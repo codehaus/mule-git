@@ -10,9 +10,9 @@
 
 package org.mule.providers.email.transformers;
 
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.transformer.TransformerException;
-import org.mule.api.transformer.UMOTransformer;
+import org.mule.api.transformer.Transformer;
 import org.mule.impl.AlreadyInitialisedException;
 import org.mule.impl.transformer.AbstractTransformer;
 import org.mule.tck.AbstractTransformerTestCase;
@@ -28,15 +28,15 @@ public class MailMessageTransformersTestCase extends AbstractTransformerTestCase
 {
     private Message message;
 
-    public UMOTransformer getTransformer() throws Exception
+    public Transformer getTransformer() throws Exception
     {
         return new EmailMessageToString();
     }
 
-    public UMOTransformer getRoundTripTransformer() throws Exception
+    public Transformer getRoundTripTransformer() throws Exception
     {
         StringToEmailMessage trans = new StringToEmailMessage();
-        UMOImmutableEndpoint endpoint = muleContext.getRegistry().lookupEndpointFactory().getOutboundEndpoint(
+        ImmutableEndpoint endpoint = muleContext.getRegistry().lookupEndpointFactory().getOutboundEndpoint(
             "smtp://a:a@a.com");
 
         // We need to init the connector without actually connecting for this test

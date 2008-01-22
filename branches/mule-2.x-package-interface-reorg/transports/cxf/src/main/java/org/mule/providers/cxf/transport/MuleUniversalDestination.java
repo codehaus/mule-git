@@ -33,12 +33,12 @@ public class MuleUniversalDestination extends AbstractDestination
         // String uri = getAddress().getAddress().getValue().toString();
 
         // TODO - support decoupled endpoints
-        // UMOEndpoint ep;
+        // Endpoint ep;
         // try {
         // System.out.println("creating endpoint " + uri);
         // ep = MuleEndpoint.getOrCreateEndpointForUri("cxf:" + uri,
-        // UMOEndpoint.ENDPOINT_TYPE_RECEIVER);
-        // } catch (UMOException e) {
+        // Endpoint.ENDPOINT_TYPE_RECEIVER);
+        // } catch (AbstractMuleException e) {
         // throw new RuntimeException(e);
         // }
         // ep.setConnector(transport.getConnector());

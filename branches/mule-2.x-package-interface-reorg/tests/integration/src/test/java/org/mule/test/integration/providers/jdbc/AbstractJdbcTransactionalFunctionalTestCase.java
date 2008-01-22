@@ -11,23 +11,23 @@
 package org.mule.test.integration.providers.jdbc;
 
 
-import org.mule.api.UMOComponent;
-import org.mule.api.UMOEventContext;
-import org.mule.api.UMOTransaction;
-import org.mule.api.UMOTransactionConfig;
-import org.mule.api.UMOTransactionFactory;
-import org.mule.api.context.UMOServerNotification;
-import org.mule.api.endpoint.UMOEndpointBuilder;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.Component;
+import org.mule.api.EventContext;
+import org.mule.api.Transaction;
+import org.mule.api.TransactionConfig;
+import org.mule.api.TransactionFactory;
+import org.mule.api.context.ServerNotification;
+import org.mule.api.endpoint.EndpointBuilder;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.impl.DefaultExceptionStrategy;
 import org.mule.impl.MuleTransactionConfig;
 import org.mule.impl.endpoint.EndpointURIEndpointBuilder;
 import org.mule.impl.internal.notifications.TransactionNotification;
 import org.mule.impl.internal.notifications.TransactionNotificationListener;
 import org.mule.impl.model.seda.SedaComponent;
-import org.mule.impl.routing.inbound.InboundRouterCollection;
+import org.mule.impl.routing.inbound.DefaultInboundRouterCollection;
 import org.mule.impl.routing.outbound.OutboundPassThroughRouter;
-import org.mule.impl.routing.outbound.OutboundRouterCollection;
+import org.mule.impl.routing.outbound.DefaultOutboundRouterCollection;
 import org.mule.tck.functional.EventCallback;
 import org.mule.util.object.PrototypeObjectFactory;
 
@@ -38,7 +38,7 @@ import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
 public abstract class AbstractJdbcTransactionalFunctionalTestCase extends AbstractJdbcFunctionalTestCase  implements TransactionNotificationListener
 {
 
-    private UMOTransaction currentTx;
+    private Transaction currentTx;
     protected boolean rollbacked = false;
 
     protected void doSetUp() throws Exception
@@ -54,7 +54,7 @@ public abstract class AbstractJdbcTransactionalFunctionalTestCase extends Abstra
 
         EventCallback callback = new EventCallback()
         {
-            public void eventReceived(UMOEventContext context, Object component) throws Exception
+            public void eventReceived(EventContext context, Object component) throws Exception
             {
                 try
                 {
@@ -75,7 +75,7 @@ public abstract class AbstractJdbcTransactionalFunctionalTestCase extends Abstra
         };
 
         // Start the server
-        initialiseComponent(UMOTransactionConfig.ACTION_ALWAYS_BEGIN, callback);
+        initialiseComponent(TransactionConfig.ACTION_ALWAYS_BEGIN, callback);
         muleContext.start();
 
         execSqlUpdate("INSERT INTO TEST(TYPE, DATA, ACK, RESULT) VALUES (1, '" + DEFAULT_MESSAGE
@@ -101,37 +101,37 @@ public abstract class AbstractJdbcTransactionalFunctionalTestCase extends Abstra
         assertNull(obj[0]);
     }
 
-    public UMOComponent initialiseComponent(byte txBeginAction, EventCallback callback) throws Exception
+    public Component initialiseComponent(byte txBeginAction, EventCallback callback) throws Exception
     {
 
-        UMOComponent component = new SedaComponent();
+        Component component = new SedaComponent();
         component.setExceptionListener(new DefaultExceptionStrategy());
         component.setName("testComponent");
         component.setServiceFactory(new PrototypeObjectFactory(JdbcFunctionalTestComponent.class));
 
-        UMOTransactionFactory tf = getTransactionFactory();
-        UMOTransactionConfig txConfig = new MuleTransactionConfig();
+        TransactionFactory tf = getTransactionFactory();
+        TransactionConfig txConfig = new MuleTransactionConfig();
         txConfig.setFactory(tf);
         txConfig.setAction(txBeginAction);
         
-        UMOEndpointBuilder endpointBuilder = new EndpointURIEndpointBuilder(getInDest(), muleContext);
+        EndpointBuilder endpointBuilder = new EndpointURIEndpointBuilder(getInDest(), muleContext);
         endpointBuilder.setName("testIn");
         endpointBuilder.setConnector(connector);
         endpointBuilder.setTransactionConfig(txConfig);
-        UMOImmutableEndpoint endpoint = muleContext.getRegistry().lookupEndpointFactory().getInboundEndpoint(
+        ImmutableEndpoint endpoint = muleContext.getRegistry().lookupEndpointFactory().getInboundEndpoint(
             endpointBuilder);
 
-        UMOEndpointBuilder endpointBuilder2 = new EndpointURIEndpointBuilder(getOutDest(), muleContext);
+        EndpointBuilder endpointBuilder2 = new EndpointURIEndpointBuilder(getOutDest(), muleContext);
         endpointBuilder2.setName("testOut");
         endpointBuilder2.setConnector(connector);
-        UMOImmutableEndpoint outProvider = muleContext.getRegistry().lookupEndpointFactory().getOutboundEndpoint(
+        ImmutableEndpoint outProvider = muleContext.getRegistry().lookupEndpointFactory().getOutboundEndpoint(
             endpointBuilder2);
         
-        component.setOutboundRouter(new OutboundRouterCollection());
+        component.setOutboundRouter(new DefaultOutboundRouterCollection());
         OutboundPassThroughRouter router = new OutboundPassThroughRouter();
         router.addEndpoint(outProvider);
         component.getOutboundRouter().addRouter(router);
-        component.setInboundRouter(new InboundRouterCollection());
+        component.setInboundRouter(new DefaultInboundRouterCollection());
         component.getInboundRouter().addEndpoint(endpoint);
 
         HashMap props = new HashMap();
@@ -142,7 +142,7 @@ public abstract class AbstractJdbcTransactionalFunctionalTestCase extends Abstra
         return component;
     }
 
-    public void onNotification(UMOServerNotification notification)
+    public void onNotification(ServerNotification notification)
     {
         if (notification.getAction() == TransactionNotification.TRANSACTION_ROLLEDBACK)
         {
@@ -150,6 +150,6 @@ public abstract class AbstractJdbcTransactionalFunctionalTestCase extends Abstra
         }
     }
 
-    abstract protected UMOTransactionFactory getTransactionFactory();
+    abstract protected TransactionFactory getTransactionFactory();
 
 }

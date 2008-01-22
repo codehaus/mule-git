@@ -10,13 +10,13 @@
 
 package org.mule.providers.ejb;
 
-import org.mule.api.transport.UMOConnector;
+import org.mule.api.transport.Connector;
 import org.mule.tck.providers.AbstractConnectorTestCase;
 
 public class EjbConnectorTestCase extends AbstractConnectorTestCase
 {
 
-    public UMOConnector createConnector() throws Exception
+    public Connector createConnector() throws Exception
     {
         EjbConnector c = new EjbConnector();
         c.setName("EjbConnector");

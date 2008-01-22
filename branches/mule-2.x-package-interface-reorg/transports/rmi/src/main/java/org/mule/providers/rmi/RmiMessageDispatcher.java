@@ -10,11 +10,11 @@
 
 package org.mule.providers.rmi;
 
-import org.mule.api.UMOEvent;
-import org.mule.api.UMOMessage;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.Event;
+import org.mule.api.MuleMessage;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.transformer.TransformerException;
-import org.mule.impl.MuleMessage;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.transport.AbstractMessageDispatcher;
 
 import java.lang.reflect.Method;
@@ -32,7 +32,7 @@ public class RmiMessageDispatcher extends AbstractMessageDispatcher
     protected volatile Remote remoteObject;
     protected volatile Method invokedMethod;
 
-    public RmiMessageDispatcher(UMOImmutableEndpoint endpoint)
+    public RmiMessageDispatcher(ImmutableEndpoint endpoint)
     {
         super(endpoint);
         this.connector = (RmiConnector)endpoint.getConnector();
@@ -62,7 +62,7 @@ public class RmiMessageDispatcher extends AbstractMessageDispatcher
         invokedMethod = null;
     }
 
-    private Object[] getArgs(UMOEvent event) throws TransformerException
+    private Object[] getArgs(Event event) throws TransformerException
     {
         Object payload = event.transformMessage();
         if (payload instanceof Object[])
@@ -78,9 +78,9 @@ public class RmiMessageDispatcher extends AbstractMessageDispatcher
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.api.transport.UMOConnectorSession#dispatch(org.mule.api.UMOEvent)
+     * @see org.mule.api.transport.UMOConnectorSession#dispatch(org.mule.api.Event)
      */
-    protected void doDispatch(UMOEvent event) throws Exception
+    protected void doDispatch(Event event) throws Exception
     {
         Object[] arguments = getArgs(event);
         if (invokedMethod == null)
@@ -93,9 +93,9 @@ public class RmiMessageDispatcher extends AbstractMessageDispatcher
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.api.transport.UMOConnectorSession#send(org.mule.api.UMOEvent)
+     * @see org.mule.api.transport.UMOConnectorSession#send(org.mule.api.Event)
      */
-    public UMOMessage doSend(UMOEvent event) throws Exception
+    public MuleMessage doSend(Event event) throws Exception
     {
         if (invokedMethod == null)
         {
@@ -111,7 +111,7 @@ public class RmiMessageDispatcher extends AbstractMessageDispatcher
         }
         else
         {
-            return new MuleMessage(connector.getMessageAdapter(result).getPayload(), Collections.EMPTY_MAP);
+            return new DefaultMuleMessage(connector.getMessageAdapter(result).getPayload(), Collections.EMPTY_MAP);
         }
     }
 

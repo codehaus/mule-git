@@ -10,15 +10,15 @@
 
 package org.mule.api.routing;
 
-import org.mule.api.UMOMessage;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
-import org.mule.imple.config.i18n.Message;
+import org.mule.api.MuleMessage;
+import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.impl.config.i18n.Message;
 
 /**
  * <code>ResponseTimeoutException</code> is thrown when a response is not received
  * in a given timeout in the Response Router.
  * 
- * @see org.mule.api.routing.UMOResponseRouter
+ * @see org.mule.api.routing.ResponseRouter
  */
 public class ResponseTimeoutException extends RoutingException
 {
@@ -27,14 +27,14 @@ public class ResponseTimeoutException extends RoutingException
      */
     private static final long serialVersionUID = 6882278747922113239L;
 
-    public ResponseTimeoutException(Message message, UMOMessage umoMessage, UMOImmutableEndpoint endpoint)
+    public ResponseTimeoutException(Message message, MuleMessage umoMessage, ImmutableEndpoint endpoint)
     {
         super(message, umoMessage, endpoint);
     }
 
     public ResponseTimeoutException(Message message,
-                                    UMOMessage umoMessage,
-                                    UMOImmutableEndpoint endpoint,
+                                    MuleMessage umoMessage,
+                                    ImmutableEndpoint endpoint,
                                     Throwable cause)
     {
         super(message, umoMessage, endpoint, cause);

@@ -11,11 +11,11 @@
 package org.mule;
 
 import org.mule.api.MuleException;
-import org.mule.api.UMOException;
+import org.mule.api.AbstractMuleException;
 import org.mule.api.context.ManagerException;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.routing.RoutingException;
-import org.mule.imple.config.i18n.MessageFactory;
+import org.mule.impl.config.i18n.MessageFactory;
 import org.mule.tck.AbstractMuleTestCase;
 
 public class ExceptionsTestCase extends AbstractMuleTestCase
@@ -34,15 +34,15 @@ public class ExceptionsTestCase extends AbstractMuleTestCase
         assertEquals(e.getClass().getName() + ": " + msg, e.toString());
     }
 
-    public final void testRoutingExceptionNullUMOMessageNullUMOImmutableEndpoint() throws UMOException
+    public final void testRoutingExceptionNullUMOMessageNullUMOImmutableEndpoint() throws AbstractMuleException
     {
         RoutingException rex = new RoutingException(null, null);
         assertNotNull(rex);
     }
 
-    public final void testRoutingExceptionNullUMOMessageValidUMOImmutableEndpoint() throws UMOException
+    public final void testRoutingExceptionNullUMOMessageValidUMOImmutableEndpoint() throws AbstractMuleException
     {
-        UMOImmutableEndpoint endpoint = muleContext.getRegistry().lookupEndpointFactory().getOutboundEndpoint("test://outbound");
+        ImmutableEndpoint endpoint = muleContext.getRegistry().lookupEndpointFactory().getOutboundEndpoint("test://outbound");
         assertNotNull(endpoint);
 
         RoutingException rex = new RoutingException(null, endpoint);

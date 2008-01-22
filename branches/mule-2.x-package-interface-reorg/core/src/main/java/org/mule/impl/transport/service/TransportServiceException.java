@@ -10,7 +10,7 @@
 
 package org.mule.impl.transport.service;
 
-import org.mule.imple.config.i18n.Message;
+import org.mule.impl.config.i18n.Message;
 
 /**
  * <code>TransportServiceException</code> is thrown if a ProviderServicedescriptor

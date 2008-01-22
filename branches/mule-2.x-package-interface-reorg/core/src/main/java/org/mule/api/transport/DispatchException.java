@@ -10,10 +10,10 @@
 
 package org.mule.api.transport;
 
-import org.mule.api.UMOMessage;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.MuleMessage;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.routing.RoutingException;
-import org.mule.imple.config.i18n.Message;
+import org.mule.impl.config.i18n.Message;
 
 /**
  * <code>DispatchException</code> is thrown when an endpoint dispatcher fails to
@@ -27,24 +27,24 @@ public class DispatchException extends RoutingException
      */
     private static final long serialVersionUID = -8204621943732496605L;
 
-    public DispatchException(UMOMessage message, UMOImmutableEndpoint endpoint)
+    public DispatchException(MuleMessage message, ImmutableEndpoint endpoint)
     {
         super(message, endpoint);
     }
 
-    public DispatchException(UMOMessage umoMessage, UMOImmutableEndpoint endpoint, Throwable cause)
+    public DispatchException(MuleMessage umoMessage, ImmutableEndpoint endpoint, Throwable cause)
     {
         super(umoMessage, endpoint, cause);
     }
 
-    public DispatchException(Message message, UMOMessage umoMessage, UMOImmutableEndpoint endpoint)
+    public DispatchException(Message message, MuleMessage umoMessage, ImmutableEndpoint endpoint)
     {
         super(message, umoMessage, endpoint);
     }
 
     public DispatchException(Message message,
-                             UMOMessage umoMessage,
-                             UMOImmutableEndpoint endpoint,
+                             MuleMessage umoMessage,
+                             ImmutableEndpoint endpoint,
                              Throwable cause)
     {
         super(message, umoMessage, endpoint, cause);

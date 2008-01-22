@@ -1,13 +1,13 @@
 
 package org.mule.extras.client;
 
-import org.mule.api.UMOException;
+import org.mule.api.AbstractMuleException;
 import org.mule.tck.AbstractMuleTestCase;
 
 public class MuleClientTestCase extends AbstractMuleTestCase
 {
 
-    public void testCreateMuleClient() throws UMOException
+    public void testCreateMuleClient() throws AbstractMuleException
     {
         MuleClient muleClient = new MuleClient();
         assertEquals(muleContext, muleClient.getMuleContext());

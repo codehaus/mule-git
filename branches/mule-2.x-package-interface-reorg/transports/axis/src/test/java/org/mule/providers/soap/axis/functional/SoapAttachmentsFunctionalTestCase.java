@@ -10,10 +10,10 @@
 
 package org.mule.providers.soap.axis.functional;
 
-import org.mule.api.UMOMessage;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.MuleMessage;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.impl.MuleEvent;
-import org.mule.impl.MuleMessage;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.MuleSession;
 import org.mule.impl.transport.AbstractConnector;
 import org.mule.providers.soap.axis.AxisMessageDispatcher;
@@ -43,19 +43,19 @@ public class SoapAttachmentsFunctionalTestCase extends FunctionalTestCase
 
     protected void sendTestData(int iterations) throws Exception
     {
-        UMOImmutableEndpoint ep = muleContext.getRegistry().lookupEndpointFactory().getOutboundEndpoint(
+        ImmutableEndpoint ep = muleContext.getRegistry().lookupEndpointFactory().getOutboundEndpoint(
             "axis:http://localhost:60198/mule/services/testComponent?method=receiveMessageWithAttachments");
 
         AxisMessageDispatcher client = new AxisMessageDispatcher(ep);
         for (int i = 0; i < iterations; i++)
         {
-            UMOMessage msg = new MuleMessage("testPayload");
+            MuleMessage msg = new DefaultMuleMessage("testPayload");
             File tempFile = File.createTempFile("test", ".att");
             tempFile.deleteOnExit();
             msg.addAttachment("testAttachment", new DataHandler(new FileDataSource(tempFile)));
             MuleSession session = new MuleSession(msg, ((AbstractConnector) ep.getConnector()).getSessionHandler());
             MuleEvent event = new MuleEvent(msg, ep, session, true);
-            UMOMessage result = client.send(event);
+            MuleMessage result = client.send(event);
             assertNotNull(result);
             assertNotNull(result.getPayload());
             assertEquals(result.getPayloadAsString(), "Done");

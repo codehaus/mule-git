@@ -13,7 +13,7 @@ package org.mule.samples.errorhandler;
 import org.mule.api.MuleException;
 import org.mule.api.lifecycle.FatalException;
 import org.mule.api.transformer.TransformerException;
-import org.mule.imple.config.i18n.MessageFactory;
+import org.mule.impl.config.i18n.MessageFactory;
 import org.mule.samples.errorhandler.exceptions.BusinessException;
 import org.mule.transformers.xml.ObjectToXml;
 import org.mule.util.FileUtils;

@@ -11,7 +11,7 @@
 package org.mule.providers.email.transformers;
 
 import org.mule.api.transformer.TransformerException;
-import org.mule.api.transport.UMOConnector;
+import org.mule.api.transport.Connector;
 import org.mule.impl.transformer.AbstractTransformer;
 import org.mule.providers.email.AbstractMailConnector;
 
@@ -50,7 +50,7 @@ public class Rfc822ByteArraytoMimeMessage extends AbstractTransformer
             throw new TransformerException(this,
                     new IllegalStateException("The transformer is no associated with an endpoint."));
         }
-        UMOConnector connector = endpoint.getConnector();
+        Connector connector = endpoint.getConnector();
         if (!(connector instanceof AbstractMailConnector))
         {
             throw new TransformerException(this,

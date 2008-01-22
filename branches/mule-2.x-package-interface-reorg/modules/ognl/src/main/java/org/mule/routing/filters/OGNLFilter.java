@@ -10,8 +10,8 @@
 
 package org.mule.routing.filters;
 
-import org.mule.api.UMOFilter;
-import org.mule.api.UMOMessage;
+import org.mule.api.Filter;
+import org.mule.api.MuleMessage;
 import org.mule.api.config.ConfigurationException;
 
 import ognl.Ognl;
@@ -19,7 +19,7 @@ import ognl.OgnlException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-public class OGNLFilter implements UMOFilter
+public class OGNLFilter implements Filter
 {
     protected final Log logger = LogFactory.getLog(this.getClass());
 
@@ -52,7 +52,7 @@ public class OGNLFilter implements UMOFilter
         }
     }
 
-    public boolean accept(UMOMessage message)
+    public boolean accept(MuleMessage message)
     {
         // no message: nothing to filter
         if (message == null)

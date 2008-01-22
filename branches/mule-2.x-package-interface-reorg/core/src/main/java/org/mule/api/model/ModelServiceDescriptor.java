@@ -23,7 +23,7 @@ import org.mule.api.registry.ServiceException;
  */
 public interface ModelServiceDescriptor extends ServiceDescriptor
 {
-    public UMOModel createModel() throws ServiceException;
+    public Model createModel() throws ServiceException;
 
     public Class getModelClass() throws ServiceException;
 }

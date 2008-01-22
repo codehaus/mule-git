@@ -12,10 +12,10 @@ package org.mule.providers.file;
 
 import org.mule.RegistryContext;
 import org.mule.api.MuleException;
-import org.mule.api.UMOException;
-import org.mule.api.UMOMessage;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
-import org.mule.impl.MuleMessage;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleMessage;
+import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.transport.AbstractMessageRequester;
 import org.mule.providers.file.filters.FilenameWildcardFilter;
 import org.mule.providers.file.i18n.FileMessages;
@@ -32,7 +32,7 @@ public class FileMessageRequester extends AbstractMessageRequester
 {
     private final FileConnector connector;
 
-    public FileMessageRequester(UMOImmutableEndpoint endpoint)
+    public FileMessageRequester(ImmutableEndpoint endpoint)
     {
         super(endpoint);
         this.connector = (FileConnector) endpoint.getConnector();
@@ -41,9 +41,9 @@ public class FileMessageRequester extends AbstractMessageRequester
     /**
      * There is no associated session for a file connector
      *
-     * @throws org.mule.api.UMOException
+     * @throws org.mule.api.AbstractMuleException
      */
-    public Object getDelegateSession() throws UMOException
+    public Object getDelegateSession() throws AbstractMuleException
     {
         return null;
     }
@@ -58,7 +58,7 @@ public class FileMessageRequester extends AbstractMessageRequester
      * @throws Exception
      */
 
-    protected UMOMessage doRequest(long timeout) throws Exception
+    protected MuleMessage doRequest(long timeout) throws Exception
     {
         File file = FileUtils.newFile(endpoint.getEndpointURI().getAddress());
         File result = null;
@@ -98,7 +98,7 @@ public class FileMessageRequester extends AbstractMessageRequester
                     }
                 }
 
-                MuleMessage message;
+                DefaultMuleMessage message;
                 File destinationFile = null;
                 if (connector.getMoveToDirectory() != null)
                 {
@@ -108,17 +108,17 @@ public class FileMessageRequester extends AbstractMessageRequester
                     {
                         logger.error("Failed to move file: " + result.getAbsolutePath()
                                      + " to " + destinationFile.getAbsolutePath());
-                        message = new MuleMessage(connector.getMessageAdapter(result));
+                        message = new DefaultMuleMessage(connector.getMessageAdapter(result));
                     }
                     else
                     {
-                        message = new MuleMessage(connector.getMessageAdapter(destinationFile));
+                        message = new DefaultMuleMessage(connector.getMessageAdapter(destinationFile));
                     }
 
                 }
                 else
                 {
-                    message = new MuleMessage(connector.getMessageAdapter(result));
+                    message = new DefaultMuleMessage(connector.getMessageAdapter(result));
                 }
 
                 if (connector.isAutoDelete())

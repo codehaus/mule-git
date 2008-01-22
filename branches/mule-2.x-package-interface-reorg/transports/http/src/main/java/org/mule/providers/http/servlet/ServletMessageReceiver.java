@@ -10,11 +10,11 @@
 
 package org.mule.providers.http.servlet;
 
-import org.mule.api.UMOComponent;
-import org.mule.api.UMOException;
-import org.mule.api.endpoint.UMOEndpoint;
+import org.mule.api.Component;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.endpoint.Endpoint;
 import org.mule.api.lifecycle.CreateException;
-import org.mule.api.transport.UMOConnector;
+import org.mule.api.transport.Connector;
 import org.mule.impl.transport.AbstractMessageReceiver;
 
 /**
@@ -25,7 +25,7 @@ import org.mule.impl.transport.AbstractMessageReceiver;
 
 public class ServletMessageReceiver extends AbstractMessageReceiver
 {
-    public ServletMessageReceiver(UMOConnector connector, UMOComponent component, UMOEndpoint endpoint)
+    public ServletMessageReceiver(Connector connector, Component component, Endpoint endpoint)
             throws CreateException
     {
 
@@ -48,12 +48,12 @@ public class ServletMessageReceiver extends AbstractMessageReceiver
         // nothing to do
     }
 
-    protected void doStart() throws UMOException
+    protected void doStart() throws AbstractMuleException
     {
         // nothing to do
     }
 
-    protected void doStop() throws UMOException
+    protected void doStop() throws AbstractMuleException
     {
         // nothing to do
     }

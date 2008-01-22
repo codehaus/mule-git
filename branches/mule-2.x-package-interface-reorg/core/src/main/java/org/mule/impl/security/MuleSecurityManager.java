@@ -10,14 +10,14 @@
 
 package org.mule.impl.security;
 
-import org.mule.api.UMOEncryptionStrategy;
+import org.mule.api.EncryptionStrategy;
 import org.mule.api.lifecycle.InitialisationException;
+import org.mule.api.security.MuleAuthentication;
+import org.mule.api.security.SecurityContext;
 import org.mule.api.security.SecurityException;
+import org.mule.api.security.SecurityManager;
+import org.mule.api.security.SecurityProvider;
 import org.mule.api.security.SecurityProviderNotFoundException;
-import org.mule.api.security.UMOAuthentication;
-import org.mule.api.security.UMOSecurityContext;
-import org.mule.api.security.UMOSecurityManager;
-import org.mule.api.security.UMOSecurityProvider;
 import org.mule.api.security.UnknownAuthenticationTypeException;
 
 import java.util.ArrayList;
@@ -36,7 +36,7 @@ import org.apache.commons.logging.LogFactory;
  * for a Mule instance.
  */
 
-public class MuleSecurityManager implements UMOSecurityManager
+public class MuleSecurityManager implements SecurityManager
 {
 
     /**
@@ -56,18 +56,18 @@ public class MuleSecurityManager implements UMOSecurityManager
     {
         for (Iterator iterator = providers.values().iterator(); iterator.hasNext();)
         {
-            UMOSecurityProvider provider = (UMOSecurityProvider) iterator.next();
+            SecurityProvider provider = (SecurityProvider) iterator.next();
             provider.initialise();
         }
 
         for (Iterator iterator = cryptoStrategies.values().iterator(); iterator.hasNext();)
         {
-            UMOEncryptionStrategy strategy = (UMOEncryptionStrategy) iterator.next();
+            EncryptionStrategy strategy = (EncryptionStrategy) iterator.next();
             strategy.initialise();
         }
     }
 
-    public UMOAuthentication authenticate(UMOAuthentication authentication)
+    public MuleAuthentication authenticate(MuleAuthentication authentication)
         throws SecurityException, SecurityProviderNotFoundException
     {
         Iterator iter = providers.values().iterator();
@@ -76,7 +76,7 @@ public class MuleSecurityManager implements UMOSecurityManager
 
         while (iter.hasNext())
         {
-            UMOSecurityProvider provider = (UMOSecurityProvider) iter.next();
+            SecurityProvider provider = (SecurityProvider) iter.next();
 
             if (provider.supports(toTest))
             {
@@ -85,7 +85,7 @@ public class MuleSecurityManager implements UMOSecurityManager
                     logger.debug("Authentication attempt using " + provider.getClass().getName());
                 }
 
-                UMOAuthentication result = provider.authenticate(authentication);
+                MuleAuthentication result = provider.authenticate(authentication);
 
                 if (result != null)
                 {
@@ -97,7 +97,7 @@ public class MuleSecurityManager implements UMOSecurityManager
         throw new SecurityProviderNotFoundException(toTest.getName());
     }
 
-    public void addProvider(UMOSecurityProvider provider)
+    public void addProvider(SecurityProvider provider)
     {
         if (getProvider(provider.getName()) != null)
         {
@@ -106,18 +106,18 @@ public class MuleSecurityManager implements UMOSecurityManager
         providers.put(provider.getName(), provider);
     }
 
-    public UMOSecurityProvider getProvider(String name)
+    public SecurityProvider getProvider(String name)
     {
         if (name == null)
         {
             throw new IllegalArgumentException("provider Name cannot be null");
         }
-        return (UMOSecurityProvider) providers.get(name);
+        return (SecurityProvider) providers.get(name);
     }
 
-    public UMOSecurityProvider removeProvider(String name)
+    public SecurityProvider removeProvider(String name)
     {
-        return (UMOSecurityProvider) providers.remove(name);
+        return (SecurityProvider) providers.remove(name);
     }
 
     public Collection getProviders()
@@ -129,12 +129,12 @@ public class MuleSecurityManager implements UMOSecurityManager
     {
         for (Iterator iterator = providers.iterator(); iterator.hasNext();)
         {
-            UMOSecurityProvider provider = (UMOSecurityProvider) iterator.next();
+            SecurityProvider provider = (SecurityProvider) iterator.next();
             addProvider(provider);
         }
     }
 
-    public UMOSecurityContext createSecurityContext(UMOAuthentication authentication)
+    public SecurityContext createSecurityContext(MuleAuthentication authentication)
         throws UnknownAuthenticationTypeException
     {
         Iterator iter = providers.values().iterator();
@@ -143,7 +143,7 @@ public class MuleSecurityManager implements UMOSecurityManager
 
         while (iter.hasNext())
         {
-            UMOSecurityProvider provider = (UMOSecurityProvider) iter.next();
+            SecurityProvider provider = (SecurityProvider) iter.next();
 
             if (provider.supports(toTest))
             {
@@ -153,19 +153,19 @@ public class MuleSecurityManager implements UMOSecurityManager
         throw new UnknownAuthenticationTypeException(authentication);
     }
 
-    public UMOEncryptionStrategy getEncryptionStrategy(String name)
+    public EncryptionStrategy getEncryptionStrategy(String name)
     {
-        return (UMOEncryptionStrategy) cryptoStrategies.get(name);
+        return (EncryptionStrategy) cryptoStrategies.get(name);
     }
 
-    public void addEncryptionStrategy(UMOEncryptionStrategy strategy)
+    public void addEncryptionStrategy(EncryptionStrategy strategy)
     {
         cryptoStrategies.put(strategy.getName(), strategy);
     }
 
-    public UMOEncryptionStrategy removeEncryptionStrategy(String name)
+    public EncryptionStrategy removeEncryptionStrategy(String name)
     {
-        return (UMOEncryptionStrategy) cryptoStrategies.remove(name);
+        return (EncryptionStrategy) cryptoStrategies.remove(name);
 
     }
 
@@ -178,7 +178,7 @@ public class MuleSecurityManager implements UMOSecurityManager
     {
         for (Iterator iterator = strategies.iterator(); iterator.hasNext();)
         {
-            UMOEncryptionStrategy strategy = (UMOEncryptionStrategy) iterator.next();
+            EncryptionStrategy strategy = (EncryptionStrategy) iterator.next();
             addEncryptionStrategy(strategy);
         }
     }

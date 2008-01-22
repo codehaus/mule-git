@@ -10,7 +10,7 @@
 
 package org.mule.providers.http;
 
-import org.mule.api.transport.UMOConnector;
+import org.mule.api.transport.Connector;
 import org.mule.providers.http.servlet.ServletConnector;
 import org.mule.tck.providers.AbstractConnectorTestCase;
 
@@ -18,7 +18,7 @@ public class ServletConnectorTestCase extends AbstractConnectorTestCase
 {
 
     // @Override
-    public UMOConnector createConnector() throws Exception
+    public Connector createConnector() throws Exception
     {
         ServletConnector c = new ServletConnector();
         c.setName("test");

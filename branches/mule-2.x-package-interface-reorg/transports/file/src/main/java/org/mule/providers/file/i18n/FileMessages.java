@@ -10,9 +10,9 @@
 
 package org.mule.providers.file.i18n;
 
-import org.mule.api.endpoint.UMOEndpointURI;
-import org.mule.imple.config.i18n.Message;
-import org.mule.imple.config.i18n.MessageFactory;
+import org.mule.api.endpoint.EndpointURI;
+import org.mule.impl.config.i18n.Message;
+import org.mule.impl.config.i18n.MessageFactory;
 
 public class FileMessages extends MessageFactory
 {
@@ -43,7 +43,7 @@ public class FileMessages extends MessageFactory
         return createMessage(BUNDLE_PATH, 5);
     }
 
-    public static Message invalidFileFilter(UMOEndpointURI endpointURI)
+    public static Message invalidFileFilter(EndpointURI endpointURI)
     {
         return createMessage(BUNDLE_PATH, 6, endpointURI);
     }

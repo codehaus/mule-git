@@ -10,7 +10,7 @@
 
 package org.mule.util.xa;
 
-import org.mule.imple.config.i18n.Message;
+import org.mule.impl.config.i18n.Message;
 
 public class ResourceManagerSystemException extends ResourceManagerException
 {

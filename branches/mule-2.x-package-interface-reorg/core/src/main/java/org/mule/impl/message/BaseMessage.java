@@ -16,7 +16,7 @@ import java.util.Map;
 
 /**
  * <code>BaseMessage</code> A default message implementation used for messages sent
- * over the wire. client messages should NOT implement UMOMessage.
+ * over the wire. client messages should NOT implement MuleMessage.
  */
 public class BaseMessage implements Serializable
 {

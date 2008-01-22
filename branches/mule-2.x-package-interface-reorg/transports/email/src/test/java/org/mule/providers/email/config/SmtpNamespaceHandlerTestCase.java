@@ -9,7 +9,7 @@
  */
 package org.mule.providers.email.config;
 
-import org.mule.api.UMOException;
+import org.mule.api.AbstractMuleException;
 import org.mule.providers.email.SmtpConnector;
 import org.mule.providers.email.SmtpsConnector;
 
@@ -77,7 +77,7 @@ public class SmtpNamespaceHandlerTestCase extends AbstractEmailNamespaceHandlerT
         assertTrue(c.isStarted());
     }
 
-    public void testEndpoint() throws UMOException
+    public void testEndpoint() throws AbstractMuleException
     {
         testEndpoint("global1", SmtpConnector.SMTP);
         testEndpoint("global2", SmtpConnector.SMTP);

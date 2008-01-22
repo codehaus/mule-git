@@ -10,9 +10,9 @@
 
 package org.mule.providers.soap.axis;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
-import org.mule.impl.MuleMessage;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.tck.FunctionalTestCase;
 
 import java.util.HashMap;
@@ -35,7 +35,7 @@ public class AxisServiceUsingXFireEndpointTestCase extends FunctionalTestCase
     public void testAxis() throws Exception
     {
         MuleClient client = new MuleClient();
-        UMOMessage reply = client.send("vm://axis.in", new MuleMessage("Test String"));
+        MuleMessage reply = client.send("vm://axis.in", new DefaultMuleMessage("Test String"));
 
         assertNotNull(reply);
         assertNotNull(reply.getPayload());
@@ -48,7 +48,7 @@ public class AxisServiceUsingXFireEndpointTestCase extends FunctionalTestCase
         MuleClient client = new MuleClient();
         Map props = new HashMap();
         props.put("http.method", "GET");
-        UMOMessage reply = client.send("http://localhost:63381/services/AxisService?WSDL", "", props);
+        MuleMessage reply = client.send("http://localhost:63381/services/AxisService?WSDL", "", props);
 
         assertNotNull(reply);
         assertNotNull(reply.getPayload());

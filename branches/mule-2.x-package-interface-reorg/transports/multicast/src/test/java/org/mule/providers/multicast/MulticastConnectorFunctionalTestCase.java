@@ -10,7 +10,7 @@
 
 package org.mule.providers.multicast;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 
@@ -46,7 +46,7 @@ public class MulticastConnectorFunctionalTestCase extends FunctionalTestCase
         int receivedPackets = 0;
         for (; receivedPackets < broadcastMessages; receivedPackets++)
         {
-            UMOMessage message = client.request("vm://foo", 2000);
+            MuleMessage message = client.request("vm://foo", 2000);
             assertNotNull(message);
             receivedMessages.add(message.getPayloadAsString());
         }

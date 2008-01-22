@@ -10,7 +10,7 @@
 
 package org.mule.providers.soap.axis;
 
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.providers.soap.axis.mock.MockAxisServer;
 import org.mule.providers.soap.axis.mock.MockProvider;
 import org.mule.providers.soap.SoapConstants;
@@ -58,7 +58,7 @@ public class AxisNamespaceHandlerTestCase extends FunctionalTestCase
 
     public void testEndpointProperties() throws Exception
     {
-        UMOImmutableEndpoint endpoint =
+        ImmutableEndpoint endpoint =
                 muleContext.getRegistry().lookupEndpointBuilder("endpoint").buildOutboundEndpoint();
         Map props = endpoint.getProperties();
         assertEquals("[methodNamespace][method]", assertKey(props, SoapConstants.SOAP_ACTION_PROPERTY, String.class));

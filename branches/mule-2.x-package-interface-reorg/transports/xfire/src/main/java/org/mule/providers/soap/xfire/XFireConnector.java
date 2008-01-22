@@ -11,26 +11,26 @@
 package org.mule.providers.soap.xfire;
 
 import org.mule.api.MuleRuntimeException;
-import org.mule.api.UMOComponent;
-import org.mule.api.UMOException;
-import org.mule.api.context.UMOServerNotification;
-import org.mule.api.context.UMOWorkManager;
-import org.mule.api.endpoint.UMOEndpointBuilder;
-import org.mule.api.endpoint.UMOEndpointURI;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.Component;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.context.ServerNotification;
+import org.mule.api.context.WorkManager;
+import org.mule.api.endpoint.EndpointBuilder;
+import org.mule.api.endpoint.EndpointURI;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.InitialisationException;
-import org.mule.api.transport.UMOMessageReceiver;
+import org.mule.api.transport.MessageReceiver;
+import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.impl.endpoint.EndpointURIEndpointBuilder;
 import org.mule.impl.internal.notifications.ManagerNotification;
 import org.mule.impl.internal.notifications.ManagerNotificationListener;
 import org.mule.impl.internal.notifications.NotificationException;
 import org.mule.impl.model.seda.SedaComponent;
-import org.mule.impl.routing.inbound.InboundRouterCollection;
+import org.mule.impl.routing.inbound.DefaultInboundRouterCollection;
 import org.mule.impl.transformer.TransformerUtils;
 import org.mule.impl.transport.AbstractConnectable;
 import org.mule.impl.transport.AbstractConnector;
 import org.mule.impl.transport.FatalConnectException;
-import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.providers.http.HttpConnector;
 import org.mule.providers.http.HttpConstants;
 import org.mule.providers.soap.xfire.i18n.XFireMessages;
@@ -201,12 +201,12 @@ public class XFireConnector extends AbstractConnector
         
         // xfire.getTransportManager().getTransports().clear();
         // TODO: check transport class
-        UMOWorkManager wm = this.getReceiverThreadingProfile().createWorkManager("xfire-local-transport");
+        WorkManager wm = this.getReceiverThreadingProfile().createWorkManager("xfire-local-transport");
         try
         {
             wm.start();
         }
-        catch (UMOException e)
+        catch (AbstractMuleException e)
         {
             throw new MuleRuntimeException(CoreMessages.failedToStart("local channel work manager"), e);
         }
@@ -218,7 +218,7 @@ public class XFireConnector extends AbstractConnector
         xfire.getTransportManager().register(universalTransport);
     }
 
-    protected void createLocalTransport(UMOWorkManager wm)
+    protected void createLocalTransport(WorkManager wm)
     {
         if (transportClass == null)
         {
@@ -231,7 +231,7 @@ public class XFireConnector extends AbstractConnector
                 Class transportClazz = ClassUtils.loadClass(transportClass, this.getClass());
                 try
                 {
-                    Constructor constructor = transportClazz.getConstructor(new Class[]{UMOWorkManager.class});
+                    Constructor constructor = transportClazz.getConstructor(new Class[]{WorkManager.class});
                     transport = (Transport) constructor.newInstance(new Object[]{wm});
                 }
                 catch (NoSuchMethodException ne)
@@ -338,12 +338,12 @@ public class XFireConnector extends AbstractConnector
         // template method
     }
 
-    protected void doStart() throws UMOException
+    protected void doStart() throws AbstractMuleException
     {
 
     }
 
-    protected void doStop() throws UMOException
+    protected void doStop() throws AbstractMuleException
     {
         // template method
     }
@@ -358,8 +358,8 @@ public class XFireConnector extends AbstractConnector
         this.xfire = xfire;
     }
 
-    protected void registerReceiverWithMuleService(UMOMessageReceiver receiver, UMOEndpointURI ep)
-        throws UMOException
+    protected void registerReceiverWithMuleService(MessageReceiver receiver, EndpointURI ep)
+        throws AbstractMuleException
     {
     	 // TODO MULE-2228 Simplify this API
     	SedaComponent c = new SedaComponent();
@@ -374,8 +374,8 @@ public class XFireConnector extends AbstractConnector
         svcComponent.initialise();
         
         SingletonObjectFactory of = new SingletonObjectFactory(svcComponent);
-        // Inject the UMOComponent because XFireServiceComponent is UMOComponentAware.
-        // TODO Is this really necessary?  The only thing the UMOComponent is needed for is to get the
+        // Inject the Component because XFireServiceComponent is ComponentAware.
+        // TODO Is this really necessary?  The only thing the Component is needed for is to get the
         // threading profile.
         of.setComponent(c);
         of.initialise();
@@ -416,7 +416,7 @@ public class XFireConnector extends AbstractConnector
                 "text/xml");
         }
         
-        UMOEndpointBuilder serviceEndpointbuilder = new EndpointURIEndpointBuilder(endpoint,
+        EndpointBuilder serviceEndpointbuilder = new EndpointURIEndpointBuilder(endpoint,
             muleContext);
         serviceEndpointbuilder.setSynchronous(sync);
         serviceEndpointbuilder.setName(ep.getScheme() + ":" + serviceName);
@@ -431,7 +431,7 @@ public class XFireConnector extends AbstractConnector
 
         // TODO Do we really need to modify the existing receiver endpoint? What happnes if we don't security,
         // filters and transformers will get invoked twice?
-        UMOEndpointBuilder receiverEndpointBuilder = new EndpointURIEndpointBuilder(receiver.getEndpoint(),
+        EndpointBuilder receiverEndpointBuilder = new EndpointURIEndpointBuilder(receiver.getEndpoint(),
             muleContext);
         receiverEndpointBuilder.setTransformers(TransformerUtils.UNDEFINED);
         receiverEndpointBuilder.setResponseTransformers(TransformerUtils.UNDEFINED);
@@ -440,17 +440,17 @@ public class XFireConnector extends AbstractConnector
         // Remove the Axis Receiver Security filter now
         receiverEndpointBuilder.setSecurityFilter(null);
 
-        UMOImmutableEndpoint serviceEndpoint = muleContext.getRegistry()
+        ImmutableEndpoint serviceEndpoint = muleContext.getRegistry()
             .lookupEndpointFactory()
             .getInboundEndpoint(serviceEndpointbuilder);
 
-        UMOImmutableEndpoint receiverEndpoint = muleContext.getRegistry()
+        ImmutableEndpoint receiverEndpoint = muleContext.getRegistry()
             .lookupEndpointFactory()
             .getInboundEndpoint(receiverEndpointBuilder);
 
         receiver.setEndpoint(receiverEndpoint);
 
-        c.setInboundRouter(new InboundRouterCollection());
+        c.setInboundRouter(new DefaultInboundRouterCollection());
         c.getInboundRouter().addEndpoint(serviceEndpoint);
         
         components.add(c);
@@ -474,7 +474,7 @@ public class XFireConnector extends AbstractConnector
      * @return the key to store the newly created receiver against. In this case it
      *         is the component name, which is equivilent to the Axis service name.
      */
-    protected Object getReceiverKey(UMOComponent component, UMOImmutableEndpoint endpoint)
+    protected Object getReceiverKey(Component component, ImmutableEndpoint endpoint)
     {
         if (endpoint.getEndpointURI().getPort() == -1)
         {
@@ -567,7 +567,7 @@ public class XFireConnector extends AbstractConnector
         this.typeMappingRegistry = typeMappingRegistry;
     }
 
-    public void onNotification(UMOServerNotification event)
+    public void onNotification(ServerNotification event)
     {
         // We need to register the xfire service component once the model
         // starts because
@@ -582,13 +582,13 @@ public class XFireConnector extends AbstractConnector
         {
         	for (Iterator itr = components.iterator(); itr.hasNext();)
         	{
-        		UMOComponent c = (UMOComponent) itr.next();
+        		Component c = (Component) itr.next();
 
                 try
                 {
                     muleContext.getRegistry().registerComponent(c);
                 }
-                catch (UMOException e)
+                catch (AbstractMuleException e)
                 {
                     handleException(e);
                 }
@@ -621,7 +621,7 @@ public class XFireConnector extends AbstractConnector
         transportClass = clazz;
     }
     
-    public boolean isSyncEnabled(UMOImmutableEndpoint endpoint)
+    public boolean isSyncEnabled(ImmutableEndpoint endpoint)
     {
         String scheme = endpoint.getEndpointURI().getScheme().toLowerCase();
         if (scheme.equals("http") || scheme.equals("https") || scheme.equals("ssl") || scheme.equals("tcp")
@@ -635,13 +635,13 @@ public class XFireConnector extends AbstractConnector
         }
     }
 
-    protected Client createXFireClient(UMOImmutableEndpoint endpoint, Service service, XFire xfire)
+    protected Client createXFireClient(ImmutableEndpoint endpoint, Service service, XFire xfire)
             throws Exception
     {
         return createXFireClient(endpoint, service, xfire, null);
     }
 
-    protected Client createXFireClient(UMOImmutableEndpoint endpoint, Service service,
+    protected Client createXFireClient(ImmutableEndpoint endpoint, Service service,
                                        XFire xfire, String transportClass) throws Exception
     {
         Class transportClazz = MuleUniversalTransport.class;
@@ -695,7 +695,7 @@ public class XFireConnector extends AbstractConnector
         return client;
     }
 
-    protected Client doClientConnect(UMOImmutableEndpoint endpoint, AbstractConnectable connectable) throws Exception
+    protected Client doClientConnect(ImmutableEndpoint endpoint, AbstractConnectable connectable) throws Exception
     {
         final XFire xfire = getXfire();
         final String serviceName = XFireMessageDispatcher.getServiceName(endpoint);

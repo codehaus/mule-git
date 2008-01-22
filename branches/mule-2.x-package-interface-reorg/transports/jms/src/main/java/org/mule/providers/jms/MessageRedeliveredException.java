@@ -11,7 +11,7 @@
 package org.mule.providers.jms;
 
 import org.mule.api.MessagingException;
-import org.mule.imple.config.i18n.Message;
+import org.mule.impl.config.i18n.Message;
 import org.mule.providers.jms.i18n.JmsMessages;
 
 public class MessageRedeliveredException extends MessagingException

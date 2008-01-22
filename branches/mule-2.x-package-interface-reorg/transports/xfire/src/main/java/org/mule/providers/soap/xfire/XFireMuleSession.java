@@ -10,22 +10,22 @@
 
 package org.mule.providers.soap.xfire;
 
-import org.mule.api.UMOSession;
+import org.mule.api.Session;
 
-import org.codehaus.xfire.transport.Session;
+
 
 /**
  * Mules session wrapper for XFire
  */
-public class XFireMuleSession implements Session
+public class XFireMuleSession implements org.codehaus.xfire.transport.Session
 {
-    UMOSession session;
+    Session session;
 
-    public XFireMuleSession(UMOSession session)
+    public XFireMuleSession(Session session)
     {
         if (session == null)
         {
-            throw new IllegalArgumentException("UMOSession");
+            throw new IllegalArgumentException("Session");
         }
         this.session = session;
     }

@@ -10,14 +10,14 @@
 
 package org.mule.impl.config;
 
-import org.mule.api.UMOException;
+import org.mule.api.AbstractMuleException;
 import org.mule.api.config.ExceptionReader;
 
 import java.util.Collections;
 import java.util.Map;
 
 /**
- * Grabs all information from the UMOException type
+ * Grabs all information from the AbstractMuleException type
  */
 public final class UMOExceptionReader implements ExceptionReader
 {
@@ -34,7 +34,7 @@ public final class UMOExceptionReader implements ExceptionReader
 
     public Class getExceptionType()
     {
-        return UMOException.class;
+        return AbstractMuleException.class;
     }
 
     /**
@@ -44,7 +44,7 @@ public final class UMOExceptionReader implements ExceptionReader
      */
     public Map getInfo(Throwable t)
     {
-        return (t instanceof UMOException ? ((UMOException) t).getInfo() : Collections.EMPTY_MAP);
+        return (t instanceof AbstractMuleException ? ((AbstractMuleException) t).getInfo() : Collections.EMPTY_MAP);
     }
 
 }

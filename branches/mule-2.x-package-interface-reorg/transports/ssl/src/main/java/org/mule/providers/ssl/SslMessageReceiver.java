@@ -10,11 +10,11 @@
 
 package org.mule.providers.ssl;
 
-import org.mule.api.UMOComponent;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.Component;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.CreateException;
-import org.mule.api.transport.UMOConnector;
-import org.mule.impl.MuleMessage;
+import org.mule.api.transport.Connector;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.transport.AbstractMessageReceiver;
 import org.mule.providers.tcp.TcpMessageReceiver;
 
@@ -34,7 +34,7 @@ public class SslMessageReceiver extends TcpMessageReceiver implements HandshakeC
     private Certificate[] peerCertificateChain;
     private Certificate[] localCertificateChain;
 
-    public SslMessageReceiver(UMOConnector connector, UMOComponent component, UMOImmutableEndpoint endpoint)
+    public SslMessageReceiver(Connector connector, Component component, ImmutableEndpoint endpoint)
             throws CreateException
     {
         super(connector, component, endpoint);
@@ -45,7 +45,7 @@ public class SslMessageReceiver extends TcpMessageReceiver implements HandshakeC
         return new SslWorker(socket, this);
     }
 
-    private void preRoute(MuleMessage message) throws Exception
+    private void preRoute(DefaultMuleMessage message) throws Exception
     {
         if(peerCertificateChain != null) message.setProperty(SslConnector.PEER_CERTIFICATES, peerCertificateChain);
         if(localCertificateChain != null) message.setProperty(SslConnector.LOCAL_CERTIFICATES, localCertificateChain);
@@ -72,7 +72,7 @@ public class SslMessageReceiver extends TcpMessageReceiver implements HandshakeC
             ((SSLSocket) socket).addHandshakeCompletedListener(SslMessageReceiver.this);
         }
 
-        protected void preRouteMuleMessage(MuleMessage message) throws Exception
+        protected void preRouteMuleMessage(DefaultMuleMessage message) throws Exception
         {
             super.preRouteMuleMessage(message);
 

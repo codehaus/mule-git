@@ -10,7 +10,7 @@
 
 package org.mule.providers.tcp.protocols;
 
-import org.mule.impl.MuleMessage;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.RequestContext;
 
 import java.io.IOException;
@@ -31,7 +31,7 @@ class MuleMessageWorker
 
     public static byte[] doWrite() throws IOException
     {
-        MuleMessage msg = (MuleMessage) RequestContext.getEvent().getMessage();
+        DefaultMuleMessage msg = (DefaultMuleMessage) RequestContext.getEvent().getMessage();
         return SerializationUtils.serialize(msg);
     }
 

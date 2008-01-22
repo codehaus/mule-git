@@ -10,10 +10,10 @@
 
 package org.mule.providers.soap.axis;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.api.transport.DispatchException;
 import org.mule.extras.client.MuleClient;
-import org.mule.impl.MuleMessage;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.tck.testmodels.services.TestComponent;
 import org.mule.tck.testmodels.services.TestComponentException;
@@ -35,8 +35,8 @@ public class AxisExceptionTestCase extends FunctionalTestCase
     public void testSuccessCall() throws Exception
     {
         MuleClient client = new MuleClient();
-        UMOMessage reply = client.send("axis:http://localhost:63381/services/AxisService?method=receive",
-            new MuleMessage("test"));
+        MuleMessage reply = client.send("axis:http://localhost:63381/services/AxisService?method=receive",
+            new DefaultMuleMessage("test"));
 
         assertNotNull(reply);
         assertNotNull(reply.getPayload());
@@ -50,7 +50,7 @@ public class AxisExceptionTestCase extends FunctionalTestCase
         {
             MuleClient client = new MuleClient();
             client.send("axis:http://localhost:63381/services/AxisService?method=throwsException",
-                new MuleMessage("test"));
+                new DefaultMuleMessage("test"));
 
             fail("should have thrown exception");
         }
@@ -68,7 +68,7 @@ public class AxisExceptionTestCase extends FunctionalTestCase
     public void testExceptionBasedRoutingForAxis() throws Exception
     {
         MuleClient client = new MuleClient();
-        UMOMessage reply = client.send("vm://localhost.test", new MuleMessage("test"));
+        MuleMessage reply = client.send("vm://localhost.test", new DefaultMuleMessage("test"));
 
         assertNotNull(reply);
         assertNotNull(reply.getPayload());

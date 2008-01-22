@@ -10,7 +10,7 @@
 
 package org.mule.extras.client;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.transformer.TransformerException;
 import org.mule.impl.transformer.AbstractTransformer;
@@ -26,12 +26,12 @@ public abstract class AbstractEventTransformer extends AbstractTransformer
 {
     protected AbstractEventTransformer()
     {
-        setReturnClass(UMOMessage.class);
+        setReturnClass(MuleMessage.class);
     }
 
-    public UMOMessage transform(Object src, Method method) throws TransformerException
+    public MuleMessage transform(Object src, Method method) throws TransformerException
     {
-        UMOMessage message = (UMOMessage)transform(src);
+        MuleMessage message = (MuleMessage)transform(src);
         message.setProperty(MuleProperties.MULE_METHOD_PROPERTY, method.getName());
         return message;
     }

@@ -10,7 +10,7 @@
 
 package org.mule.providers.email.connectors;
 
-import org.mule.api.transport.UMOConnector;
+import org.mule.api.transport.Connector;
 import org.mule.providers.email.SmtpsConnector;
 
 import com.icegreen.greenmail.util.ServerSetup;
@@ -24,7 +24,7 @@ public class SmtpsConnectorTestCase extends SmtpConnectorTestCase
     }
 
     // @Override
-    public UMOConnector createConnector() throws Exception
+    public Connector createConnector() throws Exception
     {
         SmtpsConnector connector = new SmtpsConnector();
         connector.setName("SmtpsConnector");

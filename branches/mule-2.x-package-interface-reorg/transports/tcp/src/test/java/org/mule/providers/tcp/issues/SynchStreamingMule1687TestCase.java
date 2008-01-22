@@ -10,9 +10,9 @@
 
 package org.mule.providers.tcp.issues;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
-import org.mule.impl.MuleMessage;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.transport.DefaultMessageAdapter;
 import org.mule.tck.FunctionalTestCase;
 
@@ -37,8 +37,8 @@ public class SynchStreamingMule1687TestCase extends FunctionalTestCase
     public void testSendAndRequest() throws Exception
     {
         MuleClient client = new MuleClient();
-        UMOMessage message = client.send("tcp://localhost:65432",
-            new MuleMessage(new DefaultMessageAdapter(new ByteArrayInputStream(TEST_MESSAGE.getBytes()))));
+        MuleMessage message = client.send("tcp://localhost:65432",
+            new DefaultMuleMessage(new DefaultMessageAdapter(new ByteArrayInputStream(TEST_MESSAGE.getBytes()))));
         assertNotNull(message);
 
         Object payload = message.getPayload();

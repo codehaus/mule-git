@@ -10,7 +10,7 @@
 
 package org.mule.providers.tcp.issues;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.providers.tcp.protocols.LengthProtocol;
 import org.mule.tck.FunctionalTestCase;
@@ -44,7 +44,7 @@ public class KeepSendSocketOpenMule1491TestCase extends FunctionalTestCase
     {
         MuleClient client = new MuleClient();
         Map props = new HashMap();
-        UMOMessage result = client.send("clientEndpoint", TEST_MESSAGE, props);
+        MuleMessage result = client.send("clientEndpoint", TEST_MESSAGE, props);
         assertEquals(TEST_MESSAGE + " Received", result.getPayloadAsString());
         // try an extra message in case it's a problem on repeat
         result = client.send("clientEndpoint", TEST_MESSAGE, props);

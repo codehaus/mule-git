@@ -10,8 +10,8 @@
 
 package org.mule.providers.http.transformers;
 
-import org.mule.api.UMOEvent;
-import org.mule.api.UMOMessage;
+import org.mule.api.Event;
+import org.mule.api.MuleMessage;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.transformer.TransformerException;
 import org.mule.api.transport.OutputHandler;
@@ -47,7 +47,7 @@ import org.apache.commons.httpclient.methods.TraceMethod;
 import org.apache.commons.httpclient.params.HttpMethodParams;
 
 /**
- * <code>ObjectToHttpClientMethodRequest</code> transforms a UMOMessage into a
+ * <code>ObjectToHttpClientMethodRequest</code> transforms a MuleMessage into a
  * HttpClient HttpMethod that represents an HttpRequest.
  */
 
@@ -57,7 +57,7 @@ public class ObjectToHttpClientMethodRequest extends AbstractMessageAwareTransfo
     public ObjectToHttpClientMethodRequest()
     {
         setReturnClass(HttpMethod.class);
-        registerSourceType(UMOMessage.class);
+        registerSourceType(MuleMessage.class);
         registerSourceType(byte[].class);
         registerSourceType(String.class);
         registerSourceType(InputStream.class);
@@ -114,7 +114,7 @@ public class ObjectToHttpClientMethodRequest extends AbstractMessageAwareTransfo
         return parameterIndex + 1;
     }
 
-    public Object transform(UMOMessage msg, String outputEncoding) throws TransformerException
+    public Object transform(MuleMessage msg, String outputEncoding) throws TransformerException
     {
         Object src = msg.getPayload();
 
@@ -232,7 +232,7 @@ public class ObjectToHttpClientMethodRequest extends AbstractMessageAwareTransfo
 
     protected void setupEntityMethod(Object src,
                                    String encoding,
-                                   UMOMessage msg,
+                                   MuleMessage msg,
                                    URI uri,
                                    EntityEnclosingMethod postMethod)
             throws UnsupportedEncodingException, TransformerException
@@ -304,7 +304,7 @@ public class ObjectToHttpClientMethodRequest extends AbstractMessageAwareTransfo
             }
             else if (src instanceof OutputHandler)
             {
-                UMOEvent event = RequestContext.getEvent();
+                Event event = RequestContext.getEvent();
                 postMethod.setRequestEntity(new StreamPayloadRequestEntity((OutputHandler) src, event));
             }
             else
@@ -320,7 +320,7 @@ public class ObjectToHttpClientMethodRequest extends AbstractMessageAwareTransfo
 
     }
 
-    protected void setHeaders(HttpMethod httpMethod, UMOMessage msg)
+    protected void setHeaders(HttpMethod httpMethod, MuleMessage msg)
     {
         // Standard requestHeaders
         String headerValue;

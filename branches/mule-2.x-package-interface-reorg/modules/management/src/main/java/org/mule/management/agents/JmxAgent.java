@@ -11,19 +11,19 @@ package org.mule.management.agents;
 
 import org.mule.RegistryContext;
 import org.mule.api.MuleRuntimeException;
-import org.mule.api.UMOComponent;
-import org.mule.api.UMOException;
-import org.mule.api.context.UMOServerNotification;
+import org.mule.api.Component;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.context.ServerNotification;
 import org.mule.api.lifecycle.InitialisationException;
-import org.mule.api.model.UMOModel;
-import org.mule.api.transport.UMOConnector;
-import org.mule.api.transport.UMOMessageReceiver;
+import org.mule.api.model.Model;
+import org.mule.api.transport.Connector;
+import org.mule.api.transport.MessageReceiver;
 import org.mule.impl.AbstractAgent;
+import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.impl.internal.notifications.ManagerNotification;
 import org.mule.impl.internal.notifications.ManagerNotificationListener;
 import org.mule.impl.internal.notifications.NotificationException;
 import org.mule.impl.transport.AbstractConnector;
-import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.management.i18n.ManagementMessages;
 import org.mule.management.mbeans.ComponentService;
 import org.mule.management.mbeans.ComponentServiceMBean;
@@ -133,7 +133,7 @@ public class JmxAgent extends AbstractAgent
     /**
      * {@inheritDoc}
      *
-     * @see org.mule.api.context.UMOAgent#getDescription()
+     * @see org.mule.api.context.Agent#getDescription()
      */
     public String getDescription()
     {
@@ -220,7 +220,7 @@ public class JmxAgent extends AbstractAgent
         // We need to register all the services once the server has initialised
         ManagerNotificationListener l = new ManagerNotificationListener()
         {
-            public void onNotification(UMOServerNotification notification)
+            public void onNotification(ServerNotification notification)
             {
                 if (notification.getAction() == ManagerNotification.MANAGER_STARTED_MODELS)
                 {
@@ -264,7 +264,7 @@ public class JmxAgent extends AbstractAgent
      *
      * @see org.mule.api.lifecycle.Startable#start()
      */
-    public void start() throws UMOException
+    public void start() throws AbstractMuleException
     {
         if (connectorServer != null)
         {
@@ -285,7 +285,7 @@ public class JmxAgent extends AbstractAgent
      *
      * @see org.mule.api.lifecycle.Stoppable#stop()
      */
-    public void stop() throws UMOException
+    public void stop() throws AbstractMuleException
     {
         if (connectorServer != null)
         {
@@ -334,7 +334,7 @@ public class JmxAgent extends AbstractAgent
     /** {@inheritDoc}
      * (non-Javadoc)
      *
-     * @see org.mule.api.context.UMOAgent#registered()
+     * @see org.mule.api.context.Agent#registered()
      */
     public void registered()
     {
@@ -344,7 +344,7 @@ public class JmxAgent extends AbstractAgent
     /** {@inheritDoc}
      * (non-Javadoc)
      *
-     * @see org.mule.api.context.UMOAgent#unregistered()
+     * @see org.mule.api.context.Agent#unregistered()
      */
     public void unregistered()
     {
@@ -353,9 +353,9 @@ public class JmxAgent extends AbstractAgent
 
     /**
      * Register a Java Service Wrapper agent.
-     * @throws UMOException if registration failed
+     * @throws AbstractMuleException if registration failed
      */
-    protected void registerWrapperService() throws UMOException
+    protected void registerWrapperService() throws AbstractMuleException
     {
         // WrapperManager to support restarts
         final WrapperManagerAgent wmAgent = new WrapperManagerAgent();
@@ -383,7 +383,7 @@ public class JmxAgent extends AbstractAgent
     {
         for (Iterator iterator = muleContext.getRegistry().getModels().iterator(); iterator.hasNext();)
         {
-            UMOModel model = (UMOModel) iterator.next();
+            Model model = (Model) iterator.next();
             ModelServiceMBean serviceMBean = new ModelService(model);
             String rawName = serviceMBean.getName() + "(" + serviceMBean.getType() + ")";
             String name = jmxSupport.escape(rawName);
@@ -418,9 +418,9 @@ public class JmxAgent extends AbstractAgent
             InstanceAlreadyExistsException, MalformedObjectNameException
     {
         String rawName;
-        for (Iterator iterator = muleContext.getRegistry().lookupObjects(UMOComponent.class).iterator(); iterator.hasNext();)
+        for (Iterator iterator = muleContext.getRegistry().lookupObjects(Component.class).iterator(); iterator.hasNext();)
         {
-            rawName = ((UMOComponent) iterator.next()).getName();
+            rawName = ((Component) iterator.next()).getName();
             final String name = jmxSupport.escape(rawName);
             ObjectName on = jmxSupport.getObjectName(jmxSupport.getDomainName(muleContext) + ":type=org.mule.Component,name=" + name);
             ComponentServiceMBean serviceMBean = new ComponentService(rawName);
@@ -435,15 +435,15 @@ public class JmxAgent extends AbstractAgent
             InstanceAlreadyExistsException, MalformedObjectNameException
     {
         Iterator iter = muleContext.getRegistry().getConnectors().iterator();
-        UMOConnector connector;
+        Connector connector;
         while (iter.hasNext())
         {
-            connector = (UMOConnector) iter.next();
+            connector = (Connector) iter.next();
             if (connector instanceof AbstractConnector)
             {
                 for (Iterator iterator = ((AbstractConnector) connector).getReceivers().values().iterator(); iterator.hasNext();)
                 {
-                    EndpointServiceMBean mBean = new EndpointService((UMOMessageReceiver) iterator.next());
+                    EndpointServiceMBean mBean = new EndpointService((MessageReceiver) iterator.next());
                     final String rawName = mBean.getName();
                     final String name = jmxSupport.escape(rawName);
                     if (logger.isInfoEnabled()) {
@@ -480,7 +480,7 @@ public class JmxAgent extends AbstractAgent
         Iterator iter = muleContext.getRegistry().getConnectors().iterator();
         while (iter.hasNext())
         {
-            UMOConnector connector = (UMOConnector) iter.next();
+            Connector connector = (Connector) iter.next();
             ConnectorServiceMBean mBean = new ConnectorService(connector);
             final String rawName = mBean.getName();
             final String name = jmxSupport.escape(rawName);

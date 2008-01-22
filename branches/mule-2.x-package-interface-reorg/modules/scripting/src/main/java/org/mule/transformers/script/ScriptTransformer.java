@@ -10,7 +10,7 @@
 
 package org.mule.transformers.script;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.transformer.TransformerException;
 import org.mule.components.script.jsr223.Scriptable;
@@ -33,7 +33,7 @@ public class ScriptTransformer extends AbstractMessageAwareTransformer
         super();
     }
 
-    public Object transform(UMOMessage message, String outputEncoding) throws TransformerException
+    public Object transform(MuleMessage message, String outputEncoding) throws TransformerException
     {
         Bindings bindings = this.getScriptEngine().createBindings();
         this.populateBindings(bindings, message);
@@ -48,7 +48,7 @@ public class ScriptTransformer extends AbstractMessageAwareTransformer
         }
     }
 
-    protected void populateBindings(Bindings namespace, UMOMessage message)
+    protected void populateBindings(Bindings namespace, MuleMessage message)
     {
         namespace.put("message", message);
         namespace.put("src", message.getPayload());

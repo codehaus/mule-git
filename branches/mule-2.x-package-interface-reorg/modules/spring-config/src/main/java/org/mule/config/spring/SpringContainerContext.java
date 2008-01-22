@@ -17,8 +17,8 @@ import org.mule.api.context.ObjectNotFoundException;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.config.spring.util.CachedResource;
 import org.mule.impl.config.ReaderInputStream;
+import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.impl.container.AbstractContainerContext;
-import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.util.ClassUtils;
 
 import java.io.Reader;

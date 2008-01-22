@@ -12,9 +12,9 @@ package org.mule.impl.container;
 
 import org.mule.RegistryContext;
 import org.mule.api.MuleContext;
+import org.mule.api.context.ContainerContext;
 import org.mule.api.context.ContainerException;
 import org.mule.api.context.MuleContextAware;
-import org.mule.api.context.UMOContainerContext;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.util.ChainedReader;
 import org.mule.util.SystemUtils;
@@ -29,7 +29,7 @@ import org.apache.commons.logging.LogFactory;
  * <code>AbstractContainerContext</code> provides base container configuration
  * functions for handling embedded configuration.
  */
-public abstract class AbstractContainerContext implements UMOContainerContext, MuleContextAware
+public abstract class AbstractContainerContext implements ContainerContext, MuleContextAware
 {
     /**
      * logger used by this class

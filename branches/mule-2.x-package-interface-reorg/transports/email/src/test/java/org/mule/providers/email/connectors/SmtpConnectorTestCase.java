@@ -10,14 +10,14 @@
 
 package org.mule.providers.email.connectors;
 
-import org.mule.api.UMOComponent;
-import org.mule.api.UMOMessage;
-import org.mule.api.UMOSession;
-import org.mule.api.endpoint.UMOEndpointBuilder;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
-import org.mule.api.transport.UMOConnector;
+import org.mule.api.Component;
+import org.mule.api.MuleMessage;
+import org.mule.api.Session;
+import org.mule.api.endpoint.EndpointBuilder;
+import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.api.transport.Connector;
 import org.mule.impl.MuleEvent;
-import org.mule.impl.MuleMessage;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.ResponseOutputStream;
 import org.mule.impl.endpoint.EndpointURIEndpointBuilder;
 import org.mule.impl.routing.outbound.OutboundPassThroughRouter;
@@ -47,7 +47,7 @@ public class SmtpConnectorTestCase extends AbstractMailConnectorFunctionalTestCa
         super(NO_INITIAL_EMAIL, protocol, port);
     }
 
-    public UMOConnector createConnector() throws Exception
+    public Connector createConnector() throws Exception
     {
         SmtpConnector c = new SmtpConnector();
         c.setName("SmtpConnector");
@@ -62,14 +62,14 @@ public class SmtpConnectorTestCase extends AbstractMailConnectorFunctionalTestCa
     // @Override
     public void testConnectorListenerSupport() throws Exception
     {
-        UMOConnector connector = getConnector();
+        Connector connector = getConnector();
         assertNotNull(connector);
 
-        UMOComponent component = getTestComponent("anApple", Apple.class);
+        Component component = getTestComponent("anApple", Apple.class);
         //muleContext.getRegistry().registerComponent(component);
-        UMOEndpointBuilder builder = new EndpointURIEndpointBuilder(getTestEndpointURI(), muleContext);
+        EndpointBuilder builder = new EndpointURIEndpointBuilder(getTestEndpointURI(), muleContext);
         builder.setName("test");
-        UMOImmutableEndpoint endpoint = muleContext.getRegistry().lookupEndpointFactory().getOutboundEndpoint(
+        ImmutableEndpoint endpoint = muleContext.getRegistry().lookupEndpointFactory().getOutboundEndpoint(
             builder);
         try
         {
@@ -85,17 +85,17 @@ public class SmtpConnectorTestCase extends AbstractMailConnectorFunctionalTestCa
     public void testSend() throws Exception
     {
         //muleContext.getRegistry().registerConnector(createConnector(false));
-        UMOImmutableEndpoint endpoint = muleContext.getRegistry().lookupEndpointFactory().getOutboundEndpoint(
+        ImmutableEndpoint endpoint = muleContext.getRegistry().lookupEndpointFactory().getOutboundEndpoint(
             getTestEndpointURI());
         
-        UMOComponent component = getTestComponent(uniqueName("testComponent"), FunctionalTestComponent.class);
+        Component component = getTestComponent(uniqueName("testComponent"), FunctionalTestComponent.class);
         // TODO Simplify this API for adding an outbound endpoint.
         ((OutboundPassThroughRouter) component.getOutboundRouter().getRouters().get(0)).addEndpoint(endpoint);
         //muleContext.getRegistry().registerComponent(component);
 
-        UMOMessage message = new MuleMessage(MESSAGE);
+        MuleMessage message = new DefaultMuleMessage(MESSAGE);
         message.setStringProperty(MailProperties.TO_ADDRESSES_PROPERTY, EMAIL);
-        UMOSession session = getTestSession(getTestComponent("apple", Apple.class));
+        Session session = getTestSession(getTestComponent("apple", Apple.class));
         MuleEvent event = new MuleEvent(message, endpoint, session, true, new ResponseOutputStream(System.out));
         endpoint.dispatch(event);
 

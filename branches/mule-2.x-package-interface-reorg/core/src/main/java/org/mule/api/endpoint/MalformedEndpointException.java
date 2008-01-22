@@ -10,8 +10,8 @@
 
 package org.mule.api.endpoint;
 
-import org.mule.imple.config.i18n.CoreMessages;
-import org.mule.imple.config.i18n.Message;
+import org.mule.impl.config.i18n.CoreMessages;
+import org.mule.impl.config.i18n.Message;
 
 /**
  * <code>MalformedEndpointException</code> is thrown by the MuleEndpointURI class

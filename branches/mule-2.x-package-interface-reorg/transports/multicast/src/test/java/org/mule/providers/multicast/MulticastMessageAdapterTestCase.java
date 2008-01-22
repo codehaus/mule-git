@@ -12,8 +12,8 @@ package org.mule.providers.multicast;
 
 import org.mule.tck.providers.AbstractMessageAdapterTestCase;
 import org.mule.api.MessagingException;
-import org.mule.api.transport.UMOMessageAdapter;
-import org.mule.impl.MuleMessage;
+import org.mule.api.transport.MessageAdapter;
+import org.mule.impl.DefaultMuleMessage;
 
 import java.net.DatagramPacket;
 
@@ -25,7 +25,7 @@ public class MulticastMessageAdapterTestCase extends AbstractMessageAdapterTestC
         return new DatagramPacket("Hello".getBytes(), 5);
     }
 
-    public UMOMessageAdapter createAdapter(Object payload) throws MessagingException
+    public MessageAdapter createAdapter(Object payload) throws MessagingException
     {
         return new MulticastMessageAdapter(payload);
     }
@@ -33,9 +33,9 @@ public class MulticastMessageAdapterTestCase extends AbstractMessageAdapterTestC
     public void testMessageRetrieval() throws Exception
     {
         Object message = getValidMessage();
-        UMOMessageAdapter adapter = createAdapter(message);
+        MessageAdapter adapter = createAdapter(message);
 
-        MuleMessage muleMessage = new MuleMessage(adapter);
+        DefaultMuleMessage muleMessage = new DefaultMuleMessage(adapter);
 
         assertEquals(new String(((DatagramPacket)message).getData()), muleMessage.getPayloadAsString());
         byte[] bytes = muleMessage.getPayloadAsBytes();

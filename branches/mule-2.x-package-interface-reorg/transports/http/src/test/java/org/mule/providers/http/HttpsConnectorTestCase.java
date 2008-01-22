@@ -11,10 +11,10 @@
 package org.mule.providers.http;
 
 import org.mule.api.MuleContext;
-import org.mule.api.UMOComponent;
-import org.mule.api.endpoint.UMOEndpoint;
+import org.mule.api.Component;
+import org.mule.api.endpoint.Endpoint;
 import org.mule.api.lifecycle.InitialisationException;
-import org.mule.api.transport.UMOConnector;
+import org.mule.api.transport.Connector;
 import org.mule.impl.endpoint.MuleEndpointURI;
 import org.mule.providers.tcp.TcpConnector;
 import org.mule.tck.providers.AbstractConnectorTestCase;
@@ -27,7 +27,7 @@ public class HttpsConnectorTestCase extends AbstractConnectorTestCase
 {
 
     // @Override
-    public UMOConnector createConnector() throws Exception
+    public Connector createConnector() throws Exception
     {
         return createConnector(muleContext, false);
     }
@@ -65,8 +65,8 @@ public class HttpsConnectorTestCase extends AbstractConnectorTestCase
 
     public void testValidListener() throws Exception
     {
-        UMOComponent component = getTestComponent("orange", Orange.class);
-        UMOEndpoint endpoint = (UMOEndpoint) muleContext.getRegistry().lookupEndpointFactory().getInboundEndpoint(
+        Component component = getTestComponent("orange", Orange.class);
+        Endpoint endpoint = (Endpoint) muleContext.getRegistry().lookupEndpointFactory().getInboundEndpoint(
             getTestEndpointURI());
 
         try

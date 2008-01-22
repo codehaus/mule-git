@@ -10,7 +10,7 @@
 
 package org.mule.providers.file;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 
 import java.io.BufferedReader;
@@ -53,7 +53,7 @@ public class FileFunctionalTestCase extends AbstractFileFunctionalTestCase
         MuleClient client = new MuleClient();
         String url = fileToUrl(target) + "?connector=receiveConnector";
         logger.debug(url);
-        UMOMessage message = client.request(url, 100000);
+        MuleMessage message = client.request(url, 100000);
         checkReceivedMessage(message);
     }
 

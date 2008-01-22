@@ -9,10 +9,10 @@
  */
 package org.mule.impl.lifecycle;
 
+import org.mule.api.AbstractMuleException;
 import org.mule.api.MuleContext;
-import org.mule.api.UMOException;
-import org.mule.api.lifecycle.UMOLifecycleManager;
-import org.mule.api.lifecycle.UMOLifecyclePhase;
+import org.mule.api.lifecycle.LifecycleManager;
+import org.mule.api.lifecycle.LifecyclePhase;
 import org.mule.impl.lifecycle.phases.NotInLifecyclePhase;
 import org.mule.util.StringMessageUtils;
 
@@ -29,7 +29,7 @@ import org.apache.commons.logging.LogFactory;
 /**
  * TODO
  */
-public class GenericLifecycleManager implements UMOLifecycleManager
+public class GenericLifecycleManager implements LifecycleManager
 {
     /**
      * logger used by this class
@@ -51,19 +51,19 @@ public class GenericLifecycleManager implements UMOLifecycleManager
     {
         for (Iterator iterator = lifecycles.iterator(); iterator.hasNext();)
         {
-            UMOLifecyclePhase phase = (UMOLifecyclePhase) iterator.next();
+            LifecyclePhase phase = (LifecyclePhase) iterator.next();
             registerLifecycle(phase);
         }
 
     }
 
-    public void registerLifecycle(UMOLifecyclePhase lci)
+    public void registerLifecycle(LifecyclePhase lci)
     {
         index.put(lci.getName(), new Integer(lifecycles.size()));
         lifecycles.add(lci);
     }
 
-    public void firePhase(MuleContext muleContext, String phase) throws UMOException
+    public void firePhase(MuleContext muleContext, String phase) throws AbstractMuleException
     {
         if (currentPhase.equalsIgnoreCase(phase))
         {
@@ -78,7 +78,7 @@ public class GenericLifecycleManager implements UMOLifecycleManager
         try
         {
             setExecutingPhase(phase);
-            UMOLifecyclePhase li = (UMOLifecyclePhase) lifecycles.get(phaseIndex.intValue());
+            LifecyclePhase li = (LifecyclePhase) lifecycles.get(phaseIndex.intValue());
             li.fireLifecycle(muleContext, currentPhase);
             setCurrentPhase(li);
         }
@@ -103,7 +103,7 @@ public class GenericLifecycleManager implements UMOLifecycleManager
         return executingPhase;
     }
 
-    protected synchronized void setCurrentPhase(UMOLifecyclePhase phase)
+    protected synchronized void setCurrentPhase(LifecyclePhase phase)
     {
         completedPhases.add(phase.getName());
         completedPhases.remove(phase.getOppositeLifecyclePhase());
@@ -127,17 +127,17 @@ public class GenericLifecycleManager implements UMOLifecycleManager
         return completedPhases.contains(phaseName);
     }
 
-    public void applyLifecycle(MuleContext muleContext, Object object) throws UMOException
+    public void applyLifecycle(MuleContext muleContext, Object object) throws AbstractMuleException
     {
-        //String startingPhase = UMOLifecyclePhase.PHASE_NAME;
-        UMOLifecyclePhase lcp;
+        //String startingPhase = DefaultLifecyclePhase.PHASE_NAME;
+        LifecyclePhase lcp;
         String phase;
         Integer phaseIndex;
         for (Iterator iterator = completedPhases.iterator(); iterator.hasNext();)
         {
             phase = (String) iterator.next();
             phaseIndex = (Integer) index.get(phase);
-            lcp = (UMOLifecyclePhase) lifecycles.get(phaseIndex.intValue());
+            lcp = (LifecyclePhase) lifecycles.get(phaseIndex.intValue());
             lcp.applyLifecycle(object);
             //startingPhase = phase;
         }
@@ -145,7 +145,7 @@ public class GenericLifecycleManager implements UMOLifecycleManager
         if (getExecutingPhase() != null)
         {
             phaseIndex = (Integer) index.get(getExecutingPhase());
-            lcp = (UMOLifecyclePhase) lifecycles.get(phaseIndex.intValue());
+            lcp = (LifecyclePhase) lifecycles.get(phaseIndex.intValue());
             lcp.applyLifecycle(object);
         }
     }
@@ -181,7 +181,7 @@ public class GenericLifecycleManager implements UMOLifecycleManager
         }
         else
         {
-            UMOLifecyclePhase phase = (UMOLifecyclePhase) lifecycles.get(phaseIndex.intValue());
+            LifecyclePhase phase = (LifecyclePhase) lifecycles.get(phaseIndex.intValue());
             if (!phase.isPhaseSupported(currentPhase))
             {
                 throw new IllegalStateException("Lifecycle phase: " + currentPhase + " does not support current phase: "

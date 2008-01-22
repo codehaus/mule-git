@@ -13,20 +13,20 @@ package org.mule.providers.soap.axis.extensions;
 import org.mule.MuleServer;
 import org.mule.RegistryContext;
 import org.mule.api.MuleContext;
-import org.mule.api.UMOComponent;
-import org.mule.api.UMOEvent;
-import org.mule.api.UMOException;
-import org.mule.api.UMOMessage;
-import org.mule.api.UMOSession;
+import org.mule.api.Component;
+import org.mule.api.Event;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleMessage;
+import org.mule.api.Session;
 import org.mule.api.config.MuleProperties;
-import org.mule.api.endpoint.UMOEndpoint;
-import org.mule.api.endpoint.UMOEndpointBuilder;
-import org.mule.api.endpoint.UMOEndpointURI;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
-import org.mule.api.routing.UMOOutboundRouter;
-import org.mule.api.routing.UMOOutboundRouterCollection;
+import org.mule.api.endpoint.Endpoint;
+import org.mule.api.endpoint.EndpointBuilder;
+import org.mule.api.endpoint.EndpointURI;
+import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.api.routing.OutboundRouter;
+import org.mule.api.routing.OutboundRouterCollection;
 import org.mule.impl.MuleEvent;
-import org.mule.impl.MuleMessage;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.RequestContext;
 import org.mule.impl.endpoint.EndpointURIEndpointBuilder;
 import org.mule.impl.endpoint.MuleEndpointURI;
@@ -83,14 +83,14 @@ public class UniversalSender extends BasicHandler
         }
         // Get the event stored in call
         // If a receive call is made there will be no event
-        // UMOEvent event =
-        // (UMOEvent)call.getProperty(MuleProperties.MULE_EVENT_PROPERTY);
+        // Event event =
+        // (Event)call.getProperty(MuleProperties.MULE_EVENT_PROPERTY);
         // Get the dispatch endpoint
         String uri = msgContext.getStrProp(MessageContext.TRANS_URL);
-        UMOImmutableEndpoint requestEndpoint = (UMOImmutableEndpoint)call
+        ImmutableEndpoint requestEndpoint = (ImmutableEndpoint)call
             .getProperty(MuleProperties.MULE_ENDPOINT_PROPERTY);
         
-        UMOImmutableEndpoint endpoint;
+        ImmutableEndpoint endpoint;
 
         // put username and password in URI if they are set on the current event
         if (msgContext.getUsername() != null)
@@ -103,7 +103,7 @@ public class UniversalSender extends BasicHandler
             {
                 endpoint = lookupEndpoint(uri);
             }
-            catch (UMOException e)
+            catch (AbstractMuleException e)
             {
                 requestEndpoint.getConnector().handleException(e);
                 return;
@@ -115,7 +115,7 @@ public class UniversalSender extends BasicHandler
             {
                 endpoint = lookupEndpoint(uri);
             }
-            catch (UMOException e)
+            catch (AbstractMuleException e)
             {
                 requestEndpoint.getConnector().handleException(e);
                 return;
@@ -203,8 +203,8 @@ public class UniversalSender extends BasicHandler
                 
                 props.put(HttpConstants.HEADER_CONTENT_TYPE, contentType);
             }
-            UMOMessage message = new MuleMessage(payload, props);
-            UMOSession session = RequestContext.getEventContext().getSession();
+            MuleMessage message = new DefaultMuleMessage(payload, props);
+            Session session = RequestContext.getEventContext().getSession();
 
             logger.info("Making Axis soap request on: " + uri);
             if (logger.isDebugEnabled())
@@ -215,13 +215,13 @@ public class UniversalSender extends BasicHandler
             if (sync)
             {
                 MuleContext muleContext = MuleServer.getMuleContext();
-                UMOEndpointBuilder builder = new EndpointURIEndpointBuilder(endpoint, muleContext);
+                EndpointBuilder builder = new EndpointURIEndpointBuilder(endpoint, muleContext);
                 builder.setRemoteSync(true);
-                UMOImmutableEndpoint syncEndpoint = muleContext.getRegistry()
+                ImmutableEndpoint syncEndpoint = muleContext.getRegistry()
                     .lookupEndpointFactory()
                     .getOutboundEndpoint(builder);
-                UMOEvent dispatchEvent = new MuleEvent(message, syncEndpoint, session, sync);
-                UMOMessage result = endpoint.send(dispatchEvent);
+                Event dispatchEvent = new MuleEvent(message, syncEndpoint, session, sync);
+                MuleMessage result = endpoint.send(dispatchEvent);
 
                 if (result != null)
                 {
@@ -243,7 +243,7 @@ public class UniversalSender extends BasicHandler
             }
             else
             {
-                UMOEvent dispatchEvent = new MuleEvent(message, endpoint, session, sync);
+                Event dispatchEvent = new MuleEvent(message, endpoint, session, sync);
                 endpoint.dispatch(dispatchEvent);
             }
         }
@@ -258,22 +258,22 @@ public class UniversalSender extends BasicHandler
 
     }
 
-    protected UMOImmutableEndpoint lookupEndpoint(String uri) throws UMOException
+    protected ImmutableEndpoint lookupEndpoint(String uri) throws AbstractMuleException
     {
-        UMOComponent axis = RegistryContext.getRegistry().lookupComponent(AxisConnector.AXIS_SERVICE_COMPONENT_NAME);
-        UMOEndpointURI endpoint = new MuleEndpointURI(uri);
+        Component axis = RegistryContext.getRegistry().lookupComponent(AxisConnector.AXIS_SERVICE_COMPONENT_NAME);
+        EndpointURI endpoint = new MuleEndpointURI(uri);
         MuleContext muleContext = MuleServer.getMuleContext(); 
-        UMOImmutableEndpoint ep;
+        ImmutableEndpoint ep;
 
         if (axis != null)
         {
             synchronized (endpointsCache)
             {
-                ep = (UMOImmutableEndpoint)endpointsCache.get(endpoint.getAddress());
+                ep = (ImmutableEndpoint)endpointsCache.get(endpoint.getAddress());
                 if (ep == null)
                 {
                     updateEndpointCache(axis.getOutboundRouter());
-                    ep = (UMOImmutableEndpoint)endpointsCache.get(endpoint.getAddress());
+                    ep = (ImmutableEndpoint)endpointsCache.get(endpoint.getAddress());
                     if (ep == null)
                     {
                         logger.debug("Dispatch Endpoint uri: " + uri
@@ -300,15 +300,15 @@ public class UniversalSender extends BasicHandler
         return ep;
     }
 
-    private void updateEndpointCache(UMOOutboundRouterCollection router)
+    private void updateEndpointCache(OutboundRouterCollection router)
     {
         endpointsCache.clear();
         for (Iterator iterator = router.getRouters().iterator(); iterator.hasNext();)
         {
-            UMOOutboundRouter r = (UMOOutboundRouter)iterator.next();
+            OutboundRouter r = (OutboundRouter)iterator.next();
             for (Iterator iterator1 = r.getEndpoints().iterator(); iterator1.hasNext();)
             {
-                UMOEndpoint endpoint = (UMOEndpoint)iterator1.next();
+                Endpoint endpoint = (Endpoint)iterator1.next();
                 endpointsCache.put(endpoint.getEndpointURI().getAddress(), endpoint);
             }
         }

@@ -10,15 +10,15 @@
 
 package org.mule.providers.cxf;
 
-import org.mule.api.UMOEvent;
-import org.mule.api.UMOMessage;
+import org.mule.api.Event;
+import org.mule.api.MuleMessage;
 import org.mule.api.config.MuleProperties;
-import org.mule.api.endpoint.UMOEndpointURI;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.endpoint.EndpointURI;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.CreateException;
 import org.mule.api.transformer.TransformerException;
 import org.mule.api.transport.DispatchException;
-import org.mule.impl.MuleMessage;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.transport.AbstractMessageDispatcher;
 import org.mule.providers.cxf.i18n.CxfMessages;
 import org.mule.providers.cxf.support.MuleHeadersInInterceptor;
@@ -84,7 +84,7 @@ public class CxfMessageDispatcher extends AbstractMessageDispatcher
     protected BindingProvider proxy;
     protected Method method;
     
-    public CxfMessageDispatcher(UMOImmutableEndpoint endpoint)
+    public CxfMessageDispatcher(ImmutableEndpoint endpoint)
     {
         super(endpoint);
         this.connector = (CxfConnector) endpoint.getConnector();
@@ -110,7 +110,7 @@ public class CxfMessageDispatcher extends AbstractMessageDispatcher
 
     protected Method findMethod(Class<?> clientCls) throws Exception
     {
-        UMOEndpointURI endpointUri = endpoint.getEndpointURI();
+        EndpointURI endpointUri = endpoint.getEndpointURI();
         methodName = (String)endpointUri.getParams().get(MuleProperties.MULE_METHOD_PROPERTY);
         
         if (methodName == null)
@@ -213,7 +213,7 @@ public class CxfMessageDispatcher extends AbstractMessageDispatcher
             throw new CreateException(CxfMessages.portNotFound(port), this);
         }
         
-        UMOEndpointURI uri = endpoint.getEndpointURI();
+        EndpointURI uri = endpoint.getEndpointURI();
         if (uri.getUser() != null)
         {
             proxy.getRequestContext().put(BindingProvider.USERNAME_PROPERTY, uri.getUser());
@@ -280,7 +280,7 @@ public class CxfMessageDispatcher extends AbstractMessageDispatcher
         // nothing to do
     }
 
-    protected String getMethodName(UMOEvent event) throws DispatchException
+    protected String getMethodName(Event event) throws DispatchException
     {
         // @TODO: Which of these *really* matter?
         String method = (String)event.getMessage().getProperty(MuleProperties.MULE_METHOD_PROPERTY);     
@@ -304,7 +304,7 @@ public class CxfMessageDispatcher extends AbstractMessageDispatcher
         return method;
     }
 
-    protected Object[] getArgs(UMOEvent event) throws TransformerException
+    protected Object[] getArgs(Event event) throws TransformerException
     {
         Object payload = event.transformMessage();
         Object[] args;
@@ -318,7 +318,7 @@ public class CxfMessageDispatcher extends AbstractMessageDispatcher
             args = new Object[]{payload};
         }
 
-        UMOMessage message = event.getMessage();
+        MuleMessage message = event.getMessage();
         Set<?> attachmentNames = message.getAttachmentNames();
         if (attachmentNames != null && !attachmentNames.isEmpty())
         {
@@ -335,7 +335,7 @@ public class CxfMessageDispatcher extends AbstractMessageDispatcher
         return args;
     }
 
-    protected UMOMessage doSend(UMOEvent event) throws Exception
+    protected MuleMessage doSend(Event event) throws Exception
     {
         ((ClientImpl)client).setSynchronousTimeout(event.getTimeout());
         if (proxy == null)
@@ -348,7 +348,7 @@ public class CxfMessageDispatcher extends AbstractMessageDispatcher
         }
     }
 
-    protected UMOMessage doSendWithProxy(UMOEvent event) throws Exception
+    protected MuleMessage doSendWithProxy(Event event) throws Exception
     {
         Method localMethod = method;
         if (localMethod == null) 
@@ -373,7 +373,7 @@ public class CxfMessageDispatcher extends AbstractMessageDispatcher
         return buildResponseMessage(event, new Object[] { response });
     }
 
-    protected UMOMessage doSendWithClient(UMOEvent event) throws Exception
+    protected MuleMessage doSendWithClient(Event event) throws Exception
     {
         String method = getMethodName(event);
 
@@ -408,19 +408,19 @@ public class CxfMessageDispatcher extends AbstractMessageDispatcher
         return buildResponseMessage(event, response);
     }
 
-    protected UMOMessage buildResponseMessage(UMOEvent event, Object[] response) 
+    protected MuleMessage buildResponseMessage(Event event, Object[] response) 
     {
-        UMOMessage result = null;
+        MuleMessage result = null;
         if (response != null && response.length <= 1)
         {
             if (response.length == 1)
             {
-                result = new MuleMessage(response[0], event.getMessage());
+                result = new DefaultMuleMessage(response[0], event.getMessage());
             }
         }
         else
         {
-            result = new MuleMessage(response, event.getMessage());
+            result = new DefaultMuleMessage(response, event.getMessage());
         }
 
         return result;
@@ -445,7 +445,7 @@ public class CxfMessageDispatcher extends AbstractMessageDispatcher
         return bop;
     }
 
-    protected void doDispatch(UMOEvent event) throws Exception
+    protected void doDispatch(Event event) throws Exception
     {
         doSend(event);
     }
@@ -457,11 +457,11 @@ public class CxfMessageDispatcher extends AbstractMessageDispatcher
      *            The call should return immediately if there is data available. If
      *            no data becomes available before the timeout elapses, null will be
      *            returned
-     * @return the result of the request wrapped in a UMOMessage object. Null will be
+     * @return the result of the request wrapped in a MuleMessage object. Null will be
      *         returned if no data was avaialable
      * @throws Exception if the call to the underlying protocal cuases an exception
      */
-    protected UMOMessage doReceive(long timeout) throws Exception
+    protected MuleMessage doReceive(long timeout) throws Exception
     {
         ((ClientImpl)client).setSynchronousTimeout((int)timeout);
 
@@ -484,11 +484,11 @@ public class CxfMessageDispatcher extends AbstractMessageDispatcher
 
         if (response != null && response.length == 1)
         {
-            return new MuleMessage(response[0]);
+            return new DefaultMuleMessage(response[0]);
         }
         else
         {
-            return new MuleMessage(response);
+            return new DefaultMuleMessage(response);
         }
     }
 

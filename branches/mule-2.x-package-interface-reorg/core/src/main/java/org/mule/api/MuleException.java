@@ -10,14 +10,14 @@
 
 package org.mule.api;
 
-import org.mule.imple.config.i18n.Message;
-import org.mule.imple.config.i18n.MessageFactory;
+import org.mule.impl.config.i18n.Message;
+import org.mule.impl.config.i18n.MessageFactory;
 
 /**
  * <code>MuleException</code> Is the base exception type for the Mule application
  * any other exceptions thrown by Mule code will be based on this exception.
  */
-public class MuleException extends UMOException
+public class MuleException extends AbstractMuleException
 {
     /**
      * Serial version

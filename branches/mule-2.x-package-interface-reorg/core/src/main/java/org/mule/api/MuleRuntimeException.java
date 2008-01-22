@@ -10,7 +10,7 @@
 
 package org.mule.api;
 
-import org.mule.imple.config.i18n.Message;
+import org.mule.impl.config.i18n.Message;
 
 /**
  * <code>MuleRuntimeException</code> Is the base runtime exception type for the

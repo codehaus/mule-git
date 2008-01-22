@@ -10,7 +10,7 @@
 
 package org.mule.providers.bpm.jbpm;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.providers.bpm.BPMS;
 import org.mule.providers.bpm.ProcessConnector;
@@ -31,7 +31,7 @@ public class SimpleJbpmTestCase extends AbstractJbpmTestCase
         // Deploy the process definition.
         ((Jbpm) bpms).deployProcess("simple-process.xml");
 
-        UMOMessage response;
+        MuleMessage response;
         Object process;
         BPMS bpms = connector.getBpms();
         MuleClient client = new MuleClient();
@@ -64,7 +64,7 @@ public class SimpleJbpmTestCase extends AbstractJbpmTestCase
         // Deploy the process definition.
         ((Jbpm) bpms).deployProcess("simple-process.xml");
 
-        UMOMessage response;
+        MuleMessage response;
         Object process;
         BPMS bpms = connector.getBpms();
         MuleClient client = new MuleClient();

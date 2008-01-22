@@ -10,7 +10,7 @@
 
 package org.mule.providers.tcp.issues;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 
@@ -39,7 +39,7 @@ public class AsynchMule1869TestCase extends FunctionalTestCase
         client.dispatch("asyncClientEndpoint", TEST_MESSAGE, props);
         // MULE-2754
         Thread.sleep(100);
-        UMOMessage result =  client.request("asyncClientEndpoint", 10000);
+        MuleMessage result =  client.request("asyncClientEndpoint", 10000);
         assertNotNull("No message received", result);
         assertEquals(TEST_MESSAGE + " Received Async", result.getPayloadAsString());
     }

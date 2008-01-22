@@ -12,9 +12,9 @@ package org.mule.impl.transport;
 
 import org.mule.api.MuleRuntimeException;
 import org.mule.api.ThreadSafeAccess;
-import org.mule.api.transport.UMOMessageAdapter;
-import org.mule.api.transport.UMOMutableMessageAdapter;
-import org.mule.imple.config.i18n.CoreMessages;
+import org.mule.api.transport.MessageAdapter;
+import org.mule.api.transport.MutableMessageAdapter;
+import org.mule.impl.config.i18n.CoreMessages;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -27,7 +27,7 @@ import javax.activation.DataHandler;
  * associated with an object.
  */
 
-public final class DefaultMessageAdapter extends AbstractMessageAdapter implements UMOMutableMessageAdapter
+public final class DefaultMessageAdapter extends AbstractMessageAdapter implements MutableMessageAdapter
 {
     /**
      * Serial version
@@ -64,7 +64,7 @@ public final class DefaultMessageAdapter extends AbstractMessageAdapter implemen
         }
     }
 
-    public DefaultMessageAdapter(Object message, UMOMessageAdapter previous)
+    public DefaultMessageAdapter(Object message, MessageAdapter previous)
     {
         super(previous);
         if (previous != null)

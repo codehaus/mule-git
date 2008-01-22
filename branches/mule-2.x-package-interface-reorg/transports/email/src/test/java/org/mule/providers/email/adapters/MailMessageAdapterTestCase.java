@@ -12,7 +12,7 @@ package org.mule.providers.email.adapters;
 
 import org.mule.api.MessagingException;
 import org.mule.api.registry.ServiceDescriptorFactory;
-import org.mule.api.transport.UMOMessageAdapter;
+import org.mule.api.transport.MessageAdapter;
 import org.mule.providers.email.MailMessageAdapter;
 import org.mule.tck.providers.AbstractMessageAdapterTestCase;
 
@@ -37,7 +37,7 @@ public class MailMessageAdapterTestCase extends AbstractMessageAdapterTestCase
      * 
      * @see org.mule.tck.providers.AbstractMessageAdapterTestCase#createAdapter()
      */
-    public UMOMessageAdapter createAdapter(Object payload) throws MessagingException
+    public MessageAdapter createAdapter(Object payload) throws MessagingException
     {
         return new MailMessageAdapter(payload);
     }

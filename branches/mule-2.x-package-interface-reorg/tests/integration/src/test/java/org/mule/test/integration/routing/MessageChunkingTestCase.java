@@ -11,7 +11,7 @@
 package org.mule.test.integration.routing;
 
 
-import org.mule.api.context.UMOServerNotification;
+import org.mule.api.context.ServerNotification;
 import org.mule.extras.client.MuleClient;
 import org.mule.impl.internal.notifications.MessageNotification;
 import org.mule.impl.internal.notifications.MessageNotificationListener;
@@ -68,7 +68,7 @@ public class MessageChunkingTestCase extends FunctionalTestCase
         // Listen to events fired by the ChunkingReceiver component
         muleContext.registerListener(new FunctionalTestNotificationListener()
         {
-            public void onNotification(UMOServerNotification notification)
+            public void onNotification(ServerNotification notification)
             {
                 // Not strictly necessary to test for this as when we register the
                 // listener we
@@ -93,7 +93,7 @@ public class MessageChunkingTestCase extends FunctionalTestCase
         // many message parts have been received
         muleContext.registerListener(new MessageNotificationListener()
         {
-            public void onNotification(UMOServerNotification notification)
+            public void onNotification(ServerNotification notification)
             {
                 if (notification.getAction() == MessageNotification.MESSAGE_RECEIVED)
                 {
@@ -119,7 +119,7 @@ public class MessageChunkingTestCase extends FunctionalTestCase
         // Listen to events fired by the ChunkingReceiver component
         muleContext.registerListener(new FunctionalTestNotificationListener()
         {
-            public void onNotification(UMOServerNotification notification)
+            public void onNotification(ServerNotification notification)
             {
                 // Not strictly necessary to test for this as when we register the
                 // listener we
@@ -137,7 +137,7 @@ public class MessageChunkingTestCase extends FunctionalTestCase
         // many message parts have been received
         muleContext.registerListener(new MessageNotificationListener()
         {
-            public void onNotification(UMOServerNotification notification)
+            public void onNotification(ServerNotification notification)
             {
                 if (notification.getAction() == MessageNotification.MESSAGE_RECEIVED)
                 {

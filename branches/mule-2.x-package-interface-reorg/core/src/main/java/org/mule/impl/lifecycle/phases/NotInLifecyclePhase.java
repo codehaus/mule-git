@@ -9,20 +9,20 @@
  */
 package org.mule.impl.lifecycle.phases;
 
-import org.mule.api.lifecycle.UMOLifecyclePhase;
-import org.mule.impl.lifecycle.LifecyclePhase;
+import org.mule.api.lifecycle.LifecyclePhase;
+import org.mule.impl.lifecycle.DefaultLifecyclePhase;
 
 /**
  * This lifecycle phase marks the 'pre-lifecycle' phase of an object. The default phase before
  * any other phase has been executed
  */
-public class NotInLifecyclePhase extends LifecyclePhase
+public class NotInLifecyclePhase extends DefaultLifecyclePhase
 {
     public static String PHASE_NAME = "not in lifecycle";
 
     public NotInLifecyclePhase()
     {
         super(PHASE_NAME, NotInLifecyclePhase.class, null);
-        registerSupportedPhase(UMOLifecyclePhase.ALL_PHASES);
+        registerSupportedPhase(LifecyclePhase.ALL_PHASES);
     }
 }

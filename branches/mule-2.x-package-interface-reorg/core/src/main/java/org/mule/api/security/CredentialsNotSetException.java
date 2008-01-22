@@ -10,9 +10,9 @@
 
 package org.mule.api.security;
 
-import org.mule.api.UMOMessage;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
-import org.mule.imple.config.i18n.Message;
+import org.mule.api.MuleMessage;
+import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.impl.config.i18n.Message;
 
 /**
  * <code>CredentialsNotSetException</code> is thrown when user credentials cannot
@@ -25,20 +25,20 @@ public class CredentialsNotSetException extends UnauthorisedException
      */
     private static final long serialVersionUID = -6271648179641734579L;
 
-    public CredentialsNotSetException(Message message, UMOMessage umoMessage)
+    public CredentialsNotSetException(Message message, MuleMessage umoMessage)
     {
         super(message, umoMessage);
     }
 
-    public CredentialsNotSetException(Message message, UMOMessage umoMessage, Throwable cause)
+    public CredentialsNotSetException(Message message, MuleMessage umoMessage, Throwable cause)
     {
         super(message, umoMessage, cause);
     }
 
-    public CredentialsNotSetException(UMOMessage umoMessage,
-                                      UMOSecurityContext context,
-                                      UMOImmutableEndpoint endpoint,
-                                      UMOEndpointSecurityFilter filter)
+    public CredentialsNotSetException(MuleMessage umoMessage,
+                                      SecurityContext context,
+                                      ImmutableEndpoint endpoint,
+                                      EndpointSecurityFilter filter)
     {
         super(umoMessage, context, endpoint, filter);
     }

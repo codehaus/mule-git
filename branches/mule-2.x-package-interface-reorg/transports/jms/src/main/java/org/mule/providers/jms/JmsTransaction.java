@@ -11,10 +11,10 @@
 package org.mule.providers.jms;
 
 import org.mule.api.TransactionException;
+import org.mule.impl.config.i18n.CoreMessages;
+import org.mule.impl.config.i18n.MessageFactory;
 import org.mule.impl.transaction.AbstractSingleResourceTransaction;
 import org.mule.impl.transaction.IllegalTransactionStateException;
-import org.mule.imple.config.i18n.CoreMessages;
-import org.mule.imple.config.i18n.MessageFactory;
 import org.mule.providers.jms.i18n.JmsMessages;
 
 import javax.jms.Connection;

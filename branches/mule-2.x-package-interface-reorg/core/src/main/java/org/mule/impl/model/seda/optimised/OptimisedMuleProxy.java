@@ -10,22 +10,22 @@
 
 package org.mule.impl.model.seda.optimised;
 
+import org.mule.api.AbstractMuleException;
+import org.mule.api.Component;
+import org.mule.api.Event;
+import org.mule.api.EventContext;
 import org.mule.api.MessagingException;
-import org.mule.api.UMOComponent;
-import org.mule.api.UMOEvent;
-import org.mule.api.UMOEventContext;
-import org.mule.api.UMOException;
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.api.lifecycle.Callable;
 import org.mule.api.lifecycle.Disposable;
 import org.mule.api.lifecycle.Startable;
 import org.mule.api.lifecycle.Stoppable;
 import org.mule.api.model.ModelException;
 import org.mule.api.model.MuleProxy;
-import org.mule.impl.MuleMessage;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.RequestContext;
+import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.impl.management.stats.ComponentStatistics;
-import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.util.queue.QueueSession;
 
 import org.apache.commons.logging.Log;
@@ -46,12 +46,12 @@ public class OptimisedMuleProxy implements MuleProxy
     /**
      * Holds the current event being processed
      */
-    private UMOEvent event;
+    private Event event;
 
     /**
      * holds the UMO descriptor
      */
-    private UMOComponent component;
+    private Component component;
 
     /**
      * Determines if the proxy is suspended
@@ -70,16 +70,16 @@ public class OptimisedMuleProxy implements MuleProxy
      * itself
      * 
      * @param component the underlying object that with receive events
-     * @param component the UMOComponent descriptor associated with the component
+     * @param component the Component descriptor associated with the component
      */
-    public OptimisedMuleProxy(Callable pojoService, UMOComponent component)
-        throws UMOException
+    public OptimisedMuleProxy(Callable pojoService, Component component)
+        throws AbstractMuleException
     {
         this.component = component;
         this.pojoService = pojoService;
     }
 
-    public void start() throws UMOException
+    public void start() throws AbstractMuleException
     {
         checkDisposed();
         if (!started && pojoService instanceof Startable)
@@ -103,7 +103,7 @@ public class OptimisedMuleProxy implements MuleProxy
         return started;
     }
 
-    public void stop() throws UMOException
+    public void stop() throws AbstractMuleException
     {
         checkDisposed();
 
@@ -145,7 +145,7 @@ public class OptimisedMuleProxy implements MuleProxy
      * 
      * @param event the event being processed
      */
-    public void onEvent(QueueSession session, UMOEvent event)
+    public void onEvent(QueueSession session, Event event)
     {
         this.event = event;
     }
@@ -165,16 +165,16 @@ public class OptimisedMuleProxy implements MuleProxy
      * 
      * @param event the event to pass to the UMO
      * @return the return event from the UMO
-     * @throws org.mule.api.UMOException if the call fails
+     * @throws org.mule.api.AbstractMuleException if the call fails
      */
-    public Object onCall(UMOEvent event) throws UMOException
+    public Object onCall(Event event) throws AbstractMuleException
     {
         if (logger.isTraceEnabled())
         {
             logger.trace("MuleProxy: sync call for Mule UMO " + component.getName());
         }
 
-        UMOMessage returnMessage = null;
+        MuleMessage returnMessage = null;
         try
         {
             if (event.getEndpoint().canRequest())
@@ -213,7 +213,7 @@ public class OptimisedMuleProxy implements MuleProxy
                     // }
                     if (component.getOutboundRouter().hasEndpoints())
                     {
-                        UMOMessage outboundReturnMessage = component.getOutboundRouter().route(
+                        MuleMessage outboundReturnMessage = component.getOutboundRouter().route(
                             returnMessage, event.getSession(), event.isSynchronous());
                         if (outboundReturnMessage != null)
                         {
@@ -261,7 +261,7 @@ public class OptimisedMuleProxy implements MuleProxy
         catch (Exception e)
         {
             event.getSession().setValid(false);
-            if (e instanceof UMOException)
+            if (e instanceof AbstractMuleException)
             {
                 handleException(e);
             }
@@ -276,18 +276,18 @@ public class OptimisedMuleProxy implements MuleProxy
         return returnMessage;
     }
 
-    protected UMOMessage invokeUmo(UMOEventContext context) throws Exception
+    protected MuleMessage invokeUmo(EventContext context) throws Exception
     {
         Object result = pojoService.onCall(RequestContext.getEventContext());
         if (result != null)
         {
-            if (result instanceof UMOMessage)
+            if (result instanceof MuleMessage)
             {
-                return (UMOMessage) result;
+                return (MuleMessage) result;
             }
             else
             {
-                return new MuleMessage(result, context.getMessage());
+                return new DefaultMuleMessage(result, context.getMessage());
             }
         }
         return null;
@@ -335,19 +335,19 @@ public class OptimisedMuleProxy implements MuleProxy
         suspended = false;
     }
 
-    // private void processReplyTo(UMOMessage returnMessage) throws UMOException
+    // private void processReplyTo(MuleMessage returnMessage) throws AbstractMuleException
     // {
     // if (returnMessage != null && returnMessage.getReplyTo() != null) {
     // logger.info("sending reply to: " + returnMessage.getReplyTo());
-    // UMOEndpointURI endpointUri = new
+    // EndpointURI endpointUri = new
     // MuleEndpointURI(returnMessage.getReplyTo().toString());
     //
     // // get the endpointUri for this uri
-    // UMOEndpoint endpoint = MuleEndpoint.getOrCreateEndpointForUri(endpointUri,
-    // UMOEndpoint.ENDPOINT_TYPE_SENDER);
+    // Endpoint endpoint = MuleEndpoint.getOrCreateEndpointForUri(endpointUri,
+    // Endpoint.ENDPOINT_TYPE_SENDER);
     //
     // // Create the replyTo event asynchronous
-    // UMOEvent replyToEvent = new MuleEvent(returnMessage, endpoint,
+    // Event replyToEvent = new MuleEvent(returnMessage, endpoint,
     // event.getSession(), false);
     // // make sure remove the replyTo property as not cause a a forever
     // // replyto loop
@@ -391,7 +391,7 @@ public class OptimisedMuleProxy implements MuleProxy
                 {
                     startTime = System.currentTimeMillis();
                 }
-                UMOMessage result = invokeUmo(RequestContext.getEventContext());
+                MuleMessage result = invokeUmo(RequestContext.getEventContext());
                 if (stat.isEnabled())
                 {
                     stat.addExecutionTime(System.currentTimeMillis() - startTime);
@@ -426,7 +426,7 @@ public class OptimisedMuleProxy implements MuleProxy
         catch (Exception e)
         {
             event.getSession().setValid(false);
-            if (e instanceof UMOException)
+            if (e instanceof AbstractMuleException)
             {
                 handleException(e);
             }

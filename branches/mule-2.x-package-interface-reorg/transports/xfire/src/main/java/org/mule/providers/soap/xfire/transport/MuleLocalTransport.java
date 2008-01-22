@@ -10,7 +10,7 @@
 
 package org.mule.providers.soap.xfire.transport;
 
-import org.mule.api.context.UMOWorkManager;
+import org.mule.api.context.WorkManager;
 import org.mule.providers.soap.xfire.MuleInvoker;
 
 import org.apache.commons.logging.Log;
@@ -47,9 +47,9 @@ public class MuleLocalTransport extends AbstractTransport implements SoapTranspo
 
     private Session session;
     private boolean maintainSession;
-    protected final UMOWorkManager workManager;
+    protected final WorkManager workManager;
 
-    public MuleLocalTransport(UMOWorkManager workManager)
+    public MuleLocalTransport(WorkManager workManager)
     {
         super();
         SoapTransportHelper.createSoapTransport(this);

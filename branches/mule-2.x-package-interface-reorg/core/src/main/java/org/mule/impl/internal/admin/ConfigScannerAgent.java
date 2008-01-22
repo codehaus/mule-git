@@ -12,7 +12,7 @@ package org.mule.impl.internal.admin;
 
 import org.mule.MuleServer;
 import org.mule.RegistryContext;
-import org.mule.api.UMOException;
+import org.mule.api.AbstractMuleException;
 import org.mule.api.config.ConfigurationBuilder;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.impl.AbstractAgent;
@@ -82,13 +82,13 @@ public class ConfigScannerAgent extends AbstractAgent
         return getName() + " scanning for files in " + configDirName;
     }
 
-    public void start() throws UMOException
+    public void start() throws AbstractMuleException
     {
         scannerThread = new ScannerThread();
         scannerThread.start();
     }
 
-    public void stop() throws UMOException
+    public void stop() throws AbstractMuleException
     {
     }
 

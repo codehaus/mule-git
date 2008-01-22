@@ -10,7 +10,7 @@
 
 package org.mule.test.integration.routing.nested;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 
@@ -30,7 +30,7 @@ public class NestedRouterTestCase extends FunctionalTestCase
         MuleClient client = new MuleClient();
         String message = "Mule";
         client.dispatch(prefix + "invoker.in", message, null);
-        UMOMessage reply = client.request(prefix + "invoker.out", RECEIVE_TIMEOUT);
+        MuleMessage reply = client.request(prefix + "invoker.out", RECEIVE_TIMEOUT);
         assertNotNull(reply);
         assertNull(reply.getExceptionPayload());
         assertEquals("Received: Hello " + message + " " + number, reply.getPayload());

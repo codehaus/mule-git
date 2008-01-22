@@ -10,7 +10,7 @@
 
 package org.mule.providers.soap.axis;
 
-import org.mule.api.transport.UMOConnector;
+import org.mule.api.transport.Connector;
 import org.mule.tck.providers.AbstractConnectorTestCase;
 
 /**
@@ -24,7 +24,7 @@ public class AxisConnectorTestCase extends AbstractConnectorTestCase
         return "axis:http://localhost:38009/axis";
     }
 
-    public UMOConnector createConnector() throws Exception
+    public Connector createConnector() throws Exception
     {
         AxisConnector c = new AxisConnector();
         c.setName("axisConnector");

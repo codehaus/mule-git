@@ -10,7 +10,7 @@
 
 package org.mule.providers.email.connectors;
 
-import org.mule.api.transport.UMOConnector;
+import org.mule.api.transport.Connector;
 import org.mule.providers.email.ImapConnector;
 
 import com.icegreen.greenmail.util.ServerSetup;
@@ -32,7 +32,7 @@ public class ImapConnectorTestCase extends AbstractReceivingMailConnectorTestCas
     }
 
     // @Override
-    public UMOConnector createConnector() throws Exception
+    public Connector createConnector() throws Exception
     {
         ImapConnector connector = new ImapConnector();
         connector.setName("ImapConnector");

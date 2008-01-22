@@ -10,11 +10,11 @@
 
 package org.mule.examples.loanbroker.routers;
 
-import org.mule.api.UMOEvent;
-import org.mule.api.UMOMessage;
+import org.mule.api.Event;
+import org.mule.api.MuleMessage;
 import org.mule.examples.loanbroker.LocaleMessage;
 import org.mule.examples.loanbroker.messages.LoanQuote;
-import org.mule.impl.MuleMessage;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.routing.inbound.EventGroup;
 
 import java.util.Iterator;
@@ -29,15 +29,15 @@ public class BankQuotesAggregationLogic
      */
     protected static final Log logger = LogFactory.getLog(BankQuotesAggregationLogic.class);
     
-    public static UMOMessage aggregateEvents(EventGroup events) throws Exception
+    public static MuleMessage aggregateEvents(EventGroup events) throws Exception
     {
         LoanQuote lowestQuote = null;
         LoanQuote quote = null;
-        UMOEvent event = null;
+        Event event = null;
 
         for (Iterator iterator = events.iterator(); iterator.hasNext();)
         {
-            event = (UMOEvent)iterator.next();
+            event = (Event)iterator.next();
             Object o = event.transformMessage();
             if(o instanceof LoanQuote)
             {
@@ -64,6 +64,6 @@ public class BankQuotesAggregationLogic
         }
 
         logger.info(LocaleMessage.lowestQuote(lowestQuote));
-        return new MuleMessage(lowestQuote, event.getMessage());
+        return new DefaultMuleMessage(lowestQuote, event.getMessage());
     }
 }

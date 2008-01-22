@@ -10,7 +10,7 @@
 
 package org.mule.providers.tcp.protocols;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 
@@ -36,7 +36,7 @@ public class MuleMessageLengthTestCase extends FunctionalTestCase
     {
         MuleClient client = new MuleClient();
         Map props = new HashMap();
-        UMOMessage result = client.send("clientEndpoint", TEST_MESSAGE, props);
+        MuleMessage result = client.send("clientEndpoint", TEST_MESSAGE, props);
         assertEquals(TEST_MESSAGE + " Received", result.getPayloadAsString());
     }
 

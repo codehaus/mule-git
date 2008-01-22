@@ -11,14 +11,14 @@
 package org.mule.providers.tcp;
 
 import org.mule.api.MessagingException;
-import org.mule.api.UMOException;
-import org.mule.api.UMOMessage;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleMessage;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.InitialisationException;
-import org.mule.api.transport.UMOConnector;
+import org.mule.api.transport.Connector;
+import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.impl.model.streaming.CallbackOutputStream;
 import org.mule.impl.transport.AbstractConnector;
-import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.providers.tcp.protocols.SafeProtocol;
 
 import java.io.BufferedOutputStream;
@@ -116,7 +116,7 @@ public class TcpConnector extends AbstractConnector
 
     private boolean newValue(int parameter, int socketValue)
     {
-        return parameter != UMOConnector.INT_VALUE_NOT_SET && parameter != socketValue;
+        return parameter != Connector.INT_VALUE_NOT_SET && parameter != socketValue;
     }
 
     protected void doInitialise() throws InitialisationException
@@ -146,7 +146,7 @@ public class TcpConnector extends AbstractConnector
      * Lookup a socket in the list of dispatcher sockets but don't create a new
      * socket
      */
-    protected Socket getSocket(UMOImmutableEndpoint endpoint) throws Exception
+    protected Socket getSocket(ImmutableEndpoint endpoint) throws Exception
     {
         TcpSocketKey socketKey = new TcpSocketKey(endpoint);
         if (logger.isDebugEnabled())
@@ -167,7 +167,7 @@ public class TcpConnector extends AbstractConnector
         return socket;
     }
 
-    void releaseSocket(Socket socket, UMOImmutableEndpoint endpoint) throws Exception
+    void releaseSocket(Socket socket, ImmutableEndpoint endpoint) throws Exception
     {
         TcpSocketKey socketKey = new TcpSocketKey(endpoint);
         lastSocketKey = socketKey;
@@ -179,8 +179,8 @@ public class TcpConnector extends AbstractConnector
         }
     }
 
-    public OutputStream getOutputStream(final UMOImmutableEndpoint endpoint, UMOMessage message)
-            throws UMOException
+    public OutputStream getOutputStream(final ImmutableEndpoint endpoint, MuleMessage message)
+            throws AbstractMuleException
     {
         final Socket socket;
         try
@@ -225,12 +225,12 @@ public class TcpConnector extends AbstractConnector
         socketsPool.clear();
     }
 
-    protected void doStart() throws UMOException
+    protected void doStart() throws AbstractMuleException
     {
         // template method
     }
 
-    protected void doStop() throws UMOException
+    protected void doStop() throws AbstractMuleException
     {
         // template method
     }

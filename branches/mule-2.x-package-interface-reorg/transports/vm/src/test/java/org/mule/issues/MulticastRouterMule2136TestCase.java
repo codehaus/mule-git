@@ -10,8 +10,8 @@
 
 package org.mule.issues;
 
-import org.mule.api.UMOException;
-import org.mule.api.UMOMessage;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.modules.xml.functional.AbstractXmlFunctionalTestCase;
 
@@ -33,30 +33,30 @@ public class MulticastRouterMule2136TestCase extends AbstractXmlFunctionalTestCa
         return "issues/multicast-router-mule-2136-test.xml";
     }
 
-    protected MuleClient sendObject() throws UMOException
+    protected MuleClient sendObject() throws AbstractMuleException
     {
         MuleClient client = new MuleClient();
         client.dispatch("object-in", new Parent(new Child()), null);
         return client;
     }
 
-    public void testObjectOut() throws UMOException
+    public void testObjectOut() throws AbstractMuleException
     {
         request(sendObject(), "object-out", Parent.class);
     }
 
-    public void testObjectXmlOut() throws UMOException
+    public void testObjectXmlOut() throws AbstractMuleException
     {
         String xml = (String) request(sendObject(), "object-xml-out", String.class);
         assertEquals(SERIALIZED, xml);
     }
 
-    public void testXmlObjectOut() throws UMOException
+    public void testXmlObjectOut() throws AbstractMuleException
     {
         request(sendObject(), "xml-object-out", Parent.class);
     }
 
-    public void testStress() throws UMOException
+    public void testStress() throws AbstractMuleException
     {
         int tenth = TEST_COUNT / 10;
         for (int i = 0; i < TEST_COUNT; i++)
@@ -75,9 +75,9 @@ public class MulticastRouterMule2136TestCase extends AbstractXmlFunctionalTestCa
     }
 
 
-    protected Object request(MuleClient client, String endpoint, Class clazz) throws UMOException
+    protected Object request(MuleClient client, String endpoint, Class clazz) throws AbstractMuleException
     {
-        UMOMessage message = client.request(endpoint, TIMEOUT);
+        MuleMessage message = client.request(endpoint, TIMEOUT);
         assertNotNull(message);
         assertNotNull(message.getPayload());
         assertTrue(message.getPayload().getClass().getName(), clazz.isAssignableFrom(message.getPayload().getClass()));

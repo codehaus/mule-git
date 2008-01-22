@@ -12,7 +12,7 @@ package org.mule.util;
 
 import org.mule.RegistryContext;
 import org.mule.api.MuleRuntimeException;
-import org.mule.imple.config.i18n.MessageFactory;
+import org.mule.impl.config.i18n.MessageFactory;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;

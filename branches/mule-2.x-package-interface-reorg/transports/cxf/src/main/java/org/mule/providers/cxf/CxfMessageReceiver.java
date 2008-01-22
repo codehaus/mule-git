@@ -10,15 +10,15 @@
 
 package org.mule.providers.cxf;
 
-import org.mule.api.UMOComponent;
-import org.mule.api.UMOException;
-import org.mule.api.endpoint.UMOEndpoint;
+import org.mule.api.Component;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.endpoint.Endpoint;
 import org.mule.api.lifecycle.Callable;
 import org.mule.api.lifecycle.CreateException;
 import org.mule.api.lifecycle.Disposable;
 import org.mule.api.lifecycle.Initialisable;
 import org.mule.api.lifecycle.InitialisationException;
-import org.mule.api.transport.UMOConnector;
+import org.mule.api.transport.Connector;
 import org.mule.impl.transport.AbstractMessageReceiver;
 import org.mule.providers.cxf.i18n.CxfMessages;
 import org.mule.providers.cxf.support.ProviderService;
@@ -52,7 +52,7 @@ public class CxfMessageReceiver extends AbstractMessageReceiver
     private Server server;
     private boolean bridge;
 
-    public CxfMessageReceiver(UMOConnector umoConnector, UMOComponent component, UMOEndpoint umoEndpoint)
+    public CxfMessageReceiver(Connector umoConnector, Component component, Endpoint umoEndpoint)
         throws CreateException
     {
         super(umoConnector, component, umoEndpoint);
@@ -162,7 +162,7 @@ public class CxfMessageReceiver extends AbstractMessageReceiver
 
             server = sfb.create();
         }
-        catch (UMOException e)
+        catch (AbstractMuleException e)
         {
             throw new InitialisationException(e, this);
         }
@@ -234,7 +234,7 @@ public class CxfMessageReceiver extends AbstractMessageReceiver
         }
     }
 
-    private Class<?> getInterface() throws UMOException, ClassNotFoundException
+    private Class<?> getInterface() throws AbstractMuleException, ClassNotFoundException
     {
         try
         {
@@ -263,12 +263,12 @@ public class CxfMessageReceiver extends AbstractMessageReceiver
         server.stop();
     }
 
-    public void doStart() throws UMOException
+    public void doStart() throws AbstractMuleException
     {
         // nothing to do
     }
 
-    public void doStop() throws UMOException
+    public void doStop() throws AbstractMuleException
     {
         // nothing to do
     }

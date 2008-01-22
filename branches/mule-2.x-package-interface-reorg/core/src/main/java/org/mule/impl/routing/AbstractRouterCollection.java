@@ -14,9 +14,9 @@ import org.mule.api.MuleContext;
 import org.mule.api.context.MuleContextAware;
 import org.mule.api.lifecycle.Initialisable;
 import org.mule.api.lifecycle.InitialisationException;
-import org.mule.api.routing.UMORouter;
-import org.mule.api.routing.UMORouterCatchAllStrategy;
-import org.mule.api.routing.UMORouterCollection;
+import org.mule.api.routing.Router;
+import org.mule.api.routing.RouterCatchAllStrategy;
+import org.mule.api.routing.RouterCollection;
 import org.mule.impl.management.stats.RouterStatistics;
 
 import java.util.Iterator;
@@ -32,7 +32,7 @@ import org.apache.commons.logging.LogFactory;
  * router collections for in and outbound routers.
  */
 
-public abstract class AbstractRouterCollection implements UMORouterCollection, Initialisable, MuleContextAware
+public abstract class AbstractRouterCollection implements RouterCollection, Initialisable, MuleContextAware
 {
     /**
      * logger used by this class
@@ -45,7 +45,7 @@ public abstract class AbstractRouterCollection implements UMORouterCollection, I
 
     private RouterStatistics statistics;
 
-    private UMORouterCatchAllStrategy catchAllStrategy;
+    private RouterCatchAllStrategy catchAllStrategy;
     
     protected MuleContext muleContext;
 
@@ -58,7 +58,7 @@ public abstract class AbstractRouterCollection implements UMORouterCollection, I
     {
         for (Iterator iterator = routers.iterator(); iterator.hasNext();)
         {
-            UMORouter router = (UMORouter) iterator.next();
+            Router router = (Router) iterator.next();
             router.initialise();
         }
     }
@@ -67,7 +67,7 @@ public abstract class AbstractRouterCollection implements UMORouterCollection, I
     {
         for (Iterator iterator = routers.iterator(); iterator.hasNext();)
         {
-            UMORouter router = (UMORouter) iterator.next();
+            Router router = (Router) iterator.next();
             router.dispose();
         }
     }
@@ -76,17 +76,17 @@ public abstract class AbstractRouterCollection implements UMORouterCollection, I
     {
         for (Iterator iterator = routers.iterator(); iterator.hasNext();)
         {
-            addRouter((UMORouter) iterator.next());
+            addRouter((Router) iterator.next());
         }
     }
 
-    public void addRouter(UMORouter router)
+    public void addRouter(Router router)
     {
         router.setRouterStatistics(getStatistics());
         routers.add(router);
     }
 
-    public UMORouter removeRouter(UMORouter router)
+    public Router removeRouter(Router router)
     {
         if (routers.remove(router))
         {
@@ -103,12 +103,12 @@ public abstract class AbstractRouterCollection implements UMORouterCollection, I
         return routers;
     }
 
-    public UMORouterCatchAllStrategy getCatchAllStrategy()
+    public RouterCatchAllStrategy getCatchAllStrategy()
     {
         return catchAllStrategy;
     }
 
-    public void setCatchAllStrategy(UMORouterCatchAllStrategy catchAllStrategy)
+    public void setCatchAllStrategy(RouterCatchAllStrategy catchAllStrategy)
     {
         this.catchAllStrategy = catchAllStrategy;
         if (this.catchAllStrategy != null && catchAllStrategy instanceof AbstractCatchAllStrategy)

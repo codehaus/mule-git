@@ -10,7 +10,7 @@
 
 package org.mule.impl.transformer.simple;
 
-import org.mule.api.transformer.UMOTransformer;
+import org.mule.api.transformer.Transformer;
 import org.mule.impl.transformer.simple.ObjectToString;
 import org.mule.tck.AbstractTransformerTestCase;
 
@@ -20,7 +20,7 @@ import java.util.TreeMap;
 public class ObjectToStringWithMapTestCase extends AbstractTransformerTestCase
 {
 
-    public UMOTransformer getTransformer() throws Exception
+    public Transformer getTransformer() throws Exception
     {
         return new ObjectToString();
     }
@@ -40,7 +40,7 @@ public class ObjectToStringWithMapTestCase extends AbstractTransformerTestCase
         return "{existingValue=VALUE, nonexistingValue=null}";
     }
 
-    public UMOTransformer getRoundTripTransformer() throws Exception
+    public Transformer getRoundTripTransformer() throws Exception
     {
         // we do not want round trip transforming tested
         return null;

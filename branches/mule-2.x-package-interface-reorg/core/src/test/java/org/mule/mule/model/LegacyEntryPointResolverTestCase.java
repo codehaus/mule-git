@@ -10,9 +10,9 @@
 
 package org.mule.mule.model;
 
-import org.mule.api.UMOException;
+import org.mule.api.AbstractMuleException;
 import org.mule.api.config.MuleProperties;
-import org.mule.api.model.UMOEntryPointResolverSet;
+import org.mule.api.model.EntryPointResolverSet;
 import org.mule.impl.RequestContext;
 import org.mule.impl.model.resolvers.ArrayEntryPointResolver;
 import org.mule.impl.model.resolvers.EntryPointNotFoundException;
@@ -45,7 +45,7 @@ public class LegacyEntryPointResolverTestCase extends AbstractMuleTestCase
             LegacyEntryPointResolverSet resolver = new LegacyEntryPointResolverSet();
             resolver.invoke(new WaterMelon(), getTestEventContext("blah"));
         }
-        catch (UMOException e)
+        catch (AbstractMuleException e)
         {
             fail("Test should have passed: " + e);
         }
@@ -58,7 +58,7 @@ public class LegacyEntryPointResolverTestCase extends AbstractMuleTestCase
             LegacyEntryPointResolverSet resolver = new LegacyEntryPointResolverSet();
             resolver.invoke(new FruitBowl(), getTestEventContext(new FruitLover("Mmmm")));
         }
-        catch (UMOException e)
+        catch (AbstractMuleException e)
         {
             fail("Test should have passed: " + e);
         }
@@ -74,7 +74,7 @@ public class LegacyEntryPointResolverTestCase extends AbstractMuleTestCase
             fail("Test should have failed because the arguments were not wrapped properly: ");
 
         }
-        catch (UMOException e)
+        catch (AbstractMuleException e)
         {
             //expected
         }
@@ -87,7 +87,7 @@ public class LegacyEntryPointResolverTestCase extends AbstractMuleTestCase
             LegacyEntryPointResolverSet resolver = new LegacyEntryPointResolverSet();
             resolver.invoke(new FruitBowl(), getTestEventContext(new Object[]{new Fruit[]{new Apple(), new Orange()}}));
         }
-        catch (UMOException e)
+        catch (AbstractMuleException e)
         {
             fail("Test should have passed: " + e);
         }
@@ -103,7 +103,7 @@ public class LegacyEntryPointResolverTestCase extends AbstractMuleTestCase
             resolver.addEntryPointResolver(new ArrayEntryPointResolver());
             resolver.invoke(new FruitBowl(), getTestEventContext(new Fruit[]{new Apple(), new Orange()}));
         }
-        catch (UMOException e)
+        catch (AbstractMuleException e)
         {
             fail("Test should have passed: " + e);
         }
@@ -112,7 +112,7 @@ public class LegacyEntryPointResolverTestCase extends AbstractMuleTestCase
 //    public ComponentMethodMapping[] getComponentMappings()
 //    {
 //        ComponentMethodMapping[] mappings = new ComponentMethodMapping[5];
-//        mappings[0] = new ComponentMethodMapping(WaterMelon.class, "myEventHandler", UMOEvent.class);
+//        mappings[0] = new ComponentMethodMapping(WaterMelon.class, "myEventHandler", Event.class);
 //        mappings[1] = new ComponentMethodMapping(FruitBowl.class, "consumeFruit", FruitLover.class);
 //        // see testArrayArgumentResolution
 //        mappings[2] = new ComponentMethodMapping(FruitBowl.class, "setFruit", Fruit[].class);
@@ -133,8 +133,8 @@ public class LegacyEntryPointResolverTestCase extends AbstractMuleTestCase
 //    public UMODescriptor getDescriptorToResolve(String className) throws Exception
 //    {
 //        UMODescriptor descriptor = super.getDescriptorToResolve(className);
-//        descriptor.setInboundRouter(new InboundRouterCollection());
-//        UMOEndpoint endpoint = new MuleEndpoint("test://foo", true);
+//        descriptor.setInboundRouter(new DefaultInboundRouterCollection());
+//        Endpoint endpoint = new MuleEndpoint("test://foo", true);
 //
 //        if (className.equals(FruitBowl.class.getName()))
 //        {
@@ -151,11 +151,11 @@ public class LegacyEntryPointResolverTestCase extends AbstractMuleTestCase
 
     /**
      * Tests entrypoint discovery when there is more than one discoverable method
-     * with UMOEventContext parameter.
+     * with EventContext parameter.
      */
     public void testFailEntryPointMultiplePayloadMatches() throws Exception
     {
-        UMOEntryPointResolverSet resolverSet = new LegacyEntryPointResolverSet();
+        EntryPointResolverSet resolverSet = new LegacyEntryPointResolverSet();
 
         try
         {
@@ -176,7 +176,7 @@ public class LegacyEntryPointResolverTestCase extends AbstractMuleTestCase
      */
     public void testMethodOverrideDoesNotFallback() throws Exception
     {
-        UMOEntryPointResolverSet resolverSet = new LegacyEntryPointResolverSet();
+        EntryPointResolverSet resolverSet = new LegacyEntryPointResolverSet();
         RequestContext.setEvent(getTestEvent(new FruitLover("Yummy!")));
 
         // those are usually set on the endpoint and copied over to the message
@@ -195,7 +195,7 @@ public class LegacyEntryPointResolverTestCase extends AbstractMuleTestCase
      */
     public void testMethodOverrideIgnoredWithCallable() throws Exception
     {
-        UMOEntryPointResolverSet resolver = new LegacyEntryPointResolverSet();
+        EntryPointResolverSet resolver = new LegacyEntryPointResolverSet();
 
         RequestContext.setEvent(getTestEvent(new FruitLover("Yummy!")));
 
@@ -221,12 +221,12 @@ public class LegacyEntryPointResolverTestCase extends AbstractMuleTestCase
 
     /**
      * If there was a method parameter specified to override the discovery mechanism
-     * and a target instance has a method accepting UMOEventContext, proceed to call
+     * and a target instance has a method accepting EventContext, proceed to call
      * this method, ignore the method override parameter.
      */
     public void testMethodOverrideIgnoredWithEventContext() throws Exception
     {
-        UMOEntryPointResolverSet resolverSet = new LegacyEntryPointResolverSet();
+        EntryPointResolverSet resolverSet = new LegacyEntryPointResolverSet();
 
         RequestContext.setEvent(getTestEvent(new FruitLover("Yummy!")));
 
@@ -250,7 +250,7 @@ public class LegacyEntryPointResolverTestCase extends AbstractMuleTestCase
     // TODO MULE-1088: currently fails, therefore disabled
     public void testArrayArgumentResolution() throws Exception
     {
-        UMOEntryPointResolverSet resolverSet = new LegacyEntryPointResolverSet();
+        EntryPointResolverSet resolverSet = new LegacyEntryPointResolverSet();
 
         Object payload = new Object[]{new Fruit[]{new Apple(), new Banana()}};
         RequestContext.setEvent(getTestEvent(payload));
@@ -268,7 +268,7 @@ public class LegacyEntryPointResolverTestCase extends AbstractMuleTestCase
     /** Test for proper resolution of a method that takes a List as argument. */
     public void testListArgumentResolution() throws Exception
     {
-        UMOEntryPointResolverSet resolverSet = new LegacyEntryPointResolverSet();
+        EntryPointResolverSet resolverSet = new LegacyEntryPointResolverSet();
         Object payload = Arrays.asList(new Fruit[]{new Apple(), new Banana()});
         RequestContext.setEvent(getTestEvent(payload));
 
@@ -285,7 +285,7 @@ public class LegacyEntryPointResolverTestCase extends AbstractMuleTestCase
     /** Test for proper resolution of an existing method specified as override */
     public void testExplicitOverride() throws Exception
     {
-        UMOEntryPointResolverSet resolverSet = new LegacyEntryPointResolverSet();
+        EntryPointResolverSet resolverSet = new LegacyEntryPointResolverSet();
 
         Object payload = Arrays.asList(new Fruit[]{new Apple(), new Banana()});
         RequestContext.setEvent(getTestEvent(payload));

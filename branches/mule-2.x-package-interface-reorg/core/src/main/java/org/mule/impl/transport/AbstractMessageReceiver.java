@@ -10,23 +10,23 @@
 
 package org.mule.impl.transport;
 
-import org.mule.api.UMOComponent;
-import org.mule.api.UMOEvent;
-import org.mule.api.UMOException;
-import org.mule.api.UMOMessage;
-import org.mule.api.UMOSession;
-import org.mule.api.UMOTransaction;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.Component;
+import org.mule.api.Event;
+import org.mule.api.MuleMessage;
+import org.mule.api.Session;
+import org.mule.api.Transaction;
 import org.mule.api.config.MuleProperties;
-import org.mule.api.context.UMOWorkManager;
-import org.mule.api.endpoint.UMOEndpointURI;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.context.WorkManager;
+import org.mule.api.endpoint.EndpointURI;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.CreateException;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.security.SecurityException;
 import org.mule.api.transport.ConnectionStrategy;
+import org.mule.api.transport.Connector;
 import org.mule.api.transport.InternalMessageListener;
-import org.mule.api.transport.UMOConnector;
-import org.mule.api.transport.UMOMessageReceiver;
+import org.mule.api.transport.MessageReceiver;
 import org.mule.impl.MuleEvent;
 import org.mule.impl.MuleSession;
 import org.mule.impl.NullSessionHandler;
@@ -34,11 +34,11 @@ import org.mule.impl.OptimizedRequestContext;
 import org.mule.impl.RequestContext;
 import org.mule.impl.ResponseOutputStream;
 import org.mule.impl.config.ExceptionHelper;
+import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.impl.internal.notifications.ConnectionNotification;
 import org.mule.impl.internal.notifications.MessageNotification;
 import org.mule.impl.internal.notifications.SecurityNotification;
 import org.mule.impl.transaction.TransactionCoordination;
-import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.util.ClassUtils;
 import org.mule.util.StringMessageUtils;
 import org.mule.util.concurrent.WaitableBoolean;
@@ -55,16 +55,16 @@ import org.apache.commons.logging.LogFactory;
  * Receivers provided with Mule. A message receiver enables an endpoint to receive a
  * message from an external system.
  */
-public abstract class AbstractMessageReceiver implements UMOMessageReceiver
+public abstract class AbstractMessageReceiver implements MessageReceiver
 {
     /** logger used by this class */
     protected final Log logger = LogFactory.getLog(getClass());
 
     /** The Component with which this receiver is associated with */
-    protected UMOComponent component = null;
+    protected Component component = null;
 
     /** The endpoint descriptor which is associated with this receiver */
-    protected UMOImmutableEndpoint endpoint = null;
+    protected ImmutableEndpoint endpoint = null;
 
     private InternalMessageListener listener;
 
@@ -91,9 +91,9 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
      * endpoint endpointUri may get rewritten if this endpointUri is a wildcard
      * endpointUri such as jms.*
      */
-    private UMOEndpointURI endpointUri;
+    private EndpointURI endpointUri;
 
-    private UMOWorkManager workManager;
+    private WorkManager workManager;
 
     protected ConnectionStrategy connectionStrategy;
 
@@ -112,10 +112,10 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
      *                  will listen on. The endpointUri can be anything and is specific to
      *                  the receiver implementation i.e. an email address, a directory, a
      *                  jms destination or port address.
-     * @see UMOComponent
-     * @see UMOImmutableEndpoint
+     * @see Component
+     * @see ImmutableEndpoint
      */
-    public AbstractMessageReceiver(UMOConnector connector, UMOComponent component, UMOImmutableEndpoint endpoint)
+    public AbstractMessageReceiver(Connector connector, Component component, ImmutableEndpoint endpoint)
             throws CreateException
     {
         setConnector(connector);
@@ -150,7 +150,7 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
         {
             workManager = this.connector.getReceiverWorkManager("receiver");
         }
-        catch (UMOException e)
+        catch (AbstractMuleException e)
         {
             throw new InitialisationException(e, this);
         }
@@ -162,9 +162,9 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
     /*
     * (non-Javadoc)
     *
-    * @see org.mule.api.transport.UMOMessageReceiver#getEndpointName()
+    * @see org.mule.api.transport.MessageReceiver#getEndpointName()
     */
-    public UMOImmutableEndpoint getEndpoint()
+    public ImmutableEndpoint getEndpoint()
     {
         return endpoint;
     }
@@ -172,7 +172,7 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.api.transport.UMOMessageReceiver#getExceptionListener()
+     * @see org.mule.api.transport.MessageReceiver#getExceptionListener()
      */
     public void handleException(Exception exception)
     {
@@ -196,7 +196,7 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
                 logger.warn("Reconnecting after exception: " + exception.getMessage(), exception);
                 connectionStrategy.connect(this);
             }
-            catch (UMOException e)
+            catch (AbstractMuleException e)
             {
                 connector.getExceptionListener().exceptionThrown(e);
             }
@@ -210,7 +210,7 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
      * @param message
      * @param exception
      */
-    protected void setExceptionDetails(UMOMessage message, Throwable exception)
+    protected void setExceptionDetails(MuleMessage message, Throwable exception)
     {
         String propName = ExceptionHelper.getErrorCodePropertyName(connector.getProtocol());
         // If we dont find a error code property we can assume there are not
@@ -227,12 +227,12 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
         }
     }
 
-    public UMOConnector getConnector()
+    public Connector getConnector()
     {
         return connector;
     }
 
-    public void setConnector(UMOConnector connector)
+    public void setConnector(Connector connector)
     {
         if (connector != null)
         {
@@ -252,45 +252,45 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
         }
     }
 
-    public UMOComponent getComponent()
+    public Component getComponent()
     {
         return component;
     }
 
-    public final UMOMessage routeMessage(UMOMessage message) throws UMOException
+    public final MuleMessage routeMessage(MuleMessage message) throws AbstractMuleException
     {
         return routeMessage(message, (endpoint.isSynchronous() || TransactionCoordination.getInstance()
                 .getTransaction() != null));
     }
 
-    public final UMOMessage routeMessage(UMOMessage message, boolean synchronous) throws UMOException
+    public final MuleMessage routeMessage(MuleMessage message, boolean synchronous) throws AbstractMuleException
     {
-        UMOTransaction tx = TransactionCoordination.getInstance().getTransaction();
+        Transaction tx = TransactionCoordination.getInstance().getTransaction();
         return routeMessage(message, tx, tx != null || synchronous, null);
     }
 
-    public final UMOMessage routeMessage(UMOMessage message, UMOTransaction trans, boolean synchronous)
-            throws UMOException
+    public final MuleMessage routeMessage(MuleMessage message, Transaction trans, boolean synchronous)
+            throws AbstractMuleException
     {
         return routeMessage(message, trans, synchronous, null);
     }
 
-    public final UMOMessage routeMessage(UMOMessage message, OutputStream outputStream) throws UMOException
+    public final MuleMessage routeMessage(MuleMessage message, OutputStream outputStream) throws AbstractMuleException
     {
         return routeMessage(message, endpoint.isSynchronous(), outputStream);
     }
 
-    public final UMOMessage routeMessage(UMOMessage message, boolean synchronous, OutputStream outputStream)
-            throws UMOException
+    public final MuleMessage routeMessage(MuleMessage message, boolean synchronous, OutputStream outputStream)
+            throws AbstractMuleException
     {
-        UMOTransaction tx = TransactionCoordination.getInstance().getTransaction();
+        Transaction tx = TransactionCoordination.getInstance().getTransaction();
         return routeMessage(message, tx, tx != null || synchronous, outputStream);
     }
 
-    public final UMOMessage routeMessage(UMOMessage message,
-                                         UMOTransaction trans,
+    public final MuleMessage routeMessage(MuleMessage message,
+                                         Transaction trans,
                                          boolean synchronous,
-                                         OutputStream outputStream) throws UMOException
+                                         OutputStream outputStream) throws AbstractMuleException
     {
 
         if (connector.isEnableMessageEvents())
@@ -346,7 +346,7 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
         return listener.onMessage(message, trans, synchronous, outputStream);
     }
 
-    protected UMOMessage handleUnacceptedFilter(UMOMessage message)
+    protected MuleMessage handleUnacceptedFilter(MuleMessage message)
     {
         String messageId;
         messageId = message.getUniqueId();
@@ -363,9 +363,9 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.api.transport.UMOMessageReceiver#setEndpoint(org.mule.api.endpoint.UMOEndpoint)
+     * @see org.mule.api.transport.MessageReceiver#setEndpoint(org.mule.api.endpoint.Endpoint)
      */
-    public void setEndpoint(UMOImmutableEndpoint endpoint)
+    public void setEndpoint(ImmutableEndpoint endpoint)
     {
         if (endpoint == null)
         {
@@ -377,9 +377,9 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.api.transport.UMOMessageReceiver#setSession(org.mule.api.UMOSession)
+     * @see org.mule.api.transport.MessageReceiver#setSession(org.mule.api.Session)
      */
-    public void setComponent(UMOComponent component)
+    public void setComponent(Component component)
     {
         if (component == null)
         {
@@ -395,17 +395,17 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
         doDispose();
     }
 
-    public UMOEndpointURI getEndpointURI()
+    public EndpointURI getEndpointURI()
     {
         return endpointUri;
     }
 
-    protected UMOWorkManager getWorkManager()
+    protected WorkManager getWorkManager()
     {
         return workManager;
     }
 
-    protected void setWorkManager(UMOWorkManager workManager)
+    protected void setWorkManager(WorkManager workManager)
     {
         this.workManager = workManager;
     }
@@ -482,7 +482,7 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
         return endpoint.getEndpointURI().toString();
     }
 
-    public final void start() throws UMOException
+    public final void start() throws AbstractMuleException
     {
         if (stopped.compareAndSet(true, false))
         {
@@ -515,7 +515,7 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
             {
                 doStop();
             }
-            catch (UMOException e)
+            catch (AbstractMuleException e)
             {
                 // TODO MULE-863: What should we really do?
                 logger.error(e.getMessage(), e);
@@ -542,13 +542,13 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
     private class DefaultInternalMessageListener implements InternalMessageListener
     {
 
-        public UMOMessage onMessage(UMOMessage message,
-                                    UMOTransaction trans,
+        public MuleMessage onMessage(MuleMessage message,
+                                    Transaction trans,
                                     boolean synchronous,
-                                    OutputStream outputStream) throws UMOException
+                                    OutputStream outputStream) throws AbstractMuleException
         {
 
-            UMOMessage resultMessage = null;
+            MuleMessage resultMessage = null;
             ResponseOutputStream ros = null;
             if (outputStream != null)
             {
@@ -561,8 +561,8 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
                     ros = new ResponseOutputStream(outputStream);
                 }
             }
-            UMOSession session = new MuleSession(message, connector.getSessionHandler(), component);
-            UMOEvent muleEvent = new MuleEvent(message, endpoint, session, synchronous, ros);
+            Session session = new MuleSession(message, connector.getSessionHandler(), component);
+            Event muleEvent = new MuleEvent(message, endpoint, session, synchronous, ros);
             muleEvent = OptimizedRequestContext.unsafeSetEvent(muleEvent);
             message = muleEvent.getMessage();
 
@@ -648,9 +648,9 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
         //call this method when the receiver is created. see MULE-2113 for more information about lifecycle clean up
     }
 
-    protected abstract void doStart() throws UMOException;
+    protected abstract void doStart() throws AbstractMuleException;
 
-    protected abstract void doStop() throws UMOException;
+    protected abstract void doStop() throws AbstractMuleException;
 
     protected abstract void doConnect() throws Exception;
 

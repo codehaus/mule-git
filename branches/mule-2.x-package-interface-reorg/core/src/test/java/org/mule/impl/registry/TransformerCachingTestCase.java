@@ -11,7 +11,7 @@ package org.mule.impl.registry;
 
 import org.mule.api.transformer.DiscoverableTransformer;
 import org.mule.api.transformer.TransformerException;
-import org.mule.api.transformer.UMOTransformer;
+import org.mule.api.transformer.Transformer;
 import org.mule.impl.transformer.AbstractTransformer;
 import org.mule.impl.transformer.simple.ObjectToByteArray;
 import org.mule.tck.AbstractMuleTestCase;
@@ -23,11 +23,11 @@ public class TransformerCachingTestCase extends AbstractMuleTestCase
 {
     public void testCacheUpdate() throws Exception
     {
-        UMOTransformer trans = muleContext.getRegistry().lookupTransformer(FilterInputStream.class, byte[].class);
+        Transformer trans = muleContext.getRegistry().lookupTransformer(FilterInputStream.class, byte[].class);
         assertNotNull(trans);
         assertTrue(trans instanceof ObjectToByteArray);
 
-        UMOTransformer trans2 = new FilterInputStreamToByteArray();
+        Transformer trans2 = new FilterInputStreamToByteArray();
         muleContext.getRegistry().registerTransformer(trans2);
 
         trans = muleContext.getRegistry().lookupTransformer(FilterInputStream.class, byte[].class);

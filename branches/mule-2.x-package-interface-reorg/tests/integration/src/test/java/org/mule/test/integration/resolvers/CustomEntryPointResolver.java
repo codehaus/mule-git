@@ -10,14 +10,14 @@
 
 package org.mule.test.integration.resolvers;
 
-import org.mule.api.UMOEventContext;
+import org.mule.api.EventContext;
 import org.mule.api.model.InvocationResult;
-import org.mule.api.model.UMOEntryPointResolver;
+import org.mule.api.model.EntryPointResolver;
 
-public class CustomEntryPointResolver implements UMOEntryPointResolver
+public class CustomEntryPointResolver implements EntryPointResolver
 {
 
-    public InvocationResult invoke(Object component, UMOEventContext context) throws Exception
+    public InvocationResult invoke(Object component, EventContext context) throws Exception
     {
         return new InvocationResult(
                 ((Target) component).custom(context.getMessage().getPayload()),

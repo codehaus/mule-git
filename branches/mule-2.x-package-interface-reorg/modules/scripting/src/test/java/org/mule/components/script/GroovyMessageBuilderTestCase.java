@@ -10,7 +10,7 @@
 
 package org.mule.components.script;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 
@@ -25,7 +25,7 @@ public class GroovyMessageBuilderTestCase extends FunctionalTestCase
     public void testFunctionBehaviour() throws Exception
     {
         MuleClient client = new MuleClient();
-        UMOMessage m = client.send("vm://groovy.1", "Test:", null);
+        MuleMessage m = client.send("vm://groovy.1", "Test:", null);
         assertNotNull(m);
         assertEquals("Test: A Received B Received", m.getPayloadAsString());
     }

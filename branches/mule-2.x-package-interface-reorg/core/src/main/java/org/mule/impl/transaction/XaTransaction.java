@@ -12,8 +12,8 @@ package org.mule.impl.transaction;
 
 import org.mule.MuleServer;
 import org.mule.api.TransactionException;
-import org.mule.imple.config.i18n.CoreMessages;
-import org.mule.imple.config.i18n.MessageFactory;
+import org.mule.impl.config.i18n.CoreMessages;
+import org.mule.impl.config.i18n.MessageFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -132,7 +132,7 @@ public class XaTransaction extends AbstractTransaction
         finally
         {
             /*
-                MUST nullify XA ref here, otherwise UMOTransaction.getStatus() doesn't match
+                MUST nullify XA ref here, otherwise Transaction.getStatus() doesn't match
                 javax.transaction.Transaction.getStatus(). Must return STATUS_NO_TRANSACTION and not
                 STATUS_COMMITTED.
 
@@ -196,7 +196,7 @@ public class XaTransaction extends AbstractTransaction
         finally
         {
             /*
-                MUST nullify XA ref here, otherwise UMOTransaction.getStatus() doesn't match
+                MUST nullify XA ref here, otherwise Transaction.getStatus() doesn't match
                 javax.transaction.Transaction.getStatus(). Must return STATUS_NO_TRANSACTION and not
                 STATUS_COMMITTED.
 

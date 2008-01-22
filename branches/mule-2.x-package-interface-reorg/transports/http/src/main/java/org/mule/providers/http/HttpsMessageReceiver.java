@@ -10,12 +10,12 @@
 
 package org.mule.providers.http;
 
-import org.mule.api.UMOComponent;
-import org.mule.api.UMOMessage;
-import org.mule.api.endpoint.UMOEndpoint;
+import org.mule.api.Component;
+import org.mule.api.MuleMessage;
+import org.mule.api.endpoint.Endpoint;
 import org.mule.api.lifecycle.CreateException;
 import org.mule.api.lifecycle.InitialisationException;
-import org.mule.api.transport.UMOConnector;
+import org.mule.api.transport.Connector;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -30,7 +30,7 @@ import javax.resource.spi.work.Work;
 public class HttpsMessageReceiver extends HttpMessageReceiver
 {
 
-    public HttpsMessageReceiver(UMOConnector connector, UMOComponent component, UMOEndpoint endpoint)
+    public HttpsMessageReceiver(Connector connector, Component component, Endpoint endpoint)
             throws CreateException
     {
         super(connector, component, endpoint);
@@ -54,7 +54,7 @@ public class HttpsMessageReceiver extends HttpMessageReceiver
             ((SSLSocket) socket).addHandshakeCompletedListener(this);
         }
 
-        protected void preRouteMessage(UMOMessage message)
+        protected void preRouteMessage(MuleMessage message)
         {
             super.preRouteMessage(message);
             

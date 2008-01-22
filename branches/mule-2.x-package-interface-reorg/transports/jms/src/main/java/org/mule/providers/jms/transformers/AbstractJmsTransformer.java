@@ -10,13 +10,13 @@
 
 package org.mule.providers.jms.transformers;
 
-import org.mule.api.UMOMessage;
-import org.mule.api.UMOTransaction;
+import org.mule.api.MuleMessage;
+import org.mule.api.Transaction;
 import org.mule.api.config.MuleProperties;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.transformer.DiscoverableTransformer;
 import org.mule.api.transformer.TransformerException;
-import org.mule.api.transport.UMOConnector;
+import org.mule.api.transport.Connector;
 import org.mule.impl.transaction.TransactionCoordination;
 import org.mule.impl.transformer.AbstractMessageAwareTransformer;
 import org.mule.providers.jms.JmsConnector;
@@ -47,7 +47,7 @@ public abstract class AbstractJmsTransformer extends AbstractMessageAwareTransfo
         super();
     }
 
-    protected Message transformToMessage(UMOMessage message) throws TransformerException
+    protected Message transformToMessage(MuleMessage message) throws TransformerException
     {
         Session session = null;
         try
@@ -93,7 +93,7 @@ public abstract class AbstractJmsTransformer extends AbstractMessageAwareTransfo
 
             if (session != null && endpoint != null) // endpoint can be null in some programmatic tests only in fact
             {
-                UMOTransaction muleTx = TransactionCoordination.getInstance().getTransaction();
+                Transaction muleTx = TransactionCoordination.getInstance().getTransaction();
 
                 final JmsConnector connector = (JmsConnector) endpoint.getConnector();
                 if (muleTx == null)
@@ -133,10 +133,10 @@ public abstract class AbstractJmsTransformer extends AbstractMessageAwareTransfo
             // Try to figure out our endpoint's JMS Specification and fall back to
             // 1.0.2 if none is set.
             String jmsSpec = JmsConstants.JMS_SPECIFICATION_102B;
-            UMOImmutableEndpoint endpoint = this.getEndpoint();
+            ImmutableEndpoint endpoint = this.getEndpoint();
             if (endpoint != null)
             {
-                UMOConnector connector = endpoint.getConnector();
+                Connector connector = endpoint.getConnector();
                 if (connector instanceof JmsConnector)
                 {
                     jmsSpec = ((JmsConnector) connector).getSpecification();
@@ -151,7 +151,7 @@ public abstract class AbstractJmsTransformer extends AbstractMessageAwareTransfo
         }
     }
 
-    protected void setJmsProperties(UMOMessage umoMessage, Message msg) throws JMSException
+    protected void setJmsProperties(MuleMessage umoMessage, Message msg) throws JMSException
     {
         for (Iterator iterator = umoMessage.getPropertyNames().iterator(); iterator.hasNext();)
         {

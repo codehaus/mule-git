@@ -10,28 +10,28 @@
 
 package org.mule.impl.transport.service;
 
-import org.mule.api.UMOComponent;
-import org.mule.api.UMOException;
-import org.mule.api.UMOTransactionConfig;
-import org.mule.api.UMOTransactionFactory;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.Component;
+import org.mule.api.TransactionConfig;
+import org.mule.api.TransactionFactory;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.endpoint.EndpointURIBuilder;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.registry.AbstractServiceDescriptor;
 import org.mule.api.registry.Registry;
-import org.mule.api.transformer.UMOTransformer;
-import org.mule.api.transport.UMOConnector;
-import org.mule.api.transport.UMOMessageAdapter;
-import org.mule.api.transport.UMOMessageDispatcherFactory;
-import org.mule.api.transport.UMOMessageReceiver;
-import org.mule.api.transport.UMOMessageRequesterFactory;
-import org.mule.api.transport.UMOSessionHandler;
+import org.mule.api.transformer.Transformer;
+import org.mule.api.transport.Connector;
+import org.mule.api.transport.MessageAdapter;
+import org.mule.api.transport.MessageDispatcherFactory;
+import org.mule.api.transport.MessageReceiver;
+import org.mule.api.transport.MessageRequesterFactory;
+import org.mule.api.transport.SessionHandler;
 import org.mule.impl.MuleSessionHandler;
+import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.impl.endpoint.UrlEndpointURIBuilder;
 import org.mule.impl.transaction.XaTransactionFactory;
 import org.mule.impl.transformer.TransformerUtils;
 import org.mule.impl.transport.NullPayload;
-import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.util.ClassUtils;
 import org.mule.util.CollectionUtils;
 import org.mule.util.object.ObjectFactory;
@@ -57,9 +57,9 @@ public class DefaultTransportServiceDescriptor extends AbstractServiceDescriptor
     private String defaultOutboundTransformer;
     private String defaultResponseTransformer;
 
-    private UMOTransformer inboundTransformer;
-    private UMOTransformer outboundTransformer;
-    private UMOTransformer responseTransformer;
+    private Transformer inboundTransformer;
+    private Transformer outboundTransformer;
+    private Transformer responseTransformer;
     // private EndpointBuilder endpointBuilderImpl;
 
     private Properties exceptionMappings = new Properties();
@@ -143,12 +143,12 @@ public class DefaultTransportServiceDescriptor extends AbstractServiceDescriptor
     /* (non-Javadoc)
      * @see org.mule.impl.transport.service.TransportServiceDescriptor#createMessageAdapter(java.lang.Object)
      */
-    public UMOMessageAdapter createMessageAdapter(Object message) throws TransportServiceException
+    public MessageAdapter createMessageAdapter(Object message) throws TransportServiceException
     {
         return createMessageAdapter(message, messageAdapter);
     }
 
-    protected UMOMessageAdapter createMessageAdapter(Object message, String clazz)
+    protected MessageAdapter createMessageAdapter(Object message, String clazz)
             throws TransportServiceException
     {
         if (message == null)
@@ -159,7 +159,7 @@ public class DefaultTransportServiceDescriptor extends AbstractServiceDescriptor
         {
             try
             {
-                return (UMOMessageAdapter) ClassUtils.instanciateClass(clazz, new Object[]{message});
+                return (MessageAdapter) ClassUtils.instanciateClass(clazz, new Object[]{message});
             }
             catch (Exception e)
             {
@@ -175,7 +175,7 @@ public class DefaultTransportServiceDescriptor extends AbstractServiceDescriptor
     /* (non-Javadoc)
      * @see org.mule.impl.transport.service.TransportServiceDescriptor#createSessionHandler()
      */
-    public UMOSessionHandler createSessionHandler() throws TransportServiceException
+    public SessionHandler createSessionHandler() throws TransportServiceException
     {
         if (sessionHandler == null)
         {
@@ -188,7 +188,7 @@ public class DefaultTransportServiceDescriptor extends AbstractServiceDescriptor
         }
         try
         {
-            return (UMOSessionHandler) ClassUtils.instanciateClass(sessionHandler, ClassUtils.NO_ARGS,
+            return (SessionHandler) ClassUtils.instanciateClass(sessionHandler, ClassUtils.NO_ARGS,
                     getClass());
         }
         catch (Throwable e)
@@ -198,28 +198,28 @@ public class DefaultTransportServiceDescriptor extends AbstractServiceDescriptor
     }
 
     /* (non-Javadoc)
-     * @see org.mule.impl.transport.service.TransportServiceDescriptor#createMessageReceiver(org.mule.api.transport.UMOConnector, org.mule.api.UMOComponent, org.mule.api.endpoint.UMOEndpoint)
+     * @see org.mule.impl.transport.service.TransportServiceDescriptor#createMessageReceiver(org.mule.api.transport.Connector, org.mule.api.Component, org.mule.api.endpoint.Endpoint)
      */
-    public UMOMessageReceiver createMessageReceiver(UMOConnector connector,
-                                                    UMOComponent component,
-                                                    UMOImmutableEndpoint endpoint) throws UMOException
+    public MessageReceiver createMessageReceiver(Connector connector,
+                                                    Component component,
+                                                    ImmutableEndpoint endpoint) throws AbstractMuleException
     {
 
         return createMessageReceiver(connector, component, endpoint, null);
     }
 
     /* (non-Javadoc)
-     * @see org.mule.impl.transport.service.TransportServiceDescriptor#createMessageReceiver(org.mule.api.transport.UMOConnector, org.mule.api.UMOComponent, org.mule.api.endpoint.UMOEndpoint, java.lang.Object[])
+     * @see org.mule.impl.transport.service.TransportServiceDescriptor#createMessageReceiver(org.mule.api.transport.Connector, org.mule.api.Component, org.mule.api.endpoint.Endpoint, java.lang.Object[])
      */
-    public UMOMessageReceiver createMessageReceiver(UMOConnector connector,
-                                                    UMOComponent component,
-                                                    UMOImmutableEndpoint endpoint,
-                                                    Object[] args) throws UMOException
+    public MessageReceiver createMessageReceiver(Connector connector,
+                                                    Component component,
+                                                    ImmutableEndpoint endpoint,
+                                                    Object[] args) throws AbstractMuleException
     {
         String receiverClass = messageReceiver;
 
         if (endpoint.getTransactionConfig() != null
-                && endpoint.getTransactionConfig().getAction() != UMOTransactionConfig.ACTION_NONE)
+                && endpoint.getTransactionConfig().getAction() != TransactionConfig.ACTION_NONE)
         {
             boolean xaTx = endpoint.getTransactionConfig().getFactory() instanceof XaTransactionFactory;
             if (transactedMessageReceiver != null && !xaTx)
@@ -257,7 +257,7 @@ public class DefaultTransportServiceDescriptor extends AbstractServiceDescriptor
 
             try
             {
-                return (UMOMessageReceiver) ClassUtils.instanciateClass(receiverClass, newArgs);
+                return (MessageReceiver) ClassUtils.instanciateClass(receiverClass, newArgs);
             }
             catch (Exception e)
             {
@@ -274,13 +274,13 @@ public class DefaultTransportServiceDescriptor extends AbstractServiceDescriptor
     /* (non-Javadoc)
      * @see org.mule.impl.transport.service.TransportServiceDescriptor#createDispatcherFactory()
      */
-    public UMOMessageDispatcherFactory createDispatcherFactory() throws TransportServiceException
+    public MessageDispatcherFactory createDispatcherFactory() throws TransportServiceException
     {
         if (dispatcherFactory != null)
         {
             try
             {
-                return (UMOMessageDispatcherFactory) ClassUtils.instanciateClass(dispatcherFactory,
+                return (MessageDispatcherFactory) ClassUtils.instanciateClass(dispatcherFactory,
                         ClassUtils.NO_ARGS);
             }
             catch (Exception e)
@@ -298,13 +298,13 @@ public class DefaultTransportServiceDescriptor extends AbstractServiceDescriptor
     /* (non-Javadoc)
      * @see org.mule.impl.transport.service.TransportServiceDescriptor#createRequesterFactory()
      */
-    public UMOMessageRequesterFactory createRequesterFactory() throws TransportServiceException
+    public MessageRequesterFactory createRequesterFactory() throws TransportServiceException
     {
         if (requesterFactory != null)
         {
             try
             {
-                return (UMOMessageRequesterFactory) ClassUtils.instanciateClass(requesterFactory,
+                return (MessageRequesterFactory) ClassUtils.instanciateClass(requesterFactory,
                         ClassUtils.NO_ARGS);
             }
             catch (Exception e)
@@ -323,13 +323,13 @@ public class DefaultTransportServiceDescriptor extends AbstractServiceDescriptor
     /* (non-Javadoc)
      * @see org.mule.impl.transport.service.TransportServiceDescriptor#createTransactionFactory()
      */
-    public UMOTransactionFactory createTransactionFactory() throws TransportServiceException
+    public TransactionFactory createTransactionFactory() throws TransportServiceException
     {
         if (transactionFactory != null)
         {
             try
             {
-                return (UMOTransactionFactory) ClassUtils.instanciateClass(transactionFactory,
+                return (TransactionFactory) ClassUtils.instanciateClass(transactionFactory,
                         ClassUtils.NO_ARGS);
             }
             catch (Exception e)
@@ -346,9 +346,9 @@ public class DefaultTransportServiceDescriptor extends AbstractServiceDescriptor
     /* (non-Javadoc)
      * @see org.mule.impl.transport.service.TransportServiceDescriptor#createConnector(java.lang.String)
      */
-    public UMOConnector createConnector() throws TransportServiceException
+    public Connector createConnector() throws TransportServiceException
     {
-        UMOConnector newConnector;
+        Connector newConnector;
         // if there is a factory, use it
         try
         {
@@ -356,13 +356,13 @@ public class DefaultTransportServiceDescriptor extends AbstractServiceDescriptor
             {
                 ObjectFactory factory = (ObjectFactory) ClassUtils.loadClass(connectorFactory,
                         TransportFactory.class).newInstance();
-                newConnector = (UMOConnector) factory.getOrCreate();
+                newConnector = (Connector) factory.getOrCreate();
             }
             else
             {
                 if (connector != null)
                 {
-                    newConnector = (UMOConnector) ClassUtils.loadClass(connector, TransportFactory.class)
+                    newConnector = (Connector) ClassUtils.loadClass(connector, TransportFactory.class)
                             .newInstance();
                 }
                 else
@@ -402,7 +402,7 @@ public class DefaultTransportServiceDescriptor extends AbstractServiceDescriptor
             logger.info("Loading default inbound transformer: " + defaultInboundTransformer);
             try
             {
-                inboundTransformer = (UMOTransformer) ClassUtils.instanciateClass(
+                inboundTransformer = (Transformer) ClassUtils.instanciateClass(
                         defaultInboundTransformer, ClassUtils.NO_ARGS);
                 return CollectionUtils.singletonList(inboundTransformer);
             }
@@ -428,7 +428,7 @@ public class DefaultTransportServiceDescriptor extends AbstractServiceDescriptor
             logger.info("Loading default outbound transformer: " + defaultOutboundTransformer);
             try
             {
-                outboundTransformer = (UMOTransformer) ClassUtils.instanciateClass(
+                outboundTransformer = (Transformer) ClassUtils.instanciateClass(
                         defaultOutboundTransformer, ClassUtils.NO_ARGS);
                 return CollectionUtils.singletonList(outboundTransformer);
             }
@@ -454,7 +454,7 @@ public class DefaultTransportServiceDescriptor extends AbstractServiceDescriptor
             logger.info("Loading default response transformer: " + defaultResponseTransformer);
             try
             {
-                responseTransformer = (UMOTransformer) ClassUtils.instanciateClass(
+                responseTransformer = (Transformer) ClassUtils.instanciateClass(
                         defaultResponseTransformer, ClassUtils.NO_ARGS);
                 return CollectionUtils.singletonList(responseTransformer);
             }

@@ -9,7 +9,7 @@
  */
 package org.mule.util.properties;
 
-import org.mule.imple.config.i18n.CoreMessages;
+import org.mule.impl.config.i18n.CoreMessages;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -10,7 +10,7 @@
 
 package org.mule.providers.jms;
 
-import org.mule.api.endpoint.UMOEndpointURI;
+import org.mule.api.endpoint.EndpointURI;
 import org.mule.impl.endpoint.MuleEndpointURI;
 import org.mule.tck.AbstractMuleTestCase;
 
@@ -19,7 +19,7 @@ public class JmsEndpointTestCase extends AbstractMuleTestCase
 
     public void testWithoutFullUrl() throws Exception
     {
-        UMOEndpointURI url = new MuleEndpointURI("jms:/my.queue");
+        EndpointURI url = new MuleEndpointURI("jms:/my.queue");
         url.initialise();
         assertEquals("jms", url.getScheme());
         assertEquals("my.queue", url.getAddress());
@@ -29,7 +29,7 @@ public class JmsEndpointTestCase extends AbstractMuleTestCase
 
     public void testFullUrlWithSlashes() throws Exception
     {
-        UMOEndpointURI url = new MuleEndpointURI("jms://my/queue");
+        EndpointURI url = new MuleEndpointURI("jms://my/queue");
         url.initialise();
         assertEquals("jms", url.getScheme());
         assertEquals("my/queue", url.getAddress());
@@ -39,7 +39,7 @@ public class JmsEndpointTestCase extends AbstractMuleTestCase
 
     public void testWithoutFullUrlAndEndpointName() throws Exception
     {
-        UMOEndpointURI url = new MuleEndpointURI("jms:/my.queue?endpointName=jmsProvider");
+        EndpointURI url = new MuleEndpointURI("jms:/my.queue?endpointName=jmsProvider");
         url.initialise();
         assertEquals("jms", url.getScheme());
         assertEquals("my.queue", url.getAddress());
@@ -50,7 +50,7 @@ public class JmsEndpointTestCase extends AbstractMuleTestCase
 
     public void testJmsUrl() throws Exception
     {
-        UMOEndpointURI url = new MuleEndpointURI("jms://queue1?endpointName=jmsProvider");
+        EndpointURI url = new MuleEndpointURI("jms://queue1?endpointName=jmsProvider");
         url.initialise();
         assertEquals("jms", url.getScheme());
         assertEquals("queue1", url.getAddress());
@@ -61,7 +61,7 @@ public class JmsEndpointTestCase extends AbstractMuleTestCase
 
     public void testJmsTopic() throws Exception
     {
-        UMOEndpointURI url = new MuleEndpointURI("jms://topic:topic1");
+        EndpointURI url = new MuleEndpointURI("jms://topic:topic1");
         url.initialise();
         assertEquals("jms", url.getScheme());
         assertEquals("topic1", url.getAddress());
@@ -72,7 +72,7 @@ public class JmsEndpointTestCase extends AbstractMuleTestCase
 
     public void testJmsTopicWithProvider() throws Exception
     {
-        UMOEndpointURI url = new MuleEndpointURI("jms://topic:topic1?endpointName=jmsProvider");
+        EndpointURI url = new MuleEndpointURI("jms://topic:topic1?endpointName=jmsProvider");
         url.initialise();
         assertEquals("jms", url.getScheme());
         assertEquals("topic1", url.getAddress());
@@ -83,7 +83,7 @@ public class JmsEndpointTestCase extends AbstractMuleTestCase
 
     public void testJmsTopicWithUserInfo() throws Exception
     {
-        UMOEndpointURI url = new MuleEndpointURI("jms://user:password@topic:topic1");
+        EndpointURI url = new MuleEndpointURI("jms://user:password@topic:topic1");
         url.initialise();
         assertEquals("jms", url.getScheme());
         assertEquals("topic1", url.getAddress());
@@ -96,7 +96,7 @@ public class JmsEndpointTestCase extends AbstractMuleTestCase
 
     public void testJmsTopicWithUserInfoAndProvider() throws Exception
     {
-        UMOEndpointURI url = new MuleEndpointURI("jms://user:password@topic:topic1?endpointName=jmsProvider");
+        EndpointURI url = new MuleEndpointURI("jms://user:password@topic:topic1?endpointName=jmsProvider");
         url.initialise();
         assertEquals("jms", url.getScheme());
         assertEquals("topic1", url.getAddress());
@@ -110,7 +110,7 @@ public class JmsEndpointTestCase extends AbstractMuleTestCase
 
     public void testJmsDestWithSlashesAndUserInfoUsingAddressParam() throws Exception
     {
-        UMOEndpointURI url = new MuleEndpointURI("jms://user:password@?address=/myQueues/myQueue");
+        EndpointURI url = new MuleEndpointURI("jms://user:password@?address=/myQueues/myQueue");
         url.initialise();
         assertEquals("jms", url.getScheme());
         assertEquals("/myQueues/myQueue", url.getAddress());
@@ -122,7 +122,7 @@ public class JmsEndpointTestCase extends AbstractMuleTestCase
 
     public void testJmsDestWithSlashesAndUserInfo() throws Exception
     {
-        UMOEndpointURI url = new MuleEndpointURI("jms://user:password@myQueues/myQueue");
+        EndpointURI url = new MuleEndpointURI("jms://user:password@myQueues/myQueue");
         url.initialise();
         assertEquals("jms", url.getScheme());
         assertEquals("myQueues/myQueue", url.getAddress());

@@ -10,14 +10,14 @@
 
 package org.mule.impl.routing.outbound;
 
-import org.mule.api.UMOException;
-import org.mule.api.UMOMessage;
-import org.mule.api.UMOSession;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleMessage;
+import org.mule.api.Session;
 import org.mule.api.context.MuleContextAware;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.routing.CouldNotRouteOutboundMessageException;
 import org.mule.api.routing.RoutingException;
-import org.mule.imple.config.i18n.CoreMessages;
+import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.util.StringUtils;
 import org.mule.util.properties.PropertyExtractorManager;
 
@@ -52,7 +52,7 @@ public class EndpointSelector extends FilteringOutboundRouter implements MuleCon
 
 
 
-    public UMOMessage route(UMOMessage message, UMOSession session, boolean synchronous)
+    public MuleMessage route(MuleMessage message, Session session, boolean synchronous)
         throws RoutingException
     {
         List endpoints;
@@ -80,7 +80,7 @@ public class EndpointSelector extends FilteringOutboundRouter implements MuleCon
                     getSelectorProperty(), new Class[]{String.class, List.class}, property.getClass()), message, null);
         }
 
-        UMOMessage result = null;
+        MuleMessage result = null;
         for (Iterator iterator = endpoints.iterator(); iterator.hasNext();)
         {
             endpointName = iterator.next().toString();
@@ -90,7 +90,7 @@ public class EndpointSelector extends FilteringOutboundRouter implements MuleCon
                 throw new CouldNotRouteOutboundMessageException(
                         CoreMessages.objectIsNull("Endpoint Name: " + getSelectorProperty()), message, null);
             }
-            UMOImmutableEndpoint ep = null;
+            ImmutableEndpoint ep = null;
             try
             {
                 ep = lookupEndpoint(endpointName);
@@ -109,7 +109,7 @@ public class EndpointSelector extends FilteringOutboundRouter implements MuleCon
                     dispatch(session, message, ep);
                 }
             }
-            catch (UMOException e)
+            catch (AbstractMuleException e)
             {
                 throw new CouldNotRouteOutboundMessageException(message, ep, e);
             }
@@ -117,13 +117,13 @@ public class EndpointSelector extends FilteringOutboundRouter implements MuleCon
         return result;
     }
 
-    protected UMOImmutableEndpoint lookupEndpoint(String endpointName) throws UMOException
+    protected ImmutableEndpoint lookupEndpoint(String endpointName) throws AbstractMuleException
     {
-        UMOImmutableEndpoint ep;
+        ImmutableEndpoint ep;
         Iterator iterator = endpoints.iterator();
         while (iterator.hasNext())
         {
-            ep = (UMOImmutableEndpoint) iterator.next();
+            ep = (ImmutableEndpoint) iterator.next();
             // Endpoint identifier (deprecated)
             if (endpointName.equals(ep.getEndpointURI().getEndpointName()))
             {

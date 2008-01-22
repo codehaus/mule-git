@@ -10,10 +10,10 @@
 
 package org.mule.test.usecases.properties;
 
-import org.mule.api.UMOEventContext;
-import org.mule.api.UMOMessage;
+import org.mule.api.EventContext;
+import org.mule.api.MuleMessage;
 import org.mule.api.lifecycle.Callable;
-import org.mule.impl.MuleMessage;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.tck.testmodels.fruit.Apple;
 
 import java.util.HashMap;
@@ -28,7 +28,7 @@ public class PropsComponent implements Callable
 
     protected static Apple testObjectProperty = new Apple();
 
-    public Object onCall(UMOEventContext context) throws Exception
+    public Object onCall(EventContext context) throws Exception
     {
         logger.debug("org.mule.test.usecases.props.PropsComponent");
 
@@ -38,7 +38,7 @@ public class PropsComponent implements Callable
             Map props = new HashMap();
             props.put("stringParam", "param1");
             props.put("objectParam", testObjectProperty);
-            UMOMessage msg = new MuleMessage(context.getMessageAsString(), props);
+            MuleMessage msg = new DefaultMuleMessage(context.getMessageAsString(), props);
             logger.debug("Adding done: " + context.getComponent().getName());
             return msg;
         }

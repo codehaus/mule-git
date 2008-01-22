@@ -10,8 +10,8 @@
 
 package org.mule.providers.vm.i18n;
 
-import org.mule.imple.config.i18n.Message;
-import org.mule.imple.config.i18n.MessageFactory;
+import org.mule.impl.config.i18n.Message;
+import org.mule.impl.config.i18n.MessageFactory;
 import org.mule.providers.vm.VMConnector;
 
 public class VMMessages extends MessageFactory

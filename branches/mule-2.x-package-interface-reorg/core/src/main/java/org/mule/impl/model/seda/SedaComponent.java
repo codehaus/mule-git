@@ -11,13 +11,13 @@
 package org.mule.impl.model.seda;
 
 import org.mule.RegistryContext;
+import org.mule.api.AbstractMuleException;
 import org.mule.api.ComponentException;
+import org.mule.api.Event;
+import org.mule.api.MuleMessage;
 import org.mule.api.MuleRuntimeException;
-import org.mule.api.UMOEvent;
-import org.mule.api.UMOException;
-import org.mule.api.UMOMessage;
 import org.mule.api.config.ThreadingProfile;
-import org.mule.api.context.UMOWorkManager;
+import org.mule.api.context.WorkManager;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.lifecycle.LifecycleException;
 import org.mule.api.lifecycle.Startable;
@@ -27,10 +27,10 @@ import org.mule.impl.FailedToQueueEventException;
 import org.mule.impl.MuleEvent;
 import org.mule.impl.config.MuleConfiguration;
 import org.mule.impl.config.QueueProfile;
+import org.mule.impl.config.i18n.CoreMessages;
+import org.mule.impl.config.i18n.MessageFactory;
 import org.mule.impl.management.stats.ComponentStatistics;
 import org.mule.impl.model.AbstractComponent;
-import org.mule.imple.config.i18n.CoreMessages;
-import org.mule.imple.config.i18n.MessageFactory;
 import org.mule.util.queue.Queue;
 import org.mule.util.queue.QueueSession;
 
@@ -40,7 +40,6 @@ import javax.resource.spi.work.Work;
 import javax.resource.spi.work.WorkEvent;
 import javax.resource.spi.work.WorkException;
 import javax.resource.spi.work.WorkListener;
-import javax.resource.spi.work.WorkManager;
 
 /**
  * A Seda component runs inside a Seda Model and is responsible for managing a Seda
@@ -54,7 +53,7 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
      */
     private static final long serialVersionUID = 7711976708670893015L;
 
-    protected UMOWorkManager workManager;
+    protected WorkManager workManager;
 
     /**
      * The time out used for taking from the Seda Queue.
@@ -131,12 +130,12 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
         }
     }
 
-    public void doForceStop() throws UMOException
+    public void doForceStop() throws AbstractMuleException
     {
         doStop();
     }
 
-    public void doStop() throws UMOException
+    public void doStop() throws AbstractMuleException
     {
         if (muleContext.getQueueManager().getQueueSession().getQueue(name).size() > 0)
         {
@@ -157,7 +156,7 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
         }
     }
 
-    public void doStart() throws UMOException
+    public void doStart() throws AbstractMuleException
     {
         try
         {
@@ -187,7 +186,7 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
         serviceFactory.dispose();
     }
 
-    protected void doDispatch(UMOEvent event) throws UMOException
+    protected void doDispatch(Event event) throws AbstractMuleException
     {
         // Dispatching event to the component
         if (stats.isEnabled())
@@ -224,9 +223,9 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
         }
     }
 
-    public UMOMessage doSend(UMOEvent event) throws UMOException
+    public MuleMessage doSend(Event event) throws AbstractMuleException
     {
-        UMOMessage result = null;
+        MuleMessage result = null;
         Object pojoService = null;
         MuleProxy proxy = null;
         try
@@ -239,9 +238,9 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
             {
                 logger.debug(this + " : got proxy for " + event.getId() + " = " + proxy);
             }
-            result = (UMOMessage) proxy.onCall(event);
+            result = (MuleMessage) proxy.onCall(event);
         }
-        catch (UMOException e)
+        catch (AbstractMuleException e)
         {
             throw e;
         }
@@ -355,7 +354,7 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
                     handleException(new ComponentException(CoreMessages.proxyPoolTimedOut(),
                         (event == null ? null : event.getMessage()), this, e));
                 }
-                else if (e instanceof UMOException)
+                else if (e instanceof AbstractMuleException)
                 {
                     handleException(e);
                 }
@@ -386,7 +385,7 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
         stopping.set(false);
     }
 
-    protected void enqueue(UMOEvent event) throws Exception
+    protected void enqueue(Event event) throws Exception
     {
         QueueSession session = muleContext.getQueueManager().getQueueSession();
         Queue queue = session.getQueue(name);
@@ -401,7 +400,7 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
         queue.put(event);
     }
 
-    protected UMOEvent dequeue() throws Exception
+    protected Event dequeue() throws Exception
     {
         QueueSession session = muleContext.getQueueManager().getQueueSession();
         Queue queue = session.getQueue(name);
@@ -419,7 +418,7 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
         }
         else
         {
-            return (UMOEvent) queue.poll(getQueueTimeout().intValue());
+            return (Event) queue.poll(getQueueTimeout().intValue());
         }
     }
 
@@ -480,7 +479,7 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
         return new ComponentStatistics(getName(), threadingProfile.getMaxThreadsActive());
     }
 
-    public Object getInstance() throws UMOException
+    public Object getInstance() throws AbstractMuleException
     {
         throw new UnsupportedOperationException("Direct access to underlying service object is not allowed in the SedaModel.  If this is for a unit test, make sure you are using the TestSedaModel ('seda-test')");
     }
@@ -515,12 +514,12 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
         this.threadingProfile = threadingProfile;
     }
 
-    public UMOWorkManager getWorkManager()
+    public WorkManager getWorkManager()
     {
         return workManager;
     }
 
-    public void setWorkManager(UMOWorkManager workManager)
+    public void setWorkManager(WorkManager workManager)
     {
         this.workManager = workManager;
     }

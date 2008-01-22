@@ -10,10 +10,10 @@
 
 package org.mule.providers.udp;
 
-import org.mule.api.UMOComponent;
-import org.mule.api.endpoint.UMOEndpointBuilder;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
-import org.mule.api.transport.UMOMessageReceiver;
+import org.mule.api.Component;
+import org.mule.api.endpoint.EndpointBuilder;
+import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.api.transport.MessageReceiver;
 import org.mule.impl.endpoint.EndpointURIEndpointBuilder;
 import org.mule.tck.providers.AbstractMessageReceiverTestCase;
 
@@ -22,20 +22,20 @@ import com.mockobjects.dynamic.Mock;
 public class UdpMessageReceiverTestCase extends AbstractMessageReceiverTestCase
 {
 
-    public UMOMessageReceiver getMessageReceiver() throws Exception
+    public MessageReceiver getMessageReceiver() throws Exception
     {
         endpoint = muleContext.getRegistry().lookupEndpointFactory().getInboundEndpoint(
             "udp://localhost:10100");
-        Mock mockComponent = new Mock(UMOComponent.class);
+        Mock mockComponent = new Mock(Component.class);
         mockComponent.expectAndReturn("getResponseTransformer", null);
         mockComponent.expectAndReturn("getResponseRouter", null);
 
-        return new UdpMessageReceiver(endpoint.getConnector(), (UMOComponent) mockComponent.proxy(), endpoint);
+        return new UdpMessageReceiver(endpoint.getConnector(), (Component) mockComponent.proxy(), endpoint);
     }
 
-    public UMOImmutableEndpoint getEndpoint() throws Exception
+    public ImmutableEndpoint getEndpoint() throws Exception
     {
-        UMOEndpointBuilder builder = new EndpointURIEndpointBuilder("udp://localhost:10100", muleContext);
+        EndpointBuilder builder = new EndpointURIEndpointBuilder("udp://localhost:10100", muleContext);
         builder.setConnector(new UdpConnector());
         return muleContext.getRegistry()
             .lookupEndpointFactory()

@@ -9,8 +9,8 @@
  */
 package org.mule.test.integration.transaction;
 
-import org.mule.api.UMOMessage;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.MuleMessage;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.impl.DefaultExceptionStrategy;
 
 /**
@@ -21,7 +21,7 @@ import org.mule.impl.DefaultExceptionStrategy;
 public class RollbackRoutingExceptionStrategy extends DefaultExceptionStrategy
 {
 
-    public void handleRoutingException(UMOMessage message, UMOImmutableEndpoint endpoint, Throwable t)
+    public void handleRoutingException(MuleMessage message, ImmutableEndpoint endpoint, Throwable t)
     {
         logger.debug("handleRoutingException: endpoint=" + endpoint + " message=" + message);
         defaultHandler(t);

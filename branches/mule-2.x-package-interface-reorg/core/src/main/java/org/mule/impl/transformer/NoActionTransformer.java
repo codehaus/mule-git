@@ -29,7 +29,7 @@ public final class NoActionTransformer extends AbstractTransformer
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.api.transformer.UMOTransformer#transform(java.lang.Object)
+     * @see org.mule.api.transformer.Transformer#transform(java.lang.Object)
      */
     public Object doTransform(Object src, String encoding) throws TransformerException
     {

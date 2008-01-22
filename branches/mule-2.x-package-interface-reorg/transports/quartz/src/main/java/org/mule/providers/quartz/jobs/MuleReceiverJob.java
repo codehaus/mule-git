@@ -11,7 +11,7 @@
 package org.mule.providers.quartz.jobs;
 
 import org.mule.RegistryContext;
-import org.mule.impl.MuleMessage;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.transport.AbstractConnector;
 import org.mule.impl.transport.AbstractMessageReceiver;
 import org.mule.impl.transport.NullPayload;
@@ -90,7 +90,7 @@ public class MuleReceiverJob implements Job
                     payload = NullPayload.getInstance();
                 }
             }
-            receiver.routeMessage(new MuleMessage(receiver.getConnector().getMessageAdapter(payload)));
+            receiver.routeMessage(new DefaultMuleMessage(receiver.getConnector().getMessageAdapter(payload)));
         }
         catch (Exception e)
         {

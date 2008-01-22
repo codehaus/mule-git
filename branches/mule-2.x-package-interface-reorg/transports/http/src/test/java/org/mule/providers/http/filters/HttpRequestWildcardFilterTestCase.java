@@ -10,7 +10,7 @@
 
 package org.mule.providers.http.filters;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.providers.http.HttpConnector;
 import org.mule.providers.http.HttpConstants;
@@ -41,7 +41,7 @@ public class HttpRequestWildcardFilterTestCase extends FunctionalTestCase
     public void testReference() throws Exception
     {
         MuleClient client = new MuleClient();
-        UMOMessage result = client.send(REF_ENDPOINT, TEST_MESSAGE, null);
+        MuleMessage result = client.send(REF_ENDPOINT, TEST_MESSAGE, null);
 
         assertEquals(TEST_MESSAGE, result.getPayloadAsString());
     }
@@ -49,7 +49,7 @@ public class HttpRequestWildcardFilterTestCase extends FunctionalTestCase
     public void testHttpPost() throws Exception
     {
         MuleClient client = new MuleClient();
-        UMOMessage result = client.send(HTTP_ENDPOINT, TEST_MESSAGE, null);
+        MuleMessage result = client.send(HTTP_ENDPOINT, TEST_MESSAGE, null);
 
         assertEquals(TEST_MESSAGE, result.getPayloadAsString());
     }
@@ -59,7 +59,7 @@ public class HttpRequestWildcardFilterTestCase extends FunctionalTestCase
         Map props = new HashMap();
         props.put(HttpConstants.METHOD_GET, "true");
         MuleClient client = new MuleClient();
-        UMOMessage result = client.send(HTTP_ENDPOINT, TEST_MESSAGE, props);
+        MuleMessage result = client.send(HTTP_ENDPOINT, TEST_MESSAGE, props);
 
         assertEquals(TEST_MESSAGE, result.getPayloadAsString());
     }
@@ -69,7 +69,7 @@ public class HttpRequestWildcardFilterTestCase extends FunctionalTestCase
         Map props = new HashMap();
         props.put(HttpConstants.METHOD_GET, "true");
         MuleClient client = new MuleClient();
-        UMOMessage result = client.send(HTTP_ENDPOINT, TEST_BAD_MESSAGE, props);
+        MuleMessage result = client.send(HTTP_ENDPOINT, TEST_BAD_MESSAGE, props);
         assertEquals(HttpConstants.SC_NOT_ACCEPTABLE, result.getIntProperty(HttpConnector.HTTP_STATUS_PROPERTY, 0));
         assertNotNull(result.getExceptionPayload());
     }

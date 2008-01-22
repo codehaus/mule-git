@@ -10,8 +10,8 @@
 
 package org.mule.providers.http.functional;
 
-import org.mule.api.UMOException;
-import org.mule.api.UMOMessage;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 
@@ -45,7 +45,7 @@ public class TwoEndpointsSinglePortTestCase extends FunctionalTestCase
         sendWithResponse("http://localhost:60211/mycomponent1", "test", "mycomponent1", 5);
         sendWithResponse("http://localhost:60211/mycomponent2", "test", "mycomponent2", 5);
 
-        UMOMessage result = client.send("http://localhost:60211/mycomponent-notfound", "test", null);
+        MuleMessage result = client.send("http://localhost:60211/mycomponent-notfound", "test", null);
         assertNotNull(result);
         assertNotNull(result.getExceptionPayload());
         assertEquals(404, result.getIntProperty("http.status", 0));
@@ -56,7 +56,7 @@ public class TwoEndpointsSinglePortTestCase extends FunctionalTestCase
     }
 
     protected void sendWithResponse(String endpoint, String message, String response, int noOfMessages)
-        throws UMOException
+        throws AbstractMuleException
     {
         MuleClient client = new MuleClient();
 

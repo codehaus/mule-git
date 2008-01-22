@@ -10,14 +10,14 @@
 
 package org.mule.api.lifecycle;
 
-import org.mule.api.UMOException;
-import org.mule.imple.config.i18n.CoreMessages;
-import org.mule.imple.config.i18n.Message;
+import org.mule.api.AbstractMuleException;
+import org.mule.impl.config.i18n.CoreMessages;
+import org.mule.impl.config.i18n.Message;
 import org.mule.util.ObjectUtils;
 
 /** <code>LifecycleException</code> TODO */
 
-public class LifecycleException extends UMOException
+public class LifecycleException extends AbstractMuleException
 {
     /** Serial version */
     private static final long serialVersionUID = 2909614055858287394L;

@@ -10,9 +10,9 @@
 
 package org.mule.impl.internal.notifications.manager;
 
-import org.mule.api.context.UMOServerNotification;
+import org.mule.api.context.ServerNotification;
 
-public class Event1 extends UMOServerNotification
+public class Event1 extends ServerNotification
 {
 
     public Event1()

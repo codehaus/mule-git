@@ -10,9 +10,9 @@
 
 package org.mule.providers.http.transformers;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.api.transformer.TransformerException;
-import org.mule.impl.MuleMessage;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.transformer.AbstractTransformer;
 import org.mule.impl.transport.NullPayload;
 import org.mule.providers.http.HttpConstants;
@@ -28,7 +28,7 @@ import org.apache.commons.httpclient.HttpMethod;
 
 /**
  * <code>HttpClientMethodResponseToObject</code> transforms a http client response
- * to a MuleMessage.
+ * to a DefaultMuleMessage.
  */
 
 public class HttpClientMethodResponseToObject extends AbstractTransformer
@@ -37,7 +37,7 @@ public class HttpClientMethodResponseToObject extends AbstractTransformer
     public HttpClientMethodResponseToObject()
     {
         registerSourceType(HttpMethod.class);
-        setReturnClass(UMOMessage.class);
+        setReturnClass(MuleMessage.class);
     }
 
     public Object doTransform(Object src, String encoding) throws TransformerException
@@ -79,6 +79,6 @@ public class HttpClientMethodResponseToObject extends AbstractTransformer
         }
         // Set Mule Properties
 
-        return new MuleMessage(msg, headerProps);
+        return new DefaultMuleMessage(msg, headerProps);
     }
 }

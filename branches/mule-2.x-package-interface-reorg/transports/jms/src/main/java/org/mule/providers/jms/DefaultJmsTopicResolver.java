@@ -10,7 +10,7 @@
 
 package org.mule.providers.jms;
 
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.util.MapUtils;
 import org.mule.util.StringMessageUtils;
 
@@ -61,7 +61,7 @@ public class DefaultJmsTopicResolver implements JmsTopicResolver
     /**
      * Will use endpoint's resource info to detect a topic,
      * as in {@code jms://topic:trade.PriceUpdatesTopic}. This
-     * method will call {@link #isTopic(org.mule.api.endpoint.UMOImmutableEndpoint, boolean)}
+     * method will call {@link #isTopic(org.mule.api.endpoint.ImmutableEndpoint, boolean)}
      * with fallback flag set to <strong>true</false>.
      * <p/>
      * <strong>NOTE:</strong> When using topics, use the '.' (dot) symbol for subcontext separation,
@@ -69,15 +69,15 @@ public class DefaultJmsTopicResolver implements JmsTopicResolver
      * topic endpoint due to the way URI's are parsed. 
      * @param endpoint endpoint to test
      * @return true if the endpoint has a topic configuration
-     * @see #isTopic(org.mule.api.endpoint.UMOImmutableEndpoint, boolean) 
+     * @see #isTopic(org.mule.api.endpoint.ImmutableEndpoint, boolean) 
      */
-    public boolean isTopic (UMOImmutableEndpoint endpoint)
+    public boolean isTopic (ImmutableEndpoint endpoint)
     {
         return isTopic(endpoint, true);
     }
 
     /** {@inheritDoc} */
-    public boolean isTopic (UMOImmutableEndpoint endpoint, boolean fallbackToEndpointProperties)
+    public boolean isTopic (ImmutableEndpoint endpoint, boolean fallbackToEndpointProperties)
     {
         final String resourceInfo = endpoint.getEndpointURI().getResourceInfo();
         boolean topic = JmsConstants.TOPIC_PROPERTY.equalsIgnoreCase(resourceInfo);

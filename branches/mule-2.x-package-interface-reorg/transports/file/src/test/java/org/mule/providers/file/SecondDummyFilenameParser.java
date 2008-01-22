@@ -10,12 +10,12 @@
 
 package org.mule.providers.file;
 
-import org.mule.api.transport.UMOMessageAdapter;
+import org.mule.api.transport.MessageAdapter;
 
 public class SecondDummyFilenameParser implements FilenameParser
 {
 
-    public String getFilename(UMOMessageAdapter adapter, String pattern)
+    public String getFilename(MessageAdapter adapter, String pattern)
     {
         return null;
     }

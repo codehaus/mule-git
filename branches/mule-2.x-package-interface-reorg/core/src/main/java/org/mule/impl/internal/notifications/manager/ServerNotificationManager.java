@@ -11,9 +11,9 @@
 package org.mule.impl.internal.notifications.manager;
 
 import org.mule.RegistryContext;
-import org.mule.api.context.UMOServerNotification;
-import org.mule.api.context.UMOServerNotificationListener;
-import org.mule.api.context.UMOWorkManager;
+import org.mule.api.context.ServerNotification;
+import org.mule.api.context.ServerNotificationListener;
+import org.mule.api.context.WorkManager;
 import org.mule.api.lifecycle.Disposable;
 import org.mule.api.lifecycle.LifecycleException;
 import org.mule.impl.config.MuleConfiguration;
@@ -26,7 +26,6 @@ import java.util.Map;
 import javax.resource.spi.work.Work;
 import javax.resource.spi.work.WorkException;
 import javax.resource.spi.work.WorkListener;
-import javax.resource.spi.work.WorkManager;
 
 import edu.emory.mathcs.backport.java.util.concurrent.BlockingDeque;
 import edu.emory.mathcs.backport.java.util.concurrent.LinkedBlockingDeque;
@@ -82,7 +81,7 @@ public class ServerNotificationManager implements Work, Disposable, ServerNotifi
         this.dynamic = dynamic;
     }
 
-    public void start(UMOWorkManager workManager) throws LifecycleException
+    public void start(WorkManager workManager) throws LifecycleException
     {
         try
         {
@@ -109,12 +108,12 @@ public class ServerNotificationManager implements Work, Disposable, ServerNotifi
         configuration.addListenerSubscriptionPair(pair);
     }
 
-    public void addListener(UMOServerNotificationListener listener)
+    public void addListener(ServerNotificationListener listener)
     {
         configuration.addListenerSubscriptionPair(new ListenerSubscriptionPair(listener));
     }
 
-    public void addListenerSubscription(UMOServerNotificationListener listener, String subscription)
+    public void addListenerSubscription(ServerNotificationListener listener, String subscription)
     {
         configuration.addListenerSubscriptionPair(new ListenerSubscriptionPair(listener, subscription));
     }
@@ -127,7 +126,7 @@ public class ServerNotificationManager implements Work, Disposable, ServerNotifi
     /**
      * This removes *all* registrations that reference this listener
      */
-    public void removeListener(UMOServerNotificationListener listener)
+    public void removeListener(ServerNotificationListener listener)
     {
         configuration.removeListener(listener);
     }
@@ -157,7 +156,7 @@ public class ServerNotificationManager implements Work, Disposable, ServerNotifi
         configuration.disableAllTypes(types);
     }
 
-    public void fireNotification(UMOServerNotification notification)
+    public void fireNotification(ServerNotification notification)
     {
         if (!disposed.get())
         {
@@ -194,7 +193,7 @@ public class ServerNotificationManager implements Work, Disposable, ServerNotifi
         workListener = null;
     }
 
-    protected void notifyListeners(UMOServerNotification notification)
+    protected void notifyListeners(ServerNotification notification)
     {
         if (!disposed.get())
         {
@@ -213,7 +212,7 @@ public class ServerNotificationManager implements Work, Disposable, ServerNotifi
         {
             try
             {
-                UMOServerNotification notification = (UMOServerNotification) eventQueue.take();
+                ServerNotification notification = (ServerNotification) eventQueue.take();
                 notifyListeners(notification);
             }
             catch (InterruptedException e)

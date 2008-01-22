@@ -10,8 +10,8 @@
 
 package org.mule.api.security;
 
-import org.mule.api.UMOMessage;
-import org.mule.imple.config.i18n.Message;
+import org.mule.api.MuleMessage;
+import org.mule.impl.config.i18n.Message;
 
 /**
  * <code>EncryptionNotSupportedException</code> is thrown if an algorithm is set in
@@ -25,12 +25,12 @@ public class EncryptionNotSupportedException extends SecurityException
      */
     private static final long serialVersionUID = -1661059380853528623L;
 
-    public EncryptionNotSupportedException(Message message, UMOMessage umoMessage)
+    public EncryptionNotSupportedException(Message message, MuleMessage umoMessage)
     {
         super(message, umoMessage);
     }
 
-    public EncryptionNotSupportedException(Message message, UMOMessage umoMessage, Throwable cause)
+    public EncryptionNotSupportedException(Message message, MuleMessage umoMessage, Throwable cause)
     {
         super(message, umoMessage, cause);
     }

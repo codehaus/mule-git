@@ -10,9 +10,9 @@
 
 package org.mule.providers.jdbc;
 
-import org.mule.api.UMOEvent;
-import org.mule.api.UMOMessage;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.Event;
+import org.mule.api.MuleMessage;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.impl.transport.AbstractMessageRequester;
 
 
@@ -21,7 +21,7 @@ public class JdbcMessageRequester extends AbstractMessageRequester
 
     private JdbcConnector connector;
 
-    public JdbcMessageRequester(UMOImmutableEndpoint endpoint)
+    public JdbcMessageRequester(ImmutableEndpoint endpoint)
     {
         super(endpoint);
         this.connector = (JdbcConnector) endpoint.getConnector();
@@ -44,11 +44,11 @@ public class JdbcMessageRequester extends AbstractMessageRequester
      *            The call should return immediately if there is data available. If
      *            no data becomes available before the timeout elapses, null will be
      *            returned
-     * @return the result of the request wrapped in a UMOMessage object. Null will be
+     * @return the result of the request wrapped in a MuleMessage object. Null will be
      *         returned if no data was available
      * @throws Exception if the call to the underlying protocol causes an exception
      */
-    protected UMOMessage doRequest(long timeout) throws Exception
+    protected MuleMessage doRequest(long timeout) throws Exception
     {
         return doRequest(timeout, null);
     }
@@ -58,11 +58,11 @@ public class JdbcMessageRequester extends AbstractMessageRequester
      * Special case: The event is need when doReceive was called from doSend
      * @param timeout only for compatibility with doRequest(long timeout)
      * @param event There is a need to get params from message
-     * @return the result of the request wrapped in a UMOMessage object. Null will be
+     * @return the result of the request wrapped in a MuleMessage object. Null will be
      *         returned if no data was available
      * @throws Exception if the call to the underlying protocol causes an exception
      */
-    protected UMOMessage doRequest(long timeout, UMOEvent event) throws Exception
+    protected MuleMessage doRequest(long timeout, Event event) throws Exception
     {
         return JdbcMessageDispatcher.executeRequest(timeout, event, connector, endpoint);
     }

@@ -10,10 +10,10 @@
 
 package org.mule.impl.transformer;
 
-import org.mule.api.UMOEventContext;
+import org.mule.api.EventContext;
 import org.mule.api.transformer.TransformerException;
 import org.mule.impl.RequestContext;
-import org.mule.imple.config.i18n.CoreMessages;
+import org.mule.impl.config.i18n.CoreMessages;
 
 /**
  * <code>AbstractEventAwareTransformer</code> is a transformer that has a reference
@@ -21,11 +21,11 @@ import org.mule.imple.config.i18n.CoreMessages;
  * with the current message useful to the transform. Note that when part of a
  * transform chain, the Message payload reflects the pre-transform message state,
  * unless there is no current event for this thread, then the message will be a new
- * MuleMessage with the src as its payload. Transformers should always work on the
+ * DefaultMuleMessage with the src as its payload. Transformers should always work on the
  * src object not the message payload.
  * 
- * @see org.mule.api.UMOMessage
- * @see org.mule.impl.MuleMessage
+ * @see org.mule.api.MuleMessage
+ * @see org.mule.impl.DefaultMuleMessage
  * @see org.mule.impl.transformer.AbstractMessageAwareTransformer
  * @deprecated use AbstractMessageAwareTransformer
  *
@@ -35,7 +35,7 @@ public abstract class AbstractEventAwareTransformer extends AbstractTransformer
 {
     public final Object doTransform(Object src, String encoding) throws TransformerException
     {
-        UMOEventContext event = RequestContext.getEventContext();
+        EventContext event = RequestContext.getEventContext();
         if (event == null && requiresCurrentEvent())
         {
             throw new TransformerException(CoreMessages.noCurrentEventForTransformer(), this);
@@ -43,7 +43,7 @@ public abstract class AbstractEventAwareTransformer extends AbstractTransformer
         return transform(src, encoding, event);
     }
 
-    public abstract Object transform(Object src, String encoding, UMOEventContext context)
+    public abstract Object transform(Object src, String encoding, EventContext context)
         throws TransformerException;
 
     protected boolean requiresCurrentEvent()

@@ -10,38 +10,38 @@
 
 package org.mule.impl.routing.filters.logic;
 
-import org.mule.api.UMOFilter;
-import org.mule.api.UMOMessage;
+import org.mule.api.Filter;
+import org.mule.api.MuleMessage;
 
 /**
  * <code>NotFilter</code> accepts if the filter does not accept.
  */
 
-public class NotFilter implements UMOFilter
+public class NotFilter implements Filter
 {
-    private UMOFilter filter;
+    private Filter filter;
 
     public NotFilter()
     {
         super();
     }
 
-    public NotFilter(UMOFilter filter)
+    public NotFilter(Filter filter)
     {
         this.filter = filter;
     }
 
-    public UMOFilter getFilter()
+    public Filter getFilter()
     {
         return filter;
     }
 
-    public void setFilter(UMOFilter filter)
+    public void setFilter(Filter filter)
     {
         this.filter = filter;
     }
 
-    public boolean accept(UMOMessage message)
+    public boolean accept(MuleMessage message)
     {
         return (filter != null ? !filter.accept(message) : false);
     }

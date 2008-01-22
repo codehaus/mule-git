@@ -10,9 +10,9 @@
 
 package org.mule.providers.soap.axis.functional;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
-import org.mule.impl.MuleMessage;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.tck.FunctionalTestCase;
 
 import java.util.HashMap;
@@ -33,8 +33,8 @@ public class AxisSoapHeadersTestCase extends FunctionalTestCase
         Map properties = new HashMap();
         properties.put("http.method", "POST");
 
-        MuleMessage soapRequest = null;
-        soapRequest = new MuleMessage(
+        DefaultMuleMessage soapRequest = null;
+        soapRequest = new DefaultMuleMessage(
             "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
                             +
 
@@ -53,7 +53,7 @@ public class AxisSoapHeadersTestCase extends FunctionalTestCase
                             "<soapenv:Body><echo soapenv:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"><value0 xsi:type=\"soapenc:string\" xmlns:soapenc=\"http://schemas.xmlsoap.org/soap/encoding/\">Test Message</value0></echo></soapenv:Body>"
                             + "</soapenv:Envelope>");
 
-        UMOMessage reply = client.send("http://localhost:62181/services/component", soapRequest, properties);
+        MuleMessage reply = client.send("http://localhost:62181/services/component", soapRequest, properties);
 
         // Put this in so that no spurious exceptions are thrown
         // TODO research and see why sometimes we get 404 or Connection refused

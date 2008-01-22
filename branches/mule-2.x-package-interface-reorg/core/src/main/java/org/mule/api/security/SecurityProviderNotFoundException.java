@@ -10,15 +10,15 @@
 
 package org.mule.api.security;
 
-import org.mule.api.UMOException;
-import org.mule.imple.config.i18n.CoreMessages;
+import org.mule.api.AbstractMuleException;
+import org.mule.impl.config.i18n.CoreMessages;
 
 /**
  * <code>SecurityProviderNotFoundException</code> is thrown by the
- * UMOSecurityManager when an authentication request is made but no suitable security
+ * SecurityManager when an authentication request is made but no suitable security
  * provider can be found to process the authentication
  */
-public class SecurityProviderNotFoundException extends UMOException
+public class SecurityProviderNotFoundException extends AbstractMuleException
 {
     /**
      * Serial version

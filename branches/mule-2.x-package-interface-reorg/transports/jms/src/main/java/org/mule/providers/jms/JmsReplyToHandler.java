@@ -10,10 +10,10 @@
 
 package org.mule.providers.jms;
 
-import org.mule.api.UMOEvent;
-import org.mule.api.UMOException;
-import org.mule.api.UMOMessage;
-import org.mule.api.transformer.UMOTransformer;
+import org.mule.api.Event;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleMessage;
+import org.mule.api.transformer.Transformer;
 import org.mule.api.transport.DispatchException;
 import org.mule.impl.model.AbstractComponent;
 import org.mule.impl.transformer.TransformerUtils;
@@ -46,7 +46,7 @@ public class JmsReplyToHandler extends DefaultReplyToHandler
         this.connector = connector;
     }
 
-    public void processReplyTo(UMOEvent event, UMOMessage returnMessage, Object replyTo) throws UMOException
+    public void processReplyTo(Event event, MuleMessage returnMessage, Object replyTo) throws AbstractMuleException
     {
         Destination replyToDestination = null;
         MessageProducer replyToProducer = null;
@@ -69,7 +69,7 @@ public class JmsReplyToHandler extends DefaultReplyToHandler
             Class srcType = returnMessage.getPayload().getClass();
             for (Iterator iterator = getTransformers().iterator(); iterator.hasNext();)
             {
-                UMOTransformer t = (UMOTransformer)iterator.next();
+                Transformer t = (Transformer)iterator.next();
                 if(t.isSourceTypeSupported(srcType))
                 {
                     if(t.getEndpoint()==null)
@@ -104,7 +104,7 @@ public class JmsReplyToHandler extends DefaultReplyToHandler
             replyToProducer = connector.getJmsSupport().createProducer(session, replyToDestination, topic);
 
             // QoS support
-            UMOMessage eventMsg = event.getMessage();
+            MuleMessage eventMsg = event.getMessage();
             String ttlString = (String)eventMsg.removeProperty(JmsConstants.TIME_TO_LIVE_PROPERTY);
             String priorityString = (String)eventMsg.removeProperty(JmsConstants.PRIORITY_PROPERTY);
             String persistentDeliveryString = (String)eventMsg.removeProperty(JmsConstants.PERSISTENT_DELIVERY_PROPERTY);

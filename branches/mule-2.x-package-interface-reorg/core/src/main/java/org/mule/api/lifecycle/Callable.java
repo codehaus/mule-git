@@ -10,7 +10,7 @@
 
 package org.mule.api.lifecycle;
 
-import org.mule.api.UMOEventContext;
+import org.mule.api.EventContext;
 
 /**
  * <code>Callable</code> is used to provide UMOs with an interface that supports
@@ -18,15 +18,15 @@ import org.mule.api.UMOEventContext;
  * <code>onCall</code> method provides an example lifecycle method that is executed
  * when an event is received for the implementing component.
  */
-public interface Callable extends UMOEventListener
+public interface Callable extends EventListener
 {
     /**
      * Passes the event to the listener
      * 
      * @param eventContext the context of the current event being process
      * @return Object this object can be anything. When the
-     *         <code>UMOLifecycleAdapter</code> for the component receives this
-     *         object it will first see if the Object is an <code>UMOMessage</code>
+     *         <code>LifecycleAdapter</code> for the component receives this
+     *         object it will first see if the Object is an <code>MuleMessage</code>
      *         if not and the Object is not null a new message will be created using
      *         the returned object as the payload. This new event will then get
      *         published via the configured outbound router if-
@@ -39,5 +39,5 @@ public interface Callable extends UMOEventListener
      *             handled by the implementation they will be handled by the
      *             exceptionListener associated with the component
      */
-    Object onCall(UMOEventContext eventContext) throws Exception;
+    Object onCall(EventContext eventContext) throws Exception;
 }

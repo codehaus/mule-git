@@ -10,7 +10,7 @@
 
 package org.mule.impl.internal.notifications;
 
-import org.mule.api.context.UMOServerNotification;
+import org.mule.api.context.ServerNotification;
 
 /**
  * <code>ManagementNotification</code> is fired when monitored resources such as
@@ -19,7 +19,7 @@ import org.mule.api.context.UMOServerNotification;
  * @see org.mule.MuleManager
  * @see org.mule.api.context.UMOManager
  */
-public class ManagementNotification extends UMOServerNotification
+public class ManagementNotification extends ServerNotification
 {
     /**
      * Serial version

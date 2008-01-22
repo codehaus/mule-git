@@ -9,9 +9,9 @@
  */
 package org.mule.impl.model.resolvers;
 
-import org.mule.api.UMOEventContext;
+import org.mule.api.EventContext;
+import org.mule.api.model.EntryPointResolver;
 import org.mule.api.model.InvocationResult;
-import org.mule.api.model.UMOEntryPointResolver;
 import org.mule.api.transformer.TransformerException;
 import org.mule.impl.VoidResult;
 import org.mule.impl.transport.NullPayload;
@@ -27,12 +27,12 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * A Base class for {@link org.mule.api.model.UMOEntryPointResolver}. It provides parameters for
+ * A Base class for {@link org.mule.api.model.EntryPointResolver}. It provides parameters for
  * detemining if the payload of the message should be transformed first and whether void methods are
  * acceptible. It also provides a method cashe for those resolvers that use reflection to discover methods
  * on the component.
  */
-public abstract class AbstractEntryPointResolver implements UMOEntryPointResolver
+public abstract class AbstractEntryPointResolver implements EntryPointResolver
 {
     /** logger used by this class */
     protected transient final Log logger = LogFactory.getLog(getClass());
@@ -65,7 +65,7 @@ public abstract class AbstractEntryPointResolver implements UMOEntryPointResolve
         this.acceptVoidMethods = acceptVoidMethods;
     }
 
-    protected Method getMethodByName(String methodName, UMOEventContext context)
+    protected Method getMethodByName(String methodName, EventContext context)
     {
         StringBuffer key = new StringBuffer(24).append(context.getComponent().getName())
                 .append(".").append(methodName);
@@ -73,7 +73,7 @@ public abstract class AbstractEntryPointResolver implements UMOEntryPointResolve
         return method;
     }
 
-    protected Method addMethodByName(Method method, UMOEventContext context)
+    protected Method addMethodByName(Method method, EventContext context)
     {
         StringBuffer key = new StringBuffer(24).append(context.getComponent().getName())
                 .append(".").append(method.getName());
@@ -107,7 +107,7 @@ public abstract class AbstractEntryPointResolver implements UMOEntryPointResolve
     }
 
 
-    protected Object[] getPayloadFromMessage(UMOEventContext context) throws TransformerException
+    protected Object[] getPayloadFromMessage(EventContext context) throws TransformerException
     {
         Object temp;
         if (isTransformFirst())

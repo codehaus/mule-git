@@ -11,9 +11,9 @@
 package org.mule.tck.testmodels.mule;
 
 import org.mule.api.MuleContext;
+import org.mule.api.Transaction;
 import org.mule.api.TransactionException;
-import org.mule.api.UMOTransaction;
-import org.mule.api.UMOTransactionFactory;
+import org.mule.api.TransactionFactory;
 
 import com.mockobjects.dynamic.Mock;
 
@@ -22,15 +22,15 @@ import com.mockobjects.dynamic.Mock;
  * 
  */
 
-public class TestTransactionFactory implements UMOTransactionFactory
+public class TestTransactionFactory implements TransactionFactory
 {
 
     // for testsing properties
     private String value;
 
-    public UMOTransaction beginTransaction(MuleContext muleContext) throws TransactionException
+    public Transaction beginTransaction(MuleContext muleContext) throws TransactionException
     {
-        return (UMOTransaction) new Mock(UMOTransaction.class).proxy();
+        return (Transaction) new Mock(Transaction.class).proxy();
     }
 
     public boolean isTransacted()

@@ -11,7 +11,7 @@
 package org.mule.impl.transformer.compression;
 
 import org.mule.api.lifecycle.InitialisationException;
-import org.mule.api.transformer.UMOTransformer;
+import org.mule.api.transformer.Transformer;
 import org.mule.impl.transformer.compression.GZipUncompressTransformer;
 
 import java.io.UnsupportedEncodingException;
@@ -48,7 +48,7 @@ public class GZipTransformerRawBytesTestCase extends GZipTransformerTestCase
     }
 
     // @Override
-    public UMOTransformer getRoundTripTransformer()
+    public Transformer getRoundTripTransformer()
     {
         GZipUncompressTransformer transformer = new GZipUncompressTransformer();
 
@@ -65,7 +65,7 @@ public class GZipTransformerRawBytesTestCase extends GZipTransformerTestCase
     }
 
     // @Override
-    public void doTestBadReturnType(UMOTransformer tran, Object src) throws Exception
+    public void doTestBadReturnType(Transformer tran, Object src) throws Exception
     {
         /*
          * Disabled, otherwise the test for invalid return types would fail. The

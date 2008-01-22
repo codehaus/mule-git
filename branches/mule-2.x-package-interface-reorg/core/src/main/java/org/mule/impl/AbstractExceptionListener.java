@@ -10,29 +10,29 @@
 
 package org.mule.impl;
 
+import org.mule.api.AbstractMuleException;
+import org.mule.api.Event;
+import org.mule.api.EventContext;
 import org.mule.api.MessagingException;
 import org.mule.api.MuleContext;
+import org.mule.api.MuleMessage;
+import org.mule.api.Transaction;
 import org.mule.api.TransactionException;
-import org.mule.api.UMOEvent;
-import org.mule.api.UMOEventContext;
-import org.mule.api.UMOException;
-import org.mule.api.UMOMessage;
-import org.mule.api.UMOTransaction;
 import org.mule.api.context.MuleContextAware;
+import org.mule.api.endpoint.EndpointURI;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.endpoint.InvalidEndpointTypeException;
-import org.mule.api.endpoint.UMOEndpointURI;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
 import org.mule.api.lifecycle.Disposable;
 import org.mule.api.lifecycle.Initialisable;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.lifecycle.LifecycleException;
 import org.mule.api.routing.RoutingException;
 import org.mule.impl.config.ExceptionHelper;
+import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.impl.internal.notifications.ExceptionNotification;
 import org.mule.impl.message.ExceptionMessage;
 import org.mule.impl.transaction.TransactionCoordination;
 import org.mule.impl.transport.NullPayload;
-import org.mule.imple.config.i18n.CoreMessages;
 
 import java.beans.ExceptionListener;
 import java.util.Iterator;
@@ -79,11 +79,11 @@ public abstract class AbstractExceptionListener implements ExceptionListener, In
         this.endpoints.clear();
         for (Iterator iterator = endpoints.iterator(); iterator.hasNext();)
         {
-            addEndpoint((UMOImmutableEndpoint) iterator.next());
+            addEndpoint((ImmutableEndpoint) iterator.next());
         }
     }
 
-    public void addEndpoint(UMOImmutableEndpoint endpoint)
+    public void addEndpoint(ImmutableEndpoint endpoint)
     {
         if (endpoint != null)
         {
@@ -96,7 +96,7 @@ public abstract class AbstractExceptionListener implements ExceptionListener, In
         }
     }
 
-    public boolean removeEndpoint(UMOImmutableEndpoint endpoint)
+    public boolean removeEndpoint(ImmutableEndpoint endpoint)
     {
         return endpoints.remove(endpoint);
     }
@@ -134,7 +134,7 @@ public abstract class AbstractExceptionListener implements ExceptionListener, In
             else
             {
                 logger.info("There is no current event available, routing Null message with the exception");
-                handleMessagingException(new MuleMessage(NullPayload.getInstance()), e);
+                handleMessagingException(new DefaultMuleMessage(NullPayload.getInstance()), e);
             }
             return;
         }
@@ -186,7 +186,7 @@ public abstract class AbstractExceptionListener implements ExceptionListener, In
      */
     protected void markTransactionForRollback()
     {
-        UMOTransaction tx = TransactionCoordination.getInstance().getTransaction();
+        Transaction tx = TransactionCoordination.getInstance().getTransaction();
         try
         {
             if (tx != null)
@@ -202,12 +202,12 @@ public abstract class AbstractExceptionListener implements ExceptionListener, In
 
     /**
      * Routes the current exception to an error endpoint such as a Dead Letter Queue
-     * (jms) This method is only invoked if there is a UMOMessage available to
+     * (jms) This method is only invoked if there is a MuleMessage available to
      * dispatch. The message dispatched from this method will be an
      * <code>ExceptionMessage</code> which contains the exception thrown the
-     * UMOMessage and any context information.
+     * MuleMessage and any context information.
      * 
-     * @param message the UMOMessage being processed when the exception occurred
+     * @param message the MuleMessage being processed when the exception occurred
      * @param failedEndpoint optional; the endpoint being dispatched or received on
      *            when the error occurred. This is NOT the endpoint that the message
      *            will be disptched on and is only supplied to this method for
@@ -215,17 +215,17 @@ public abstract class AbstractExceptionListener implements ExceptionListener, In
      * @param t the exception thrown. This will be sent with the ExceptionMessage
      * @see ExceptionMessage
      */
-    protected void routeException(UMOMessage message, UMOImmutableEndpoint failedEndpoint, Throwable t)
+    protected void routeException(MuleMessage message, ImmutableEndpoint failedEndpoint, Throwable t)
     {
-        UMOImmutableEndpoint endpoint = getEndpoint(t);
+        ImmutableEndpoint endpoint = getEndpoint(t);
         if (endpoint != null)
         {
             try
             {
                 logger.error("Message being processed is: " + (message == null ? "null" : message.toString()));
-                UMOEventContext ctx = RequestContext.getEventContext();
+                EventContext ctx = RequestContext.getEventContext();
                 String component = "Unknown";
-                UMOEndpointURI endpointUri = null;
+                EndpointURI endpointUri = null;
                 if (ctx != null)
                 {
                     if (ctx.getComponent() != null)
@@ -241,16 +241,16 @@ public abstract class AbstractExceptionListener implements ExceptionListener, In
                 ExceptionMessage msg;
                 msg = new ExceptionMessage(getErrorMessagePayload(message), t, component, endpointUri);
 
-                UMOMessage exceptionMessage;
+                MuleMessage exceptionMessage;
                 if (ctx == null)
                 {
-                    exceptionMessage = new MuleMessage(msg);
+                    exceptionMessage = new DefaultMuleMessage(msg);
                 }
                 else
                 {
-                    exceptionMessage = new MuleMessage(msg, ctx.getMessage());
+                    exceptionMessage = new DefaultMuleMessage(msg, ctx.getMessage());
                 }
-                UMOEvent exceptionEvent = new MuleEvent(exceptionMessage, endpoint, new MuleSession(
+                Event exceptionEvent = new MuleEvent(exceptionMessage, endpoint, new MuleSession(
                     exceptionMessage, new MuleSessionHandler()), true);
                 exceptionEvent = RequestContext.setEvent(exceptionEvent);
                 endpoint.send(exceptionEvent);
@@ -261,7 +261,7 @@ public abstract class AbstractExceptionListener implements ExceptionListener, In
                 }
 
             }
-            catch (UMOException e)
+            catch (AbstractMuleException e)
             {
                 logFatal(message, e);
             }
@@ -272,7 +272,7 @@ public abstract class AbstractExceptionListener implements ExceptionListener, In
         }
     }
 
-    protected Object getErrorMessagePayload(UMOMessage message)
+    protected Object getErrorMessagePayload(MuleMessage message)
     {
         try
         {
@@ -296,11 +296,11 @@ public abstract class AbstractExceptionListener implements ExceptionListener, In
      * @return The endpoint used to dispatch an exception message on or null if there
      *         are no endpoints registered
      */
-    protected UMOImmutableEndpoint getEndpoint(Throwable t)
+    protected ImmutableEndpoint getEndpoint(Throwable t)
     {
         if (endpoints.size() > 0)
         {
-            return (UMOImmutableEndpoint) endpoints.get(0);
+            return (ImmutableEndpoint) endpoints.get(0);
         }
         else
         {
@@ -315,7 +315,7 @@ public abstract class AbstractExceptionListener implements ExceptionListener, In
      */
     protected void logException(Throwable t)
     {
-        UMOException umoe = ExceptionHelper.getRootMuleException(t);
+        AbstractMuleException umoe = ExceptionHelper.getRootMuleException(t);
         if (umoe != null)
         {
             logger.error(umoe.getDetailedMessage());
@@ -331,10 +331,10 @@ public abstract class AbstractExceptionListener implements ExceptionListener, In
      * if an error occurs in the exception listener itself. This implementation logs
      * the the message itself to the logs if it is not null
      * 
-     * @param message The UMOMessage currently being processed
+     * @param message The MuleMessage currently being processed
      * @param t the fatal exception to log
      */
-    protected void logFatal(UMOMessage message, Throwable t)
+    protected void logFatal(MuleMessage message, Throwable t)
     {
         logger.fatal(
             "Failed to dispatch message to error queue after it failed to process.  This may cause message loss."
@@ -377,7 +377,7 @@ public abstract class AbstractExceptionListener implements ExceptionListener, In
      *            some wrapper exception
      * @see MessagingException
      */
-    public abstract void handleMessagingException(UMOMessage message, Throwable e);
+    public abstract void handleMessagingException(MuleMessage message, Throwable e);
 
     /**
      * A routing exception is thrown when an excpetion occurs during normal message
@@ -392,10 +392,10 @@ public abstract class AbstractExceptionListener implements ExceptionListener, In
      *            some wrapper exception
      * @see RoutingException
      */
-    public abstract void handleRoutingException(UMOMessage message, UMOImmutableEndpoint endpoint, Throwable e);
+    public abstract void handleRoutingException(MuleMessage message, ImmutableEndpoint endpoint, Throwable e);
 
     /**
-     * LifecyclePhase exceptions are thrown when an error occurs during an object's
+     * DefaultLifecyclePhase exceptions are thrown when an error occurs during an object's
      * lifecycle call such as start, stop or initialise. The exception contains a
      * reference to the object that failed which can be used for more informative
      * logging.

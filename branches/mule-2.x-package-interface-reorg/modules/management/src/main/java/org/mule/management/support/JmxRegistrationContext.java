@@ -10,7 +10,7 @@
 package org.mule.management.support;
 
 import org.mule.api.MuleContext;
-import org.mule.api.context.UMOServerNotification;
+import org.mule.api.context.ServerNotification;
 import org.mule.impl.internal.notifications.ManagerNotification;
 import org.mule.impl.internal.notifications.ManagerNotificationListener;
 import org.mule.impl.internal.notifications.NotificationException;
@@ -54,7 +54,7 @@ public class JmxRegistrationContext
             // Mule JMX domains with ever increasing suffix.
             context.registerListener(new ManagerNotificationListener()
             {
-                public void onNotification(UMOServerNotification notification)
+                public void onNotification(ServerNotification notification)
                 {
                     ManagerNotification mn = (ManagerNotification) notification;
                     if (ManagerNotification.MANAGER_DISPOSED == mn.getAction())

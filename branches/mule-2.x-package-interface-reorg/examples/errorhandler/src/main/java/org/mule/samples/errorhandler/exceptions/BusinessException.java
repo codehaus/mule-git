@@ -10,13 +10,13 @@
 
 package org.mule.samples.errorhandler.exceptions;
 
-import org.mule.api.UMOException;
-import org.mule.imple.config.i18n.MessageFactory;
+import org.mule.api.AbstractMuleException;
+import org.mule.impl.config.i18n.MessageFactory;
 
 /**
  * <code>BusinessException</code> TODO (document class)
  */
-public class BusinessException extends UMOException
+public class BusinessException extends AbstractMuleException
 {
     /**
      * Serial version

@@ -10,7 +10,7 @@
 
 package org.mule.impl.internal.notifications;
 
-import org.mule.api.context.UMOServerNotificationListener;
+import org.mule.api.context.ServerNotificationListener;
 
 /**
  * <code>CustomNotificationListener</code> is an observer interface that can be
@@ -19,7 +19,7 @@ import org.mule.api.context.UMOServerNotificationListener;
  * by components and other objects such as routers, transformers, agents, etc to
  * communicate a change of state to each other.
  */
-public interface CustomNotificationListener extends UMOServerNotificationListener
+public interface CustomNotificationListener extends ServerNotificationListener
 {
     // no methods
 }

@@ -10,14 +10,14 @@
 
 package org.mule.api.context;
 
-import org.mule.api.UMOException;
-import org.mule.imple.config.i18n.Message;
+import org.mule.api.AbstractMuleException;
+import org.mule.impl.config.i18n.Message;
 
 /**
  * <code>ManagerException</code> is thrown when an exception occurs with Manager
  * objects
  */
-public class ManagerException extends UMOException
+public class ManagerException extends AbstractMuleException
 {
     /**
      * Serial version

@@ -10,7 +10,7 @@
 package org.mule.impl.model.resolvers;
 
 /**
- * An {@link org.mule.api.model.UMOEntryPointResolverSet} that mimics the behaviour of the Mule 1.x
+ * An {@link org.mule.api.model.EntryPointResolverSet} that mimics the behaviour of the Mule 1.x
  * DynamicEntryPointResolver.
  */
 public class LegacyEntryPointResolverSet extends DefaultEntryPointResolverSet

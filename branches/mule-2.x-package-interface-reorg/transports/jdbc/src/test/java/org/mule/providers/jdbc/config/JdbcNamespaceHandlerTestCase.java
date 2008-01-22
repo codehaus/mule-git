@@ -9,7 +9,7 @@
  */
 package org.mule.providers.jdbc.config;
 
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.providers.jdbc.JdbcConnector;
 import org.mule.providers.jdbc.test.TestDataSource;
 import org.mule.tck.FunctionalTestCase;
@@ -65,7 +65,7 @@ public class JdbcNamespaceHandlerTestCase extends FunctionalTestCase
     public void testEndpointQueryOverride() throws Exception
     {
         JdbcConnector c = (JdbcConnector) muleContext.getRegistry().lookupConnector("jdbcConnector3");
-        UMOImmutableEndpoint testJdbcEndpoint = muleContext.getRegistry()
+        ImmutableEndpoint testJdbcEndpoint = muleContext.getRegistry()
             .lookupEndpointFactory()
             .getInboundEndpoint("testJdbcEndpoint");
         

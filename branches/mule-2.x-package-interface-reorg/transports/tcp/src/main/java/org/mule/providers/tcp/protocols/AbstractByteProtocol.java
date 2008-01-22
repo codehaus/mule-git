@@ -10,7 +10,7 @@
 
 package org.mule.providers.tcp.protocols;
 
-import org.mule.api.transport.UMOMessageAdapter;
+import org.mule.api.transport.MessageAdapter;
 import org.mule.impl.ResponseOutputStream;
 import org.mule.providers.tcp.TcpProtocol;
 import org.mule.util.ClassUtils;
@@ -72,9 +72,9 @@ public abstract class AbstractByteProtocol implements TcpProtocol
                         + " cannot handle streaming");
             }
         }
-        else if (data instanceof UMOMessageAdapter)
+        else if (data instanceof MessageAdapter)
         {
-            write(os, ((UMOMessageAdapter) data).getPayload());
+            write(os, ((MessageAdapter) data).getPayload());
         }
         else if (data instanceof byte[])
         {

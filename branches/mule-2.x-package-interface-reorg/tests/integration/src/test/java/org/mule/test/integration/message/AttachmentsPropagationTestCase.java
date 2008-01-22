@@ -10,8 +10,8 @@
 
 package org.mule.test.integration.message;
 
-import org.mule.api.UMOEventContext;
-import org.mule.api.UMOMessage;
+import org.mule.api.EventContext;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.providers.email.transformers.PlainTextDataSource;
 import org.mule.tck.AbstractMuleTestCase;
@@ -33,15 +33,15 @@ public class AttachmentsPropagationTestCase extends AbstractMuleTestCase impleme
         super.doSetUp();
 
         // TODO Convert this to an XML config
-//        UMOEndpointBuilder endpointBuilder = new EndpointURIEndpointBuilder("vm://Single", muleContext);
+//        EndpointBuilder endpointBuilder = new EndpointURIEndpointBuilder("vm://Single", muleContext);
 //        endpointBuilder.setName("SingleEndpoint");
-//        UMOImmutableEndpoint vmSingle = muleContext.getRegistry()
+//        ImmutableEndpoint vmSingle = muleContext.getRegistry()
 //            .lookupEndpointFactory()
 //            .getOutboundEndpoint(endpointBuilder, muleContext);
 //        
-//        UMOEndpointBuilder endpointBuilder2 = new EndpointURIEndpointBuilder("vm://Single", muleContext);
+//        EndpointBuilder endpointBuilder2 = new EndpointURIEndpointBuilder("vm://Single", muleContext);
 //        endpointBuilder2.setName("ChainedEndpoint");
-//        UMOImmutableEndpoint vmChained = muleContext.getRegistry()
+//        ImmutableEndpoint vmChained = muleContext.getRegistry()
 //            .lookupEndpointFactory()
 //            .getOutboundEndpoint(endpointBuilder2, muleContext);
 //        
@@ -54,9 +54,9 @@ public class AttachmentsPropagationTestCase extends AbstractMuleTestCase impleme
 //            .getEndpointURI());
     }
 
-    public void eventReceived(UMOEventContext context, Object component) throws Exception
+    public void eventReceived(EventContext context, Object component) throws Exception
     {
-        UMOMessage message = context.getMessage();
+        MuleMessage message = context.getMessage();
         // add an attachment, named after the componentname...
         message.addAttachment(context.getComponent().getName(), new DataHandler(
             new PlainTextDataSource("text/plain", "<content>")));
@@ -70,7 +70,7 @@ public class AttachmentsPropagationTestCase extends AbstractMuleTestCase impleme
     {
 
         MuleClient client = new MuleClient();
-        UMOMessage result = client.send("vm://Single", "", null);
+        MuleMessage result = client.send("vm://Single", "", null);
         assertNotNull(result);
 
         // expect SINGLE attachment from SINGLE component
@@ -80,7 +80,7 @@ public class AttachmentsPropagationTestCase extends AbstractMuleTestCase impleme
     public void testChainedComponentKnowsAttachments() throws Exception
     {
         MuleClient client = new MuleClient();
-        UMOMessage result = client.send("vm://Chained", "", null);
+        MuleMessage result = client.send("vm://Chained", "", null);
         assertNotNull(result);
 
         // expect CHAINED attachment from CHAINED component
@@ -93,7 +93,7 @@ public class AttachmentsPropagationTestCase extends AbstractMuleTestCase impleme
         // a MuleClient should be able to receive attachments
         MuleClient client = new MuleClient();
 
-        UMOMessage result = client.send("vm://Single", "", null);
+        MuleMessage result = client.send("vm://Single", "", null);
         assertNotNull(result);
 
         // expect SINGLE attachment from SINGLE component

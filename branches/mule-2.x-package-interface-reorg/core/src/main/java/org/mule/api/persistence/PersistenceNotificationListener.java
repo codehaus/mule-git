@@ -10,15 +10,15 @@
 
 package org.mule.api.persistence;
 
-import org.mule.api.context.UMOServerNotification;
-import org.mule.api.context.UMOServerNotificationListener;
+import org.mule.api.context.ServerNotification;
+import org.mule.api.context.ServerNotificationListener;
 
 /**
  * 
  * @author 
  * @version $Revision$
  */
-public class PersistenceNotificationListener implements UMOServerNotificationListener
+public class PersistenceNotificationListener implements ServerNotificationListener
 {
     private PersistenceManager persistenceManager;
 
@@ -27,7 +27,7 @@ public class PersistenceNotificationListener implements UMOServerNotificationLis
         this.persistenceManager = persistenceManager;
     }
 
-    public void onNotification(UMOServerNotification notification)
+    public void onNotification(ServerNotification notification)
     {
         if (notification instanceof PersistenceNotification)
         {

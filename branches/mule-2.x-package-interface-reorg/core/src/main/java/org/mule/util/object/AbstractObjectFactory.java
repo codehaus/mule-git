@@ -9,8 +9,8 @@
  */
 package org.mule.util.object;
 
-import org.mule.api.UMOComponent;
-import org.mule.api.UMOComponentAware;
+import org.mule.api.Component;
+import org.mule.api.ComponentAware;
 import org.mule.api.config.ConfigurationException;
 import org.mule.api.lifecycle.Initialisable;
 import org.mule.api.lifecycle.InitialisationException;
@@ -25,7 +25,7 @@ import org.apache.commons.logging.LogFactory;
 /**
  * Creates object instances based on the class and sets any properties.
  */
-public abstract class AbstractObjectFactory implements ObjectFactory, UMOComponentAware
+public abstract class AbstractObjectFactory implements ObjectFactory, ComponentAware
 {
     public static final String ATTRIBUTE_OBJECT_CLASS_NAME = "objectClassName";
     public static final String ATTRIBUTE_OBJECT_CLASS = "objectClass";
@@ -35,10 +35,10 @@ public abstract class AbstractObjectFactory implements ObjectFactory, UMOCompone
     protected Map properties = null;
     
     /**
-     * This is not pretty but its the only way I could find to get the UMOComponent
+     * This is not pretty but its the only way I could find to get the Component
      * injected into each instance of a POJO service.
      */
-    UMOComponent component;
+    Component component;
     
     protected transient Log logger = LogFactory.getLog(getClass());
     
@@ -97,7 +97,7 @@ public abstract class AbstractObjectFactory implements ObjectFactory, UMOCompone
             BeanUtils.populate(object, properties);            
         }
         
-        // This is not pretty but its the only way I could find to get the UMOComponent
+        // This is not pretty but its the only way I could find to get the Component
         // properly injected into each instance of a POJO service.
         if (component != null)
         {
@@ -112,10 +112,10 @@ public abstract class AbstractObjectFactory implements ObjectFactory, UMOCompone
     }
 
     /**
-     * This is not pretty but its the only way I could find to get the UMOComponent
+     * This is not pretty but its the only way I could find to get the Component
      * injected into each instance of a POJO service.
      */
-    public void setComponent(UMOComponent component) throws ConfigurationException
+    public void setComponent(Component component) throws ConfigurationException
     {
         this.component = component;
     }

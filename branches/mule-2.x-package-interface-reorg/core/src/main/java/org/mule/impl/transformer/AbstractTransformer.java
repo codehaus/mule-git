@@ -10,14 +10,14 @@
 
 package org.mule.impl.transformer;
 
-import org.mule.api.UMOMessage;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.MuleMessage;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.InitialisationException;
+import org.mule.api.transformer.Transformer;
 import org.mule.api.transformer.TransformerException;
-import org.mule.api.transformer.UMOTransformer;
-import org.mule.api.transport.UMOMessageAdapter;
+import org.mule.api.transport.MessageAdapter;
+import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.impl.transport.NullPayload;
-import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.util.ClassUtils;
 import org.mule.util.FileUtils;
 import org.mule.util.StringMessageUtils;
@@ -39,7 +39,7 @@ import org.apache.commons.logging.LogFactory;
  * Transformations transform one object into another.
  */
 
-public abstract class AbstractTransformer implements UMOTransformer
+public abstract class AbstractTransformer implements Transformer
 {
     protected static final int DEFAULT_TRUNCATE_LENGTH = 200;
 
@@ -58,7 +58,7 @@ public abstract class AbstractTransformer implements UMOTransformer
     protected String name = null;
 
     /** The endpoint that this transformer instance is configured on */
-    protected UMOImmutableEndpoint endpoint = null;
+    protected ImmutableEndpoint endpoint = null;
 
     /**
      * A list of supported Class types that the source payload passed into this
@@ -67,7 +67,7 @@ public abstract class AbstractTransformer implements UMOTransformer
     protected final List sourceTypes = new CopyOnWriteArrayList();
 
     /** This is the following transformer in the chain of transformers. */
-    protected UMOTransformer nextTransformer;
+    protected Transformer nextTransformer;
 
     /**
      * Determines whether the transformer will throw an exception if the message
@@ -206,17 +206,17 @@ public abstract class AbstractTransformer implements UMOTransformer
         String encoding = null;
 
         Object payload = src;
-        UMOMessageAdapter adapter = null;
-        if (src instanceof UMOMessageAdapter)
+        MessageAdapter adapter = null;
+        if (src instanceof MessageAdapter)
         {
-            encoding = ((UMOMessageAdapter) src).getEncoding();
-            adapter = (UMOMessageAdapter) src;
-            if ((!isSourceTypeSupported(UMOMessageAdapter.class, true)
-                    && !isSourceTypeSupported(UMOMessage.class, true)
+            encoding = ((MessageAdapter) src).getEncoding();
+            adapter = (MessageAdapter) src;
+            if ((!isSourceTypeSupported(MessageAdapter.class, true)
+                    && !isSourceTypeSupported(MuleMessage.class, true)
                     && !(this instanceof AbstractMessageAwareTransformer))
                     )
             {
-                src = ((UMOMessageAdapter) src).getPayload();
+                src = ((MessageAdapter) src).getPayload();
                 payload = adapter.getPayload();
             }
         }
@@ -276,7 +276,7 @@ public abstract class AbstractTransformer implements UMOTransformer
         return InputStream.class.isAssignableFrom(srcCls) || StreamSource.class.isAssignableFrom(srcCls);
     }
 
-    public UMOImmutableEndpoint getEndpoint()
+    public ImmutableEndpoint getEndpoint()
     {
         return endpoint;
     }
@@ -284,9 +284,9 @@ public abstract class AbstractTransformer implements UMOTransformer
     /*
      * (non-Javadoc)
      *
-     * @see org.mule.api.transformer.UMOTransformer#setConnector(org.mule.api.transport.UMOConnector)
+     * @see org.mule.api.transformer.Transformer#setConnector(org.mule.api.transport.Connector)
      */
-    public void setEndpoint(UMOImmutableEndpoint endpoint)
+    public void setEndpoint(ImmutableEndpoint endpoint)
     {
         this.endpoint = endpoint;
     }

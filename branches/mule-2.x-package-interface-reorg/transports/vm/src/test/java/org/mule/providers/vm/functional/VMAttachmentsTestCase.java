@@ -9,9 +9,9 @@
  */
 package org.mule.providers.vm.functional;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
-import org.mule.impl.MuleMessage;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.tck.FunctionalTestCase;
 
 import java.io.File;
@@ -28,11 +28,11 @@ public class VMAttachmentsTestCase extends FunctionalTestCase
 
     public void testAttachments() throws Exception
     {
-         MuleMessage m = new MuleMessage("Mmm... attachments!");
+         DefaultMuleMessage m = new DefaultMuleMessage("Mmm... attachments!");
         FileDataSource ds = new FileDataSource(new File("transports/vm/src/test/resources/" + getConfigResources()).getAbsoluteFile());
         m.addAttachment("test-attachment", new DataHandler(ds));
         MuleClient client = new MuleClient();
-        UMOMessage msg = client.send("vm-in", m);
+        MuleMessage msg = client.send("vm-in", m);
         assertNotNull(msg);
         if(msg.getExceptionPayload()!=null)
         {

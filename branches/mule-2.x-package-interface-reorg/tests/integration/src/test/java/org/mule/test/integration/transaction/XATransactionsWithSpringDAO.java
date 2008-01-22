@@ -10,7 +10,7 @@
 
 package org.mule.test.integration.transaction;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.providers.jdbc.JdbcUtils;
 import org.mule.providers.jdbc.util.MuleDerbyUtils;
@@ -101,7 +101,7 @@ public class XATransactionsWithSpringDAO extends FunctionalTestCase
         MuleClient client = new MuleClient();
         Book book = new Book(1, "testBook", "testAuthor");
         client.sendNoReceive("jms://my.queue", book, null);
-        UMOMessage result = client.request("vm://output", RECEIVE_TIMEOUT);
+        MuleMessage result = client.request("vm://output", RECEIVE_TIMEOUT);
         assertNotNull(result);
         assertNotNull(result.getPayload());
         assertTrue(((Boolean) result.getPayload()).booleanValue());
@@ -118,7 +118,7 @@ public class XATransactionsWithSpringDAO extends FunctionalTestCase
 
         Book book = new Book(1, "testBook", "testAuthor");
         client.sendNoReceive("jms://my.queue", book, null);
-        UMOMessage result = client.request("vm://output", RECEIVE_TIMEOUT);
+        MuleMessage result = client.request("vm://output", RECEIVE_TIMEOUT);
         assertNotNull(result);
         assertNotNull(result.getPayload());
         assertTrue(((Boolean) result.getPayload()).booleanValue());

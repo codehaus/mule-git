@@ -10,8 +10,8 @@
 
 package org.mule.providers.xmpp.filters;
 
-import org.mule.api.UMOFilter;
-import org.mule.api.UMOMessage;
+import org.mule.api.Filter;
+import org.mule.api.MuleMessage;
 
 import org.jivesoftware.smack.filter.PacketFilter;
 import org.jivesoftware.smack.packet.Packet;
@@ -20,7 +20,7 @@ import org.jivesoftware.smack.packet.Packet;
  * <code>AbstractXmppFilter</code> is a filter adapter so that Smack Filters can be
  * configured as Mule filters.
  */
-public abstract class AbstractXmppFilter implements UMOFilter, PacketFilter
+public abstract class AbstractXmppFilter implements Filter, PacketFilter
 {
     protected volatile PacketFilter delegate;
 
@@ -34,9 +34,9 @@ public abstract class AbstractXmppFilter implements UMOFilter, PacketFilter
         return delegate.accept(packet);
     }
 
-    public boolean accept(UMOMessage message)
+    public boolean accept(MuleMessage message)
     {
-        // If we have received a UMOMessage the filter has already been applied
+        // If we have received a MuleMessage the filter has already been applied
         return true;
     }
 

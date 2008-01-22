@@ -10,8 +10,8 @@
 
 package org.mule.extras.jaas;
 
-import org.mule.api.UMOEncryptionStrategy;
-import org.mule.api.UMOMessage;
+import org.mule.api.EncryptionStrategy;
+import org.mule.api.MuleMessage;
 import org.mule.api.config.MuleProperties;
 import org.mule.extras.client.MuleClient;
 import org.mule.impl.security.MuleCredentials;
@@ -34,12 +34,12 @@ public class JaasAuthenticationWithNtLoginModule extends FunctionalTestCase
         MuleClient client = new MuleClient();
 
         Map props = new HashMap();
-        UMOEncryptionStrategy strategy = muleContext
+        EncryptionStrategy strategy = muleContext
             .getSecurityManager()
             .getEncryptionStrategy("PBE");
         String header = MuleCredentials.createHeader("Marie.Rizzo", "dragon", "PBE", strategy);
         props.put(MuleProperties.MULE_USER_PROPERTY, header);
-        UMOMessage m = client.send("vm://test", "Test", props);
+        MuleMessage m = client.send("vm://test", "Test", props);
 
         assertNotNull(m);
         assertTrue(m.getPayload() instanceof String);

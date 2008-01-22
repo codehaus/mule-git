@@ -10,7 +10,7 @@
 
 package org.mule.providers.soap.xfire;
 
-import org.mule.api.UMOEvent;
+import org.mule.api.Event;
 import org.mule.api.config.MuleProperties;
 import org.mule.providers.soap.MuleSoapHeaders;
 
@@ -32,11 +32,11 @@ public class MuleHeadersOutHandler extends AbstractHandler
      */
     public void invoke(MessageContext context) throws Exception
     {
-        UMOEvent event = (UMOEvent) context.getProperty(MuleProperties.MULE_EVENT_PROPERTY);
+        Event event = (Event) context.getProperty(MuleProperties.MULE_EVENT_PROPERTY);
 
         if (event == null && context.getClient() != null)
         {
-            event = (UMOEvent) context.getClient().getProperty(MuleProperties.MULE_EVENT_PROPERTY);
+            event = (Event) context.getClient().getProperty(MuleProperties.MULE_EVENT_PROPERTY);
         }
 
         if (event != null)

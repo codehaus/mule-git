@@ -10,10 +10,10 @@
 
 package org.mule.providers.soap.xfire;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.api.config.MuleProperties;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
-import org.mule.impl.MuleMessage;
+import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.transport.AbstractMessageRequester;
 import org.mule.providers.soap.xfire.transport.MuleUniversalTransport;
 
@@ -36,7 +36,7 @@ public class XFireMessageRequester extends AbstractMessageRequester
     protected Client client = null;
     protected final XFireConnector connector;
 
-    public XFireMessageRequester(UMOImmutableEndpoint endpoint)
+    public XFireMessageRequester(ImmutableEndpoint endpoint)
     {
         super(endpoint);
         this.connector = (XFireConnector) endpoint.getConnector();
@@ -67,11 +67,11 @@ public class XFireMessageRequester extends AbstractMessageRequester
      *            The call should return immediately if there is data available. If
      *            no data becomes available before the timeout elapses, null will be
      *            returned
-     * @return the result of the request wrapped in a UMOMessage object. Null will be
+     * @return the result of the request wrapped in a MuleMessage object. Null will be
      *         returned if no data was avaialable
      * @throws Exception if the call to the underlying protocal cuases an exception
      */
-    protected UMOMessage doRequest(long timeout) throws Exception
+    protected MuleMessage doRequest(long timeout) throws Exception
     {
         String serviceName = XFireMessageDispatcher.getServiceName(endpoint);
 
@@ -99,11 +99,11 @@ public class XFireMessageRequester extends AbstractMessageRequester
 
         if (response != null && response.length == 1)
         {
-            return new MuleMessage(response[0]);
+            return new DefaultMuleMessage(response[0]);
         }
         else
         {
-            return new MuleMessage(response);
+            return new DefaultMuleMessage(response);
         }
     }
 

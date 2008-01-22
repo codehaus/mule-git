@@ -10,14 +10,14 @@
 
 package org.mule.providers.bpm;
 
-import org.mule.api.UMOComponent;
-import org.mule.api.UMOException;
-import org.mule.api.UMOMessage;
-import org.mule.api.endpoint.UMOEndpoint;
+import org.mule.api.Component;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleMessage;
+import org.mule.api.endpoint.Endpoint;
 import org.mule.api.lifecycle.CreateException;
 import org.mule.api.lifecycle.InitialisationException;
-import org.mule.api.transport.UMOConnector;
-import org.mule.impl.MuleMessage;
+import org.mule.api.transport.Connector;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.transport.AbstractMessageReceiver;
 
 import java.util.Map;
@@ -30,17 +30,17 @@ public class ProcessMessageReceiver extends AbstractMessageReceiver
 
     private ProcessConnector connector = null;
 
-    public ProcessMessageReceiver(UMOConnector connector, UMOComponent component, UMOEndpoint endpoint)
+    public ProcessMessageReceiver(Connector connector, Component component, Endpoint endpoint)
             throws CreateException
     {
         super(connector, component, endpoint);
         this.connector = (ProcessConnector) connector;
     }
 
-    public UMOMessage generateSynchronousEvent(String endpoint, Object payload, Map messageProperties) throws UMOException
+    public MuleMessage generateSynchronousEvent(String endpoint, Object payload, Map messageProperties) throws AbstractMuleException
     {
         logger.debug("Executing process is sending an event (synchronously) to Mule endpoint = " + endpoint);
-        UMOMessage response = generateEvent(endpoint, payload, messageProperties, true);
+        MuleMessage response = generateEvent(endpoint, payload, messageProperties, true);
         if (logger.isDebugEnabled())
         {
             logger.debug("Synchronous response is " + (response != null ? response.getPayload() : null));
@@ -48,7 +48,7 @@ public class ProcessMessageReceiver extends AbstractMessageReceiver
         return response;
     }
 
-    public void generateAsynchronousEvent(String endpoint, Object payload, Map messageProperties) throws UMOException
+    public void generateAsynchronousEvent(String endpoint, Object payload, Map messageProperties) throws AbstractMuleException
     {
         logger.debug("Executing process is dispatching an event (asynchronously) to Mule endpoint = " + endpoint);
         try
@@ -61,16 +61,16 @@ public class ProcessMessageReceiver extends AbstractMessageReceiver
         }
     }
 
-    protected UMOMessage generateEvent(String endpoint, Object payload, Map messageProperties, boolean synchronous) throws UMOException
+    protected MuleMessage generateEvent(String endpoint, Object payload, Map messageProperties, boolean synchronous) throws AbstractMuleException
     {
-        UMOMessage message;
-        if (payload instanceof UMOMessage)
+        MuleMessage message;
+        if (payload instanceof MuleMessage)
         {
-            message = (UMOMessage) payload;
+            message = (MuleMessage) payload;
         }
         else
         {
-            message = new MuleMessage(connector.getMessageAdapter(payload));
+            message = new DefaultMuleMessage(connector.getMessageAdapter(payload));
         }
         message.addProperties(messageProperties);
 
@@ -138,12 +138,12 @@ public class ProcessMessageReceiver extends AbstractMessageReceiver
         // nothing to do
     }
 
-    protected void doStart() throws UMOException
+    protected void doStart() throws AbstractMuleException
     {
         // nothing to do
     }
 
-    protected void doStop() throws UMOException
+    protected void doStop() throws AbstractMuleException
     {
         // nothing to do
     }

@@ -10,8 +10,8 @@
 
 package org.mule.test.integration.routing;
 
-import org.mule.api.UMOException;
-import org.mule.api.UMOMessage;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 
@@ -22,11 +22,11 @@ public class AggregatorIntegrationTestCase extends FunctionalTestCase
         return "org/mule/test/integration/routing/test-correlation-aggregator.xml";
     }
 
-    public void testAggregator() throws UMOException
+    public void testAggregator() throws AbstractMuleException
     {
         String message = "test";
         MuleClient client = new MuleClient();
-        UMOMessage result = client.send("vm://distributor.queue", message, null);
+        MuleMessage result = client.send("vm://distributor.queue", message, null);
         assertNotNull(result);
         assertEquals(message + message, result.getPayload());
     }

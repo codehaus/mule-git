@@ -11,11 +11,11 @@ package org.mule.impl;
 
 import org.mule.MuleServer;
 import org.mule.RegistryContext;
+import org.mule.api.AbstractMuleException;
 import org.mule.api.MuleContext;
-import org.mule.api.UMOException;
 import org.mule.impl.config.ExceptionHelper;
-import org.mule.imple.config.i18n.CoreMessages;
-import org.mule.imple.config.i18n.Message;
+import org.mule.impl.config.i18n.CoreMessages;
+import org.mule.impl.config.i18n.Message;
 import org.mule.util.StringMessageUtils;
 
 import java.util.ArrayList;
@@ -64,7 +64,7 @@ public class MuleShutdownHook extends Thread
     protected void shutdown(Throwable t)
     {
         Message msg = CoreMessages.fatalErrorWhileRunning();
-        UMOException muleException = ExceptionHelper.getRootMuleException(t);
+        AbstractMuleException muleException = ExceptionHelper.getRootMuleException(t);
         if (muleException != null)
         {
             logger.fatal(muleException.getDetailedMessage());

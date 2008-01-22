@@ -10,7 +10,7 @@
 
 package org.mule.extras.wssecurity.testcases;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 
@@ -46,7 +46,7 @@ public class AxisMultipleConnectorsWSSecurityTestCase extends FunctionalTestCase
 
         props.setProperty(WSHandlerConstants.USE_REQ_SIG_CERT, "false");
 
-        UMOMessage result;
+        MuleMessage result;
 
         MuleClient client = new MuleClient();
         result = client.send("vm://secured", "Inputgot", props);
@@ -68,7 +68,7 @@ public class AxisMultipleConnectorsWSSecurityTestCase extends FunctionalTestCase
     public void unsecuredWS(String endpoint, String message) throws Exception
     {
         MuleClient client = new MuleClient();
-        UMOMessage result = client.send(endpoint, message, null);
+        MuleMessage result = client.send(endpoint, message, null);
         assertNotNull(result.getPayload());
         assertTrue(result.getPayloadAsString().equalsIgnoreCase(message));
     }

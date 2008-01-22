@@ -11,13 +11,13 @@
 package org.mule.impl.routing.inbound;
 
 import org.mule.MuleServer;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.Event;
 import org.mule.api.MessagingException;
 import org.mule.api.MuleContext;
-import org.mule.api.UMOEvent;
-import org.mule.api.UMOException;
-import org.mule.api.UMOMessage;
-import org.mule.api.endpoint.UMOEndpointBuilder;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.MuleMessage;
+import org.mule.api.endpoint.EndpointBuilder;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.impl.MuleEvent;
 import org.mule.impl.endpoint.EndpointURIEndpointBuilder;
 import org.mule.impl.routing.AggregationException;
@@ -39,9 +39,9 @@ public abstract class AbstractEventAggregator extends SelectiveConsumer
     private final ConcurrentMap eventGroups = new ConcurrentHashMap();
 
     // //@Override
-    public UMOEvent[] process(UMOEvent event) throws MessagingException
+    public Event[] process(Event event) throws MessagingException
     {
-        UMOEvent[] result = null;
+        Event[] result = null;
 
         if (this.isMatch(event))
         {
@@ -93,25 +93,25 @@ public abstract class AbstractEventAggregator extends SelectiveConsumer
 
                     if (this.shouldAggregateEvents(group))
                     {
-                        UMOMessage returnMessage = this.aggregateEvents(group);
-                        UMOImmutableEndpoint endpoint;
+                        MuleMessage returnMessage = this.aggregateEvents(group);
+                        ImmutableEndpoint endpoint;
 
                         try
                         {
                             MuleContext muleContext = MuleServer.getMuleContext();
-                            UMOEndpointBuilder builder = new EndpointURIEndpointBuilder(event.getEndpoint(), muleContext);
+                            EndpointBuilder builder = new EndpointURIEndpointBuilder(event.getEndpoint(), muleContext);
                             // TODO - is this correct? it stops other transformers from being used
                             builder.setTransformers(new LinkedList());
                             builder.setName(this.getClass().getName());
                             endpoint = muleContext.getRegistry().lookupEndpointFactory().getInboundEndpoint(builder);
                         }
-                        catch (UMOException e)
+                        catch (AbstractMuleException e)
                         {
                             throw new MessagingException(e.getI18nMessage(), returnMessage, e);
                         }
-                        UMOEvent returnEvent = new MuleEvent(returnMessage, endpoint, event.getComponent(),
+                        Event returnEvent = new MuleEvent(returnMessage, endpoint, event.getComponent(),
                             event);
-                        result = new UMOEvent[]{returnEvent};
+                        result = new Event[]{returnEvent};
                         this.removeEventGroup(group);
                     }
                     // result or not: exit spinloop
@@ -131,19 +131,19 @@ public abstract class AbstractEventAggregator extends SelectiveConsumer
      * @param groupId the id to use for the new EventGroup
      * @return a new EventGroup
      */
-    protected EventGroup createEventGroup(UMOEvent event, Object groupId)
+    protected EventGroup createEventGroup(Event event, Object groupId)
     {
         return new EventGroup(groupId);
     }
 
     /**
      * Returns the identifier by which events will be correlated. By default this is
-     * the value as returned by {@link org.mule.api.transport.UMOMessageAdapter#getCorrelationId()}.
+     * the value as returned by {@link org.mule.api.transport.MessageAdapter#getCorrelationId()}.
      * 
      * @param event the event use for determining the correlation group id
      * @return the id used to correlate related events
      */
-    protected Object getEventGroupIdForEvent(UMOEvent event)
+    protected Object getEventGroupIdForEvent(Event event)
     {
         String groupId = event.getMessage().getCorrelationId();
 
@@ -220,6 +220,6 @@ public abstract class AbstractEventAggregator extends SelectiveConsumer
      *             whole event group is removed and passed to the exception handler
      *             for this componenet
      */
-    protected abstract UMOMessage aggregateEvents(EventGroup events) throws AggregationException;
+    protected abstract MuleMessage aggregateEvents(EventGroup events) throws AggregationException;
 
 }

@@ -10,12 +10,12 @@
 
 package org.mule.api;
 
-import org.mule.impl.MuleMessage;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.RequestContext;
 import org.mule.impl.config.MuleManifest;
+import org.mule.impl.config.i18n.CoreMessages;
+import org.mule.impl.config.i18n.Message;
 import org.mule.impl.transport.NullPayload;
-import org.mule.imple.config.i18n.CoreMessages;
-import org.mule.imple.config.i18n.Message;
 
 import java.util.Map;
 
@@ -24,7 +24,7 @@ import java.util.Map;
  * errors specific to Message processing occur..
  */
 
-public class MessagingException extends UMOException
+public class MessagingException extends AbstractMuleException
 {
     /**
      * Serial version
@@ -32,18 +32,18 @@ public class MessagingException extends UMOException
     private static final long serialVersionUID = 6941498759267936649L;
 
     /**
-     * The UMOMessage being processed when the error occurred
+     * The MuleMessage being processed when the error occurred
      */
-    protected final transient UMOMessage umoMessage;
+    protected final transient MuleMessage umoMessage;
 
-    public MessagingException(Message message, UMOMessage umoMessage)
+    public MessagingException(Message message, MuleMessage umoMessage)
     {
         super();
         this.umoMessage = umoMessage;
         setMessage(generateMessage(message));
     }
 
-    public MessagingException(Message message, UMOMessage umoMessage, Throwable cause)
+    public MessagingException(Message message, MuleMessage umoMessage, Throwable cause)
     {
         super(cause);
         this.umoMessage = umoMessage;
@@ -59,7 +59,7 @@ public class MessagingException extends UMOException
         }
         else
         {
-            this.umoMessage = new MuleMessage(payload, (Map) null);
+            this.umoMessage = new DefaultMuleMessage(payload, (Map) null);
         }
         setMessage(generateMessage(message));
     }
@@ -73,7 +73,7 @@ public class MessagingException extends UMOException
         }
         else
         {
-            this.umoMessage = new MuleMessage(payload, (Map) null);
+            this.umoMessage = new DefaultMuleMessage(payload, (Map) null);
         }
         setMessage(generateMessage(message));
     }
@@ -100,14 +100,14 @@ public class MessagingException extends UMOException
         }
         else
         {
-            buf.append("The current UMOMessage is null! Please report this to ").append(MuleManifest.getDevListEmail());
+            buf.append("The current MuleMessage is null! Please report this to ").append(MuleManifest.getDevListEmail());
             addInfo("Payload", NullPayload.getInstance().toString());
         }
 
         return buf.toString();
     }
 
-    public UMOMessage getUmoMessage()
+    public MuleMessage getUmoMessage()
     {
         return umoMessage;
     }

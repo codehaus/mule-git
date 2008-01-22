@@ -12,7 +12,7 @@ package org.mule.impl.security;
 
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.security.CryptoFailureException;
-import org.mule.imple.config.i18n.CoreMessages;
+import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.util.Base64;
 
 import java.security.GeneralSecurityException;

@@ -13,7 +13,7 @@ package org.mule.providers.file;
 import org.mule.api.MessagingException;
 import org.mule.api.MuleRuntimeException;
 import org.mule.api.ThreadSafeAccess;
-import org.mule.imple.config.i18n.CoreMessages;
+import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.util.IOUtils;
 
 /**

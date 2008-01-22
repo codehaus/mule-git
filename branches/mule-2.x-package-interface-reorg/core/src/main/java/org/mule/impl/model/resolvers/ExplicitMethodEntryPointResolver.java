@@ -9,9 +9,9 @@
  */
 package org.mule.impl.model.resolvers;
 
-import org.mule.api.UMOEventContext;
+import org.mule.api.EventContext;
 import org.mule.api.model.InvocationResult;
-import org.mule.imple.config.i18n.CoreMessages;
+import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.util.ClassUtils;
 import org.mule.util.StringMessageUtils;
 
@@ -47,7 +47,7 @@ public class ExplicitMethodEntryPointResolver extends AbstractEntryPointResolver
         return this.methods.remove(name);
     }
 
-    public InvocationResult invoke(Object component, UMOEventContext context) throws Exception
+    public InvocationResult invoke(Object component, EventContext context) throws Exception
     {
         if (methods == null || methods.size() == 0)
         {

@@ -10,9 +10,9 @@
 
 package org.mule.impl.internal.admin;
 
-import org.mule.api.UMOException;
-import org.mule.api.context.UMOServerNotification;
-import org.mule.api.context.UMOServerNotificationListener;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.context.ServerNotification;
+import org.mule.api.context.ServerNotificationListener;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.impl.AbstractAgent;
 import org.mule.impl.internal.notifications.AdminNotificationListener;
@@ -62,12 +62,12 @@ public abstract class AbstractNotificationLoggerAgent extends AbstractAgent
         super(name);
     }
 
-    public void start() throws UMOException
+    public void start() throws AbstractMuleException
     {
         // nothing to do
     }
 
-    public void stop() throws UMOException
+    public void stop() throws AbstractMuleException
     {
         // nothing to do
     }
@@ -86,7 +86,7 @@ public abstract class AbstractNotificationLoggerAgent extends AbstractAgent
     {
         for (Iterator iterator = listeners.iterator(); iterator.hasNext();)
         {
-            UMOServerNotificationListener listener = (UMOServerNotificationListener) iterator.next();
+            ServerNotificationListener listener = (ServerNotificationListener) iterator.next();
             muleContext.unregisterListener(listener);
         }
     }
@@ -186,9 +186,9 @@ public abstract class AbstractNotificationLoggerAgent extends AbstractAgent
         doInitialise();
         if (!ignoreManagerNotifications)
         {
-            UMOServerNotificationListener l = new ManagerNotificationListener()
+            ServerNotificationListener l = new ManagerNotificationListener()
             {
-                public void onNotification(UMOServerNotification notification)
+                public void onNotification(ServerNotification notification)
                 {
                     logEvent(notification);
                 }
@@ -205,9 +205,9 @@ public abstract class AbstractNotificationLoggerAgent extends AbstractAgent
         }
         if (!ignoreModelNotifications)
         {
-            UMOServerNotificationListener l = new ModelNotificationListener()
+            ServerNotificationListener l = new ModelNotificationListener()
             {
-                public void onNotification(UMOServerNotification notification)
+                public void onNotification(ServerNotification notification)
                 {
                     logEvent(notification);
                 }
@@ -224,9 +224,9 @@ public abstract class AbstractNotificationLoggerAgent extends AbstractAgent
         }
         if (!ignoreComponentNotifications)
         {
-            UMOServerNotificationListener l = new ComponentNotificationListener()
+            ServerNotificationListener l = new ComponentNotificationListener()
             {
-                public void onNotification(UMOServerNotification notification)
+                public void onNotification(ServerNotification notification)
                 {
                     logEvent(notification);
                 }
@@ -243,9 +243,9 @@ public abstract class AbstractNotificationLoggerAgent extends AbstractAgent
         }
         if (!ignoreSecurityNotifications)
         {
-            UMOServerNotificationListener l = new SecurityNotificationListener()
+            ServerNotificationListener l = new SecurityNotificationListener()
             {
-                public void onNotification(UMOServerNotification notification)
+                public void onNotification(ServerNotification notification)
                 {
                     logEvent(notification);
                 }
@@ -263,9 +263,9 @@ public abstract class AbstractNotificationLoggerAgent extends AbstractAgent
 
         if (!ignoreManagementNotifications)
         {
-            UMOServerNotificationListener l = new ManagementNotificationListener()
+            ServerNotificationListener l = new ManagementNotificationListener()
             {
-                public void onNotification(UMOServerNotification notification)
+                public void onNotification(ServerNotification notification)
                 {
                     logEvent(notification);
                 }
@@ -283,9 +283,9 @@ public abstract class AbstractNotificationLoggerAgent extends AbstractAgent
 
         if (!ignoreCustomNotifications)
         {
-            UMOServerNotificationListener l = new CustomNotificationListener()
+            ServerNotificationListener l = new CustomNotificationListener()
             {
-                public void onNotification(UMOServerNotification notification)
+                public void onNotification(ServerNotification notification)
                 {
                     logEvent(notification);
                 }
@@ -303,9 +303,9 @@ public abstract class AbstractNotificationLoggerAgent extends AbstractAgent
 
         if (!ignoreConnectionNotifications)
         {
-            UMOServerNotificationListener l = new ConnectionNotificationListener()
+            ServerNotificationListener l = new ConnectionNotificationListener()
             {
-                public void onNotification(UMOServerNotification notification)
+                public void onNotification(ServerNotification notification)
                 {
                     logEvent(notification);
                 }
@@ -323,9 +323,9 @@ public abstract class AbstractNotificationLoggerAgent extends AbstractAgent
 
         if (!ignoreAdminNotifications)
         {
-            UMOServerNotificationListener l = new AdminNotificationListener()
+            ServerNotificationListener l = new AdminNotificationListener()
             {
-                public void onNotification(UMOServerNotification notification)
+                public void onNotification(ServerNotification notification)
                 {
                     logEvent(notification);
                 }
@@ -347,9 +347,9 @@ public abstract class AbstractNotificationLoggerAgent extends AbstractAgent
         }
         else if (!ignoreMessageNotifications)
         {
-            UMOServerNotificationListener l = new MessageNotificationListener()
+            ServerNotificationListener l = new MessageNotificationListener()
             {
-                public void onNotification(UMOServerNotification notification)
+                public void onNotification(ServerNotification notification)
                 {
                     logEvent(notification);
                 }
@@ -369,5 +369,5 @@ public abstract class AbstractNotificationLoggerAgent extends AbstractAgent
 
     protected abstract void doInitialise() throws InitialisationException;
 
-    protected abstract void logEvent(UMOServerNotification e);
+    protected abstract void logEvent(ServerNotification e);
 }

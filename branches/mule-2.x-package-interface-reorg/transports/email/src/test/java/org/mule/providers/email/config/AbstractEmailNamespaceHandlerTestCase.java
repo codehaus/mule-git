@@ -9,16 +9,16 @@
  */
 package org.mule.providers.email.config;
 
-import org.mule.api.UMOException;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.tck.FunctionalTestCase;
 
 public abstract class AbstractEmailNamespaceHandlerTestCase extends FunctionalTestCase
 {
 
-    protected void testEndpoint(String name, String protocolName) throws UMOException
+    protected void testEndpoint(String name, String protocolName) throws AbstractMuleException
     {
-        UMOImmutableEndpoint endpoint =
+        ImmutableEndpoint endpoint =
                 muleContext.getRegistry().lookupEndpointFactory().getInboundEndpoint(name);
         assertNotNull(endpoint);
         String address = endpoint.getEndpointURI().getAddress();

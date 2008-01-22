@@ -10,10 +10,10 @@
 
 package org.mule.providers.soap.axis.issues;
 
-import org.mule.api.UMOException;
-import org.mule.api.endpoint.UMOEndpointBuilder;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
-import org.mule.api.transport.UMOConnector;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.endpoint.EndpointBuilder;
+import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.api.transport.Connector;
 import org.mule.providers.soap.axis.AxisConnector;
 import org.mule.tck.FunctionalTestCase;
 
@@ -25,56 +25,56 @@ public class EndpointRetrievalMule2021TestCase extends FunctionalTestCase
         return "endpoint-retrieval-mule-2021-test.xml";
     }
 
-    public void testLookupEndpoint() throws UMOException
+    public void testLookupEndpoint() throws AbstractMuleException
     {
-        UMOImmutableEndpoint endpoint1 = muleContext.getRegistry().lookupEndpoint("Endpoint");
+        ImmutableEndpoint endpoint1 = muleContext.getRegistry().lookupEndpoint("Endpoint");
         // Null expected because lookupEndpoint does not create endpoints from global endpoint name.        
         assertNull(endpoint1);
 
-        UMOEndpointBuilder endpointBuiler = muleContext.getRegistry().lookupEndpointBuilder("Endpoint");      
+        EndpointBuilder endpointBuiler = muleContext.getRegistry().lookupEndpointBuilder("Endpoint");      
         // There should however be an endpoint builder with this id/name
         assertNotNull(endpointBuiler);
         
-        UMOImmutableEndpoint endpoint2 = muleContext.getRegistry().lookupEndpoint(
+        ImmutableEndpoint endpoint2 = muleContext.getRegistry().lookupEndpoint(
             "axis:http://localhost:18081/mule/Service?method=toString");
         // Null expected because lookupEndpoint does not create endpoints from uri's.
         assertNull(endpoint2);
     }
 
-    public void testGetOutboundEndpoint() throws UMOException
+    public void testGetOutboundEndpoint() throws AbstractMuleException
     {
-        UMOImmutableEndpoint endpoint1 = muleContext.getRegistry().lookupEndpointFactory().getOutboundEndpoint(
+        ImmutableEndpoint endpoint1 = muleContext.getRegistry().lookupEndpointFactory().getOutboundEndpoint(
             "Endpoint");
         assertEndpointOk(endpoint1);
-        UMOImmutableEndpoint endpoint2 = muleContext.getRegistry().lookupEndpointFactory().getOutboundEndpoint(
+        ImmutableEndpoint endpoint2 = muleContext.getRegistry().lookupEndpointFactory().getOutboundEndpoint(
             "axis:http://localhost:18081/mule/Service?method=toString");
         assertEndpointOk(endpoint2);
     }
 
-    public void testGetInboundEndpoint() throws UMOException
+    public void testGetInboundEndpoint() throws AbstractMuleException
     {
-        UMOImmutableEndpoint endpoint1 = muleContext.getRegistry().lookupEndpointFactory().getInboundEndpoint(
+        ImmutableEndpoint endpoint1 = muleContext.getRegistry().lookupEndpointFactory().getInboundEndpoint(
             "Endpoint");
         assertEndpointOk(endpoint1);
-        UMOImmutableEndpoint endpoint2 = muleContext.getRegistry().lookupEndpointFactory().getInboundEndpoint(
+        ImmutableEndpoint endpoint2 = muleContext.getRegistry().lookupEndpointFactory().getInboundEndpoint(
             "axis:http://localhost:18081/mule/Service?method=toString");
         assertEndpointOk(endpoint2);
     }
 
-    public void testGetResponseEndpoint() throws UMOException
+    public void testGetResponseEndpoint() throws AbstractMuleException
     {
-        UMOImmutableEndpoint endpoint1 = muleContext.getRegistry().lookupEndpointFactory().getInboundEndpoint(
+        ImmutableEndpoint endpoint1 = muleContext.getRegistry().lookupEndpointFactory().getInboundEndpoint(
             "Endpoint");
         assertEndpointOk(endpoint1);
-        UMOImmutableEndpoint endpoint2 = muleContext.getRegistry().lookupEndpointFactory().getInboundEndpoint(
+        ImmutableEndpoint endpoint2 = muleContext.getRegistry().lookupEndpointFactory().getInboundEndpoint(
             "axis:http://localhost:18081/mule/Service?method=toString");
         assertEndpointOk(endpoint2);
     }
 
-    private void assertEndpointOk(UMOImmutableEndpoint endpoint)
+    private void assertEndpointOk(ImmutableEndpoint endpoint)
     {
         assertNotNull("Endpoint is null", endpoint);
-        UMOConnector connector = endpoint.getConnector();
+        Connector connector = endpoint.getConnector();
         assertTrue("Connector not AXIS", connector instanceof AxisConnector);
     }
 

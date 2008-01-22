@@ -12,19 +12,19 @@ package org.mule.providers.soap;
 
 import org.mule.MuleServer;
 import org.mule.api.MuleContext;
-import org.mule.api.UMOComponent;
-import org.mule.api.UMOComponentAware;
-import org.mule.api.UMOEventContext;
-import org.mule.api.UMOMessage;
-import org.mule.api.endpoint.UMOEndpoint;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.Component;
+import org.mule.api.ComponentAware;
+import org.mule.api.EventContext;
+import org.mule.api.MuleMessage;
+import org.mule.api.endpoint.Endpoint;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.Callable;
 import org.mule.api.lifecycle.Initialisable;
 import org.mule.api.lifecycle.InitialisationException;
-import org.mule.api.routing.UMOOutboundRouter;
-import org.mule.impl.MuleMessage;
-import org.mule.imple.config.i18n.CoreMessages;
-import org.mule.imple.config.i18n.MessageFactory;
+import org.mule.api.routing.OutboundRouter;
+import org.mule.impl.DefaultMuleMessage;
+import org.mule.impl.config.i18n.CoreMessages;
+import org.mule.impl.config.i18n.MessageFactory;
 import org.mule.util.IOUtils;
 import org.mule.util.StringUtils;
 
@@ -53,7 +53,7 @@ import org.apache.commons.logging.LogFactory;
  * (with no xfire or axis).
  * 
  */
-public class WSProxyService implements Callable, UMOComponentAware, Initialisable
+public class WSProxyService implements Callable, ComponentAware, Initialisable
 {
 
     private String urlWebservice;
@@ -62,7 +62,7 @@ public class WSProxyService implements Callable, UMOComponentAware, Initialisabl
     private String wsdlFileContents;
     private boolean useFile = false;
 
-    private UMOComponent component;
+    private Component component;
 
     private static final String HTTP_REQUEST = "http.request";
     private static final String WSDL_PARAM_1 = "?wsdl";
@@ -106,7 +106,7 @@ public class WSProxyService implements Callable, UMOComponentAware, Initialisabl
         this.wsdlFile = wsdlFile;
     }
 
-    public Object onCall(UMOEventContext eventContext) throws Exception
+    public Object onCall(EventContext eventContext) throws Exception
     {
         if (wsdlEndpoint == null && lazyInit)
         {
@@ -114,7 +114,7 @@ public class WSProxyService implements Callable, UMOComponentAware, Initialisabl
         }
         
         // retrieve the message
-        UMOMessage message = eventContext.getMessage();
+        MuleMessage message = eventContext.getMessage();
 
         // retrieve the original http request. This will be used to check if the user
         // asked for the WSDL or just for the service
@@ -135,11 +135,11 @@ public class WSProxyService implements Callable, UMOComponentAware, Initialisabl
                 return wsdlFileContents;
             }
             MuleContext muleContext = MuleServer.getMuleContext();
-            UMOImmutableEndpoint webServiceEndpoint = muleContext.getRegistry()
+            ImmutableEndpoint webServiceEndpoint = muleContext.getRegistry()
                 .lookupEndpointFactory()
                 .getOutboundEndpoint(this.wsdlEndpoint);
 
-            UMOMessage replyWSDL = eventContext.receiveEvent(webServiceEndpoint, eventContext.getTimeout());
+            MuleMessage replyWSDL = eventContext.receiveEvent(webServiceEndpoint, eventContext.getTimeout());
 
             wsdlString = replyWSDL.getPayloadAsString();
 
@@ -147,7 +147,7 @@ public class WSProxyService implements Callable, UMOComponentAware, Initialisabl
             wsdlString = wsdlString.replaceAll(this.urlWebservice, eventContext.getEndpointURI().getAddress());
 
             // create a new mule message with the new WSDL
-            MuleMessage modifiedWsdl = new MuleMessage(wsdlString, message);
+            DefaultMuleMessage modifiedWsdl = new DefaultMuleMessage(wsdlString, message);
 
             logger.debug("WSDL retrieved successfully");
 
@@ -166,7 +166,7 @@ public class WSProxyService implements Callable, UMOComponentAware, Initialisabl
     }
 
     // called once upon initialisation
-    public void setComponent(UMOComponent component)
+    public void setComponent(Component component)
     {
         this.component = component;
     }
@@ -175,8 +175,8 @@ public class WSProxyService implements Callable, UMOComponentAware, Initialisabl
     {
         if (component != null)
         {        
-            UMOOutboundRouter router = (UMOOutboundRouter)component.getOutboundRouter().getRouters().get(0);
-            UMOEndpoint endpoint = (UMOEndpoint)router.getEndpoints().get(0);
+            OutboundRouter router = (OutboundRouter)component.getOutboundRouter().getRouters().get(0);
+            Endpoint endpoint = (Endpoint)router.getEndpoints().get(0);
             this.urlWebservice = endpoint.getEndpointURI().getAddress();
     
             // remove any params from the url

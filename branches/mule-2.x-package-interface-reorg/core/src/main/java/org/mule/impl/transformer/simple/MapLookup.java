@@ -11,8 +11,8 @@
 package org.mule.impl.transformer.simple;
 
 import org.mule.api.transformer.TransformerException;
+import org.mule.impl.config.i18n.MessageFactory;
 import org.mule.impl.transformer.AbstractTransformer;
-import org.mule.imple.config.i18n.MessageFactory;
 
 import java.util.Map;
 

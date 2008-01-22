@@ -10,12 +10,12 @@
 
 package org.mule.impl.transport;
 
-import org.mule.api.context.UMOWorkManager;
+import org.mule.api.context.WorkManager;
 
 public class PollingReceiverWorkerSchedule implements Runnable
 {
     protected final PollingReceiverWorker worker;
-    protected final UMOWorkManager workManager;
+    protected final WorkManager workManager;
     protected final AbstractPollingMessageReceiver receiver;
 
     protected PollingReceiverWorkerSchedule(PollingReceiverWorker work)

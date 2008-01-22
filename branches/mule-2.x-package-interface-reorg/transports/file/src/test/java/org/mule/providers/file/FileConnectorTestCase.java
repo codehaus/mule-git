@@ -11,7 +11,7 @@
 package org.mule.providers.file;
 
 import org.mule.RegistryContext;
-import org.mule.api.transport.UMOConnector;
+import org.mule.api.transport.Connector;
 import org.mule.tck.providers.AbstractConnectorTestCase;
 import org.mule.util.FileUtils;
 
@@ -55,9 +55,9 @@ public class FileConnectorTestCase extends AbstractConnectorTestCase
      *
      * @see org.mule.tck.providers.AbstractConnectorTestCase#createConnector()
      */
-    public UMOConnector createConnector() throws Exception
+    public Connector createConnector() throws Exception
     {
-        UMOConnector connector = new FileConnector();
+        Connector connector = new FileConnector();
         connector.setName("testFile");
         return connector;
     }
@@ -80,9 +80,9 @@ public class FileConnectorTestCase extends AbstractConnectorTestCase
 //        FileConnector connector = (FileConnector)getConnector();
 //        connector.setPollingFrequency(POLLING_FREQUENCY);
 //
-//        UMOEndpoint endpoint = getTestEndpoint("simple", UMOImmutableEndpoint.ENDPOINT_TYPE_RECEIVER);
-//        UMOComponent component = getTestComponent(descriptor);
-//        UMOMessageReceiver receiver = connector.createReceiver(component, endpoint);
+//        Endpoint endpoint = getTestEndpoint("simple", ImmutableEndpoint.ENDPOINT_TYPE_RECEIVER);
+//        Component component = getTestComponent(descriptor);
+//        MessageReceiver receiver = connector.createReceiver(component, endpoint);
 //        assertEquals("Connector's polling frequency must not be ignored.", POLLING_FREQUENCY,
 //            ((FileMessageReceiver)receiver).getFrequency());
 //    }
@@ -96,15 +96,15 @@ public class FileConnectorTestCase extends AbstractConnectorTestCase
 //        // set some connector-level value which we are about to override
 //        connector.setPollingFrequency(-1);
 //
-//        UMOEndpoint endpoint = getTestEndpoint("simple", UMOImmutableEndpoint.ENDPOINT_TYPE_RECEIVER);
+//        Endpoint endpoint = getTestEndpoint("simple", ImmutableEndpoint.ENDPOINT_TYPE_RECEIVER);
 //
 //        Properties props = new Properties();
 //        // Endpoint wants String-typed properties
 //        props.put(FileConnector.PROPERTY_POLLING_FREQUENCY, String.valueOf(POLLING_FREQUENCY_OVERRIDE));
 //        endpoint.setProperties(props);
 //
-//        UMOComponent component = getTestComponent(descriptor);
-//        UMOMessageReceiver receiver = connector.createReceiver(component, endpoint);
+//        Component component = getTestComponent(descriptor);
+//        MessageReceiver receiver = connector.createReceiver(component, endpoint);
 //        assertEquals("Polling frequency endpoint override must not be ignored.", POLLING_FREQUENCY_OVERRIDE,
 //            ((FileMessageReceiver)receiver).getFrequency());
 //    }

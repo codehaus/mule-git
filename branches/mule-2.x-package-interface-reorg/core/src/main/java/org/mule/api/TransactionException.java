@@ -10,14 +10,14 @@
 
 package org.mule.api;
 
-import org.mule.imple.config.i18n.Message;
+import org.mule.impl.config.i18n.Message;
 
 /**
  * <p>
  * <code>TransactionException</code> is thrown when an exception occurs while
  * trying to create, start commit or rollback an exception
  */
-public class TransactionException extends UMOException
+public class TransactionException extends AbstractMuleException
 {
     /**
      * Serial version

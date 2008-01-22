@@ -10,28 +10,28 @@
 
 package org.mule.impl.transport;
 
-import org.mule.api.UMOException;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
-import org.mule.api.transport.UMOMessageDispatcher;
-import org.mule.api.transport.UMOMessageDispatcherFactory;
-import org.mule.imple.config.i18n.CoreMessages;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.api.transport.MessageDispatcher;
+import org.mule.api.transport.MessageDispatcherFactory;
+import org.mule.impl.config.i18n.CoreMessages;
 
 import org.apache.commons.pool.KeyedPoolableObjectFactory;
 
 /**
  * <code>KeyedPoolMessageDispatcherFactoryAdapter</code> adapts a
- * <code>UMOMessageDispatcherFactory</code> with methods from commons-pool
+ * <code>MessageDispatcherFactory</code> with methods from commons-pool
  * <code>KeyedPoolableObjectFactory</code>. It is only required for dispatcher
  * factories that do not inherit from <code>AbstractMessageDispatcherFactory</code>.
  * 
  * @see AbstractMessageDispatcherFactory
  */
 public class KeyedPoolMessageDispatcherFactoryAdapter
-    implements UMOMessageDispatcherFactory, KeyedPoolableObjectFactory
+    implements MessageDispatcherFactory, KeyedPoolableObjectFactory
 {
-    private final UMOMessageDispatcherFactory factory;
+    private final MessageDispatcherFactory factory;
 
-    public KeyedPoolMessageDispatcherFactoryAdapter(UMOMessageDispatcherFactory factory)
+    public KeyedPoolMessageDispatcherFactoryAdapter(MessageDispatcherFactory factory)
     {
         super();
 
@@ -45,27 +45,27 @@ public class KeyedPoolMessageDispatcherFactoryAdapter
 
     public void activateObject(Object key, Object obj) throws Exception
     {
-        factory.activate((UMOImmutableEndpoint) key, (UMOMessageDispatcher) obj);
+        factory.activate((ImmutableEndpoint) key, (MessageDispatcher) obj);
     }
 
     public void destroyObject(Object key, Object obj) throws Exception
     {
-        factory.destroy((UMOImmutableEndpoint) key, (UMOMessageDispatcher) obj);
+        factory.destroy((ImmutableEndpoint) key, (MessageDispatcher) obj);
     }
 
     public Object makeObject(Object key) throws Exception
     {
-        return factory.create((UMOImmutableEndpoint) key);
+        return factory.create((ImmutableEndpoint) key);
     }
 
     public void passivateObject(Object key, Object obj) throws Exception
     {
-        factory.passivate((UMOImmutableEndpoint) key, (UMOMessageDispatcher) obj);
+        factory.passivate((ImmutableEndpoint) key, (MessageDispatcher) obj);
     }
 
     public boolean validateObject(Object key, Object obj)
     {
-        return factory.validate((UMOImmutableEndpoint) key, (UMOMessageDispatcher) obj);
+        return factory.validate((ImmutableEndpoint) key, (MessageDispatcher) obj);
     }
 
     public boolean isCreateDispatcherPerRequest()
@@ -73,27 +73,27 @@ public class KeyedPoolMessageDispatcherFactoryAdapter
         return factory.isCreateDispatcherPerRequest();
     }
 
-    public UMOMessageDispatcher create(UMOImmutableEndpoint endpoint) throws UMOException
+    public MessageDispatcher create(ImmutableEndpoint endpoint) throws AbstractMuleException
     {
         return factory.create(endpoint);
     }
 
-    public void activate(UMOImmutableEndpoint endpoint, UMOMessageDispatcher dispatcher) throws UMOException
+    public void activate(ImmutableEndpoint endpoint, MessageDispatcher dispatcher) throws AbstractMuleException
     {
         factory.activate(endpoint, dispatcher);
     }
 
-    public void destroy(UMOImmutableEndpoint endpoint, UMOMessageDispatcher dispatcher)
+    public void destroy(ImmutableEndpoint endpoint, MessageDispatcher dispatcher)
     {
         factory.destroy(endpoint, dispatcher);
     }
 
-    public void passivate(UMOImmutableEndpoint endpoint, UMOMessageDispatcher dispatcher)
+    public void passivate(ImmutableEndpoint endpoint, MessageDispatcher dispatcher)
     {
         factory.passivate(endpoint, dispatcher);
     }
 
-    public boolean validate(UMOImmutableEndpoint endpoint, UMOMessageDispatcher dispatcher)
+    public boolean validate(ImmutableEndpoint endpoint, MessageDispatcher dispatcher)
     {
         return factory.validate(endpoint, dispatcher);
     }

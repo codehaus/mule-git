@@ -10,8 +10,8 @@
 
 package org.mule.test.integration.providers.jms;
 
-import org.mule.api.UMOException;
-import org.mule.api.UMOMessage;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 
@@ -22,12 +22,12 @@ public class NestedRouterTestCase extends FunctionalTestCase
         return "org/mule/test/integration/providers/jms/nestedrouter-test.xml";
     }
 
-    public void testNestedRouter() throws UMOException
+    public void testNestedRouter() throws AbstractMuleException
     {
         MuleClient client = new MuleClient();
         String message = "Mule";
         client.dispatch("jms://invoker.in", message, null);
-        UMOMessage reply = client.request("jms://invoker.out", 10000);
+        MuleMessage reply = client.request("jms://invoker.out", 10000);
         assertNotNull(reply);
         assertEquals("Received: Hello " + message + " " + 0xC0DE, reply.getPayload());
     }

@@ -10,13 +10,13 @@
 
 package org.mule.providers.http.issues;
 
-import org.mule.api.UMOEventContext;
+import org.mule.api.EventContext;
 import org.mule.api.lifecycle.Callable;
 
 public class NoTransformPassThroughComponent implements Callable
 {
 
-    public Object onCall(UMOEventContext context) throws Exception
+    public Object onCall(EventContext context) throws Exception
     {
         return context.getMessage();
     }

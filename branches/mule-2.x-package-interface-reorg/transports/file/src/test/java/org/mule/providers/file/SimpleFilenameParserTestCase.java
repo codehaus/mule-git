@@ -10,7 +10,7 @@
 
 package org.mule.providers.file;
 
-import org.mule.api.transport.UMOMessageAdapter;
+import org.mule.api.transport.MessageAdapter;
 import org.mule.impl.transport.DefaultMessageAdapter;
 import org.mule.tck.AbstractMuleTestCase;
 
@@ -20,7 +20,7 @@ import org.mule.tck.AbstractMuleTestCase;
 public class SimpleFilenameParserTestCase extends AbstractMuleTestCase
 {
     private SimpleFilenameParser parser;
-    private UMOMessageAdapter adapter;
+    private MessageAdapter adapter;
 
     protected void doSetUp() throws Exception
     {

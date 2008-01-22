@@ -12,23 +12,23 @@ package org.mule.providers.jms;
 
 import org.mule.api.MuleContext;
 import org.mule.api.TransactionException;
-import org.mule.api.UMOTransaction;
-import org.mule.api.UMOTransactionFactory;
+import org.mule.api.Transaction;
+import org.mule.api.TransactionFactory;
 
 /**
  * <p>
  * <code>JmsTransactionFactory</code> creates a JMS local transaction
  */
-public class JmsTransactionFactory implements UMOTransactionFactory
+public class JmsTransactionFactory implements TransactionFactory
 {
     private String name;
     
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.api.UMOTransactionFactory#beginTransaction(org.mule.api.transport.UMOMessageDispatcher)
+     * @see org.mule.api.TransactionFactory#beginTransaction(org.mule.api.transport.MessageDispatcher)
      */
-    public UMOTransaction beginTransaction(MuleContext muleContext) throws TransactionException
+    public Transaction beginTransaction(MuleContext muleContext) throws TransactionException
     {
         JmsTransaction tx = new JmsTransaction();
         tx.begin();

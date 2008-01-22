@@ -10,9 +10,9 @@
 
 package org.mule.providers.http.functional;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
-import org.mule.impl.MuleMessage;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.transformers.xml.XsltTransformer;
 import org.mule.util.IOUtils;
@@ -43,7 +43,7 @@ public class HttpContentLengthPropagationTestCase extends FunctionalTestCase
         byte[] fileContents = IOUtils.toByteArray(is);
 
         MuleClient client = new MuleClient();
-        UMOMessage result = client.send("http://localhost:8085", new MuleMessage(fileContents));
+        MuleMessage result = client.send("http://localhost:8085", new DefaultMuleMessage(fileContents));
 
         XsltTransformer trans = new XsltTransformer();
         trans.setXslFile(NAME_STYLESHEET);

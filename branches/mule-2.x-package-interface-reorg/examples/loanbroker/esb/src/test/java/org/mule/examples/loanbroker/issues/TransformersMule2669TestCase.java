@@ -10,8 +10,8 @@
 
 package org.mule.examples.loanbroker.issues;
 
-import org.mule.api.UMOException;
-import org.mule.api.UMOMessage;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleMessage;
 import org.mule.examples.loanbroker.bank.Bank;
 import org.mule.examples.loanbroker.messages.LoanBrokerQuoteRequest;
 import org.mule.extras.client.MuleClient;
@@ -28,12 +28,12 @@ public class TransformersMule2669TestCase extends FunctionalTestCase
         return "transformers-mule-2669.xml";
     }
 
-    public void testTransformers() throws UMOException
+    public void testTransformers() throws AbstractMuleException
     {
         MuleClient client = new MuleClient();
         LoanBrokerQuoteRequest request = new LoanBrokerQuoteRequest();
         request.setLenders(new Bank[0]);
-        UMOMessage response = client.send("jms://in?connector=default", request, null);
+        MuleMessage response = client.send("jms://in?connector=default", request, null);
         assertNotNull(response);
         assertNull(response.getExceptionPayload());
         Set propertyNames = response.getPropertyNames();

@@ -10,9 +10,9 @@
 
 package org.mule.providers.file;
 
-import org.mule.api.UMOException;
-import org.mule.api.endpoint.UMOEndpointBuilder;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.endpoint.EndpointBuilder;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.impl.endpoint.EndpointURIEndpointBuilder;
 import org.mule.impl.transformer.TransformerUtils;
 import org.mule.impl.transformer.simple.ByteArrayToSerializable;
@@ -56,10 +56,10 @@ public class ConnectorServiceOverridesTestCase extends FunctionalTestCase
         assertNull(c.getServiceOverrides());
     }
 
-    public void testServiceOverrides3() throws InterruptedException, UMOException
+    public void testServiceOverrides3() throws InterruptedException, AbstractMuleException
     {
-        // UMOEndpointURI uri = new MuleEndpointURI("file:///temp?connector=fileConnector1");
-        UMOImmutableEndpoint endpoint = muleContext.getRegistry().lookupEndpointFactory().getInboundEndpoint(
+        // EndpointURI uri = new MuleEndpointURI("file:///temp?connector=fileConnector1");
+        ImmutableEndpoint endpoint = muleContext.getRegistry().lookupEndpointFactory().getInboundEndpoint(
             "file:///temp?connector=fileConnector1");
 
         assertNotNull(endpoint);
@@ -70,19 +70,19 @@ public class ConnectorServiceOverridesTestCase extends FunctionalTestCase
         assertNotNull(c);
         assertNotNull(c.getServiceOverrides());
 
-        UMOEndpointBuilder builder = new EndpointURIEndpointBuilder("file:///temp?connector=fileConnector1",
+        EndpointBuilder builder = new EndpointURIEndpointBuilder("file:///temp?connector=fileConnector1",
             muleContext);
         builder.setConnector(c);
         endpoint = muleContext.getRegistry().lookupEndpointFactory().getInboundEndpoint(builder);
         assertNotNull(((AbstractConnector) endpoint.getConnector()).getServiceOverrides());
 
-        UMOEndpointBuilder builder2 = new EndpointURIEndpointBuilder("file:///temp?connector=fileConnector3",
+        EndpointBuilder builder2 = new EndpointURIEndpointBuilder("file:///temp?connector=fileConnector3",
             muleContext);
         builder.setConnector(c);
         endpoint = muleContext.getRegistry().lookupEndpointFactory().getInboundEndpoint(builder2);
         assertNull(((AbstractConnector) endpoint.getConnector()).getServiceOverrides());
 
-        UMOEndpointBuilder builder3 = new EndpointURIEndpointBuilder("file:///temp?connector=fileConnector2",
+        EndpointBuilder builder3 = new EndpointURIEndpointBuilder("file:///temp?connector=fileConnector2",
             muleContext);
         builder.setConnector(c);
         endpoint = muleContext.getRegistry().lookupEndpointFactory().getInboundEndpoint(builder3);

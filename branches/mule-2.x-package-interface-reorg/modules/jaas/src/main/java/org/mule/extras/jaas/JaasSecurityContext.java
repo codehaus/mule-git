@@ -10,10 +10,10 @@
 
 package org.mule.extras.jaas;
 
-import org.mule.api.security.UMOAuthentication;
-import org.mule.api.security.UMOSecurityContext;
+import org.mule.api.security.MuleAuthentication;
+import org.mule.api.security.SecurityContext;
 
-public class JaasSecurityContext implements UMOSecurityContext
+public class JaasSecurityContext implements SecurityContext
 {
 
     private JaasAuthentication authentication;
@@ -33,7 +33,7 @@ public class JaasSecurityContext implements UMOSecurityContext
      * 
      * @return authentication
      */
-    public final UMOAuthentication getAuthentication()
+    public final MuleAuthentication getAuthentication()
     {
         return authentication;
     }
@@ -43,7 +43,7 @@ public class JaasSecurityContext implements UMOSecurityContext
      * 
      * @param authentication
      */
-    public final void setAuthentication(UMOAuthentication authentication)
+    public final void setAuthentication(MuleAuthentication authentication)
     {
         this.authentication = (JaasAuthentication) authentication;
     }

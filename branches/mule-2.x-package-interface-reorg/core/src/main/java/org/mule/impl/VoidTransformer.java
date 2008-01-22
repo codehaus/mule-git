@@ -10,10 +10,10 @@
 
 package org.mule.impl;
 
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.InitialisationException;
+import org.mule.api.transformer.Transformer;
 import org.mule.api.transformer.TransformerException;
-import org.mule.api.transformer.UMOTransformer;
 
 import java.util.List;
 
@@ -21,7 +21,7 @@ import java.util.List;
  * A unique transformer instance than indicates an error (typically that the transformer
  * in question has not been initialised).
  */
-public class VoidTransformer implements UMOTransformer
+public class VoidTransformer implements Transformer
 {
 
     private static class SingletonHolder
@@ -69,12 +69,12 @@ public class VoidTransformer implements UMOTransformer
         throw new IllegalStateException("Void transformer");
     }
 
-    public UMOImmutableEndpoint getEndpoint()
+    public ImmutableEndpoint getEndpoint()
     {
         throw new IllegalStateException("Void transformer");
     }
 
-    public void setEndpoint(UMOImmutableEndpoint endpoint)
+    public void setEndpoint(ImmutableEndpoint endpoint)
     {
         throw new IllegalStateException("Void transformer");
     }

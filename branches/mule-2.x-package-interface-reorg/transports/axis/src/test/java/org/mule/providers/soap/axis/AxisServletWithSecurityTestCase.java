@@ -10,7 +10,7 @@
 
 package org.mule.providers.soap.axis;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.providers.http.HttpConnector;
 import org.mule.providers.http.servlet.MuleReceiverServlet;
@@ -65,7 +65,7 @@ public class AxisServletWithSecurityTestCase extends FunctionalTestCase
         Map props = new HashMap();
         props.put(HttpConnector.HTTP_METHOD_PROPERTY, "GET");
         MuleClient client = new MuleClient();
-        UMOMessage result = client.send("http://ross:ross@localhost:" + HTTP_PORT
+        MuleMessage result = client.send("http://ross:ross@localhost:" + HTTP_PORT
                                         + "/services/mycomponent?method=echo", "test", props);
         
         ExceptionListener exceptionListener = 

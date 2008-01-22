@@ -12,19 +12,19 @@ package org.mule.tck;
 
 import org.mule.RegistryContext;
 import org.mule.api.MuleException;
-import org.mule.api.UMOComponent;
-import org.mule.api.UMOException;
-import org.mule.api.UMOFilter;
+import org.mule.api.Component;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.Filter;
 import org.mule.api.config.ThreadingProfile;
 import org.mule.api.context.ObjectNotFoundException;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
-import org.mule.api.model.UMOModel;
-import org.mule.api.routing.UMOInboundRouter;
-import org.mule.api.routing.UMOInboundRouterCollection;
-import org.mule.api.routing.UMONestedRouter;
-import org.mule.api.routing.UMOOutboundRouter;
-import org.mule.api.routing.UMOOutboundRouterCollection;
-import org.mule.api.transformer.UMOTransformer;
+import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.api.model.Model;
+import org.mule.api.routing.InboundRouter;
+import org.mule.api.routing.InboundRouterCollection;
+import org.mule.api.routing.NestedRouter;
+import org.mule.api.routing.OutboundRouter;
+import org.mule.api.routing.OutboundRouterCollection;
+import org.mule.api.transformer.Transformer;
 import org.mule.impl.DefaultExceptionStrategy;
 import org.mule.impl.endpoint.MuleEndpoint;
 import org.mule.impl.model.seda.SedaComponent;
@@ -76,15 +76,15 @@ public abstract class AbstractConfigBuilderTestCase extends AbstractScriptConfig
     }
 
     // @Override
-    public void testGlobalEndpointConfig() throws UMOException
+    public void testGlobalEndpointConfig() throws AbstractMuleException
     {
         super.testGlobalEndpointConfig();
-        UMOImmutableEndpoint endpoint = null;
+        ImmutableEndpoint endpoint = null;
         try
         {
             endpoint = muleContext.getRegistry().lookupEndpointFactory().getInboundEndpoint("fruitBowlEndpoint");
         }
-        catch (UMOException e)
+        catch (AbstractMuleException e)
         {
             e.printStackTrace();
             fail(e.getMessage());
@@ -100,17 +100,17 @@ public abstract class AbstractConfigBuilderTestCase extends AbstractScriptConfig
     }
 
     // @Override
-    public void testEndpointConfig() throws UMOException
+    public void testEndpointConfig() throws AbstractMuleException
     {
         super.testEndpointConfig();
 
         // test that endpoints have been resolved on endpoints
-        UMOImmutableEndpoint endpoint = null;
+        ImmutableEndpoint endpoint = null;
         try
         {
             endpoint = muleContext.getRegistry().lookupEndpointFactory().getInboundEndpoint("waterMelonEndpoint");
         }
-        catch (UMOException e)
+        catch (AbstractMuleException e)
         {
             e.printStackTrace();
             fail(e.getMessage());
@@ -119,13 +119,13 @@ public abstract class AbstractConfigBuilderTestCase extends AbstractScriptConfig
         assertEquals("UTF-8-TEST", endpoint.getEncoding());
         assertEquals("test.queue", endpoint.getEndpointURI().getAddress());
 
-        UMOComponent component = muleContext.getRegistry().lookupComponent("appleComponent2");
+        Component component = muleContext.getRegistry().lookupComponent("appleComponent2");
         assertNotNull(component);
     }
 
     public void testExceptionStrategy2()
     {
-        UMOComponent component = muleContext.getRegistry().lookupComponent("appleComponent");
+        Component component = muleContext.getRegistry().lookupComponent("appleComponent");
         assertNotNull(component.getExceptionListener());
         assertTrue(DefaultExceptionStrategy.class.isAssignableFrom(component.getExceptionListener().getClass()));
     }
@@ -135,7 +135,7 @@ public abstract class AbstractConfigBuilderTestCase extends AbstractScriptConfig
     {
         super.testTransformerConfig();
 
-        UMOTransformer t = muleContext.getRegistry().lookupTransformer("TestCompressionTransformer");
+        Transformer t = muleContext.getRegistry().lookupTransformer("TestCompressionTransformer");
         assertNotNull(t);
         assertTrue(t instanceof TestCompressionTransformer);
         assertEquals(t.getReturnClass(), java.lang.String.class);
@@ -147,7 +147,7 @@ public abstract class AbstractConfigBuilderTestCase extends AbstractScriptConfig
     {
         super.testModelConfig();
 
-        UMOModel model = muleContext.getRegistry().lookupModel("main");
+        Model model = muleContext.getRegistry().lookupModel("main");
         super.testModelConfig();
         // MULE-1995 Components are no longer registered with the model.
 //        assertTrue(model.isComponentRegistered("appleComponent"));
@@ -157,32 +157,32 @@ public abstract class AbstractConfigBuilderTestCase extends AbstractScriptConfig
     public void testOutboundRouterConfig2()
     {
         // test outbound message router
-        UMOComponent component = muleContext.getRegistry().lookupComponent("appleComponent");
+        Component component = muleContext.getRegistry().lookupComponent("appleComponent");
         assertNotNull(component.getOutboundRouter());
-        UMOOutboundRouterCollection router = component.getOutboundRouter();
+        OutboundRouterCollection router = component.getOutboundRouter();
         assertNotNull(router.getCatchAllStrategy());
         assertEquals(2, router.getRouters().size());
         // check first Router
-        UMOOutboundRouter route1 = (UMOOutboundRouter) router.getRouters().get(0);
+        OutboundRouter route1 = (OutboundRouter) router.getRouters().get(0);
         assertTrue(route1 instanceof FilteringOutboundRouter);
         assertNotNull(((FilteringOutboundRouter) route1).getTransformers());
         assertTrue(TransformerUtils.firstOrNull(((FilteringOutboundRouter) route1).getTransformers())
                 instanceof TestCompressionTransformer);
 
-        UMOFilter filter = ((FilteringOutboundRouter) route1).getFilter();
+        Filter filter = ((FilteringOutboundRouter) route1).getFilter();
         assertNotNull(filter);
         assertTrue(filter instanceof PayloadTypeFilter);
         assertEquals(String.class, ((PayloadTypeFilter) filter).getExpectedType());
 
         // check second Router
-        UMOOutboundRouter route2 = (UMOOutboundRouter) router.getRouters().get(1);
+        OutboundRouter route2 = (OutboundRouter) router.getRouters().get(1);
         assertTrue(route2 instanceof FilteringOutboundRouter);
 
-        UMOFilter filter2 = ((FilteringOutboundRouter) route2).getFilter();
+        Filter filter2 = ((FilteringOutboundRouter) route2).getFilter();
         assertNotNull(filter2);
         assertTrue(filter2 instanceof AndFilter);
-        UMOFilter left = ((AndFilter) filter2).getLeftFilter();
-        UMOFilter right = ((AndFilter) filter2).getRightFilter();
+        Filter left = ((AndFilter) filter2).getLeftFilter();
+        Filter right = ((AndFilter) filter2).getRightFilter();
         assertNotNull(left);
         assertTrue(left instanceof RegExFilter);
         assertEquals("the quick brown (.*)", ((RegExFilter) left).getPattern());
@@ -196,22 +196,22 @@ public abstract class AbstractConfigBuilderTestCase extends AbstractScriptConfig
 
     public void testInboundRouterConfig2()
     {
-        UMOComponent component = muleContext.getRegistry().lookupComponent("appleComponent");
+        Component component = muleContext.getRegistry().lookupComponent("appleComponent");
         assertNotNull(component.getInboundRouter());
-        UMOInboundRouterCollection messageRouter = component.getInboundRouter();
+        InboundRouterCollection messageRouter = component.getInboundRouter();
         assertNotNull(messageRouter.getCatchAllStrategy());
         assertEquals(2, messageRouter.getRouters().size());
-        UMOInboundRouter router = (UMOInboundRouter) messageRouter.getRouters().get(0);
+        InboundRouter router = (InboundRouter) messageRouter.getRouters().get(0);
         assertTrue(router instanceof SelectiveConsumer);
         SelectiveConsumer sc = (SelectiveConsumer) router;
 
         assertNotNull(sc.getFilter());
-        UMOFilter filter = sc.getFilter();
+        Filter filter = sc.getFilter();
         // check first Router
         assertTrue(filter instanceof PayloadTypeFilter);
         assertEquals(String.class, ((PayloadTypeFilter) filter).getExpectedType());
 
-        UMOInboundRouter router2 = (UMOInboundRouter) messageRouter.getRouters().get(1);
+        InboundRouter router2 = (InboundRouter) messageRouter.getRouters().get(1);
         assertTrue(router2 instanceof IdempotentReceiver);
     }
 
@@ -265,7 +265,7 @@ public abstract class AbstractConfigBuilderTestCase extends AbstractScriptConfig
         assertEquals(defaultThreadTTL, tp.getThreadTTL());
 
         // test per-component values
-        UMOComponent component = muleContext.getRegistry().lookupComponent("appleComponent2");
+        Component component = muleContext.getRegistry().lookupComponent("appleComponent2");
         assertTrue("component must be SedaComponent to get threading profile", component instanceof SedaComponent);
         tp = ((SedaComponent) component).getThreadingProfile();
         // these values are configured
@@ -325,7 +325,7 @@ public abstract class AbstractConfigBuilderTestCase extends AbstractScriptConfig
     public void testEndpointProperties() throws Exception
     {
         // test transaction config
-        UMOComponent component = muleContext.getRegistry().lookupComponent("appleComponent2");
+        Component component = muleContext.getRegistry().lookupComponent("appleComponent2");
         MuleEndpoint inEndpoint = (MuleEndpoint) component.getInboundRouter().getEndpoint(
                 "transactedInboundEndpoint");
         assertNotNull(inEndpoint);
@@ -338,17 +338,17 @@ public abstract class AbstractConfigBuilderTestCase extends AbstractScriptConfig
 //    {
 //        // test transaction config
 //        UMODescriptor descriptor = muleContext.getRegistry().lookupService("appleComponent2");
-//        UMOEndpoint inEndpoint = descriptor.getInboundRouter().getEndpoint("transactedInboundEndpoint");
+//        Endpoint inEndpoint = descriptor.getInboundRouter().getEndpoint("transactedInboundEndpoint");
 //        assertNotNull(inEndpoint);
 //        assertEquals(1, descriptor.getOutboundRouter().getRouters().size());
 //
-//        UMOEndpoint outEndpoint = (UMOEndpoint) ((UMOOutboundRouter) descriptor.getOutboundRouter()
+//        Endpoint outEndpoint = (Endpoint) ((OutboundRouter) descriptor.getOutboundRouter()
 //                .getRouters()
 //                .get(0)).getEndpoints().get(0);
 //
 //        assertNotNull(outEndpoint);
 //        assertNotNull(inEndpoint.getTransactionConfig());
-//        assertEquals(UMOTransactionConfig.ACTION_ALWAYS_BEGIN, inEndpoint.getTransactionConfig().getAction());
+//        assertEquals(TransactionConfig.ACTION_ALWAYS_BEGIN, inEndpoint.getTransactionConfig().getAction());
 //        assertTrue(inEndpoint.getTransactionConfig().getFactory() instanceof TestTransactionFactory);
 //        assertNull(inEndpoint.getTransactionConfig().getConstraint());
 //    }
@@ -364,9 +364,9 @@ public abstract class AbstractConfigBuilderTestCase extends AbstractScriptConfig
     public void testNestedRouterProxyCreation() throws ObjectNotFoundException
     {
         //Test that the proxy object was created and set on the service object
-        UMOComponent orange = muleContext.getRegistry().lookupComponent("orangeComponent");
+        Component orange = muleContext.getRegistry().lookupComponent("orangeComponent");
         assertNotNull(orange);
-        UMONestedRouter r = (UMONestedRouter) orange.getNestedRouter().getRouters().get(0);
+        NestedRouter r = (NestedRouter) orange.getNestedRouter().getRouters().get(0);
         assertNotNull(r);
 
         //TODO Grab an instance of the service object itself and test that the proxy has been injected

@@ -10,7 +10,7 @@
 
 package org.mule.api.persistence;
 
-import org.mule.api.UMOException;
+import org.mule.api.AbstractMuleException;
 
 /**
  * <code>Persistable</code> is an interface for a Mule object that wants
@@ -28,9 +28,9 @@ public interface Persistable
      * persistence request.
      *
      * @param listener The listener that the component will talk to
-     * @throws UMOException if the registration fails
+     * @throws AbstractMuleException if the registration fails
      */
-    void registerPersistenceRequestListener(PersistenceNotificationListener listener) throws UMOException;
+    void registerPersistenceRequestListener(PersistenceNotificationListener listener) throws AbstractMuleException;
 
     /**
      * Return the data for persistence. It is the responsibility
@@ -39,10 +39,10 @@ public interface Persistable
      * backup.
      *
      * @returns the data to be persisted
-     * @throws UMOException if the registration fails
+     * @throws AbstractMuleException if the registration fails
      */
 
-    Object getPersistableObject() throws UMOException;
+    Object getPersistableObject() throws AbstractMuleException;
 
     /**
      * Returns the storage key for this object. This can be a primative
@@ -51,7 +51,7 @@ public interface Persistable
      * This method will be called by the PersistenceManager in order
      * to determine whether/how to update the PersistenceStore
      */
-    Object getStorageKey() throws UMOException;
+    Object getStorageKey() throws AbstractMuleException;
 
     /**
      * Returns an optional PersistenceHelper to do any pre-persistence

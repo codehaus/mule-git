@@ -10,7 +10,7 @@
 
 package org.mule.api.config;
 
-import org.mule.api.context.UMOWorkManager;
+import org.mule.api.context.WorkManager;
 import org.mule.impl.config.ImmutableThreadingProfile;
 
 import java.util.Map;
@@ -160,7 +160,7 @@ public interface ThreadingProfile
 
     void setWorkManagerFactory(WorkManagerFactory workManagerFactory);
 
-    UMOWorkManager createWorkManager(String name);
+    WorkManager createWorkManager(String name);
 
     ThreadPoolExecutor createPool();
 
@@ -172,7 +172,7 @@ public interface ThreadingProfile
 
     static interface WorkManagerFactory
     {
-        UMOWorkManager createWorkManager(ThreadingProfile profile, String name);
+        WorkManager createWorkManager(ThreadingProfile profile, String name);
     }
 
 }

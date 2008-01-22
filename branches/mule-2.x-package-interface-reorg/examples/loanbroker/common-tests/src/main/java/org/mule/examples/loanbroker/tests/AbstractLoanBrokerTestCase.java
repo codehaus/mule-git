@@ -10,7 +10,7 @@
 
 package org.mule.examples.loanbroker.tests;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.examples.loanbroker.messages.Customer;
 import org.mule.examples.loanbroker.messages.CustomerQuoteRequest;
 import org.mule.examples.loanbroker.messages.LoanQuote;
@@ -36,7 +36,7 @@ public abstract class AbstractLoanBrokerTestCase extends FunctionalTestCase
         MuleClient client = new MuleClient();
         Customer c = new Customer("Ross Mason", 1234);
         CustomerQuoteRequest request = new CustomerQuoteRequest(c, 100000, 48);
-        UMOMessage result = client.send("CustomerRequests", request, null);
+        MuleMessage result = client.send("CustomerRequests", request, null);
         assertNotNull("Result is null", result);
         assertFalse("Result is null", result.getPayload() instanceof NullPayload);
         assertTrue("Result should be LoanQuote but is " + result.getPayload().getClass().getName(), 
@@ -64,7 +64,7 @@ public abstract class AbstractLoanBrokerTestCase extends FunctionalTestCase
             {
                 CustomerQuoteRequest loanRequest = requests[i % 3];
 
-                UMOMessage result = client.send("CustomerRequests", loanRequest, null);
+                MuleMessage result = client.send("CustomerRequests", loanRequest, null);
                 assertNotNull(result);
                 assertFalse("received a NullPayload", result.getPayload() instanceof NullPayload);
                 assertTrue("did not receive a LoanQuote but: " + result.getPayload(),

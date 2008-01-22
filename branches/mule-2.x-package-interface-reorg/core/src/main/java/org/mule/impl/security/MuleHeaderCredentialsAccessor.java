@@ -10,22 +10,22 @@
 
 package org.mule.impl.security;
 
-import org.mule.api.UMOEvent;
+import org.mule.api.Event;
 import org.mule.api.config.MuleProperties;
-import org.mule.api.security.UMOCredentialsAccessor;
+import org.mule.api.security.CredentialsAccessor;
 
 /**
  * <code>MuleHeaderCredentialsAccessor</code> obtains and sets the user credentials
  * as Mule property headers.
  */
-public class MuleHeaderCredentialsAccessor implements UMOCredentialsAccessor
+public class MuleHeaderCredentialsAccessor implements CredentialsAccessor
 {
-    public Object getCredentials(UMOEvent event)
+    public Object getCredentials(Event event)
     {
         return event.getMessage().getProperty(MuleProperties.MULE_USER_PROPERTY);
     }
 
-    public void setCredentials(UMOEvent event, Object credentials)
+    public void setCredentials(Event event, Object credentials)
     {
         event.getMessage().setProperty(MuleProperties.MULE_USER_PROPERTY, credentials);
     }

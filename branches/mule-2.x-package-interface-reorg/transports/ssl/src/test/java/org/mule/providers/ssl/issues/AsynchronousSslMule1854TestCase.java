@@ -10,7 +10,7 @@
 
 package org.mule.providers.ssl.issues;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 
@@ -34,7 +34,7 @@ public class AsynchronousSslMule1854TestCase extends FunctionalTestCase {
         client.dispatch("asyncEndpoint", TEST_MESSAGE, null);
         // MULE-2754
         Thread.sleep(100);
-        UMOMessage response = client.request("asyncEndpoint", 5000);
+        MuleMessage response = client.request("asyncEndpoint", 5000);
         assertNotNull("Response is null", response);
         assertEquals(TEST_MESSAGE + " Received Async", response.getPayloadAsString());
     }

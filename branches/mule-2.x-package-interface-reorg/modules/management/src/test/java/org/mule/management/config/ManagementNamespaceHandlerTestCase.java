@@ -11,7 +11,7 @@
 package org.mule.management.config;
 
 import org.mule.RegistryContext;
-import org.mule.api.context.UMOAgent;
+import org.mule.api.context.Agent;
 import org.mule.api.registry.Registry;
 import org.mule.config.spring.SpringRegistry;
 import org.mule.impl.internal.admin.EndpointNotificationLoggerAgent;
@@ -42,7 +42,7 @@ public class ManagementNamespaceHandlerTestCase extends FunctionalTestCase
 
     public void testSimpleJmxAgentConfig() throws Exception
     {
-        UMOAgent agent = muleContext.getRegistry().lookupAgent("simpleJmxServer");
+        Agent agent = muleContext.getRegistry().lookupAgent("simpleJmxServer");
         assertNotNull(agent);
         assertEquals(JmxAgent.class, agent.getClass());
         JmxAgent jmxAgent = (JmxAgent) agent;
@@ -87,7 +87,7 @@ public class ManagementNamespaceHandlerTestCase extends FunctionalTestCase
         Registry registry = RegistryContext.getRegistry();
         SpringRegistry springRegistry = (SpringRegistry) registry.getParent();
         assertNotNull(springRegistry);
-        Collection agents = springRegistry.lookupObjects(UMOAgent.class);
+        Collection agents = springRegistry.lookupObjects(Agent.class);
         assertEquals(agents.size(), 8);
         Iterator iter = agents.iterator();
         assertTrue(iter.next() instanceof JmxAgent);

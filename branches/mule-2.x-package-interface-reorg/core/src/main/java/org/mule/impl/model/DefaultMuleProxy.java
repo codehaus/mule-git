@@ -10,30 +10,30 @@
 
 package org.mule.impl.model;
 
+import org.mule.api.AbstractMuleException;
+import org.mule.api.Component;
+import org.mule.api.Event;
+import org.mule.api.ExceptionPayload;
 import org.mule.api.MessagingException;
 import org.mule.api.MuleContext;
-import org.mule.api.UMOComponent;
-import org.mule.api.UMOEvent;
-import org.mule.api.UMOException;
-import org.mule.api.UMOExceptionPayload;
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.api.config.MuleProperties;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
-import org.mule.api.lifecycle.UMOLifecycleAdapter;
+import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.api.lifecycle.LifecycleAdapter;
+import org.mule.api.model.EntryPointResolverSet;
+import org.mule.api.model.Model;
 import org.mule.api.model.ModelException;
 import org.mule.api.model.MuleProxy;
-import org.mule.api.model.UMOEntryPointResolverSet;
-import org.mule.api.model.UMOModel;
 import org.mule.api.transport.ReplyToHandler;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.MuleEvent;
-import org.mule.impl.MuleMessage;
 import org.mule.impl.OptimizedRequestContext;
 import org.mule.impl.RequestContext;
+import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.impl.management.stats.ComponentStatistics;
-import org.mule.impl.message.ExceptionPayload;
+import org.mule.impl.message.DefaultExceptionPayload;
 import org.mule.impl.transport.AbstractConnector;
 import org.mule.impl.transport.NullPayload;
-import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.util.queue.QueueSession;
 
 import org.apache.commons.logging.Log;
@@ -48,13 +48,13 @@ public class DefaultMuleProxy implements MuleProxy
     private static Log logger = LogFactory.getLog(DefaultMuleProxy.class);
 
     /** Holds the current event being processed */
-    private UMOEvent event;
+    private Event event;
 
     /** Holds the actual UMO */
-    private UMOLifecycleAdapter umo;
+    private LifecycleAdapter umo;
 
     /** holds the UMO descriptor */
-    private UMOComponent component;
+    private Component component;
 
     /** Determines if the proxy is suspended */
     private boolean suspended = true;
@@ -69,19 +69,19 @@ public class DefaultMuleProxy implements MuleProxy
      * Constructs a Proxy using the UMO's AbstractMessageDispatcher and the UMO
      * itself
      */
-    public DefaultMuleProxy(Object pojoService, UMOComponent component, MuleContext muleContext)
-            throws UMOException
+    public DefaultMuleProxy(Object pojoService, Component component, MuleContext muleContext)
+            throws AbstractMuleException
     {
         //this.pojoService = pojoService;
         this.component = component;
         this.muleContext = muleContext;
 
-        UMOModel model = component.getModel();
-        UMOEntryPointResolverSet resolver = model.getEntryPointResolverSet();
+        Model model = component.getModel();
+        EntryPointResolverSet resolver = model.getEntryPointResolverSet();
         umo = model.getLifecycleAdapterFactory().create(pojoService, component, resolver);
     }
 
-    public void start() throws UMOException
+    public void start() throws AbstractMuleException
     {
         checkDisposed();
         if (!umo.isStarted())
@@ -104,7 +104,7 @@ public class DefaultMuleProxy implements MuleProxy
         return umo.isStarted();
     }
 
-    public void stop() throws UMOException
+    public void stop() throws AbstractMuleException
     {
         checkDisposed();
         if (umo.isStarted())
@@ -139,7 +139,7 @@ public class DefaultMuleProxy implements MuleProxy
      *
      * @param event the event being processed
      */
-    public void onEvent(QueueSession session, UMOEvent event)
+    public void onEvent(QueueSession session, Event event)
     {
         this.queueSession = session;
         this.event = event;
@@ -160,16 +160,16 @@ public class DefaultMuleProxy implements MuleProxy
      *
      * @param event the event to pass to the UMO
      * @return the return event from the UMO
-     * @throws UMOException if the call fails
+     * @throws AbstractMuleException if the call fails
      */
-    public Object onCall(UMOEvent event) throws UMOException
+    public Object onCall(Event event) throws AbstractMuleException
     {
         if (logger.isTraceEnabled())
         {
             logger.trace("MuleProxy: sync call for Mule UMO " + component.getName());
         }
 
-        UMOMessage returnMessage = null;
+        MuleMessage returnMessage = null;
         try
         {
             if (event.getEndpoint().canRequest())
@@ -215,7 +215,7 @@ public class DefaultMuleProxy implements MuleProxy
                 {
                     if (component.getOutboundRouter().hasEndpoints())
                     {
-                        UMOMessage outboundReturnMessage = component.getOutboundRouter().route(
+                        MuleMessage outboundReturnMessage = component.getOutboundRouter().route(
                                 returnMessage, event.getSession(), event.isSynchronous());
                         if (outboundReturnMessage != null)
                         {
@@ -280,12 +280,12 @@ public class DefaultMuleProxy implements MuleProxy
             {
                 // important that we pull event from request context here as it may have been modified
                 // (necessary to avoid scribbling between thrreads)
-                returnMessage = new MuleMessage(NullPayload.getInstance(), RequestContext.getEvent().getMessage());
+                returnMessage = new DefaultMuleMessage(NullPayload.getInstance(), RequestContext.getEvent().getMessage());
             }
-            UMOExceptionPayload exceptionPayload = returnMessage.getExceptionPayload();
+            ExceptionPayload exceptionPayload = returnMessage.getExceptionPayload();
             if (exceptionPayload == null)
             {
-                exceptionPayload = new ExceptionPayload(e);
+                exceptionPayload = new DefaultExceptionPayload(e);
             }
             returnMessage.setExceptionPayload(exceptionPayload);
         }
@@ -330,7 +330,7 @@ public class DefaultMuleProxy implements MuleProxy
         suspended = false;
     }
 
-    protected ReplyToHandler getReplyToHandler(UMOMessage message, UMOImmutableEndpoint endpoint)
+    protected ReplyToHandler getReplyToHandler(MuleMessage message, ImmutableEndpoint endpoint)
     {
         Object replyTo = message.getReplyTo();
         ReplyToHandler replyToHandler = null;
@@ -346,7 +346,7 @@ public class DefaultMuleProxy implements MuleProxy
         return replyToHandler;
     }
 
-    private void processReplyTo(UMOMessage returnMessage) throws UMOException
+    private void processReplyTo(MuleMessage returnMessage) throws AbstractMuleException
     {
         if (returnMessage != null && returnMessage.getReplyTo() != null)
         {
@@ -356,7 +356,7 @@ public class DefaultMuleProxy implements MuleProxy
             }
 
             // get the endpointUri for this uri
-            UMOImmutableEndpoint endpoint = muleContext.getRegistry()
+            ImmutableEndpoint endpoint = muleContext.getRegistry()
                 .lookupEndpointFactory()
                 .getOutboundEndpoint(returnMessage.getReplyTo().toString());
             // make sure remove the replyTo property as not cause a a forever
@@ -364,7 +364,7 @@ public class DefaultMuleProxy implements MuleProxy
             returnMessage.removeProperty(MuleProperties.MULE_REPLY_TO_PROPERTY);
 
             // Create the replyTo event asynchronous
-            UMOEvent replyToEvent = new MuleEvent(returnMessage, endpoint, event.getSession(), false);
+            Event replyToEvent = new MuleEvent(returnMessage, endpoint, event.getSession(), false);
 
             // queue the event
             onEvent(queueSession, replyToEvent);
@@ -410,7 +410,7 @@ public class DefaultMuleProxy implements MuleProxy
                     // TODO MULE-2099 This is what the MethodFixInterceptor from Axis/XFire was doing.
                     event.getMessage().setBooleanProperty(MuleProperties.MULE_IGNORE_METHOD_PROPERTY, true);
                 }
-                UMOMessage result = umo.intercept(null);
+                MuleMessage result = umo.intercept(null);
                 
                 if (component.getName().startsWith("_xfireServiceComponent") ||
                     component.getName().startsWith("_axisServiceComponent"))

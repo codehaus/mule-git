@@ -10,8 +10,8 @@
 
 package org.mule.util;
 
-import org.mule.imple.config.i18n.CoreMessages;
-import org.mule.imple.config.i18n.Message;
+import org.mule.impl.config.i18n.CoreMessages;
+import org.mule.impl.config.i18n.Message;
 
 import java.io.IOException;
 import java.io.InputStream;

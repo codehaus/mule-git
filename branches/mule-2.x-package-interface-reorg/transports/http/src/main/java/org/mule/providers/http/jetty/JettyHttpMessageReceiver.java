@@ -13,18 +13,18 @@ package org.mule.providers.http.jetty;
 import org.mule.MuleServer;
 import org.mule.RegistryContext;
 import org.mule.api.MuleContext;
-import org.mule.api.UMOComponent;
-import org.mule.api.UMOException;
+import org.mule.api.Component;
+import org.mule.api.AbstractMuleException;
 import org.mule.api.config.ThreadingProfile;
-import org.mule.api.endpoint.UMOEndpoint;
-import org.mule.api.endpoint.UMOEndpointBuilder;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.endpoint.Endpoint;
+import org.mule.api.endpoint.EndpointBuilder;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.CreateException;
 import org.mule.api.lifecycle.LifecycleException;
-import org.mule.api.transport.UMOConnector;
+import org.mule.api.transport.Connector;
+import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.impl.endpoint.EndpointURIEndpointBuilder;
 import org.mule.impl.transport.AbstractMessageReceiver;
-import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.providers.http.i18n.HttpMessages;
 import org.mule.providers.http.servlet.MuleRESTReceiverServlet;
 import org.mule.providers.http.servlet.ServletConnector;
@@ -46,7 +46,7 @@ public class JettyHttpMessageReceiver extends AbstractMessageReceiver
 
     private Server httpServer;
 
-    public JettyHttpMessageReceiver(UMOConnector connector, UMOComponent component, UMOEndpoint endpoint)
+    public JettyHttpMessageReceiver(Connector connector, Component component, Endpoint endpoint)
             throws CreateException
     {
 
@@ -79,10 +79,10 @@ public class JettyHttpMessageReceiver extends AbstractMessageReceiver
                     path = "/";
                 }
 
-                UMOEndpointBuilder endpointBuilder = new EndpointURIEndpointBuilder("servlet://" + path.substring(1),
+                EndpointBuilder endpointBuilder = new EndpointURIEndpointBuilder("servlet://" + path.substring(1),
                     connector.getMuleContext());
                 endpointBuilder.setTransformers(endpoint.getTransformers());
-                UMOImmutableEndpoint ep = connector.getMuleContext()
+                ImmutableEndpoint ep = connector.getMuleContext()
                     .getRegistry()
                     .lookupEndpointFactory()
                     .getInboundEndpoint(endpointBuilder);
@@ -171,7 +171,7 @@ public class JettyHttpMessageReceiver extends AbstractMessageReceiver
         }
     }
 
-    protected void doStart() throws UMOException
+    protected void doStart() throws AbstractMuleException
     {
         try
         {
@@ -183,7 +183,7 @@ public class JettyHttpMessageReceiver extends AbstractMessageReceiver
         }
     }
 
-    protected void doStop() throws UMOException
+    protected void doStop() throws AbstractMuleException
     {
         try
         {

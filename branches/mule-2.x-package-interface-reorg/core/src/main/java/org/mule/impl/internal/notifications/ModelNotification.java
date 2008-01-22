@@ -10,16 +10,16 @@
 
 package org.mule.impl.internal.notifications;
 
-import org.mule.api.context.UMOServerNotification;
-import org.mule.api.model.UMOModel;
+import org.mule.api.context.ServerNotification;
+import org.mule.api.model.Model;
 
 /**
  * <code>ModelNotification</code> is fired when an event such as the model starting
  * occurs. The payload of this event will always be a reference to the model.
  * 
- * @see org.mule.api.model.UMOModel
+ * @see org.mule.api.model.Model
  */
-public class ModelNotification extends UMOServerNotification implements BlockingServerEvent
+public class ModelNotification extends ServerNotification implements BlockingServerEvent
 {
     /**
      * Serial version
@@ -50,7 +50,7 @@ public class ModelNotification extends UMOServerNotification implements Blocking
         registerAction("model disposed", MODEL_DISPOSED);
     }
 
-    public ModelNotification(UMOModel model, int action)
+    public ModelNotification(Model model, int action)
     {
         super(model, action);
         resourceIdentifier = model.getName();
@@ -58,6 +58,6 @@ public class ModelNotification extends UMOServerNotification implements Blocking
 
     protected String getPayloadToString()
     {
-        return ((UMOModel) source).getName();
+        return ((Model) source).getName();
     }
 }

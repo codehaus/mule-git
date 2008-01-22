@@ -10,14 +10,14 @@
 
 package org.mule.providers.stdio;
 
-import org.mule.api.UMOComponent;
-import org.mule.api.UMOException;
-import org.mule.api.UMOMessage;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.Component;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleMessage;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.InitialisationException;
-import org.mule.api.transport.UMOConnector;
-import org.mule.api.transport.UMOMessageReceiver;
-import org.mule.imple.config.i18n.MessageFactory;
+import org.mule.api.transport.Connector;
+import org.mule.api.transport.MessageReceiver;
+import org.mule.impl.config.i18n.MessageFactory;
 import org.mule.util.StringUtils;
 
 import java.io.InputStream;
@@ -187,19 +187,19 @@ public class PromptStdioConnector extends StdioConnector
         this.outputMessageCode = outputMessageCode;
     }
 
-    public UMOConnector getConnector()
+    public Connector getConnector()
     {
         return this;
     }
 
-    public UMOMessageReceiver registerListener(UMOComponent component, UMOImmutableEndpoint endpoint) throws Exception
+    public MessageReceiver registerListener(Component component, ImmutableEndpoint endpoint) throws Exception
     {
         if (receivers.size() > 0)
         {
             throw new UnsupportedOperationException(
                 "You can only register one listener per system stream connector");
         }
-        UMOMessageReceiver receiver = super.registerListener(component, endpoint);
+        MessageReceiver receiver = super.registerListener(component, endpoint);
         return receiver;
     }
 
@@ -221,7 +221,7 @@ public class PromptStdioConnector extends StdioConnector
     }
 
 
-    public OutputStream getOutputStream(UMOImmutableEndpoint endpoint, UMOMessage message) throws UMOException
+    public OutputStream getOutputStream(ImmutableEndpoint endpoint, MuleMessage message) throws AbstractMuleException
     {
         OutputStream out;
         String streamName = endpoint.getEndpointURI().getAddress();

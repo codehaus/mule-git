@@ -10,9 +10,9 @@
 
 package org.mule.tck.testmodels.mule;
 
+import org.mule.api.AbstractMuleException;
+import org.mule.api.Component;
 import org.mule.api.MuleContext;
-import org.mule.api.UMOComponent;
-import org.mule.api.UMOException;
 import org.mule.impl.model.DefaultMuleProxy;
 
 /**
@@ -22,8 +22,8 @@ public class TestMuleProxy extends DefaultMuleProxy
 {
     private Object pojoService;
     
-    public TestMuleProxy(Object pojoService, UMOComponent component, MuleContext muleContext)
-        throws UMOException
+    public TestMuleProxy(Object pojoService, Component component, MuleContext muleContext)
+        throws AbstractMuleException
     {
         super(pojoService, component, muleContext);
         this.pojoService = pojoService;

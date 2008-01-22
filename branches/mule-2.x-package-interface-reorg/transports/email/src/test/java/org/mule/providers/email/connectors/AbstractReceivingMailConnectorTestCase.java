@@ -10,12 +10,12 @@
 
 package org.mule.providers.email.connectors;
 
-import org.mule.api.UMOComponent;
-import org.mule.api.UMOEventContext;
+import org.mule.api.Component;
+import org.mule.api.EventContext;
 import org.mule.api.config.MuleProperties;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
-import org.mule.api.routing.UMOInboundRouterCollection;
-import org.mule.impl.routing.inbound.InboundRouterCollection;
+import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.api.routing.InboundRouterCollection;
+import org.mule.impl.routing.inbound.DefaultInboundRouterCollection;
 import org.mule.providers.email.transformers.EmailMessageToString;
 import org.mule.tck.MuleTestUtils;
 import org.mule.tck.functional.EventCallback;
@@ -49,7 +49,7 @@ public abstract class AbstractReceivingMailConnectorTestCase extends AbstractMai
         HashMap props = new HashMap();
         props.put("eventCallback", new EventCallback()
         {
-            public synchronized void eventReceived(UMOEventContext context, Object component)
+            public synchronized void eventReceived(EventContext context, Object component)
             {
                 try 
                 {
@@ -67,11 +67,11 @@ public abstract class AbstractReceivingMailConnectorTestCase extends AbstractMai
             }
         });
 
-        UMOComponent component = MuleTestUtils.getTestComponent(uniqueName("testComponent"), FunctionalTestComponent.class, props, muleContext, /*initialize*/false);
-        UMOImmutableEndpoint ep = 
+        Component component = MuleTestUtils.getTestComponent(uniqueName("testComponent"), FunctionalTestComponent.class, props, muleContext, /*initialize*/false);
+        ImmutableEndpoint ep = 
             muleContext.getRegistry().lookupEndpointFactory()
                 .getInboundEndpoint(getTestEndpointURI());
-        UMOInboundRouterCollection inboundRouter = new InboundRouterCollection();
+        InboundRouterCollection inboundRouter = new DefaultInboundRouterCollection();
         inboundRouter.addEndpoint(ep);
         component.setInboundRouter(inboundRouter);
         muleContext.getRegistry().registerComponent(component);

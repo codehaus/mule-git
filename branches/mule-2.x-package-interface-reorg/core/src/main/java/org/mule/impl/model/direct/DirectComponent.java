@@ -10,12 +10,12 @@
 
 package org.mule.impl.model.direct;
 
-import org.mule.api.UMOEvent;
-import org.mule.api.UMOException;
-import org.mule.api.UMOMessage;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.Event;
+import org.mule.api.MuleMessage;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.model.MuleProxy;
-import org.mule.impl.MuleMessage;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.model.AbstractComponent;
 
 import java.util.List;
@@ -47,7 +47,7 @@ public class DirectComponent extends AbstractComponent
             pojoService = getOrCreateService();
             proxy = createComponentProxy(pojoService);
         }
-        catch (UMOException e)
+        catch (AbstractMuleException e)
         {
             throw new InitialisationException(e, this);
         }
@@ -67,31 +67,31 @@ public class DirectComponent extends AbstractComponent
         //proxy.dispose();
     }
 
-    protected UMOMessage doSend(UMOEvent event) throws UMOException
+    protected MuleMessage doSend(Event event) throws AbstractMuleException
     {
 
         Object obj = proxy.onCall(event);
-        if (obj instanceof UMOMessage)
+        if (obj instanceof MuleMessage)
         {
-            return (UMOMessage) obj;
+            return (MuleMessage) obj;
         }
         else
         {
-            return new MuleMessage(obj, event.getMessage());
+            return new DefaultMuleMessage(obj, event.getMessage());
         }
     }
 
-    protected void doDispatch(UMOEvent event) throws UMOException
+    protected void doDispatch(Event event) throws AbstractMuleException
     {
         proxy.onCall(event);
     }
 
-    protected void doStop() throws UMOException
+    protected void doStop() throws AbstractMuleException
     {
         proxy.stop();
     }
 
-    protected void doStart() throws UMOException
+    protected void doStart() throws AbstractMuleException
     {
         proxy.start();
     }

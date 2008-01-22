@@ -10,16 +10,16 @@
 
 package org.mule.providers.http;
 
-import org.mule.api.UMOEvent;
-import org.mule.api.UMOMessage;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.Event;
+import org.mule.api.MuleMessage;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.transformer.TransformerException;
-import org.mule.api.transformer.UMOTransformer;
+import org.mule.api.transformer.Transformer;
 import org.mule.api.transport.DispatchException;
 import org.mule.api.transport.OutputHandler;
 import org.mule.api.transport.ReceiveException;
-import org.mule.impl.MuleMessage;
-import org.mule.impl.message.ExceptionPayload;
+import org.mule.impl.DefaultMuleMessage;
+import org.mule.impl.message.DefaultExceptionPayload;
 import org.mule.impl.transport.AbstractMessageDispatcher;
 import org.mule.providers.http.i18n.HttpMessages;
 import org.mule.providers.http.transformers.HttpClientMethodResponseToObject;
@@ -58,10 +58,10 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
     public static final int ERROR_STATUS_CODE_RANGE_START = 400;
     private final HttpConnector connector;
     private volatile HttpClient client = null;
-    private final UMOTransformer receiveTransformer;
-    private final UMOTransformer sendTransformer;
+    private final Transformer receiveTransformer;
+    private final Transformer sendTransformer;
 
-    public HttpClientMessageDispatcher(UMOImmutableEndpoint endpoint)
+    public HttpClientMessageDispatcher(ImmutableEndpoint endpoint)
     {
         super(endpoint);
         this.connector = (HttpConnector) endpoint.getConnector();
@@ -82,7 +82,7 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
         client = null;
     }
 
-    protected void doDispatch(UMOEvent event) throws Exception
+    protected void doDispatch(Event event) throws Exception
     {
         HttpMethod httpMethod = getMethod(event);
         try
@@ -103,7 +103,7 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
         }
     }
 
-    protected HttpMethod execute(UMOEvent event, HttpMethod httpMethod)
+    protected HttpMethod execute(Event event, HttpMethod httpMethod)
         throws Exception
     {
         // TODO set connection timeout buffer etc
@@ -130,9 +130,9 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
         
     }
 
-    protected void processCookies(UMOEvent event)
+    protected void processCookies(Event event)
     {
-        UMOMessage msg = event.getMessage();
+        MuleMessage msg = event.getMessage();
         Cookie[] cookies = (Cookie[]) msg.removeProperty(HttpConnector.HTTP_COOKIES_PROPERTY);
         if (cookies != null && cookies.length > 0)
         {
@@ -142,9 +142,9 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
         }
     }
 
-    protected HttpMethod getMethod(UMOEvent event) throws TransformerException
+    protected HttpMethod getMethod(Event event) throws TransformerException
     {
-        UMOMessage msg = event.getMessage();
+        MuleMessage msg = event.getMessage();
         setPropertyFromEndpoint(event, msg, HttpConnector.HTTP_CUSTOM_HEADERS_MAP_PROPERTY);
         
         HttpMethod httpMethod;
@@ -163,7 +163,7 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
         return httpMethod;
     }
 
-    protected void setPropertyFromEndpoint(UMOEvent event, UMOMessage msg, String prop)
+    protected void setPropertyFromEndpoint(Event event, MuleMessage msg, String prop)
     {
         Object o = msg.getProperty(prop, null);
         if (o == null) {
@@ -175,7 +175,7 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
         }
     }
 
-    protected HttpMethod createEntityMethod(UMOEvent event, Object body, EntityEnclosingMethod postMethod)
+    protected HttpMethod createEntityMethod(Event event, Object body, EntityEnclosingMethod postMethod)
         throws TransformerException
     {
         HttpMethod httpMethod;
@@ -209,9 +209,9 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.api.transport.UMOConnector#send(org.mule.api.UMOEvent)
+     * @see org.mule.api.transport.Connector#send(org.mule.api.Event)
      */
-    protected UMOMessage doSend(UMOEvent event) throws Exception
+    protected MuleMessage doSend(Event event) throws Exception
     {        
         HttpMethod httpMethod = getMethod(event);
         connector.setupClientAuthorization(event, httpMethod, client, endpoint);
@@ -224,10 +224,10 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
         {
             httpMethod = execute(event, httpMethod);
 
-            ExceptionPayload ep = null;
+            DefaultExceptionPayload ep = null;
             if (httpMethod.getStatusCode() >= ERROR_STATUS_CODE_RANGE_START)
             {
-                ep = new ExceptionPayload(new DispatchException(event.getMessage(), event.getEndpoint(),
+                ep = new DefaultExceptionPayload(new DispatchException(event.getMessage(), event.getEndpoint(),
                     new Exception("Http call returned a status of: " + httpMethod.getStatusCode() + " "
                                   + httpMethod.getStatusText())));
             }
@@ -256,7 +256,7 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
                 logger.debug("Http response is: " + status);
             }
             
-            UMOMessage m = new MuleMessage(adapter);
+            MuleMessage m = new DefaultMuleMessage(adapter);
           
             m.setExceptionPayload(ep);
             return m;

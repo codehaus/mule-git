@@ -10,22 +10,22 @@
 
 package org.mule.providers.tcp;
 
-import org.mule.api.UMOException;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.tck.FunctionalTestCase;
 
 public class TcpSocketKeyTestCase extends FunctionalTestCase
 {
 
-    public void testHashAndEquals() throws UMOException
+    public void testHashAndEquals() throws AbstractMuleException
     {
-        UMOImmutableEndpoint endpoint1in =
+        ImmutableEndpoint endpoint1in =
                 muleContext.getRegistry().lookupEndpointFactory().getInboundEndpoint("globalEndpoint1");
         TcpSocketKey key1in = new TcpSocketKey(endpoint1in);
-        UMOImmutableEndpoint endpoint1out =
+        ImmutableEndpoint endpoint1out =
                 muleContext.getRegistry().lookupEndpointFactory().getOutboundEndpoint("globalEndpoint1");
         TcpSocketKey key1out = new TcpSocketKey(endpoint1out);
-        UMOImmutableEndpoint endpoint2in =
+        ImmutableEndpoint endpoint2in =
                 muleContext.getRegistry().lookupEndpointFactory().getInboundEndpoint("globalEndpoint2");
         TcpSocketKey key2in = new TcpSocketKey(endpoint2in);
 

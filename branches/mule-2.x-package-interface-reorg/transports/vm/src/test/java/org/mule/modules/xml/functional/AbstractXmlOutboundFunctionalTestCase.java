@@ -10,8 +10,8 @@
 
 package org.mule.modules.xml.functional;
 
-import org.mule.api.UMOException;
-import org.mule.api.UMOMessage;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 
 import java.io.IOException;
@@ -37,17 +37,17 @@ public abstract class AbstractXmlOutboundFunctionalTestCase extends AbstractXmlF
         return "xml/xml-outbound-functional-test.xml";
     }
 
-    protected void doSend(String endpoint) throws IOException, UMOException
+    protected void doSend(String endpoint) throws IOException, AbstractMuleException
     {
         String xml = getConfigAsString();
         MuleClient client = new MuleClient();
         client.dispatch(endpoint, xml, null);
     }
 
-    protected void assertService(String prefix, int index, String service) throws UMOException, IOException
+    protected void assertService(String prefix, int index, String service) throws AbstractMuleException, IOException
     {
         MuleClient client = new MuleClient();
-        UMOMessage response = client.request(prefix + index, TIMEOUT);
+        MuleMessage response = client.request(prefix + index, TIMEOUT);
         assertNotNull(response);
         assertNotNull(response.getPayload());
         assertTrue(response.getPayload().getClass().getName(), response.getPayload() instanceof Document);
@@ -57,13 +57,13 @@ public abstract class AbstractXmlOutboundFunctionalTestCase extends AbstractXmlF
         assertEquals(service, element.attributeValue(NAME));
     }
 
-    protected void assertServices(String prefix, int index, String[] services) throws UMOException, IOException
+    protected void assertServices(String prefix, int index, String[] services) throws AbstractMuleException, IOException
     {
         List remaining = new LinkedList(Arrays.asList(services)); // asList is immutable
         while (remaining.size() > 0)
         {
             MuleClient client = new MuleClient();
-            UMOMessage response = client.request(prefix + index, TIMEOUT);
+            MuleMessage response = client.request(prefix + index, TIMEOUT);
             assertNotNull(response);
             assertNotNull(response.getPayload());
             assertTrue(response.getPayload().getClass().getName(), response.getPayload() instanceof Document);

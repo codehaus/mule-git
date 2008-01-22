@@ -10,9 +10,9 @@
 
 package org.mule.impl.transformer;
 
-import org.mule.api.UMOException;
+import org.mule.api.AbstractMuleException;
 import org.mule.api.lifecycle.InitialisationException;
-import org.mule.api.transformer.UMOTransformer;
+import org.mule.api.transformer.Transformer;
 import org.mule.impl.VoidTransformer;
 import org.mule.impl.transport.service.TransportFactoryException;
 import org.mule.impl.transport.service.TransportServiceDescriptor;
@@ -53,7 +53,7 @@ public class TransformerUtils
             Iterator transformer = transformers.iterator();
             while (transformer.hasNext())
             {
-                ((UMOTransformer) transformer.next()).initialise();
+                ((Transformer) transformer.next()).initialise();
             }
         }
     }
@@ -76,11 +76,11 @@ public class TransformerUtils
         return buffer.toString();
     }
 
-    public static UMOTransformer firstOrNull(List transformers)
+    public static Transformer firstOrNull(List transformers)
     {
         if (isDefined(transformers) && 0 != transformers.size())
         {
-            return (UMOTransformer) transformers.get(0);
+            return (Transformer) transformers.get(0);
         }
         else
         {
@@ -90,7 +90,7 @@ public class TransformerUtils
 
     public static boolean isSourceTypeSupportedByFirst(List transformers, Class clazz)
     {
-        UMOTransformer transformer = firstOrNull(transformers);
+        Transformer transformer = firstOrNull(transformers);
         return null != transformer && transformer.isSourceTypeSupported(clazz);
     }
 
@@ -132,7 +132,7 @@ public class TransformerUtils
             TransformerUtils.initialiseAllTransformers(transformers);
             return transformers;
         }
-        catch (UMOException e)
+        catch (AbstractMuleException e)
         {
             logger.debug(e.getMessage(), e);
             return TransformerUtils.UNDEFINED;

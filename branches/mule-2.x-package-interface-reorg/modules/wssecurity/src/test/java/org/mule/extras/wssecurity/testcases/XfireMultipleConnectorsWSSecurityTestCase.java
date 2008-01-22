@@ -10,9 +10,9 @@
 
 package org.mule.extras.wssecurity.testcases;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
-import org.mule.impl.MuleMessage;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.tck.FunctionalTestCase;
 
 import java.util.Properties;
@@ -43,7 +43,7 @@ public class XfireMultipleConnectorsWSSecurityTestCase extends FunctionalTestCas
         // Callback used to retrive password for given user.
         props.setProperty(WSHandlerConstants.PW_CALLBACK_CLASS, "org.mule.extras.wssecurity.callbackhandlers.MuleWsSecurityCallbackHandler");
 
-        UMOMessage m = client.send("vm://secured", "Test", props);
+        MuleMessage m = client.send("vm://secured", "Test", props);
         assertNotNull(m);
         assertTrue(m.getPayload() instanceof String);
         assertTrue(m.getPayload().equals("Test"));
@@ -52,7 +52,7 @@ public class XfireMultipleConnectorsWSSecurityTestCase extends FunctionalTestCas
     public void testUnsecured() throws Exception
     {
         MuleClient client = new MuleClient();
-        UMOMessage reply = client.send("vm://unsecured", new MuleMessage("Test"));
+        MuleMessage reply = client.send("vm://unsecured", new DefaultMuleMessage("Test"));
         
         assertEquals("Test", reply.getPayloadAsString());
     }

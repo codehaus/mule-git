@@ -10,18 +10,18 @@
 
 package org.mule.impl.transport;
 
-import org.mule.api.UMOMessage;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.MuleMessage;
+import org.mule.api.endpoint.ImmutableEndpoint;
 
 public final class UnsupportedMessageRequester extends AbstractMessageRequester
 {
 
-    public UnsupportedMessageRequester(UMOImmutableEndpoint endpoint)
+    public UnsupportedMessageRequester(ImmutableEndpoint endpoint)
     {
         super(endpoint);
     }
 
-    protected UMOMessage doRequest(long timeout) throws Exception
+    protected MuleMessage doRequest(long timeout) throws Exception
     {
         throw new UnsupportedOperationException("Request not supported for this transport");
     }

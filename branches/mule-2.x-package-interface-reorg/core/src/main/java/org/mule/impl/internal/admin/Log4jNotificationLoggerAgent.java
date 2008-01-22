@@ -10,9 +10,9 @@
 
 package org.mule.impl.internal.admin;
 
-import org.mule.api.context.UMOServerNotification;
+import org.mule.api.context.ServerNotification;
 import org.mule.api.lifecycle.InitialisationException;
-import org.mule.imple.config.i18n.CoreMessages;
+import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.util.FileUtils;
 import org.mule.util.MapUtils;
 import org.mule.util.StringUtils;
@@ -131,7 +131,7 @@ public class Log4jNotificationLoggerAgent extends AbstractNotificationLoggerAgen
         }
     }
 
-    protected void logEvent(UMOServerNotification e)
+    protected void logEvent(ServerNotification e)
     {
         if (eventLogger != null)
         {

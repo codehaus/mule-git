@@ -10,7 +10,7 @@
 
 package org.mule.providers.email.issues;
 
-import org.mule.api.transport.UMOConnector;
+import org.mule.api.transport.Connector;
 import org.mule.providers.email.AbstractRetrieveMailConnector;
 import org.mule.providers.email.connectors.ImapConnectorTestCase;
 import org.mule.util.FileUtils;
@@ -29,9 +29,9 @@ public abstract class AbstractBaseBackupMule2050TestCase extends ImapConnectorTe
     }
 
     // @Override
-    public UMOConnector createConnector() throws Exception
+    public Connector createConnector() throws Exception
     {
-        UMOConnector connector = super.createConnector();
+        Connector connector = super.createConnector();
         ((AbstractRetrieveMailConnector) connector).setBackupEnabled(backupEnabled);
         return connector;
     }

@@ -12,7 +12,7 @@ package org.mule.providers.file;
 
 import org.mule.RegistryContext;
 import org.mule.api.MessagingException;
-import org.mule.api.transport.UMOMessageAdapter;
+import org.mule.api.transport.MessageAdapter;
 import org.mule.tck.providers.AbstractMessageAdapterTestCase;
 import org.mule.util.FileUtils;
 
@@ -61,7 +61,7 @@ public class FileContentsMessageAdapterTestCase extends AbstractMessageAdapterTe
      * 
      * @see org.mule.tck.providers.AbstractMessageAdapterTestCase#createAdapter()
      */
-    public UMOMessageAdapter createAdapter(Object payload) throws MessagingException
+    public MessageAdapter createAdapter(Object payload) throws MessagingException
     {
         if (payload.equals(validMessage))
         {
@@ -90,7 +90,7 @@ public class FileContentsMessageAdapterTestCase extends AbstractMessageAdapterTe
     public void testMessageContentsProperlyLoaded() throws Exception
     {
         // get new message adapter to test
-        UMOMessageAdapter adapter = new FileContentsMessageAdapter(messageFile);
+        MessageAdapter adapter = new FileContentsMessageAdapter(messageFile);
 
         // delete the file before accessing the payload
          assertTrue(messageFile.delete());

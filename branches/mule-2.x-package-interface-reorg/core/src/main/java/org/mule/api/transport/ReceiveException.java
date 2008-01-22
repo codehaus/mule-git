@@ -10,29 +10,29 @@
 
 package org.mule.api.transport;
 
-import org.mule.api.UMOException;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
-import org.mule.imple.config.i18n.CoreMessages;
-import org.mule.imple.config.i18n.Message;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.impl.config.i18n.CoreMessages;
+import org.mule.impl.config.i18n.Message;
 import org.mule.util.ObjectUtils;
 
 /**
  * <code>ReceiveException</code> is specifically thrown by the Provider receive
  * method if something fails in the underlying transport
  */
-public class ReceiveException extends UMOException
+public class ReceiveException extends AbstractMuleException
 {
     /**
      * Serial version
      */
     private static final long serialVersionUID = 1960304517882133951L;
 
-    private UMOImmutableEndpoint endpoint;
+    private ImmutableEndpoint endpoint;
 
     /**
      * @param message the exception message
      */
-    public ReceiveException(Message message, UMOImmutableEndpoint endpoint, long timeout)
+    public ReceiveException(Message message, ImmutableEndpoint endpoint, long timeout)
     {
         super(message);
         this.endpoint = endpoint;
@@ -44,7 +44,7 @@ public class ReceiveException extends UMOException
      * @param message the exception message
      * @param cause the exception that cause this exception to be thrown
      */
-    public ReceiveException(Message message, UMOImmutableEndpoint endpoint, long timeout, Throwable cause)
+    public ReceiveException(Message message, ImmutableEndpoint endpoint, long timeout, Throwable cause)
     {
         super(message, cause);
         this.endpoint = endpoint;
@@ -52,7 +52,7 @@ public class ReceiveException extends UMOException
         addInfo("Timeout", String.valueOf(timeout));
     }
 
-    public ReceiveException(UMOImmutableEndpoint endpoint, long timeout, Throwable cause)
+    public ReceiveException(ImmutableEndpoint endpoint, long timeout, Throwable cause)
     {
         this(CoreMessages.failedToRecevieWithTimeout(endpoint, timeout),
             endpoint, timeout, cause);

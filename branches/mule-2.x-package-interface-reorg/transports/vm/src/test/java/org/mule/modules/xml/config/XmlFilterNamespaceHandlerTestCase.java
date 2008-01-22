@@ -10,7 +10,7 @@
 
 package org.mule.modules.xml.config;
 
-import org.mule.api.UMOComponent;
+import org.mule.api.Component;
 import org.mule.impl.routing.filters.logic.NotFilter;
 import org.mule.impl.routing.outbound.FilteringOutboundRouter;
 import org.mule.routing.filters.xml.IsXmlFilter;
@@ -33,7 +33,7 @@ public class XmlFilterNamespaceHandlerTestCase extends FunctionalTestCase
      */
     public void testIsXmlFilter()
     {
-        UMOComponent component = muleContext.getRegistry().lookupComponent("test for xml");
+        Component component = muleContext.getRegistry().lookupComponent("test for xml");
         List routers = component.getOutboundRouter().getRouters();
         assertEquals(2, routers.size());
         assertTrue(routers.get(0).getClass().getName(), routers.get(0) instanceof FilteringOutboundRouter);
@@ -45,7 +45,7 @@ public class XmlFilterNamespaceHandlerTestCase extends FunctionalTestCase
 
     public void testJXPathFilter()
     {
-        UMOComponent component = muleContext.getRegistry().lookupComponent("filter xml for content");
+        Component component = muleContext.getRegistry().lookupComponent("filter xml for content");
         List routers = component.getOutboundRouter().getRouters();
         assertEquals(1, routers.size());
         assertTrue(routers.get(0).getClass().getName(), routers.get(0) instanceof FilteringOutboundRouter);

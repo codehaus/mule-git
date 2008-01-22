@@ -10,11 +10,11 @@
 
 package org.mule.impl.routing.outbound;
 
-import org.mule.api.UMOComponent;
-import org.mule.api.UMOMessage;
-import org.mule.api.UMOSession;
-import org.mule.api.endpoint.UMOEndpoint;
-import org.mule.impl.MuleMessage;
+import org.mule.api.Component;
+import org.mule.api.MuleMessage;
+import org.mule.api.Session;
+import org.mule.api.endpoint.Endpoint;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.routing.outbound.FilteringListMessageSplitter;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.tck.testmodels.fruit.Apple;
@@ -26,10 +26,10 @@ public class FilteringListMessageSplitterTestCase extends AbstractMuleTestCase
 {
     public void testCorrelationGroupSizePropertySet() throws Exception
     {
-        UMOComponent testComponent = getTestComponent("test", Apple.class);
-        UMOSession session = getTestSession(testComponent);
+        Component testComponent = getTestComponent("test", Apple.class);
+        Session session = getTestSession(testComponent);
 
-        UMOEndpoint endpoint = getTestEndpoint("Test1Provider", UMOEndpoint.ENDPOINT_TYPE_SENDER);
+        Endpoint endpoint = getTestEndpoint("Test1Provider", Endpoint.ENDPOINT_TYPE_SENDER);
 
         FilteringListMessageSplitter router = new FilteringListMessageSplitter();
         router.setFilter(null);
@@ -41,9 +41,9 @@ public class FilteringListMessageSplitterTestCase extends AbstractMuleTestCase
         payload.add("three");
         payload.add("four");
 
-        UMOMessage message = new MuleMessage(payload);
+        MuleMessage message = new DefaultMuleMessage(payload);
 
-        UMOMessage result = router.route(message, session, true);
+        MuleMessage result = router.route(message, session, true);
         assertNotNull(result);
 
         assertEquals("Correlation group size has not been set.", 4, result.getCorrelationGroupSize());

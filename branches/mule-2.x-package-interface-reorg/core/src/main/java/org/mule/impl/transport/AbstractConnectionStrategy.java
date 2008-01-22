@@ -10,12 +10,12 @@
 
 package org.mule.impl.transport;
 
-import org.mule.api.context.UMOWorkManager;
+import org.mule.api.context.WorkManager;
+import org.mule.api.transport.Connectable;
 import org.mule.api.transport.ConnectionStrategy;
-import org.mule.api.transport.UMOConnectable;
-import org.mule.api.transport.UMOConnector;
-import org.mule.api.transport.UMOMessageReceiver;
-import org.mule.imple.config.i18n.MessageFactory;
+import org.mule.api.transport.Connector;
+import org.mule.api.transport.MessageReceiver;
+import org.mule.impl.config.i18n.MessageFactory;
 
 import javax.resource.spi.work.Work;
 import javax.resource.spi.work.WorkException;
@@ -35,17 +35,17 @@ public abstract class AbstractConnectionStrategy implements ConnectionStrategy
 
     private volatile boolean doThreading = false;
 
-    private UMOWorkManager workManager;
+    private WorkManager workManager;
 
     private final Object reconnectLock = new Object();
 
-    public final void connect(final UMOConnectable connectable) throws FatalConnectException
+    public final void connect(final Connectable connectable) throws FatalConnectException
     {
         if (doThreading)
         {
             try
             {
-                UMOWorkManager wm = getWorkManager();
+                WorkManager wm = getWorkManager();
                 if (wm == null)
                 {
                     throw new FatalConnectException(MessageFactory.createStaticMessage("No WorkManager is available"), connectable);
@@ -75,9 +75,9 @@ public abstract class AbstractConnectionStrategy implements ConnectionStrategy
                             }
                             // TODO should really extract an interface for
                             // classes capable of handling an exception
-                            if (connectable instanceof UMOConnector)
+                            if (connectable instanceof Connector)
                             {
-                                ((UMOConnector) connectable).handleException(e);
+                                ((Connector) connectable).handleException(e);
                             }
                             // TODO: this cast is evil
                             else if (connectable instanceof AbstractMessageReceiver)
@@ -128,28 +128,28 @@ public abstract class AbstractConnectionStrategy implements ConnectionStrategy
     }
 
 
-    public UMOWorkManager getWorkManager()
+    public WorkManager getWorkManager()
     {
         return workManager;
     }
 
-    public void setWorkManager(UMOWorkManager workManager)
+    public void setWorkManager(WorkManager workManager)
     {
         this.workManager = workManager;
     }
 
-    protected abstract void doConnect(UMOConnectable connectable) throws FatalConnectException;
+    protected abstract void doConnect(Connectable connectable) throws FatalConnectException;
 
     /**
      * Resets any state stored in the retry strategy
      */
     public abstract void resetState();
 
-    protected String getDescription(UMOConnectable connectable)
+    protected String getDescription(Connectable connectable)
     {
-        if (connectable instanceof UMOMessageReceiver)
+        if (connectable instanceof MessageReceiver)
         {
-            return ((UMOMessageReceiver) connectable).getEndpointURI().toString();
+            return ((MessageReceiver) connectable).getEndpointURI().toString();
         }
         else
         {

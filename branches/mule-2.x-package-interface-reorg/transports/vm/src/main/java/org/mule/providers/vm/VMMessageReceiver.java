@@ -10,13 +10,13 @@
 
 package org.mule.providers.vm;
 
-import org.mule.api.UMOComponent;
-import org.mule.api.UMOException;
-import org.mule.api.UMOMessage;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.Component;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleMessage;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.CreateException;
-import org.mule.api.transport.UMOConnector;
-import org.mule.impl.MuleMessage;
+import org.mule.api.transport.Connector;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.transport.PollingReceiverWorker;
 import org.mule.impl.transport.TransactedPollingMessageReceiver;
 import org.mule.util.queue.Queue;
@@ -37,7 +37,7 @@ public class VMMessageReceiver extends TransactedPollingMessageReceiver
     private VMConnector connector;
     private final Object lock = new Object();
 
-    public VMMessageReceiver(UMOConnector connector, UMOComponent component, UMOImmutableEndpoint endpoint)
+    public VMMessageReceiver(Connector connector, Component component, ImmutableEndpoint endpoint)
         throws CreateException
     {
         super(connector, component, endpoint);
@@ -83,10 +83,10 @@ public class VMMessageReceiver extends TransactedPollingMessageReceiver
         // template method
     }
 
-    public void onMessage(UMOMessage message) throws UMOException
+    public void onMessage(MuleMessage message) throws AbstractMuleException
     {
         // Rewrite the message to treat it as a new message
-        UMOMessage newMessage = new MuleMessage(message.getPayload(), message);
+        MuleMessage newMessage = new DefaultMuleMessage(message.getPayload(), message);
 
         /*
          * TODO HH: review: onEvent can only be called by the VMMessageDispatcher - why is this lock here and
@@ -98,10 +98,10 @@ public class VMMessageReceiver extends TransactedPollingMessageReceiver
         }
     }
 
-    public Object onCall(UMOMessage message, boolean synchronous) throws UMOException
+    public Object onCall(MuleMessage message, boolean synchronous) throws AbstractMuleException
     {
         // Rewrite the message to treat it as a new message
-        UMOMessage newMessage = new MuleMessage(message.getPayload(), message);
+        MuleMessage newMessage = new DefaultMuleMessage(message.getPayload(), message);
         return routeMessage(newMessage, synchronous);
     }
 
@@ -125,7 +125,7 @@ public class VMMessageReceiver extends TransactedPollingMessageReceiver
         int batchSize = Math.max(1, Math.min(queue.size(), ((maxThreads / 2) - 1)));
 
         // try to get the first event off the queue
-        UMOMessage message = (UMOMessage) queue.poll(connector.getQueueTimeout());
+        MuleMessage message = (MuleMessage) queue.poll(connector.getQueueTimeout());
 
         if (message != null)
         {
@@ -135,7 +135,7 @@ public class VMMessageReceiver extends TransactedPollingMessageReceiver
             // keep batching if more events are available
             for (int i = 0; i < batchSize && message != null; i++)
             {
-                message = (UMOMessage) queue.poll(0);
+                message = (MuleMessage) queue.poll(0);
                 if (message != null)
                 {
                     messages.add(message);
@@ -150,10 +150,10 @@ public class VMMessageReceiver extends TransactedPollingMessageReceiver
     protected void processMessage(Object msg) throws Exception
     {
         // getMessages() returns UMOEvents
-        UMOMessage message = (UMOMessage) msg;
+        MuleMessage message = (MuleMessage) msg;
 
         // Rewrite the message to treat it as a new message
-        UMOMessage newMessage = new MuleMessage(message.getPayload(), message);
+        MuleMessage newMessage = new DefaultMuleMessage(message.getPayload(), message);
         routeMessage(newMessage);
     }
 

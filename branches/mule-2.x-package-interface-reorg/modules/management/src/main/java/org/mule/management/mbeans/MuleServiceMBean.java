@@ -10,7 +10,7 @@
 
 package org.mule.management.mbeans;
 
-import org.mule.api.UMOException;
+import org.mule.api.AbstractMuleException;
 
 import java.util.Date;
 
@@ -30,11 +30,11 @@ public interface MuleServiceMBean
 
     String getVendor();
 
-    void start() throws UMOException;
+    void start() throws AbstractMuleException;
 
-    void stop() throws UMOException;
+    void stop() throws AbstractMuleException;
 
-    void dispose() throws UMOException;
+    void dispose() throws AbstractMuleException;
 
     long getFreeMemory();
 

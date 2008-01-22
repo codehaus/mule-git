@@ -9,7 +9,7 @@
  */
 package org.mule.impl.model.resolvers;
 
-import org.mule.api.UMOEventContext;
+import org.mule.api.EventContext;
 import org.mule.api.model.InvocationResult;
 import org.mule.util.ClassUtils;
 import org.mule.util.StringMessageUtils;
@@ -90,7 +90,7 @@ public abstract class AbstractArgumentEntryPointResolver extends ReflectionEntry
         this.enableDiscovery = enableDiscovery;
     }
 
-    public InvocationResult invoke(Object component, UMOEventContext context) throws Exception
+    public InvocationResult invoke(Object component, EventContext context) throws Exception
     {
         Method method = null;
         Object[] payload = getPayloadFromMessage(context);

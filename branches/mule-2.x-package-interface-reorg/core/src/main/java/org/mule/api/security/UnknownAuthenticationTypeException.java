@@ -10,22 +10,22 @@
 
 package org.mule.api.security;
 
-import org.mule.api.UMOException;
-import org.mule.imple.config.i18n.CoreMessages;
+import org.mule.api.AbstractMuleException;
+import org.mule.impl.config.i18n.CoreMessages;
 
 /**
  * <code>UnknownAuthenticationTypeException</code> is thrown if a security context
- * request is make with an unrecognised UMOAuthentication type.
+ * request is make with an unrecognised Authentication type.
  */
 
-public class UnknownAuthenticationTypeException extends UMOException
+public class UnknownAuthenticationTypeException extends AbstractMuleException
 {
     /**
      * Serial version
      */
     private static final long serialVersionUID = 6275865761357999175L;
 
-    public UnknownAuthenticationTypeException(UMOAuthentication authentication)
+    public UnknownAuthenticationTypeException(MuleAuthentication authentication)
     {
         super(CoreMessages.authTypeNotRecognised((authentication == null
                         ? "null" : authentication.getClass().getName())));

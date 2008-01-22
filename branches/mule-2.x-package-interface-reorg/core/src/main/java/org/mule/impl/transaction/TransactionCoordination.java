@@ -10,9 +10,9 @@
 
 package org.mule.impl.transaction;
 
+import org.mule.api.Transaction;
 import org.mule.api.TransactionException;
-import org.mule.api.UMOTransaction;
-import org.mule.imple.config.i18n.CoreMessages;
+import org.mule.impl.config.i18n.CoreMessages;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -39,16 +39,16 @@ public final class TransactionCoordination
         return instance;
     }
 
-    public UMOTransaction getTransaction()
+    public Transaction getTransaction()
     {
-        return (UMOTransaction) transactions.get();
+        return (Transaction) transactions.get();
     }
 
-    public void unbindTransaction(UMOTransaction transaction) throws TransactionException
+    public void unbindTransaction(Transaction transaction) throws TransactionException
     {
         try
         {
-            UMOTransaction oldTx = (UMOTransaction) transactions.get();
+            Transaction oldTx = (Transaction) transactions.get();
             if (oldTx != null && !oldTx.equals(transaction))
             {
                 throw new IllegalTransactionStateException(CoreMessages.transactionCannotUnbind());
@@ -68,9 +68,9 @@ public final class TransactionCoordination
         }
     }
 
-    public void bindTransaction(UMOTransaction transaction) throws TransactionException
+    public void bindTransaction(Transaction transaction) throws TransactionException
     {
-        UMOTransaction oldTx = (UMOTransaction) transactions.get();
+        Transaction oldTx = (Transaction) transactions.get();
         if (oldTx != null)
         {
             throw new IllegalTransactionStateException(CoreMessages.transactionAlreadyBound());

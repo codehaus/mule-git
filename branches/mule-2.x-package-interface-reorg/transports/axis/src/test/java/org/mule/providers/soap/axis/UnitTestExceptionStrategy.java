@@ -10,7 +10,7 @@
 
 package org.mule.providers.soap.axis;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.impl.DefaultComponentExceptionStrategy;
 
 import java.util.ArrayList;
@@ -30,7 +30,7 @@ public class UnitTestExceptionStrategy extends DefaultComponentExceptionStrategy
         messagingExceptions = new ArrayList();
     }
     
-    protected void logFatal(UMOMessage message, Throwable t)
+    protected void logFatal(MuleMessage message, Throwable t)
     {
         logger.debug("logFatal", t);
     }
@@ -40,7 +40,7 @@ public class UnitTestExceptionStrategy extends DefaultComponentExceptionStrategy
         logger.debug("logException", t);
     }
 
-    public void handleMessagingException(UMOMessage message, Throwable t)
+    public void handleMessagingException(MuleMessage message, Throwable t)
     {
         messagingExceptions.add(t);
         super.handleMessagingException(message, t);

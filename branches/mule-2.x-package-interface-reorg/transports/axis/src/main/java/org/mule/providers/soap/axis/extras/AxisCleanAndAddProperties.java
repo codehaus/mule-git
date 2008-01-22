@@ -10,8 +10,8 @@
 
 package org.mule.providers.soap.axis.extras;
 
-import org.mule.api.UMOEventContext;
-import org.mule.api.UMOMessage;
+import org.mule.api.EventContext;
+import org.mule.api.MuleMessage;
 import org.mule.api.config.MuleProperties;
 import org.mule.providers.http.HttpConnector;
 import org.mule.providers.http.HttpConstants;
@@ -32,10 +32,10 @@ public class AxisCleanAndAddProperties
     // MuleProperties.MULE_METHOD_PROPERTY and "soapAction"
     // and also filter out any http related header
     
-    public static Map cleanAndAdd(UMOEventContext muleEventContext){
+    public static Map cleanAndAdd(EventContext muleEventContext){
         
         Map props = new HashMap();
-        UMOMessage currentMessage = muleEventContext.getMessage();
+        MuleMessage currentMessage = muleEventContext.getMessage();
 
         for (Iterator iterator = currentMessage.getPropertyNames().iterator(); iterator.hasNext();)
         {

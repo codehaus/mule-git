@@ -10,12 +10,12 @@
 
 package org.mule.api.persistence;
 
-import org.mule.api.context.UMOServerNotification;
+import org.mule.api.context.ServerNotification;
 
 /**
  * TODO
  */
-public class PersistenceNotification extends UMOServerNotification 
+public class PersistenceNotification extends ServerNotification 
 {
     public static final int PERSISTABLE_NOT_READY = 0;
     public static final int PERSISTABLE_READY = 1;

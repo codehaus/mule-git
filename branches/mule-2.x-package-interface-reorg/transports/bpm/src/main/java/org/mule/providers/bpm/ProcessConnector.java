@@ -10,13 +10,13 @@
 
 package org.mule.providers.bpm;
 
-import org.mule.api.UMOException;
-import org.mule.api.UMOMessage;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleMessage;
 import org.mule.api.config.ConfigurationException;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.extras.client.MuleClient;
+import org.mule.impl.config.i18n.MessageFactory;
 import org.mule.impl.transport.AbstractConnector;
-import org.mule.imple.config.i18n.MessageFactory;
 import org.mule.util.StringUtils;
 
 import java.util.Map;
@@ -115,12 +115,12 @@ public class ProcessConnector extends AbstractConnector implements MessageServic
         // template method
     }
 
-    protected void doStart() throws UMOException
+    protected void doStart() throws AbstractMuleException
     {
         // template method
     }
 
-    protected void doStop() throws UMOException
+    protected void doStop() throws AbstractMuleException
     {
         // template method
     }
@@ -174,7 +174,7 @@ public class ProcessConnector extends AbstractConnector implements MessageServic
         return url;
     }
 
-    public UMOMessage generateMessage(String endpoint,
+    public MuleMessage generateMessage(String endpoint,
                                       Object payloadObject,
                                       Map messageProperties,
                                       boolean synchronous) throws Exception

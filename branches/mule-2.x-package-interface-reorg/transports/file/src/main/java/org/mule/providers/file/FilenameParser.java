@@ -10,7 +10,7 @@
 
 package org.mule.providers.file;
 
-import org.mule.api.transport.UMOMessageAdapter;
+import org.mule.api.transport.MessageAdapter;
 
 /**
  * <code>FilenameParser</code> is a simple expression parser interface for
@@ -18,5 +18,5 @@ import org.mule.api.transport.UMOMessageAdapter;
  */
 public interface FilenameParser
 {
-    public String getFilename(UMOMessageAdapter adapter, String pattern);
+    public String getFilename(MessageAdapter adapter, String pattern);
 }

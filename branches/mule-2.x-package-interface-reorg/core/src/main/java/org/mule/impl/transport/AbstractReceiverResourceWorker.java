@@ -67,7 +67,7 @@ public abstract class AbstractReceiverResourceWorker extends AbstractReceiverWor
      * The method used to read the next message from the underlying transport.
      * @param resource the resource to read from, this may be a socket, a directory or some higher level
      * representation.
-     * @return the message read from the resource.  This can be raw data such as a byte[] or a UMOMessageAdapter.
+     * @return the message read from the resource.  This can be raw data such as a byte[] or a MessageAdapter.
      * @throws Exception
      */
     protected abstract Object getNextMessage(Object resource) throws Exception;

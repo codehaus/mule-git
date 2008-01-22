@@ -10,14 +10,14 @@
 
 package org.mule.impl.transport;
 
-import org.mule.api.UMOException;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
-import org.mule.api.transport.UMOMessageRequester;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.api.transport.MessageRequester;
 
 public final class UnsupportedMessageRequesterFactory extends AbstractMessageRequesterFactory
 {
 
-    public UMOMessageRequester create(UMOImmutableEndpoint endpoint) throws UMOException
+    public MessageRequester create(ImmutableEndpoint endpoint) throws AbstractMuleException
     {
         return new UnsupportedMessageRequester(endpoint);
     }

@@ -9,14 +9,14 @@
  */
 package org.mule.impl.model.resolvers;
 
-import org.mule.api.UMOException;
-import org.mule.imple.config.i18n.MessageFactory;
+import org.mule.api.AbstractMuleException;
+import org.mule.impl.config.i18n.MessageFactory;
 
 /**
  * Tis exception gets thrown by the {@link org.mule.impl.model.resolvers.DefaultEntryPointResolverSet} if after trying
  * all entrypointResolvers it cannot fin the entrypoint on the service component
  */
-public class EntryPointNotFoundException extends UMOException
+public class EntryPointNotFoundException extends AbstractMuleException
 {
     /** @param message the exception message */
     public EntryPointNotFoundException(String message)

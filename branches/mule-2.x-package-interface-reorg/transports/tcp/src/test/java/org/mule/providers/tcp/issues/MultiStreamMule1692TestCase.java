@@ -10,7 +10,7 @@
 
 package org.mule.providers.tcp.issues;
 
-import org.mule.api.UMOEventContext;
+import org.mule.api.EventContext;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.tck.functional.EventCallback;
@@ -49,7 +49,7 @@ public class MultiStreamMule1692TestCase extends FunctionalTestCase
     {
         return new EventCallback()
         {
-            public synchronized void eventReceived(UMOEventContext context, Object component)
+            public synchronized void eventReceived(EventContext context, Object component)
             {
                 try
                 {

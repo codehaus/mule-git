@@ -10,7 +10,7 @@
 
 package org.mule.providers.stdio;
 
-import org.mule.api.transport.UMOConnector;
+import org.mule.api.transport.Connector;
 import org.mule.tck.providers.AbstractConnectorTestCase;
 
 public class PromptStdioConnectorTestCase extends AbstractConnectorTestCase
@@ -21,9 +21,9 @@ public class PromptStdioConnectorTestCase extends AbstractConnectorTestCase
         return "stdio://System.out";
     }
 
-    public UMOConnector createConnector() throws Exception
+    public Connector createConnector() throws Exception
     {
-        UMOConnector cnn = new PromptStdioConnector();
+        Connector cnn = new PromptStdioConnector();
         cnn.setName("TestStdio");
         return cnn;
     }

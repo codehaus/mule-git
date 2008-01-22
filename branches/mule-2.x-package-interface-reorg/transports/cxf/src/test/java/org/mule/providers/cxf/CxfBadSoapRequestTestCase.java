@@ -10,9 +10,9 @@
 
 package org.mule.providers.cxf;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
-import org.mule.impl.MuleMessage;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.tck.FunctionalTestCase;
 
 import java.util.List;
@@ -46,7 +46,7 @@ public class CxfBadSoapRequestTestCase extends FunctionalTestCase
                              + "</ssss>"
                              + "</soap:Body>" + "</soap:Envelope>";
 
-        UMOMessage reply = client.send("http://localhost:63381/services/TestComponent", new MuleMessage(
+        MuleMessage reply = client.send("http://localhost:63381/services/TestComponent", new DefaultMuleMessage(
             soapRequest));
 
         assertNotNull(reply);

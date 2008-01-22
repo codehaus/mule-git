@@ -10,7 +10,7 @@
 
 package org.mule.examples.loanbroker.transformers;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.api.transformer.TransformerException;
 import org.mule.examples.loanbroker.bank.Bank;
 import org.mule.examples.loanbroker.messages.LoanBrokerQuoteRequest;
@@ -27,10 +27,10 @@ public class SetLendersAsRecipients extends AbstractMessageAwareTransformer
     public SetLendersAsRecipients()
     {
         this.registerSourceType(LoanBrokerQuoteRequest.class);
-        this.setReturnClass(UMOMessage.class);
+        this.setReturnClass(MuleMessage.class);
     }
 
-    public Object transform(UMOMessage message, String outputEncoding) throws TransformerException
+    public Object transform(MuleMessage message, String outputEncoding) throws TransformerException
     {
         Object src = message.getPayload();
         Bank[] lenders = ((LoanBrokerQuoteRequest) src).getLenders();

@@ -10,9 +10,9 @@
 
 package org.mule.impl.message;
 
-import org.mule.api.UMOEventContext;
-import org.mule.api.UMOMessage;
-import org.mule.api.endpoint.UMOEndpointURI;
+import org.mule.api.EventContext;
+import org.mule.api.MuleMessage;
+import org.mule.api.endpoint.EndpointURI;
 import org.mule.impl.RequestContext;
 
 import java.util.Date;
@@ -31,13 +31,13 @@ public class ExceptionMessage extends BaseMessage
 
     private Throwable exception;
     private String componentName;
-    private UMOEndpointURI endpointUri;
+    private EndpointURI endpointUri;
     private Date timeStamp;
 
     public ExceptionMessage(Object message,
                             Throwable exception,
                             String componentName,
-                            UMOEndpointURI endpointUri)
+                            EndpointURI endpointUri)
     {
         super(message);
         this.exception = exception;
@@ -45,10 +45,10 @@ public class ExceptionMessage extends BaseMessage
         this.componentName = componentName;
         this.endpointUri = endpointUri;
 
-        UMOEventContext ctx = RequestContext.getEventContext();
+        EventContext ctx = RequestContext.getEventContext();
         if (ctx != null)
         {
-            UMOMessage msg = ctx.getMessage();
+            MuleMessage msg = ctx.getMessage();
             for (Iterator iterator = msg.getPropertyNames().iterator(); iterator.hasNext();)
             {
                 String propertyKey = (String) iterator.next();
@@ -62,7 +62,7 @@ public class ExceptionMessage extends BaseMessage
         return componentName;
     }
 
-    public UMOEndpointURI getEndpoint()
+    public EndpointURI getEndpoint()
     {
         return endpointUri;
     }

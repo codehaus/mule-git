@@ -11,7 +11,7 @@
 package org.mule.providers.file.transformers;
 
 import org.mule.api.transformer.TransformerException;
-import org.mule.api.transformer.UMOTransformer;
+import org.mule.api.transformer.Transformer;
 import org.mule.tck.AbstractTransformerTestCase;
 import org.mule.util.FileUtils;
 import org.mule.util.SystemUtils;
@@ -68,7 +68,7 @@ public class FileToStringTestCase extends AbstractTransformerTestCase
      * 
      * @see org.mule.tck.AbstractTransformerTestCase#getRoundTripTransformer()
      */
-    public UMOTransformer getRoundTripTransformer() throws Exception
+    public Transformer getRoundTripTransformer() throws Exception
     {
         return null;
     }
@@ -88,7 +88,7 @@ public class FileToStringTestCase extends AbstractTransformerTestCase
      * 
      * @see org.mule.tck.AbstractTransformerTestCase#getTransformer()
      */
-    public UMOTransformer getTransformer() throws Exception
+    public Transformer getTransformer() throws Exception
     {
         return new FileToString();
     }

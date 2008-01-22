@@ -11,8 +11,8 @@
 package org.mule.providers.udp;
 
 import org.mule.api.MessagingException;
-import org.mule.api.transport.UMOMessageAdapter;
-import org.mule.impl.MuleMessage;
+import org.mule.api.transport.MessageAdapter;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.tck.providers.AbstractMessageAdapterTestCase;
 
 import java.net.DatagramPacket;
@@ -25,7 +25,7 @@ public class UdpMessageAdapterTestCase extends AbstractMessageAdapterTestCase
         return new DatagramPacket("Hello".getBytes(), 5);
     }
 
-    public UMOMessageAdapter createAdapter(Object payload) throws MessagingException
+    public MessageAdapter createAdapter(Object payload) throws MessagingException
     {
         return new UdpMessageAdapter(payload);
     }
@@ -33,8 +33,8 @@ public class UdpMessageAdapterTestCase extends AbstractMessageAdapterTestCase
     public void testMessageRetrieval() throws Exception
     {
         Object message = getValidMessage();
-        UMOMessageAdapter adapter = createAdapter(message);
-        MuleMessage muleMessage = new MuleMessage(adapter);
+        MessageAdapter adapter = createAdapter(message);
+        DefaultMuleMessage muleMessage = new DefaultMuleMessage(adapter);
         assertEquals(new String(((DatagramPacket)message).getData()), muleMessage.getPayloadAsString());
         byte[] bytes = muleMessage.getPayloadAsBytes();
         assertNotNull(bytes);

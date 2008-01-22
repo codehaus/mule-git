@@ -10,7 +10,7 @@
 
 package org.mule.impl.transformer.codec;
 
-import org.mule.api.transformer.UMOTransformer;
+import org.mule.api.transformer.Transformer;
 import org.mule.impl.transformer.codec.XmlEntityDecoder;
 import org.mule.impl.transformer.codec.XmlEntityEncoder;
 import org.mule.tck.AbstractTransformerTestCase;
@@ -28,12 +28,12 @@ public class XMLEntityTransformersTestCase extends AbstractTransformerTestCase
         return "<?xml version=\"1.0\" encoding=\"utf-8\"?><string xmlns=\"http://www.webserviceX.NET/\"><StockQuotes><Stock><Symbol>IBM</Symbol><Last>91.52</Last><Date>11/3/2006</Date><Time>11:10am</Time><Change>-0.16</Change><Open>91.76</Open><High>92.34</High><Low>91.43</Low><Volume>1856600</Volume><MktCap>139.3B</MktCap><PreviousClose>91.68</PreviousClose><PercentageChange>-0.17%</PercentageChange><AnnRange>72.73 - 92.68</AnnRange><Earns>5.815</Earns><P-E>15.77</P-E><Name>INTL BUSINESS MAC</Name></Stock></StockQuotes></string>";
     }
 
-    public UMOTransformer getTransformer()
+    public Transformer getTransformer()
     {
         return new XmlEntityEncoder();
     }
 
-    public UMOTransformer getRoundTripTransformer()
+    public Transformer getRoundTripTransformer()
     {
         return new XmlEntityDecoder();
     }

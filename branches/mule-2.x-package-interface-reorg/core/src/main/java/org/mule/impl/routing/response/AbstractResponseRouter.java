@@ -10,9 +10,9 @@
 
 package org.mule.impl.routing.response;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.api.config.MuleProperties;
-import org.mule.api.routing.UMOResponseRouter;
+import org.mule.api.routing.ResponseRouter;
 import org.mule.impl.config.MuleConfiguration;
 import org.mule.impl.routing.AbstractRouter;
 import org.mule.impl.routing.CorrelationPropertiesExtractor;
@@ -26,7 +26,7 @@ import org.apache.commons.logging.LogFactory;
  * <code>AbstractResponseRouter</code> is a base class for all Response Routers
  */
 
-public abstract class AbstractResponseRouter extends AbstractRouter implements UMOResponseRouter
+public abstract class AbstractResponseRouter extends AbstractRouter implements ResponseRouter
 {
     protected final Log logger = LogFactory.getLog(getClass());
 
@@ -84,7 +84,7 @@ public abstract class AbstractResponseRouter extends AbstractRouter implements U
      * @param message a received reply message
      * @return the correlation Id for this message
      */
-    protected Object getReplyAggregateIdentifier(UMOMessage message)
+    protected Object getReplyAggregateIdentifier(MuleMessage message)
     {
         return propertyExtractor.getProperty(MuleProperties.MULE_CORRELATION_ID_PROPERTY, message);
     }
@@ -94,12 +94,12 @@ public abstract class AbstractResponseRouter extends AbstractRouter implements U
      * with a group identifier not registered with this router, a new group is
      * created. The id returned here can be a correlationId or some custom
      * aggregation Id. This implementation uses the Unique Message Id of the
-     * UMOMessage being returned a
+     * MuleMessage being returned a
      * 
      * @param message A response messages received on the response router endpoint
      * @return an aggregation Id for this event
      */
-    protected Object getCallResponseAggregateIdentifier(UMOMessage message)
+    protected Object getCallResponseAggregateIdentifier(MuleMessage message)
     {
         return propertyExtractor.getProperty(MuleProperties.MULE_MESSAGE_ID_PROPERTY, message);
     }

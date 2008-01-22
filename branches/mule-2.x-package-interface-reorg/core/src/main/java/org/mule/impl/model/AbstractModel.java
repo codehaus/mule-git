@@ -10,14 +10,14 @@
 
 package org.mule.impl.model;
 
+import org.mule.api.AbstractMuleException;
 import org.mule.api.MuleContext;
-import org.mule.api.UMOException;
-import org.mule.api.context.UMOServerNotification;
+import org.mule.api.context.ServerNotification;
 import org.mule.api.lifecycle.InitialisationException;
-import org.mule.api.lifecycle.UMOLifecycleAdapterFactory;
-import org.mule.api.model.UMOEntryPointResolver;
-import org.mule.api.model.UMOEntryPointResolverSet;
-import org.mule.api.model.UMOModel;
+import org.mule.api.lifecycle.LifecycleAdapterFactory;
+import org.mule.api.model.EntryPointResolver;
+import org.mule.api.model.EntryPointResolverSet;
+import org.mule.api.model.Model;
 import org.mule.impl.DefaultComponentExceptionStrategy;
 import org.mule.impl.DefaultLifecycleAdapterFactory;
 import org.mule.impl.internal.notifications.ModelNotification;
@@ -34,18 +34,18 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * <code>MuleModel</code> is the default implementation of the UMOModel. The model
+ * <code>MuleModel</code> is the default implementation of the Model. The model
  * encapsulates and manages the runtime behaviour of a Mule Server instance. It is
  * responsible for maintaining the UMOs instances and their configuration.
  */
-public abstract class AbstractModel implements UMOModel
+public abstract class AbstractModel implements Model
 {
 
     public static final String DEFAULT_MODEL_NAME = "main";
 
     private String name = DEFAULT_MODEL_NAME;
-    private UMOEntryPointResolverSet entryPointResolverSet = null; // values are supplied below as required
-    private UMOLifecycleAdapterFactory lifecycleAdapterFactory = new DefaultLifecycleAdapterFactory();
+    private EntryPointResolverSet entryPointResolverSet = null; // values are supplied below as required
+    private LifecycleAdapterFactory lifecycleAdapterFactory = new DefaultLifecycleAdapterFactory();
     private AtomicBoolean initialised = new AtomicBoolean(false);
     private AtomicBoolean started = new AtomicBoolean(false);
     private ExceptionListener exceptionListener = new DefaultComponentExceptionStrategy();
@@ -76,9 +76,9 @@ public abstract class AbstractModel implements UMOModel
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.api.model.UMOModel#getEntryPointResolver()
+     * @see org.mule.api.model.Model#getEntryPointResolver()
      */
-    public UMOEntryPointResolverSet getEntryPointResolverSet()
+    public EntryPointResolverSet getEntryPointResolverSet()
     {
         if (null == entryPointResolverSet)
         {
@@ -90,9 +90,9 @@ public abstract class AbstractModel implements UMOModel
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.api.model.UMOModel#setEntryPointResolver(org.mule.api.model.UMOEntryPointResolver)
+     * @see org.mule.api.model.Model#setEntryPointResolver(org.mule.api.model.EntryPointResolver)
      */
-    public void setEntryPointResolverSet(UMOEntryPointResolverSet entryPointResolverSet)
+    public void setEntryPointResolverSet(EntryPointResolverSet entryPointResolverSet)
     {
         this.entryPointResolverSet = entryPointResolverSet;
     }
@@ -110,16 +110,16 @@ public abstract class AbstractModel implements UMOModel
         }
         for (Iterator resolvers = entryPointResolvers.iterator(); resolvers.hasNext();)
         {
-            entryPointResolverSet.addEntryPointResolver((UMOEntryPointResolver) resolvers.next());
+            entryPointResolverSet.addEntryPointResolver((EntryPointResolver) resolvers.next());
         }
     }
 
     /*
      * (non-Javadoc)
      *
-     * @see org.mule.api.model.UMOModel#getLifecycleAdapterFactory()
+     * @see org.mule.api.model.Model#getLifecycleAdapterFactory()
      */
-    public UMOLifecycleAdapterFactory getLifecycleAdapterFactory()
+    public LifecycleAdapterFactory getLifecycleAdapterFactory()
     {
         return lifecycleAdapterFactory;
     }
@@ -127,9 +127,9 @@ public abstract class AbstractModel implements UMOModel
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.api.model.UMOModel#setLifecycleAdapterFactory(org.mule.api.lifecycle.UMOLifecycleAdapterFactory)
+     * @see org.mule.api.model.Model#setLifecycleAdapterFactory(org.mule.api.lifecycle.LifecycleAdapterFactory)
      */
-    public void setLifecycleAdapterFactory(UMOLifecycleAdapterFactory lifecycleAdapterFactory)
+    public void setLifecycleAdapterFactory(LifecycleAdapterFactory lifecycleAdapterFactory)
     {
         this.lifecycleAdapterFactory = lifecycleAdapterFactory;
     }
@@ -144,9 +144,9 @@ public abstract class AbstractModel implements UMOModel
     /**
      * Stops any registered components
      *
-     * @throws UMOException if a Component fails tcomponent
+     * @throws AbstractMuleException if a Component fails tcomponent
      */
-    public void stop() throws UMOException
+    public void stop() throws AbstractMuleException
     {
         fireNotification(new ModelNotification(this, ModelNotification.MODEL_STOPPING));
         started.set(false);
@@ -156,9 +156,9 @@ public abstract class AbstractModel implements UMOModel
     /**
      * Starts all registered components
      *
-     * @throws UMOException if any of the components fail to start
+     * @throws AbstractMuleException if any of the components fail to start
      */
-    public void start() throws UMOException
+    public void start() throws AbstractMuleException
     {
         if (!initialised.get())
         {
@@ -201,7 +201,7 @@ public abstract class AbstractModel implements UMOModel
         this.exceptionListener = exceptionListener;
     }
 
-    void fireNotification(UMOServerNotification notification)
+    void fireNotification(ServerNotification notification)
     {
         if (muleContext != null)
         {

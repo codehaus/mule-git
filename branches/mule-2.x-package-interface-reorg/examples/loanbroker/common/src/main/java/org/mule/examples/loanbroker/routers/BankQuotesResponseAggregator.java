@@ -10,7 +10,7 @@
 
 package org.mule.examples.loanbroker.routers;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.api.routing.RoutingException;
 import org.mule.impl.routing.AggregationException;
 import org.mule.impl.routing.inbound.EventGroup;
@@ -33,7 +33,7 @@ public class BankQuotesResponseAggregator extends ResponseCorrelationAggregator
      *             this scenario the whole event group is removed and passed to the
      *             exception handler for this componenet
      */
-    protected UMOMessage aggregateEvents(EventGroup events) throws RoutingException
+    protected MuleMessage aggregateEvents(EventGroup events) throws RoutingException
     {
         try
         {

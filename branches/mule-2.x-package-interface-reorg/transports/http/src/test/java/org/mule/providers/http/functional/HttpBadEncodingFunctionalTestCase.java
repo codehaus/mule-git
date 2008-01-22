@@ -10,9 +10,9 @@
 
 package org.mule.providers.http.functional;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
-import org.mule.impl.MuleMessage;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.providers.http.HttpConnector;
 
 public class HttpBadEncodingFunctionalTestCase extends HttpEncodingFunctionalTestCase
@@ -24,9 +24,9 @@ public class HttpBadEncodingFunctionalTestCase extends HttpEncodingFunctionalTes
         
         // Send as bytes so that the StringRequestEntity isn't used. If it is used
         // it will throw an exception and stop us from testing the server side.
-        MuleMessage msg = new MuleMessage(TEST_MESSAGE.getBytes());
+        DefaultMuleMessage msg = new DefaultMuleMessage(TEST_MESSAGE.getBytes());
         msg.setEncoding("UTFF-912");
-        UMOMessage reply = client.send("clientEndpoint", msg);
+        MuleMessage reply = client.send("clientEndpoint", msg);
         assertNotNull(reply);
         assertEquals("500", reply.getProperty(HttpConnector.HTTP_STATUS_PROPERTY));
         assertNotNull(reply.getExceptionPayload());

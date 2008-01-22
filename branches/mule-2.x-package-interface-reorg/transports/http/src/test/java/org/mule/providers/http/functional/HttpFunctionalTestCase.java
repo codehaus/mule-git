@@ -10,7 +10,7 @@
 
 package org.mule.providers.http.functional;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.providers.http.HttpConstants;
 import org.mule.tck.FunctionalTestCase;
@@ -37,7 +37,7 @@ public class HttpFunctionalTestCase extends FunctionalTestCase
         MuleClient client = new MuleClient();
         Map props = new HashMap();
         props.put(HttpConstants.HEADER_CONTENT_TYPE, "text/plain;charset=UTF-8");
-        UMOMessage result = client.send("clientEndpoint", TEST_MESSAGE, props);
+        MuleMessage result = client.send("clientEndpoint", TEST_MESSAGE, props);
         assertEquals(TEST_MESSAGE + " Received", result.getPayloadAsString());
     }
 }

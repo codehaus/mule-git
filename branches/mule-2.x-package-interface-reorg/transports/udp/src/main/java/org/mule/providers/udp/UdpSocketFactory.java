@@ -9,8 +9,8 @@
  */
 package org.mule.providers.udp;
 
-import org.mule.api.endpoint.UMOImmutableEndpoint;
-import org.mule.api.transport.UMOConnector;
+import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.api.transport.Connector;
 import org.mule.util.MapUtils;
 
 import java.io.IOException;
@@ -35,10 +35,10 @@ public class UdpSocketFactory implements KeyedPoolableObjectFactory
 
     public Object makeObject(Object key) throws Exception
     {
-        UMOImmutableEndpoint ep = (UMOImmutableEndpoint)key;
+        ImmutableEndpoint ep = (ImmutableEndpoint)key;
         DatagramSocket socket;
 
-        if(ep.getType() == UMOImmutableEndpoint.ENDPOINT_TYPE_RECEIVER)
+        if(ep.getType() == ImmutableEndpoint.ENDPOINT_TYPE_RECEIVER)
         {
             int port = ep.getEndpointURI().getPort();
             String host = ep.getEndpointURI().getHost();
@@ -67,17 +67,17 @@ public class UdpSocketFactory implements KeyedPoolableObjectFactory
         UdpConnector connector = (UdpConnector)ep.getConnector();
         //There is some overhead in stting socket timeout and buffer size, so we're
         //careful here only to set if needed
-        if (connector.getReceiveBufferSize() != UMOConnector.INT_VALUE_NOT_SET
+        if (connector.getReceiveBufferSize() != Connector.INT_VALUE_NOT_SET
             && socket.getReceiveBufferSize() != connector.getReceiveBufferSize())
         {
             socket.setReceiveBufferSize(connector.getReceiveBufferSize());
         }
-        if (connector.getSendBufferSize() != UMOConnector.INT_VALUE_NOT_SET
+        if (connector.getSendBufferSize() != Connector.INT_VALUE_NOT_SET
             && socket.getSendBufferSize() != connector.getSendBufferSize())
         {
             socket.setSendBufferSize(connector.getSendBufferSize());
         }
-        if (connector.getReceiveTimeout() != UMOConnector.INT_VALUE_NOT_SET
+        if (connector.getReceiveTimeout() != Connector.INT_VALUE_NOT_SET
             && socket.getSoTimeout() != connector.getReceiveTimeout())
         {
             socket.setSoTimeout(connector.getSendTimeout());
@@ -108,7 +108,7 @@ public class UdpSocketFactory implements KeyedPoolableObjectFactory
 
     public void passivateObject(Object key, Object object) throws Exception
     {
-        UMOImmutableEndpoint ep = (UMOImmutableEndpoint)key;
+        ImmutableEndpoint ep = (ImmutableEndpoint)key;
 
         boolean keepSocketOpen = MapUtils.getBooleanValue(ep.getProperties(),
             UdpConnector.KEEP_SEND_SOCKET_OPEN_PROPERTY, ((UdpConnector)ep.getConnector()).isKeepSendSocketOpen());

@@ -10,17 +10,17 @@
 
 package org.mule.providers.rmi;
 
-import org.mule.api.UMOComponent;
-import org.mule.api.UMOEvent;
-import org.mule.api.UMOException;
+import org.mule.api.Component;
+import org.mule.api.Event;
+import org.mule.api.AbstractMuleException;
 import org.mule.api.config.MuleProperties;
-import org.mule.api.endpoint.UMOEndpointURI;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.endpoint.EndpointURI;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.transport.DispatchException;
-import org.mule.api.transport.UMOMessageReceiver;
+import org.mule.api.transport.MessageReceiver;
+import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.impl.transport.AbstractJndiConnector;
-import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.providers.rmi.i18n.RmiMessages;
 import org.mule.util.ArrayUtils;
 import org.mule.util.ClassUtils;
@@ -111,12 +111,12 @@ public class RmiConnector extends AbstractJndiConnector
         // template method
     }
 
-    protected void doStart() throws UMOException
+    protected void doStart() throws AbstractMuleException
     {
         // template method
     }
 
-    protected void doStop() throws UMOException
+    protected void doStop() throws AbstractMuleException
     {
         // template method
     }
@@ -202,7 +202,7 @@ public class RmiConnector extends AbstractJndiConnector
         this.securityManager = securityManager;
     }
 
-    public UMOMessageReceiver createReceiver(UMOComponent component, UMOImmutableEndpoint endpoint) throws Exception
+    public MessageReceiver createReceiver(Component component, ImmutableEndpoint endpoint) throws Exception
     {
         final Object[] args = new Object[]{new Long(pollingFrequency)};
         return getServiceDescriptor().createMessageReceiver(this, component, endpoint, args);
@@ -215,14 +215,14 @@ public class RmiConnector extends AbstractJndiConnector
      * @param remoteObject The remote object on which to invoke the method
      * @param event The current event being processed
      * @return
-     * @throws org.mule.api.UMOException
+     * @throws org.mule.api.AbstractMuleException
      * @throws NoSuchMethodException
      * @throws ClassNotFoundException
      */
-    public Method getMethodObject(Remote remoteObject, UMOEvent event)
-        throws UMOException, NoSuchMethodException, ClassNotFoundException
+    public Method getMethodObject(Remote remoteObject, Event event)
+        throws AbstractMuleException, NoSuchMethodException, ClassNotFoundException
     {
-        UMOEndpointURI endpointUri = event.getEndpoint().getEndpointURI();
+        EndpointURI endpointUri = event.getEndpoint().getEndpointURI();
 
         String methodName = MapUtils.getString(endpointUri.getParams(), MuleProperties.MULE_METHOD_PROPERTY,
             null);
@@ -286,11 +286,11 @@ public class RmiConnector extends AbstractJndiConnector
         return classes;
     }
 
-    protected Object getRemoteRef(UMOImmutableEndpoint endpoint)
+    protected Object getRemoteRef(ImmutableEndpoint endpoint)
         throws IOException, NotBoundException, NamingException, InitialisationException
     {
 
-        UMOEndpointURI endpointUri = endpoint.getEndpointURI();
+        EndpointURI endpointUri = endpoint.getEndpointURI();
 
         String serviceName = endpointUri.getPath();
         try
@@ -329,7 +329,7 @@ public class RmiConnector extends AbstractJndiConnector
         return getJndiContext(inetAddress.getHostAddress() + ":" + port).lookup(serviceName);
     }
 
-    public Remote getRemoteObject(UMOImmutableEndpoint endpoint)
+    public Remote getRemoteObject(ImmutableEndpoint endpoint)
         throws IOException, NotBoundException, NamingException, InitialisationException
     {
         return (Remote)getRemoteRef(endpoint);

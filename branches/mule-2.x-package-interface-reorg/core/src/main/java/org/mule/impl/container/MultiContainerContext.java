@@ -10,11 +10,11 @@
 
 package org.mule.impl.container;
 
+import org.mule.api.context.ContainerContext;
 import org.mule.api.context.ContainerException;
 import org.mule.api.context.ObjectNotFoundException;
-import org.mule.api.context.UMOContainerContext;
 import org.mule.api.lifecycle.InitialisationException;
-import org.mule.imple.config.i18n.CoreMessages;
+import org.mule.impl.config.i18n.CoreMessages;
 
 import java.io.Reader;
 import java.util.Iterator;
@@ -27,7 +27,7 @@ import org.apache.commons.logging.LogFactory;
  * <code>MultiContainerContext</code> is a container that hosts other containers
  * from which components are queried.
  */
-public class MultiContainerContext implements UMOContainerContext
+public class MultiContainerContext implements ContainerContext
 {
     /**
      * logger used by this class
@@ -52,7 +52,7 @@ public class MultiContainerContext implements UMOContainerContext
         return name;
     }
 
-    public void addContainer(UMOContainerContext container)
+    public void addContainer(ContainerContext container)
     {
         if (containers.containsKey(container.getName()))
         {
@@ -62,9 +62,9 @@ public class MultiContainerContext implements UMOContainerContext
         containers.put(container.getName(), container);
     }
 
-    public UMOContainerContext removeContainer(String name)
+    public ContainerContext removeContainer(String name)
     {
-        return (UMOContainerContext) containers.remove(name);
+        return (ContainerContext) containers.remove(name);
     }
 
     public Object getComponent(Object key) throws ObjectNotFoundException
@@ -89,10 +89,10 @@ public class MultiContainerContext implements UMOContainerContext
         }
         
         Object component = null;
-        UMOContainerContext container;
+        ContainerContext container;
         if (realKey.getContainerName() != null)
         {
-            container = (UMOContainerContext) containers.get(realKey.getContainerName());
+            container = (ContainerContext) containers.get(realKey.getContainerName());
             if (container != null)
             {
                 return container.getComponent(realKey);
@@ -105,7 +105,7 @@ public class MultiContainerContext implements UMOContainerContext
 
         for (Iterator iterator = containers.values().iterator(); iterator.hasNext();)
         {
-            container = (UMOContainerContext) iterator.next();
+            container = (ContainerContext) iterator.next();
             try
             {
                 component = container.getComponent(realKey);
@@ -167,10 +167,10 @@ public class MultiContainerContext implements UMOContainerContext
 
     public void dispose()
     {
-        UMOContainerContext container;
+        ContainerContext container;
         for (Iterator iterator = containers.values().iterator(); iterator.hasNext();)
         {
-            container = (UMOContainerContext) iterator.next();
+            container = (ContainerContext) iterator.next();
             container.dispose();
         }
         containers.clear();

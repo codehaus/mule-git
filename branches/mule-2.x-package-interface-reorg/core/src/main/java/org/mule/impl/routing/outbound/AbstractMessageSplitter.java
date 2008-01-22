@@ -10,11 +10,11 @@
 
 package org.mule.impl.routing.outbound;
 
-import org.mule.api.UMOException;
-import org.mule.api.UMOMessage;
-import org.mule.api.UMOSession;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleMessage;
+import org.mule.api.Session;
 import org.mule.api.config.MuleProperties;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.routing.CouldNotRouteOutboundMessageException;
 import org.mule.api.routing.RoutingException;
 
@@ -37,7 +37,7 @@ public abstract class AbstractMessageSplitter extends FilteringOutboundRouter
     // synchronous on the endpoint
     protected boolean honorSynchronicity = false;
 
-    public UMOMessage route(UMOMessage message, UMOSession session, boolean synchronous)
+    public MuleMessage route(MuleMessage message, Session session, boolean synchronous)
         throws RoutingException
     {
         String correlationId = (String) propertyExtractor.getProperty(
@@ -45,13 +45,13 @@ public abstract class AbstractMessageSplitter extends FilteringOutboundRouter
 
         this.initialise(message);
 
-        UMOImmutableEndpoint endpoint;
-        UMOMessage result = null;
+        ImmutableEndpoint endpoint;
+        MuleMessage result = null;
         List list = getEndpoints();
         int correlationSequence = 1;
         for (Iterator iterator = list.iterator(); iterator.hasNext();)
         {
-            endpoint = (UMOImmutableEndpoint) iterator.next();
+            endpoint = (ImmutableEndpoint) iterator.next();
             message = getMessagePart(message, endpoint);
             // TODO MULE-1378
             if (message == null)
@@ -102,7 +102,7 @@ public abstract class AbstractMessageSplitter extends FilteringOutboundRouter
                         dispatch(session, message, endpoint);
                     }
                 }
-                catch (UMOException e)
+                catch (AbstractMuleException e)
                 {
                     throw new CouldNotRouteOutboundMessageException(message, endpoint, e);
                 }
@@ -139,11 +139,11 @@ public abstract class AbstractMessageSplitter extends FilteringOutboundRouter
 
     /**
      * This method can be implemented to split the message up before
-     * {@link #getMessagePart(UMOMessage, UMOImmutableEndpoint)} method is called.
+     * {@link #getMessagePart(MuleMessage, ImmutableEndpoint)} method is called.
      * 
      * @param message the message being routed
      */
-    protected abstract void initialise(UMOMessage message);
+    protected abstract void initialise(MuleMessage message);
 
     /**
      * Retrieves a specific message part for the given endpoint. the message will then be
@@ -154,11 +154,11 @@ public abstract class AbstractMessageSplitter extends FilteringOutboundRouter
      * @param endpoint the endpoint that will be used to route the resulting message part
      * @return the message part to dispatch
      */
-    protected abstract UMOMessage getMessagePart(UMOMessage message, UMOImmutableEndpoint endpoint);
+    protected abstract MuleMessage getMessagePart(MuleMessage message, ImmutableEndpoint endpoint);
 
     /**
      * This method is called after all parts of the original message have been processed;
-     * typically this is the case after {@link #getMessagePart(UMOMessage, UMOImmutableEndpoint)}
+     * typically this is the case after {@link #getMessagePart(MuleMessage, ImmutableEndpoint)}
      * returned <code>null</code>.
      */
     protected abstract void cleanup();

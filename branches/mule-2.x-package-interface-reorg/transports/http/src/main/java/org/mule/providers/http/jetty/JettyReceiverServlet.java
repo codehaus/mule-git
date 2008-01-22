@@ -11,7 +11,7 @@
 package org.mule.providers.http.jetty;
 
 import org.mule.api.endpoint.EndpointException;
-import org.mule.api.transport.UMOMessageReceiver;
+import org.mule.api.transport.MessageReceiver;
 import org.mule.providers.http.i18n.HttpMessages;
 import org.mule.providers.http.servlet.MuleReceiverServlet;
 
@@ -27,7 +27,7 @@ public class JettyReceiverServlet extends MuleReceiverServlet
      */
     private static final long serialVersionUID = 238326861089137293L;
 
-    private UMOMessageReceiver receiver;
+    private MessageReceiver receiver;
 
     //@Override
     protected void doInit(ServletConfig servletConfig) throws ServletException
@@ -35,7 +35,7 @@ public class JettyReceiverServlet extends MuleReceiverServlet
         final ServletContext servletContext = servletConfig.getServletContext();
         synchronized (servletContext)
         {
-            receiver = (UMOMessageReceiver) servletContext.getAttribute("messageReceiver");
+            receiver = (MessageReceiver) servletContext.getAttribute("messageReceiver");
         }
         if (receiver == null)
         {
@@ -44,7 +44,7 @@ public class JettyReceiverServlet extends MuleReceiverServlet
     }
 
     //@Override
-    protected UMOMessageReceiver getReceiverForURI(HttpServletRequest httpServletRequest)
+    protected MessageReceiver getReceiverForURI(HttpServletRequest httpServletRequest)
         throws EndpointException
     {
         return receiver;

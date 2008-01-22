@@ -10,7 +10,7 @@
 
 package org.mule.providers.vm;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 
@@ -28,7 +28,7 @@ public class VMFunctionalTestCase extends FunctionalTestCase
     {
         MuleClient client = new MuleClient();
         client.dispatch("vm://in", "Marco", null);
-        UMOMessage response = client.request("vm://out", WAIT);
+        MuleMessage response = client.request("vm://out", WAIT);
         assertNotNull("Response is null", response);
         assertEquals("Polo", response.getPayload());
     }
@@ -37,7 +37,7 @@ public class VMFunctionalTestCase extends FunctionalTestCase
     {
         MuleClient client = new MuleClient();
         client.dispatch("vm://in", "Marco", null);
-        UMOMessage response = client.request("vm://out", WAIT);
+        MuleMessage response = client.request("vm://out", WAIT);
         assertNotNull("Response is null", response);
         assertEquals("Polo", response.getPayload());
     }
@@ -48,7 +48,7 @@ public class VMFunctionalTestCase extends FunctionalTestCase
         client.dispatch("vm://in", "Marco", null);
         client.dispatch("vm://in", "Marco", null);
         client.dispatch("vm://in", "Marco", null);
-        UMOMessage response;
+        MuleMessage response;
         for (int i = 0; i < 3; ++i)
         {
             response = client.request("vm://out", WAIT);

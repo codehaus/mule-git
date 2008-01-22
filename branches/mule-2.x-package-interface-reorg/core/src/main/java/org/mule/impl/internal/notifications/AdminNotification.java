@@ -10,8 +10,8 @@
 
 package org.mule.impl.internal.notifications;
 
-import org.mule.api.UMOMessage;
-import org.mule.api.context.UMOServerNotification;
+import org.mule.api.MuleMessage;
+import org.mule.api.context.ServerNotification;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,7 +20,7 @@ import java.util.Map;
  * <code>AdminNotification</code> is used to invoke actions on a remote mule server
  */
 
-public class AdminNotification extends UMOServerNotification
+public class AdminNotification extends ServerNotification
 {
     /**
      * Serial version
@@ -39,20 +39,20 @@ public class AdminNotification extends UMOServerNotification
     }
 
     private Map properties = new HashMap();
-    private UMOMessage message;
+    private MuleMessage message;
 
-    public AdminNotification(UMOMessage message, int action)
+    public AdminNotification(MuleMessage message, int action)
     {
         super(message, action);
     }
 
-    public AdminNotification(UMOMessage message, int action, String resourceIdentifier)
+    public AdminNotification(MuleMessage message, int action, String resourceIdentifier)
     {
         super(message, action, resourceIdentifier);
         this.message = message;
     }
 
-    public UMOMessage getMessage()
+    public MuleMessage getMessage()
     {
         return message;
     }

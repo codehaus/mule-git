@@ -10,7 +10,7 @@
 
 package org.mule.providers.soap.axis.extensions;
 
-import org.mule.api.UMOEvent;
+import org.mule.api.Event;
 import org.mule.api.config.MuleProperties;
 import org.mule.providers.soap.MuleSoapHeaders;
 
@@ -107,7 +107,7 @@ public class MuleSoapHeadersHandler extends BasicHandler
         {
             return;
         }
-        UMOEvent event = (UMOEvent)msgContext.getProperty(MuleProperties.MULE_EVENT_PROPERTY);
+        Event event = (Event)msgContext.getProperty(MuleProperties.MULE_EVENT_PROPERTY);
 
         if (event == null)
         {

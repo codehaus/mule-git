@@ -10,8 +10,8 @@
 
 package org.mule.providers.email.transformers;
 
-import org.mule.api.UMOException;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.transformer.TransformerException;
 import org.mule.tck.FunctionalTestCase;
 
@@ -36,7 +36,7 @@ public class Rfc822ByteArrayTestCase extends FunctionalTestCase
         mimeMessageToByteArray(newMimeMessage());
     }
 
-    public void testToByteArrayAndBack() throws MessagingException, UMOException, IOException
+    public void testToByteArrayAndBack() throws MessagingException, AbstractMuleException, IOException
     {
         MimeMessage first = newMimeMessage();
         byte[] bytes = mimeMessageToByteArray(first);
@@ -47,10 +47,10 @@ public class Rfc822ByteArrayTestCase extends FunctionalTestCase
         assertEquals(first.getFrom()[0], second.getFrom()[0]);
     }
 
-    protected MimeMessage byteArrayToMimeMessage(byte[] bytes) throws UMOException
+    protected MimeMessage byteArrayToMimeMessage(byte[] bytes) throws AbstractMuleException
     {
         Rfc822ByteArraytoMimeMessage transformer = new Rfc822ByteArraytoMimeMessage();
-        UMOImmutableEndpoint endpoint = muleContext.getRegistry().lookupEndpointFactory().getInboundEndpoint(
+        ImmutableEndpoint endpoint = muleContext.getRegistry().lookupEndpointFactory().getInboundEndpoint(
             "smtp");
         transformer.setEndpoint(endpoint);
         Object result = transformer.transform(bytes);

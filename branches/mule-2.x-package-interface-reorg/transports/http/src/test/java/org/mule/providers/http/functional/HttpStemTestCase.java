@@ -10,8 +10,8 @@
 
 package org.mule.providers.http.functional;
 
-import org.mule.api.UMOException;
-import org.mule.api.UMOMessage;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.providers.http.HttpConnector;
 import org.mule.tck.FunctionalTestCase;
@@ -40,7 +40,7 @@ public class HttpStemTestCase extends FunctionalTestCase
 
     protected void doTest(MuleClient client, String url) throws Exception
     {
-        UMOMessage result = client.send(url, "Hello World", null);
+        MuleMessage result = client.send(url, "Hello World", null);
         assertEquals("Hello World", result.getPayloadAsString());
         assertEquals(200, result.getIntProperty(HttpConnector.HTTP_STATUS_PROPERTY, 0));
     }

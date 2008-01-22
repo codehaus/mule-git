@@ -11,9 +11,9 @@ package org.mule.impl.lifecycle;
 
 import org.mule.api.MuleContext;
 import org.mule.api.MuleRuntimeException;
-import org.mule.api.context.UMOServerNotification;
+import org.mule.api.context.ServerNotification;
+import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.impl.internal.notifications.ManagerNotification;
-import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.util.ClassUtils;
 
 import java.lang.reflect.Constructor;
@@ -44,9 +44,9 @@ public class NotificationLifecycleObject extends LifecycleObject
         // MULE-2903: make sure the notifiactionClass is properly loaded and initialized
         notificationClass = ClassUtils.initializeClass(notificationClass);
 
-        if (!UMOServerNotification.class.isAssignableFrom(notificationClass))
+        if (!ServerNotification.class.isAssignableFrom(notificationClass))
         {
-            throw new IllegalArgumentException("Notification class must be of type: " + UMOServerNotification.class.getName());
+            throw new IllegalArgumentException("Notification class must be of type: " + ServerNotification.class.getName());
         }
 
         ctor = ClassUtils.getConstructor(notificationClass, new Class[]{Object.class, String.class});
@@ -104,11 +104,11 @@ public class NotificationLifecycleObject extends LifecycleObject
         super.firePostNotification(context);
     }
 
-    protected UMOServerNotification createNotification(MuleContext context, String action)
+    protected ServerNotification createNotification(MuleContext context, String action)
     {
         try
         {
-            return (UMOServerNotification)ctor.newInstance(new Object[]{context, action});
+            return (ServerNotification)ctor.newInstance(new Object[]{context, action});
         }
         catch (Exception e)
         {

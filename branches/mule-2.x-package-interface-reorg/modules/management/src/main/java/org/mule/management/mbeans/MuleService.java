@@ -12,7 +12,7 @@ package org.mule.management.mbeans;
 
 import org.mule.MuleServer;
 import org.mule.api.MuleContext;
-import org.mule.api.UMOException;
+import org.mule.api.AbstractMuleException;
 import org.mule.impl.config.MuleManifest;
 import org.mule.util.IOUtils;
 import org.mule.util.StringMessageUtils;
@@ -123,17 +123,17 @@ public class MuleService implements MuleServiceMBean
         return vendor;
     }
 
-    public void start() throws UMOException
+    public void start() throws AbstractMuleException
     {
         muleContext.start();
     }
 
-    public void stop() throws UMOException
+    public void stop() throws AbstractMuleException
     {
         muleContext.stop();
     }
 
-    public void dispose() throws UMOException
+    public void dispose() throws AbstractMuleException
     {
         muleContext.dispose();
     }

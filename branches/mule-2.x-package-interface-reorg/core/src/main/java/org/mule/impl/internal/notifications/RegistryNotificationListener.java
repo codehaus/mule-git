@@ -10,14 +10,14 @@
 
 package org.mule.impl.internal.notifications;
 
-import org.mule.api.context.UMOServerNotificationListener;
+import org.mule.api.context.ServerNotificationListener;
 
 /**
  * <code>RegistryNotificationListener</code> is an observer interface that objects
  * can implement and then register themselves with the MuleContext to be notified
  * when a Registry event occurs.
  */
-public interface RegistryNotificationListener extends UMOServerNotificationListener
+public interface RegistryNotificationListener extends ServerNotificationListener
 {
     // no methods
 }

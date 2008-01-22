@@ -9,7 +9,7 @@
  */
 package org.mule.providers.jms.integration;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 
 /**
@@ -28,7 +28,7 @@ public class JmsMuleSideDurableTopicXATxTestCase extends AbstractJmsFunctionalTe
 
     public void testMuleXaTopic() throws Exception
     {
-        UMOMessage result = null;
+        MuleMessage result = null;
         MuleClient client = new MuleClient();
         client.dispatch("vm://in", DEFAULT_INPUT_MESSAGE, null);
         result = client.request("vm://out", TIMEOUT);

@@ -10,17 +10,17 @@
 
 package org.mule.impl.routing.outbound;
 
-import org.mule.api.UMOException;
-import org.mule.api.UMOMessage;
-import org.mule.api.UMOSession;
-import org.mule.api.UMOTransactionConfig;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleMessage;
+import org.mule.api.Session;
+import org.mule.api.TransactionConfig;
 import org.mule.api.config.MuleProperties;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.endpoint.InvalidEndpointTypeException;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
-import org.mule.api.routing.UMOOutboundRouter;
+import org.mule.api.routing.OutboundRouter;
+import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.impl.routing.AbstractRouter;
 import org.mule.impl.routing.CorrelationPropertiesExtractor;
-import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.util.ClassUtils;
 import org.mule.util.StringMessageUtils;
 import org.mule.util.SystemUtils;
@@ -39,7 +39,7 @@ import org.apache.commons.logging.LogFactory;
  * statistics about message processing through the router.
  *
  */
-public abstract class AbstractOutboundRouter extends AbstractRouter implements UMOOutboundRouter
+public abstract class AbstractOutboundRouter extends AbstractRouter implements OutboundRouter
 {
     public static final int ENABLE_CORRELATION_IF_NOT_SET = 0;
     public static final int ENABLE_CORRELATION_ALWAYS = 1;
@@ -57,9 +57,9 @@ public abstract class AbstractOutboundRouter extends AbstractRouter implements U
 
     protected PropertyExtractor propertyExtractor = new CorrelationPropertiesExtractor();
 
-    protected UMOTransactionConfig transactionConfig;
+    protected TransactionConfig transactionConfig;
 
-    public void dispatch(UMOSession session, UMOMessage message, UMOImmutableEndpoint endpoint) throws UMOException
+    public void dispatch(Session session, MuleMessage message, ImmutableEndpoint endpoint) throws AbstractMuleException
     {
         setMessageProperties(session, message, endpoint);
 
@@ -89,7 +89,7 @@ public abstract class AbstractOutboundRouter extends AbstractRouter implements U
         }
     }
 
-    public UMOMessage send(UMOSession session, UMOMessage message, UMOImmutableEndpoint endpoint) throws UMOException
+    public MuleMessage send(Session session, MuleMessage message, ImmutableEndpoint endpoint) throws AbstractMuleException
     {
         if (replyTo != null)
         {
@@ -118,7 +118,7 @@ public abstract class AbstractOutboundRouter extends AbstractRouter implements U
             }
         }
 
-        UMOMessage result = session.sendEvent(message, endpoint);
+        MuleMessage result = session.sendEvent(message, endpoint);
 
         if (getRouterStatistics() != null)
         {
@@ -149,7 +149,7 @@ public abstract class AbstractOutboundRouter extends AbstractRouter implements U
         return result;
     }
 
-    protected void setMessageProperties(UMOSession session, UMOMessage message, UMOImmutableEndpoint endpoint)
+    protected void setMessageProperties(Session session, MuleMessage message, ImmutableEndpoint endpoint)
     {
         if (replyTo != null)
         {
@@ -226,7 +226,7 @@ public abstract class AbstractOutboundRouter extends AbstractRouter implements U
         // this.endpoints = new CopyOnWriteArrayList(endpoints);
         for (Iterator iterator = endpoints.iterator(); iterator.hasNext();)
         {
-            UMOImmutableEndpoint umoEndpoint = (UMOImmutableEndpoint) iterator.next();
+            ImmutableEndpoint umoEndpoint = (ImmutableEndpoint) iterator.next();
             if (!umoEndpoint.canSend())
             {
                 throw new InvalidEndpointTypeException(CoreMessages.outboundRouterMustUseOutboudEndpoints(
@@ -236,7 +236,7 @@ public abstract class AbstractOutboundRouter extends AbstractRouter implements U
         }
     }
 
-    public void addEndpoint(UMOImmutableEndpoint endpoint)
+    public void addEndpoint(ImmutableEndpoint endpoint)
     {
         if (!endpoint.canSend())
         {
@@ -246,7 +246,7 @@ public abstract class AbstractOutboundRouter extends AbstractRouter implements U
         endpoints.add(endpoint);
     }
 
-    public boolean removeEndpoint(UMOImmutableEndpoint endpoint)
+    public boolean removeEndpoint(ImmutableEndpoint endpoint)
     {
         return endpoints.remove(endpoint);
     }
@@ -319,12 +319,12 @@ public abstract class AbstractOutboundRouter extends AbstractRouter implements U
         }
     }
 
-    public UMOTransactionConfig getTransactionConfig()
+    public TransactionConfig getTransactionConfig()
     {
         return transactionConfig;
     }
 
-    public void setTransactionConfig(UMOTransactionConfig transactionConfig)
+    public void setTransactionConfig(TransactionConfig transactionConfig)
     {
         this.transactionConfig = transactionConfig;
     }
@@ -337,14 +337,14 @@ public abstract class AbstractOutboundRouter extends AbstractRouter implements U
     /**
      * @param name the Endpoint identifier
      * @return the Endpoint or null if the endpointUri is not registered
-     * @see org.mule.api.routing.UMOInboundRouterCollection
+     * @see org.mule.api.routing.InboundRouterCollection
      */
-    public UMOImmutableEndpoint getEndpoint(String name)
+    public ImmutableEndpoint getEndpoint(String name)
     {
-        UMOImmutableEndpoint endpointDescriptor;
+        ImmutableEndpoint endpointDescriptor;
         for (Iterator iterator = endpoints.iterator(); iterator.hasNext();)
         {
-            endpointDescriptor = (UMOImmutableEndpoint)iterator.next();
+            endpointDescriptor = (ImmutableEndpoint)iterator.next();
             if (endpointDescriptor.getName().equals(name))
             {
                 return endpointDescriptor;

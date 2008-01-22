@@ -10,8 +10,8 @@
 
 package org.mule.providers.jms.filters;
 
-import org.mule.api.UMOFilter;
-import org.mule.api.UMOMessage;
+import org.mule.api.Filter;
+import org.mule.api.MuleMessage;
 import org.mule.util.ClassUtils;
 import org.mule.util.StringUtils;
 
@@ -22,7 +22,7 @@ import javax.jms.Message;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-public class JmsPropertyFilter implements UMOFilter
+public class JmsPropertyFilter implements Filter
 {
 
     /**
@@ -50,7 +50,7 @@ public class JmsPropertyFilter implements UMOFilter
      */
     private Pattern pattern = null;
 
-    public boolean accept(UMOMessage message)
+    public boolean accept(MuleMessage message)
     {
         if (StringUtils.isBlank(propertyName))
         {

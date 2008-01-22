@@ -10,10 +10,10 @@
 
 package org.mule.providers.soap.axis;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.api.config.MuleProperties;
-import org.mule.api.endpoint.UMOEndpointURI;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.endpoint.EndpointURI;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.impl.endpoint.MuleEndpointURI;
 import org.mule.impl.transport.AbstractMessageRequester;
 
@@ -41,7 +41,7 @@ public class AxisMessageRequester extends AbstractMessageRequester
     protected AxisConnector connector;
     protected Service service;
 
-    public AxisMessageRequester(UMOImmutableEndpoint endpoint)
+    public AxisMessageRequester(ImmutableEndpoint endpoint)
     {
         super(endpoint);
         this.connector = (AxisConnector)endpoint.getConnector();
@@ -69,7 +69,7 @@ public class AxisMessageRequester extends AbstractMessageRequester
         // template method
     }
 
-    protected synchronized EngineConfiguration getClientConfig(UMOImmutableEndpoint endpoint)
+    protected synchronized EngineConfiguration getClientConfig(ImmutableEndpoint endpoint)
     {
         if (clientConfig == null)
         {
@@ -89,7 +89,7 @@ public class AxisMessageRequester extends AbstractMessageRequester
         return clientConfig;
     }
 
-    protected Service createService(UMOImmutableEndpoint endpoint) throws Exception
+    protected Service createService(ImmutableEndpoint endpoint) throws Exception
     {
         // Create a simple axis service without wsdl
         EngineConfiguration config = getClientConfig(endpoint);
@@ -103,11 +103,11 @@ public class AxisMessageRequester extends AbstractMessageRequester
      *            The call should return immediately if there is data available. If
      *            no data becomes available before the timeout elapses, null will be
      *            returned
-     * @return the result of the request wrapped in a UMOMessage object. Null will be
+     * @return the result of the request wrapped in a MuleMessage object. Null will be
      *         returned if no data was avaialable
      * @throws Exception if the call to the underlying protocal cuases an exception
      */
-    protected UMOMessage doRequest(long timeout) throws Exception
+    protected MuleMessage doRequest(long timeout) throws Exception
     {
         Call call = new Call(service);
         String uri = endpoint.getEndpointURI().toString();
@@ -131,7 +131,7 @@ public class AxisMessageRequester extends AbstractMessageRequester
         return AxisMessageDispatcher.createMessage(result, call);
     }
 
-    public UMOMessage request(String endpoint, Object[] args) throws Exception
+    public MuleMessage request(String endpoint, Object[] args) throws Exception
     {
         Call call = new Call(service);
 
@@ -142,7 +142,7 @@ public class AxisMessageRequester extends AbstractMessageRequester
         {
             endpoint = "axis:" + endpoint;
         }
-        UMOEndpointURI ep = new MuleEndpointURI(endpoint);
+        EndpointURI ep = new MuleEndpointURI(endpoint);
         String method = (String)ep.getParams().remove(MuleProperties.MULE_METHOD_PROPERTY);
         call.setOperationName(method);
 
@@ -151,7 +151,7 @@ public class AxisMessageRequester extends AbstractMessageRequester
         return AxisMessageDispatcher.createMessage(result, call);
     }
 
-    public UMOMessage request(String endpoint, SOAPEnvelope envelope) throws Exception
+    public MuleMessage request(String endpoint, SOAPEnvelope envelope) throws Exception
     {
         Call call = new Call(service);
 

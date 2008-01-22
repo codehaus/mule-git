@@ -10,12 +10,12 @@
 
 package org.mule.test.integration.client;
 
-import org.mule.api.UMOMessage;
-import org.mule.api.UMOTransaction;
-import org.mule.api.UMOTransactionConfig;
+import org.mule.api.MuleMessage;
+import org.mule.api.Transaction;
+import org.mule.api.TransactionConfig;
 import org.mule.api.config.MuleProperties;
-import org.mule.api.endpoint.UMOEndpointBuilder;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.endpoint.EndpointBuilder;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.transaction.TransactionCallback;
 import org.mule.extras.client.MuleClient;
 import org.mule.impl.MuleTransactionConfig;
@@ -51,15 +51,15 @@ public class MuleClientTransactionTestCase extends FunctionalTestCase
 
         MuleTransactionConfig tc = new MuleTransactionConfig();
         tc.setFactory(new JmsTransactionFactory());
-        tc.setAction(UMOTransactionConfig.ACTION_ALWAYS_BEGIN);
+        tc.setAction(TransactionConfig.ACTION_ALWAYS_BEGIN);
 
         // This enpoint needs to be registered prior to use cause we need to set
         // the transaction config so that the endpoint will "know" it is transacted
         // and not close the session itself but leave it up to the transaction.
-        UMOEndpointBuilder endpointBuilder = new EndpointURIEndpointBuilder("jms://test.queue", muleContext);
+        EndpointBuilder endpointBuilder = new EndpointURIEndpointBuilder("jms://test.queue", muleContext);
         endpointBuilder.setTransactionConfig(tc);
         endpointBuilder.setName("TransactedTest.Queue");
-        UMOImmutableEndpoint inboundEndpoint = muleContext.getRegistry()
+        ImmutableEndpoint inboundEndpoint = muleContext.getRegistry()
                 .lookupEndpointFactory()
                 .getOutboundEndpoint(endpointBuilder);
         client.getMuleContext().getRegistry().registerEndpoint(inboundEndpoint);
@@ -74,14 +74,14 @@ public class MuleClientTransactionTestCase extends FunctionalTestCase
                 {
                     client.send("TransactedTest.Queue", "Test Client Dispatch message " + i, props);
                 }
-                UMOTransaction tx = TransactionCoordination.getInstance().getTransaction();
+                Transaction tx = TransactionCoordination.getInstance().getTransaction();
                 assertNotNull(tx);
                 tx.setRollbackOnly();
                 return null;
             }
         });
 
-        UMOMessage result = client.request("jms://replyTo.queue", 2000);
+        MuleMessage result = client.request("jms://replyTo.queue", 2000);
         assertNull(result);
     }
 
@@ -100,15 +100,15 @@ public class MuleClientTransactionTestCase extends FunctionalTestCase
 
         MuleTransactionConfig tc = new MuleTransactionConfig();
         tc.setFactory(new JmsTransactionFactory());
-        tc.setAction(UMOTransactionConfig.ACTION_ALWAYS_BEGIN);
+        tc.setAction(TransactionConfig.ACTION_ALWAYS_BEGIN);
 
         // This enpoint needs to be registered prior to use cause we need to set
         // the transaction config so that the endpoint will "know" it is transacted
         // and not close the session itself but leave it up to the transaction.
-        UMOEndpointBuilder endpointBuilder = new EndpointURIEndpointBuilder("jms://test.queue", muleContext);
+        EndpointBuilder endpointBuilder = new EndpointURIEndpointBuilder("jms://test.queue", muleContext);
         endpointBuilder.setTransactionConfig(tc);
         endpointBuilder.setName("TransactedTest.Queue");
-        UMOImmutableEndpoint inboundEndpoint = muleContext.getRegistry()
+        ImmutableEndpoint inboundEndpoint = muleContext.getRegistry()
                 .lookupEndpointFactory()
                 .getOutboundEndpoint(endpointBuilder);
         client.getMuleContext().getRegistry().registerEndpoint(inboundEndpoint);
@@ -134,7 +134,7 @@ public class MuleClientTransactionTestCase extends FunctionalTestCase
             // this is ok
         }
 
-        UMOMessage result = client.request("jms://replyTo.queue", 2000);
+        MuleMessage result = client.request("jms://replyTo.queue", 2000);
         assertNull(result);
     }
 
@@ -154,15 +154,15 @@ public class MuleClientTransactionTestCase extends FunctionalTestCase
 
         MuleTransactionConfig tc = new MuleTransactionConfig();
         tc.setFactory(new JmsTransactionFactory());
-        tc.setAction(UMOTransactionConfig.ACTION_ALWAYS_BEGIN);
+        tc.setAction(TransactionConfig.ACTION_ALWAYS_BEGIN);
 
         // This enpoint needs to be registered prior to use cause we need to set
         // the transaction config so that the endpoint will "know" it is transacted
         // and not close the session itself but leave it up to the transaction.
-        UMOEndpointBuilder endpointBuilder = new EndpointURIEndpointBuilder("jms://test.queue", muleContext);
+        EndpointBuilder endpointBuilder = new EndpointURIEndpointBuilder("jms://test.queue", muleContext);
         endpointBuilder.setTransactionConfig(tc);
         endpointBuilder.setName("TransactedTest.Queue");
-        UMOImmutableEndpoint inboundEndpoint = muleContext.getRegistry()
+        ImmutableEndpoint inboundEndpoint = muleContext.getRegistry()
                 .lookupEndpointFactory()
                 .getOutboundEndpoint(endpointBuilder);
         client.getMuleContext().getRegistry().registerEndpoint(inboundEndpoint);
@@ -183,10 +183,10 @@ public class MuleClientTransactionTestCase extends FunctionalTestCase
 
         for (int i = 0; i < 100; i++)
         {
-            UMOMessage result = client.request("jms://replyTo.queue", 2000);
+            MuleMessage result = client.request("jms://replyTo.queue", 2000);
             assertNotNull(result);
         }
-        UMOMessage result = client.request("jms://replyTo.queue", 2000);
+        MuleMessage result = client.request("jms://replyTo.queue", 2000);
         assertNull(result);
     }
 
@@ -195,7 +195,7 @@ public class MuleClientTransactionTestCase extends FunctionalTestCase
         final MuleClient client = new MuleClient();
         MuleTransactionConfig tc = new MuleTransactionConfig();
         tc.setFactory(new JmsTransactionFactory());
-        tc.setAction(UMOTransactionConfig.ACTION_ALWAYS_BEGIN);
+        tc.setAction(TransactionConfig.ACTION_ALWAYS_BEGIN);
         TransactionTemplate tt = new TransactionTemplate(tc, null, muleContext);
         tt.execute(new TransactionCallback()
         {

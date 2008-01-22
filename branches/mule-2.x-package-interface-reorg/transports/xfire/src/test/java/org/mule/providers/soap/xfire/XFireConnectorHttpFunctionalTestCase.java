@@ -10,7 +10,7 @@
 
 package org.mule.providers.soap.xfire;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.providers.soap.AbstractSoapUrlEndpointFunctionalTestCase;
 
@@ -46,7 +46,7 @@ public class XFireConnectorHttpFunctionalTestCase extends AbstractSoapUrlEndpoin
         MuleClient client = new MuleClient();
         Map props = new HashMap();
         props.put("http.method", "GET");
-        UMOMessage reply = client.send(fullPath+"?wsdl", folder+componentName+"?wsdl", props);
+        MuleMessage reply = client.send(fullPath+"?wsdl", folder+componentName+"?wsdl", props);
         
         assertNotNull(reply);
         assertNotNull(reply.getPayload());

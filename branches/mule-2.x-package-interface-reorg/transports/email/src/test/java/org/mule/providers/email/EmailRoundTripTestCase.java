@@ -10,8 +10,8 @@
 
 package org.mule.providers.email;
 
-import org.mule.api.UMOException;
-import org.mule.api.UMOMessage;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 
@@ -39,12 +39,12 @@ public class EmailRoundTripTestCase extends FunctionalTestCase
         return "email-round-trip-test.xml";
     }
 
-    public void testRoundTrip() throws UMOException, InterruptedException
+    public void testRoundTrip() throws AbstractMuleException, InterruptedException
     {
         // first, check that the conversion happened - we should have a copy of
         // the message as rfc822 encoded bytes on vm://rfc822
         MuleClient client = new MuleClient();
-        UMOMessage message = client.request("vm://rfc822?connector=queue", WAIT_MS);
+        MuleMessage message = client.request("vm://rfc822?connector=queue", WAIT_MS);
         assertTrue(message.getPayload() instanceof byte[]);
 
         // next, check that the email is received in the server

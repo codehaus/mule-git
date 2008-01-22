@@ -10,7 +10,7 @@
 
 package org.mule.impl.internal.notifications.manager;
 
-import org.mule.api.context.UMOServerNotification;
+import org.mule.api.context.ServerNotification;
 import org.mule.impl.routing.filters.WildcardFilter;
 
 /**
@@ -31,7 +31,7 @@ class Sender
         subscriptionFilter.setCaseSensitive(false);
     }
 
-    public void dispatch(UMOServerNotification notification)
+    public void dispatch(ServerNotification notification)
     {
         if (pair.isNullSubscription() ||
                 (null != notification.getResourceIdentifier() &&

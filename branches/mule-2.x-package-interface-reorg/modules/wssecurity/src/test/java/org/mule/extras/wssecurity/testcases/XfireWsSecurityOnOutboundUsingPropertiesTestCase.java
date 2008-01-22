@@ -10,9 +10,9 @@
 
 package org.mule.extras.wssecurity.testcases;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
-import org.mule.impl.MuleMessage;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.tck.FunctionalTestCase;
 
 public class XfireWsSecurityOnOutboundUsingPropertiesTestCase extends FunctionalTestCase
@@ -21,7 +21,7 @@ public class XfireWsSecurityOnOutboundUsingPropertiesTestCase extends Functional
     public void testWsSecurityOnOutbound() throws Exception
     {
         MuleClient client = new MuleClient();
-        UMOMessage message = client.send("vm://testin", new MuleMessage("Hello World!"));
+        MuleMessage message = client.send("vm://testin", new DefaultMuleMessage("Hello World!"));
         assertNotNull(message.getPayload());
         assertTrue(message.getPayloadAsString().startsWith("Hello World!"));
     }    

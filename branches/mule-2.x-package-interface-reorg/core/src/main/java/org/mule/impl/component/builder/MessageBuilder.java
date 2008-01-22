@@ -10,7 +10,7 @@
 
 package org.mule.impl.component.builder;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 
 /**
  * A Strategy Class for Building one message from the invocation results of a chain
@@ -19,5 +19,5 @@ import org.mule.api.UMOMessage;
  */
 public interface MessageBuilder
 {
-    Object buildMessage(UMOMessage request, UMOMessage response) throws MessageBuilderException;
+    Object buildMessage(MuleMessage request, MuleMessage response) throws MessageBuilderException;
 }

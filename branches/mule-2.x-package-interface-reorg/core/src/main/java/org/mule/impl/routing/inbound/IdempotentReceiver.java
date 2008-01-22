@@ -10,11 +10,11 @@
 
 package org.mule.impl.routing.inbound;
 
+import org.mule.api.Event;
 import org.mule.api.MessagingException;
-import org.mule.api.UMOEvent;
 import org.mule.api.routing.IdempotentMessageIdStore;
 import org.mule.api.routing.RoutingException;
-import org.mule.imple.config.i18n.CoreMessages;
+import org.mule.impl.config.i18n.CoreMessages;
 
 /**
  * <code>IdempotentReceiver</code> ensures that only unique messages are received by a
@@ -82,7 +82,7 @@ public class IdempotentReceiver extends SelectiveConsumer
         this.expirationInterval = expirationInterval;
     }
 
-    protected void initialize(UMOEvent event) throws RoutingException
+    protected void initialize(Event event) throws RoutingException
     {
         if (assignedComponentName == null && idStore == null)
         {
@@ -98,7 +98,7 @@ public class IdempotentReceiver extends SelectiveConsumer
     }
 
     // @Override
-    public boolean isMatch(UMOEvent event) throws MessagingException
+    public boolean isMatch(Event event) throws MessagingException
     {
         if (idStore == null)
         {
@@ -120,7 +120,7 @@ public class IdempotentReceiver extends SelectiveConsumer
     }
 
     // @Override
-    public UMOEvent[] process(UMOEvent event) throws MessagingException
+    public Event[] process(Event event) throws MessagingException
     {
         String eventComponentName = event.getComponent().getName();
         if (!assignedComponentName.equals(eventComponentName))
@@ -139,7 +139,7 @@ public class IdempotentReceiver extends SelectiveConsumer
         {
             if (idStore.storeId(id))
             {
-                return new UMOEvent[]{event};
+                return new Event[]{event};
             }
             else
             {
@@ -153,7 +153,7 @@ public class IdempotentReceiver extends SelectiveConsumer
         }
     }
 
-    protected Object getIdForEvent(UMOEvent event) throws MessagingException
+    protected Object getIdForEvent(Event event) throws MessagingException
     {
         return event.getMessage().getUniqueId();
     }

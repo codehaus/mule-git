@@ -10,24 +10,24 @@
 
 package org.mule.impl.transport;
 
-import org.mule.api.UMOEvent;
-import org.mule.api.UMOMessage;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.Event;
+import org.mule.api.MuleMessage;
+import org.mule.api.endpoint.ImmutableEndpoint;
 
 public final class UnsupportedMessageDispatcher extends AbstractMessageDispatcher
 {
 
-    public UnsupportedMessageDispatcher(UMOImmutableEndpoint endpoint)
+    public UnsupportedMessageDispatcher(ImmutableEndpoint endpoint)
     {
         super(endpoint);
     }
 
-    protected void doDispatch(UMOEvent event) throws Exception
+    protected void doDispatch(Event event) throws Exception
     {
         throw new UnsupportedOperationException("Dispatch not supported for this transport.");
     }
 
-    protected UMOMessage doSend(UMOEvent event) throws Exception
+    protected MuleMessage doSend(Event event) throws Exception
     {
         throw new UnsupportedOperationException("Send not supported for this transport.");
     }

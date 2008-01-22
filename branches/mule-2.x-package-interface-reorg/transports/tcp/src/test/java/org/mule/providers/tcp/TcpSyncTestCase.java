@@ -10,10 +10,10 @@
 
 package org.mule.providers.tcp;
 
-import org.mule.api.UMOMessage;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.MuleMessage;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.impl.MuleEvent;
-import org.mule.impl.MuleMessage;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.MuleSession;
 import org.mule.impl.NullSessionHandler;
 import org.mule.tck.FunctionalTestCase;
@@ -30,10 +30,10 @@ public class TcpSyncTestCase extends FunctionalTestCase
         return "tcp-sync.xml";
     }
 
-    protected UMOMessage send(Object payload) throws Exception
+    protected MuleMessage send(Object payload) throws Exception
     {
-        UMOMessage message = new MuleMessage(payload);
-        UMOImmutableEndpoint endpoint = muleContext.getRegistry().lookupEndpointFactory().getOutboundEndpoint(
+        MuleMessage message = new DefaultMuleMessage(payload);
+        ImmutableEndpoint endpoint = muleContext.getRegistry().lookupEndpointFactory().getOutboundEndpoint(
             endpointUri);
         MuleSession session = new MuleSession(message, new NullSessionHandler());
         MuleEvent event = new MuleEvent(message, endpoint, session, true);
@@ -43,7 +43,7 @@ public class TcpSyncTestCase extends FunctionalTestCase
 
     public void testSendString() throws Exception
     {
-        UMOMessage message = send("data");
+        MuleMessage message = send("data");
         assertNotNull(message);
         String response = message.getPayloadAsString();
         assertEquals("data", response);
@@ -54,7 +54,7 @@ public class TcpSyncTestCase extends FunctionalTestCase
         TcpConnector tcp = (TcpConnector)muleContext.getRegistry().lookupConnector("tcpConnector");
         tcp.setBufferSize(1024 * 16);
         byte[] data = fillBuffer(new byte[tcp.getBufferSize()]);
-        UMOMessage message = send(data);
+        MuleMessage message = send(data);
         assertNotNull(message);
         byte[] response = message.getPayloadAsBytes();
         assertEquals(data.length, response.length);
@@ -68,7 +68,7 @@ public class TcpSyncTestCase extends FunctionalTestCase
         byte[] data = fillBuffer(new byte[tcp.getBufferSize()]);
         for (int i = 0; i < 20; ++i)
         {
-            UMOMessage message = send(data);
+            MuleMessage message = send(data);
             assertNotNull(message);
             byte[] response = message.getPayloadAsBytes();
             assertEquals(data.length, response.length);
@@ -79,7 +79,7 @@ public class TcpSyncTestCase extends FunctionalTestCase
     public void testSyncResponseVeryBig() throws Exception
     {
         byte[] data = fillBuffer(new byte[1024 * 1024]);
-        UMOMessage message = send(data);
+        MuleMessage message = send(data);
         assertNotNull(message);
         byte[] response = message.getPayloadAsBytes();
         assertEquals(data.length, response.length);

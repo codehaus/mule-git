@@ -10,7 +10,7 @@
 
 package org.mule.tck.functional;
 
-import org.mule.api.UMOEventContext;
+import org.mule.api.EventContext;
 import org.mule.api.transformer.TransformerException;
 import org.mule.impl.internal.notifications.CustomNotification;
 
@@ -47,9 +47,9 @@ public class FunctionalTestNotification extends CustomNotification
     }
 
     private final Object replyMessage;
-    private final UMOEventContext eventContext;
+    private final EventContext eventContext;
 
-    public FunctionalTestNotification(UMOEventContext context, Object replyMessage, int action)
+    public FunctionalTestNotification(EventContext context, Object replyMessage, int action)
             throws TransformerException
     {
         super(context.transformMessage(), action);
@@ -63,7 +63,7 @@ public class FunctionalTestNotification extends CustomNotification
         return replyMessage;
     }
 
-    public UMOEventContext getEventContext()
+    public EventContext getEventContext()
     {
         return eventContext;
     }

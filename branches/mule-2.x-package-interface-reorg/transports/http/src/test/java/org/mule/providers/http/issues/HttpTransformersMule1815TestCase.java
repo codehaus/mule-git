@@ -10,8 +10,8 @@
 
 package org.mule.providers.http.issues;
 
-import org.mule.api.UMOException;
-import org.mule.api.UMOMessage;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.tck.functional.FunctionalTestComponent;
@@ -27,10 +27,10 @@ public class HttpTransformersMule1815TestCase extends FunctionalTestCase
         return "http-transformers-mule-1815-test.xml";
     }
 
-    private UMOMessage sendTo(String uri) throws UMOException
+    private MuleMessage sendTo(String uri) throws AbstractMuleException
     {
         MuleClient client = new MuleClient();
-        UMOMessage message = client.send(uri, OUTBOUND_MESSAGE, null);
+        MuleMessage message = client.send(uri, OUTBOUND_MESSAGE, null);
         assertNotNull(message);
         return message;
     }

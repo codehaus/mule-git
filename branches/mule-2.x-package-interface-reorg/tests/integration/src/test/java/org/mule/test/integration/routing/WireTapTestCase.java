@@ -11,7 +11,7 @@
 package org.mule.test.integration.routing;
 
 
-import org.mule.api.context.UMOServerNotification;
+import org.mule.api.context.ServerNotification;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.tck.functional.FunctionalTestNotificationListener;
@@ -33,7 +33,7 @@ public class WireTapTestCase extends FunctionalTestCase
         final Latch tappedReceiverLatch = new Latch();
         muleContext.registerListener(new FunctionalTestNotificationListener()
         {
-            public void onNotification(UMOServerNotification notification)
+            public void onNotification(ServerNotification notification)
             {
                 if (notification.getResourceIdentifier().equals("Receiver"))
                 {

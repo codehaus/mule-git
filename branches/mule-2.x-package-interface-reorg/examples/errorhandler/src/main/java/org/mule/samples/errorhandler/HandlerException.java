@@ -10,10 +10,10 @@
 
 package org.mule.samples.errorhandler;
 
-import org.mule.api.UMOException;
-import org.mule.imple.config.i18n.MessageFactory;
+import org.mule.api.AbstractMuleException;
+import org.mule.impl.config.i18n.MessageFactory;
 
-public class HandlerException extends UMOException
+public class HandlerException extends AbstractMuleException
 {
 
     /**

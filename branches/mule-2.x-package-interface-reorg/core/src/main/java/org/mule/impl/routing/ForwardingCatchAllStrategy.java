@@ -10,14 +10,14 @@
 
 package org.mule.impl.routing;
 
-import org.mule.api.UMOEvent;
-import org.mule.api.UMOMessage;
-import org.mule.api.UMOSession;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.Event;
+import org.mule.api.MuleMessage;
+import org.mule.api.Session;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.routing.ComponentRoutingException;
 import org.mule.api.routing.RoutingException;
 import org.mule.impl.MuleEvent;
-import org.mule.imple.config.i18n.CoreMessages;
+import org.mule.impl.config.i18n.CoreMessages;
 
 /**
  * <code>ForwardingCatchAllStrategy</code> acts as a catch and forward router for
@@ -30,7 +30,7 @@ public class ForwardingCatchAllStrategy extends AbstractCatchAllStrategy
 {
     private boolean sendTransformed = false;
 
-    public UMOMessage catchMessage(UMOMessage message, UMOSession session, boolean synchronous)
+    public MuleMessage catchMessage(MuleMessage message, Session session, boolean synchronous)
         throws RoutingException
     {
         if (getEndpoint() == null)
@@ -40,17 +40,17 @@ public class ForwardingCatchAllStrategy extends AbstractCatchAllStrategy
         }
         try
         {
-            UMOImmutableEndpoint endpoint = getEndpoint();
+            ImmutableEndpoint endpoint = getEndpoint();
             if (sendTransformed && endpoint.getTransformers() != null)
             {
                 message.applyTransformers(endpoint.getTransformers());
             }
 
-            UMOEvent newEvent = new MuleEvent(message, endpoint, session, synchronous);
+            Event newEvent = new MuleEvent(message, endpoint, session, synchronous);
 
             if (synchronous)
             {
-                UMOMessage result = endpoint.send(newEvent);
+                MuleMessage result = endpoint.send(newEvent);
                 if (statistics != null)
                 {
                     statistics.incrementRoutedMessage(getEndpoint());

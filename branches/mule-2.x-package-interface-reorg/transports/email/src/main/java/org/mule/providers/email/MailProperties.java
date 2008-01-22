@@ -11,7 +11,7 @@
 package org.mule.providers.email;
 
 /**
- * Mail properties that are sent on the MuleMessage when receiving a Mail Message or
+ * Mail properties that are sent on the DefaultMuleMessage when receiving a Mail Message or
  * which can be set on the endpoint or event to be added to outgoing mail
  */
 public interface MailProperties

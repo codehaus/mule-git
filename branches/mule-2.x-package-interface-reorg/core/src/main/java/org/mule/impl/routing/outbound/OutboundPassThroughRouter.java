@@ -10,10 +10,10 @@
 
 package org.mule.impl.routing.outbound;
 
-import org.mule.api.UMOFilter;
-import org.mule.api.UMOMessage;
-import org.mule.api.UMOSession;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.Filter;
+import org.mule.api.MuleMessage;
+import org.mule.api.Session;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.routing.RoutingException;
 
 import java.util.List;
@@ -32,7 +32,7 @@ public class OutboundPassThroughRouter extends FilteringOutboundRouter
     }
 
 
-    public void addEndpoint(UMOImmutableEndpoint endpoint)
+    public void addEndpoint(ImmutableEndpoint endpoint)
     {
         if (endpoint == null)
         {
@@ -54,13 +54,13 @@ public class OutboundPassThroughRouter extends FilteringOutboundRouter
         super.setEndpoints(endpoints);
     }
 
-    public void setFilter(UMOFilter filter)
+    public void setFilter(Filter filter)
     {
         throw new UnsupportedOperationException(
             "The Pass Through cannot use filters, use the FilteringOutboundRouter instead");
     }
 
-    public UMOMessage route(UMOMessage message, UMOSession session, boolean synchronous)
+    public MuleMessage route(MuleMessage message, Session session, boolean synchronous)
         throws RoutingException
     {
         if (endpoints == null || endpoints.size() == 0)

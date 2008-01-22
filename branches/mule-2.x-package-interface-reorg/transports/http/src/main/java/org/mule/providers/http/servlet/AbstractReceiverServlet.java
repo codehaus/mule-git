@@ -10,7 +10,7 @@
 
 package org.mule.providers.http.servlet;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.providers.http.HttpConnector;
 import org.mule.providers.http.HttpConstants;
 import org.mule.providers.http.HttpResponse;
@@ -104,7 +104,7 @@ public abstract class AbstractReceiverServlet extends HttpServlet
         // nothing to do
     }
 
-    protected void writeResponse(HttpServletResponse servletResponse, UMOMessage message) throws Exception
+    protected void writeResponse(HttpServletResponse servletResponse, MuleMessage message) throws Exception
     {
         if (message == null)
         {

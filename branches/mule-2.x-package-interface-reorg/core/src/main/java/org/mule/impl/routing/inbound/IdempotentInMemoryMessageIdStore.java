@@ -11,7 +11,7 @@
 package org.mule.impl.routing.inbound;
 
 import org.mule.api.routing.IdempotentMessageIdStore;
-import org.mule.imple.config.i18n.CoreMessages;
+import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.util.concurrent.DaemonThreadFactory;
 
 import java.util.Map;
@@ -101,7 +101,7 @@ public class IdempotentInMemoryMessageIdStore implements IdempotentMessageIdStor
         // this block is unfortunately necessary to counter a possible race condition
         // between multiple nonatomic calls to containsId/storeId, which are
         // only necessary because of the nonatomic calls to isMatch/process by
-        // InboundRouterCollection.route().
+        // DefaultInboundRouterCollection.route().
         synchronized (store)
         {
             if (store.values().contains(id))

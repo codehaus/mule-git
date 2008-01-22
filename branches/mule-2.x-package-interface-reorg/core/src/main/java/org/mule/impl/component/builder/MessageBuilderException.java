@@ -11,9 +11,9 @@
 package org.mule.impl.component.builder;
 
 import org.mule.api.MessagingException;
-import org.mule.api.UMOMessage;
-import org.mule.imple.config.i18n.CoreMessages;
-import org.mule.imple.config.i18n.Message;
+import org.mule.api.MuleMessage;
+import org.mule.impl.config.i18n.CoreMessages;
+import org.mule.impl.config.i18n.Message;
 
 /**
  * Thrown by a MessageBuilder implementation if it cannot build the current
@@ -26,17 +26,17 @@ public class MessageBuilderException extends MessagingException
      */
     private static final long serialVersionUID = 1144140732378649625L;
 
-    public MessageBuilderException(Message message, UMOMessage umoMessage)
+    public MessageBuilderException(Message message, MuleMessage umoMessage)
     {
         super(message, umoMessage);
     }
 
-    public MessageBuilderException(Message message, UMOMessage umoMessage, Throwable cause)
+    public MessageBuilderException(Message message, MuleMessage umoMessage, Throwable cause)
     {
         super(message, umoMessage, cause);
     }
 
-    public MessageBuilderException(UMOMessage umoMessage, Throwable cause)
+    public MessageBuilderException(MuleMessage umoMessage, Throwable cause)
     {
         super(CoreMessages.failedToBuildMessage(), umoMessage, cause);
     }

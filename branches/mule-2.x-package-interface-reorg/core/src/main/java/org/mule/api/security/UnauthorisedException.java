@@ -10,11 +10,11 @@
 
 package org.mule.api.security;
 
-import org.mule.api.UMOMessage;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.MuleMessage;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.impl.RequestContext;
-import org.mule.imple.config.i18n.CoreMessages;
-import org.mule.imple.config.i18n.Message;
+import org.mule.impl.config.i18n.CoreMessages;
+import org.mule.impl.config.i18n.Message;
 
 /**
  * <code>UnauthorisedException</code> is thrown if authentication fails
@@ -37,27 +37,27 @@ public class UnauthorisedException extends SecurityException
         super(message, RequestContext.getEventContext().getMessage(), cause);
     }
 
-    public UnauthorisedException(Message message, UMOMessage umoMessage)
+    public UnauthorisedException(Message message, MuleMessage umoMessage)
     {
         super(message, umoMessage);
     }
 
-    public UnauthorisedException(Message message, UMOMessage umoMessage, Throwable cause)
+    public UnauthorisedException(Message message, MuleMessage umoMessage, Throwable cause)
     {
         super(message, umoMessage, cause);
     }
 
-    public UnauthorisedException(UMOMessage umoMessage,
-                                 UMOSecurityContext context,
-                                 UMOImmutableEndpoint endpoint,
-                                 UMOEndpointSecurityFilter filter)
+    public UnauthorisedException(MuleMessage umoMessage,
+                                 SecurityContext context,
+                                 ImmutableEndpoint endpoint,
+                                 EndpointSecurityFilter filter)
     {
         super(constructMessage(context, endpoint, filter), umoMessage);
     }
 
-    private static Message constructMessage(UMOSecurityContext context,
-                                            UMOImmutableEndpoint endpoint,
-                                            UMOEndpointSecurityFilter filter)
+    private static Message constructMessage(SecurityContext context,
+                                            ImmutableEndpoint endpoint,
+                                            EndpointSecurityFilter filter)
     {
 
         Message m = null;

@@ -10,15 +10,15 @@
 
 package org.mule.providers.tcp;
 
-import org.mule.api.UMOException;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
-import org.mule.api.transport.UMOMessageDispatcher;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.api.transport.MessageDispatcher;
 import org.mule.impl.transport.AbstractMessageDispatcherFactory;
 
 public class TcpMessageDispatcherFactory extends AbstractMessageDispatcherFactory
 {
 
-    public UMOMessageDispatcher create(UMOImmutableEndpoint endpoint) throws UMOException
+    public MessageDispatcher create(ImmutableEndpoint endpoint) throws AbstractMuleException
     {
         return new TcpMessageDispatcher(endpoint);
     }

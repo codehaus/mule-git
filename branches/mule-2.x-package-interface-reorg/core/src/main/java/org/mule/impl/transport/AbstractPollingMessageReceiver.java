@@ -10,12 +10,12 @@
 
 package org.mule.impl.transport;
 
-import org.mule.api.UMOComponent;
-import org.mule.api.UMOException;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.Component;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.CreateException;
-import org.mule.api.transport.UMOConnector;
-import org.mule.imple.config.i18n.CoreMessages;
+import org.mule.api.transport.Connector;
+import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.util.ObjectUtils;
 
 import java.util.Iterator;
@@ -47,14 +47,14 @@ public abstract class AbstractPollingMessageReceiver extends AbstractMessageRece
     // @GuardedBy(itself)
     protected final List schedules = new LinkedList();
 
-    public AbstractPollingMessageReceiver(UMOConnector connector,
-                                          UMOComponent component,
-                                          final UMOImmutableEndpoint endpoint) throws CreateException
+    public AbstractPollingMessageReceiver(Connector connector,
+                                          Component component,
+                                          final ImmutableEndpoint endpoint) throws CreateException
     {
         super(connector, component, endpoint);
     }
 
-    protected void doStart() throws UMOException
+    protected void doStart() throws AbstractMuleException
     {
         try
         {
@@ -67,7 +67,7 @@ public abstract class AbstractPollingMessageReceiver extends AbstractMessageRece
         }
     }
 
-    protected void doStop() throws UMOException
+    protected void doStop() throws AbstractMuleException
     {
         this.unschedule();
     }

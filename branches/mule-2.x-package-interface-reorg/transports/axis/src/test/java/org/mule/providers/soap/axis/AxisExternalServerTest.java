@@ -10,7 +10,7 @@
 
 package org.mule.providers.soap.axis;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.api.config.MuleProperties;
 import org.mule.extras.client.MuleClient;
 import org.mule.providers.soap.NamedParameter;
@@ -33,7 +33,7 @@ public class AxisExternalServerTest extends AbstractMuleTestCase
     {
         String URL = "axis:http://localhost:8080/axis/Calculator.jws?method=add";
         MuleClient client = new MuleClient();
-        UMOMessage result = client.send(URL, new Object[]{new Integer(4), new Integer(3)}, null);
+        MuleMessage result = client.send(URL, new Object[]{new Integer(4), new Integer(3)}, null);
         assertNotNull(result);
 
         assertEquals(result.getPayload(), new Integer(7));
@@ -46,7 +46,7 @@ public class AxisExternalServerTest extends AbstractMuleTestCase
         Map props = new HashMap();
         props.put(AxisConnector.STYLE, "wrapped");
         props.put(AxisConnector.USE, "literal");
-        UMOMessage result = client.send(URL, new Object[]{new Integer(3), new Integer(3)}, props);
+        MuleMessage result = client.send(URL, new Object[]{new Integer(3), new Integer(3)}, props);
         assertNotNull(result);
 
         assertEquals(result.getPayload(), new Integer(6));
@@ -66,7 +66,7 @@ public class AxisExternalServerTest extends AbstractMuleTestCase
         props.put(AxisConnector.STYLE, "wrapped");
         props.put(AxisConnector.USE, "literal");
         props.put(MuleProperties.MULE_METHOD_PROPERTY, method);
-        UMOMessage result = client.send(URL, new Object[]{new Integer(3), new Integer(3)}, props);
+        MuleMessage result = client.send(URL, new Object[]{new Integer(3), new Integer(3)}, props);
         assertNotNull(result);
 
         assertEquals(result.getPayload(), new Integer(6));
@@ -78,7 +78,7 @@ public class AxisExternalServerTest extends AbstractMuleTestCase
         MuleClient client = new MuleClient(
             "axis-client-endpoint-config.xml");
 
-        UMOMessage result = client.send("calculatorAddEndpoint",
+        MuleMessage result = client.send("calculatorAddEndpoint",
             new Object[]{new Integer(3), new Integer(3)}, null);
         assertNotNull(result);
 
@@ -102,7 +102,7 @@ public class AxisExternalServerTest extends AbstractMuleTestCase
     // method.setReturnType(NamedParameter.XSD_INT);
     // props.put(MuleProperties.MULE_METHOD_PROPERTY, method);
     //         
-    // UMOMessage result = client.send(URL, new Object[]{new Integer(3), new
+    // MuleMessage result = client.send(URL, new Object[]{new Integer(3), new
     // Integer(3)}, props);
     // assertNotNull(result);
     //        
@@ -117,7 +117,7 @@ public class AxisExternalServerTest extends AbstractMuleTestCase
     // "wsdl-axis:http://localhost:8080/axis/Calculator.jws?wsdl&method=add";
     // MuleClient client = new MuleClient();
     //
-    // UMOMessage result = client.send(URL, new Object[]{new Integer(4), new
+    // MuleMessage result = client.send(URL, new Object[]{new Integer(4), new
     // Integer(4)}, null);
     // assertNotNull(result);
     //

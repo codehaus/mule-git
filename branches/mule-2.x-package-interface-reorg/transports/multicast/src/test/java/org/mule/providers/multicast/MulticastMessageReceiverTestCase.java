@@ -10,9 +10,9 @@
 
 package org.mule.providers.multicast;
 
-import org.mule.api.UMOComponent;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
-import org.mule.api.transport.UMOMessageReceiver;
+import org.mule.api.Component;
+import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.api.transport.MessageReceiver;
 import org.mule.impl.transport.AbstractConnector;
 import org.mule.tck.providers.AbstractMessageReceiverTestCase;
 
@@ -20,17 +20,17 @@ import com.mockobjects.dynamic.Mock;
 
 public class MulticastMessageReceiverTestCase extends AbstractMessageReceiverTestCase
 {
-    public UMOMessageReceiver getMessageReceiver() throws Exception
+    public MessageReceiver getMessageReceiver() throws Exception
     {
-        Mock mockComponent = new Mock(UMOComponent.class);
+        Mock mockComponent = new Mock(Component.class);
         mockComponent.expectAndReturn("getResponseTransformer", null);
         mockComponent.expectAndReturn("getResponseRouter", null);
 
         return new MulticastMessageReceiver((AbstractConnector)endpoint.getConnector(),
-            (UMOComponent)mockComponent.proxy(), endpoint);
+            (Component)mockComponent.proxy(), endpoint);
     }
 
-    public UMOImmutableEndpoint getEndpoint() throws Exception
+    public ImmutableEndpoint getEndpoint() throws Exception
     {
         return muleContext.getRegistry().lookupEndpointFactory().getInboundEndpoint("multicast://228.2.3.4:10100");
     }

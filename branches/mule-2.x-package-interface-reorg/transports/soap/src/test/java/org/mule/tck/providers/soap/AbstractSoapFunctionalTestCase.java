@@ -10,8 +10,8 @@
 
 package org.mule.tck.providers.soap;
 
-import org.mule.api.UMOException;
-import org.mule.api.UMOMessage;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleMessage;
 import org.mule.api.transport.DispatchException;
 import org.mule.extras.client.MuleClient;
 import org.mule.impl.transport.NullPayload;
@@ -62,7 +62,7 @@ public abstract class AbstractSoapFunctionalTestCase extends FunctionalTestCase
         for (int i = 0; i < number; i++)
         {
             props.put("X-Message-Number", String.valueOf(i));
-            UMOMessage msg = client.send(getRequestResponseEndpoint(), "Message " + i, props);
+            MuleMessage msg = client.send(getRequestResponseEndpoint(), "Message " + i, props);
             assertNotNull(msg);
             results.add(msg.getPayload());
         }
@@ -77,7 +77,7 @@ public abstract class AbstractSoapFunctionalTestCase extends FunctionalTestCase
     public void testRequest() throws Throwable
     {
         MuleClient client = new MuleClient();
-        UMOMessage result = client.request(getReceiveEndpoint(), 0);
+        MuleMessage result = client.request(getReceiveEndpoint(), 0);
         assertNotNull(result);
         assertNotNull(result.getPayload());
         assertTrue(result.getPayload().toString().length() > 0);
@@ -86,7 +86,7 @@ public abstract class AbstractSoapFunctionalTestCase extends FunctionalTestCase
     public void testReceiveComplex() throws Throwable
     {
         MuleClient client = new MuleClient();
-        UMOMessage result = client.request(getReceiveComplexEndpoint(), 0);
+        MuleMessage result = client.request(getReceiveComplexEndpoint(), 0);
         assertNotNull(result);
         assertTrue(result.getPayload() instanceof Person);
         assertEquals("Fred", ((Person)result.getPayload()).getFirstName());
@@ -102,7 +102,7 @@ public abstract class AbstractSoapFunctionalTestCase extends FunctionalTestCase
     public void testSendAndReceiveComplex() throws Throwable
     {
         MuleClient client = new MuleClient();
-        UMOMessage result = client.send(getSendReceiveComplexEndpoint1(), new Person("Dino", "Flintstone"),
+        MuleMessage result = client.send(getSendReceiveComplexEndpoint1(), new Person("Dino", "Flintstone"),
             null);
         assertEquals(NullPayload.getInstance(), result.getPayload());
 
@@ -117,7 +117,7 @@ public abstract class AbstractSoapFunctionalTestCase extends FunctionalTestCase
     public void testReceiveComplexCollection() throws Throwable
     {
         MuleClient client = new MuleClient();
-        UMOMessage result = client.request(getReceiveComplexCollectionEndpoint(), 0);
+        MuleMessage result = client.request(getReceiveComplexCollectionEndpoint(), 0);
         assertNotNull(result);
         assertTrue(result.getPayload() instanceof Person[]);
         assertEquals(3, ((Person[])result.getPayload()).length);
@@ -131,7 +131,7 @@ public abstract class AbstractSoapFunctionalTestCase extends FunctionalTestCase
         Thread.sleep(4500);
 
         // lets get our newly added person
-        UMOMessage result = client.request(getDispatchAsyncComplexEndpoint2(), 0);
+        MuleMessage result = client.request(getDispatchAsyncComplexEndpoint2(), 0);
         assertNotNull(result);
         assertTrue("Did not receive a Person but: " + result.getPayload().getClass(),
             result.getPayload() instanceof Person);
@@ -147,7 +147,7 @@ public abstract class AbstractSoapFunctionalTestCase extends FunctionalTestCase
             client.send(getTestExceptionEndpoint(), new Person("Ross", "Mason"), null);
             fail("A nested Fault should have been raised");
         }
-        catch (UMOException e)
+        catch (AbstractMuleException e)
         {
             // toplevel
             assertTrue(e instanceof DispatchException);
@@ -161,7 +161,7 @@ public abstract class AbstractSoapFunctionalTestCase extends FunctionalTestCase
         Map props = new HashMap();
         props.put(HttpConnector.HTTP_METHOD_PROPERTY, "GET");
         MuleClient client = new MuleClient();
-        UMOMessage result = client.send(getWsdlEndpoint(), null, props);
+        MuleMessage result = client.send(getWsdlEndpoint(), null, props);
         assertNotNull(result);
         if (logger.isDebugEnabled())
         {

@@ -10,7 +10,7 @@
 
 package org.mule.providers.quartz;
 
-import org.mule.api.transport.UMOConnector;
+import org.mule.api.transport.Connector;
 import org.mule.tck.providers.AbstractConnectorTestCase;
 
 public class QuartzConnectorTestCase extends AbstractConnectorTestCase
@@ -21,7 +21,7 @@ public class QuartzConnectorTestCase extends AbstractConnectorTestCase
      * @see org.mule.tck.providers.AbstractConnectorTestCase#getConnector()
      */
     // @Override
-    public UMOConnector createConnector() throws Exception
+    public Connector createConnector() throws Exception
     {
         QuartzConnector c = new QuartzConnector();
         c.setName("QuartzConnector");

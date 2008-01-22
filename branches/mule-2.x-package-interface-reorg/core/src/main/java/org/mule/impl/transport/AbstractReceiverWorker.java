@@ -11,13 +11,13 @@ package org.mule.impl.transport;
 
 import org.mule.MuleServer;
 import org.mule.api.MuleContext;
+import org.mule.api.MuleMessage;
+import org.mule.api.Transaction;
 import org.mule.api.TransactionException;
-import org.mule.api.UMOMessage;
-import org.mule.api.UMOTransaction;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.transaction.TransactionCallback;
-import org.mule.api.transport.UMOMessageAdapter;
-import org.mule.impl.MuleMessage;
+import org.mule.api.transport.MessageAdapter;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.transaction.TransactionCoordination;
 import org.mule.impl.transaction.TransactionTemplate;
 
@@ -29,12 +29,12 @@ import java.util.List;
 import javax.resource.spi.work.Work;
 
 /**
- * A base Worker used by Transport {@link org.mule.api.transport.UMOMessageReceiver} implementations.
+ * A base Worker used by Transport {@link org.mule.api.transport.MessageReceiver} implementations.
  */
 public abstract class AbstractReceiverWorker implements Work
 {
     protected List messages;
-    protected UMOImmutableEndpoint endpoint;
+    protected ImmutableEndpoint endpoint;
     protected AbstractMessageReceiver receiver;
     protected OutputStream out;
 
@@ -85,7 +85,7 @@ public abstract class AbstractReceiverWorker implements Work
         {
             public Object doInTransaction() throws Exception
             {
-                UMOTransaction tx = TransactionCoordination.getInstance().getTransaction();
+                Transaction tx = TransactionCoordination.getInstance().getTransaction();
                 if (tx != null)
                 {
                     bindTransaction(tx);
@@ -99,19 +99,19 @@ public abstract class AbstractReceiverWorker implements Work
                     o = preProcessMessage(o);
                     if (o != null)
                     {
-                        UMOMessageAdapter adapter;
-                        if (o instanceof UMOMessageAdapter)
+                        MessageAdapter adapter;
+                        if (o instanceof MessageAdapter)
                         {
-                            adapter = (UMOMessageAdapter) o;
+                            adapter = (MessageAdapter) o;
                         }
                         else
                         {
                             adapter = endpoint.getConnector().getMessageAdapter(o);
                         }
 
-                        MuleMessage muleMessage = new MuleMessage(adapter);
+                        DefaultMuleMessage muleMessage = new DefaultMuleMessage(adapter);
                         preRouteMuleMessage(muleMessage);
-                        UMOMessage result = receiver.routeMessage(muleMessage, tx,  tx != null || endpoint.isSynchronous(), out);
+                        MuleMessage result = receiver.routeMessage(muleMessage, tx,  tx != null || endpoint.isSynchronous(), out);
                         if (result != null)
                         {
                             o = postProcessMessage(result);
@@ -148,7 +148,7 @@ public abstract class AbstractReceiverWorker implements Work
      * @param message the next message to be processed
      * @throws Exception
      */
-    protected void preRouteMuleMessage(MuleMessage message) throws Exception
+    protected void preRouteMuleMessage(DefaultMuleMessage message) throws Exception
     {
         //no op
     }
@@ -159,7 +159,7 @@ public abstract class AbstractReceiverWorker implements Work
      * @param tx the current transaction or null if there is no transaction
      * @throws TransactionException
      */
-    protected abstract void bindTransaction(UMOTransaction tx) throws TransactionException;
+    protected abstract void bindTransaction(Transaction tx) throws TransactionException;
 
     /**
      * A conveniece method that passes the exception to the connector's ExceptionListener
@@ -202,7 +202,7 @@ public abstract class AbstractReceiverWorker implements Work
      * list of results
      * @throws Exception
      */
-    protected UMOMessage postProcessMessage(UMOMessage message) throws Exception
+    protected MuleMessage postProcessMessage(MuleMessage message) throws Exception
     {
         //no op
         return message;

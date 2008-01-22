@@ -13,7 +13,7 @@ import org.mule.RegistryContext;
 import org.mule.api.MuleContext;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.context.MuleContextAware;
-import org.mule.api.model.UMOModel;
+import org.mule.api.model.Model;
 import org.mule.impl.config.MuleConfiguration;
 import org.mule.impl.model.ModelFactory;
 
@@ -28,13 +28,13 @@ public class SystemModelFactoryBean extends AbstractFactoryBean implements MuleC
 
     private String type;
 
-    private UMOModel model;
+    private Model model;
 
     private MuleContext muleContext;
 
     public Class getObjectType()
     {
-        return UMOModel.class;
+        return Model.class;
     }
 
     protected Object createInstance() throws Exception

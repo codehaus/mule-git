@@ -10,7 +10,7 @@
 
 package org.mule.test.usecases.axis.clientbridge;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 
@@ -25,7 +25,7 @@ public class ClientBridgeTestCase extends FunctionalTestCase
     public void testBridgeVMToAxis() throws Exception
     {
         MuleClient client = new MuleClient();
-        UMOMessage message = client.send("vm://complexRequest", new ComplexData("Foo", new Integer(84)), null);
+        MuleMessage message = client.send("vm://complexRequest", new ComplexData("Foo", new Integer(84)), null);
 
         assertNotNull(message);
         assertTrue(message.getPayload() instanceof ComplexData);

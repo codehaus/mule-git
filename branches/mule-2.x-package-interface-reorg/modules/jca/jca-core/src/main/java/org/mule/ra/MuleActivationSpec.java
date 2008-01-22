@@ -11,7 +11,7 @@
 package org.mule.ra;
 
 import org.mule.api.endpoint.EndpointException;
-import org.mule.api.endpoint.UMOEndpointURI;
+import org.mule.api.endpoint.EndpointURI;
 import org.mule.impl.endpoint.MuleEndpointURI;
 import org.mule.util.StringUtils;
 
@@ -41,7 +41,7 @@ public class MuleActivationSpec implements ActivationSpec, Serializable
     private int createConnector;
     private MuleResourceAdapter resourceAdapter;
     private String endpoint;
-    private UMOEndpointURI endpointURI;
+    private EndpointURI endpointURI;
     private String modelName;
 
     public Properties getPropertiesMap()

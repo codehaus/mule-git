@@ -10,7 +10,7 @@
 
 package org.mule.test.integration.resolvers;
 
-import org.mule.api.UMOEventContext;
+import org.mule.api.EventContext;
 import org.mule.api.lifecycle.Callable;
 
 public class Target implements Callable
@@ -26,7 +26,7 @@ public class Target implements Callable
         return "object";
     }
 
-    public Object onCall(UMOEventContext eventContext) throws Exception
+    public Object onCall(EventContext eventContext) throws Exception
     {
         return "callable";
     }

@@ -11,11 +11,11 @@
 package org.mule.providers.soap.xfire.transport;
 
 import org.mule.api.MuleException;
-import org.mule.api.UMOEventContext;
-import org.mule.api.UMOException;
-import org.mule.api.UMOMessage;
-import org.mule.api.context.UMOWorkManager;
-import org.mule.impl.message.ExceptionPayload;
+import org.mule.api.EventContext;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleMessage;
+import org.mule.api.context.WorkManager;
+import org.mule.impl.message.DefaultExceptionPayload;
 import org.mule.providers.soap.xfire.XFireConnector;
 import org.mule.util.StringUtils;
 
@@ -68,7 +68,7 @@ public class MuleLocalChannel extends AbstractChannel
     protected transient Log logger = LogFactory.getLog(getClass());
 
     private final Session session;
-    protected UMOWorkManager workManager;
+    protected WorkManager workManager;
 
     public MuleLocalChannel(String uri, Transport transport, Session session)
     {
@@ -197,12 +197,12 @@ public class MuleLocalChannel extends AbstractChannel
         return true;
     }
 
-    public UMOWorkManager getWorkManager()
+    public WorkManager getWorkManager()
     {
         return workManager;
     }
 
-    public void setWorkManager(UMOWorkManager workManager)
+    public void setWorkManager(WorkManager workManager)
     {
         this.workManager = workManager;
     }
@@ -312,7 +312,7 @@ public class MuleLocalChannel extends AbstractChannel
     /**
      * Get the service that is mapped to the specified request.
      */
-    protected String getService(UMOEventContext context)
+    protected String getService(EventContext context)
     {
         String pathInfo = context.getEndpointURI().getPath();
 
@@ -337,7 +337,7 @@ public class MuleLocalChannel extends AbstractChannel
         return serviceName;
     }
 
-    public Object onCall(UMOEventContext ctx) throws UMOException
+    public Object onCall(EventContext ctx) throws AbstractMuleException
     {
 
         try
@@ -394,7 +394,7 @@ public class MuleLocalChannel extends AbstractChannel
                 if (fault != null && fault.getBody() != null)
                 {
                     result = resultStream.toString(fault.getEncoding());
-                    ExceptionPayload exceptionPayload = new ExceptionPayload(new Exception(result.toString()));
+                    DefaultExceptionPayload exceptionPayload = new DefaultExceptionPayload(new Exception(result.toString()));
                     ctx.getMessage().setExceptionPayload(exceptionPayload);
                 }
                 else if (context.getExchange().hasOutMessage())
@@ -424,14 +424,14 @@ public class MuleLocalChannel extends AbstractChannel
             }
 
         }
-        catch (UMOException e)
+        catch (AbstractMuleException e)
         {
             logger.warn("Could not dispatch message to XFire!", e);
             throw e;
         }
     }
 
-    private String getSoapAction(UMOMessage message) {
+    private String getSoapAction(MuleMessage message) {
         String action = (String) message.getProperty(SoapConstants.SOAP_ACTION);
         
         if (action != null && action.startsWith("\"") && action.endsWith("\"") && action.length() >= 2)

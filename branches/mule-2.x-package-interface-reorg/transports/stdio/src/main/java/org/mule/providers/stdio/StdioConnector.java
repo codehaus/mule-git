@@ -10,9 +10,9 @@
 
 package org.mule.providers.stdio;
 
-import org.mule.api.UMOComponent;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
-import org.mule.api.transport.UMOMessageReceiver;
+import org.mule.api.Component;
+import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.api.transport.MessageReceiver;
 import org.mule.impl.transport.AbstractConnector;
 import org.mule.impl.transport.AbstractPollingMessageReceiver;
 
@@ -39,10 +39,10 @@ public abstract class StdioConnector extends AbstractConnector
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.api.transport.UMOConnector#registerListener(org.mule.api.UMOSession,
-     *      org.mule.api.endpoint.UMOEndpoint)
+     * @see org.mule.api.transport.Connector#registerListener(org.mule.api.Session,
+     *      org.mule.api.endpoint.Endpoint)
      */
-    public UMOMessageReceiver createReceiver(UMOComponent component, UMOImmutableEndpoint endpoint) throws Exception
+    public MessageReceiver createReceiver(Component component, ImmutableEndpoint endpoint) throws Exception
     {
         return serviceDescriptor.createMessageReceiver(this, component, endpoint,
             new Object[]{new Long(AbstractPollingMessageReceiver.DEFAULT_POLL_FREQUENCY)});
@@ -77,7 +77,7 @@ public abstract class StdioConnector extends AbstractConnector
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.api.transport.UMOConnector#getProtocol()
+     * @see org.mule.api.transport.Connector#getProtocol()
      */
 
     public String getProtocol()

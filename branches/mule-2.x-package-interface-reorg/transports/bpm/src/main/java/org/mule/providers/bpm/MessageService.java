@@ -9,7 +9,7 @@
  */
 package org.mule.providers.bpm;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 
 import java.util.Map;
 
@@ -25,5 +25,5 @@ import java.util.Map;
  */
 public interface MessageService {
 
-    public UMOMessage generateMessage(String endpoint, Object payloadObject, Map messageProperties, boolean synchronous) throws Exception;
+    public MuleMessage generateMessage(String endpoint, Object payloadObject, Map messageProperties, boolean synchronous) throws Exception;
 }

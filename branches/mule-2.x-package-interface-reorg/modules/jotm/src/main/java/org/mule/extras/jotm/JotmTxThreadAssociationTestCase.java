@@ -10,13 +10,13 @@
 
 package org.mule.extras.jotm;
 
-import org.mule.api.context.UMOTransactionManagerFactory;
+import org.mule.api.context.TransactionManagerFactory;
 import org.mule.tck.AbstractTxThreadAssociationTestCase;
 
 public class JotmTxThreadAssociationTestCase extends AbstractTxThreadAssociationTestCase
 {
 
-    protected UMOTransactionManagerFactory getTransactionManagerFactory()
+    protected TransactionManagerFactory getTransactionManagerFactory()
     {
         return new JotmTransactionManagerFactory();
     }

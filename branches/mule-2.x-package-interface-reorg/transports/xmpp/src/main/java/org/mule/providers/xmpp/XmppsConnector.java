@@ -10,7 +10,7 @@
 
 package org.mule.providers.xmpp;
 
-import org.mule.api.endpoint.UMOEndpointURI;
+import org.mule.api.endpoint.EndpointURI;
 
 import org.jivesoftware.smack.SSLXMPPConnection;
 import org.jivesoftware.smack.XMPPConnection;
@@ -30,7 +30,7 @@ public class XmppsConnector extends XmppConnector
      * This method creates a {@link SSLXMPPConnection} to allow secure communication to the Jabber
      * server.
      */
-    protected XMPPConnection doCreateXmppConnection(UMOEndpointURI endpointURI) throws XMPPException
+    protected XMPPConnection doCreateXmppConnection(EndpointURI endpointURI) throws XMPPException
     {
         XMPPConnection xmppConnection = null;
         

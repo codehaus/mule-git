@@ -10,7 +10,7 @@
 
 package org.mule.providers.email;
 
-import org.mule.imple.config.i18n.CoreMessages;
+import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.util.StringUtils;
 
 import java.io.IOException;

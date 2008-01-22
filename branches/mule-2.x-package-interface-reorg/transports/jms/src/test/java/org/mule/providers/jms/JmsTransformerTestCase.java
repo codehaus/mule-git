@@ -10,9 +10,9 @@
 
 package org.mule.providers.jms;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.impl.MuleEvent;
-import org.mule.impl.MuleMessage;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.RequestContext;
 import org.mule.providers.jms.transformers.ObjectToJMSMessage;
 import org.mule.tck.AbstractMuleTestCase;
@@ -38,7 +38,7 @@ public class JmsTransformerTestCase extends AbstractMuleTestCase
         // The purpose is to test whether custom JMS message properties survive
         // transformations when their name begins with "JMS" (MULE-1120).
 
-        // First we need a JMS message wrapped into a UMOMessage. This turned out to
+        // First we need a JMS message wrapped into a MuleMessage. This turned out to
         // be trickier than expected (ha ha) since mocking a Message depends on the
         // specific calls made to the mocked class.
         Mock mockMessage = new Mock(TextMessage.class);
@@ -68,9 +68,9 @@ public class JmsTransformerTestCase extends AbstractMuleTestCase
         mockMessage.expect("setObjectProperty", setPropertyMatcher);
 
         Message mockTextMessage = (Message)mockMessage.proxy();
-        UMOMessage msg = new MuleMessage(new JmsMessageAdapter(mockTextMessage));
+        MuleMessage msg = new DefaultMuleMessage(new JmsMessageAdapter(mockTextMessage));
 
-        // Now we set a custom "JMS-like" property on the UMOMessage
+        // Now we set a custom "JMS-like" property on the MuleMessage
         msg.setProperty("JMS_CUSTOM_PROPERTY", "customValue");
 
         // The AbstractJMSTransformer will only apply JMS properties to the
@@ -85,7 +85,7 @@ public class JmsTransformerTestCase extends AbstractMuleTestCase
         ObjectToJMSMessage transformer = new ObjectToJMSMessage();
         Message transformed = (Message)transformer.transform(msg.getPayload());
 
-        // Finally we can assert that the setProperty done to the UMOMessage actually
+        // Finally we can assert that the setProperty done to the MuleMessage actually
         // made it through to the wrapped JMS Message. Yay!
         assertEquals("customValue", transformed.getObjectProperty("JMS_CUSTOM_PROPERTY"));
 

@@ -10,12 +10,12 @@
 
 package org.mule.management.agents;
 
-import org.mule.api.UMOException;
+import org.mule.api.AbstractMuleException;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.impl.AbstractAgent;
 import org.mule.impl.config.MuleManifest;
-import org.mule.imple.config.i18n.CoreMessages;
-import org.mule.imple.config.i18n.MessageFactory;
+import org.mule.impl.config.i18n.CoreMessages;
+import org.mule.impl.config.i18n.MessageFactory;
 import org.mule.management.mbeans.MBeanServerFactory;
 import org.mule.management.support.AutoDiscoveryJmxSupportFactory;
 import org.mule.management.support.JmxSupport;
@@ -184,7 +184,7 @@ public class Mx4jAgent extends AbstractAgent
     }
 
     /* @see org.mule.api.lifecycle.Startable#start() */
-    public void start() throws UMOException
+    public void start() throws AbstractMuleException
     {
         if (mBeanServer == null)
         {
@@ -212,7 +212,7 @@ public class Mx4jAgent extends AbstractAgent
     }
 
     /* @see org.mule.api.lifecycle.Stoppable#stop() */
-    public void stop() throws UMOException
+    public void stop() throws AbstractMuleException
     {
         if (mBeanServer == null)
         {
@@ -275,13 +275,13 @@ public class Mx4jAgent extends AbstractAgent
         }
     }
 
-    /* @see org.mule.api.context.UMOAgent#registered() */
+    /* @see org.mule.api.context.Agent#registered() */
     public void registered()
     {
         // nothing to do
     }
 
-    /* @see org.mule.api.context.UMOAgent#unregistered() */
+    /* @see org.mule.api.context.Agent#unregistered() */
     public void unregistered()
     {
         // nothing to do
@@ -291,7 +291,7 @@ public class Mx4jAgent extends AbstractAgent
     // Getters and setters
     // /////////////////////////////////////////////////////////////////////////
 
-    /* @see org.mule.api.context.UMOAgent#getDescription() */
+    /* @see org.mule.api.context.Agent#getDescription() */
     public String getDescription()
     {
         return "MX4J Http adaptor: " + jmxAdaptorUrl;

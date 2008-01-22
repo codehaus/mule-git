@@ -10,19 +10,19 @@
 
 package org.mule.providers.udp;
 
-import org.mule.api.UMOComponent;
-import org.mule.api.UMOException;
-import org.mule.api.UMOMessage;
+import org.mule.api.Component;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleMessage;
 import org.mule.api.config.MuleProperties;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.CreateException;
 import org.mule.api.lifecycle.Disposable;
-import org.mule.api.transport.UMOConnector;
-import org.mule.api.transport.UMOMessageAdapter;
-import org.mule.impl.MuleMessage;
+import org.mule.api.transport.Connector;
+import org.mule.api.transport.MessageAdapter;
+import org.mule.impl.DefaultMuleMessage;
+import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.impl.transport.AbstractMessageReceiver;
 import org.mule.impl.transport.ConnectException;
-import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.providers.udp.i18n.UdpMessages;
 
 import java.io.IOException;
@@ -48,7 +48,7 @@ public class UdpMessageReceiver extends AbstractMessageReceiver implements Work
     private URI uri;
     protected List responseTransformers = null;
 
-    public UdpMessageReceiver(UMOConnector connector, UMOComponent component, UMOImmutableEndpoint endpoint)
+    public UdpMessageReceiver(Connector connector, Component component, ImmutableEndpoint endpoint)
             throws CreateException
     {
 
@@ -105,12 +105,12 @@ public class UdpMessageReceiver extends AbstractMessageReceiver implements Work
 
     }
 
-    protected void doStart() throws UMOException
+    protected void doStart() throws AbstractMuleException
     {
         // nothing to do
     }
 
-    protected void doStop() throws UMOException
+    protected void doStop() throws AbstractMuleException
     {
         // nothing to do
     }
@@ -253,16 +253,16 @@ public class UdpMessageReceiver extends AbstractMessageReceiver implements Work
         /** Accept requests from a given Udp address */
         public void run()
         {
-            UMOMessage returnMessage = null;
+            MuleMessage returnMessage = null;
             try
             {
-                UMOMessageAdapter adapter = connector.getMessageAdapter(packet);
+                MessageAdapter adapter = connector.getMessageAdapter(packet);
                 final SocketAddress clientAddress = socket.getRemoteSocketAddress();
                 if (clientAddress != null)
                 {
                     adapter.setProperty(MuleProperties.MULE_REMOTE_CLIENT_ADDRESS, clientAddress);
                 }
-                returnMessage = routeMessage(new MuleMessage(adapter), endpoint.isSynchronous());
+                returnMessage = routeMessage(new DefaultMuleMessage(adapter), endpoint.isSynchronous());
 
                 if (returnMessage != null)
                 {

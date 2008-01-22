@@ -10,7 +10,7 @@
 package org.mule.providers.http.components;
 
 import org.mule.tck.FunctionalTestCase;
-import org.mule.api.UMOComponent;
+import org.mule.api.Component;
 import org.mule.impl.routing.filters.WildcardFilter;
 import org.mule.impl.routing.filters.logic.NotFilter;
 import org.mule.providers.http.components.RestServiceWrapper;
@@ -29,7 +29,7 @@ public class RestServiceComponentTestCase extends FunctionalTestCase
     public void testResetServiceNamespaceHandler() throws Exception
     {
 
-        UMOComponent component = muleContext.getRegistry().lookupComponent(SERVICE_NAME);
+        Component component = muleContext.getRegistry().lookupComponent(SERVICE_NAME);
         Object object = component.getServiceFactory().getOrCreate();
         assertEquals(object.getClass().getName(), RestServiceWrapper.class.getName());
         RestServiceWrapper restServiceWrapper = (RestServiceWrapper) object;

@@ -10,7 +10,7 @@
 
 package org.mule.providers.bpm;
 
-import org.mule.api.transport.UMOConnector;
+import org.mule.api.transport.Connector;
 import org.mule.providers.bpm.test.TestBpms;
 import org.mule.tck.providers.AbstractConnectorTestCase;
 
@@ -27,7 +27,7 @@ public class BpmConnectorTestCase extends AbstractConnectorTestCase
      * 
      * @see org.mule.tck.providers.AbstractConnectorTestCase#getConnector()
      */
-    public UMOConnector createConnector() throws Exception
+    public Connector createConnector() throws Exception
     {
         ProcessConnector c = new ProcessConnector();
         c.setName("ProcessConnector");

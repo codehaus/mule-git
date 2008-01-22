@@ -10,7 +10,7 @@
 
 package org.mule.impl.internal.notifications;
 
-import org.mule.api.context.UMOServerNotification;
+import org.mule.api.context.ServerNotification;
 
 /**
  * <code>CustomNotification</code> Custom notifications can be used by components
@@ -22,7 +22,7 @@ import org.mule.api.context.UMOServerNotification;
  * 
  * @see CustomNotificationListener
  */
-public class CustomNotification extends UMOServerNotification
+public class CustomNotification extends ServerNotification
 {
     /**
      * Serial version

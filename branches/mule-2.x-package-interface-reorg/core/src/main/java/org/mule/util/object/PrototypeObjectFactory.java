@@ -12,7 +12,7 @@ package org.mule.util.object;
 
 import org.mule.api.lifecycle.Disposable;
 import org.mule.api.lifecycle.InitialisationException;
-import org.mule.imple.config.i18n.MessageFactory;
+import org.mule.impl.config.i18n.MessageFactory;
 import org.mule.util.UUID;
 
 import java.util.Iterator;

@@ -10,14 +10,14 @@
 
 package org.mule.impl.security;
 
-import org.mule.api.UMOEncryptionStrategy;
+import org.mule.api.EncryptionStrategy;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.security.CryptoFailureException;
 
 /**
  * Empty mock for tests
  */
-public class MockEncryptionStrategy extends Named implements UMOEncryptionStrategy
+public class MockEncryptionStrategy extends Named implements EncryptionStrategy
 {
 
     public byte[] encrypt(byte[] data, Object info) throws CryptoFailureException

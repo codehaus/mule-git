@@ -12,23 +12,23 @@ package org.mule.providers.vm;
 
 import org.mule.api.MessagingException;
 import org.mule.api.TransactionException;
-import org.mule.api.UMOComponent;
-import org.mule.api.UMOException;
-import org.mule.api.UMOTransaction;
+import org.mule.api.Component;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.Transaction;
 import org.mule.api.endpoint.EndpointException;
-import org.mule.api.endpoint.UMOEndpointURI;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.endpoint.EndpointURI;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.InitialisationException;
-import org.mule.api.transport.UMOMessageAdapter;
-import org.mule.api.transport.UMOMessageReceiver;
-import org.mule.impl.MuleMessage;
+import org.mule.api.transport.MessageAdapter;
+import org.mule.api.transport.MessageReceiver;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.config.QueueProfile;
+import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.impl.endpoint.DynamicEndpointURIEndpoint;
 import org.mule.impl.endpoint.MuleEndpointURI;
 import org.mule.impl.routing.filters.WildcardFilter;
 import org.mule.impl.transaction.TransactionCoordination;
 import org.mule.impl.transport.AbstractConnector;
-import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.util.queue.CachingPersistenceStrategy;
 import org.mule.util.queue.MemoryPersistenceStrategy;
 import org.mule.util.queue.QueueManager;
@@ -89,17 +89,17 @@ public class VMConnector extends AbstractConnector
         // template method
     }
 
-    protected void doStart() throws UMOException
+    protected void doStart() throws AbstractMuleException
     {
         // template method
     }
 
-    protected void doStop() throws UMOException
+    protected void doStop() throws AbstractMuleException
     {
         // template method
     }
 
-    public UMOMessageReceiver createReceiver(UMOComponent component, UMOImmutableEndpoint endpoint) throws Exception
+    public MessageReceiver createReceiver(Component component, ImmutableEndpoint endpoint) throws Exception
     {
         if (queueEvents)
         {
@@ -108,23 +108,23 @@ public class VMConnector extends AbstractConnector
         return serviceDescriptor.createMessageReceiver(this, component, endpoint);
     }
 
-    public UMOMessageAdapter getMessageAdapter(Object message) throws MessagingException
+    public MessageAdapter getMessageAdapter(Object message) throws MessagingException
     {
         if (message == null)
         {
             throw new NullPointerException(CoreMessages.objectIsNull("message").getMessage());
         }
-        else if (message instanceof MuleMessage)
+        else if (message instanceof DefaultMuleMessage)
         {
-            return ((MuleMessage)message).getAdapter();
+            return ((DefaultMuleMessage)message).getAdapter();
         }
-        else if (message instanceof UMOMessageAdapter)
+        else if (message instanceof MessageAdapter)
         {
-            return (UMOMessageAdapter)message;
+            return (MessageAdapter)message;
         }
         else
         {
-            throw new MessagingException(CoreMessages.objectNotOfCorrectType(message.getClass(), UMOMessageAdapter.class), null);
+            throw new MessagingException(CoreMessages.objectNotOfCorrectType(message.getClass(), MessageAdapter.class), null);
         }
     }
 
@@ -153,14 +153,14 @@ public class VMConnector extends AbstractConnector
         this.queueProfile = queueProfile;
     }
 
-    VMMessageReceiver getReceiver(UMOEndpointURI endpointUri) throws EndpointException
+    VMMessageReceiver getReceiver(EndpointURI endpointUri) throws EndpointException
     {
         return (VMMessageReceiver)getReceiverByEndpoint(endpointUri);
     }
 
     QueueSession getQueueSession() throws InitialisationException
     {
-        UMOTransaction tx = TransactionCoordination.getInstance().getTransaction();
+        Transaction tx = TransactionCoordination.getInstance().getTransaction();
         if (tx != null)
         {
             if (tx.hasResource(queueManager))
@@ -198,16 +198,16 @@ public class VMConnector extends AbstractConnector
         return session;
     }
 
-    protected UMOMessageReceiver getReceiverByEndpoint(UMOEndpointURI endpointUri) throws EndpointException
+    protected MessageReceiver getReceiverByEndpoint(EndpointURI endpointUri) throws EndpointException
     {
         if (logger.isDebugEnabled())
         {
             logger.debug("Looking up vm receiver for address: " + endpointUri.toString());
         }
 
-        UMOMessageReceiver receiver;
+        MessageReceiver receiver;
         // If we have an exact match, use it
-        receiver = (UMOMessageReceiver)receivers.get(endpointUri.getAddress());
+        receiver = (MessageReceiver)receivers.get(endpointUri.getAddress());
         if (receiver != null)
         {
             if (logger.isDebugEnabled())
@@ -220,13 +220,13 @@ public class VMConnector extends AbstractConnector
         // otherwise check each one against a wildcard match
         for (Iterator iterator = receivers.values().iterator(); iterator.hasNext();)
         {
-            receiver = (UMOMessageReceiver)iterator.next();
+            receiver = (MessageReceiver)iterator.next();
             String filterAddress = receiver.getEndpointURI().getAddress();
             WildcardFilter filter = new WildcardFilter(filterAddress);
             if (filter.accept(endpointUri.getAddress()))
             {
-                UMOImmutableEndpoint endpoint = receiver.getEndpoint();
-                UMOEndpointURI newEndpointURI = new MuleEndpointURI(endpointUri, filterAddress);
+                ImmutableEndpoint endpoint = receiver.getEndpoint();
+                EndpointURI newEndpointURI = new MuleEndpointURI(endpointUri, filterAddress);
                 receiver.setEndpoint(new DynamicEndpointURIEndpoint(endpoint, newEndpointURI));
 
                 if (logger.isDebugEnabled())

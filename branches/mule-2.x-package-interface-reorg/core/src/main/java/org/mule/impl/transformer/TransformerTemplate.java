@@ -9,7 +9,7 @@
  */
 package org.mule.impl.transformer;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.api.transformer.TransformerException;
 
 /** TODO */
@@ -22,7 +22,7 @@ public class TransformerTemplate extends AbstractMessageAwareTransformer
         this.callback = callback;
     }
 
-    public Object transform(UMOMessage message, String outputEncoding) throws TransformerException
+    public Object transform(MuleMessage message, String outputEncoding) throws TransformerException
     {
         try
         {
@@ -40,7 +40,7 @@ public class TransformerTemplate extends AbstractMessageAwareTransformer
 
     public interface TransformerCallback
     {
-        public Object doTransform(UMOMessage message) throws Exception;
+        public Object doTransform(MuleMessage message) throws Exception;
     }
 
     public static class OverwitePayloadCallback implements TransformerCallback
@@ -52,7 +52,7 @@ public class TransformerTemplate extends AbstractMessageAwareTransformer
             this.payload = payload;
         }
 
-        public Object doTransform(UMOMessage message) throws Exception
+        public Object doTransform(MuleMessage message) throws Exception
         {
             return payload;
         }

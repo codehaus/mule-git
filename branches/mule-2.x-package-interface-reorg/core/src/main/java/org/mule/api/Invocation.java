@@ -22,7 +22,7 @@ public class Invocation
 {
     /** The components descriptor */
     // @GuardedBy(itself)
-    private final UMOComponent component;
+    private final Component component;
 
     /** the next invocation in the chain */
     // @GuardedBy(itself)
@@ -30,7 +30,7 @@ public class Invocation
 
     /** The current message for the component */
     // @GuardedBy(this)
-    private UMOMessage message;
+    private MuleMessage message;
 
     /**
      * Constructs an initialised invocation
@@ -39,7 +39,7 @@ public class Invocation
      * @param message the current message
      * @param invocation the next invocation in the chain or null.
      */
-    public Invocation(UMOComponent component, UMOMessage message, Invocation invocation)
+    public Invocation(Component component, MuleMessage message, Invocation invocation)
     {
         this.component = component;
         this.message = message;
@@ -50,9 +50,9 @@ public class Invocation
      * Excutes this invocation
      * 
      * @return the current message that may have been altered by the invocation
-     * @throws UMOException if something goes wrong
+     * @throws AbstractMuleException if something goes wrong
      */
-    public UMOMessage execute() throws UMOException
+    public MuleMessage execute() throws AbstractMuleException
     {
         return invocation.execute();
     }
@@ -62,12 +62,12 @@ public class Invocation
      * 
      * @return the descriptor for the component associated with this invocation
      */
-    public UMOComponent getComponent()
+    public Component getComponent()
     {
         return component;
     }
 
-    public UMOEvent getEvent()
+    public Event getEvent()
     {
         return RequestContext.getEvent();
     }
@@ -77,7 +77,7 @@ public class Invocation
      * 
      * @return the current message
      */
-    public UMOMessage getMessage()
+    public MuleMessage getMessage()
     {
         synchronized (this)
         {
@@ -85,7 +85,7 @@ public class Invocation
         }
     }
 
-    public void setMessage(UMOMessage message)
+    public void setMessage(MuleMessage message)
     {
         synchronized (this)
         {

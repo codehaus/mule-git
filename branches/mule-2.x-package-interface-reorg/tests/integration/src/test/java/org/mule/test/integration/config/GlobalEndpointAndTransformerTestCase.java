@@ -9,10 +9,10 @@
  */
 package org.mule.test.integration.config;
 
-import org.mule.api.UMOException;
-import org.mule.api.UMOMessage;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
-import org.mule.impl.MuleMessage;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.tck.FunctionalTestCase;
 
 /*
@@ -21,10 +21,10 @@ import org.mule.tck.FunctionalTestCase;
 public class GlobalEndpointAndTransformerTestCase extends FunctionalTestCase
 {
     
-    public void testNormal() throws UMOException
+    public void testNormal() throws AbstractMuleException
     {
         MuleClient client=new MuleClient();
-        UMOMessage msg=client.send("vm://in",new MuleMessage("HELLO!"));
+        MuleMessage msg=client.send("vm://in",new DefaultMuleMessage("HELLO!"));
         assertTrue(msg.getPayload() instanceof byte[]);        
     }
 

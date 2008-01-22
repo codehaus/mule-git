@@ -10,8 +10,8 @@
 
 package org.mule.providers.vm;
 
-import org.mule.api.endpoint.UMOImmutableEndpoint;
-import org.mule.api.transport.UMOMessageReceiver;
+import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.api.transport.MessageReceiver;
 import org.mule.tck.providers.AbstractMessageReceiverTestCase;
 
 public class VMMessageReceiverTestCase extends AbstractMessageReceiverTestCase
@@ -30,12 +30,12 @@ public class VMMessageReceiverTestCase extends AbstractMessageReceiverTestCase
      * 
      * @see org.mule.tck.providers.AbstractMessageReceiverTestCase#getMessageReceiver()
      */
-    public UMOMessageReceiver getMessageReceiver()
+    public MessageReceiver getMessageReceiver()
     {
         return receiver;
     }
 
-    public UMOImmutableEndpoint getEndpoint() throws Exception
+    public ImmutableEndpoint getEndpoint() throws Exception
     {
         return muleContext.getRegistry().lookupEndpointFactory().getInboundEndpoint("vm://test");
     }

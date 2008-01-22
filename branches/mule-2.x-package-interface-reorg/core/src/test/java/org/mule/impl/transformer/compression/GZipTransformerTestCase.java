@@ -11,7 +11,7 @@
 package org.mule.impl.transformer.compression;
 
 import org.mule.api.lifecycle.InitialisationException;
-import org.mule.api.transformer.UMOTransformer;
+import org.mule.api.transformer.Transformer;
 import org.mule.impl.transformer.compression.GZipCompressTransformer;
 import org.mule.impl.transformer.compression.GZipUncompressTransformer;
 import org.mule.tck.AbstractTransformerTestCase;
@@ -49,12 +49,12 @@ public class GZipTransformerTestCase extends AbstractTransformerTestCase
         return "the quick brown fox jumped over the lazy dog the quick brown fox jumped over the lazy dog the quick brown fox jumped over the lazy dog";
     }
 
-    public UMOTransformer getTransformer()
+    public Transformer getTransformer()
     {
         return new GZipCompressTransformer();
     }
 
-    public UMOTransformer getRoundTripTransformer()
+    public Transformer getRoundTripTransformer()
     {
         GZipUncompressTransformer transformer = new GZipUncompressTransformer();
         transformer.setReturnClass(String.class);

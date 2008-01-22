@@ -10,7 +10,7 @@
 
 package org.mule.components.script.refreshable;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.util.IOUtils;
@@ -48,7 +48,7 @@ public abstract class AbstractRefreshableBeanTestCase extends FunctionalTestCase
         writeScript(script, nameToPath(name));
         Thread.sleep(WAIT_TIME); // wait for bean to refresh
         MuleClient client = new MuleClient();
-        UMOMessage m = client.send(endpoint, payload, null);
+        MuleMessage m = client.send(endpoint, payload, null);
         assertNotNull(m);
         assertEquals(payload + result, m.getPayloadAsString());
     }

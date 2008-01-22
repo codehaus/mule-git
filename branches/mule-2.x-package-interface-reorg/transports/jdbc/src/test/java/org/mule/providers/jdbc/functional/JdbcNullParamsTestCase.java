@@ -10,9 +10,9 @@
 
 package org.mule.providers.jdbc.functional;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
-import org.mule.impl.MuleMessage;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.transport.NullPayload;
 
 import java.util.Collection;
@@ -35,14 +35,14 @@ public class JdbcNullParamsTestCase extends AbstractJdbcFunctionalTestCase
         MuleClient client = new MuleClient();
         
         //check that db is still empty
-        UMOMessage reply = client.request("jdbc://getTest", 1000);
+        MuleMessage reply = client.request("jdbc://getTest", 1000);
         assertTrue(reply.getPayload() instanceof Collection);
         assertTrue(((Collection)reply.getPayload()).isEmpty());
         
         //execute the write query by sending a message on the jdbc://writeTest
         //the message is a nullpayload since we are not taking any params from any object
         //No other params will be sent to this endpoint
-        client.send("jdbc://writeTest", new MuleMessage(NullPayload.getInstance()));
+        client.send("jdbc://writeTest", new DefaultMuleMessage(NullPayload.getInstance()));
         
         //get the data which was written by the previous statement and test it
         reply = client.request("jdbc://getTest", 1000);

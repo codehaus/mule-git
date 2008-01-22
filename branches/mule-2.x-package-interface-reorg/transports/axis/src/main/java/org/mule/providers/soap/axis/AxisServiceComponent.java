@@ -11,22 +11,22 @@
 package org.mule.providers.soap.axis;
 
 import org.mule.api.MessagingException;
-import org.mule.api.UMOEventContext;
-import org.mule.api.UMOException;
-import org.mule.api.UMOMessage;
+import org.mule.api.EventContext;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleMessage;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.endpoint.EndpointException;
-import org.mule.api.endpoint.UMOEndpointURI;
+import org.mule.api.endpoint.EndpointURI;
 import org.mule.api.lifecycle.Callable;
 import org.mule.api.lifecycle.Initialisable;
 import org.mule.api.lifecycle.InitialisationException;
-import org.mule.impl.MuleMessage;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.RequestContext;
 import org.mule.impl.config.MuleManifest;
+import org.mule.impl.config.i18n.CoreMessages;
+import org.mule.impl.config.i18n.MessageFactory;
 import org.mule.impl.endpoint.MuleEndpointURI;
 import org.mule.impl.transport.WriterMessageAdapter;
-import org.mule.imple.config.i18n.CoreMessages;
-import org.mule.imple.config.i18n.MessageFactory;
 import org.mule.providers.http.HttpConnector;
 import org.mule.providers.http.HttpConstants;
 import org.mule.providers.soap.SoapConstants;
@@ -103,8 +103,8 @@ public class AxisServiceComponent implements Initialisable, Callable
      * 
      * @param context the context to process
      * @return Object this object can be anything. When the
-     *         <code>UMOLifecycleAdapter</code> for the component receives this
-     *         object it will first see if the Object is an <code>UMOEvent</code>
+     *         <code>LifecycleAdapter</code> for the component receives this
+     *         object it will first see if the Object is an <code>Event</code>
      *         if not and the Object is not null a new context will be created using
      *         the returned object as the payload. This new context will then get
      *         published to the configured outbound endpoint if-
@@ -117,7 +117,7 @@ public class AxisServiceComponent implements Initialisable, Callable
      *             aren't handled by the implementation they will be handled by the
      *             exceptionListener associated with the component
      */
-    public Object onCall(UMOEventContext context) throws Exception
+    public Object onCall(EventContext context) throws Exception
     {
         WriterMessageAdapter response = new WriterMessageAdapter(new StringWriter(4096));
         String method = context.getMessage().getStringProperty(HttpConnector.HTTP_METHOD_PROPERTY,
@@ -131,7 +131,7 @@ public class AxisServiceComponent implements Initialisable, Callable
             doPost(context, response);
         }
         response.getWriter().close();
-        return new MuleMessage(response);
+        return new DefaultMuleMessage(response);
     }
 
     public void initialise() throws InitialisationException
@@ -142,15 +142,15 @@ public class AxisServiceComponent implements Initialisable, Callable
         }        
     }
 
-    public void doGet(UMOEventContext context, WriterMessageAdapter response)
-        throws UMOException, IOException
+    public void doGet(EventContext context, WriterMessageAdapter response)
+        throws AbstractMuleException, IOException
     {
         try
         {
             // We parse a new uri based on the listening host and port with the
             // request parameters appended
             // Using the soap prefix ensures that we use a soap endpoint builder
-            UMOEndpointURI endpointUri = context.getEndpointURI();
+            EndpointURI endpointUri = context.getEndpointURI();
             if (!"servlet".equalsIgnoreCase(context.getEndpointURI().getSchemeMetaInfo()))
             {
                 String uri = SoapConstants.SOAP_ENDPOINT_PREFIX + context.getEndpointURI().getScheme()
@@ -267,9 +267,9 @@ public class AxisServiceComponent implements Initialisable, Callable
     }
 
     protected void processMethodRequest(MessageContext msgContext,
-                                        UMOEventContext context,
+                                        EventContext context,
                                         WriterMessageAdapter response,
-                                        UMOEndpointURI endpointUri) throws AxisFault
+                                        EndpointURI endpointUri) throws AxisFault
     {
         Properties params = endpointUri.getUserParams();
 
@@ -427,7 +427,7 @@ public class AxisServiceComponent implements Initialisable, Callable
 
     }
 
-    protected void reportAvailableServices(UMOEventContext context, WriterMessageAdapter response)
+    protected void reportAvailableServices(EventContext context, WriterMessageAdapter response)
         throws ConfigurationException, AxisFault
     {
         AxisEngine engine = getAxis();
@@ -508,7 +508,7 @@ public class AxisServiceComponent implements Initialisable, Callable
         response.write("</ul>");
     }
 
-    protected void reportCantGetAxisService(UMOEventContext context, WriterMessageAdapter response)
+    protected void reportCantGetAxisService(EventContext context, WriterMessageAdapter response)
     {
         response.setProperty(HttpConnector.HTTP_STATUS_PROPERTY, "404");
         response.setProperty(HttpConstants.HEADER_CONTENT_TYPE, "text/html");
@@ -516,7 +516,7 @@ public class AxisServiceComponent implements Initialisable, Callable
         response.write("<p>" + Messages.getMessage("noService06") + "</p>");
     }
 
-    protected void doPost(UMOEventContext context, WriterMessageAdapter response)
+    protected void doPost(EventContext context, WriterMessageAdapter response)
         throws Exception
     {
         String soapAction;
@@ -532,7 +532,7 @@ public class AxisServiceComponent implements Initialisable, Callable
         String contentType;
         try
         {
-            UMOEndpointURI endpointUri = getEndpoint(context);
+            EndpointURI endpointUri = getEndpoint(context);
             populateMessageContext(msgContext, context, endpointUri);
             if (securityProvider != null)
             {
@@ -626,7 +626,7 @@ public class AxisServiceComponent implements Initialisable, Callable
         }
     }
 
-    private UMOEndpointURI getEndpoint(UMOEventContext context) throws EndpointException
+    private EndpointURI getEndpoint(EventContext context) throws EndpointException
     {
         String endpoint = context.getEndpointURI().getAddress();
         String request = context.getMessage().getStringProperty(HttpConnector.HTTP_REQUEST_PROPERTY, null);
@@ -696,10 +696,10 @@ public class AxisServiceComponent implements Initialisable, Callable
     }
 
     private void populateMessageContext(MessageContext msgContext,
-                                        UMOEventContext context,
-                                        UMOEndpointURI endpointUri) throws AxisFault, ConfigurationException
+                                        EventContext context,
+                                        EndpointURI endpointUri) throws AxisFault, ConfigurationException
     {
-        UMOMessage msg = context.getMessage();
+        MuleMessage msg = context.getMessage();
 
         if (logger.isDebugEnabled())
         {
@@ -755,7 +755,7 @@ public class AxisServiceComponent implements Initialisable, Callable
         msgContext.setProperty("servletEndpointContext", sec);
     }
 
-    private String getSoapAction(UMOEventContext context) throws AxisFault
+    private String getSoapAction(EventContext context) throws AxisFault
     {
         String soapAction = context.getMessage().getStringProperty(SoapConstants.SOAP_ACTION_PROPERTY_CAPS, null);
         if (logger.isDebugEnabled())
@@ -770,7 +770,7 @@ public class AxisServiceComponent implements Initialisable, Callable
         return soapAction;
     }
 
-    protected String getServiceName(UMOEventContext context, UMOEndpointURI endpointUri) throws AxisFault
+    protected String getServiceName(EventContext context, EndpointURI endpointUri) throws AxisFault
     {
         String serviceName = endpointUri.getPath();
         if (StringUtils.isEmpty(serviceName))

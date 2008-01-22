@@ -10,7 +10,7 @@
 
 package org.mule.providers.jms.transformers;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.api.transformer.TransformerException;
 import org.mule.util.ClassUtils;
 
@@ -38,7 +38,7 @@ public class ObjectToJMSMessage extends AbstractJmsTransformer
         setReturnClass(Message.class);
     }
 
-    public Object transform(UMOMessage message, String outputEncoding) throws TransformerException
+    public Object transform(MuleMessage message, String outputEncoding) throws TransformerException
     {
         try
         {

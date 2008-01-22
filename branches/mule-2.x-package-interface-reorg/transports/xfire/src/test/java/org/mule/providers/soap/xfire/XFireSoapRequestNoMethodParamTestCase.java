@@ -10,9 +10,9 @@
 
 package org.mule.providers.soap.xfire;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
-import org.mule.impl.MuleMessage;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.tck.FunctionalTestCase;
 
 public class XFireSoapRequestNoMethodParamTestCase extends FunctionalTestCase
@@ -24,8 +24,8 @@ public class XFireSoapRequestNoMethodParamTestCase extends FunctionalTestCase
     {
         MuleClient client = new MuleClient();
 
-        UMOMessage msg = client.send("http://localhost:63381/services/TestComponent",
-            new MuleMessage(request));
+        MuleMessage msg = client.send("http://localhost:63381/services/TestComponent",
+            new DefaultMuleMessage(request));
 
         assertNotNull(msg);
         assertNotNull(msg.getPayload());

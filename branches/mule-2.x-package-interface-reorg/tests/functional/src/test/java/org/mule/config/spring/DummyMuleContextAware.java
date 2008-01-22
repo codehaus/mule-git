@@ -12,14 +12,14 @@ package org.mule.config.spring;
 
 import org.mule.api.MuleContext;
 import org.mule.api.context.MuleContextAware;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.transformer.TransformerException;
-import org.mule.api.transformer.UMOTransformer;
+import org.mule.api.transformer.Transformer;
 
 import java.util.List;
 
-public class DummyMuleContextAware implements MuleContextAware, UMOTransformer
+public class DummyMuleContextAware implements MuleContextAware, Transformer
 {
 
     public void setMuleContext(MuleContext context)
@@ -62,12 +62,12 @@ public class DummyMuleContextAware implements MuleContextAware, UMOTransformer
         return null;
     }
 
-    public UMOImmutableEndpoint getEndpoint()
+    public ImmutableEndpoint getEndpoint()
     {
         return null;
     }
 
-    public void setEndpoint(UMOImmutableEndpoint endpoint)
+    public void setEndpoint(ImmutableEndpoint endpoint)
     {
         // empty
     }

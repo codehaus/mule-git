@@ -11,18 +11,18 @@
 package org.mule.impl.security;
 
 import org.mule.api.lifecycle.InitialisationException;
-import org.mule.api.security.UMOAuthentication;
-import org.mule.api.security.UMOSecurityContext;
-import org.mule.api.security.UMOSecurityProvider;
+import org.mule.api.security.MuleAuthentication;
+import org.mule.api.security.SecurityContext;
+import org.mule.api.security.SecurityProvider;
 import org.mule.api.security.UnknownAuthenticationTypeException;
 
 /**
  * Empty mock for test
  */
-public class MockSecurityProvider extends Named implements UMOSecurityProvider
+public class MockSecurityProvider extends Named implements SecurityProvider
 {
 
-    public UMOAuthentication authenticate(UMOAuthentication authentication) throws org.mule.api.security.SecurityException
+    public MuleAuthentication authenticate(MuleAuthentication authentication) throws org.mule.api.security.SecurityException
     {
         return null;
     }
@@ -32,7 +32,7 @@ public class MockSecurityProvider extends Named implements UMOSecurityProvider
         return false;
     }
 
-    public UMOSecurityContext createSecurityContext(UMOAuthentication auth) throws UnknownAuthenticationTypeException
+    public SecurityContext createSecurityContext(MuleAuthentication auth) throws UnknownAuthenticationTypeException
     {
         return null;
     }

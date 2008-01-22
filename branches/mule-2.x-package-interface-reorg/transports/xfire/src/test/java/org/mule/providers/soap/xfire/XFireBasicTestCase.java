@@ -10,7 +10,7 @@
 
 package org.mule.providers.soap.xfire;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.util.IOUtils;
@@ -50,7 +50,7 @@ public class XFireBasicTestCase extends FunctionalTestCase
 //                {
 //                    try
 //                    {
-//                        UMOMessage result = client.send("xfire:http://localhost:63081/services/echoService?method=echo", "Hello!", null);
+//                        MuleMessage result = client.send("xfire:http://localhost:63081/services/echoService?method=echo", "Hello!", null);
 //                        //Throttling here to see if the steam gets closed before we can read it
 //                        Thread.sleep(1000);
 //                        System.out.println("received: " + result.getPayloadAsString() + " " + i);
@@ -97,7 +97,7 @@ public class XFireBasicTestCase extends FunctionalTestCase
 //        s.close();
 
         MuleClient client = new MuleClient(muleContext);
-        UMOMessage result = client.send("xfire:http://localhost:63083/services/echoService3?method=echo", "Hello!", null);
+        MuleMessage result = client.send("xfire:http://localhost:63083/services/echoService3?method=echo", "Hello!", null);
         assertEquals("Hello!", result.getPayload());
     }
     
@@ -113,14 +113,14 @@ public class XFireBasicTestCase extends FunctionalTestCase
         SOAPBinding soapBinding = (SOAPBinding) binding.getExtensibilityElements().get(0);
         assertEquals("http://schemas.xmlsoap.org/soap/http", soapBinding.getTransportURI());
 
-        UMOMessage result = client.send("xfire:http://localhost:63084/services/echoService4?method=echo", "Hello!", null);
+        MuleMessage result = client.send("xfire:http://localhost:63084/services/echoService4?method=echo", "Hello!", null);
         assertEquals("Hello!", result.getPayload());
     }
 
     public void testEchoWsdl() throws Exception
     {
         MuleClient client = new MuleClient(muleContext);
-        UMOMessage result = client.request("http://localhost:63081/services/echoService?wsdl", 5000);
+        MuleMessage result = client.request("http://localhost:63081/services/echoService?wsdl", 5000);
         assertNotNull(result.getPayload());
         XMLUnit.compareXML(echoWsdl, result.getPayloadAsString());
     }
@@ -128,7 +128,7 @@ public class XFireBasicTestCase extends FunctionalTestCase
     public void testListServices() throws Exception
     {
         MuleClient client = new MuleClient(muleContext);
-        UMOMessage result = client.request("http://localhost:63081/services/echoService?list", 5000);
+        MuleMessage result = client.request("http://localhost:63081/services/echoService?list", 5000);
         assertNotNull(result.getPayload());
         System.out.println(result.getPayloadAsString());
         //Note that Xfire wraps the HTML in Xml...

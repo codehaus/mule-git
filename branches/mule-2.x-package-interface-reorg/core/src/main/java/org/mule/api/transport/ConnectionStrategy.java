@@ -25,5 +25,5 @@ public interface ConnectionStrategy
      * @throws FatalConnectException is thrown if the strategy finally fails to make
      *             a connection.
      */
-    void connect(UMOConnectable connectable) throws FatalConnectException;
+    void connect(Connectable connectable) throws FatalConnectException;
 }

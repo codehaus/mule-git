@@ -10,11 +10,11 @@
 
 package org.mule.providers.soap.xfire;
 
-import org.mule.api.UMOException;
-import org.mule.api.UMOMessage;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleMessage;
 import org.mule.api.config.MuleProperties;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
-import org.mule.impl.MuleMessage;
+import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.transport.AbstractMessageReceiver;
 import org.mule.impl.transport.NullPayload;
 
@@ -42,7 +42,7 @@ public class MuleInvoker implements Invoker
 
     public Object invoke(Method method, Object[] objects, MessageContext messageContext) throws XFireFault
     {
-        UMOMessage message = null;
+        MuleMessage message = null;
         try
         {
             XFireMessageAdapter messageAdapter = (XFireMessageAdapter)receiver.getConnector()
@@ -50,9 +50,9 @@ public class MuleInvoker implements Invoker
             messageAdapter.setMessageContext(messageContext);
             messageAdapter.setProperty(MuleProperties.MULE_METHOD_PROPERTY, method);
 
-            message = receiver.routeMessage(new MuleMessage(messageAdapter), synchronous);
+            message = receiver.routeMessage(new DefaultMuleMessage(messageAdapter), synchronous);
         }
-        catch (UMOException e)
+        catch (AbstractMuleException e)
         {
             throw new XFireFault(e);
         }
@@ -80,7 +80,7 @@ public class MuleInvoker implements Invoker
         }
     }
 
-    public UMOImmutableEndpoint getEndpoint()
+    public ImmutableEndpoint getEndpoint()
     {
         return receiver.getEndpoint();
     }

@@ -10,9 +10,9 @@
 
 package org.mule.impl.transport;
 
-import org.mule.api.transport.UMOConnectable;
+import org.mule.api.transport.Connectable;
 import org.mule.impl.config.ExceptionHelper;
-import org.mule.imple.config.i18n.CoreMessages;
+import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.util.ObjectUtils;
 
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicInteger;
@@ -61,7 +61,7 @@ public class SimpleRetryConnectionStrategy extends AbstractConnectionStrategy
     private volatile int retryCount = DEFAULT_RETRY_COUNT;
     private volatile long retryFrequency = DEFAULT_FREQUENCY;
 
-    protected void doConnect(UMOConnectable connectable) throws FatalConnectException
+    protected void doConnect(Connectable connectable) throws FatalConnectException
     {
         while (true)
         {

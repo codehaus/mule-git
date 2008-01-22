@@ -10,7 +10,7 @@
 
 package org.mule.providers.soap.axis.style;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.api.config.MuleProperties;
 import org.mule.extras.client.MuleClient;
 import org.mule.providers.soap.NamedParameter;
@@ -179,7 +179,7 @@ public class AxisMessageStyleServiceWithoutNamespaceTestCase extends FunctionalT
                 }
             }
 
-            UMOMessage result = client.send(endpoint, expectedResult, props);
+            MuleMessage result = client.send(endpoint, expectedResult, props);
             assertNotNull(result);
             assertEquals(expectedResult, result.getPayloadAsString());
         }

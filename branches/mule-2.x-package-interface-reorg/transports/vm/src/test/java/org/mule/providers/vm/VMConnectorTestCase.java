@@ -10,13 +10,13 @@
 
 package org.mule.providers.vm;
 
-import org.mule.api.transport.UMOConnector;
-import org.mule.impl.MuleMessage;
+import org.mule.api.transport.Connector;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.tck.providers.AbstractConnectorTestCase;
 
 public class VMConnectorTestCase extends AbstractConnectorTestCase
 {
-    public UMOConnector createConnector() throws Exception
+    public Connector createConnector() throws Exception
     {
         VMConnector conn = new VMConnector();
         conn.setName("TestVM");
@@ -30,7 +30,7 @@ public class VMConnectorTestCase extends AbstractConnectorTestCase
 
     public Object getValidMessage() throws Exception
     {
-        return new MuleMessage("TestMessage");
+        return new DefaultMuleMessage("TestMessage");
     }
 
 }

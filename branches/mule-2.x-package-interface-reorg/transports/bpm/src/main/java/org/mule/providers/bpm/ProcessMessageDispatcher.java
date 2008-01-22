@@ -10,15 +10,15 @@
 
 package org.mule.providers.bpm;
 
-import org.mule.api.UMOEvent;
-import org.mule.api.UMOMessage;
+import org.mule.api.Event;
+import org.mule.api.MuleMessage;
 import org.mule.api.config.MuleProperties;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.transport.DispatchException;
-import org.mule.impl.MuleMessage;
+import org.mule.impl.DefaultMuleMessage;
+import org.mule.impl.config.i18n.MessageFactory;
 import org.mule.impl.transport.AbstractMessageDispatcher;
 import org.mule.impl.transport.NullPayload;
-import org.mule.imple.config.i18n.MessageFactory;
 import org.mule.util.StringUtils;
 
 import java.util.HashMap;
@@ -32,7 +32,7 @@ public class ProcessMessageDispatcher extends AbstractMessageDispatcher
 {
     private ProcessConnector connector;
 
-    public ProcessMessageDispatcher(UMOImmutableEndpoint endpoint)
+    public ProcessMessageDispatcher(ImmutableEndpoint endpoint)
     {
         super(endpoint);
         this.connector = (ProcessConnector)endpoint.getConnector();
@@ -43,13 +43,13 @@ public class ProcessMessageDispatcher extends AbstractMessageDispatcher
      * 
      * @return an object representing the new state of the process
      */
-    public UMOMessage doSend(UMOEvent event) throws Exception
+    public MuleMessage doSend(Event event) throws Exception
     {
         Object process = processAction(event);
 
         if (process != null)
         {
-            UMOMessage msg = new MuleMessage(process);
+            MuleMessage msg = new DefaultMuleMessage(process);
             msg.setProperty(ProcessConnector.PROPERTY_PROCESS_ID, connector.getBpms().getId(process));
             return msg;
         }
@@ -64,12 +64,12 @@ public class ProcessMessageDispatcher extends AbstractMessageDispatcher
     /**
      * Performs an asynchronous action on the BPMS.
      */
-    public void doDispatch(UMOEvent event) throws Exception
+    public void doDispatch(Event event) throws Exception
     {
         processAction(event);
     }
 
-    protected Object processAction(UMOEvent event) throws Exception
+    protected Object processAction(Event event) throws Exception
     {
         // An object representing the new state of the process
         Object process = null;

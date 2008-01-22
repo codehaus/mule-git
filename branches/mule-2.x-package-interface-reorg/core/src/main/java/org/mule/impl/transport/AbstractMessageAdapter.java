@@ -10,14 +10,14 @@
 
 package org.mule.impl.transport;
 
+import org.mule.api.ExceptionPayload;
 import org.mule.api.MuleRuntimeException;
 import org.mule.api.ThreadSafeAccess;
-import org.mule.api.UMOExceptionPayload;
 import org.mule.api.config.MuleProperties;
+import org.mule.api.transport.MessageAdapter;
 import org.mule.api.transport.PropertyScope;
-import org.mule.api.transport.UMOMessageAdapter;
 import org.mule.impl.config.MuleManifest;
-import org.mule.imple.config.i18n.CoreMessages;
+import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.util.DebugOptions;
 import org.mule.util.FileUtils;
 import org.mule.util.IOUtils;
@@ -45,7 +45,7 @@ import org.apache.commons.logging.LogFactory;
  * message types that maybe don't normally allow for meta information, such as a File
  * or TCP.
  */
-public abstract class AbstractMessageAdapter implements UMOMessageAdapter, ThreadSafeAccess
+public abstract class AbstractMessageAdapter implements MessageAdapter, ThreadSafeAccess
 {
     /**
      * Should we fail when we detect scribbling?  This can be overridden by setting the
@@ -66,7 +66,7 @@ public abstract class AbstractMessageAdapter implements UMOMessageAdapter, Threa
     protected String encoding = FileUtils.DEFAULT_ENCODING;
 
     /** If an excpetion occurs while processing this message an exception payload will be attached here */
-    protected UMOExceptionPayload exceptionPayload;
+    protected ExceptionPayload exceptionPayload;
 
     /** the default UUID for the message. If the underlying transport has the notion of a message id, this uuid will be ignorred */
     protected String id = UUID.getUUID();
@@ -87,7 +87,7 @@ public abstract class AbstractMessageAdapter implements UMOMessageAdapter, Threa
      * Creates a message adapter copying values from an existing one
      * @param template
      */
-    protected AbstractMessageAdapter(UMOMessageAdapter template)
+    protected AbstractMessageAdapter(MessageAdapter template)
     {
         logger = LogFactory.getLog(getClass());
         if (null != template)
@@ -408,14 +408,14 @@ public abstract class AbstractMessageAdapter implements UMOMessageAdapter, Threa
         setIntProperty(MuleProperties.MULE_CORRELATION_GROUP_SIZE_PROPERTY, size);
     }
 
-    public UMOExceptionPayload getExceptionPayload()
+    public ExceptionPayload getExceptionPayload()
     {
         assertAccess(READ);
         return exceptionPayload;
     }
 
     /** {@inheritDoc} */
-    public void setExceptionPayload(UMOExceptionPayload payload)
+    public void setExceptionPayload(ExceptionPayload payload)
     {
         assertAccess(WRITE);
         exceptionPayload = payload;

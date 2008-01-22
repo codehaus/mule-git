@@ -11,7 +11,7 @@
 package org.mule.impl.transformer.compression;
 
 import org.mule.api.transformer.TransformerException;
-import org.mule.imple.config.i18n.MessageFactory;
+import org.mule.impl.config.i18n.MessageFactory;
 
 import java.io.IOException;
 

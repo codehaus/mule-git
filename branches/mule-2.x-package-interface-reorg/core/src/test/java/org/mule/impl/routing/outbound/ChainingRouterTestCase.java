@@ -10,17 +10,17 @@
 
 package org.mule.impl.routing.outbound;
 
-import org.mule.api.UMOMessage;
-import org.mule.api.UMOSession;
-import org.mule.api.endpoint.UMOEndpoint;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
-import org.mule.impl.MuleMessage;
+import org.mule.api.MuleMessage;
+import org.mule.api.Session;
+import org.mule.api.endpoint.Endpoint;
+import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.endpoint.DynamicEndpointURIEndpoint;
 import org.mule.impl.endpoint.MuleEndpointURI;
 import org.mule.impl.routing.LoggingCatchAllStrategy;
 import org.mule.impl.routing.filters.PayloadTypeFilter;
 import org.mule.impl.routing.outbound.ChainingRouter;
-import org.mule.impl.routing.outbound.OutboundRouterCollection;
+import org.mule.impl.routing.outbound.DefaultOutboundRouterCollection;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.tck.MuleTestUtils;
 
@@ -44,13 +44,13 @@ public class ChainingRouterTestCase extends AbstractMuleTestCase
         session = MuleTestUtils.getMockSession();
         router = new ChainingRouter();
 
-        OutboundRouterCollection messageRouter = new OutboundRouterCollection();
+        DefaultOutboundRouterCollection messageRouter = new DefaultOutboundRouterCollection();
         messageRouter.setCatchAllStrategy(new LoggingCatchAllStrategy());
 
-        UMOEndpoint endpoint1 = getTestEndpoint("Test1Provider", UMOEndpoint.ENDPOINT_TYPE_SENDER);
+        Endpoint endpoint1 = getTestEndpoint("Test1Provider", Endpoint.ENDPOINT_TYPE_SENDER);
         assertNotNull(endpoint1);
 
-        UMOEndpoint endpoint2 = getTestEndpoint("Test2Provider", UMOEndpoint.ENDPOINT_TYPE_SENDER);
+        Endpoint endpoint2 = getTestEndpoint("Test2Provider", Endpoint.ENDPOINT_TYPE_SENDER);
         assertNotNull(endpoint2);
 
         PayloadTypeFilter filter = new PayloadTypeFilter(String.class);
@@ -65,14 +65,14 @@ public class ChainingRouterTestCase extends AbstractMuleTestCase
 
     public void testChainingOutboundRouterSynchronous() throws Exception
     {
-        UMOMessage message = new MuleMessage("test event");
+        MuleMessage message = new DefaultMuleMessage("test event");
         assertTrue(router.isMatch(message));
 
-        message = new MuleMessage("test event");
+        message = new DefaultMuleMessage("test event");
 
         session.expectAndReturn("sendEvent", C.eq(message, endpoints.get(0)), message);
         session.expectAndReturn("sendEvent", C.eq(message, endpoints.get(1)), message);
-        final UMOMessage result = router.route(message, (UMOSession)session.proxy(), true);
+        final MuleMessage result = router.route(message, (Session)session.proxy(), true);
         assertNotNull("This is a sync call, we need a result returned.", result);
         assertEquals(message, result);
         session.verify();
@@ -80,26 +80,26 @@ public class ChainingRouterTestCase extends AbstractMuleTestCase
 
     public void testChainingOutboundRouterSynchronousWithTemplate() throws Exception
     {
-        UMOEndpoint endpoint3 = getTestEndpoint("Test3Provider", UMOEndpoint.ENDPOINT_TYPE_SENDER);
+        Endpoint endpoint3 = getTestEndpoint("Test3Provider", Endpoint.ENDPOINT_TYPE_SENDER);
         assertNotNull(endpoint3);
         endpoint3.setEndpointURI(new MuleEndpointURI("test://foo?[barValue]"));
         router.addEndpoint(endpoint3);
 
         Map m = new HashMap();
         m.put("barValue", "bar");
-        UMOMessage message = new MuleMessage("test event", m);
+        MuleMessage message = new DefaultMuleMessage("test event", m);
         assertTrue(router.isMatch(message));
 
-        UMOImmutableEndpoint ep = router.getEndpoint(2, message);
+        ImmutableEndpoint ep = router.getEndpoint(2, message);
         assertEquals("test://foo?bar", ep.getEndpointURI().toString());
 
         session.expectAndReturn("sendEvent", C.eq(message, new DynamicEndpointURIEndpoint(
-            (UMOImmutableEndpoint) router.getEndpoints().get(0), new MuleEndpointURI("test://test"))), message);
+            (ImmutableEndpoint) router.getEndpoints().get(0), new MuleEndpointURI("test://test"))), message);
         session.expectAndReturn("sendEvent", C.eq(message, new DynamicEndpointURIEndpoint(
-            (UMOImmutableEndpoint) router.getEndpoints().get(1), new MuleEndpointURI("test://test"))), message);
+            (ImmutableEndpoint) router.getEndpoints().get(1), new MuleEndpointURI("test://test"))), message);
         session.expectAndReturn("sendEvent", C.eq(message, new DynamicEndpointURIEndpoint(
-            (UMOImmutableEndpoint) router.getEndpoints().get(2), new MuleEndpointURI("test://foo?bar"))), message);
-        final UMOMessage result = router.route(message, (UMOSession)session.proxy(), true);
+            (ImmutableEndpoint) router.getEndpoints().get(2), new MuleEndpointURI("test://foo?bar"))), message);
+        final MuleMessage result = router.route(message, (Session)session.proxy(), true);
         assertNotNull("This is a sync call, we need a result returned.", result);
         assertEquals(message, result);
         session.verify();
@@ -107,14 +107,14 @@ public class ChainingRouterTestCase extends AbstractMuleTestCase
 
     public void testChainingOutboundRouterAsynchronous() throws Exception
     {
-        UMOMessage message = new MuleMessage("test event");
+        MuleMessage message = new DefaultMuleMessage("test event");
         assertTrue(router.isMatch(message));
 
-        message = new MuleMessage("test event");
+        message = new DefaultMuleMessage("test event");
 
         session.expectAndReturn("sendEvent", C.eq(message, endpoints.get(0)), message);
         session.expectAndReturn("dispatchEvent", C.eq(message, endpoints.get(1)), message);
-        final UMOMessage result = router.route(message, (UMOSession)session.proxy(), false);
+        final MuleMessage result = router.route(message, (Session)session.proxy(), false);
         assertNull("Async call shouldn't return any result.", result);
         session.verify();
     }
@@ -124,10 +124,10 @@ public class ChainingRouterTestCase extends AbstractMuleTestCase
      */
     public void testBrokenChain() throws Exception
     {
-        final UMOMessage message = new MuleMessage("test event");
-        final UMOEndpoint endpoint1 = (UMOEndpoint)endpoints.get(0);
+        final MuleMessage message = new DefaultMuleMessage("test event");
+        final Endpoint endpoint1 = (Endpoint)endpoints.get(0);
         session.expect("sendEvent", C.eq(message, endpoint1));
-        UMOMessage result = router.route(message, (UMOSession)session.proxy(), false);
+        MuleMessage result = router.route(message, (Session)session.proxy(), false);
         session.verify();
         assertNull(result);
     }

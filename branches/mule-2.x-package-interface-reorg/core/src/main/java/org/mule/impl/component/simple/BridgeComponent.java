@@ -10,15 +10,15 @@
 
 package org.mule.impl.component.simple;
 
-import org.mule.api.UMOComponent;
-import org.mule.api.UMOComponentAware;
-import org.mule.api.UMOEventContext;
+import org.mule.api.Component;
+import org.mule.api.ComponentAware;
+import org.mule.api.EventContext;
 import org.mule.api.config.ConfigurationException;
 import org.mule.api.lifecycle.Callable;
-import org.mule.api.routing.UMOInboundRouter;
+import org.mule.api.routing.InboundRouter;
+import org.mule.impl.routing.inbound.DefaultInboundRouterCollection;
 import org.mule.impl.routing.inbound.ForwardingConsumer;
 import org.mule.impl.routing.inbound.InboundPassThroughRouter;
-import org.mule.impl.routing.inbound.InboundRouterCollection;
 
 import java.util.Iterator;
 
@@ -33,27 +33,27 @@ import java.util.Iterator;
  * @deprecated along with bridge-component - use an empty service and, if you want an efficient transfer of messages,
  * add a forwarding-consumer.
  */
-public class BridgeComponent implements UMOComponentAware, Callable
+public class BridgeComponent implements ComponentAware, Callable
 {
 
-    public Object onCall(UMOEventContext context) throws Exception
+    public Object onCall(EventContext context) throws Exception
     {
         throw new UnsupportedOperationException(
             "A bridge should not ever receive an event, instead the event should be directly dispatched from the inbound endpoint to the outbound router. Component is: "
                             + context.getComponent().getName());
     }
 
-    public void setComponent(UMOComponent component) throws ConfigurationException
+    public void setComponent(Component component) throws ConfigurationException
     {
         // Add a ForwardingConsumer, which punts message to oubound router, unless already present
         boolean registered = false;
         if(component.getInboundRouter()==null)
         {
-            component.setInboundRouter(new InboundRouterCollection());
+            component.setInboundRouter(new DefaultInboundRouterCollection());
         }
         for (Iterator routers = component.getInboundRouter().getRouters().iterator(); routers.hasNext();)
         {
-            UMOInboundRouter router = (UMOInboundRouter) routers.next();
+            InboundRouter router = (InboundRouter) routers.next();
             //Remove if present
             if(router instanceof InboundPassThroughRouter)
             {

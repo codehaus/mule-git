@@ -10,22 +10,22 @@
 
 package org.mule.impl;
 
-import org.mule.api.UMOException;
-import org.mule.api.UMOMessage;
-import org.mule.api.UMOSession;
-import org.mule.api.transport.UMOSessionHandler;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleMessage;
+import org.mule.api.Session;
+import org.mule.api.transport.SessionHandler;
 
 /**
  * A session handler that ignores any session information
  */
-public class NullSessionHandler implements UMOSessionHandler
+public class NullSessionHandler implements SessionHandler
 {
-    public void retrieveSessionInfoFromMessage(UMOMessage message, UMOSession session) throws UMOException
+    public void retrieveSessionInfoFromMessage(MuleMessage message, Session session) throws AbstractMuleException
     {
         // noop
     }
 
-    public void storeSessionInfoToMessage(UMOSession session, UMOMessage message) throws UMOException
+    public void storeSessionInfoToMessage(Session session, MuleMessage message) throws AbstractMuleException
     {
         // noop
     }

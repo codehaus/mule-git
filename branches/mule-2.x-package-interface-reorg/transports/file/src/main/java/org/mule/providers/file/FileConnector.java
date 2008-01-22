@@ -10,18 +10,18 @@
 
 package org.mule.providers.file;
 
-import org.mule.api.UMOComponent;
-import org.mule.api.UMOException;
-import org.mule.api.UMOMessage;
+import org.mule.api.Component;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleMessage;
 import org.mule.api.config.MuleProperties;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.transport.DispatchException;
-import org.mule.api.transport.UMOMessageReceiver;
+import org.mule.api.transport.MessageReceiver;
+import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.impl.transformer.simple.ByteArrayToSerializable;
 import org.mule.impl.transformer.simple.SerializableToByteArray;
 import org.mule.impl.transport.AbstractConnector;
-import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.providers.file.filters.FilenameWildcardFilter;
 import org.mule.util.FileUtils;
 import org.mule.util.MapUtils;
@@ -112,7 +112,7 @@ public class FileConnector extends AbstractConnector
         filenameParser = new SimpleFilenameParser();
     }
 
-    protected Object getReceiverKey(UMOComponent component, UMOImmutableEndpoint endpoint)
+    protected Object getReceiverKey(Component component, ImmutableEndpoint endpoint)
     {
         if (endpoint.getFilter() != null)
         {
@@ -132,7 +132,7 @@ public class FileConnector extends AbstractConnector
      * <li>pollingFrequency</li>
      * </ul>
      */
-    public UMOMessageReceiver createReceiver(UMOComponent component, UMOImmutableEndpoint endpoint) throws Exception
+    public MessageReceiver createReceiver(Component component, ImmutableEndpoint endpoint) throws Exception
     {
         String readDir = endpoint.getEndpointURI().getAddress();
         if (null != getReadFromDirectory())
@@ -248,7 +248,7 @@ public class FileConnector extends AbstractConnector
         {
             doStop();
         }
-        catch (UMOException e)
+        catch (AbstractMuleException e)
         {
             logger.error(e.getMessage(), e);
         }
@@ -270,12 +270,12 @@ public class FileConnector extends AbstractConnector
         // template method, nothing to do
     }
 
-    protected void doStart() throws UMOException
+    protected void doStart() throws AbstractMuleException
     {
         // template method, nothing to do
     }
 
-    protected void doStop() throws UMOException
+    protected void doStop() throws AbstractMuleException
     {
         if (outputStream != null)
         {
@@ -505,10 +505,10 @@ public class FileConnector extends AbstractConnector
      * @param message the current message being processed
      * @return the output stream to use for this request or null if the transport
      *         does not support streaming
-     * @throws org.mule.api.UMOException
+     * @throws org.mule.api.AbstractMuleException
      */
-    public OutputStream getOutputStream(UMOImmutableEndpoint endpoint, UMOMessage message)
-        throws UMOException
+    public OutputStream getOutputStream(ImmutableEndpoint endpoint, MuleMessage message)
+        throws AbstractMuleException
     {
         String address = endpoint.getEndpointURI().getAddress();
         String writeToDirectory = message.getStringProperty(FileConnector.PROPERTY_WRITE_TO_DIRECTORY, null);
@@ -566,7 +566,7 @@ public class FileConnector extends AbstractConnector
         }
     }
 
-    private String generateFilename(UMOMessage message, String pattern)
+    private String generateFilename(MuleMessage message, String pattern)
     {
         if (pattern == null)
         {

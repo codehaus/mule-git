@@ -12,18 +12,18 @@ package org.mule.impl.registry;
 
 import org.mule.api.MuleContext;
 import org.mule.api.ThreadSafeAccess;
-import org.mule.api.UMOComponent;
-import org.mule.api.UMOEvent;
-import org.mule.api.UMOException;
-import org.mule.api.UMOMessage;
-import org.mule.api.UMOSession;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
-import org.mule.api.security.UMOCredentials;
+import org.mule.api.Component;
+import org.mule.api.Event;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleMessage;
+import org.mule.api.Session;
+import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.api.security.Credentials;
 import org.mule.api.transformer.TransformerException;
-import org.mule.impl.MuleMessage;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.RequestContext;
 import org.mule.impl.OptimizedRequestContext;
-import org.mule.impl.message.ExceptionPayload;
+import org.mule.impl.message.DefaultExceptionPayload;
 import org.mule.tck.AbstractMuleTestCase;
 
 import java.io.OutputStream;
@@ -38,7 +38,7 @@ public class RequestContextTestCase extends AbstractMuleTestCase
     public void testSetExceptionPayloadAcrossThreads() throws InterruptedException
     {
         threadSafeEvent = true;
-        UMOEvent event = new DummyEvent();
+        Event event = new DummyEvent();
         runThread(event, false);
         runThread(event, true);
     }
@@ -46,12 +46,12 @@ public class RequestContextTestCase extends AbstractMuleTestCase
     public void testFailureWithoutThreadSafeEvent() throws InterruptedException
     {
         threadSafeEvent = false;
-        UMOEvent event = new DummyEvent();
+        Event event = new DummyEvent();
         runThread(event, false);
         runThread(event, true);
     }
 
-    protected void runThread(UMOEvent event, boolean doTest) throws InterruptedException
+    protected void runThread(Event event, boolean doTest) throws InterruptedException
     {
         AtomicBoolean success = new AtomicBoolean(false);
         Thread thread = new Thread(new SetExceptionPayload(event, success));
@@ -66,10 +66,10 @@ public class RequestContextTestCase extends AbstractMuleTestCase
     private class SetExceptionPayload implements Runnable
     {
 
-        private UMOEvent event;
+        private Event event;
         private AtomicBoolean success;
 
-        public SetExceptionPayload(UMOEvent event, AtomicBoolean success)
+        public SetExceptionPayload(Event event, AtomicBoolean success)
         {
             this.event = event;
             this.success = success;
@@ -80,7 +80,7 @@ public class RequestContextTestCase extends AbstractMuleTestCase
             try
             {
                 OptimizedRequestContext.unsafeSetEvent(event);
-                RequestContext.setExceptionPayload(new ExceptionPayload(new Exception()));
+                RequestContext.setExceptionPayload(new DefaultExceptionPayload(new Exception()));
                 success.set(true);
             }
             catch (RuntimeException e)
@@ -91,22 +91,22 @@ public class RequestContextTestCase extends AbstractMuleTestCase
 
     }
 
-    private class DummyEvent implements UMOEvent, ThreadSafeAccess
+    private class DummyEvent implements Event, ThreadSafeAccess
     {
 
-        private UMOMessage message = new MuleMessage(null);
+        private MuleMessage message = new DefaultMuleMessage(null);
 
-        public UMOMessage getMessage()
+        public MuleMessage getMessage()
         {
             return message;
         }
 
-        public UMOCredentials getCredentials()
+        public Credentials getCredentials()
         {
             return null;  //To change body of implemented methods use File | Settings | File Templates.
         }
 
-        public byte[] getMessageAsBytes() throws UMOException
+        public byte[] getMessageAsBytes() throws AbstractMuleException
         {
             return new byte[0];  //To change body of implemented methods use File | Settings | File Templates.
         }
@@ -131,7 +131,7 @@ public class RequestContextTestCase extends AbstractMuleTestCase
             return null;  //To change body of implemented methods use File | Settings | File Templates.
         }
 
-        public String getMessageAsString() throws UMOException
+        public String getMessageAsString() throws AbstractMuleException
         {
             return null;  //To change body of implemented methods use File | Settings | File Templates.
         }
@@ -141,7 +141,7 @@ public class RequestContextTestCase extends AbstractMuleTestCase
             return null;  //To change body of implemented methods use File | Settings | File Templates.
         }
 
-        public String getMessageAsString(String encoding) throws UMOException
+        public String getMessageAsString(String encoding) throws AbstractMuleException
         {
             return null;  //To change body of implemented methods use File | Settings | File Templates.
         }
@@ -161,17 +161,17 @@ public class RequestContextTestCase extends AbstractMuleTestCase
             return null;  //To change body of implemented methods use File | Settings | File Templates.
         }
 
-        public UMOImmutableEndpoint getEndpoint()
+        public ImmutableEndpoint getEndpoint()
         {
             return null;  //To change body of implemented methods use File | Settings | File Templates.
         }
 
-        public UMOSession getSession()
+        public Session getSession()
         {
             return null;  //To change body of implemented methods use File | Settings | File Templates.
         }
 
-        public UMOComponent getComponent()
+        public Component getComponent()
         {
             return null;  //To change body of implemented methods use File | Settings | File Templates.
         }

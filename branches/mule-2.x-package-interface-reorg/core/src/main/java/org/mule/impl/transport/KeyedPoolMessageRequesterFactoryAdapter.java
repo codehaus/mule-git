@@ -10,28 +10,28 @@
 
 package org.mule.impl.transport;
 
-import org.mule.api.UMOException;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
-import org.mule.api.transport.UMOMessageRequester;
-import org.mule.api.transport.UMOMessageRequesterFactory;
-import org.mule.imple.config.i18n.CoreMessages;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.api.transport.MessageRequester;
+import org.mule.api.transport.MessageRequesterFactory;
+import org.mule.impl.config.i18n.CoreMessages;
 
 import org.apache.commons.pool.KeyedPoolableObjectFactory;
 
 /**
  * <code>KeyedPoolMessageRequesterFactoryAdapter</code> adapts a
- * <code>UMOMessageRequesterFactory</code> with methods from commons-pool
+ * <code>MessageRequesterFactory</code> with methods from commons-pool
  * <code>KeyedPoolableObjectFactory</code>. It is only required for requester
  * factories that do not inherit from <code>AbstractMessageRequesterFactory</code>.
  *
  * @see org.mule.impl.transport.AbstractMessageRequesterFactory
  */
 public class KeyedPoolMessageRequesterFactoryAdapter
-    implements UMOMessageRequesterFactory, KeyedPoolableObjectFactory
+    implements MessageRequesterFactory, KeyedPoolableObjectFactory
 {
-    private final UMOMessageRequesterFactory factory;
+    private final MessageRequesterFactory factory;
 
-    public KeyedPoolMessageRequesterFactoryAdapter(UMOMessageRequesterFactory factory)
+    public KeyedPoolMessageRequesterFactoryAdapter(MessageRequesterFactory factory)
     {
         super();
 
@@ -45,27 +45,27 @@ public class KeyedPoolMessageRequesterFactoryAdapter
 
     public void activateObject(Object key, Object obj) throws Exception
     {
-        factory.activate((UMOImmutableEndpoint) key, (UMOMessageRequester) obj);
+        factory.activate((ImmutableEndpoint) key, (MessageRequester) obj);
     }
 
     public void destroyObject(Object key, Object obj) throws Exception
     {
-        factory.destroy((UMOImmutableEndpoint) key, (UMOMessageRequester) obj);
+        factory.destroy((ImmutableEndpoint) key, (MessageRequester) obj);
     }
 
     public Object makeObject(Object key) throws Exception
     {
-        return factory.create((UMOImmutableEndpoint) key);
+        return factory.create((ImmutableEndpoint) key);
     }
 
     public void passivateObject(Object key, Object obj) throws Exception
     {
-        factory.passivate((UMOImmutableEndpoint) key, (UMOMessageRequester) obj);
+        factory.passivate((ImmutableEndpoint) key, (MessageRequester) obj);
     }
 
     public boolean validateObject(Object key, Object obj)
     {
-        return factory.validate((UMOImmutableEndpoint) key, (UMOMessageRequester) obj);
+        return factory.validate((ImmutableEndpoint) key, (MessageRequester) obj);
     }
 
     public boolean isCreateRequesterPerRequest()
@@ -73,27 +73,27 @@ public class KeyedPoolMessageRequesterFactoryAdapter
         return factory.isCreateRequesterPerRequest();
     }
 
-    public UMOMessageRequester create(UMOImmutableEndpoint endpoint) throws UMOException
+    public MessageRequester create(ImmutableEndpoint endpoint) throws AbstractMuleException
     {
         return factory.create(endpoint);
     }
 
-    public void activate(UMOImmutableEndpoint endpoint, UMOMessageRequester requester) throws UMOException
+    public void activate(ImmutableEndpoint endpoint, MessageRequester requester) throws AbstractMuleException
     {
         factory.activate(endpoint, requester);
     }
 
-    public void destroy(UMOImmutableEndpoint endpoint, UMOMessageRequester requester)
+    public void destroy(ImmutableEndpoint endpoint, MessageRequester requester)
     {
         factory.destroy(endpoint, requester);
     }
 
-    public void passivate(UMOImmutableEndpoint endpoint, UMOMessageRequester requester)
+    public void passivate(ImmutableEndpoint endpoint, MessageRequester requester)
     {
         factory.passivate(endpoint, requester);
     }
 
-    public boolean validate(UMOImmutableEndpoint endpoint, UMOMessageRequester requester)
+    public boolean validate(ImmutableEndpoint endpoint, MessageRequester requester)
     {
         return factory.validate(endpoint, requester);
     }

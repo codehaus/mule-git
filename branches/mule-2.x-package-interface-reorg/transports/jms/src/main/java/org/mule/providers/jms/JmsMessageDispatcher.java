@@ -10,14 +10,14 @@
 
 package org.mule.providers.jms;
 
-import org.mule.api.UMOEvent;
-import org.mule.api.UMOMessage;
-import org.mule.api.endpoint.UMOEndpointURI;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.Event;
+import org.mule.api.MuleMessage;
+import org.mule.api.endpoint.EndpointURI;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.transport.DispatchException;
-import org.mule.api.transport.UMOConnector;
-import org.mule.api.transport.UMOMessageAdapter;
-import org.mule.impl.MuleMessage;
+import org.mule.api.transport.Connector;
+import org.mule.api.transport.MessageAdapter;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.transaction.IllegalTransactionStateException;
 import org.mule.impl.transport.AbstractMessageDispatcher;
 import org.mule.providers.jms.i18n.JmsMessages;
@@ -52,13 +52,13 @@ public class JmsMessageDispatcher extends AbstractMessageDispatcher
     private JmsConnector connector;
     private Session cachedSession;
 
-    public JmsMessageDispatcher(UMOImmutableEndpoint endpoint)
+    public JmsMessageDispatcher(ImmutableEndpoint endpoint)
     {
         super(endpoint);
         this.connector = (JmsConnector)endpoint.getConnector();
     }
 
-    protected void doDispatch(UMOEvent event) throws Exception
+    protected void doDispatch(Event event) throws Exception
     {
         dispatchMessage(event);
     }
@@ -73,7 +73,7 @@ public class JmsMessageDispatcher extends AbstractMessageDispatcher
         // template method
     }
 
-    private UMOMessage dispatchMessage(UMOEvent event) throws Exception
+    private MuleMessage dispatchMessage(Event event) throws Exception
     {
         Session session = null;
         MessageProducer producer = null;
@@ -130,7 +130,7 @@ public class JmsMessageDispatcher extends AbstractMessageDispatcher
                 }
             }
 
-            UMOEndpointURI endpointUri = event.getEndpoint().getEndpointURI();
+            EndpointURI endpointUri = event.getEndpoint().getEndpointURI();
 
             boolean topic = connector.getTopicResolver().isTopic(event.getEndpoint(), true);
 
@@ -152,7 +152,7 @@ public class JmsMessageDispatcher extends AbstractMessageDispatcher
                 msg.setJMSCorrelationID(event.getMessage().getCorrelationId());
             }
 
-            UMOMessage eventMsg = event.getMessage();
+            MuleMessage eventMsg = event.getMessage();
 
             // Some JMS implementations might not support the ReplyTo property.
             if (connector.supportsProperty(JmsConstants.JMS_REPLY_TO))
@@ -218,14 +218,14 @@ public class JmsMessageDispatcher extends AbstractMessageDispatcher
 
             if (connector.isHonorQosHeaders())
             {
-                int priorityProp = eventMsg.getIntProperty(JmsConstants.JMS_PRIORITY, UMOConnector.INT_VALUE_NOT_SET);
-                int deliveryModeProp = eventMsg.getIntProperty(JmsConstants.JMS_DELIVERY_MODE, UMOConnector.INT_VALUE_NOT_SET);
+                int priorityProp = eventMsg.getIntProperty(JmsConstants.JMS_PRIORITY, Connector.INT_VALUE_NOT_SET);
+                int deliveryModeProp = eventMsg.getIntProperty(JmsConstants.JMS_DELIVERY_MODE, Connector.INT_VALUE_NOT_SET);
 
-                if (priorityProp != UMOConnector.INT_VALUE_NOT_SET)
+                if (priorityProp != Connector.INT_VALUE_NOT_SET)
                 {
                     priority = priorityProp;
                 }
-                if (deliveryModeProp != UMOConnector.INT_VALUE_NOT_SET)
+                if (deliveryModeProp != Connector.INT_VALUE_NOT_SET)
                 {
                     persistent = deliveryModeProp == DeliveryMode.PERSISTENT;
                 }
@@ -263,8 +263,8 @@ public class JmsMessageDispatcher extends AbstractMessageDispatcher
                 }
                 else
                 {
-                    UMOMessageAdapter adapter = connector.getMessageAdapter(result);
-                    return new MuleMessage(JmsMessageUtils.toObject(result, connector.getSpecification()),
+                    MessageAdapter adapter = connector.getMessageAdapter(result);
+                    return new DefaultMuleMessage(JmsMessageUtils.toObject(result, connector.getSpecification()),
                         adapter);
                 }
             }
@@ -288,8 +288,8 @@ public class JmsMessageDispatcher extends AbstractMessageDispatcher
                     }
                     else
                     {
-                        UMOMessageAdapter adapter = connector.getMessageAdapter(result);
-                        return new MuleMessage(
+                        MessageAdapter adapter = connector.getMessageAdapter(result);
+                        return new DefaultMuleMessage(
                             JmsMessageUtils.toObject(result, connector.getSpecification()), adapter);
                     }
                 }
@@ -325,9 +325,9 @@ public class JmsMessageDispatcher extends AbstractMessageDispatcher
         }
     }
 
-    protected UMOMessage doSend(UMOEvent event) throws Exception
+    protected MuleMessage doSend(Event event) throws Exception
     {
-        UMOMessage message = dispatchMessage(event);
+        MuleMessage message = dispatchMessage(event);
         return message;
     }
 

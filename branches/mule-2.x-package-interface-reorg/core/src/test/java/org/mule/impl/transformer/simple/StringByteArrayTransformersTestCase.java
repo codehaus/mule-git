@@ -10,7 +10,7 @@
 
 package org.mule.impl.transformer.simple;
 
-import org.mule.api.transformer.UMOTransformer;
+import org.mule.api.transformer.Transformer;
 import org.mule.impl.transformer.simple.ByteArrayToObject;
 import org.mule.impl.transformer.simple.ObjectToByteArray;
 import org.mule.tck.AbstractTransformerTestCase;
@@ -20,12 +20,12 @@ import java.util.Arrays;
 public class StringByteArrayTransformersTestCase extends AbstractTransformerTestCase
 {
 
-    public UMOTransformer getTransformer() throws Exception
+    public Transformer getTransformer() throws Exception
     {
         return new ObjectToByteArray();
     }
 
-    public UMOTransformer getRoundTripTransformer() throws Exception
+    public Transformer getRoundTripTransformer() throws Exception
     {
         return new ByteArrayToObject();
     }

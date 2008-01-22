@@ -10,20 +10,20 @@
 
 package org.mule.impl.endpoint;
 
+import org.mule.api.Filter;
 import org.mule.api.MuleContext;
-import org.mule.api.UMOFilter;
-import org.mule.api.UMOTransactionConfig;
+import org.mule.api.TransactionConfig;
 import org.mule.api.context.MuleContextAware;
+import org.mule.api.endpoint.Endpoint;
 import org.mule.api.endpoint.EndpointException;
-import org.mule.api.endpoint.UMOEndpoint;
-import org.mule.api.endpoint.UMOEndpointURI;
+import org.mule.api.endpoint.EndpointURI;
 import org.mule.api.lifecycle.InitialisationException;
-import org.mule.api.security.UMOEndpointSecurityFilter;
+import org.mule.api.security.EndpointSecurityFilter;
 import org.mule.api.transport.ConnectionStrategy;
-import org.mule.api.transport.UMOConnector;
+import org.mule.api.transport.Connector;
 import org.mule.impl.ImmutableMuleEndpoint;
+import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.impl.transformer.TransformerUtils;
-import org.mule.imple.config.i18n.CoreMessages;
 
 import java.util.List;
 import java.util.Map;
@@ -34,7 +34,7 @@ import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicReference;
  * <code>MuleEndpoint</code> describes a Provider in the Mule Server. A endpoint is
  * a grouping of an endpoint, an endpointUri and a transformer.
  */
-public class MuleEndpoint extends ImmutableMuleEndpoint implements UMOEndpoint, MuleContextAware
+public class MuleEndpoint extends ImmutableMuleEndpoint implements Endpoint, MuleContextAware
 {
     private static final long serialVersionUID = 3883445445846168147L;
     
@@ -46,7 +46,7 @@ public class MuleEndpoint extends ImmutableMuleEndpoint implements UMOEndpoint, 
         super();
     }
 
-    public void setEndpointURI(UMOEndpointURI endpointUri) throws EndpointException
+    public void setEndpointURI(EndpointURI endpointUri) throws EndpointException
     {
         if (connector != null && endpointUri != null
             && !connector.supportsProtocol(endpointUri.getFullScheme()))
@@ -85,7 +85,7 @@ public class MuleEndpoint extends ImmutableMuleEndpoint implements UMOEndpoint, 
         this.type = type;
     }
 
-    public void setConnector(UMOConnector connector)
+    public void setConnector(Connector connector)
     {
         if (connector != null && endpointUri != null
             && !connector.supportsProtocol(endpointUri.getFullScheme()))
@@ -125,12 +125,12 @@ public class MuleEndpoint extends ImmutableMuleEndpoint implements UMOEndpoint, 
         return false;
     }
 
-    public void setTransactionConfig(UMOTransactionConfig config)
+    public void setTransactionConfig(TransactionConfig config)
     {
         transactionConfig = config;
     }
 
-    public void setFilter(UMOFilter filter)
+    public void setFilter(Filter filter)
     {
         this.filter = filter;
     }
@@ -147,14 +147,14 @@ public class MuleEndpoint extends ImmutableMuleEndpoint implements UMOEndpoint, 
     }
 
     /**
-     * Sets an UMOEndpointSecurityFilter for this endpoint. If a filter is set all
+     * Sets an EndpointSecurityFilter for this endpoint. If a filter is set all
      * traffice via this endpoint with be subject to authentication.
      * 
      * @param filter the UMOSecurityFilter responsible for authenticating message
      *            flow via this endpoint.
-     * @see org.mule.api.security.UMOEndpointSecurityFilter
+     * @see org.mule.api.security.EndpointSecurityFilter
      */
-    public void setSecurityFilter(UMOEndpointSecurityFilter filter)
+    public void setSecurityFilter(EndpointSecurityFilter filter)
     {
         securityFilter = filter;
         if (securityFilter != null)

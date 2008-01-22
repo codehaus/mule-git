@@ -10,8 +10,8 @@
 
 package org.mule.providers.ssl;
 
-import org.mule.api.UMOComponent;
-import org.mule.api.UMOMessage;
+import org.mule.api.Component;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.tck.functional.CounterCallback;
@@ -41,7 +41,7 @@ public class SslFunctionalTestCase extends FunctionalTestCase {
     {
         MuleClient client = new MuleClient();
         Map props = new HashMap();
-        UMOMessage result = client.send("sendEndpoint", TEST_MESSAGE, props);
+        MuleMessage result = client.send("sendEndpoint", TEST_MESSAGE, props);
         assertEquals(TEST_MESSAGE + " Received", result.getPayloadAsString());
     }
 
@@ -51,11 +51,11 @@ public class SslFunctionalTestCase extends FunctionalTestCase {
         Map props = new HashMap();
         for (int i = 0; i < NUM_MESSAGES; ++i)
         {
-            UMOMessage result = client.send("sendManyEndpoint", TEST_MESSAGE, props);
+            MuleMessage result = client.send("sendManyEndpoint", TEST_MESSAGE, props);
             assertEquals(TEST_MESSAGE + " Received", result.getPayloadAsString());
         }
 
-        UMOComponent c = muleContext.getRegistry().lookupComponent("testComponent2");
+        Component c = muleContext.getRegistry().lookupComponent("testComponent2");
         assertTrue("Component should be a TestSedaComponent", c instanceof TestSedaComponent);
         Object ftc = ((TestSedaComponent) c).getOrCreateService();
         assertNotNull("Functional Test Component not found in the model.", ftc);
@@ -73,7 +73,7 @@ public class SslFunctionalTestCase extends FunctionalTestCase {
         client.dispatch("asyncEndpoint", TEST_MESSAGE, null);
         // MULE-2754
         Thread.sleep(100);
-        UMOMessage response = client.request("asyncEndpoint", 5000);
+        MuleMessage response = client.request("asyncEndpoint", 5000);
         assertNotNull("Response is null", response);
         assertEquals(TEST_MESSAGE + " Received Async", response.getPayloadAsString());
     }

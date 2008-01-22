@@ -10,7 +10,7 @@
 
 package org.mule.providers.bpm.jbpm.actions;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.api.config.MuleProperties;
 import org.mule.providers.bpm.ProcessConnector;
 import org.mule.providers.bpm.jbpm.MuleMessageService;
@@ -111,7 +111,7 @@ public class SendMuleEvent extends LoggingActionHandler
             props.putAll(properties);
         }
 
-        UMOMessage response = mule.generateMessage(endpoint, payloadObject, props, synchronous);
+        MuleMessage response = mule.generateMessage(endpoint, payloadObject, props, synchronous);
         if (synchronous)
         {
             if (response != null)

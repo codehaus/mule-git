@@ -1,6 +1,6 @@
 package org.mule.impl.endpoint;
 
-import org.mule.api.endpoint.UMOEndpointURI;
+import org.mule.api.endpoint.EndpointURI;
 import org.mule.tck.AbstractMuleTestCase;
 
 import java.util.HashMap;
@@ -67,7 +67,7 @@ public class URIBuilderTestCase extends AbstractMuleTestCase
     public void testFromString()
     {
         URIBuilder uri = new URIBuilder("test://bar");
-        UMOEndpointURI endpointURI = uri.getEndpoint();
+        EndpointURI endpointURI = uri.getEndpoint();
         assertEquals("test://bar", endpointURI.getUri().toString());
         assertEquals("test", endpointURI.getSchemeMetaInfo());
         uri = new URIBuilder("meta:test://bar");

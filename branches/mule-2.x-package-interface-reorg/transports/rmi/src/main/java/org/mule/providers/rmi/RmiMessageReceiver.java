@@ -10,12 +10,12 @@
 
 package org.mule.providers.rmi;
 
-import org.mule.api.UMOComponent;
+import org.mule.api.Component;
 import org.mule.api.config.MuleProperties;
-import org.mule.api.endpoint.UMOEndpoint;
+import org.mule.api.endpoint.Endpoint;
 import org.mule.api.lifecycle.CreateException;
-import org.mule.api.transport.UMOConnector;
-import org.mule.impl.MuleMessage;
+import org.mule.api.transport.Connector;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.transport.AbstractPollingMessageReceiver;
 import org.mule.impl.transport.ConnectException;
 import org.mule.providers.rmi.i18n.RmiMessages;
@@ -45,9 +45,9 @@ public class RmiMessageReceiver extends AbstractPollingMessageReceiver
 
     protected Object[] methodArguments = null;
 
-    public RmiMessageReceiver(UMOConnector connector,
-                              UMOComponent component,
-                              UMOEndpoint endpoint,
+    public RmiMessageReceiver(Connector connector,
+                              Component component,
+                              Endpoint endpoint,
                               long frequency) throws CreateException
     {
         super(connector, component, endpoint);
@@ -119,7 +119,7 @@ public class RmiMessageReceiver extends AbstractPollingMessageReceiver
             if (null != result)
             {
                 final Object payload = connector.getMessageAdapter(result).getPayload();
-                routeMessage(new MuleMessage(payload), endpoint.isSynchronous());
+                routeMessage(new DefaultMuleMessage(payload), endpoint.isSynchronous());
             }
         }
         catch (Exception e)

@@ -10,7 +10,7 @@
 
 package org.mule.management;
 
-import org.mule.api.context.UMOServerNotification;
+import org.mule.api.context.ServerNotification;
 import org.mule.impl.internal.notifications.ComponentNotification;
 import org.mule.impl.internal.notifications.ComponentNotificationListener;
 import org.mule.impl.internal.notifications.CustomNotification;
@@ -95,7 +95,7 @@ public class ServerNotificationsTestCase extends AbstractMuleTestCase
         final CountDownLatch latch = new CountDownLatch(1);
         muleContext.registerListener(new ComponentNotificationListener()
         {
-            public void onNotification(UMOServerNotification notification)
+            public void onNotification(ServerNotification notification)
             {
                 if (notification.getAction() == ComponentNotification.COMPONENT_STARTED)
                 {
@@ -121,7 +121,7 @@ public class ServerNotificationsTestCase extends AbstractMuleTestCase
 
         muleContext.registerListener(new ComponentNotificationListener()
         {
-            public void onNotification(UMOServerNotification notification)
+            public void onNotification(ServerNotification notification)
             {
                 if (notification.getAction() == ComponentNotification.COMPONENT_STARTED)
                 {
@@ -148,7 +148,7 @@ public class ServerNotificationsTestCase extends AbstractMuleTestCase
 
         muleContext.registerListener(new DummyNotificationListener()
         {
-            public void onNotification(UMOServerNotification notification)
+            public void onNotification(ServerNotification notification)
             {
                 if (notification.getAction() == DummyNotification.EVENT_RECEIVED)
                 {
@@ -174,7 +174,7 @@ public class ServerNotificationsTestCase extends AbstractMuleTestCase
 
         muleContext.registerListener(new DummyNotificationListener()
         {
-            public void onNotification(UMOServerNotification notification)
+            public void onNotification(ServerNotification notification)
             {
                 if (notification.getAction() == DummyNotification.EVENT_RECEIVED)
                 {
@@ -195,7 +195,7 @@ public class ServerNotificationsTestCase extends AbstractMuleTestCase
         assertEquals(2, customNotificationCount.get());
     }
 
-    public void onNotification(UMOServerNotification notification)
+    public void onNotification(ServerNotification notification)
     {
         if (notification.getAction() == ModelNotification.MODEL_STOPPED)
         {

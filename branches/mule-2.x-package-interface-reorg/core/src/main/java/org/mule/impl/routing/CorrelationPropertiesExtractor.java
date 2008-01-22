@@ -10,7 +10,7 @@
 
 package org.mule.impl.routing;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.api.config.MuleProperties;
 import org.mule.util.properties.MessageHeaderPropertyExtractor;
 
@@ -27,10 +27,10 @@ public class CorrelationPropertiesExtractor extends MessageHeaderPropertyExtract
     public final Object getProperty(String name, Object message)
     {
         Object result;
-        UMOMessage msg = null;
-        if (message instanceof UMOMessage)
+        MuleMessage msg = null;
+        if (message instanceof MuleMessage)
         {
-            msg = (UMOMessage) message;
+            msg = (MuleMessage) message;
         }
         if (msg != null)
         {
@@ -60,12 +60,12 @@ public class CorrelationPropertiesExtractor extends MessageHeaderPropertyExtract
         return result;
     }
 
-    public String getMessageId(UMOMessage message)
+    public String getMessageId(MuleMessage message)
     {
         return message.getUniqueId();
     }
 
-    public String getCorrelationId(UMOMessage message)
+    public String getCorrelationId(MuleMessage message)
     {
         String id = message.getCorrelationId();
         if (id == null)

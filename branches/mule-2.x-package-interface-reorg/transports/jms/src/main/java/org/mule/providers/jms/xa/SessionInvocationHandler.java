@@ -9,11 +9,11 @@
  */
 package org.mule.providers.jms.xa;
 
-import org.mule.api.UMOTransaction;
+import org.mule.api.Transaction;
+import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.impl.transaction.IllegalTransactionStateException;
 import org.mule.impl.transaction.TransactionCoordination;
 import org.mule.impl.transaction.XaTransaction;
-import org.mule.imple.config.i18n.CoreMessages;
 
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
@@ -130,7 +130,7 @@ public class SessionInvocationHandler implements InvocationHandler
             logger.debug("Enlistment request: " + this);
         }
 
-        UMOTransaction transaction = TransactionCoordination.getInstance().getTransaction();
+        Transaction transaction = TransactionCoordination.getInstance().getTransaction();
         if (transaction == null)
         {
             throw new IllegalTransactionStateException(CoreMessages.noMuleTransactionAvailable());

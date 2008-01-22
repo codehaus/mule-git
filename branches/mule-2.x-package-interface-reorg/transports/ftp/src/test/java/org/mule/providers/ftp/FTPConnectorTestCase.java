@@ -10,12 +10,12 @@
 
 package org.mule.providers.ftp;
 
-import org.mule.api.UMOComponent;
-import org.mule.api.endpoint.UMOEndpoint;
-import org.mule.api.endpoint.UMOEndpointURI;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
-import org.mule.api.transport.UMOConnector;
-import org.mule.api.transport.UMOMessageReceiver;
+import org.mule.api.Component;
+import org.mule.api.endpoint.Endpoint;
+import org.mule.api.endpoint.EndpointURI;
+import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.api.transport.Connector;
+import org.mule.api.transport.MessageReceiver;
 import org.mule.tck.providers.AbstractConnectorTestCase;
 import org.mule.tck.testmodels.fruit.Apple;
 
@@ -36,7 +36,7 @@ public class FTPConnectorTestCase extends AbstractConnectorTestCase
      * @see org.mule.tck.providers.AbstractConnectorTestCase#createConnector()
      */
     // @Override
-    public UMOConnector createConnector() throws Exception
+    public Connector createConnector() throws Exception
     {
         return internalGetConnector(false);
     }
@@ -56,10 +56,10 @@ public class FTPConnectorTestCase extends AbstractConnectorTestCase
      */
     public void testConnectorPollingFrequency() throws Exception
     {
-        UMOEndpoint endpoint = getTestEndpoint("mock", UMOImmutableEndpoint.ENDPOINT_TYPE_RECEIVER);
-        UMOComponent component = getTestComponent("apple", Apple.class);
+        Endpoint endpoint = getTestEndpoint("mock", ImmutableEndpoint.ENDPOINT_TYPE_RECEIVER);
+        Component component = getTestComponent("apple", Apple.class);
         FtpConnector connector = (FtpConnector)getConnector();
-        UMOMessageReceiver receiver = connector.createReceiver(component, endpoint);
+        MessageReceiver receiver = connector.createReceiver(component, endpoint);
         assertEquals("Connector's polling frequency must not be ignored.", POLLING_FREQUENCY,
             ((FtpMessageReceiver)receiver).getFrequency());
     }
@@ -69,16 +69,16 @@ public class FTPConnectorTestCase extends AbstractConnectorTestCase
      */
     public void testPollingFrequencyEndpointOverride() throws Exception
     {
-        UMOEndpoint endpoint = getTestEndpoint("mock", UMOImmutableEndpoint.ENDPOINT_TYPE_RECEIVER);
+        Endpoint endpoint = getTestEndpoint("mock", ImmutableEndpoint.ENDPOINT_TYPE_RECEIVER);
 
         Properties props = new Properties();
         // Endpoint wants String-typed properties
         props.put(FtpConnector.PROPERTY_POLLING_FREQUENCY, String.valueOf(POLLING_FREQUENCY_OVERRIDE));
         endpoint.setProperties(props);
 
-        UMOComponent component = getTestComponent("apple", Apple.class);
+        Component component = getTestComponent("apple", Apple.class);
         FtpConnector connector = (FtpConnector)getConnector();
-        UMOMessageReceiver receiver = connector.createReceiver(component, endpoint);
+        MessageReceiver receiver = connector.createReceiver(component, endpoint);
         assertEquals("Polling frequency endpoint override must not be ignored.", POLLING_FREQUENCY_OVERRIDE,
             ((FtpMessageReceiver)receiver).getFrequency());
     }
@@ -87,10 +87,10 @@ public class FTPConnectorTestCase extends AbstractConnectorTestCase
     {
         final String testObject = "custom object";
 
-        final UMOImmutableEndpoint endpoint = muleContext.getRegistry()
+        final ImmutableEndpoint endpoint = muleContext.getRegistry()
             .lookupEndpointFactory()
             .getOutboundEndpoint("ftp://test:test@example.com");
-        final UMOEndpointURI endpointURI = endpoint.getEndpointURI();
+        final EndpointURI endpointURI = endpoint.getEndpointURI();
 
         FtpConnectionFactory testFactory = new TestFtpConnectionFactory(endpointURI);
         FtpConnector connector = (FtpConnector)getConnector();
@@ -125,7 +125,7 @@ public class FTPConnectorTestCase extends AbstractConnectorTestCase
 
     public static final class TestFtpConnectionFactory extends FtpConnectionFactory {
 
-        public TestFtpConnectionFactory(UMOEndpointURI uri)
+        public TestFtpConnectionFactory(EndpointURI uri)
         {
             super(uri);
         }

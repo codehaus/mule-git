@@ -10,7 +10,7 @@
 
 package org.mule.api.model;
 
-import org.mule.imple.config.i18n.Message;
+import org.mule.impl.config.i18n.Message;
 
 /**
  * <code>SessionException</code> is thrown when errors occur in the MuleSession or

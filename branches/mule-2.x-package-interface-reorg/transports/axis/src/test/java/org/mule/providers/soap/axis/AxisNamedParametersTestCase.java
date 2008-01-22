@@ -10,7 +10,7 @@
 
 package org.mule.providers.soap.axis;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.api.config.MuleProperties;
 import org.mule.extras.client.MuleClient;
 import org.mule.providers.soap.NamedParameter;
@@ -36,7 +36,7 @@ public class AxisNamedParametersTestCase extends FunctionalTestCase
         MuleClient client = new MuleClient();
         // The component itself will throw an exception if the parameters in the
         // request SOAP message are not named
-        UMOMessage result = client.send("vm://mycomponent1", "Hello Named", null);
+        MuleMessage result = client.send("vm://mycomponent1", "Hello Named", null);
         assertEquals("Hello Named", result.getPayload());
     }
 
@@ -52,7 +52,7 @@ public class AxisNamedParametersTestCase extends FunctionalTestCase
         // when making the call
         props.put(MuleProperties.MULE_SOAP_METHOD, soapMethod);
 
-        UMOMessage result = client.send("axis:http://localhost:62111/mule/mycomponent2?method=echo",
+        MuleMessage result = client.send("axis:http://localhost:62111/mule/mycomponent2?method=echo",
             "Hello Named", props);
         assertEquals("Hello Named", result.getPayload());
     }

@@ -15,8 +15,8 @@ import org.mule.api.ThreadSafeAccess;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.transport.MessageTypeNotSupportedException;
 import org.mule.api.transport.UniqueIdNotSupportedException;
+import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.impl.transport.AbstractMessageAdapter;
-import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.providers.http.HttpConstants;
 
 import java.util.Enumeration;

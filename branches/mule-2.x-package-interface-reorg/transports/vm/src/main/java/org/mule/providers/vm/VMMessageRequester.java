@@ -10,8 +10,8 @@
 
 package org.mule.providers.vm;
 
-import org.mule.api.UMOMessage;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.MuleMessage;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.impl.transport.AbstractMessageRequester;
 import org.mule.util.queue.Queue;
 import org.mule.util.queue.QueueSession;
@@ -25,7 +25,7 @@ public class VMMessageRequester extends AbstractMessageRequester
 
     private final VMConnector connector;
 
-    public VMMessageRequester(UMOImmutableEndpoint endpoint)
+    public VMMessageRequester(ImmutableEndpoint endpoint)
     {
         super(endpoint);
         this.connector = (VMConnector) endpoint.getConnector();
@@ -38,11 +38,11 @@ public class VMMessageRequester extends AbstractMessageRequester
      *                The call should return immediately if there is data available. If
      *                no data becomes available before the timeout elapses, null will be
      *                returned
-     * @return the result of the request wrapped in a UMOMessage object. Null will be
+     * @return the result of the request wrapped in a MuleMessage object. Null will be
      *         returned if no data was available
      * @throws Exception if the call to the underlying protocol causes an exception
      */
-    protected UMOMessage doRequest(long timeout) throws Exception
+    protected MuleMessage doRequest(long timeout) throws Exception
     {
         if (!connector.isQueueEvents())
         {
@@ -64,14 +64,14 @@ public class VMMessageRequester extends AbstractMessageRequester
             }
             else
             {
-                UMOMessage message = null;
+                MuleMessage message = null;
                 if (logger.isDebugEnabled())
                 {
                     logger.debug("Waiting for a message on " + endpoint.getEndpointURI().getAddress());
                 }
                 try
                 {
-                    message = (UMOMessage) queue.poll(timeout);
+                    message = (MuleMessage) queue.poll(timeout);
                 }
                 catch (InterruptedException e)
                 {

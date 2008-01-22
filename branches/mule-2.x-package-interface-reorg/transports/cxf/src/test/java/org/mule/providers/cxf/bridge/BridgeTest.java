@@ -10,7 +10,7 @@
 
 package org.mule.providers.cxf.bridge;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 
@@ -22,7 +22,7 @@ public class BridgeTest extends FunctionalTestCase
                      + "<soap:Body>" + "<test> foo </test>" + "</soap:Body>" + "</soap:Envelope>";
 
         MuleClient client = new MuleClient();
-        UMOMessage result = client.send("http://localhost:63081/services/Echo", msg, null);
+        MuleMessage result = client.send("http://localhost:63081/services/Echo", msg, null);
         String resString = result.getPayloadAsString();
 
         assertTrue(resString.indexOf("<test> foo </test>") != -1);

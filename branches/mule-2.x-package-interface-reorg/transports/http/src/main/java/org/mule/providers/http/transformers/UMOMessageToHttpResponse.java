@@ -10,7 +10,7 @@
 
 package org.mule.providers.http.transformers;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.transformer.TransformerException;
@@ -73,7 +73,7 @@ public class UMOMessageToHttpResponse extends AbstractMessageAwareTransformer
         }
     }
 
-    public Object transform(UMOMessage msg, String outputEncoding) throws TransformerException
+    public Object transform(MuleMessage msg, String outputEncoding) throws TransformerException
     {
         Object src = msg.getPayload();
         // Send back the exception payload if one has been set
@@ -186,7 +186,7 @@ public class UMOMessageToHttpResponse extends AbstractMessageAwareTransformer
 
     }
 
-    protected HttpResponse createResponse(Object src, String encoding, UMOMessage msg)
+    protected HttpResponse createResponse(Object src, String encoding, MuleMessage msg)
         throws IOException, TransformerException
     {
         HttpResponse response = new HttpResponse();

@@ -10,14 +10,14 @@
 
 package org.mule.impl.internal.notifications;
 
-import org.mule.api.context.UMOServerNotificationListener;
+import org.mule.api.context.ServerNotificationListener;
 
 /**
  * <code>MessageNotificationListener</code> is an observer interface that objects
  * can use to receive notifications about messages being sent and received from a
  * Mule Server
  */
-public interface MessageNotificationListener extends UMOServerNotificationListener
+public interface MessageNotificationListener extends ServerNotificationListener
 {
     // no methods
 }

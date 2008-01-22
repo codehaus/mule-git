@@ -11,13 +11,13 @@
 package org.mule.extras.jaas;
 
 import org.mule.api.lifecycle.InitialisationException;
-import org.mule.api.security.UMOAuthentication;
-import org.mule.api.security.UMOSecurityContext;
-import org.mule.api.security.UMOSecurityContextFactory;
-import org.mule.api.security.UMOSecurityProvider;
+import org.mule.api.security.MuleAuthentication;
+import org.mule.api.security.SecurityContext;
+import org.mule.api.security.SecurityContextFactory;
+import org.mule.api.security.SecurityProvider;
 import org.mule.api.security.UnauthorisedException;
 import org.mule.api.security.UnknownAuthenticationTypeException;
-import org.mule.imple.config.i18n.CoreMessages;
+import org.mule.impl.config.i18n.CoreMessages;
 
 import java.io.IOException;
 import java.security.Security;
@@ -33,7 +33,7 @@ import javax.security.auth.login.LoginException;
 /**
  *  This is the Provider for Mule's Jaas Security.
  */
-public class JaasSimpleAuthenticationProvider implements UMOSecurityProvider
+public class JaasSimpleAuthenticationProvider implements SecurityProvider
 {
 
     private String loginConfig;
@@ -42,7 +42,7 @@ public class JaasSimpleAuthenticationProvider implements UMOSecurityProvider
     private String loginModule;
     private String defaultModule = "org.mule.extras.jaas.loginmodule.DefaultLoginModule";
     private String name;
-    private UMOSecurityContextFactory factory;
+    private SecurityContextFactory factory;
 
     // ~ Getters and Setters
     // ================================================================
@@ -182,11 +182,11 @@ public class JaasSimpleAuthenticationProvider implements UMOSecurityProvider
      * callback handler and the name of the class or directory to prtect. If the
      * Login Context is successfully created, it will then attempt to login.
      *
-     * @return UMOAuthentication
+     * @return Authentication
      * @throws org.mule.api.security.SecurityException
      *
      */
-    public final UMOAuthentication authenticate(UMOAuthentication authentication)
+    public final MuleAuthentication authenticate(MuleAuthentication authentication)
             throws org.mule.api.security.SecurityException
     {
         LoginContext loginContext;
@@ -239,7 +239,7 @@ public class JaasSimpleAuthenticationProvider implements UMOSecurityProvider
      */
     public final boolean supports(Class aClass)
     {
-        return UMOAuthentication.class.isAssignableFrom(aClass);
+        return MuleAuthentication.class.isAssignableFrom(aClass);
     }
 
     /**
@@ -248,7 +248,7 @@ public class JaasSimpleAuthenticationProvider implements UMOSecurityProvider
      *          This occurs when the Security
      *          Factory cannot be created
      */
-    public final UMOSecurityContext createSecurityContext(UMOAuthentication auth)
+    public final SecurityContext createSecurityContext(MuleAuthentication auth)
             throws UnknownAuthenticationTypeException
     {
         return factory.create(auth);

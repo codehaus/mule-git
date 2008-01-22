@@ -10,16 +10,16 @@
 
 package org.mule.providers.soap.axis;
 
-import org.mule.api.UMOComponent;
-import org.mule.api.UMOException;
-import org.mule.api.UMOExceptionPayload;
-import org.mule.api.UMOMessage;
+import org.mule.api.Component;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.ExceptionPayload;
+import org.mule.api.MuleMessage;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.lifecycle.Callable;
 import org.mule.api.lifecycle.Disposable;
 import org.mule.api.lifecycle.Initialisable;
-import org.mule.api.transport.UMOMessageAdapter;
-import org.mule.impl.MuleMessage;
+import org.mule.api.transport.MessageAdapter;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.RequestContext;
 import org.mule.impl.config.ExceptionHelper;
 import org.mule.impl.transport.AbstractMessageReceiver;
@@ -70,7 +70,7 @@ public class AxisServiceProxy
 
         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable
         {
-            UMOMessageAdapter messageAdapter = receiver.getConnector().getMessageAdapter(args);
+            MessageAdapter messageAdapter = receiver.getConnector().getMessageAdapter(args);
             messageAdapter.setProperty(MuleProperties.MULE_METHOD_PROPERTY, method);
             
             // add all custom headers, filter out all mule headers (such as
@@ -80,15 +80,15 @@ public class AxisServiceProxy
             // and also filter out any http related header
             messageAdapter.addProperties(AxisCleanAndAddProperties.cleanAndAdd(RequestContext.getEventContext()));                        
                                    
-            UMOMessage message = receiver.routeMessage(new MuleMessage(messageAdapter), synchronous);
+            MuleMessage message = receiver.routeMessage(new DefaultMuleMessage(messageAdapter), synchronous);
             
             if (message != null)
             {
-                UMOExceptionPayload wsException = message.getExceptionPayload();
+                ExceptionPayload wsException = message.getExceptionPayload();
 
                 if (wsException != null)
                 {
-                    UMOException umoException = ExceptionHelper.getRootMuleException(wsException.getException());
+                    AbstractMuleException umoException = ExceptionHelper.getRootMuleException(wsException.getException());
                     // if the exception has a cause, then throw only the cause
                     if (umoException.getCause() != null)
                     {
@@ -131,8 +131,8 @@ public class AxisServiceProxy
         AxisServiceProxy.properties.set(properties);
     }
 
-    public static Class[] getInterfacesForComponent(UMOComponent component)
-        throws UMOException, ClassNotFoundException
+    public static Class[] getInterfacesForComponent(Component component)
+        throws AbstractMuleException, ClassNotFoundException
     {
         Class[] interfaces;
 //        List ifaces = (List)component.getProperties().get(SERVICE_INTERFACES);

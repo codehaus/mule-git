@@ -10,7 +10,7 @@
 
 package org.mule.providers.tcp;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 
@@ -36,7 +36,7 @@ public class TcpLengthFunctionalTestCase extends FunctionalTestCase
     {
         MuleClient client = new MuleClient();
         Map props = new HashMap();
-        UMOMessage result = client.send("clientEndpoint", TEST_MESSAGE, props);
+        MuleMessage result = client.send("clientEndpoint", TEST_MESSAGE, props);
         assertEquals(TEST_MESSAGE + " Received", result.getPayloadAsString());
     }
 
@@ -47,7 +47,7 @@ public class TcpLengthFunctionalTestCase extends FunctionalTestCase
         client.dispatch("asyncClientEndpoint1", TEST_MESSAGE, props);
         // MULE-2754
         Thread.sleep(200);
-        UMOMessage result =  client.request("asyncClientEndpoint1", 3000);
+        MuleMessage result =  client.request("asyncClientEndpoint1", 3000);
         // expect failure - streaming not supported
         assertNull(result);
     }
@@ -59,7 +59,7 @@ public class TcpLengthFunctionalTestCase extends FunctionalTestCase
         client.dispatch("asyncClientEndpoint2", TEST_MESSAGE, props);
         // MULE-2754
         Thread.sleep(200);
-        UMOMessage result =  client.request("asyncClientEndpoint2", 3000);
+        MuleMessage result =  client.request("asyncClientEndpoint2", 3000);
         // expect failure - TCP simply can't work like this
         assertNull(result);
     }

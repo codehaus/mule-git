@@ -11,17 +11,17 @@ package org.mule.impl.registry;
 
 import org.mule.MuleServer;
 import org.mule.RegistryContext;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.Component;
 import org.mule.api.MuleContext;
-import org.mule.api.UMOComponent;
-import org.mule.api.UMOException;
-import org.mule.api.context.UMOAgent;
-import org.mule.api.endpoint.UMOEndpointBuilder;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.context.Agent;
+import org.mule.api.endpoint.EndpointBuilder;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.InitialisationException;
+import org.mule.api.lifecycle.LifecycleManager;
+import org.mule.api.lifecycle.LifecyclePhase;
 import org.mule.api.lifecycle.Stoppable;
-import org.mule.api.lifecycle.UMOLifecycleManager;
-import org.mule.api.lifecycle.UMOLifecyclePhase;
-import org.mule.api.model.UMOModel;
+import org.mule.api.model.Model;
 import org.mule.api.registry.AbstractServiceDescriptor;
 import org.mule.api.registry.ObjectProcessor;
 import org.mule.api.registry.RegistrationException;
@@ -30,13 +30,13 @@ import org.mule.api.registry.ServiceDescriptor;
 import org.mule.api.registry.ServiceDescriptorFactory;
 import org.mule.api.registry.ServiceException;
 import org.mule.api.transformer.DiscoverableTransformer;
-import org.mule.api.transformer.UMOTransformer;
-import org.mule.api.transport.UMOConnector;
+import org.mule.api.transformer.Transformer;
+import org.mule.api.transport.Connector;
 import org.mule.impl.config.MuleConfiguration;
+import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.impl.lifecycle.GenericLifecycleManager;
 import org.mule.impl.lifecycle.phases.TransientRegistryDisposePhase;
 import org.mule.impl.lifecycle.phases.TransientRegistryInitialisePhase;
-import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.util.BeanUtils;
 import org.mule.util.ClassUtils;
 import org.mule.util.SpiUtils;
@@ -94,13 +94,13 @@ public class TransientRegistry extends AbstractRegistry
 
     }
 
-    protected UMOLifecycleManager createLifecycleManager()
+    protected LifecycleManager createLifecycleManager()
     {
         GenericLifecycleManager lcm = new GenericLifecycleManager();
-        UMOLifecyclePhase initPhase = new TransientRegistryInitialisePhase();
+        LifecyclePhase initPhase = new TransientRegistryInitialisePhase();
         initPhase.setRegistryScope(Registry.SCOPE_IMMEDIATE);
         lcm.registerLifecycle(initPhase);
-        UMOLifecyclePhase disposePhase = new TransientRegistryDisposePhase();
+        LifecyclePhase disposePhase = new TransientRegistryDisposePhase();
         disposePhase.setRegistryScope(Registry.SCOPE_IMMEDIATE);
         lcm.registerLifecycle(disposePhase);
         return lcm;
@@ -337,7 +337,7 @@ public class TransientRegistry extends AbstractRegistry
                             + "\") because MuleContext has not yet been created.");
                 }
             }
-            catch (UMOException e)
+            catch (AbstractMuleException e)
             {
                 throw new RegistrationException(e);
             }
@@ -349,36 +349,36 @@ public class TransientRegistry extends AbstractRegistry
     }
 
     //@java.lang.Override
-    public void registerAgent(UMOAgent agent) throws UMOException
+    public void registerAgent(Agent agent) throws AbstractMuleException
     {
-        registerObject(agent.getName(), agent, UMOAgent.class);
+        registerObject(agent.getName(), agent, Agent.class);
     }
 
     //@java.lang.Override
-    public void registerConnector(UMOConnector connector) throws UMOException
+    public void registerConnector(Connector connector) throws AbstractMuleException
     {
-        registerObject(connector.getName(), connector, UMOConnector.class);
+        registerObject(connector.getName(), connector, Connector.class);
     }
 
     //@java.lang.Override
-    public void registerEndpoint(UMOImmutableEndpoint endpoint) throws UMOException
+    public void registerEndpoint(ImmutableEndpoint endpoint) throws AbstractMuleException
     {
-        registerObject(endpoint.getName(), endpoint, UMOImmutableEndpoint.class);
+        registerObject(endpoint.getName(), endpoint, ImmutableEndpoint.class);
     }
 
-    public void registerEndpointBuilder(String name, UMOEndpointBuilder builder) throws UMOException
+    public void registerEndpointBuilder(String name, EndpointBuilder builder) throws AbstractMuleException
     {
-        registerObject(name, builder, UMOEndpointBuilder.class);
-    }
-
-    //@java.lang.Override
-    public void registerModel(UMOModel model) throws UMOException
-    {
-        registerObject(model.getName(), model, UMOModel.class);
+        registerObject(name, builder, EndpointBuilder.class);
     }
 
     //@java.lang.Override
-    protected void doRegisterTransformer(UMOTransformer transformer) throws UMOException
+    public void registerModel(Model model) throws AbstractMuleException
+    {
+        registerObject(model.getName(), model, Model.class);
+    }
+
+    //@java.lang.Override
+    protected void doRegisterTransformer(Transformer transformer) throws AbstractMuleException
     {
         //TODO should we always throw an exception if an object already exists
         if (lookupTransformer(transformer.getName()) != null)
@@ -386,16 +386,16 @@ public class TransientRegistry extends AbstractRegistry
             throw new RegistrationException(CoreMessages.objectAlreadyRegistered("transformer: " +
                     transformer.getName(), lookupTransformer(transformer.getName()), transformer).getMessage());
         }
-        registerObject(transformer.getName(), transformer, UMOTransformer.class);
+        registerObject(transformer.getName(), transformer, Transformer.class);
     }
 
     //@java.lang.Override
-    public void registerComponent(UMOComponent component) throws UMOException
+    public void registerComponent(Component component) throws AbstractMuleException
     {
-        registerObject(component.getName(), component, UMOComponent.class);
+        registerObject(component.getName(), component, Component.class);
     }
 
-    protected void unregisterObject(String key, Object metadata) throws UMOException
+    protected void unregisterObject(String key, Object metadata) throws AbstractMuleException
     {
         Object obj = getObjectTypeMap(metadata).remove(key);
         if (obj instanceof Stoppable)
@@ -404,58 +404,58 @@ public class TransientRegistry extends AbstractRegistry
         }
     }
 
-    public void unregisterObject(String key) throws UMOException
+    public void unregisterObject(String key) throws AbstractMuleException
     {
         unregisterObject(key, Object.class);
     }
 
     //@java.lang.Override
-    public void unregisterComponent(String componentName) throws UMOException
+    public void unregisterComponent(String componentName) throws AbstractMuleException
     {
-        unregisterObject(componentName, UMOComponent.class);
+        unregisterObject(componentName, Component.class);
     }
 
 
     //@java.lang.Override
-    public void unregisterAgent(String agentName) throws UMOException
+    public void unregisterAgent(String agentName) throws AbstractMuleException
     {
-        unregisterObject(agentName, UMOAgent.class);
+        unregisterObject(agentName, Agent.class);
     }
 
     //@java.lang.Override
-    public void unregisterConnector(String connectorName) throws UMOException
+    public void unregisterConnector(String connectorName) throws AbstractMuleException
     {
-        unregisterObject(connectorName, UMOConnector.class);
+        unregisterObject(connectorName, Connector.class);
     }
 
     //@java.lang.Override
-    public void unregisterEndpoint(String endpointName) throws UMOException
+    public void unregisterEndpoint(String endpointName) throws AbstractMuleException
     {
-        unregisterObject(endpointName, UMOImmutableEndpoint.class);
+        unregisterObject(endpointName, ImmutableEndpoint.class);
     }
 
     //@java.lang.Override
-    public void unregisterModel(String modelName) throws UMOException
+    public void unregisterModel(String modelName) throws AbstractMuleException
     {
-        unregisterObject(modelName, UMOModel.class);
+        unregisterObject(modelName, Model.class);
     }
 
     //@java.lang.Override
-    public void unregisterTransformer(String transformerName) throws UMOException
+    public void unregisterTransformer(String transformerName) throws AbstractMuleException
     {
-        UMOTransformer transformer = lookupTransformer(transformerName);
+        Transformer transformer = lookupTransformer(transformerName);
         if (transformer instanceof DiscoverableTransformer)
         {
             exactTransformerCache.clear();
             transformerListCache.clear();
         }
-        unregisterObject(transformerName, UMOTransformer.class);
+        unregisterObject(transformerName, Transformer.class);
     }
 
     //@java.lang.Override
-    public UMOTransformer lookupTransformer(String name)
+    public Transformer lookupTransformer(String name)
     {
-        UMOTransformer transformer = super.lookupTransformer(name);
+        Transformer transformer = super.lookupTransformer(name);
         if (transformer != null)
         {
             try
@@ -467,9 +467,9 @@ public class TransientRegistry extends AbstractRegistry
 //                Map props = BeanUtils.describe(transformer);
 //                props.remove("endpoint");
 //                props.remove("strategy");
-//                transformer = (UMOTransformer)ClassUtils.instanciateClass(transformer.getClass(), ClassUtils.NO_ARGS);
+//                transformer = (Transformer)ClassUtils.instanciateClass(transformer.getClass(), ClassUtils.NO_ARGS);
                 //TODO: friggin' cloning
-                transformer = (UMOTransformer) BeanUtils.cloneBean(transformer);
+                transformer = (Transformer) BeanUtils.cloneBean(transformer);
             }
             catch (Exception e)
             {

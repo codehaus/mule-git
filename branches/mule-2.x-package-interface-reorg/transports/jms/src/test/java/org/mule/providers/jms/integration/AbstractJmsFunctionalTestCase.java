@@ -9,7 +9,7 @@
  */
 package org.mule.providers.jms.integration;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 
@@ -52,9 +52,9 @@ public abstract class AbstractJmsFunctionalTestCase extends FunctionalTestCase
         client.dispatch(DEFAULT_INPUT_MULE_QUEUE_NAME, DEFAULT_INPUT_MESSAGE, null);
     }
 
-    protected UMOMessage receiveMessage() throws Exception
+    protected MuleMessage receiveMessage() throws Exception
     {
-        UMOMessage result = client.request(DEFUALT_OUTPUT_MULE_QUEUE_NAME, TIMEOUT);
+        MuleMessage result = client.request(DEFUALT_OUTPUT_MULE_QUEUE_NAME, TIMEOUT);
         assertNotNull(result);
         assertNotNull(result.getPayload());
         assertNull(result.getExceptionPayload());
@@ -67,7 +67,7 @@ public abstract class AbstractJmsFunctionalTestCase extends FunctionalTestCase
     {
         dispatchMessage();
         receiveMessage();
-        UMOMessage result = client.request(DEFUALT_OUTPUT_MULE_QUEUE_NAME, SMALL_TIMEOUT);
+        MuleMessage result = client.request(DEFUALT_OUTPUT_MULE_QUEUE_NAME, SMALL_TIMEOUT);
         assertNull(result);
     }
 

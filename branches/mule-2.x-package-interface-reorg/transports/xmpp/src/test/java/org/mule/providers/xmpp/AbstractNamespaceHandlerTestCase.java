@@ -11,7 +11,7 @@
 package org.mule.providers.xmpp;
 
 import org.mule.api.endpoint.EndpointException;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.tck.FunctionalTestCase;
 
@@ -38,13 +38,13 @@ public abstract class AbstractNamespaceHandlerTestCase extends FunctionalTestCas
 
     public void testEndpoints() throws EndpointException, InitialisationException
     {
-        UMOImmutableEndpoint simpleEndpoint = muleContext.getRegistry()
+        ImmutableEndpoint simpleEndpoint = muleContext.getRegistry()
             .lookupEndpointBuilder("simpleEndpoint")
             .buildOutboundEndpoint();
         assertEquals(protocolName + "://mule:secret@localhost:1234/recipient", simpleEndpoint.getEndpointURI()
             .toString());
 
-        UMOImmutableEndpoint groupChatEndpoint = muleContext.getRegistry()
+        ImmutableEndpoint groupChatEndpoint = muleContext.getRegistry()
             .lookupEndpointBuilder("groupChatEndpoint")
             .buildOutboundEndpoint();
         assertEquals(protocolName + "://mule:secret@localhost:1234/recipient", groupChatEndpoint.getEndpointURI()

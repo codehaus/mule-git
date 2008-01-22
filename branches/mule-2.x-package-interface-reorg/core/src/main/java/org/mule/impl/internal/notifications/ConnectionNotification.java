@@ -10,14 +10,14 @@
 
 package org.mule.impl.internal.notifications;
 
-import org.mule.api.context.UMOServerNotification;
-import org.mule.api.transport.UMOConnectable;
+import org.mule.api.context.ServerNotification;
+import org.mule.api.transport.Connectable;
 
 /**
  * Is fired by a connector when a connection is made, or disconnected of the
  * connection fails.
  */
-public class ConnectionNotification extends UMOServerNotification
+public class ConnectionNotification extends ServerNotification
 {
     /**
      * Serial version
@@ -33,7 +33,7 @@ public class ConnectionNotification extends UMOServerNotification
         registerAction("disconnected", CONNECTION_DISCONNECTED);
     }
 
-    public ConnectionNotification(UMOConnectable resource, String identifier, int action)
+    public ConnectionNotification(Connectable resource, String identifier, int action)
     {
         super(resource, action);
         resourceIdentifier = identifier;
@@ -41,9 +41,9 @@ public class ConnectionNotification extends UMOServerNotification
 
     protected String getPayloadToString()
     {
-        if (source instanceof UMOConnectable)
+        if (source instanceof Connectable)
         {
-            return ((UMOConnectable) source).getConnectionDescription();
+            return ((Connectable) source).getConnectionDescription();
         }
         return source.toString();
     }

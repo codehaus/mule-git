@@ -11,30 +11,30 @@
 package org.mule.impl.endpoint;
 
 import org.mule.RegistryContext;
+import org.mule.api.Filter;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleException;
-import org.mule.api.UMOFilter;
-import org.mule.api.UMOTransactionConfig;
+import org.mule.api.TransactionConfig;
+import org.mule.api.endpoint.EndpointBuilder;
 import org.mule.api.endpoint.EndpointException;
-import org.mule.api.endpoint.UMOEndpointBuilder;
-import org.mule.api.endpoint.UMOEndpointURI;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.endpoint.EndpointURI;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.registry.ServiceDescriptorFactory;
 import org.mule.api.registry.ServiceException;
-import org.mule.api.security.UMOEndpointSecurityFilter;
-import org.mule.api.transformer.UMOTransformer;
+import org.mule.api.security.EndpointSecurityFilter;
+import org.mule.api.transformer.Transformer;
 import org.mule.api.transport.ConnectionStrategy;
-import org.mule.api.transport.UMOConnector;
+import org.mule.api.transport.Connector;
 import org.mule.impl.MuleTransactionConfig;
+import org.mule.impl.config.i18n.CoreMessages;
+import org.mule.impl.config.i18n.Message;
 import org.mule.impl.transformer.TransformerUtils;
 import org.mule.impl.transport.AbstractConnector;
 import org.mule.impl.transport.SingleAttemptConnectionStrategy;
 import org.mule.impl.transport.service.TransportFactory;
 import org.mule.impl.transport.service.TransportFactoryException;
 import org.mule.impl.transport.service.TransportServiceDescriptor;
-import org.mule.imple.config.i18n.CoreMessages;
-import org.mule.imple.config.i18n.Message;
 import org.mule.util.ClassUtils;
 import org.mule.util.MapCombiner;
 import org.mule.util.MuleObjectHelper;
@@ -56,7 +56,7 @@ import java.util.Properties;
  * transport specific endpoints, streaming endpoints etc.<br/>
 
  */
-public abstract class AbstractEndpointBuilder implements UMOEndpointBuilder
+public abstract class AbstractEndpointBuilder implements EndpointBuilder
 {
  
     public static final int GET_OR_CREATE_CONNECTOR = 0;
@@ -66,19 +66,19 @@ public abstract class AbstractEndpointBuilder implements UMOEndpointBuilder
     public static final int USE_CONNECTOR = 3;
 
     protected URIBuilder uriBuilder;
-    protected UMOConnector connector;
+    protected Connector connector;
     protected List transformers = TransformerUtils.UNDEFINED;
     protected List responseTransformers = TransformerUtils.UNDEFINED;
     protected String name;
     protected Map properties = new HashMap();
-    protected UMOTransactionConfig transactionConfig;
-    protected UMOFilter filter;
+    protected TransactionConfig transactionConfig;
+    protected Filter filter;
     protected Boolean deleteUnacceptedMessages;
-    protected UMOEndpointSecurityFilter securityFilter;
+    protected EndpointSecurityFilter securityFilter;
     protected Boolean synchronous;
     protected Boolean remoteSync;
     protected Integer remoteSyncTimeout;
-    protected String initialState = UMOImmutableEndpoint.INITIAL_STATE_STARTED;
+    protected String initialState = ImmutableEndpoint.INITIAL_STATE_STARTED;
     protected String encoding;
     protected Integer createConnector;
     protected ConnectionStrategy connectionStrategy;
@@ -87,12 +87,12 @@ public abstract class AbstractEndpointBuilder implements UMOEndpointBuilder
     protected String registryId = null;
     protected MuleContext muleContext;
 
-    public UMOImmutableEndpoint buildInboundEndpoint() throws EndpointException, InitialisationException
+    public ImmutableEndpoint buildInboundEndpoint() throws EndpointException, InitialisationException
     {
         return doBuildInboundEndpoint();
     }
 
-    public UMOImmutableEndpoint buildOutboundEndpoint() throws EndpointException, InitialisationException
+    public ImmutableEndpoint buildOutboundEndpoint() throws EndpointException, InitialisationException
     {
         return doBuildOutboundEndpoint();
     }
@@ -100,10 +100,10 @@ public abstract class AbstractEndpointBuilder implements UMOEndpointBuilder
     protected void configureEndpoint(MuleEndpoint ep) throws InitialisationException, EndpointException
     {
         // protected String registryId = null; ??
-        UMOEndpointURI endpointURI = uriBuilder.getEndpoint();
+        EndpointURI endpointURI = uriBuilder.getEndpoint();
         endpointURI.initialise();
         ep.setEndpointURI(endpointURI);
-        UMOConnector connector = getConnector();
+        Connector connector = getConnector();
         ep.setConnector(connector);
 
         // Do not inherit from connector
@@ -133,7 +133,7 @@ public abstract class AbstractEndpointBuilder implements UMOEndpointBuilder
         ep.setMuleContext(muleContext);
     }
 
-    protected UMOImmutableEndpoint doBuildInboundEndpoint() throws InitialisationException, EndpointException
+    protected ImmutableEndpoint doBuildInboundEndpoint() throws InitialisationException, EndpointException
     {
         InboundEndpoint ep = new InboundEndpoint();
         configureEndpoint(ep);
@@ -142,7 +142,7 @@ public abstract class AbstractEndpointBuilder implements UMOEndpointBuilder
         return ep;
     }
 
-    protected UMOImmutableEndpoint doBuildOutboundEndpoint() throws InitialisationException, EndpointException
+    protected ImmutableEndpoint doBuildOutboundEndpoint() throws InitialisationException, EndpointException
     {
         OutboundEndpoint ep = new OutboundEndpoint();
         configureEndpoint(ep);
@@ -151,12 +151,12 @@ public abstract class AbstractEndpointBuilder implements UMOEndpointBuilder
         return ep;
     }
 
-    protected boolean getSynchronous(UMOConnector connector, UMOImmutableEndpoint endpoint)
+    protected boolean getSynchronous(Connector connector, ImmutableEndpoint endpoint)
     {
         return synchronous != null ? synchronous.booleanValue() : getDefaultSynchronous(connector, endpoint);
     } 
 
-    protected boolean getDefaultSynchronous(UMOConnector connector, UMOImmutableEndpoint endpoint)
+    protected boolean getDefaultSynchronous(Connector connector, ImmutableEndpoint endpoint)
     {
         if (connector != null && connector.isSyncEnabled(endpoint))
         {
@@ -168,47 +168,47 @@ public abstract class AbstractEndpointBuilder implements UMOEndpointBuilder
         }
     }
     
-    protected ConnectionStrategy getConnectionStrategy(UMOConnector connector)
+    protected ConnectionStrategy getConnectionStrategy(Connector connector)
     {
         return connectionStrategy != null ? connectionStrategy : getDefaultConnectionStrategy(connector);
     }
 
-    protected ConnectionStrategy getDefaultConnectionStrategy(UMOConnector connector)
+    protected ConnectionStrategy getDefaultConnectionStrategy(Connector connector)
     {
         return new SingleAttemptConnectionStrategy();
     }
 
-    protected UMOTransactionConfig getTransactionConfig()
+    protected TransactionConfig getTransactionConfig()
     {
         return transactionConfig != null ? transactionConfig : getDefaultTransactionConfig();
     }
 
-    protected UMOTransactionConfig getDefaultTransactionConfig()
+    protected TransactionConfig getDefaultTransactionConfig()
     {
         return new MuleTransactionConfig();
     }
 
-    protected UMOEndpointSecurityFilter getSecurityFilter()
+    protected EndpointSecurityFilter getSecurityFilter()
     {
         return securityFilter != null ? securityFilter : getDefaultSecurityFilter();
     }
 
-    protected UMOEndpointSecurityFilter getDefaultSecurityFilter()
+    protected EndpointSecurityFilter getDefaultSecurityFilter()
     {
         return null;
     }
 
-    protected UMOConnector getConnector() throws EndpointException
+    protected Connector getConnector() throws EndpointException
     {
         return connector != null ? connector : getDefaultConnector();
     }
 
-    protected UMOConnector getDefaultConnector() throws EndpointException
+    protected Connector getDefaultConnector() throws EndpointException
     {
         return getConnector(uriBuilder.getEndpoint(), muleContext);
     }
 
-    protected String getName(UMOImmutableEndpoint endpoint)
+    protected String getName(ImmutableEndpoint endpoint)
     {
         String uriName = uriBuilder.getEndpoint().getEndpointName();
         return name != null ? name :
@@ -235,13 +235,13 @@ public abstract class AbstractEndpointBuilder implements UMOEndpointBuilder
         return Collections.unmodifiableMap(combiner);
     }
 
-    protected boolean getRemoteSync(UMOConnector connector)
+    protected boolean getRemoteSync(Connector connector)
     {
         return remoteSync != null ? remoteSync.booleanValue() : getDefaultRemoteSync(connector);
 
     }
 
-    protected boolean getDefaultRemoteSync(UMOConnector connector)
+    protected boolean getDefaultRemoteSync(Connector connector)
     {
         // what is this for?!
         if (connector == null || connector.isRemoteSyncEnabled())
@@ -254,7 +254,7 @@ public abstract class AbstractEndpointBuilder implements UMOEndpointBuilder
         }
     }
 
-    protected boolean getDeleteUnacceptedMessages(UMOConnector connector)
+    protected boolean getDeleteUnacceptedMessages(Connector connector)
     {
         return deleteUnacceptedMessages != null
                                                ? deleteUnacceptedMessages.booleanValue()
@@ -262,17 +262,17 @@ public abstract class AbstractEndpointBuilder implements UMOEndpointBuilder
 
     }
 
-    protected boolean getDefaultDeleteUnacceptedMessages(UMOConnector connector)
+    protected boolean getDefaultDeleteUnacceptedMessages(Connector connector)
     {
         return false;
     }
 
-    protected String getEndpointEncoding(UMOConnector connector)
+    protected String getEndpointEncoding(Connector connector)
     {
         return encoding != null ? encoding : getDefaultEndpointEncoding(connector);
     }
 
-    protected String getDefaultEndpointEncoding(UMOConnector connector)
+    protected String getDefaultEndpointEncoding(Connector connector)
     {
         if (muleContext != null)
         {
@@ -284,40 +284,40 @@ public abstract class AbstractEndpointBuilder implements UMOEndpointBuilder
         }
     }
 
-    protected UMOFilter getFilter(UMOConnector connector)
+    protected Filter getFilter(Connector connector)
     {
         return filter != null ? filter : getDefaultFilter(connector);
 
     }
 
-    protected UMOFilter getDefaultFilter(UMOConnector connector)
+    protected Filter getDefaultFilter(Connector connector)
     {
         return null;
     }
 
-    protected String getInitialState(UMOConnector connector)
+    protected String getInitialState(Connector connector)
     {
         return initialState != null ? initialState : getDefaultInitialState(connector);
 
     }
 
-    protected String getDefaultInitialState(UMOConnector connector)
+    protected String getDefaultInitialState(Connector connector)
     {
-        return UMOImmutableEndpoint.INITIAL_STATE_STARTED;
+        return ImmutableEndpoint.INITIAL_STATE_STARTED;
     }
 
-    protected int getRemoteSyncTimeout(UMOConnector connector)
+    protected int getRemoteSyncTimeout(Connector connector)
     {
         return remoteSyncTimeout != null ? remoteSyncTimeout.intValue() : getDefaultRemoteSyncTimeout(connector);
 
     }
 
-    protected int getDefaultRemoteSyncTimeout(UMOConnector connector)
+    protected int getDefaultRemoteSyncTimeout(Connector connector)
     {
         return muleContext.getRegistry().getConfiguration().getDefaultSynchronousEventTimeout();
     }
 
-    protected List getInboundTransformers(UMOConnector connector, UMOEndpointURI endpointURI)
+    protected List getInboundTransformers(Connector connector, EndpointURI endpointURI)
         throws TransportFactoryException
     {
         // #1 Transformers set on builder
@@ -337,7 +337,7 @@ public abstract class AbstractEndpointBuilder implements UMOEndpointBuilder
         return getDefaultInboundTransformers(connector);
     }
 
-    protected List getDefaultInboundTransformers(UMOConnector connector) throws TransportFactoryException
+    protected List getDefaultInboundTransformers(Connector connector) throws TransportFactoryException
     {
         try
         {
@@ -350,7 +350,7 @@ public abstract class AbstractEndpointBuilder implements UMOEndpointBuilder
         }
     }
 
-    protected List getOutboundTransformers(UMOConnector connector, UMOEndpointURI endpointURI)
+    protected List getOutboundTransformers(Connector connector, EndpointURI endpointURI)
         throws TransportFactoryException
     {
         // #1 Transformers set on builder
@@ -370,7 +370,7 @@ public abstract class AbstractEndpointBuilder implements UMOEndpointBuilder
         return getDefaultOutboundTransformers(connector);
     }
 
-    protected List getDefaultOutboundTransformers(UMOConnector connector) throws TransportFactoryException
+    protected List getDefaultOutboundTransformers(Connector connector) throws TransportFactoryException
     {
         try
         {
@@ -383,7 +383,7 @@ public abstract class AbstractEndpointBuilder implements UMOEndpointBuilder
         }
     }
 
-    protected List getResponseTransformers(UMOConnector connector, UMOEndpointURI endpointURI)
+    protected List getResponseTransformers(Connector connector, EndpointURI endpointURI)
         throws TransportFactoryException
     {
         // #1 Transformers set on builder
@@ -403,7 +403,7 @@ public abstract class AbstractEndpointBuilder implements UMOEndpointBuilder
         return getDefaultResponseTransformers(connector);
     }
 
-    protected List getDefaultResponseTransformers(UMOConnector connector) throws TransportFactoryException
+    protected List getDefaultResponseTransformers(Connector connector) throws TransportFactoryException
     {
         try
         {
@@ -428,7 +428,7 @@ public abstract class AbstractEndpointBuilder implements UMOEndpointBuilder
         }
     }
 
-    private Properties getOverrides(UMOConnector connector)
+    private Properties getOverrides(Connector connector)
     {
         // Get connector specific overrides to set on the descriptor
         Properties overrides = new Properties();
@@ -458,11 +458,11 @@ public abstract class AbstractEndpointBuilder implements UMOEndpointBuilder
         }
     }
 
-    private UMOConnector getConnector(UMOEndpointURI endpointURI, MuleContext muleContext)
+    private Connector getConnector(EndpointURI endpointURI, MuleContext muleContext)
         throws EndpointException
     {
         String scheme = uriBuilder.getEndpoint().getFullScheme();
-        UMOConnector connector;
+        Connector connector;
         try
         {
             if (uriBuilder.getEndpoint().getConnectorName() != null)
@@ -501,13 +501,13 @@ public abstract class AbstractEndpointBuilder implements UMOEndpointBuilder
 
     // Builder setters
 
-    public void setConnector(UMOConnector connector)
+    public void setConnector(Connector connector)
     {
         this.connector = connector;
 
     }
     
-    public void addTransformer(UMOTransformer transformer)
+    public void addTransformer(Transformer transformer)
     {
         if (transformers == TransformerUtils.UNDEFINED)
         {
@@ -554,13 +554,13 @@ public abstract class AbstractEndpointBuilder implements UMOEndpointBuilder
         properties.put(key, value);
     }
 
-    public void setTransactionConfig(UMOTransactionConfig transactionConfig)
+    public void setTransactionConfig(TransactionConfig transactionConfig)
     {
         this.transactionConfig = transactionConfig;
 
     }
 
-    public void setFilter(UMOFilter filter)
+    public void setFilter(Filter filter)
     {
         this.filter = filter;
 
@@ -572,7 +572,7 @@ public abstract class AbstractEndpointBuilder implements UMOEndpointBuilder
 
     }
 
-    public void setSecurityFilter(UMOEndpointSecurityFilter securityFilter)
+    public void setSecurityFilter(EndpointSecurityFilter securityFilter)
     {
         this.securityFilter = securityFilter;
 
@@ -699,7 +699,7 @@ public abstract class AbstractEndpointBuilder implements UMOEndpointBuilder
 
     public Object clone() throws CloneNotSupportedException
     {
-        UMOEndpointBuilder builder = (UMOEndpointBuilder) super.clone();
+        EndpointBuilder builder = (EndpointBuilder) super.clone();
         builder.setConnector(connector);
         builder.setURIBuilder(uriBuilder);
         builder.setTransformers(transformers);

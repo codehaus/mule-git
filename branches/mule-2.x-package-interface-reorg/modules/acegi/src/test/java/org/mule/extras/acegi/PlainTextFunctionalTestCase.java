@@ -10,7 +10,7 @@
 
 package org.mule.extras.acegi;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.providers.http.HttpConnector;
 import org.mule.providers.http.HttpConstants;
@@ -26,7 +26,7 @@ public class PlainTextFunctionalTestCase extends FunctionalTestCase
     public void testAuthenticationFailureNoContext() throws Exception
     {
         MuleClient client = new MuleClient();
-        UMOMessage m = client.send("http://localhost:4567/index.html", "", null);
+        MuleMessage m = client.send("http://localhost:4567/index.html", "", null);
         assertNotNull(m);
         int status = m.getIntProperty(HttpConnector.HTTP_STATUS_PROPERTY, -1);
         assertEquals(HttpConstants.SC_UNAUTHORIZED, status);
@@ -35,7 +35,7 @@ public class PlainTextFunctionalTestCase extends FunctionalTestCase
     public void testAuthenticationFailureBadCredentials() throws Exception
     {
         MuleClient client = new MuleClient("anonX", "anonX");
-        UMOMessage m = client.send("http://localhost:4567/index.html", "", null);
+        MuleMessage m = client.send("http://localhost:4567/index.html", "", null);
         assertNotNull(m);
         int status = m.getIntProperty(HttpConnector.HTTP_STATUS_PROPERTY, -1);
         assertEquals(HttpConstants.SC_UNAUTHORIZED, status);
@@ -44,7 +44,7 @@ public class PlainTextFunctionalTestCase extends FunctionalTestCase
     public void testAuthenticationAuthorised() throws Exception
     {
         MuleClient client = new MuleClient("anon", "anon");
-        UMOMessage m = client.send("http://localhost:4567/index.html", "", null);
+        MuleMessage m = client.send("http://localhost:4567/index.html", "", null);
         assertNotNull(m);
         int status = m.getIntProperty(HttpConnector.HTTP_STATUS_PROPERTY, -1);
         assertEquals(HttpConstants.SC_OK, status);

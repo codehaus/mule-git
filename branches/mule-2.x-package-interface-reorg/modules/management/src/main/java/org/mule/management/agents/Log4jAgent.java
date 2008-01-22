@@ -10,10 +10,10 @@
 
 package org.mule.management.agents;
 
-import org.mule.api.UMOException;
+import org.mule.api.AbstractMuleException;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.impl.AbstractAgent;
-import org.mule.imple.config.i18n.CoreMessages;
+import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.management.support.AutoDiscoveryJmxSupportFactory;
 import org.mule.management.support.JmxSupport;
 import org.mule.management.support.JmxSupportFactory;
@@ -95,7 +95,7 @@ public class Log4jAgent extends AbstractAgent
      * 
      * @see org.mule.api.lifecycle.Startable#start()
      */
-    public void start() throws UMOException
+    public void start() throws AbstractMuleException
     {
         // nothing to do
     }
@@ -105,7 +105,7 @@ public class Log4jAgent extends AbstractAgent
      * 
      * @see org.mule.api.lifecycle.Stoppable#stop()
      */
-    public void stop() throws UMOException
+    public void stop() throws AbstractMuleException
     {
         // nothing to do
     }
@@ -123,7 +123,7 @@ public class Log4jAgent extends AbstractAgent
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.api.context.UMOAgent#registered()
+     * @see org.mule.api.context.Agent#registered()
      */
     public void registered()
     {
@@ -133,7 +133,7 @@ public class Log4jAgent extends AbstractAgent
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.api.context.UMOAgent#unregistered()
+     * @see org.mule.api.context.Agent#unregistered()
      */
     public void unregistered()
     {

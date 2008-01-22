@@ -10,7 +10,7 @@
 package org.mule.xml.util.properties;
 
 import org.mule.api.MuleRuntimeException;
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.util.properties.PropertyExtractor;
 import org.mule.xml.i18n.XmlMessages;
 
@@ -36,9 +36,9 @@ public abstract class AbstractXPathPropertyExtractor implements PropertyExtracto
     {
         try
         {
-            if(message instanceof UMOMessage)
+            if(message instanceof MuleMessage)
             {
-                message = ((UMOMessage)message).getPayload();
+                message = ((MuleMessage)message).getPayload();
             }
             XPath xpath = getXPath(expression, message);
 

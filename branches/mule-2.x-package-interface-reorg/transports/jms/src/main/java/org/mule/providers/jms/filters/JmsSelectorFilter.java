@@ -10,20 +10,20 @@
 
 package org.mule.providers.jms.filters;
 
-import org.mule.api.UMOFilter;
-import org.mule.api.UMOMessage;
+import org.mule.api.Filter;
+import org.mule.api.MuleMessage;
 
 /**
  * <code>JmsSelectorFilter</code> is a wrapper for a JMS Selector. This filter
  * should not be called. Instead the JmsConnector sets the selector on the
  * destination to the expression set on this filer.
  */
-public class JmsSelectorFilter implements UMOFilter
+public class JmsSelectorFilter implements Filter
 {
 
     private String expression = null;
 
-    public boolean accept(UMOMessage message)
+    public boolean accept(MuleMessage message)
     {
         // If we have received the message the selector has been honoured
         return true;

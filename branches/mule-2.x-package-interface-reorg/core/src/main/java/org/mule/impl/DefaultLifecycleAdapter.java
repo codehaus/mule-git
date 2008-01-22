@@ -10,26 +10,26 @@
 
 package org.mule.impl;
 
+import org.mule.api.AbstractMuleException;
+import org.mule.api.Component;
+import org.mule.api.ComponentAware;
 import org.mule.api.ComponentException;
+import org.mule.api.Event;
 import org.mule.api.Invocation;
 import org.mule.api.MuleException;
-import org.mule.api.UMOComponent;
-import org.mule.api.UMOComponentAware;
-import org.mule.api.UMOEvent;
-import org.mule.api.UMOException;
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.api.lifecycle.Disposable;
 import org.mule.api.lifecycle.Initialisable;
 import org.mule.api.lifecycle.InitialisationException;
+import org.mule.api.lifecycle.LifecycleAdapter;
 import org.mule.api.lifecycle.Startable;
 import org.mule.api.lifecycle.Stoppable;
-import org.mule.api.lifecycle.UMOLifecycleAdapter;
-import org.mule.api.model.UMOEntryPointResolverSet;
-import org.mule.api.routing.UMONestedRouter;
+import org.mule.api.model.EntryPointResolverSet;
+import org.mule.api.routing.NestedRouter;
+import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.impl.model.resolvers.LegacyEntryPointResolverSet;
 import org.mule.impl.routing.nested.NestedInvocationHandler;
 import org.mule.impl.transformer.TransformerTemplate;
-import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.util.ClassUtils;
 
 import java.lang.reflect.Method;
@@ -48,13 +48,13 @@ import org.apache.commons.logging.LogFactory;
  * managed components. It's possible to plugin custom lifecycle adapters, this can
  * provide additional lifecycle methods triggered by an external source.
  */
-public class DefaultLifecycleAdapter implements UMOLifecycleAdapter
+public class DefaultLifecycleAdapter implements LifecycleAdapter
 {
     /** logger used by this class */
     protected static final Log logger = LogFactory.getLog(DefaultLifecycleAdapter.class);
 
     private Object pojoService;
-    private UMOComponent component;
+    private Component component;
     private boolean isStoppable = false;
     private boolean isStartable = false;
     private boolean isDisposable = false;
@@ -62,22 +62,22 @@ public class DefaultLifecycleAdapter implements UMOLifecycleAdapter
     private boolean started = false;
     private boolean disposed = false;
 
-    private UMOEntryPointResolverSet entryPointResolver;
+    private EntryPointResolverSet entryPointResolver;
 
-    public DefaultLifecycleAdapter(Object pojoService, UMOComponent component) throws UMOException
+    public DefaultLifecycleAdapter(Object pojoService, Component component) throws AbstractMuleException
     {
         this(pojoService, component, new LegacyEntryPointResolverSet());
     }
 
     public DefaultLifecycleAdapter(Object pojoService,
-                                   UMOComponent component,
-                                   UMOEntryPointResolverSet epResolver) throws UMOException
+                                   Component component,
+                                   EntryPointResolverSet epResolver) throws AbstractMuleException
     {
         initialise(pojoService, component, epResolver);
     }
 
-    protected void initialise(Object pojoService, UMOComponent component, UMOEntryPointResolverSet entryPointResolver)
-            throws UMOException
+    protected void initialise(Object pojoService, Component component, EntryPointResolverSet entryPointResolver)
+            throws AbstractMuleException
     {
         if (pojoService == null)
         {
@@ -95,14 +95,14 @@ public class DefaultLifecycleAdapter implements UMOLifecycleAdapter
         isStoppable = Stoppable.class.isInstance(component);
         isDisposable = Disposable.class.isInstance(component);
 
-        if (pojoService instanceof UMOComponentAware)
+        if (pojoService instanceof ComponentAware)
         {
-            ((UMOComponentAware) pojoService).setComponent(component);
+            ((ComponentAware) pojoService).setComponent(component);
         }
         configureNestedRouter();
     }
 
-    public void start() throws UMOException
+    public void start() throws AbstractMuleException
     {
         if (isStartable)
         {
@@ -119,7 +119,7 @@ public class DefaultLifecycleAdapter implements UMOLifecycleAdapter
         started = true;
     }
 
-    public void stop() throws UMOException
+    public void stop() throws AbstractMuleException
     {
         if (isStoppable)
         {
@@ -171,11 +171,11 @@ public class DefaultLifecycleAdapter implements UMOLifecycleAdapter
     }
 
     // Note: Invocation argument is not even used!
-    public UMOMessage intercept(Invocation invocation) throws UMOException
+    public MuleMessage intercept(Invocation invocation) throws AbstractMuleException
     {
         // Invoke method
         Object result;
-        UMOEvent event = RequestContext.getEvent();
+        Event event = RequestContext.getEvent();
 
         try
         {
@@ -197,7 +197,7 @@ public class DefaultLifecycleAdapter implements UMOLifecycleAdapter
             throw new ComponentException(RequestContext.getEventContext().getMessage(), component, e);
         }
 
-        UMOMessage resultMessage = null;
+        MuleMessage resultMessage = null;
         if (result instanceof VoidResult)
         {
             //This will rewire the current message
@@ -206,9 +206,9 @@ public class DefaultLifecycleAdapter implements UMOLifecycleAdapter
         }
         else if (result != null)
         {
-            if (result instanceof UMOMessage)
+            if (result instanceof MuleMessage)
             {
-                resultMessage = (UMOMessage) result;
+                resultMessage = (MuleMessage) result;
             }
             else
             {
@@ -230,7 +230,7 @@ public class DefaultLifecycleAdapter implements UMOLifecycleAdapter
         }
     }
 
-    protected void configureNestedRouter() throws UMOException
+    protected void configureNestedRouter() throws AbstractMuleException
     {
         // Initialise the nested router and bind the endpoints to the methods using a Proxy
         if (component.getNestedRouter() != null)
@@ -238,7 +238,7 @@ public class DefaultLifecycleAdapter implements UMOLifecycleAdapter
             Map bindings = new HashMap();
             for (Iterator it = component.getNestedRouter().getRouters().iterator(); it.hasNext();)
             {
-                UMONestedRouter nestedRouter = (UMONestedRouter) it.next();
+                NestedRouter nestedRouter = (NestedRouter) it.next();
                 Object proxy = bindings.get(nestedRouter.getInterface());
 
                 if (proxy == null)
@@ -292,7 +292,7 @@ public class DefaultLifecycleAdapter implements UMOLifecycleAdapter
         }
     }
 
-    public UMOComponent getComponent()
+    public Component getComponent()
     {
         return component;
     }

@@ -10,9 +10,9 @@
 
 package org.mule.providers.tcp;
 
-import org.mule.api.UMOComponent;
-import org.mule.api.endpoint.UMOEndpoint;
-import org.mule.api.transport.UMOConnector;
+import org.mule.api.Component;
+import org.mule.api.endpoint.Endpoint;
+import org.mule.api.transport.Connector;
 import org.mule.impl.endpoint.MuleEndpointURI;
 import org.mule.tck.providers.AbstractConnectorTestCase;
 import org.mule.tck.testmodels.fruit.Orange;
@@ -21,7 +21,7 @@ public class TcpConnectorTestCase extends AbstractConnectorTestCase
 {
 
     // @Override
-    public UMOConnector createConnector() throws Exception
+    public Connector createConnector() throws Exception
     {
         TcpConnector c = new TcpConnector();
         c.setName("TcpConnector");
@@ -40,13 +40,13 @@ public class TcpConnectorTestCase extends AbstractConnectorTestCase
 
     public void testValidListener() throws Exception
     {
-        UMOComponent component = getTestComponent("orange", Orange.class);
+        Component component = getTestComponent("orange", Orange.class);
         
-        UMOEndpoint endpoint = (UMOEndpoint) muleContext.getRegistry()
+        Endpoint endpoint = (Endpoint) muleContext.getRegistry()
             .lookupEndpointFactory()
             .getInboundEndpoint(getTestEndpointURI());
 
-        UMOConnector connector = getConnector();
+        Connector connector = getConnector();
 
         try
         {

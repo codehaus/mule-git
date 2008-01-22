@@ -10,12 +10,12 @@
 
 package org.mule.providers.jms;
 
-import org.mule.api.endpoint.UMOEndpointBuilder;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.endpoint.EndpointBuilder;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.InitialisationException;
-import org.mule.api.transport.UMOMessageReceiver;
+import org.mule.api.transport.MessageReceiver;
+import org.mule.impl.config.i18n.MessageFactory;
 import org.mule.impl.endpoint.EndpointURIEndpointBuilder;
-import org.mule.imple.config.i18n.MessageFactory;
 import org.mule.tck.providers.AbstractMessageReceiverTestCase;
 import org.mule.tck.testmodels.fruit.Orange;
 
@@ -66,7 +66,7 @@ public class JmsMessageReceiverTestCase extends AbstractMessageReceiverTestCase
      * 
      * @see org.mule.tck.providers.AbstractMessageReceiverTestCase#getMessageReceiver()
      */
-    public UMOMessageReceiver getMessageReceiver() throws Exception
+    public MessageReceiver getMessageReceiver() throws Exception
     {
         return new JmsMessageReceiver(endpoint.getConnector(), getTestComponent("orange", Orange.class), endpoint);
     }
@@ -76,9 +76,9 @@ public class JmsMessageReceiverTestCase extends AbstractMessageReceiverTestCase
         return JmsConnectorTestCase.getMessage();
     }
 
-    public UMOImmutableEndpoint getEndpoint() throws Exception
+    public ImmutableEndpoint getEndpoint() throws Exception
     {
-        UMOEndpointBuilder builder = new EndpointURIEndpointBuilder("jms://testcase", muleContext);
+        EndpointBuilder builder = new EndpointURIEndpointBuilder("jms://testcase", muleContext);
         if (connector == null)
         {
             throw new InitialisationException(MessageFactory.createStaticMessage("Connector has not been initialized."), null);

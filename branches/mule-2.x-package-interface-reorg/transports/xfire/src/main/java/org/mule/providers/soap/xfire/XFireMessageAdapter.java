@@ -12,7 +12,7 @@ package org.mule.providers.soap.xfire;
 
 import org.mule.api.ThreadSafeAccess;
 import org.mule.api.config.MuleProperties;
-import org.mule.api.transformer.UMOTransformer;
+import org.mule.api.transformer.Transformer;
 import org.mule.impl.transformer.simple.SerializableToByteArray;
 import org.mule.impl.transport.AbstractMessageAdapter;
 import org.mule.providers.soap.MuleSoapHeaders;
@@ -42,7 +42,7 @@ public class XFireMessageAdapter extends AbstractMessageAdapter
     private final Object payload;
     private MessageContext messageContext;
 
-    private UMOTransformer trans = new SerializableToByteArray();
+    private Transformer trans = new SerializableToByteArray();
 
     public XFireMessageAdapter(Object message)
     {

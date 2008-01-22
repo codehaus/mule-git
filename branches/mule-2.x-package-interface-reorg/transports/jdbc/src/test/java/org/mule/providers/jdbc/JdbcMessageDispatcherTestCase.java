@@ -10,7 +10,7 @@
 
 package org.mule.providers.jdbc;
 
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.providers.jdbc.test.TestDataSource;
 import org.mule.tck.AbstractMuleTestCase;
 
@@ -36,7 +36,7 @@ public class JdbcMessageDispatcherTestCase extends AbstractMuleTestCase
         muleContext.getRegistry().registerConnector(connector);
         
         
-        UMOImmutableEndpoint ep = muleContext.getRegistry().lookupEndpointFactory().getOutboundEndpoint(
+        ImmutableEndpoint ep = muleContext.getRegistry().lookupEndpointFactory().getOutboundEndpoint(
             "jdbc://select * from test");
         ep.request(0);
     }

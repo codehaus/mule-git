@@ -10,9 +10,9 @@
 
 package org.mule.providers.tcp;
 
-import org.mule.api.UMOMessage;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
-import org.mule.impl.MuleMessage;
+import org.mule.api.MuleMessage;
+import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.transport.AbstractMessageRequester;
 
 import java.io.BufferedInputStream;
@@ -29,7 +29,7 @@ public class TcpMessageRequester extends AbstractMessageRequester
 
     private final TcpConnector connector;
 
-    public TcpMessageRequester(UMOImmutableEndpoint endpoint)
+    public TcpMessageRequester(ImmutableEndpoint endpoint)
     {
         super(endpoint);
         this.connector = (TcpConnector) endpoint.getConnector();
@@ -42,11 +42,11 @@ public class TcpMessageRequester extends AbstractMessageRequester
      *            The call should return immediately if there is data available. If
      *            no data becomes available before the timeout elapses, null will be
      *            returned
-     * @return the result of the request wrapped in a UMOMessage object. Null will be
+     * @return the result of the request wrapped in a MuleMessage object. Null will be
      *         returned if no data was available
      * @throws Exception if the call to the underlying protocal cuases an exception
      */
-    protected UMOMessage doRequest(long timeout) throws Exception
+    protected MuleMessage doRequest(long timeout) throws Exception
     {
         if (timeout > Integer.MAX_VALUE || timeout < 0)
         {
@@ -60,7 +60,7 @@ public class TcpMessageRequester extends AbstractMessageRequester
             {
                 return null;
             }
-            return new MuleMessage(connector.getMessageAdapter(result));
+            return new DefaultMuleMessage(connector.getMessageAdapter(result));
         }
         catch (SocketTimeoutException e)
         {

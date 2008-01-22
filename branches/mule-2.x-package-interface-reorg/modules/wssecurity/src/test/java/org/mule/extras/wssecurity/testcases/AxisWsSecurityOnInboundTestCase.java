@@ -10,7 +10,7 @@
 
 package org.mule.extras.wssecurity.testcases;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 
@@ -35,7 +35,7 @@ public class AxisWsSecurityOnInboundTestCase extends FunctionalTestCase
         // Property file containing the Encryption properties
         props.setProperty(WSHandlerConstants.ENC_PROP_FILE, "out-encrypted-security.properties");
 
-        UMOMessage m = client.send("axis:http://localhost:64282/MySecuredUMO?method=echo", "Test", props);
+        MuleMessage m = client.send("axis:http://localhost:64282/MySecuredUMO?method=echo", "Test", props);
         assertNotNull(m);
         assertTrue(m.getPayload() instanceof String);
         assertTrue(m.getPayload().equals("Test"));

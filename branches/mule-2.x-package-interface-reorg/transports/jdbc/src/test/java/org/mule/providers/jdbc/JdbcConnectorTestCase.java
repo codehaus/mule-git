@@ -10,7 +10,7 @@
 
 package org.mule.providers.jdbc;
 
-import org.mule.api.transport.UMOConnector;
+import org.mule.api.transport.Connector;
 import org.mule.tck.providers.AbstractConnectorTestCase;
 
 import java.util.HashMap;
@@ -21,7 +21,7 @@ import org.apache.derby.jdbc.EmbeddedDataSource;
 public class JdbcConnectorTestCase extends AbstractConnectorTestCase
 {
     // @Override
-    public UMOConnector createConnector() throws Exception
+    public Connector createConnector() throws Exception
     {
         JdbcConnector c = new JdbcConnector();
         EmbeddedDataSource embeddedDS = new EmbeddedDataSource();

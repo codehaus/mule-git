@@ -10,14 +10,14 @@
 
 package org.mule.providers.soap.xfire;
 
-import org.mule.api.UMOEvent;
-import org.mule.api.UMOMessage;
+import org.mule.api.Event;
+import org.mule.api.MuleMessage;
 import org.mule.api.config.MuleProperties;
-import org.mule.api.endpoint.UMOEndpointURI;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.endpoint.EndpointURI;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.transformer.TransformerException;
 import org.mule.api.transport.DispatchException;
-import org.mule.impl.MuleMessage;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.transport.AbstractMessageDispatcher;
 import org.mule.providers.soap.SoapConstants;
 import org.mule.providers.soap.i18n.SoapMessages;
@@ -52,7 +52,7 @@ public class XFireMessageDispatcher extends AbstractMessageDispatcher
     protected final XFireConnector connector;
     private final TemplateParser soapActionTemplateParser = TemplateParser.createAntStyleParser();
 
-    public XFireMessageDispatcher(UMOImmutableEndpoint endpoint)
+    public XFireMessageDispatcher(ImmutableEndpoint endpoint)
     {
         super(endpoint);
         this.connector = (XFireConnector) endpoint.getConnector();
@@ -76,13 +76,13 @@ public class XFireMessageDispatcher extends AbstractMessageDispatcher
         // nothing to do
     }
 
-    protected String getMethod(UMOEvent event) throws DispatchException
+    protected String getMethod(Event event) throws DispatchException
     {
         String method = (String)event.getMessage().getProperty(MuleProperties.MULE_METHOD_PROPERTY);
 
         if (method == null)
         {
-            UMOEndpointURI endpointUri = event.getEndpoint().getEndpointURI();
+            EndpointURI endpointUri = event.getEndpoint().getEndpointURI();
             method = (String)endpointUri.getParams().get(MuleProperties.MULE_METHOD_PROPERTY);
         }
 
@@ -100,7 +100,7 @@ public class XFireMessageDispatcher extends AbstractMessageDispatcher
         return method;
     }
 
-    protected Object[] getArgs(UMOEvent event) throws TransformerException
+    protected Object[] getArgs(Event event) throws TransformerException
     {
         Object payload = event.transformMessage();
         Object[] args;
@@ -114,7 +114,7 @@ public class XFireMessageDispatcher extends AbstractMessageDispatcher
             args = new Object[]{payload};
         }
 
-        UMOMessage message = event.getMessage();
+        MuleMessage message = event.getMessage();
         Set attachmentNames = message.getAttachmentNames();
         if (attachmentNames != null && !attachmentNames.isEmpty())
         {
@@ -131,7 +131,7 @@ public class XFireMessageDispatcher extends AbstractMessageDispatcher
         return args;
     }
 
-    protected UMOMessage doSend(UMOEvent event) throws Exception
+    protected MuleMessage doSend(Event event) throws Exception
     {
         if (event.getEndpoint().getProperty("complexTypes") != null)
         {
@@ -163,23 +163,23 @@ public class XFireMessageDispatcher extends AbstractMessageDispatcher
 
         Object[] response = client.invoke(method, getArgs(event));
 
-        UMOMessage result = null;
+        MuleMessage result = null;
         if (response != null && response.length <= 1)
         {
             if (response.length == 1)
             {
-                result = new MuleMessage(response[0], event.getMessage());
+                result = new DefaultMuleMessage(response[0], event.getMessage());
             }
         }
         else
         {
-            result = new MuleMessage(response, event.getMessage());
+            result = new DefaultMuleMessage(response, event.getMessage());
         }
 
         return result;
     }
 
-    protected void doDispatch(UMOEvent event) throws Exception
+    protected void doDispatch(Event event) throws Exception
     {
         this.client.setTimeout(event.getTimeout());
         this.client.setProperty(MuleProperties.MULE_EVENT_PROPERTY, event);
@@ -189,7 +189,7 @@ public class XFireMessageDispatcher extends AbstractMessageDispatcher
     /**
      * Get the service that is mapped to the specified request.
      */
-    protected static String getServiceName(UMOImmutableEndpoint endpoint)
+    protected static String getServiceName(ImmutableEndpoint endpoint)
     {
         String pathInfo = endpoint.getEndpointURI().getPath();
 
@@ -214,12 +214,12 @@ public class XFireMessageDispatcher extends AbstractMessageDispatcher
         return serviceName;
     }
 
-    public String parseSoapAction(String soapAction, QName method, UMOEvent event)
+    public String parseSoapAction(String soapAction, QName method, Event event)
     {
 
-        UMOEndpointURI endpointURI = event.getEndpoint().getEndpointURI();
+        EndpointURI endpointURI = event.getEndpoint().getEndpointURI();
         Map properties = new HashMap();
-        UMOMessage msg = event.getMessage();
+        MuleMessage msg = event.getMessage();
         for (Iterator iterator = msg.getPropertyNames().iterator(); iterator.hasNext();)
         {
             String propertyKey = (String)iterator.next();
@@ -252,7 +252,7 @@ public class XFireMessageDispatcher extends AbstractMessageDispatcher
         return soapAction;
     }
 
-    protected void configureClientForComplexTypes(Client client, UMOEvent event) throws ClassNotFoundException
+    protected void configureClientForComplexTypes(Client client, Event event) throws ClassNotFoundException
     {
         Map complexTypes = (Map) event.getEndpoint().getProperty("complexTypes");
         Object[] beans = complexTypes.keySet().toArray();

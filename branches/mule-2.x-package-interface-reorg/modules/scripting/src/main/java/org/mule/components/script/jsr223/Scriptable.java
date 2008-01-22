@@ -12,7 +12,7 @@ package org.mule.components.script.jsr223;
 
 import org.mule.api.lifecycle.Initialisable;
 import org.mule.api.lifecycle.InitialisationException;
-import org.mule.imple.config.i18n.CoreMessages;
+import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.util.IOUtils;
 
 import java.io.IOException;

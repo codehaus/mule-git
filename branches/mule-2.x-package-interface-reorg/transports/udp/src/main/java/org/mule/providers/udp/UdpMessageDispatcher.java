@@ -10,10 +10,10 @@
 
 package org.mule.providers.udp;
 
-import org.mule.api.UMOEvent;
-import org.mule.api.UMOMessage;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
-import org.mule.impl.MuleMessage;
+import org.mule.api.Event;
+import org.mule.api.MuleMessage;
+import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.transport.AbstractMessageDispatcher;
 
 import java.io.IOException;
@@ -31,7 +31,7 @@ public class UdpMessageDispatcher extends AbstractMessageDispatcher
 {
     protected final UdpConnector connector;
 
-    public UdpMessageDispatcher(UMOImmutableEndpoint endpoint)
+    public UdpMessageDispatcher(ImmutableEndpoint endpoint)
     {
         super(endpoint);
         this.connector = (UdpConnector)endpoint.getConnector();
@@ -50,9 +50,9 @@ public class UdpMessageDispatcher extends AbstractMessageDispatcher
     }
 
 
-    protected synchronized void doDispatch(UMOEvent event) throws Exception
+    protected synchronized void doDispatch(Event event) throws Exception
     {
-        UMOImmutableEndpoint ep = event.getEndpoint();
+        ImmutableEndpoint ep = event.getEndpoint();
 
         DatagramSocket socket = connector.getSocket(ep);
         try
@@ -90,7 +90,7 @@ public class UdpMessageDispatcher extends AbstractMessageDispatcher
         socket.send(packet);
     }
 
-    protected synchronized UMOMessage doSend(UMOEvent event) throws Exception
+    protected synchronized MuleMessage doSend(Event event) throws Exception
     {
         doDispatch(event);
         // If we're doing sync receive try and read return info from socket
@@ -102,7 +102,7 @@ public class UdpMessageDispatcher extends AbstractMessageDispatcher
             {
                 return null;
             }
-            return new MuleMessage(connector.getMessageAdapter(result), event.getMessage());
+            return new DefaultMuleMessage(connector.getMessageAdapter(result), event.getMessage());
         }
         else
         {

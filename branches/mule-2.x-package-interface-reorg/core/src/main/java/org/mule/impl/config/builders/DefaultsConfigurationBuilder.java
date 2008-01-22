@@ -1,16 +1,16 @@
 
 package org.mule.impl.config.builders;
 
+import org.mule.api.AbstractMuleException;
 import org.mule.api.MuleContext;
-import org.mule.api.UMOException;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.config.ThreadingProfile;
-import org.mule.api.model.UMOModel;
+import org.mule.api.model.Model;
 import org.mule.api.registry.RegistrationException;
 import org.mule.api.registry.Registry;
 import org.mule.impl.config.ChainedThreadingProfile;
 import org.mule.impl.config.bootstrap.SimpleRegistryBootstrap;
-import org.mule.impl.endpoint.EndpointFactory;
+import org.mule.impl.endpoint.DefaultEndpointFactory;
 import org.mule.impl.model.seda.SedaModel;
 import org.mule.impl.security.MuleSecurityManager;
 import org.mule.util.queue.CachingPersistenceStrategy;
@@ -28,8 +28,8 @@ import org.mule.util.queue.TransactionalQueueManager;
  * <li> {@link SimpleRegistryBootstrap}
  * <li> {@link QueueManager}
  * <li> {@link SecurityManager}
- * <li> {@link EndpointFactory}
- * <li> {@link UMOModel} systemModel
+ * <li> {@link DefaultEndpointFactory}
+ * <li> {@link Model} systemModel
  * <li> {@link ThreadingProfile} defaultThreadingProfile
  * <li> {@link ThreadingProfile} defaultMessageDispatcherThreadingProfile
  * <li> {@link ThreadingProfile} defaultMessageRequesterThreadingProfile
@@ -44,7 +44,7 @@ public class DefaultsConfigurationBuilder extends AbstractConfigurationBuilder
         configureDefaults(muleContext.getRegistry());
     }
 
-    protected void configureDefaults(Registry registry) throws RegistrationException, UMOException
+    protected void configureDefaults(Registry registry) throws RegistrationException, AbstractMuleException
     {
         registry.registerObject(MuleProperties.OBJECT_MULE_SIMPLE_REGISTRY_BOOTSTRAP,
             new SimpleRegistryBootstrap());
@@ -52,7 +52,7 @@ public class DefaultsConfigurationBuilder extends AbstractConfigurationBuilder
         queueManager.setPersistenceStrategy(new CachingPersistenceStrategy(new MemoryPersistenceStrategy()));
         registry.registerObject(MuleProperties.OBJECT_QUEUE_MANAGER, queueManager);
         registry.registerObject(MuleProperties.OBJECT_SECURITY_MANAGER, new MuleSecurityManager());
-        registry.registerObject(MuleProperties.OBJECT_MULE_ENDPOINT_FACTORY, new EndpointFactory());
+        registry.registerObject(MuleProperties.OBJECT_MULE_ENDPOINT_FACTORY, new DefaultEndpointFactory());
         ThreadingProfile defaultThreadingProfile = new ChainedThreadingProfile();
         defaultThreadingProfile.setThreadWaitTimeout(30);
         defaultThreadingProfile.setMaxThreadsActive(10);
@@ -69,7 +69,7 @@ public class DefaultsConfigurationBuilder extends AbstractConfigurationBuilder
             new ChainedThreadingProfile(defaultThreadingProfile));
         registry.registerObject(MuleProperties.OBJECT_DEFAULT_COMPONENT_THREADING_PROFILE,
             new ChainedThreadingProfile(defaultThreadingProfile));
-        UMOModel systemModel = new SedaModel();
+        Model systemModel = new SedaModel();
         systemModel.setName(MuleProperties.OBJECT_SYSTEM_MODEL);
         registry.registerModel(systemModel);
     }

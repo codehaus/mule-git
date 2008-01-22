@@ -10,12 +10,12 @@
 
 package org.mule.providers.xmpp;
 
-import org.mule.api.UMOEvent;
-import org.mule.api.UMOMessage;
+import org.mule.api.Event;
+import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.MalformedEndpointException;
-import org.mule.api.endpoint.UMOEndpointURI;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
-import org.mule.impl.MuleMessage;
+import org.mule.api.endpoint.EndpointURI;
+import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.transport.AbstractMessageRequester;
 
 import org.jivesoftware.smack.Chat;
@@ -32,7 +32,7 @@ public class XmppMessageRequester extends AbstractMessageRequester
     private final XmppConnector connector;
     private volatile XMPPConnection xmppConnection = null;
 
-    public XmppMessageRequester(UMOImmutableEndpoint endpoint)
+    public XmppMessageRequester(ImmutableEndpoint endpoint)
     {
         super(endpoint);
         this.connector = (XmppConnector)endpoint.getConnector();
@@ -42,7 +42,7 @@ public class XmppMessageRequester extends AbstractMessageRequester
     {
         if (xmppConnection == null)
         {
-            UMOEndpointURI uri = endpoint.getEndpointURI();
+            EndpointURI uri = endpoint.getEndpointURI();
             xmppConnection = connector.createXmppConnection(uri);
         }
     }
@@ -74,11 +74,11 @@ public class XmppMessageRequester extends AbstractMessageRequester
      *            The call should return immediately if there is data available. If
      *            no data becomes available before the timeout elapses, null will be
      *            returned
-     * @return the result of the request wrapped in a UMOMessage object. Null will be
+     * @return the result of the request wrapped in a MuleMessage object. Null will be
      *         returned if no data was avaialable
      * @throws Exception if the call to the underlying protocal cuases an exception
      */
-    protected UMOMessage doRequest(long timeout) throws Exception
+    protected MuleMessage doRequest(long timeout) throws Exception
     {
         // Should be in the form of xmpp://user:pass@host:[port]/folder
         String to = (String)endpoint.getProperty("folder");
@@ -88,11 +88,11 @@ public class XmppMessageRequester extends AbstractMessageRequester
         }
         Chat chat = xmppConnection.createChat(to);
         Message message = null;
-        if (timeout == UMOEvent.TIMEOUT_WAIT_FOREVER)
+        if (timeout == Event.TIMEOUT_WAIT_FOREVER)
         {
             message = chat.nextMessage();
         }
-        else if (timeout == UMOEvent.TIMEOUT_DO_NOT_WAIT)
+        else if (timeout == Event.TIMEOUT_DO_NOT_WAIT)
         {
             message = chat.nextMessage(1);
         }
@@ -102,7 +102,7 @@ public class XmppMessageRequester extends AbstractMessageRequester
         }
         if (message != null)
         {
-            return new MuleMessage(connector.getMessageAdapter(message));
+            return new DefaultMuleMessage(connector.getMessageAdapter(message));
         }
         else
         {

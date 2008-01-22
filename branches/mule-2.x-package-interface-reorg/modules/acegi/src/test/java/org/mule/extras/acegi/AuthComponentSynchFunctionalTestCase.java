@@ -10,8 +10,8 @@
 
 package org.mule.extras.acegi;
 
-import org.mule.api.UMOEncryptionStrategy;
-import org.mule.api.UMOMessage;
+import org.mule.api.EncryptionStrategy;
+import org.mule.api.MuleMessage;
 import org.mule.api.config.MuleProperties;
 import org.mule.extras.client.MuleClient;
 import org.mule.impl.security.MuleCredentials;
@@ -44,12 +44,12 @@ public class AuthComponentSynchFunctionalTestCase extends FunctionalTestCase
         MuleClient client = new MuleClient();
         Map props = new HashMap();
 
-        UMOEncryptionStrategy strategy = muleContext
+        EncryptionStrategy strategy = muleContext
             .getSecurityManager()
             .getEncryptionStrategy("PBE");
         String header = MuleCredentials.createHeader("marie", "marie", "PBE", strategy);
         props.put(MuleProperties.MULE_USER_PROPERTY, header);
-        UMOMessage m = client.send("vm://test", "Marie", props);
+        MuleMessage m = client.send("vm://test", "Marie", props);
         assertNotNull(m);
         assertTrue(m.getPayload().equals("Marie"));
     }
@@ -59,12 +59,12 @@ public class AuthComponentSynchFunctionalTestCase extends FunctionalTestCase
         MuleClient client = new MuleClient();
         Map props = new HashMap();
 
-        UMOEncryptionStrategy strategy = muleContext
+        EncryptionStrategy strategy = muleContext
             .getSecurityManager()
             .getEncryptionStrategy("PBE");
         String header = MuleCredentials.createHeader("anon", "anon", "PBE", strategy);
         props.put(MuleProperties.MULE_USER_PROPERTY, header);
-        UMOMessage m = client.send("vm://test", "Marie", props);
+        MuleMessage m = client.send("vm://test", "Marie", props);
         assertEquals(NullPayload.getInstance(), m.getPayload());
     }
 
@@ -73,12 +73,12 @@ public class AuthComponentSynchFunctionalTestCase extends FunctionalTestCase
         MuleClient client = new MuleClient();
         Map props = new HashMap();
 
-        UMOEncryptionStrategy strategy = muleContext
+        EncryptionStrategy strategy = muleContext
             .getSecurityManager()
             .getEncryptionStrategy("PBE");
         String header = MuleCredentials.createHeader("anonX", "anonX", "PBE", strategy);
         props.put(MuleProperties.MULE_USER_PROPERTY, header);
-        UMOMessage m = client.send("vm://test", "Marie", props);
+        MuleMessage m = client.send("vm://test", "Marie", props);
         assertNotNull(m.getPayload());
     }
 

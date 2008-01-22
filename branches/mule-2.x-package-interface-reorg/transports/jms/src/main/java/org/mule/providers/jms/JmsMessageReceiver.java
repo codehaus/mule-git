@@ -11,13 +11,13 @@
 package org.mule.providers.jms;
 
 import org.mule.api.TransactionException;
-import org.mule.api.UMOComponent;
-import org.mule.api.UMOException;
-import org.mule.api.UMOTransaction;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.Component;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.Transaction;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.CreateException;
 import org.mule.api.lifecycle.LifecycleException;
-import org.mule.api.transport.UMOConnector;
+import org.mule.api.transport.Connector;
 import org.mule.impl.transport.AbstractMessageReceiver;
 import org.mule.impl.transport.AbstractReceiverWorker;
 import org.mule.impl.transport.ConnectException;
@@ -48,7 +48,7 @@ public class JmsMessageReceiver extends AbstractMessageReceiver implements Messa
     protected Session session;
     protected boolean startOnConnect = false;
 
-    public JmsMessageReceiver(UMOConnector connector, UMOComponent component, UMOImmutableEndpoint endpoint)
+    public JmsMessageReceiver(Connector connector, Component component, ImmutableEndpoint endpoint)
             throws CreateException
     {
         super(connector, component, endpoint);
@@ -139,7 +139,7 @@ public class JmsMessageReceiver extends AbstractMessageReceiver implements Messa
 
         }
 
-        protected void bindTransaction(UMOTransaction tx) throws TransactionException
+        protected void bindTransaction(Transaction tx) throws TransactionException
         {
             if(tx instanceof JmsTransaction)
             {
@@ -155,7 +155,7 @@ public class JmsMessageReceiver extends AbstractMessageReceiver implements Messa
         }
     }
 
-    protected void doStart() throws UMOException
+    protected void doStart() throws AbstractMuleException
     {
         try
         {
@@ -181,7 +181,7 @@ public class JmsMessageReceiver extends AbstractMessageReceiver implements Messa
         }
     }
 
-    protected void doStop() throws UMOException
+    protected void doStop() throws AbstractMuleException
     {
         try
         {

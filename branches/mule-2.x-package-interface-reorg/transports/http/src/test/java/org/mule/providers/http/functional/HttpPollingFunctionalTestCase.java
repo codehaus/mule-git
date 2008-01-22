@@ -10,7 +10,7 @@
 
 package org.mule.providers.http.functional;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 
@@ -20,7 +20,7 @@ public class HttpPollingFunctionalTestCase extends FunctionalTestCase
     public void testPollingHttpConnector() throws Exception
     {
         MuleClient client = new MuleClient();
-        UMOMessage result = client.request("vm://toclient", 5000);
+        MuleMessage result = client.request("vm://toclient", 5000);
         assertNotNull(result.getPayload());
     }
     

@@ -10,7 +10,7 @@
 
 package org.mule.test.integration.routing.replyto;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 
@@ -32,7 +32,7 @@ public class ReplytoChainIntegration3TestCase extends FunctionalTestCase
 
         MuleClient client = new MuleClient();
         client.dispatch("vm://pojo1", message, null);
-        UMOMessage result = client.request("jms://response", 10000);
+        MuleMessage result = client.request("jms://response", 10000);
         assertNotNull(result);
         assertEquals("Received: " + message, result.getPayload());
     }

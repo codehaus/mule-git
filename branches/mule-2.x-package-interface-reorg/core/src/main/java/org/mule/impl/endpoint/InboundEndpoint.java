@@ -10,7 +10,7 @@
 
 package org.mule.impl.endpoint;
 
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.endpoint.ImmutableEndpoint;
 
 public class InboundEndpoint extends MuleEndpoint
 {
@@ -24,7 +24,7 @@ public class InboundEndpoint extends MuleEndpoint
 
     public String getType()
     {
-        return UMOImmutableEndpoint.ENDPOINT_TYPE_RECEIVER;
+        return ImmutableEndpoint.ENDPOINT_TYPE_RECEIVER;
     }
     
 }

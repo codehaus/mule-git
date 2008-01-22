@@ -10,7 +10,7 @@
 
 package org.mule.providers.file;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.tck.FunctionalTestCase;
 
 import java.io.File;
@@ -74,7 +74,7 @@ public abstract class AbstractFileFunctionalTestCase extends FunctionalTestCase
         return target;
     }
 
-    protected void checkReceivedMessage(UMOMessage message) throws Exception
+    protected void checkReceivedMessage(MuleMessage message) throws Exception
     {
         assertNotNull(message);
         assertNotNull(message.getPayload());

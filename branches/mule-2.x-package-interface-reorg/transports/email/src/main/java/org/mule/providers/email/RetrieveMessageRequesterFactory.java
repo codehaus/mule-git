@@ -10,9 +10,9 @@
 
 package org.mule.providers.email;
 
-import org.mule.api.UMOException;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
-import org.mule.api.transport.UMOMessageRequester;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.api.transport.MessageRequester;
 import org.mule.impl.transport.AbstractMessageRequesterFactory;
 
 /**
@@ -33,7 +33,7 @@ public class RetrieveMessageRequesterFactory extends AbstractMessageRequesterFac
         return true;
     }
 
-    public UMOMessageRequester create(UMOImmutableEndpoint endpoint) throws UMOException
+    public MessageRequester create(ImmutableEndpoint endpoint) throws AbstractMuleException
     {
         return new RetrieveMessageRequester(endpoint);
     }

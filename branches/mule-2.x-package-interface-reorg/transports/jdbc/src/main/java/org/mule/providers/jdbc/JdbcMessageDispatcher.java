@@ -10,12 +10,12 @@
 
 package org.mule.providers.jdbc;
 
-import org.mule.api.UMOEvent;
-import org.mule.api.UMOMessage;
-import org.mule.api.UMOTransaction;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
-import org.mule.api.transport.UMOMessageAdapter;
-import org.mule.impl.MuleMessage;
+import org.mule.api.Event;
+import org.mule.api.MuleMessage;
+import org.mule.api.Transaction;
+import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.api.transport.MessageAdapter;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.transaction.TransactionCoordination;
 import org.mule.impl.transport.AbstractMessageDispatcher;
 import org.mule.util.ArrayUtils;
@@ -41,7 +41,7 @@ public class JdbcMessageDispatcher extends AbstractMessageDispatcher
     private static final String STORED_PROCEDURE_PREFIX = "{ ";
     private static final String STORED_PROCEDURE_SUFFIX = " }";
 
-    public JdbcMessageDispatcher(UMOImmutableEndpoint endpoint)
+    public JdbcMessageDispatcher(ImmutableEndpoint endpoint)
     {
         super(endpoint);
         this.connector = (JdbcConnector) endpoint.getConnector();
@@ -57,15 +57,15 @@ public class JdbcMessageDispatcher extends AbstractMessageDispatcher
         // template method
     }
     
-    protected void executeWriteStatement(UMOEvent event, String writeStmt) throws Exception
+    protected void executeWriteStatement(Event event, String writeStmt) throws Exception
     {
         List paramNames = new ArrayList();
         writeStmt = connector.parseStatement(writeStmt, paramNames);
 
-        Object[] paramValues = connector.getParams(endpoint, paramNames, new MuleMessage(
+        Object[] paramValues = connector.getParams(endpoint, paramNames, new DefaultMuleMessage(
             event.transformMessage()), this.endpoint.getEndpointURI().getAddress());
 
-        UMOTransaction tx = TransactionCoordination.getInstance().getTransaction();
+        Transaction tx = TransactionCoordination.getInstance().getTransaction();
         Connection con = null;
         try
         {
@@ -102,7 +102,7 @@ public class JdbcMessageDispatcher extends AbstractMessageDispatcher
         }
     }
     
-    protected String getStatement(UMOImmutableEndpoint endpoint)
+    protected String getStatement(ImmutableEndpoint endpoint)
     {
         String writeStmt = endpoint.getEndpointURI().getAddress();
         String str;
@@ -136,9 +136,9 @@ public class JdbcMessageDispatcher extends AbstractMessageDispatcher
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.impl.transport.AbstractMessageDispatcher#doDispatch(org.mule.api.UMOEvent)
+     * @see org.mule.impl.transport.AbstractMessageDispatcher#doDispatch(org.mule.api.Event)
      */
-    protected void doDispatch(UMOEvent event) throws Exception
+    protected void doDispatch(Event event) throws Exception
     {
         if (logger.isDebugEnabled())
         {
@@ -160,9 +160,9 @@ public class JdbcMessageDispatcher extends AbstractMessageDispatcher
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.impl.transport.AbstractMessageDispatcher#doSend(org.mule.api.UMOEvent)
+     * @see org.mule.impl.transport.AbstractMessageDispatcher#doSend(org.mule.api.Event)
      */
-    protected UMOMessage doSend(UMOEvent event) throws Exception
+    protected MuleMessage doSend(Event event) throws Exception
     {
         String statement = getStatement(event.getEndpoint());
         
@@ -186,8 +186,8 @@ public class JdbcMessageDispatcher extends AbstractMessageDispatcher
      * @return
      * @throws Exception
      */
-    protected static UMOMessage executeRequest(long timeout, UMOEvent event,
-                                               JdbcConnector connector, UMOImmutableEndpoint endpoint) throws Exception
+    protected static MuleMessage executeRequest(long timeout, Event event,
+                                               JdbcConnector connector, ImmutableEndpoint endpoint) throws Exception
     {
         if (staticLogger.isDebugEnabled())
         {
@@ -260,8 +260,8 @@ public class JdbcMessageDispatcher extends AbstractMessageDispatcher
                     staticLogger.warn("Row count for ack should be 1 and not " + nbRows);
                 }
             }
-            UMOMessageAdapter msgAdapter = connector.getMessageAdapter(result);
-            UMOMessage message = new MuleMessage(msgAdapter);
+            MessageAdapter msgAdapter = connector.getMessageAdapter(result);
+            MuleMessage message = new DefaultMuleMessage(msgAdapter);
             JdbcUtils.commitAndClose(con);
             return message;
         }

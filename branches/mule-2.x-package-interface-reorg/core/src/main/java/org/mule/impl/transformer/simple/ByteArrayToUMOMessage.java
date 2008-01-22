@@ -9,7 +9,7 @@
  */
 package org.mule.impl.transformer.simple;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 
 /** TODO */
 public class ByteArrayToUMOMessage extends ByteArrayToObject
@@ -17,6 +17,6 @@ public class ByteArrayToUMOMessage extends ByteArrayToObject
     public ByteArrayToUMOMessage()
     {
         registerSourceType(byte[].class);
-        setReturnClass(UMOMessage.class);
+        setReturnClass(MuleMessage.class);
     }
 }

@@ -10,15 +10,15 @@
 
 package org.mule.impl.routing.outbound;
 
-import org.mule.api.UMOException;
-import org.mule.api.UMOMessage;
-import org.mule.api.UMOSession;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleMessage;
+import org.mule.api.Session;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.routing.CouldNotRouteOutboundMessageException;
 import org.mule.api.routing.RoutePathNotFoundException;
 import org.mule.api.routing.RoutingException;
+import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.impl.transport.NullPayload;
-import org.mule.imple.config.i18n.CoreMessages;
 
 /**
  * <code>ChainingRouter</code> is used to pass a Mule event through multiple
@@ -28,10 +28,10 @@ import org.mule.imple.config.i18n.CoreMessages;
 public class ChainingRouter extends FilteringOutboundRouter
 {
 
-    public UMOMessage route(UMOMessage message, UMOSession session, boolean synchronous)
+    public MuleMessage route(MuleMessage message, Session session, boolean synchronous)
         throws RoutingException
     {
-        UMOMessage resultToReturn = null;
+        MuleMessage resultToReturn = null;
         if (endpoints == null || endpoints.size() == 0)
         {
             throw new RoutePathNotFoundException(CoreMessages.noEndpointsForRouter(), message, null);
@@ -44,10 +44,10 @@ public class ChainingRouter extends FilteringOutboundRouter
         }
 
         // need that ref for an error message
-        UMOImmutableEndpoint endpoint = null;
+        ImmutableEndpoint endpoint = null;
         try
         {
-            UMOMessage intermediaryResult = message;
+            MuleMessage intermediaryResult = message;
 
             for (int i = 0; i < endpointsCount; i++)
             {
@@ -64,7 +64,7 @@ public class ChainingRouter extends FilteringOutboundRouter
 
                 if (!lastEndpointInChain)
                 {
-                    UMOMessage localResult = send(session, intermediaryResult, endpoint);
+                    MuleMessage localResult = send(session, intermediaryResult, endpoint);
                     // Need to propagate correlation info and replyTo, because there
                     // is no guarantee that an external system will preserve headers
                     // (in fact most will not)
@@ -116,14 +116,14 @@ public class ChainingRouter extends FilteringOutboundRouter
             }
 
         }
-        catch (UMOException e)
+        catch (AbstractMuleException e)
         {
             throw new CouldNotRouteOutboundMessageException(message, endpoint, e);
         }
         return resultToReturn;
     }
 
-//    public void addEndpoint(UMOEndpoint endpoint)
+//    public void addEndpoint(Endpoint endpoint)
 //    {
 //        if (!endpoint.isRemoteSync())
 //        {
@@ -155,7 +155,7 @@ public class ChainingRouter extends FilteringOutboundRouter
      * @param localResult result of the last endpoint invocation
      * @param intermediaryResult the message travelling across the endpoints
      */
-    protected void processIntermediaryResult(UMOMessage localResult, UMOMessage intermediaryResult)
+    protected void processIntermediaryResult(MuleMessage localResult, MuleMessage intermediaryResult)
     {
         localResult.setCorrelationId(intermediaryResult.getCorrelationId());
         localResult.setCorrelationSequence(intermediaryResult.getCorrelationSequence());

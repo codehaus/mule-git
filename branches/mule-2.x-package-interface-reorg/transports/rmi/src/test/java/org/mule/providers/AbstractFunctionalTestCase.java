@@ -10,11 +10,11 @@
 
 package org.mule.providers;
 
-import org.mule.api.UMOException;
-import org.mule.api.UMOMessage;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleMessage;
 import org.mule.api.transport.DispatchException;
 import org.mule.extras.client.MuleClient;
-import org.mule.imple.config.i18n.Message;
+import org.mule.impl.config.i18n.Message;
 import org.mule.providers.rmi.i18n.RmiMessages;
 import org.mule.tck.FunctionalTestCase;
 
@@ -39,7 +39,7 @@ public abstract class AbstractFunctionalTestCase extends FunctionalTestCase
         MuleClient client = new MuleClient();
 
         // send Echo String
-        UMOMessage message = client.send("vm://testin", new Integer(12), null);
+        MuleMessage message = client.send("vm://testin", new Integer(12), null);
         assertNotNull(message);
         Integer payload = (Integer)message.getPayload();
         assertEquals(payload, new Integer(22));
@@ -63,7 +63,7 @@ public abstract class AbstractFunctionalTestCase extends FunctionalTestCase
 
     // from earlier invocation test case
 
-    private UMOMessage send(String uri, String message) throws Exception
+    private MuleMessage send(String uri, String message) throws Exception
     {
         MuleClient client = new MuleClient();
         return client.send(prefix + uri, message, new HashMap());
@@ -71,14 +71,14 @@ public abstract class AbstractFunctionalTestCase extends FunctionalTestCase
 
     public void testReverseString() throws Exception
     {
-        UMOMessage message = send("://localhost/TestService?method=reverseString", "hello");
+        MuleMessage message = send("://localhost/TestService?method=reverseString", "hello");
         assertNotNull(message.getPayload());
         assertEquals("olleh", message.getPayloadAsString());
     }
 
     public void testUpperCaseString() throws Exception
     {
-        UMOMessage message = send("://localhost/TestService?method=upperCaseString", "hello");
+        MuleMessage message = send("://localhost/TestService?method=upperCaseString", "hello");
         assertNotNull(message.getPayload());
         assertEquals("HELLO", message.getPayloadAsString());
     }
@@ -89,7 +89,7 @@ public abstract class AbstractFunctionalTestCase extends FunctionalTestCase
         {
             send("://localhost/TestService", "hello");
         }
-        catch (UMOException e)
+        catch (AbstractMuleException e)
         {
             assertTrue(e instanceof DispatchException);
 
@@ -105,7 +105,7 @@ public abstract class AbstractFunctionalTestCase extends FunctionalTestCase
             send("://localhost/TestService?method=foo", "hello");
             fail("expected error");
         }
-        catch (UMOException e)
+        catch (AbstractMuleException e)
         {
             assertTrue(e.getCause() instanceof NoSuchMethodException);
         }
@@ -123,7 +123,7 @@ public abstract class AbstractFunctionalTestCase extends FunctionalTestCase
             new MuleClient().send("BadType", "hello", null);
             fail("expected error");
         }
-        catch (UMOException e)
+        catch (AbstractMuleException e)
         {
             assertTrue(e.getCause() instanceof NoSuchMethodException);
         }
@@ -131,7 +131,7 @@ public abstract class AbstractFunctionalTestCase extends FunctionalTestCase
 
     public void testCorrectMethodType() throws Exception
     {
-        UMOMessage message = new MuleClient().send("GoodType", "hello", null);
+        MuleMessage message = new MuleClient().send("GoodType", "hello", null);
         assertNotNull(message);
         assertEquals("olleh", message.getPayloadAsString());
     }

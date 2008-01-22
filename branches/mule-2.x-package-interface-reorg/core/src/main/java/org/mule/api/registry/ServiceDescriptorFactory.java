@@ -12,10 +12,10 @@ package org.mule.api.registry;
 
 import org.mule.RegistryContext;
 import org.mule.api.config.MuleProperties;
+import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.impl.model.DefaultModelServiceDescriptor;
 import org.mule.impl.transport.service.DefaultTransportServiceDescriptor;
 import org.mule.impl.transport.service.TransportServiceDescriptor;
-import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.util.ClassUtils;
 import org.mule.util.SpiUtils;
 

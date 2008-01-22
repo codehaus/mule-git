@@ -11,8 +11,8 @@
 package org.mule.test.integration.providers.file;
 
 
-import org.mule.api.UMOEventContext;
-import org.mule.api.context.UMOServerNotification;
+import org.mule.api.EventContext;
+import org.mule.api.context.ServerNotification;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.tck.functional.FunctionalTestComponent;
 import org.mule.tck.functional.FunctionalTestNotification;
@@ -86,7 +86,7 @@ public class FileFunctionalTestCase extends FunctionalTestCase implements Functi
         }
     }
 
-    public void onNotification(UMOServerNotification notification)
+    public void onNotification(ServerNotification notification)
     {
         synchronized (this)
         {
@@ -98,7 +98,7 @@ public class FileFunctionalTestCase extends FunctionalTestCase implements Functi
 
     public static class FileTestComponent extends FunctionalTestComponent
     {
-        public Object onCall(UMOEventContext context) throws Exception
+        public Object onCall(EventContext context) throws Exception
         {
             // there should not be any transformers configured by default, so the
             // return message should be a byte[]

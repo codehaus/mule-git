@@ -10,11 +10,11 @@
 
 package org.mule.providers.ftp;
 
-import org.mule.api.UMOEvent;
-import org.mule.api.UMOMessage;
-import org.mule.api.endpoint.UMOEndpointURI;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
-import org.mule.impl.MuleMessage;
+import org.mule.api.Event;
+import org.mule.api.MuleMessage;
+import org.mule.api.endpoint.EndpointURI;
+import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.transport.AbstractMessageDispatcher;
 
 import java.io.FilenameFilter;
@@ -34,7 +34,7 @@ public class FtpMessageDispatcher extends AbstractMessageDispatcher
 {
     protected final FtpConnector connector;
 
-    public FtpMessageDispatcher(UMOImmutableEndpoint endpoint)
+    public FtpMessageDispatcher(ImmutableEndpoint endpoint)
     {
         super(endpoint);
         this.connector = (FtpConnector) endpoint.getConnector();
@@ -45,7 +45,7 @@ public class FtpMessageDispatcher extends AbstractMessageDispatcher
         // no op
     }
 
-    protected void doDispatch(UMOEvent event) throws Exception
+    protected void doDispatch(Event event) throws Exception
     {
         Object data = event.transformMessage();
         OutputStream out = connector.getOutputStream(event.getEndpoint(), event.getMessage());
@@ -78,7 +78,7 @@ public class FtpMessageDispatcher extends AbstractMessageDispatcher
         }
     }
 
-    protected UMOMessage doSend(UMOEvent event) throws Exception
+    protected MuleMessage doSend(Event event) throws Exception
     {
         doDispatch(event);
         return event.getMessage();
@@ -94,7 +94,7 @@ public class FtpMessageDispatcher extends AbstractMessageDispatcher
     {
         try
         {
-            UMOEndpointURI uri = endpoint.getEndpointURI();
+            EndpointURI uri = endpoint.getEndpointURI();
             FTPClient client = connector.getFtp(uri);
             connector.destroyFtp(uri, client);
         }

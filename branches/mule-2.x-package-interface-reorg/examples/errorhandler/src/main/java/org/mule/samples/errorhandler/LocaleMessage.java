@@ -10,7 +10,7 @@
 
 package org.mule.samples.errorhandler;
 
-import org.mule.imple.config.i18n.MessageFactory;
+import org.mule.impl.config.i18n.MessageFactory;
 import org.mule.util.ObjectUtils;
 import org.mule.util.StringMessageUtils;
 

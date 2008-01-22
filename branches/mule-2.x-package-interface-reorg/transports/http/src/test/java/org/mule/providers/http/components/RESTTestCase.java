@@ -10,10 +10,10 @@
 
 package org.mule.providers.http.components;
 
-import org.mule.api.UMOException;
-import org.mule.api.UMOMessage;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
-import org.mule.impl.MuleMessage;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.tck.FunctionalTestCase;
 
 public class RESTTestCase extends FunctionalTestCase
@@ -24,7 +24,7 @@ public class RESTTestCase extends FunctionalTestCase
         return "rest-functional-test.xml";
     }
     
-    public RESTTestCase() throws UMOException
+    public RESTTestCase() throws AbstractMuleException
     {
         super();
         this.setDisposeManagerPerSuite(true);
@@ -33,7 +33,7 @@ public class RESTTestCase extends FunctionalTestCase
     public void testRest1ParamPost() throws Exception
     {
         MuleClient client = new MuleClient();
-        UMOMessage reply  = client.send("vm://in1", new MuleMessage("IBM"));
+        MuleMessage reply  = client.send("vm://in1", new DefaultMuleMessage("IBM"));
         
         assertNotNull(reply);
         assertNotNull(reply.getPayloadAsString());
@@ -43,7 +43,7 @@ public class RESTTestCase extends FunctionalTestCase
     public void testRest2ParamsPost() throws Exception
     {
         MuleClient client = new MuleClient();
-        UMOMessage reply  = client.send("vm://in2", new MuleMessage(new Object[]{"MTL","MTL"}));
+        MuleMessage reply  = client.send("vm://in2", new DefaultMuleMessage(new Object[]{"MTL","MTL"}));
         
         assertNotNull(reply.getPayloadAsString());
         assertTrue(reply.getPayloadAsString().indexOf(">1</double>") > -1);
@@ -52,7 +52,7 @@ public class RESTTestCase extends FunctionalTestCase
     public void testRest1ParamGet() throws Exception
     {
         MuleClient client = new MuleClient();
-        UMOMessage reply  = client.send("vm://in3", new MuleMessage(new Object[]{"IBM"}));
+        MuleMessage reply  = client.send("vm://in3", new DefaultMuleMessage(new Object[]{"IBM"}));
         
         assertNotNull(reply);
         assertNotNull(reply.getPayloadAsString());
@@ -62,7 +62,7 @@ public class RESTTestCase extends FunctionalTestCase
     public void testRest2ParamsGet() throws Exception
     {
         MuleClient client = new MuleClient();
-        UMOMessage reply  = client.send("vm://in4", new MuleMessage(new Object[]{"MTL","MTL"}));
+        MuleMessage reply  = client.send("vm://in4", new DefaultMuleMessage(new Object[]{"MTL","MTL"}));
         
         assertNotNull(reply.getPayloadAsString());
         assertTrue(reply.getPayloadAsString().indexOf(">1</double>") > -1);

@@ -10,8 +10,8 @@
 
 package org.mule.providers.soap.axis.wsdl;
 
-import org.mule.api.UMOEvent;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.Event;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.providers.soap.SoapConstants;
 import org.mule.providers.soap.axis.AxisMessageDispatcher;
 
@@ -35,12 +35,12 @@ import org.apache.axis.wsdl.symbolTable.SymTabEntry;
 public class AxisWsdlMessageDispatcher extends AxisMessageDispatcher
 {
 
-    public AxisWsdlMessageDispatcher(UMOImmutableEndpoint endpoint)
+    public AxisWsdlMessageDispatcher(ImmutableEndpoint endpoint)
     {
         super(endpoint);
     }
 
-    protected Service createService(UMOEvent event) throws Exception
+    protected Service createService(Event event) throws Exception
     {
         String wsdlUrl = event.getEndpoint().getEndpointURI().getAddress();
         // Parse the wsdl

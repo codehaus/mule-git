@@ -23,7 +23,7 @@ import org.mortbay.jetty.Server;
 import org.mortbay.jetty.servlet.ServletHandler;
 import org.mortbay.util.InetAddrPort;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.providers.http.HttpConnector;
 import org.mule.providers.http.HttpConstants;
@@ -69,7 +69,7 @@ public class WsdlCallTestCase extends FunctionalTestCase
         Map<String, String> props = new HashMap<String, String>();
         props.put(HttpConnector.HTTP_METHOD_PROPERTY, "GET");
         MuleClient client = new MuleClient();
-        UMOMessage result = client.send("http://localhost:" + HTTP_PORT + "/services/mycomponent?wsdl", null,
+        MuleMessage result = client.send("http://localhost:" + HTTP_PORT + "/services/mycomponent?wsdl", null,
             props);
 
         assertNotNull(result);
@@ -98,7 +98,7 @@ public class WsdlCallTestCase extends FunctionalTestCase
         MuleClient client = new MuleClient();
         Map<String, String> props = new HashMap<String, String>();
         props.put("http.method", "GET");
-        UMOMessage reply = client.send("http://localhost:63082/cxfService?wsdl", null, props);
+        MuleMessage reply = client.send("http://localhost:63082/cxfService?wsdl", null, props);
 
         assertNotNull(reply);
         assertNotNull(reply.getPayload());

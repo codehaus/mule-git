@@ -10,24 +10,24 @@
 
 package org.mule.impl.security;
 
+import org.mule.api.Event;
 import org.mule.api.MuleContext;
-import org.mule.api.UMOEvent;
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.api.context.MuleContextAware;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.InitialisationException;
+import org.mule.api.security.CredentialsAccessor;
 import org.mule.api.security.CryptoFailureException;
 import org.mule.api.security.EncryptionStrategyNotFoundException;
+import org.mule.api.security.EndpointSecurityFilter;
 import org.mule.api.security.SecurityException;
+import org.mule.api.security.SecurityManager;
+import org.mule.api.security.SecurityProvider;
 import org.mule.api.security.SecurityProviderNotFoundException;
-import org.mule.api.security.UMOCredentialsAccessor;
-import org.mule.api.security.UMOEndpointSecurityFilter;
-import org.mule.api.security.UMOSecurityManager;
-import org.mule.api.security.UMOSecurityProvider;
 import org.mule.api.security.UnknownAuthenticationTypeException;
 import org.mule.api.transformer.TransformerException;
+import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.impl.transformer.TransformerTemplate;
-import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.util.StringUtils;
 
 import java.util.Arrays;
@@ -40,17 +40,17 @@ import org.apache.commons.logging.LogFactory;
  * all security filters, namely configuring the SecurityManager for this instance
  */
 
-public abstract class AbstractEndpointSecurityFilter implements UMOEndpointSecurityFilter, MuleContextAware
+public abstract class AbstractEndpointSecurityFilter implements EndpointSecurityFilter, MuleContextAware
 {
     /** logger used by this class */
     protected transient Log logger = LogFactory.getLog(getClass());
 
-    protected UMOSecurityManager securityManager;
+    protected SecurityManager securityManager;
     private String securityProviders;
-    protected UMOImmutableEndpoint endpoint;
+    protected ImmutableEndpoint endpoint;
     private boolean inbound = false;
     private boolean authenticate;
-    private UMOCredentialsAccessor credentialsAccessor;
+    private CredentialsAccessor credentialsAccessor;
     private boolean isInitialised = false;
 
     protected MuleContext muleContext;
@@ -75,11 +75,11 @@ public abstract class AbstractEndpointSecurityFilter implements UMOEndpointSecur
         // security providers
         if (securityProviders != null)
         {
-            UMOSecurityManager localManager = new MuleSecurityManager();
+            SecurityManager localManager = new MuleSecurityManager();
             String[] sp = StringUtils.splitAndTrim(securityProviders, ",");
             for (int i = 0; i < sp.length; i++)
             {
-                UMOSecurityProvider provider = securityManager.getProvider(sp[i]);
+                SecurityProvider provider = securityManager.getProvider(sp[i]);
                 if (provider != null)
                 {
                     localManager.addProvider(provider);
@@ -124,7 +124,7 @@ public abstract class AbstractEndpointSecurityFilter implements UMOEndpointSecur
         else
         {
             throw new InitialisationException(CoreMessages.authEndpointTypeForFilterMustBe(
-                UMOImmutableEndpoint.ENDPOINT_TYPE_SENDER + " or " + UMOImmutableEndpoint.ENDPOINT_TYPE_RECEIVER,
+                ImmutableEndpoint.ENDPOINT_TYPE_SENDER + " or " + ImmutableEndpoint.ENDPOINT_TYPE_RECEIVER,
                 endpoint.getType()), this);
         }
         doInitialise();
@@ -141,12 +141,12 @@ public abstract class AbstractEndpointSecurityFilter implements UMOEndpointSecur
     }
 
     /** @param manager  */
-    public void setSecurityManager(UMOSecurityManager manager)
+    public void setSecurityManager(SecurityManager manager)
     {
         securityManager = manager;
     }
 
-    public UMOSecurityManager getSecurityManager()
+    public SecurityManager getSecurityManager()
     {
         return securityManager;
     }
@@ -161,18 +161,18 @@ public abstract class AbstractEndpointSecurityFilter implements UMOEndpointSecur
         securityProviders = providers;
     }
 
-    public UMOImmutableEndpoint getEndpoint()
+    public ImmutableEndpoint getEndpoint()
     {
         return endpoint;
     }
 
-    public synchronized void setEndpoint(UMOImmutableEndpoint endpoint)
+    public synchronized void setEndpoint(ImmutableEndpoint endpoint)
     {
         this.endpoint = endpoint;
         isInitialised = false;
     }
 
-    public void authenticate(UMOEvent event)
+    public void authenticate(Event event)
             throws SecurityException, UnknownAuthenticationTypeException, CryptoFailureException,
             SecurityProviderNotFoundException, EncryptionStrategyNotFoundException,
             InitialisationException
@@ -188,21 +188,21 @@ public abstract class AbstractEndpointSecurityFilter implements UMOEndpointSecur
         }
     }
 
-    public UMOCredentialsAccessor getCredentialsAccessor()
+    public CredentialsAccessor getCredentialsAccessor()
     {
         return credentialsAccessor;
     }
 
-    public void setCredentialsAccessor(UMOCredentialsAccessor credentialsAccessor)
+    public void setCredentialsAccessor(CredentialsAccessor credentialsAccessor)
     {
         this.credentialsAccessor = credentialsAccessor;
     }
 
-    protected void updatePayload(UMOMessage message, final Object payload) throws TransformerException
+    protected void updatePayload(MuleMessage message, final Object payload) throws TransformerException
     {
         TransformerTemplate trans = new TransformerTemplate(new TransformerTemplate.TransformerCallback()
         {
-            public Object doTransform(UMOMessage message) throws Exception
+            public Object doTransform(MuleMessage message) throws Exception
             {
                 return payload;
             }
@@ -211,11 +211,11 @@ public abstract class AbstractEndpointSecurityFilter implements UMOEndpointSecur
         message.applyTransformers(Arrays.asList(new Object[]{trans}));
     }
 
-    protected abstract void authenticateInbound(UMOEvent event)
+    protected abstract void authenticateInbound(Event event)
             throws SecurityException, CryptoFailureException, SecurityProviderNotFoundException,
             EncryptionStrategyNotFoundException, UnknownAuthenticationTypeException;
 
-    protected abstract void authenticateOutbound(UMOEvent event)
+    protected abstract void authenticateOutbound(Event event)
             throws SecurityException, SecurityProviderNotFoundException, CryptoFailureException;
 
     protected abstract void doInitialise() throws InitialisationException;

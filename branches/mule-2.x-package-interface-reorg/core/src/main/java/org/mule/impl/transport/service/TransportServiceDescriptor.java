@@ -10,18 +10,18 @@
 
 package org.mule.impl.transport.service;
 
-import org.mule.api.UMOComponent;
-import org.mule.api.UMOException;
-import org.mule.api.UMOTransactionFactory;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.Component;
+import org.mule.api.TransactionFactory;
 import org.mule.api.endpoint.EndpointURIBuilder;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.registry.ServiceDescriptor;
-import org.mule.api.transport.UMOConnector;
-import org.mule.api.transport.UMOMessageAdapter;
-import org.mule.api.transport.UMOMessageDispatcherFactory;
-import org.mule.api.transport.UMOMessageReceiver;
-import org.mule.api.transport.UMOMessageRequesterFactory;
-import org.mule.api.transport.UMOSessionHandler;
+import org.mule.api.transport.Connector;
+import org.mule.api.transport.MessageAdapter;
+import org.mule.api.transport.MessageDispatcherFactory;
+import org.mule.api.transport.MessageReceiver;
+import org.mule.api.transport.MessageRequesterFactory;
+import org.mule.api.transport.SessionHandler;
 
 import java.util.List;
 import java.util.Properties;
@@ -36,26 +36,26 @@ import java.util.Properties;
  */
 public interface TransportServiceDescriptor extends ServiceDescriptor
 {
-    public UMOMessageAdapter createMessageAdapter(Object message) throws TransportServiceException;
+    public MessageAdapter createMessageAdapter(Object message) throws TransportServiceException;
 
-    public UMOSessionHandler createSessionHandler() throws TransportServiceException;
+    public SessionHandler createSessionHandler() throws TransportServiceException;
 
-    public UMOMessageReceiver createMessageReceiver(UMOConnector connector,
-                                                             UMOComponent component,
-                                                             UMOImmutableEndpoint endpoint) throws UMOException;
+    public MessageReceiver createMessageReceiver(Connector connector,
+                                                             Component component,
+                                                             ImmutableEndpoint endpoint) throws AbstractMuleException;
 
-    public UMOMessageReceiver createMessageReceiver(UMOConnector connector,
-                                                             UMOComponent component,
-                                                             UMOImmutableEndpoint endpoint,
-                                                             Object[] args) throws UMOException;
+    public MessageReceiver createMessageReceiver(Connector connector,
+                                                             Component component,
+                                                             ImmutableEndpoint endpoint,
+                                                             Object[] args) throws AbstractMuleException;
 
-    public UMOMessageDispatcherFactory createDispatcherFactory() throws TransportServiceException;
+    public MessageDispatcherFactory createDispatcherFactory() throws TransportServiceException;
 
-    public UMOMessageRequesterFactory createRequesterFactory() throws TransportServiceException;
+    public MessageRequesterFactory createRequesterFactory() throws TransportServiceException;
 
-    public UMOTransactionFactory createTransactionFactory() throws TransportServiceException;
+    public TransactionFactory createTransactionFactory() throws TransportServiceException;
 
-    public UMOConnector createConnector() throws TransportServiceException;
+    public Connector createConnector() throws TransportServiceException;
 
     public List createInboundTransformers() throws TransportFactoryException;
 

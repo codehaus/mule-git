@@ -10,11 +10,11 @@
 
 package org.mule.impl.routing.outbound;
 
-import org.mule.api.UMOMessage;
-import org.mule.api.UMOSession;
-import org.mule.api.endpoint.UMOEndpoint;
+import org.mule.api.MuleMessage;
+import org.mule.api.Session;
+import org.mule.api.endpoint.Endpoint;
 import org.mule.api.routing.RoutingException;
-import org.mule.impl.MuleMessage;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.routing.outbound.EndpointSelector;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.tck.MuleTestUtils;
@@ -48,18 +48,18 @@ import java.util.Map;
 public class EndpointSelectorTestCase extends AbstractMuleTestCase
 {
     Mock session;
-    UMOEndpoint dest1;
-    UMOEndpoint dest2;
-    UMOEndpoint dest3;
+    Endpoint dest1;
+    Endpoint dest2;
+    Endpoint dest3;
     EndpointSelector router;
 
     protected void doSetUp() throws Exception
     {
         super.doSetUp();
         session = MuleTestUtils.getMockSession();
-        dest1 = getTestEndpoint("dest1", UMOEndpoint.ENDPOINT_TYPE_SENDER);
-        dest2 = getTestEndpoint("dest2", UMOEndpoint.ENDPOINT_TYPE_SENDER);
-        dest3 = getTestEndpoint("dest3", UMOEndpoint.ENDPOINT_TYPE_SENDER);
+        dest1 = getTestEndpoint("dest1", Endpoint.ENDPOINT_TYPE_SENDER);
+        dest2 = getTestEndpoint("dest2", Endpoint.ENDPOINT_TYPE_SENDER);
+        dest3 = getTestEndpoint("dest3", Endpoint.ENDPOINT_TYPE_SENDER);
 
         List endpoints = new ArrayList();
         endpoints.add(dest1);
@@ -77,11 +77,11 @@ public class EndpointSelectorTestCase extends AbstractMuleTestCase
         props.put("apple", "red");
         props.put(router.getSelectorProperty(), "dest3");
         props.put("banana", "yellow");
-        UMOMessage message = new MuleMessage("test event", props);
+        MuleMessage message = new DefaultMuleMessage("test event", props);
 
         assertTrue(router.isMatch(message));
         session.expect("dispatchEvent", C.eq(message, dest3));
-        router.route(message, (UMOSession) session.proxy(), false);
+        router.route(message, (Session) session.proxy(), false);
         session.verify();
     }
 
@@ -95,11 +95,11 @@ public class EndpointSelectorTestCase extends AbstractMuleTestCase
         props.put("apple", "red");
         props.put("wayOut", "dest2");
         props.put("banana", "yellow");
-        UMOMessage message = new MuleMessage("test event", props);
+        MuleMessage message = new DefaultMuleMessage("test event", props);
 
         assertTrue(router.isMatch(message));
         session.expect("dispatchEvent", C.eq(message, dest2));
-        router.route(message, (UMOSession) session.proxy(), false);
+        router.route(message, (Session) session.proxy(), false);
         session.verify();
     }
 
@@ -112,8 +112,8 @@ public class EndpointSelectorTestCase extends AbstractMuleTestCase
         {
             // this test used to fail at the router; it now fails earlier when the message is
             // constructed.  i don't think this is a problem.
-            UMOMessage message = new MuleMessage("test event", props);
-            router.route(message, (UMOSession) session.proxy(), false);
+            MuleMessage message = new DefaultMuleMessage("test event", props);
+            router.route(message, (Session) session.proxy(), false);
             fail("Router should have thrown an exception if endpoint was not found.");
         }
         catch (Exception e)
@@ -124,11 +124,11 @@ public class EndpointSelectorTestCase extends AbstractMuleTestCase
 
     public void testSelectEndpointNoPropertySet() throws Exception
     {
-        UMOMessage message = new MuleMessage("test event");
+        MuleMessage message = new DefaultMuleMessage("test event");
 
         try
         {
-            router.route(message, (UMOSession) session.proxy(), false);
+            router.route(message, (Session) session.proxy(), false);
             fail("Router should have thrown an exception if no selector property was set on the message.");
         }
         catch (RoutingException e)

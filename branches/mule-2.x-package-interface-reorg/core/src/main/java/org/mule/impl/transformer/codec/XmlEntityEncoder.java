@@ -11,8 +11,8 @@
 package org.mule.impl.transformer.codec;
 
 import org.mule.api.transformer.TransformerException;
+import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.impl.transformer.AbstractTransformer;
-import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.util.XMLEntityCodec;
 
 /**

@@ -10,9 +10,9 @@
 
 package org.mule.providers.soap.xfire;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
-import org.mule.impl.MuleMessage;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.tck.FunctionalTestCase;
 
 public class XFireMultipleConnectorsTestCase extends FunctionalTestCase
@@ -32,14 +32,14 @@ public class XFireMultipleConnectorsTestCase extends FunctionalTestCase
     public void testXFireConnector1() throws Exception
     {
         MuleClient client = new MuleClient();
-        UMOMessage reply = client.send("xfire1", new MuleMessage("mule"));
+        MuleMessage reply = client.send("xfire1", new DefaultMuleMessage("mule"));
         assertEquals("Received: mule", reply.getPayloadAsString());
     }
     
     public void testXFireConnector2() throws Exception
     {
         MuleClient client = new MuleClient();
-        UMOMessage reply = client.send("xfire2", new MuleMessage("mule"));
+        MuleMessage reply = client.send("xfire2", new DefaultMuleMessage("mule"));
         assertEquals("Received: mule", reply.getPayloadAsString());
     }
 

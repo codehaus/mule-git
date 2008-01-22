@@ -12,14 +12,14 @@ package org.mule.impl.endpoint;
 
 import org.mule.RegistryContext;
 import org.mule.api.endpoint.EndpointException;
+import org.mule.api.endpoint.EndpointURI;
 import org.mule.api.endpoint.EndpointURIBuilder;
 import org.mule.api.endpoint.MalformedEndpointException;
-import org.mule.api.endpoint.UMOEndpointURI;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.registry.ServiceDescriptorFactory;
 import org.mule.api.registry.ServiceException;
+import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.impl.transport.service.TransportServiceDescriptor;
-import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.util.PropertiesUtils;
 import org.mule.util.StringUtils;
 
@@ -41,7 +41,7 @@ import org.apache.commons.logging.LogFactory;
  * recognised by the endpoint type.
  */
 
-public class MuleEndpointURI implements UMOEndpointURI
+public class MuleEndpointURI implements EndpointURI
 {
     /**
      * Serial version
@@ -109,12 +109,12 @@ public class MuleEndpointURI implements UMOEndpointURI
         }
     }
 
-    public MuleEndpointURI(UMOEndpointURI endpointUri)
+    public MuleEndpointURI(EndpointURI endpointUri)
     {
         initialise(endpointUri);
     }
 
-    public MuleEndpointURI(UMOEndpointURI endpointUri, String filterAddress)
+    public MuleEndpointURI(EndpointURI endpointUri, String filterAddress)
     {
         initialise(endpointUri);
         this.filterAddress = filterAddress;
@@ -161,7 +161,7 @@ public class MuleEndpointURI implements UMOEndpointURI
                 throw new ServiceException(CoreMessages.noServiceTransportDescriptor(scheme));
             }
             EndpointURIBuilder builder = sd.createEndpointBuilder();
-            UMOEndpointURI built = builder.build(this.uri);
+            EndpointURI built = builder.build(this.uri);
             initialise(built);
         }
         catch (Exception e)
@@ -192,7 +192,7 @@ public class MuleEndpointURI implements UMOEndpointURI
         return (url.indexOf(":/") > 0);
     }
 
-    private void initialise(UMOEndpointURI endpointUri)
+    private void initialise(EndpointURI endpointUri)
     {
         this.address = endpointUri.getAddress();
         if (this.endpointName == null)

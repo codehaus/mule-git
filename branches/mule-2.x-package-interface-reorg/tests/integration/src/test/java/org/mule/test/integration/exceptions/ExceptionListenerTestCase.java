@@ -10,7 +10,7 @@
 
 package org.mule.test.integration.exceptions;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.impl.message.ExceptionMessage;
 import org.mule.tck.FunctionalTestCase;
@@ -32,7 +32,7 @@ public class ExceptionListenerTestCase extends FunctionalTestCase
     {
         MuleClient client = new MuleClient();
 
-        UMOMessage message = client.request("vm://error.queue", 2000);
+        MuleMessage message = client.request("vm://error.queue", 2000);
         assertNull(message);
 
         client.send("vm://component.in", "test", null);
@@ -50,7 +50,7 @@ public class ExceptionListenerTestCase extends FunctionalTestCase
     {
         MuleClient client = new MuleClient();
 
-        UMOMessage message = client.request("vm://error.queue", 2000);
+        MuleMessage message = client.request("vm://error.queue", 2000);
         assertNull(message);
 
         client.send("vm://component.in", "test", null);
@@ -68,7 +68,7 @@ public class ExceptionListenerTestCase extends FunctionalTestCase
     {
         MuleClient client = new MuleClient();
 
-        UMOMessage message = client.request("vm://error.queue", 2000);
+        MuleMessage message = client.request("vm://error.queue", 2000);
         assertNull(message);
 
         client.dispatch("vm://component.in", "test", null);

@@ -10,8 +10,8 @@
 
 package org.mule.management.agents;
 
-import org.mule.api.UMOException;
-import org.mule.api.context.UMOAgent;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.context.Agent;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.impl.AbstractAgent;
 import org.mule.util.StringUtils;
@@ -73,13 +73,13 @@ public class DefaultJmxSupportAgent extends AbstractAgent
     }
 
     /** {@inheritDoc} */
-    public void start() throws UMOException
+    public void start() throws AbstractMuleException
     {
         // nothing to do
     }
 
     /** {@inheritDoc} */
-    public void stop() throws UMOException
+    public void stop() throws AbstractMuleException
     {
         // nothing to do
     }
@@ -111,7 +111,7 @@ public class DefaultJmxSupportAgent extends AbstractAgent
 
         try
         {
-            UMOAgent agent = createRmiAgent();
+            Agent agent = createRmiAgent();
             if (!isAgentRegistered(agent))
             {
                 RegistryContext.getRegistry().registerAgent(agent);
@@ -162,7 +162,7 @@ public class DefaultJmxSupportAgent extends AbstractAgent
             //TODO RM* this currently does nothing!!!
             muleContext.getRegistry().unregisterAgent(name);
         }
-        catch (UMOException e)
+        catch (AbstractMuleException e)
         {
             throw new InitialisationException(e, this);
         }
@@ -239,7 +239,7 @@ public class DefaultJmxSupportAgent extends AbstractAgent
         return new YourKitProfilerAgent();
     }
 
-    protected boolean isAgentRegistered(UMOAgent agent)
+    protected boolean isAgentRegistered(Agent agent)
     {
         return muleContext.getRegistry().lookupAgent(agent.getName()) != null;
     }

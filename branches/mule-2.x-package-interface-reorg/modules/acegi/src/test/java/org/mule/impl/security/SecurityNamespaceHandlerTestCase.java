@@ -10,8 +10,8 @@
 
 package org.mule.impl.security;
 
-import org.mule.api.UMOEncryptionStrategy;
-import org.mule.api.security.UMOSecurityManager;
+import org.mule.api.EncryptionStrategy;
+import org.mule.api.security.SecurityManager;
 import org.mule.tck.FunctionalTestCase;
 
 import java.util.Iterator;
@@ -29,7 +29,7 @@ public class SecurityNamespaceHandlerTestCase extends FunctionalTestCase
 
     public void testSecurity()
     {
-        UMOSecurityManager securityManager = muleContext.getSecurityManager();
+        SecurityManager securityManager = muleContext.getSecurityManager();
         assertNotNull(securityManager.getProvider("dummySecurityProvider"));
         assertTrue(securityManager.getProvider("dummySecurityProvider") instanceof MockSecurityProvider);
         verifyEncryptionStrategy(securityManager, "dummyEncryptionStrategy", MockEncryptionStrategy.class);
@@ -37,13 +37,13 @@ public class SecurityNamespaceHandlerTestCase extends FunctionalTestCase
         verifyEncryptionStrategy(securityManager, "secretKeyEncryptionStrategy", SecretKeyEncryptionStrategy.class);
     }
     
-    private void verifyEncryptionStrategy(UMOSecurityManager securityManager, String name, Class clazz)
+    private void verifyEncryptionStrategy(SecurityManager securityManager, String name, Class clazz)
     {
         Iterator strategies = securityManager.getEncryptionStrategies().iterator();
         logger.debug("Listing strategies");
         while (strategies.hasNext())
         {
-            UMOEncryptionStrategy strategy = (UMOEncryptionStrategy) strategies.next();
+            EncryptionStrategy strategy = (EncryptionStrategy) strategies.next();
             logger.debug(strategy.getName() + " / " + strategy.toString() + " / " + strategy.getClass());
         }
         assertNotNull(securityManager.getEncryptionStrategy(name));

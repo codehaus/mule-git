@@ -11,22 +11,22 @@
 package org.mule.impl;
 
 import org.mule.RegistryContext;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.Component;
+import org.mule.api.Event;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleException;
+import org.mule.api.MuleMessage;
+import org.mule.api.Session;
 import org.mule.api.ThreadSafeAccess;
-import org.mule.api.UMOComponent;
-import org.mule.api.UMOEvent;
-import org.mule.api.UMOException;
-import org.mule.api.UMOMessage;
-import org.mule.api.UMOSession;
 import org.mule.api.config.MuleProperties;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
-import org.mule.api.security.UMOCredentials;
+import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.api.security.Credentials;
+import org.mule.api.transformer.Transformer;
 import org.mule.api.transformer.TransformerException;
-import org.mule.api.transformer.UMOTransformer;
 import org.mule.api.transport.PropertyScope;
+import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.impl.security.MuleCredentials;
-import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.util.MapUtils;
 import org.mule.util.UUID;
 
@@ -48,13 +48,13 @@ import org.apache.commons.logging.LogFactory;
 /**
  * <code>MuleEvent</code> represents any data event occuring in the Mule
  * environment. All data sent or received within the Mule environment will be passed
- * between components as an UMOEvent. <p/> The UMOEvent holds some data and provides
+ * between components as an Event. <p/> The Event holds some data and provides
  * helper methods for obtaining the data in a format that the receiving Mule UMO
  * understands. The event can also maintain any number of properties that can be set
  * and retrieved by Mule UMO components.
  */
 
-public class MuleEvent extends EventObject implements UMOEvent, ThreadSafeAccess
+public class MuleEvent extends EventObject implements Event, ThreadSafeAccess
 {
     /**
      * Serial version
@@ -67,7 +67,7 @@ public class MuleEvent extends EventObject implements UMOEvent, ThreadSafeAccess
     /**
      * The endpoint associated with the event
      */
-    private transient UMOImmutableEndpoint endpoint = null;
+    private transient ImmutableEndpoint endpoint = null;
 
     /**
      * the Universally Unique ID for the event
@@ -77,9 +77,9 @@ public class MuleEvent extends EventObject implements UMOEvent, ThreadSafeAccess
     /**
      * The payload message used to read the payload of the event
      */
-    private UMOMessage message = null;
+    private MuleMessage message = null;
 
-    private transient UMOSession session;
+    private transient Session session;
 
     private boolean stopFurtherProcessing = false;
 
@@ -91,7 +91,7 @@ public class MuleEvent extends EventObject implements UMOEvent, ThreadSafeAccess
 
     private transient Object transformedMessage = null;
 
-    private UMOCredentials credentials = null;
+    private Credentials credentials = null;
 
     protected String[] ignoredPropertyOverrides = new String[]{MuleProperties.MULE_METHOD_PROPERTY};
 
@@ -100,10 +100,10 @@ public class MuleEvent extends EventObject implements UMOEvent, ThreadSafeAccess
      * merges them with any properties on the endpoint. The message properties take
      * precedence over the endpoint properties
      */
-    public MuleEvent(UMOMessage message,
-                     UMOImmutableEndpoint endpoint,
-                     UMOComponent component,
-                     UMOEvent previousEvent)
+    public MuleEvent(MuleMessage message,
+                     ImmutableEndpoint endpoint,
+                     Component component,
+                     Event previousEvent)
     {
         super(message.getPayload());
         this.message = message;
@@ -117,9 +117,9 @@ public class MuleEvent extends EventObject implements UMOEvent, ThreadSafeAccess
         fillProperties(previousEvent);
     }
 
-    public MuleEvent(UMOMessage message,
-                     UMOImmutableEndpoint endpoint,
-                     UMOSession session,
+    public MuleEvent(MuleMessage message,
+                     ImmutableEndpoint endpoint,
+                     Session session,
                      boolean synchronous)
     {
         this(message, endpoint, session, synchronous, null);
@@ -131,11 +131,11 @@ public class MuleEvent extends EventObject implements UMOEvent, ThreadSafeAccess
      * @param message the event payload
      * @param endpoint the endpoint to associate with the event
      * @param session the previous event if any
-     * @see org.mule.api.transport.UMOMessageAdapter
+     * @see org.mule.api.transport.MessageAdapter
      */
-    public MuleEvent(UMOMessage message,
-                     UMOImmutableEndpoint endpoint,
-                     UMOSession session,
+    public MuleEvent(MuleMessage message,
+                     ImmutableEndpoint endpoint,
+                     Session session,
                      boolean synchronous,
                      ResponseOutputStream outputStream)
     {
@@ -155,11 +155,11 @@ public class MuleEvent extends EventObject implements UMOEvent, ThreadSafeAccess
      * @param message the event payload
      * @param endpoint the endpoint to associate with the event
      * @param session the previous event if any
-     * @see org.mule.api.transport.UMOMessageAdapter
+     * @see org.mule.api.transport.MessageAdapter
      */
-    public MuleEvent(UMOMessage message,
-                     UMOImmutableEndpoint endpoint,
-                     UMOSession session,
+    public MuleEvent(MuleMessage message,
+                     ImmutableEndpoint endpoint,
+                     Session session,
                      String eventId,
                      boolean synchronous)
     {
@@ -178,7 +178,7 @@ public class MuleEvent extends EventObject implements UMOEvent, ThreadSafeAccess
      * @param message
      * @param rewriteEvent
      */
-    public MuleEvent(UMOMessage message, UMOEvent rewriteEvent)
+    public MuleEvent(MuleMessage message, Event rewriteEvent)
     {
         super(message.getPayload());
         this.message = message;
@@ -196,11 +196,11 @@ public class MuleEvent extends EventObject implements UMOEvent, ThreadSafeAccess
         fillProperties(rewriteEvent);
     }
 
-    protected void fillProperties(UMOEvent previousEvent)
+    protected void fillProperties(Event previousEvent)
     {
         if (previousEvent != null)
         {
-            UMOMessage msg = previousEvent.getMessage();
+            MuleMessage msg = previousEvent.getMessage();
             synchronized (msg)
             {
                 for (Iterator iterator = msg.getPropertyNames().iterator(); iterator.hasNext();)
@@ -276,7 +276,7 @@ public class MuleEvent extends EventObject implements UMOEvent, ThreadSafeAccess
         }
     }
 
-    public UMOCredentials getCredentials()
+    public Credentials getCredentials()
     {
         return credentials;
     }
@@ -286,7 +286,7 @@ public class MuleEvent extends EventObject implements UMOEvent, ThreadSafeAccess
         return transformedMessage;
     }
 
-    public UMOMessage getMessage()
+    public MuleMessage getMessage()
     {
         return message;
     }
@@ -347,7 +347,7 @@ public class MuleEvent extends EventObject implements UMOEvent, ThreadSafeAccess
      *         Strings.
      * @throws org.mule.api.transformer.TransformerException if a failure occurs in
      *             the transformer
-     * @see org.mule.api.transformer.UMOTransformer
+     * @see org.mule.api.transformer.Transformer
      */
     public String transformMessageToString() throws TransformerException
     {
@@ -376,7 +376,7 @@ public class MuleEvent extends EventObject implements UMOEvent, ThreadSafeAccess
         */
     }
 
-    public String getMessageAsString() throws UMOException
+    public String getMessageAsString() throws AbstractMuleException
     {
         return getMessageAsString(getEncoding());
     }
@@ -386,10 +386,10 @@ public class MuleEvent extends EventObject implements UMOEvent, ThreadSafeAccess
      *
      * @param encoding the encoding to use when converting the message to string
      * @return the message contents as a string
-     * @throws org.mule.api.UMOException if the message cannot be converted into a
+     * @throws org.mule.api.AbstractMuleException if the message cannot be converted into a
      *             string
      */
-    public String getMessageAsString(String encoding) throws UMOException
+    public String getMessageAsString(String encoding) throws AbstractMuleException
     {
         try
         {
@@ -405,7 +405,7 @@ public class MuleEvent extends EventObject implements UMOEvent, ThreadSafeAccess
     /*
      * (non-Javadoc)
      *
-     * @see org.mule.api.UMOEvent#getId()
+     * @see org.mule.api.Event#getId()
      */
     public String getId()
     {
@@ -413,7 +413,7 @@ public class MuleEvent extends EventObject implements UMOEvent, ThreadSafeAccess
     }
 
     /**
-     * @see org.mule.api.UMOEvent#getProperty(java.lang.String, boolean)
+     * @see org.mule.api.Event#getProperty(java.lang.String, boolean)
      */
     public Object getProperty(String name, boolean exhaustiveSearch)
     {
@@ -423,7 +423,7 @@ public class MuleEvent extends EventObject implements UMOEvent, ThreadSafeAccess
     /*
      * (non-Javadoc)
      *
-     * @see org.mule.api.UMOEvent#getProperty(java.lang.String, java.lang.Object,
+     * @see org.mule.api.Event#getProperty(java.lang.String, java.lang.Object,
      *      boolean)
      */
     public Object getProperty(String name, Object defaultValue, boolean exhaustiveSearch)
@@ -458,9 +458,9 @@ public class MuleEvent extends EventObject implements UMOEvent, ThreadSafeAccess
     /*
      * (non-Javadoc)
      *
-     * @see org.mule.api.UMOEvent#getEndpoint()
+     * @see org.mule.api.Event#getEndpoint()
      */
-    public UMOImmutableEndpoint getEndpoint()
+    public ImmutableEndpoint getEndpoint()
     {
         return endpoint;
     }
@@ -486,12 +486,12 @@ public class MuleEvent extends EventObject implements UMOEvent, ThreadSafeAccess
         return UUID.getUUID();
     }
 
-    public UMOSession getSession()
+    public Session getSession()
     {
         return session;
     }
 
-    void setSession(UMOSession session)
+    void setSession(Session session)
     {
         this.session = session;
     }
@@ -499,7 +499,7 @@ public class MuleEvent extends EventObject implements UMOEvent, ThreadSafeAccess
     /**
      * Gets the recipient component of this event
      */
-    public UMOComponent getComponent()
+    public Component getComponent()
     {
         return session.getComponent();
     }
@@ -599,7 +599,7 @@ public class MuleEvent extends EventObject implements UMOEvent, ThreadSafeAccess
             Iterator transformer = transformers.iterator();
             while (transformer.hasNext())
             {
-                out.writeObject(((UMOTransformer) transformer.next()).getName());
+                out.writeObject(((Transformer) transformer.next()).getName());
             }
         }
     }
@@ -649,10 +649,10 @@ public class MuleEvent extends EventObject implements UMOEvent, ThreadSafeAccess
             //if (TransformerUtils.isUndefined(endpoint.getTransformers()))
             //{
             //    //TODO DF: MULE-2291 Resolve pending endpoint mutability issues
-            //    ((UMOEndpoint) endpoint).setTransformers(transformers);
+            //    ((Endpoint) endpoint).setTransformers(transformers);
             //}
         }
-        catch (UMOException e)
+        catch (AbstractMuleException e)
         {
             throw (IOException) new IOException(e.getMessage()).initCause(e);
         }
@@ -686,7 +686,7 @@ public class MuleEvent extends EventObject implements UMOEvent, ThreadSafeAccess
     {
         if (message instanceof ThreadSafeAccess)
         {
-            MuleEvent copy = new MuleEvent((UMOMessage) ((ThreadSafeAccess) message).newThreadCopy(), this);
+            MuleEvent copy = new MuleEvent((MuleMessage) ((ThreadSafeAccess) message).newThreadCopy(), this);
             copy.resetAccessControl();
             return copy;
         }

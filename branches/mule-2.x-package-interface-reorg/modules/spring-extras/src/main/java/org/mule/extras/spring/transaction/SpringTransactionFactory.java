@@ -12,8 +12,8 @@ package org.mule.extras.spring.transaction;
 
 import org.mule.api.MuleContext;
 import org.mule.api.TransactionException;
-import org.mule.api.UMOTransaction;
-import org.mule.api.UMOTransactionFactory;
+import org.mule.api.Transaction;
+import org.mule.api.TransactionFactory;
 import org.mule.impl.transaction.AbstractSingleResourceTransaction;
 
 import org.springframework.jdbc.datasource.ConnectionHolder;
@@ -25,7 +25,7 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 /**
  * TODO: document this class
  */
-public class SpringTransactionFactory implements UMOTransactionFactory
+public class SpringTransactionFactory implements TransactionFactory
 {
 
     private PlatformTransactionManager manager;
@@ -35,9 +35,9 @@ public class SpringTransactionFactory implements UMOTransactionFactory
         super();
     }
 
-    public UMOTransaction beginTransaction(MuleContext muleContext) throws TransactionException
+    public Transaction beginTransaction(MuleContext muleContext) throws TransactionException
     {
-        UMOTransaction tx = new SpringTransaction();
+        Transaction tx = new SpringTransaction();
         tx.begin();
         return tx;
     }

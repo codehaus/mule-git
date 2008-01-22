@@ -11,7 +11,7 @@
 package org.mule.impl.transformer.simple;
 
 import org.mule.api.transformer.TransformerException;
-import org.mule.impl.MuleMessage;
+import org.mule.impl.DefaultMuleMessage;
 
 public class WrappedPayloadTransformationTestCase extends HexStringByteArrayTransformersTestCase
 {
@@ -19,7 +19,7 @@ public class WrappedPayloadTransformationTestCase extends HexStringByteArrayTran
     // extra test for MULE-1274: transforming UMOMessages with regular payload
     public void testPayloadWrappedInUMOMessage() throws TransformerException
     {
-        Object wrappedPayload = new MuleMessage(this.getResultData());
+        Object wrappedPayload = new DefaultMuleMessage(this.getResultData());
         assertEquals(this.getTestData(), this.getRoundTripTransformer().transform(wrappedPayload));
     }
 

@@ -10,17 +10,17 @@
 
 package org.mule.providers.http.components;
 
-import org.mule.api.UMOEventContext;
-import org.mule.api.UMOFilter;
-import org.mule.api.UMOMessage;
+import org.mule.api.EventContext;
+import org.mule.api.Filter;
+import org.mule.api.MuleMessage;
 import org.mule.api.lifecycle.Callable;
 import org.mule.api.lifecycle.Initialisable;
 import org.mule.api.lifecycle.InitialisationException;
-import org.mule.impl.MuleMessage;
+import org.mule.impl.DefaultMuleMessage;
+import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.impl.routing.filters.MessagePropertyFilter;
 import org.mule.impl.routing.filters.RegExFilter;
 import org.mule.impl.transport.NullPayload;
-import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.util.properties.MessageHeaderPropertyExtractor;
 import org.mule.util.properties.PropertyExtractor;
 
@@ -59,7 +59,7 @@ public class RestServiceWrapper implements Callable, Initialisable
     private Map optionalParams = new HashMap();
     private String httpMethod = "GET";
     private List payloadParameterNames;
-    private UMOFilter errorFilter;
+    private Filter errorFilter;
     private String errorExpression;
 
     private PropertyExtractor propertyExtractor = new MessageHeaderPropertyExtractor();
@@ -124,12 +124,12 @@ public class RestServiceWrapper implements Callable, Initialisable
         this.payloadParameterNames = payloadParameterNames;
     }
 
-    public UMOFilter getFilter()
+    public Filter getFilter()
     {
         return errorFilter;
     }
 
-    public void setFilter(UMOFilter errorFilter)
+    public void setFilter(Filter errorFilter)
     {
         this.errorFilter = errorFilter;
     }
@@ -177,7 +177,7 @@ public class RestServiceWrapper implements Callable, Initialisable
         }
     }
 
-    public Object onCall(UMOEventContext eventContext) throws Exception
+    public Object onCall(EventContext eventContext) throws Exception
     {
         String tempUrl;
         Object request = eventContext.transformMessage();
@@ -218,7 +218,7 @@ public class RestServiceWrapper implements Callable, Initialisable
 
         eventContext.getMessage().setProperty(HTTP_METHOD, httpMethod);
 
-        UMOMessage result = eventContext.sendEvent(new MuleMessage(requestBody, eventContext.getMessage()),
+        MuleMessage result = eventContext.sendEvent(new DefaultMuleMessage(requestBody, eventContext.getMessage()),
                                                    tempUrl);
 
         if (isErrorPayload(result))
@@ -257,7 +257,7 @@ public class RestServiceWrapper implements Callable, Initialisable
 
     //if requestBodyBuffer is null, it means that the request is a GET, otherwise it is a POST and  
     //requestBodyBuffer must contain the body of the http method at the end of this function call
-    private void setRESTParams(StringBuffer url, UMOMessage msg, Object body, Map args, boolean optional, StringBuffer requestBodyBuffer)
+    private void setRESTParams(StringBuffer url, MuleMessage msg, Object body, Map args, boolean optional, StringBuffer requestBodyBuffer)
     {
         String sep;
 
@@ -334,12 +334,12 @@ public class RestServiceWrapper implements Callable, Initialisable
         }
     }
 
-    protected boolean isErrorPayload(UMOMessage message)
+    protected boolean isErrorPayload(MuleMessage message)
     {
         return errorFilter != null && errorFilter.accept(message);
     }
 
-    protected void handleException(RestServiceException e, UMOMessage result) throws Exception
+    protected void handleException(RestServiceException e, MuleMessage result) throws Exception
     {
         throw e;
     }

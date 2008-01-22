@@ -10,10 +10,10 @@
 
 package org.mule.providers.jms;
 
-import org.mule.api.UMOComponent;
-import org.mule.api.endpoint.UMOEndpoint;
+import org.mule.api.Component;
+import org.mule.api.endpoint.Endpoint;
 import org.mule.api.lifecycle.CreateException;
-import org.mule.api.transport.UMOConnector;
+import org.mule.api.transport.Connector;
 
 import javax.jms.Message;
 import javax.jms.MessageListener;
@@ -24,7 +24,7 @@ import javax.jms.MessageListener;
 public class SingleJmsMessageReceiver extends JmsMessageReceiver implements MessageListener
 {
 
-    public SingleJmsMessageReceiver(UMOConnector connector, UMOComponent component, UMOEndpoint endpoint)
+    public SingleJmsMessageReceiver(Connector connector, Component component, Endpoint endpoint)
             throws CreateException
     {
         super(connector, component, endpoint);

@@ -9,8 +9,8 @@
  */
 package org.mule.test.integration.config;
 
-import org.mule.api.endpoint.UMOImmutableEndpoint;
-import org.mule.api.transformer.UMOTransformer;
+import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.api.transformer.Transformer;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.tck.testmodels.mule.TestCompressionTransformer;
 import org.mule.tck.testmodels.mule.TestConnector;
@@ -30,7 +30,7 @@ public class CustomConfigTestCase extends FunctionalTestCase
 
     public void testCustomEndpointConfig() throws Exception
     {
-        UMOImmutableEndpoint ep = muleContext.getRegistry().lookupEndpointFactory().getOutboundEndpoint(
+        ImmutableEndpoint ep = muleContext.getRegistry().lookupEndpointFactory().getOutboundEndpoint(
             "fooEndpoint");
         assertNotNull("fooEndpoint should not be null", ep);
         TestFilter tf = (TestFilter)ep.getFilter();
@@ -53,7 +53,7 @@ public class CustomConfigTestCase extends FunctionalTestCase
 
     public void testCustomTransformerConfig() throws Exception
     {
-        UMOTransformer trans = muleContext.getRegistry().lookupTransformer("testTransformer");
+        Transformer trans = muleContext.getRegistry().lookupTransformer("testTransformer");
         assertNotNull("testTransformer should not be null", trans);
         assertTrue("Transformer should be an instance of TestCompressionTransformer", trans instanceof TestCompressionTransformer);
         assertEquals(((TestCompressionTransformer)trans).getBeanProperty1(), "soo");

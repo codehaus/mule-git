@@ -12,13 +12,13 @@ package org.mule.providers.http.servlet;
 
 import org.mule.MuleServer;
 import org.mule.RegistryContext;
-import org.mule.api.UMOException;
-import org.mule.api.UMOMessage;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.EndpointException;
 import org.mule.api.endpoint.EndpointNotFoundException;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
-import org.mule.api.transport.UMOMessageReceiver;
-import org.mule.impl.MuleMessage;
+import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.api.transport.MessageReceiver;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.providers.http.i18n.HttpMessages;
 
 import java.io.IOException;
@@ -58,7 +58,7 @@ public class MuleRESTReceiverServlet extends MuleReceiverServlet
         {
             if (httpServletRequest.getParameter("endpoint") != null)
             {
-                UMOImmutableEndpoint endpoint = getEndpointForURI(httpServletRequest);
+                ImmutableEndpoint endpoint = getEndpointForURI(httpServletRequest);
                 String timeoutString = httpServletRequest.getParameter("timeout");
                 long to = timeout;
 
@@ -73,16 +73,16 @@ public class MuleRESTReceiverServlet extends MuleReceiverServlet
                                  + to);
                 }
 
-                UMOMessage returnMessage = endpoint.request(to);
+                MuleMessage returnMessage = endpoint.request(to);
                 writeResponse(httpServletResponse, returnMessage);
             }
             else
             {
-            	UMOMessageReceiver receiver = getReceiverForURI(httpServletRequest);
+            	MessageReceiver receiver = getReceiverForURI(httpServletRequest);
                 httpServletRequest.setAttribute(PAYLOAD_PARAMETER_NAME, payloadParameterName);
-                UMOMessage message = new MuleMessage(receiver.getConnector().getMessageAdapter(
+                MuleMessage message = new DefaultMuleMessage(receiver.getConnector().getMessageAdapter(
                     httpServletRequest));
-                UMOMessage returnMessage = receiver.routeMessage(message, true);
+                MuleMessage returnMessage = receiver.routeMessage(message, true);
                 writeResponse(httpServletResponse, returnMessage);
             }
         }
@@ -97,11 +97,11 @@ public class MuleRESTReceiverServlet extends MuleReceiverServlet
     {
         try
         {
-        	UMOMessageReceiver receiver = getReceiverForURI(httpServletRequest);
+        	MessageReceiver receiver = getReceiverForURI(httpServletRequest);
             httpServletRequest.setAttribute(PAYLOAD_PARAMETER_NAME, payloadParameterName);
-            UMOMessage message = new MuleMessage(receiver.getConnector()
+            MuleMessage message = new DefaultMuleMessage(receiver.getConnector()
                 .getMessageAdapter(httpServletRequest));
-            UMOMessage returnMessage = receiver.routeMessage(message, true);
+            MuleMessage returnMessage = receiver.routeMessage(message, true);
             writeResponse(httpServletResponse, returnMessage);
 
         }
@@ -116,9 +116,9 @@ public class MuleRESTReceiverServlet extends MuleReceiverServlet
     {
         try
         {
-        	UMOMessageReceiver receiver = getReceiverForURI(httpServletRequest);
+        	MessageReceiver receiver = getReceiverForURI(httpServletRequest);
             httpServletRequest.setAttribute(PAYLOAD_PARAMETER_NAME, payloadParameterName);
-            UMOMessage message = new MuleMessage(receiver.getConnector()
+            MuleMessage message = new DefaultMuleMessage(receiver.getConnector()
                 .getMessageAdapter(httpServletRequest));
             receiver.routeMessage(message, RegistryContext.getConfiguration().isDefaultSynchronousEndpoints());
 
@@ -140,7 +140,7 @@ public class MuleRESTReceiverServlet extends MuleReceiverServlet
     {
         try
         {
-            UMOImmutableEndpoint endpoint = getEndpointForURI(httpServletRequest);
+            ImmutableEndpoint endpoint = getEndpointForURI(httpServletRequest);
             String timeoutString = httpServletRequest.getParameter("timeout");
             long to = timeout;
 
@@ -154,7 +154,7 @@ public class MuleRESTReceiverServlet extends MuleReceiverServlet
                 logger.debug("Making request using endpoint: " + endpoint.toString() + " timeout is: " + to);
             }
 
-            UMOMessage returnMessage = endpoint.request(to);
+            MuleMessage returnMessage = endpoint.request(to);
             if (returnMessage != null)
             {
                 httpServletResponse.setStatus(HttpServletResponse.SC_OK);
@@ -171,8 +171,8 @@ public class MuleRESTReceiverServlet extends MuleReceiverServlet
         }
     }
 
-    protected UMOImmutableEndpoint getEndpointForURI(HttpServletRequest httpServletRequest)
-        throws UMOException
+    protected ImmutableEndpoint getEndpointForURI(HttpServletRequest httpServletRequest)
+        throws AbstractMuleException
     {
         String endpointName = httpServletRequest.getParameter("endpoint");
         if (endpointName == null)
@@ -180,12 +180,12 @@ public class MuleRESTReceiverServlet extends MuleReceiverServlet
             throw new EndpointException(HttpMessages.httpParameterNotSet("endpoint"));
         }
 
-        UMOImmutableEndpoint endpoint = RegistryContext.getRegistry().lookupEndpointFactory().getInboundEndpoint(endpointName);
+        ImmutableEndpoint endpoint = RegistryContext.getRegistry().lookupEndpointFactory().getInboundEndpoint(endpointName);
         if (endpoint == null)
         {
             // if we dont find an endpoint for the given name, lets check the
             // servlet receivers
-            UMOMessageReceiver receiver = (UMOMessageReceiver)getReceivers().get(endpointName);
+            MessageReceiver receiver = (MessageReceiver)getReceivers().get(endpointName);
             
             if (receiver == null)
             {

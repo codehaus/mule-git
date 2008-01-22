@@ -13,12 +13,12 @@ package org.mule.tck.functional;
 import org.mule.MuleServer;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleException;
-import org.mule.api.UMOEventContext;
+import org.mule.api.EventContext;
 import org.mule.api.lifecycle.Callable;
 import org.mule.api.lifecycle.Disposable;
 import org.mule.api.lifecycle.Initialisable;
 import org.mule.impl.RequestContext;
-import org.mule.imple.config.i18n.MessageFactory;
+import org.mule.impl.config.i18n.MessageFactory;
 import org.mule.tck.exceptions.FunctionalTestException;
 import org.mule.util.NumberUtils;
 import org.mule.util.StringMessageUtils;
@@ -79,7 +79,7 @@ public class FunctionalTestComponent implements Callable, Initialisable, Disposa
     }
 
     /** {@inheritDoc} */
-    public Object onCall(UMOEventContext context) throws Exception
+    public Object onCall(EventContext context) throws Exception
     {
         if (enableMessageHistory)
         {
@@ -147,7 +147,7 @@ public class FunctionalTestComponent implements Callable, Initialisable, Disposa
 
     /**
      * This method duplicates much of the functionality for the {@link #onCall} method above. This method is currently
-     * used by some WebServices tests where you don' want to be introducing the {@link org.mule.api.UMOEventContext} as
+     * used by some WebServices tests where you don' want to be introducing the {@link org.mule.api.EventContext} as
      * a complex type.
      * TODO: It would be nice to remove this method or at least refactor the methods so there is little or no duplication
      *
@@ -157,7 +157,7 @@ public class FunctionalTestComponent implements Callable, Initialisable, Disposa
      */
     public Object onReceive(Object data) throws Exception
     {
-        UMOEventContext context = RequestContext.getEventContext();
+        EventContext context = RequestContext.getEventContext();
         String contents = data.toString();
         String msg = StringMessageUtils.getBoilerPlate("Message Received in component: "
                 + context.getComponent().getName() + ". Content is: "

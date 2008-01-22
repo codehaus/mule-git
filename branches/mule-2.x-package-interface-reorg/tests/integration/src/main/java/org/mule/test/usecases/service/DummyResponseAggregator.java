@@ -10,8 +10,8 @@
 
 package org.mule.test.usecases.service;
 
-import org.mule.api.UMOEvent;
-import org.mule.api.UMOMessage;
+import org.mule.api.Event;
+import org.mule.api.MuleMessage;
 import org.mule.api.routing.RoutingException;
 import org.mule.impl.routing.inbound.EventGroup;
 import org.mule.impl.routing.response.ResponseCorrelationAggregator;
@@ -20,9 +20,9 @@ import org.mule.util.StringMessageUtils;
 public class DummyResponseAggregator extends ResponseCorrelationAggregator
 {
 
-    protected UMOMessage aggregateEvents(EventGroup events) throws RoutingException
+    protected MuleMessage aggregateEvents(EventGroup events) throws RoutingException
     {
         logger.info(StringMessageUtils.getBoilerPlate("Response Agregator aggregating: " + events));
-        return ((UMOEvent)events.iterator().next()).getMessage();
+        return ((Event)events.iterator().next()).getMessage();
     }
 }

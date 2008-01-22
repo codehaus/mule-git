@@ -10,36 +10,35 @@
 
 package org.mule.extras.acegi;
 
-import org.mule.api.security.UMOAuthentication;
-import org.mule.api.security.UMOSecurityContext;
+import org.mule.api.security.MuleAuthentication;
+import org.mule.api.security.SecurityContext;
 
-import org.acegisecurity.context.SecurityContext;
 import org.acegisecurity.context.SecurityContextHolder;
 
 /**
- * <code>AcegiSecurityContext</code> is a UMOSecurityContext wrapper used to
+ * <code>AcegiSecurityContext</code> is a SecurityContext wrapper used to
  * interface with an Acegi SecurityContext
  */
 
-public class AcegiSecurityContext implements UMOSecurityContext
+public class AcegiSecurityContext implements SecurityContext
 {
-    private SecurityContext delegate;
+    private org.acegisecurity.context.SecurityContext delegate;
     private AcegiAuthenticationAdapter authentication;
 
-    public AcegiSecurityContext(SecurityContext delegate)
+    public AcegiSecurityContext(org.acegisecurity.context.SecurityContext delegate)
     {
         this.delegate = delegate;
         SecurityContextHolder.setContext(this.delegate);
     }
 
-    public void setAuthentication(UMOAuthentication authentication)
+    public void setAuthentication(MuleAuthentication authentication)
     {
         this.authentication = ((AcegiAuthenticationAdapter)authentication);
         delegate.setAuthentication(this.authentication.getDelegate());
         SecurityContextHolder.setContext(delegate);
     }
 
-    public UMOAuthentication getAuthentication()
+    public MuleAuthentication getAuthentication()
     {
         return this.authentication;
     }

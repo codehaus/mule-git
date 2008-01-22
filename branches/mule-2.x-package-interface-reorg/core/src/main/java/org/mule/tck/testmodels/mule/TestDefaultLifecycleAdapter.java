@@ -10,9 +10,9 @@
 
 package org.mule.tck.testmodels.mule;
 
-import org.mule.api.UMOComponent;
-import org.mule.api.UMOException;
-import org.mule.api.model.UMOEntryPointResolverSet;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.Component;
+import org.mule.api.model.EntryPointResolverSet;
 import org.mule.impl.DefaultLifecycleAdapter;
 
 /** <code>TestDefaultLifecycleAdapter</code> TODO document */
@@ -21,9 +21,9 @@ public class TestDefaultLifecycleAdapter extends DefaultLifecycleAdapter
     /**
      * @param component
      * @param descriptor
-     * @throws UMOException
+     * @throws AbstractMuleException
      */
-    public TestDefaultLifecycleAdapter(Object pojoService, UMOComponent component) throws UMOException
+    public TestDefaultLifecycleAdapter(Object pojoService, Component component) throws AbstractMuleException
     {
         super(pojoService, component);
     }
@@ -32,11 +32,11 @@ public class TestDefaultLifecycleAdapter extends DefaultLifecycleAdapter
      * @param component
      * @param descriptor
      * @param epResolver
-     * @throws UMOException
+     * @throws AbstractMuleException
      */
     public TestDefaultLifecycleAdapter(Object pojoService,
-                                       UMOComponent component,
-                                       UMOEntryPointResolverSet epResolver) throws UMOException
+                                       Component component,
+                                       EntryPointResolverSet epResolver) throws AbstractMuleException
     {
         super(pojoService, component, epResolver);
     }

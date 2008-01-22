@@ -11,9 +11,9 @@
 package org.mule.transformers.simple;
 
 import org.mule.RegistryContext;
-import org.mule.api.UMOEventContext;
-import org.mule.api.UMOMessage;
-import org.mule.impl.MuleMessage;
+import org.mule.api.EventContext;
+import org.mule.api.MuleMessage;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.transformer.simple.MessagePropertiesTransformer;
 import org.mule.tck.FunctionalTestCase;
 
@@ -35,12 +35,12 @@ public class MessagePropertiesTransformerTestCase extends FunctionalTestCase
         add.put("addedProperty", "overwrittenValue");
         t.setAddProperties(add);
 
-        UMOMessage msg = new MuleMessage("message");
+        MuleMessage msg = new DefaultMuleMessage("message");
         msg.setProperty("addedProperty", "originalValue");
-        UMOEventContext ctx = getTestEventContext(msg);
+        EventContext ctx = getTestEventContext(msg);
         // context clones message
         msg = ctx.getMessage();
-        MuleMessage transformed = (MuleMessage) t.transform(msg, null);
+        DefaultMuleMessage transformed = (DefaultMuleMessage) t.transform(msg, null);
         assertSame(msg, transformed);
         assertEquals(msg.getUniqueId(), transformed.getUniqueId());
         assertEquals(msg.getPayload(), transformed.getPayload());
@@ -58,10 +58,10 @@ public class MessagePropertiesTransformerTestCase extends FunctionalTestCase
         t.setAddProperties(add);
         t.setOverwrite(false);
 
-        MuleMessage msg = new MuleMessage("message");
+        DefaultMuleMessage msg = new DefaultMuleMessage("message");
         msg.setProperty("addedProperty", "originalValue");
-        UMOEventContext ctx = getTestEventContext(msg);
-        MuleMessage transformed = (MuleMessage) t.transform(msg, null);
+        EventContext ctx = getTestEventContext(msg);
+        DefaultMuleMessage transformed = (DefaultMuleMessage) t.transform(msg, null);
         assertSame(msg, transformed);
         assertEquals(msg.getUniqueId(), transformed.getUniqueId());
         assertEquals(msg.getPayload(), transformed.getPayload());
@@ -75,10 +75,10 @@ public class MessagePropertiesTransformerTestCase extends FunctionalTestCase
         MessagePropertiesTransformer t = new MessagePropertiesTransformer();
         t.setDeleteProperties(Collections.singletonList("badProperty"));
 
-        MuleMessage msg = new MuleMessage("message");
+        DefaultMuleMessage msg = new DefaultMuleMessage("message");
         msg.setProperty("badProperty", "badValue");
-        UMOEventContext ctx = getTestEventContext(msg);
-        MuleMessage transformed = (MuleMessage) t.transform(msg, null);
+        EventContext ctx = getTestEventContext(msg);
+        DefaultMuleMessage transformed = (DefaultMuleMessage) t.transform(msg, null);
         assertSame(msg, transformed);
         assertEquals(msg.getUniqueId(), transformed.getUniqueId());
         assertEquals(msg.getPayload(), transformed.getPayload());

@@ -10,7 +10,7 @@
 
 package org.mule.impl.internal.notifications.manager;
 
-import org.mule.api.context.UMOServerNotificationListener;
+import org.mule.api.context.ServerNotificationListener;
 
 /**
  * A simple tuple that stores a listener with an optional subscription (used to match a resource ID).
@@ -18,7 +18,7 @@ import org.mule.api.context.UMOServerNotificationListener;
 public class ListenerSubscriptionPair
 {
 
-    private UMOServerNotificationListener listener;
+    private ServerNotificationListener listener;
     private String subscription = ServerNotificationManager.NULL_SUBSCRIPTION;
     private boolean nullSubscription = true;
 
@@ -30,18 +30,18 @@ public class ListenerSubscriptionPair
         // empty
     }
 
-    public ListenerSubscriptionPair(UMOServerNotificationListener listener)
+    public ListenerSubscriptionPair(ServerNotificationListener listener)
     {
         setListener(listener);
     }
 
-    public ListenerSubscriptionPair(UMOServerNotificationListener listener, String subscription)
+    public ListenerSubscriptionPair(ServerNotificationListener listener, String subscription)
     {
         setListener(listener);
         setSubscription(subscription);
     }
 
-    public void setListener(UMOServerNotificationListener listener)
+    public void setListener(ServerNotificationListener listener)
     {
         this.listener = listener;
     }
@@ -55,7 +55,7 @@ public class ListenerSubscriptionPair
         }
     }
 
-    public UMOServerNotificationListener getListener()
+    public ServerNotificationListener getListener()
     {
         return listener;
     }

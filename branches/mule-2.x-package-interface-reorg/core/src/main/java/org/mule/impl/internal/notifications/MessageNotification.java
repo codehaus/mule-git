@@ -10,11 +10,11 @@
 
 package org.mule.impl.internal.notifications;
 
-import org.mule.api.UMOMessage;
-import org.mule.api.context.UMOServerNotification;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
-import org.mule.api.transport.UMOConnectable;
-import org.mule.impl.MuleMessage;
+import org.mule.api.MuleMessage;
+import org.mule.api.context.ServerNotification;
+import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.api.transport.Connectable;
+import org.mule.impl.DefaultMuleMessage;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -23,7 +23,7 @@ import org.apache.commons.logging.LogFactory;
  * These notifications are fire when either a message is received via an endpoint, or
  * dispatcher of if a receive call is made on a dispatcher.
  */
-public class MessageNotification extends UMOServerNotification
+public class MessageNotification extends ServerNotification
 {
     /**
      * Serial version
@@ -47,10 +47,10 @@ public class MessageNotification extends UMOServerNotification
         registerAction("requested", MESSAGE_REQUESTED);
     }
 
-    private UMOImmutableEndpoint endpoint;
+    private ImmutableEndpoint endpoint;
 
-    public MessageNotification(UMOMessage resource,
-                               UMOImmutableEndpoint endpoint,
+    public MessageNotification(MuleMessage resource,
+                               ImmutableEndpoint endpoint,
                                String identifier,
                                int action)
     {
@@ -60,20 +60,20 @@ public class MessageNotification extends UMOServerNotification
 
     }
 
-    protected static UMOMessage cloneMessage(UMOMessage message)
+    protected static MuleMessage cloneMessage(MuleMessage message)
     {
         // TODO we probably need to support deep cloning here
         synchronized (message)
         {
-            return new MuleMessage(message.getPayload(), message);
+            return new DefaultMuleMessage(message.getPayload(), message);
         }
     }
 
     protected String getPayloadToString()
     {
-        if (source instanceof UMOConnectable)
+        if (source instanceof Connectable)
         {
-            return ((UMOConnectable) source).getConnectionDescription();
+            return ((Connectable) source).getConnectionDescription();
         }
         return source.toString();
     }
@@ -85,7 +85,7 @@ public class MessageNotification extends UMOServerNotification
                         + serverId + ", message: " + source + "}";
     }
 
-    public UMOImmutableEndpoint getEndpoint()
+    public ImmutableEndpoint getEndpoint()
     {
         return endpoint;
     }

@@ -10,9 +10,9 @@
 
 package org.mule.providers.cxf;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
-import org.mule.impl.MuleMessage;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.tck.FunctionalTestCase;
 
 public class MultipleConnectorsTestCase extends FunctionalTestCase
@@ -32,14 +32,14 @@ public class MultipleConnectorsTestCase extends FunctionalTestCase
     public void testCxfConnector1() throws Exception
     {
         MuleClient client = new MuleClient();
-        UMOMessage reply = client.send("cxf1", new MuleMessage("mule"));
+        MuleMessage reply = client.send("cxf1", new DefaultMuleMessage("mule"));
         assertEquals("Received: mule", reply.getPayloadAsString());
     }
 
     public void testCxfConnector2() throws Exception
     {
         MuleClient client = new MuleClient();
-        UMOMessage reply = client.send("cxf2", new MuleMessage("mule"));
+        MuleMessage reply = client.send("cxf2", new DefaultMuleMessage("mule"));
         assertEquals("Received: mule", reply.getPayloadAsString());
     }
 

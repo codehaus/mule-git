@@ -4,18 +4,18 @@ package org.mule.providers.cxf.transport;
 import static org.apache.cxf.message.Message.DECOUPLED_CHANNEL_MESSAGE;
 
 import org.mule.RegistryContext;
-import org.mule.api.UMOEvent;
-import org.mule.api.UMOEventContext;
-import org.mule.api.UMOException;
-import org.mule.api.UMOMessage;
-import org.mule.api.UMOSession;
+import org.mule.api.Event;
+import org.mule.api.EventContext;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleMessage;
+import org.mule.api.Session;
 import org.mule.api.config.MuleProperties;
-import org.mule.api.endpoint.UMOEndpoint;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.endpoint.Endpoint;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.transport.OutputHandler;
-import org.mule.api.transport.UMOMessageAdapter;
+import org.mule.api.transport.MessageAdapter;
 import org.mule.impl.MuleEvent;
-import org.mule.impl.MuleMessage;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.MuleSession;
 import org.mule.impl.RequestContext;
 import org.mule.impl.transport.DefaultMessageAdapter;
@@ -177,13 +177,13 @@ public class MuleUniversalConduit extends AbstractConduit
 
         OutputHandler handler = new OutputHandler()
         {
-            public void write(UMOEvent event, OutputStream out) throws IOException
+            public void write(Event event, OutputStream out) throws IOException
             {
                 IOUtils.copy(cached.getInputStream(), out);
             }
 
             @SuppressWarnings("unchecked")
-            public Map getHeaders(UMOEvent event)
+            public Map getHeaders(Event event)
             {
                 Map<String, Object> headers = new HashMap<String, Object>();
                 headers.put(HttpConstants.HEADER_CONTENT_TYPE, m.get(Message.CONTENT_TYPE));
@@ -191,7 +191,7 @@ public class MuleUniversalConduit extends AbstractConduit
 
                 // TODO copy m.get(Message.PROTOCOL_HEADERS);
 
-                UMOMessage msg = event.getMessage();
+                MuleMessage msg = event.getMessage();
                 for (Iterator iterator = msg.getPropertyNames().iterator(); iterator.hasNext();)
                 {
                     String headerName = (String) iterator.next();
@@ -221,10 +221,10 @@ public class MuleUniversalConduit extends AbstractConduit
         sp.setProperty(HttpConnector.HTTP_METHOD_PROPERTY, method);
 
         // set all properties on the message adapter
-        UMOEvent event = RequestContext.getEvent();
+        Event event = RequestContext.getEvent();
         if (event != null)
         {
-            UMOMessage msg = event.getMessage();
+            MuleMessage msg = event.getMessage();
             for (Iterator i = msg.getPropertyNames().iterator(); i.hasNext();)
             {
                 String propertyName = (String) i.next();
@@ -232,14 +232,14 @@ public class MuleUniversalConduit extends AbstractConduit
             }
         }
 
-        UMOMessage result = null;
+        MuleMessage result = null;
 
         String uri = setupURL(m);
 
         LOGGER.info("Sending message to " + uri);
         try
         {
-            UMOEndpoint ep = (UMOEndpoint) RegistryContext.getRegistry().lookupEndpointFactory().getOutboundEndpoint(uri);
+            Endpoint ep = (Endpoint) RegistryContext.getRegistry().lookupEndpointFactory().getOutboundEndpoint(uri);
 
             result = sendStream(sp, ep);
 
@@ -271,23 +271,23 @@ public class MuleUniversalConduit extends AbstractConduit
         }
     }
 
-    protected UMOMessage sendStream(UMOMessageAdapter sa, UMOImmutableEndpoint ep) throws UMOException
+    protected MuleMessage sendStream(MessageAdapter sa, ImmutableEndpoint ep) throws AbstractMuleException
     {
-        UMOEventContext eventContext = RequestContext.getEventContext();
-        UMOSession session = null;
+        EventContext eventContext = RequestContext.getEventContext();
+        Session session = null;
         if (eventContext != null)
         {
             session = eventContext.getSession();
         }
 
-        UMOMessage message = new MuleMessage(sa);
+        MuleMessage message = new DefaultMuleMessage(sa);
         if (session == null)
         {
             session = new MuleSession(message, connector.getSessionHandler());
         }
 
-        UMOEvent event = new MuleEvent(message, ep, session, true);
-        event.setTimeout(UMOEvent.TIMEOUT_NOT_SET_VALUE);
+        Event event = new MuleEvent(message, ep, session, true);
+        event.setTimeout(Event.TIMEOUT_NOT_SET_VALUE);
         RequestContext.setEvent(event);
 
         return ep.send(event);

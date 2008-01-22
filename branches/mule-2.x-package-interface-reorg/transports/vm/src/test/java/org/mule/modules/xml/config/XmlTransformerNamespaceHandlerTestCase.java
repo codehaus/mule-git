@@ -10,7 +10,7 @@
 
 package org.mule.modules.xml.config;
 
-import org.mule.api.transformer.UMOTransformer;
+import org.mule.api.transformer.Transformer;
 import org.mule.impl.transformer.AbstractTransformer;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.transformers.xml.AbstractXmlTransformer;
@@ -73,7 +73,7 @@ public class XmlTransformerNamespaceHandlerTestCase extends FunctionalTestCase
     protected AbstractTransformer getAndTestTransformer(String name, Class clazz)
     {
         assertTrue(AbstractTransformer.class.isAssignableFrom(clazz));
-        UMOTransformer object= muleContext.getRegistry().lookupTransformer(name);
+        Transformer object= muleContext.getRegistry().lookupTransformer(name);
         assertNotNull(object);
         assertTrue(clazz.isAssignableFrom(object.getClass()));
         AbstractTransformer transformer = (AbstractTransformer) object;

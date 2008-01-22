@@ -10,7 +10,7 @@
 
 package org.mule.providers.ssl;
 
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.tck.AbstractMuleTestCase;
 
 public class ConnectorFactoryTestCase extends AbstractMuleTestCase
@@ -18,7 +18,7 @@ public class ConnectorFactoryTestCase extends AbstractMuleTestCase
 
     public void testCreate() throws Exception
     {
-        UMOImmutableEndpoint endpoint = 
+        ImmutableEndpoint endpoint = 
             muleContext.getRegistry().lookupEndpointFactory().getInboundEndpoint("ssl://localhost:7877");
         assertNotNull(endpoint);
         assertNotNull(endpoint.getConnector());

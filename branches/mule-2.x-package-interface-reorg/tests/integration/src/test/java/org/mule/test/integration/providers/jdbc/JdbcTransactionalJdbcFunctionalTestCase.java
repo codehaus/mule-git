@@ -10,13 +10,13 @@
 
 package org.mule.test.integration.providers.jdbc;
 
-import org.mule.api.UMOTransactionFactory;
+import org.mule.api.TransactionFactory;
 import org.mule.providers.jdbc.JdbcTransactionFactory;
 
 public class JdbcTransactionalJdbcFunctionalTestCase extends AbstractJdbcTransactionalFunctionalTestCase
 {
 
-    protected UMOTransactionFactory getTransactionFactory()
+    protected TransactionFactory getTransactionFactory()
     {
         return new JdbcTransactionFactory();
     }

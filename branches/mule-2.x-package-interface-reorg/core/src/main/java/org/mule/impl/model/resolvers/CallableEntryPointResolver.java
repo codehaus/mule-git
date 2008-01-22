@@ -10,13 +10,13 @@
 
 package org.mule.impl.model.resolvers;
 
+import org.mule.api.EventContext;
 import org.mule.api.MuleRuntimeException;
-import org.mule.api.UMOEventContext;
 import org.mule.api.lifecycle.Callable;
+import org.mule.api.model.EntryPointResolver;
 import org.mule.api.model.InvocationResult;
-import org.mule.api.model.UMOEntryPointResolver;
-import org.mule.imple.config.i18n.CoreMessages;
-import org.mule.imple.config.i18n.MessageFactory;
+import org.mule.impl.config.i18n.CoreMessages;
+import org.mule.impl.config.i18n.MessageFactory;
 import org.mule.util.ClassUtils;
 
 import java.lang.reflect.Method;
@@ -27,7 +27,7 @@ import java.lang.reflect.Method;
  *
  * @see org.mule.api.lifecycle.Callable
  */
-public class CallableEntryPointResolver implements UMOEntryPointResolver
+public class CallableEntryPointResolver implements EntryPointResolver
 {
     protected static final Method callableMethod;
 
@@ -35,17 +35,17 @@ public class CallableEntryPointResolver implements UMOEntryPointResolver
     {
         try
         {
-            callableMethod = Callable.class.getMethod("onCall", new Class[] {UMOEventContext.class});
+            callableMethod = Callable.class.getMethod("onCall", new Class[] {EventContext.class});
         }
         catch (NoSuchMethodException e)
         {
             throw new MuleRuntimeException(
-                    MessageFactory.createStaticMessage("Panic! No onCall(UMOEventContext) method found in the Callable interface."));
+                    MessageFactory.createStaticMessage("Panic! No onCall(EventContext) method found in the Callable interface."));
         }
     }
 
 
-    public InvocationResult invoke(Object component, UMOEventContext context) throws Exception
+    public InvocationResult invoke(Object component, EventContext context) throws Exception
     {
         if (component instanceof Callable)
         {

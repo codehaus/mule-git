@@ -10,9 +10,9 @@
 
 package org.mule.impl;
 
-import org.mule.api.UMOMessage;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
-import org.mule.impl.message.ExceptionPayload;
+import org.mule.api.MuleMessage;
+import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.impl.message.DefaultExceptionPayload;
 import org.mule.impl.transport.NullPayload;
 import org.mule.util.ObjectUtils;
 
@@ -24,13 +24,13 @@ import org.mule.util.ObjectUtils;
 public class DefaultExceptionStrategy extends AbstractExceptionListener
 {
 
-    public void handleMessagingException(UMOMessage message, Throwable t)
+    public void handleMessagingException(MuleMessage message, Throwable t)
     {
         defaultHandler(t);
         routeException(messageFromContextIfAvailable(message), null, t);
     }
 
-    public void handleRoutingException(UMOMessage message, UMOImmutableEndpoint endpoint, Throwable t)
+    public void handleRoutingException(MuleMessage message, ImmutableEndpoint endpoint, Throwable t)
     {
         defaultHandler(t);
         routeException(messageFromContextIfAvailable(message), endpoint, t);
@@ -55,7 +55,7 @@ public class DefaultExceptionStrategy extends AbstractExceptionListener
         else
         {
             logger.info("There is no current event available, routing Null message with the exception");
-            handleMessagingException(new MuleMessage(NullPayload.getInstance()), t);
+            handleMessagingException(new DefaultMuleMessage(NullPayload.getInstance()), t);
         }
     }
 
@@ -63,11 +63,11 @@ public class DefaultExceptionStrategy extends AbstractExceptionListener
     {
         if (RequestContext.getEvent() != null)
         {
-            RequestContext.setExceptionPayload(new ExceptionPayload(t));
+            RequestContext.setExceptionPayload(new DefaultExceptionPayload(t));
         }
     }
 
-    protected UMOMessage messageFromContextIfAvailable(UMOMessage message)
+    protected MuleMessage messageFromContextIfAvailable(MuleMessage message)
     {
         if (null != RequestContext.getEvent())
         {

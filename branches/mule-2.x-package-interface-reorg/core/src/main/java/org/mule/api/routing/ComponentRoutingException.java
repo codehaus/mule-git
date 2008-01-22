@@ -10,11 +10,11 @@
 
 package org.mule.api.routing;
 
-import org.mule.api.UMOComponent;
-import org.mule.api.UMOMessage;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
-import org.mule.imple.config.i18n.CoreMessages;
-import org.mule.imple.config.i18n.Message;
+import org.mule.api.Component;
+import org.mule.api.MuleMessage;
+import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.impl.config.i18n.CoreMessages;
+import org.mule.impl.config.i18n.Message;
 
 /**
  * <code>ComponentRoutingException</code> is thrown due to a routing exception
@@ -28,38 +28,38 @@ public class ComponentRoutingException extends RoutingException
      */
     private static final long serialVersionUID = -113944443831267318L;
 
-    private transient UMOComponent component;
+    private transient Component component;
 
     public ComponentRoutingException(Message message,
-                                     UMOMessage umoMessage,
-                                     UMOImmutableEndpoint endpoint,
-                                     UMOComponent component)
+                                     MuleMessage umoMessage,
+                                     ImmutableEndpoint endpoint,
+                                     Component component)
     {
         super(generateMessage(message, endpoint, component), umoMessage, endpoint);
         this.component = component;
     }
 
     public ComponentRoutingException(Message message,
-                                     UMOMessage umoMessage,
-                                     UMOImmutableEndpoint endpoint,
-                                     UMOComponent component,
+                                     MuleMessage umoMessage,
+                                     ImmutableEndpoint endpoint,
+                                     Component component,
                                      Throwable cause)
     {
         super(generateMessage(message, endpoint, component), umoMessage, endpoint, cause);
         this.component = component;
     }
 
-    public ComponentRoutingException(UMOMessage umoMessage,
-                                     UMOImmutableEndpoint endpoint,
-                                     UMOComponent component)
+    public ComponentRoutingException(MuleMessage umoMessage,
+                                     ImmutableEndpoint endpoint,
+                                     Component component)
     {
         super(generateMessage(null, endpoint, component), umoMessage, endpoint);
         this.component = component;
     }
 
-    public ComponentRoutingException(UMOMessage umoMessage,
-                                     UMOImmutableEndpoint endpoint,
-                                     UMOComponent component,
+    public ComponentRoutingException(MuleMessage umoMessage,
+                                     ImmutableEndpoint endpoint,
+                                     Component component,
                                      Throwable cause)
     {
         super(generateMessage(null, endpoint, component), umoMessage, endpoint, cause);
@@ -68,8 +68,8 @@ public class ComponentRoutingException extends RoutingException
     }
 
     private static Message generateMessage(Message message,
-                                           UMOImmutableEndpoint endpoint,
-                                           UMOComponent component)
+                                           ImmutableEndpoint endpoint,
+                                           Component component)
     {
 
         Message m = CoreMessages.routingFailedOnEndpoint(component.getName(), 
@@ -85,7 +85,7 @@ public class ComponentRoutingException extends RoutingException
         }
     }
 
-    public UMOComponent getComponent()
+    public Component getComponent()
     {
         return component;
     }

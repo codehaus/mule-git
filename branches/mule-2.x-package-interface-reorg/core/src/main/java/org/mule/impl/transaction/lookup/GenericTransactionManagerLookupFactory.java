@@ -10,11 +10,11 @@
 
 package org.mule.impl.transaction.lookup;
 
-import org.mule.api.context.UMOTransactionManagerFactory;
+import org.mule.api.context.TransactionManagerFactory;
 import org.mule.api.lifecycle.Initialisable;
 import org.mule.api.lifecycle.InitialisationException;
+import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.impl.container.JndiContextHelper;
-import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.util.StringUtils;
 
 import java.util.Map;
@@ -34,7 +34,7 @@ import org.apache.commons.logging.LogFactory;
  * namespace, so your only bet is to run Mule in the same JVM as the application
  * server.
  */
-public class GenericTransactionManagerLookupFactory implements UMOTransactionManagerFactory, Initialisable
+public class GenericTransactionManagerLookupFactory implements TransactionManagerFactory, Initialisable
 {
     protected final Log logger = LogFactory.getLog(getClass());
 
@@ -86,7 +86,7 @@ public class GenericTransactionManagerLookupFactory implements UMOTransactionMan
         this.context = context;
     }
 
-    /** @see org.mule.api.context.UMOTransactionManagerFactory#create() */
+    /** @see org.mule.api.context.TransactionManagerFactory#create() */
     public TransactionManager create() throws Exception
     {
         // implementing the Initilisable interface does not call it??

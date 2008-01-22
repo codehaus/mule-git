@@ -10,15 +10,15 @@
 
 package org.mule.impl.internal.notifications.manager;
 
-import org.mule.api.context.UMOServerNotification;
-import org.mule.api.context.UMOServerNotificationListener;
+import org.mule.api.context.ServerNotification;
+import org.mule.api.context.ServerNotificationListener;
 
-public abstract class AbstractListener implements UMOServerNotificationListener
+public abstract class AbstractListener implements ServerNotificationListener
 {
 
-    private UMOServerNotification notification = null;
+    private ServerNotification notification = null;
 
-    public void onNotification(UMOServerNotification notification)
+    public void onNotification(ServerNotification notification)
     {
         this.notification = notification;
     }

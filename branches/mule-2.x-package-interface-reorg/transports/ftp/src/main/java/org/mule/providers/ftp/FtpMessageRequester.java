@@ -10,10 +10,10 @@
 
 package org.mule.providers.ftp;
 
-import org.mule.api.UMOMessage;
-import org.mule.api.endpoint.UMOEndpointURI;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
-import org.mule.impl.MuleMessage;
+import org.mule.api.MuleMessage;
+import org.mule.api.endpoint.EndpointURI;
+import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.transport.AbstractMessageRequester;
 
 import java.io.FilenameFilter;
@@ -30,7 +30,7 @@ public class FtpMessageRequester extends AbstractMessageRequester
 {
     protected final FtpConnector connector;
 
-    public FtpMessageRequester(UMOImmutableEndpoint endpoint)
+    public FtpMessageRequester(ImmutableEndpoint endpoint)
     {
         super(endpoint);
         this.connector = (FtpConnector) endpoint.getConnector();
@@ -51,7 +51,7 @@ public class FtpMessageRequester extends AbstractMessageRequester
     {
         try
         {
-            UMOEndpointURI uri = endpoint.getEndpointURI();
+            EndpointURI uri = endpoint.getEndpointURI();
             FTPClient client = connector.getFtp(uri);
             connector.destroyFtp(uri, client);
         }
@@ -68,11 +68,11 @@ public class FtpMessageRequester extends AbstractMessageRequester
      *            The call should return immediately if there is data available. If
      *            no data becomes available before the timeout elapses, null will be
      *            returned
-     * @return the result of the request wrapped in a UMOMessage object. Null will be
+     * @return the result of the request wrapped in a MuleMessage object. Null will be
      *         returned if no data was avaialable
      * @throws Exception if the call to the underlying protocal cuases an exception
      */
-    protected UMOMessage doRequest(long timeout) throws Exception
+    protected MuleMessage doRequest(long timeout) throws Exception
     {
         FTPClient client = null;
         try
@@ -118,7 +118,7 @@ public class FtpMessageRequester extends AbstractMessageRequester
             {
                 throw new IOException("Ftp error: " + client.getReplyCode());
             }
-            return new MuleMessage(connector.getMessageAdapter(baos.toByteArray()));
+            return new DefaultMuleMessage(connector.getMessageAdapter(baos.toByteArray()));
 
         }
         finally

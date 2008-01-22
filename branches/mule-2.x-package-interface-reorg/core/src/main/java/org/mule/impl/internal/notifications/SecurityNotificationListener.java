@@ -10,13 +10,13 @@
 
 package org.mule.impl.internal.notifications;
 
-import org.mule.api.context.UMOServerNotificationListener;
+import org.mule.api.context.ServerNotificationListener;
 
 /**
  * <code>ManagerNotificationListener</code> is an observer interface that objects
  * can implement to receive notifications about secure access requests.
  */
-public interface SecurityNotificationListener extends UMOServerNotificationListener
+public interface SecurityNotificationListener extends ServerNotificationListener
 {
     // no methods
 }

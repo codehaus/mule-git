@@ -10,17 +10,17 @@
 
 package org.mule.impl.model.pipeline;
 
-import org.mule.api.UMOEvent;
-import org.mule.api.UMOException;
-import org.mule.api.UMOMessage;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.Event;
+import org.mule.api.MuleMessage;
 import org.mule.api.lifecycle.Callable;
 import org.mule.api.lifecycle.Initialisable;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.transport.DispatchException;
-import org.mule.impl.MuleMessage;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.RequestContext;
+import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.impl.model.direct.DirectComponent;
-import org.mule.imple.config.i18n.CoreMessages;
 
 public class PipelineComponent extends DirectComponent
 {
@@ -45,7 +45,7 @@ public class PipelineComponent extends DirectComponent
         {
             component = getOrCreateService();
         }
-        catch (UMOException e)
+        catch (AbstractMuleException e)
         {
             throw new InitialisationException(e, this);
         }
@@ -66,19 +66,19 @@ public class PipelineComponent extends DirectComponent
 
     }
 
-    protected UMOMessage doSend(UMOEvent event) throws UMOException
+    protected MuleMessage doSend(Event event) throws AbstractMuleException
     {
         try
         {
             Object result = callable.onCall(RequestContext.getEventContext());
-            UMOMessage returnMessage = null;
-            if (result instanceof UMOMessage)
+            MuleMessage returnMessage = null;
+            if (result instanceof MuleMessage)
             {
-                returnMessage = (UMOMessage) result;
+                returnMessage = (MuleMessage) result;
             }
             else
             {
-                returnMessage = new MuleMessage(result, event.getMessage());
+                returnMessage = new DefaultMuleMessage(result, event.getMessage());
             }
             if (!event.isStopFurtherProcessing())
             {
@@ -89,7 +89,7 @@ public class PipelineComponent extends DirectComponent
                 // }
                 if (outboundRouter.hasEndpoints())
                 {
-                    UMOMessage outboundReturnMessage = outboundRouter.route(returnMessage,
+                    MuleMessage outboundReturnMessage = outboundRouter.route(returnMessage,
                         event.getSession(), event.isSynchronous());
                     if (outboundReturnMessage != null)
                     {
@@ -111,7 +111,7 @@ public class PipelineComponent extends DirectComponent
         }
     }
 
-    protected void doDispatch(UMOEvent event) throws UMOException
+    protected void doDispatch(Event event) throws AbstractMuleException
     {
         sendEvent(event);
     }

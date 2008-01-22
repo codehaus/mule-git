@@ -10,15 +10,15 @@
 
 package org.mule.tck.testmodels.mule;
 
+import org.mule.api.AbstractMuleException;
+import org.mule.api.Component;
 import org.mule.api.MessagingException;
 import org.mule.api.ThreadSafeAccess;
-import org.mule.api.UMOComponent;
-import org.mule.api.UMOException;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.InitialisationException;
-import org.mule.api.transport.UMOMessageAdapter;
-import org.mule.api.transport.UMOMessageDispatcher;
-import org.mule.api.transport.UMOMessageReceiver;
+import org.mule.api.transport.MessageAdapter;
+import org.mule.api.transport.MessageDispatcher;
+import org.mule.api.transport.MessageReceiver;
 import org.mule.impl.transport.AbstractConnector;
 import org.mule.impl.transport.AbstractMessageAdapter;
 import org.mule.impl.transport.AbstractMessageDispatcherFactory;
@@ -37,7 +37,7 @@ public class TestConnector extends AbstractConnector
         super();
         setDispatcherFactory(new AbstractMessageDispatcherFactory()
         {
-            public UMOMessageDispatcher create(UMOImmutableEndpoint endpoint) throws UMOException
+            public MessageDispatcher create(ImmutableEndpoint endpoint) throws AbstractMuleException
             {
                 return new TestMessageDispatcher(endpoint);
             }
@@ -64,12 +64,12 @@ public class TestConnector extends AbstractConnector
         // template method
     }
 
-    protected void doStart() throws UMOException
+    protected void doStart() throws AbstractMuleException
     {
         // template method
     }
 
-    protected void doStop() throws UMOException
+    protected void doStop() throws AbstractMuleException
     {
         // template method
     }
@@ -79,7 +79,7 @@ public class TestConnector extends AbstractConnector
         return "test";
     }
 
-    public UMOMessageAdapter getMessageAdapter(Object message) throws MessagingException
+    public MessageAdapter getMessageAdapter(Object message) throws MessagingException
     {
         return new DummyMessageAdapter(message);
     }
@@ -94,9 +94,9 @@ public class TestConnector extends AbstractConnector
         this.someProperty = someProperty;
     }
 
-    public UMOMessageReceiver createReceiver(UMOComponent component, UMOImmutableEndpoint endpoint) throws Exception
+    public MessageReceiver createReceiver(Component component, ImmutableEndpoint endpoint) throws Exception
     {
-        UMOMessageReceiver receiver = new AbstractMessageReceiver(this, component, endpoint)
+        MessageReceiver receiver = new AbstractMessageReceiver(this, component, endpoint)
         {
 
             protected void doInitialise() throws InitialisationException
@@ -114,12 +114,12 @@ public class TestConnector extends AbstractConnector
                 // nothing to do
             }
 
-            protected void doStart() throws UMOException
+            protected void doStart() throws AbstractMuleException
             {
                 // nothing to do
             }
 
-            protected void doStop() throws UMOException
+            protected void doStop() throws AbstractMuleException
             {
                 // nothing to do
             }
@@ -132,7 +132,7 @@ public class TestConnector extends AbstractConnector
         return receiver;
     }
 
-    public void destroyReceiver(UMOMessageReceiver receiver, UMOImmutableEndpoint endpoint) throws Exception
+    public void destroyReceiver(MessageReceiver receiver, ImmutableEndpoint endpoint) throws Exception
     {
         // nothing to do
     }

@@ -10,11 +10,11 @@
 
 package org.mule.providers.tcp;
 
-import org.mule.api.UMOEvent;
-import org.mule.api.UMOMessage;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.Event;
+import org.mule.api.MuleMessage;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.transformer.TransformerException;
-import org.mule.impl.MuleMessage;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.transport.AbstractMessageDispatcher;
 
 import java.io.BufferedInputStream;
@@ -32,13 +32,13 @@ public class TcpMessageDispatcher extends AbstractMessageDispatcher
 
     private final TcpConnector connector;
 
-    public TcpMessageDispatcher(UMOImmutableEndpoint endpoint)
+    public TcpMessageDispatcher(ImmutableEndpoint endpoint)
     {
         super(endpoint);
         this.connector = (TcpConnector) endpoint.getConnector();
     }
 
-    protected synchronized void doDispatch(UMOEvent event) throws Exception
+    protected synchronized void doDispatch(Event event) throws Exception
     {
         Socket socket = connector.getSocket(event.getEndpoint());
         try 
@@ -51,7 +51,7 @@ public class TcpMessageDispatcher extends AbstractMessageDispatcher
         }
     }
 
-    protected synchronized UMOMessage doSend(UMOEvent event) throws Exception
+    protected synchronized MuleMessage doSend(Event event) throws Exception
     {
         Socket socket = connector.getSocket(event.getEndpoint());
         dispatchToSocket(socket, event);
@@ -68,12 +68,12 @@ public class TcpMessageDispatcher extends AbstractMessageDispatcher
                         return null;
                     }
                     
-                    if (result instanceof UMOMessage)
+                    if (result instanceof MuleMessage)
                     {
-                    	return (UMOMessage) result;
+                    	return (MuleMessage) result;
                     }
                     
-                    return new MuleMessage(connector.getMessageAdapter(result));
+                    return new DefaultMuleMessage(connector.getMessageAdapter(result));
                 }
                 catch (SocketTimeoutException e)
                 {
@@ -99,7 +99,7 @@ public class TcpMessageDispatcher extends AbstractMessageDispatcher
     }
 
     // Socket management (get and release) is handled outside this method
-    private void dispatchToSocket(Socket socket, UMOEvent event) throws Exception
+    private void dispatchToSocket(Socket socket, Event event) throws Exception
     {
         Object payload = event.transformMessage();
         write(socket, payload);
@@ -112,7 +112,7 @@ public class TcpMessageDispatcher extends AbstractMessageDispatcher
         bos.flush();
     }
 
-    protected static Object receiveFromSocket(final Socket socket, int timeout, final UMOImmutableEndpoint endpoint)
+    protected static Object receiveFromSocket(final Socket socket, int timeout, final ImmutableEndpoint endpoint)
             throws IOException
     {
         final TcpConnector connector = (TcpConnector) endpoint.getConnector();

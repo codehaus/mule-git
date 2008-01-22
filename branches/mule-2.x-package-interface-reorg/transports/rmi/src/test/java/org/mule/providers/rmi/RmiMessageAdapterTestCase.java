@@ -11,7 +11,7 @@
 package org.mule.providers.rmi;
 
 import org.mule.api.MessagingException;
-import org.mule.api.transport.UMOMessageAdapter;
+import org.mule.api.transport.MessageAdapter;
 import org.mule.tck.providers.AbstractMessageAdapterTestCase;
 
 public class RmiMessageAdapterTestCase extends AbstractMessageAdapterTestCase
@@ -22,7 +22,7 @@ public class RmiMessageAdapterTestCase extends AbstractMessageAdapterTestCase
         return "Hello".getBytes();
     }
 
-    public UMOMessageAdapter createAdapter(Object payload) throws MessagingException
+    public MessageAdapter createAdapter(Object payload) throws MessagingException
     {
         return new RmiMessageAdapter(payload);
     }

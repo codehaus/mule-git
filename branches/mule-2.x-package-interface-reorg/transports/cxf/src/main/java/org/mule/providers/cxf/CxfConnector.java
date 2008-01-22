@@ -10,19 +10,19 @@
 
 package org.mule.providers.cxf;
 
-import org.mule.api.UMOComponent;
-import org.mule.api.UMOException;
-import org.mule.api.context.UMOServerNotification;
-import org.mule.api.endpoint.UMOEndpointBuilder;
-import org.mule.api.endpoint.UMOEndpointURI;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.Component;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.context.ServerNotification;
+import org.mule.api.endpoint.EndpointBuilder;
+import org.mule.api.endpoint.EndpointURI;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.InitialisationException;
-import org.mule.api.transport.UMOMessageReceiver;
+import org.mule.api.transport.MessageReceiver;
 import org.mule.impl.endpoint.EndpointURIEndpointBuilder;
 import org.mule.impl.internal.notifications.ManagerNotification;
 import org.mule.impl.internal.notifications.ManagerNotificationListener;
 import org.mule.impl.model.seda.SedaComponent;
-import org.mule.impl.routing.inbound.InboundRouterCollection;
+import org.mule.impl.routing.inbound.DefaultInboundRouterCollection;
 import org.mule.impl.transformer.TransformerUtils;
 import org.mule.impl.transport.AbstractConnector;
 import org.mule.providers.cxf.transport.MuleUniversalTransport;
@@ -124,12 +124,12 @@ public class CxfConnector extends AbstractConnector implements ManagerNotificati
         // template method
     }
 
-    protected void doStart() throws UMOException
+    protected void doStart() throws AbstractMuleException
     {
 
     }
 
-    protected void doStop() throws UMOException
+    protected void doStop() throws AbstractMuleException
     {
         bus.shutdown(true);
     }
@@ -165,8 +165,8 @@ public class CxfConnector extends AbstractConnector implements ManagerNotificati
     }
 
     @SuppressWarnings("unchecked")
-    protected void registerReceiverWithMuleService(UMOMessageReceiver receiver, UMOEndpointURI ep)
-        throws UMOException
+    protected void registerReceiverWithMuleService(MessageReceiver receiver, EndpointURI ep)
+        throws AbstractMuleException
     {
         CxfMessageReceiver cxfReceiver = (CxfMessageReceiver) receiver;
         Server server = cxfReceiver.getServer();
@@ -204,7 +204,7 @@ public class CxfConnector extends AbstractConnector implements ManagerNotificati
 
         QName serviceName = server.getEndpoint().getEndpointInfo().getName();
 
-        UMOEndpointBuilder serviceEndpointbuilder = new EndpointURIEndpointBuilder(endpoint, muleContext);
+        EndpointBuilder serviceEndpointbuilder = new EndpointURIEndpointBuilder(endpoint, muleContext);
         serviceEndpointbuilder.setSynchronous(sync);
         serviceEndpointbuilder.setName(ep.getScheme() + ":" + serviceName.getLocalPart());
         // Set the transformers on the endpoint too
@@ -218,7 +218,7 @@ public class CxfConnector extends AbstractConnector implements ManagerNotificati
 
         // TODO Do we really need to modify the existing receiver endpoint? What happnes if we don't security,
         // filters and transformers will get invoked twice?
-        UMOEndpointBuilder receiverEndpointBuilder = new EndpointURIEndpointBuilder(receiver.getEndpoint(),
+        EndpointBuilder receiverEndpointBuilder = new EndpointURIEndpointBuilder(receiver.getEndpoint(),
             muleContext);
         receiverEndpointBuilder.setTransformers(TransformerUtils.UNDEFINED);
         receiverEndpointBuilder.setResponseTransformers(TransformerUtils.UNDEFINED);
@@ -227,17 +227,17 @@ public class CxfConnector extends AbstractConnector implements ManagerNotificati
         // Remove the Axis Receiver Security filter now
         receiverEndpointBuilder.setSecurityFilter(null);
 
-        UMOImmutableEndpoint serviceEndpoint = muleContext.getRegistry()
+        ImmutableEndpoint serviceEndpoint = muleContext.getRegistry()
             .lookupEndpointFactory()
             .getInboundEndpoint(serviceEndpointbuilder);
 
-        UMOImmutableEndpoint receiverEndpoint = muleContext.getRegistry()
+        ImmutableEndpoint receiverEndpoint = muleContext.getRegistry()
             .lookupEndpointFactory()
             .getInboundEndpoint(receiverEndpointBuilder);
 
         receiver.setEndpoint(receiverEndpoint);
         
-        c.setInboundRouter(new InboundRouterCollection());
+        c.setInboundRouter(new DefaultInboundRouterCollection());
         c.getInboundRouter().addEndpoint(serviceEndpoint);
         
         components.add(c);
@@ -252,7 +252,7 @@ public class CxfConnector extends AbstractConnector implements ManagerNotificati
      *         is the component name, which is equivilent to the Axis service name.
      */
     @Override
-    protected Object getReceiverKey(UMOComponent component, UMOImmutableEndpoint endpoint)
+    protected Object getReceiverKey(Component component, ImmutableEndpoint endpoint)
     {
         if (endpoint.getEndpointURI().getPort() == -1)
         {
@@ -264,7 +264,7 @@ public class CxfConnector extends AbstractConnector implements ManagerNotificati
         }
     }
 
-    public void onNotification(UMOServerNotification event)
+    public void onNotification(ServerNotification event)
     {
         // We need to register the CXF service component once the model
         // starts because
@@ -277,13 +277,13 @@ public class CxfConnector extends AbstractConnector implements ManagerNotificati
         // listener is available
         if (event.getAction() == ManagerNotification.MANAGER_STARTED)
         {
-            for (UMOComponent c : components)
+            for (Component c : components)
             {
                 try
                 {
                     muleContext.getRegistry().registerComponent(c);
                 }
-                catch (UMOException e)
+                catch (AbstractMuleException e)
                 {
                     handleException(e);
                 }
@@ -291,7 +291,7 @@ public class CxfConnector extends AbstractConnector implements ManagerNotificati
         }
     }
     
-    public boolean isSyncEnabled(UMOImmutableEndpoint endpoint)
+    public boolean isSyncEnabled(ImmutableEndpoint endpoint)
     {
         String scheme = endpoint.getEndpointURI().getScheme().toLowerCase();
         if (scheme.equals("http") || scheme.equals("https") || scheme.equals("ssl") || scheme.equals("tcp")

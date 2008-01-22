@@ -10,7 +10,7 @@
 
 package org.mule.providers.jdbc.functional;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.providers.jdbc.JdbcConnector;
 import org.mule.providers.jdbc.util.MuleDerbyUtils;
 import org.mule.tck.FunctionalTestCase;
@@ -100,7 +100,7 @@ public abstract class AbstractJdbcFunctionalTestCase extends FunctionalTestCase
      * called by JdbcMessageReceiver) allows either null or a List of 0 rows to be
      * returned so we check for both.
      */
-    protected static void assertResultSetEmpty(UMOMessage message)
+    protected static void assertResultSetEmpty(MuleMessage message)
     {
         assertNotNull(message);
         Object payload = message.getPayload();
@@ -109,7 +109,7 @@ public abstract class AbstractJdbcFunctionalTestCase extends FunctionalTestCase
         assertTrue(list.isEmpty());
     }
 
-    protected static void assertResultSetNotEmpty(UMOMessage message)
+    protected static void assertResultSetNotEmpty(MuleMessage message)
     {
         assertNotNull(message);
         Object payload = message.getPayload();

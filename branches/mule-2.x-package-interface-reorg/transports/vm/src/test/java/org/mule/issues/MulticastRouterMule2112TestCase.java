@@ -10,9 +10,9 @@
 
 package org.mule.issues;
 
-import org.mule.api.UMOEventContext;
+import org.mule.api.EventContext;
 import org.mule.extras.client.MuleClient;
-import org.mule.impl.MuleMessage;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.tck.functional.EventCallback;
 import org.mule.tck.functional.FunctionalTestComponent;
@@ -39,7 +39,7 @@ public class MulticastRouterMule2112TestCase  extends FunctionalTestCase
         final AtomicBoolean hop1made = new AtomicBoolean(false);
         EventCallback callback1 = new EventCallback()
         {
-            public void eventReceived(final UMOEventContext context, final Object component) throws Exception
+            public void eventReceived(final EventContext context, final Object component) throws Exception
             {
                 assertTrue(hop1made.compareAndSet(false, true));
             }
@@ -48,7 +48,7 @@ public class MulticastRouterMule2112TestCase  extends FunctionalTestCase
         final AtomicBoolean hop2made = new AtomicBoolean(false);
         EventCallback callback2 = new EventCallback()
         {
-            public void eventReceived(final UMOEventContext context, final Object component) throws Exception
+            public void eventReceived(final EventContext context, final Object component) throws Exception
             {
                 assertTrue(hop2made.compareAndSet(false, true));
             }
@@ -58,7 +58,7 @@ public class MulticastRouterMule2112TestCase  extends FunctionalTestCase
         ((FunctionalTestComponent) hop2).setEventCallback(callback2);
 
         MuleClient client = new MuleClient();
-        MuleMessage request = new MuleMessage("payload");
+        DefaultMuleMessage request = new DefaultMuleMessage("payload");
         client.dispatch("vm://inbound", request);
         Thread.sleep(1000);
 

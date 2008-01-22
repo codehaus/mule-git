@@ -10,25 +10,25 @@
 package org.mule.impl.transformer;
 
 import org.mule.api.transformer.DiscoverableTransformer;
-import org.mule.api.transformer.UMOTransformer;
+import org.mule.api.transformer.Transformer;
 
 import java.util.Iterator;
 import java.util.List;
 
 /**
- * Given a {@link org.mule.api.transformer.UMOTransformer} instance, an input class and output class
+ * Given a {@link org.mule.api.transformer.Transformer} instance, an input class and output class
  * this object will create a weighting for a transformer. This weighthing can be used compare one transformer with
  * another, which can be useful for choosing a transformer to use given the input class and required output class.
  */
 public class TransformerWeighting implements Comparable
 {
-    private UMOTransformer transformer;
+    private Transformer transformer;
     private int inputWeighting;
     private int outputWeighting;
     private Class inputClass;
     private Class outputClass;
 
-    public TransformerWeighting(Class inputClass, Class outputClass, UMOTransformer transformer)
+    public TransformerWeighting(Class inputClass, Class outputClass, Transformer transformer)
     {
         this.inputClass = inputClass;
         this.outputClass = outputClass;
@@ -109,7 +109,7 @@ public class TransformerWeighting implements Comparable
         return outputWeighting;
     }
 
-    public UMOTransformer getTransformer()
+    public Transformer getTransformer()
     {
         return transformer;
     }

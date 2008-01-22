@@ -10,8 +10,8 @@
 
 package org.mule.api.model;
 
-import org.mule.api.UMOEvent;
-import org.mule.api.UMOException;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.Event;
 import org.mule.api.lifecycle.Disposable;
 import org.mule.api.lifecycle.Startable;
 import org.mule.api.lifecycle.Stoppable;
@@ -33,7 +33,7 @@ public interface MuleProxy extends Work, Startable, Stoppable, Disposable
      * 
      * @param event the event being processed
      */
-    void onEvent(QueueSession session, UMOEvent event);
+    void onEvent(QueueSession session, Event event);
 
     ComponentStatistics getStatistics();
 
@@ -44,9 +44,9 @@ public interface MuleProxy extends Work, Startable, Stoppable, Disposable
      * 
      * @param event the event to pass to the UMO
      * @return the return event from the UMO
-     * @throws UMOException if the call fails
+     * @throws AbstractMuleException if the call fails
      */
-    Object onCall(UMOEvent event) throws UMOException;
+    Object onCall(Event event) throws AbstractMuleException;
 
     /**
      * When an exception occurs this method can be called to invoke the configured

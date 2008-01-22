@@ -10,13 +10,13 @@
 
 package org.mule.providers.cxf;
 
-import org.mule.api.UMOMessage;
-import org.mule.api.UMOSession;
-import org.mule.api.endpoint.UMOEndpoint;
+import org.mule.api.MuleMessage;
+import org.mule.api.Session;
+import org.mule.api.endpoint.Endpoint;
 import org.mule.api.registry.Registry;
 import org.mule.extras.client.MuleClient;
 import org.mule.impl.MuleEvent;
-import org.mule.impl.MuleMessage;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.MuleSession;
 import org.mule.impl.transport.AbstractConnector;
 import org.mule.tck.AbstractMuleTestCase;
@@ -34,8 +34,8 @@ public class CxfWsdlTestCase extends AbstractMuleTestCase
     {
         MuleClient client = new MuleClient();
 
-        UMOMessage message = new MuleMessage("test1");
-        UMOMessage reply = client.send(TEST_URL, message);
+        MuleMessage message = new DefaultMuleMessage("test1");
+        MuleMessage reply = client.send(TEST_URL, message);
         assertNotNull(reply);
 
         Document response = (Document) reply.getPayload();
@@ -55,14 +55,14 @@ public class CxfWsdlTestCase extends AbstractMuleTestCase
 
         Registry registry = muleContext.getRegistry();
 
-        UMOEndpoint endpoint = (UMOEndpoint) registry.lookupEndpointFactory().getOutboundEndpoint(TEST_URL_NOWSDL);
+        Endpoint endpoint = (Endpoint) registry.lookupEndpointFactory().getOutboundEndpoint(TEST_URL_NOWSDL);
         endpoint.setProperty("wsdlUrl", TEST_URL_WSDL);
 
-        UMOMessage message = new MuleMessage("test1");
-        UMOSession session = new MuleSession(message,
+        MuleMessage message = new DefaultMuleMessage("test1");
+        Session session = new MuleSession(message,
             ((AbstractConnector) endpoint.getConnector()).getSessionHandler());
         MuleEvent event = new MuleEvent(message, endpoint, session, true);
-        UMOMessage reply = session.sendEvent(event);
+        MuleMessage reply = session.sendEvent(event);
 
         assertNotNull(reply);
 

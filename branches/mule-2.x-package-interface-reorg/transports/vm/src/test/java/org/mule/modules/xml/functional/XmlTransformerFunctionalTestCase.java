@@ -10,8 +10,8 @@
 
 package org.mule.modules.xml.functional;
 
-import org.mule.api.UMOException;
-import org.mule.api.UMOMessage;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 
 import org.custommonkey.xmlunit.XMLAssert;
@@ -31,19 +31,19 @@ public class XmlTransformerFunctionalTestCase extends AbstractXmlFunctionalTestC
         return "xml/xml-transformer-functional-test.xml";
     }
 
-    protected MuleClient sendXml() throws UMOException
+    protected MuleClient sendXml() throws AbstractMuleException
     {
         MuleClient client = new MuleClient();
         client.dispatch("xml-in", SIMPLE_XML, null);
         return client;
     }
 
-    protected MuleClient sendObject() throws UMOException
+    protected MuleClient sendObject() throws AbstractMuleException
     {
         return sendObject("object-in");
     }
 
-    protected MuleClient sendObject(String endpoint) throws UMOException
+    protected MuleClient sendObject(String endpoint) throws AbstractMuleException
     {
         MuleClient client = new MuleClient();
         client.dispatch(endpoint, new Parent(new Child()), null);
@@ -56,7 +56,7 @@ public class XmlTransformerFunctionalTestCase extends AbstractXmlFunctionalTestC
         XMLAssert.assertXMLEqual(SIMPLE_XML, xml);
     }
 
-    public void testXmlDomOut() throws UMOException
+    public void testXmlDomOut() throws AbstractMuleException
     {
         Document dom = (Document) request(sendXml(), "xml-dom-out", Document.class);
         assertEquals("parent", dom.getDocumentElement().getLocalName());
@@ -86,7 +86,7 @@ public class XmlTransformerFunctionalTestCase extends AbstractXmlFunctionalTestC
         XMLAssert.assertXMLEqual(SERIALIZED, xml);
     }
 
-    public void testXmlObjectOut() throws UMOException
+    public void testXmlObjectOut() throws AbstractMuleException
     {
         request(sendObject(), "xml-object-out", Parent.class);
     }
@@ -98,9 +98,9 @@ public class XmlTransformerFunctionalTestCase extends AbstractXmlFunctionalTestC
     }
 
 
-    protected Object request(MuleClient client, String endpoint, Class clazz) throws UMOException
+    protected Object request(MuleClient client, String endpoint, Class clazz) throws AbstractMuleException
     {
-        UMOMessage message = client.request(endpoint, TIMEOUT);
+        MuleMessage message = client.request(endpoint, TIMEOUT);
         assertNotNull(message);
         assertNotNull(message.getPayload());
         assertTrue(message.getPayload().getClass().getName(), clazz.isAssignableFrom(message.getPayload().getClass()));

@@ -10,17 +10,17 @@
 
 package org.mule.providers.xmpp;
 
-import org.mule.api.UMOComponent;
-import org.mule.api.UMOException;
-import org.mule.api.UMOMessage;
-import org.mule.api.endpoint.UMOEndpoint;
+import org.mule.api.Component;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleMessage;
+import org.mule.api.endpoint.Endpoint;
 import org.mule.api.lifecycle.CreateException;
-import org.mule.api.transport.UMOMessageAdapter;
-import org.mule.impl.MuleMessage;
+import org.mule.api.transport.MessageAdapter;
+import org.mule.impl.DefaultMuleMessage;
+import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.impl.transport.AbstractConnector;
 import org.mule.impl.transport.AbstractMessageReceiver;
 import org.mule.impl.transport.ConnectException;
-import org.mule.imple.config.i18n.CoreMessages;
 
 import javax.resource.spi.work.Work;
 import javax.resource.spi.work.WorkException;
@@ -39,7 +39,7 @@ public class XmppMessageReceiver extends AbstractMessageReceiver implements Pack
 {
     private XMPPConnection xmppConnection = null;
 
-    public XmppMessageReceiver(AbstractConnector connector, UMOComponent component, UMOEndpoint endpoint)
+    public XmppMessageReceiver(AbstractConnector connector, Component component, Endpoint endpoint)
             throws CreateException
     {
 
@@ -77,12 +77,12 @@ public class XmppMessageReceiver extends AbstractMessageReceiver implements Pack
         }
     }
 
-    protected void doStart() throws UMOException
+    protected void doStart() throws AbstractMuleException
     {
         // nothing to do
     }
 
-    protected void doStop() throws UMOException
+    protected void doStop() throws AbstractMuleException
     {
         // nothing to do
     }
@@ -130,15 +130,15 @@ public class XmppMessageReceiver extends AbstractMessageReceiver implements Pack
         {
             try
             {
-                UMOMessageAdapter adapter = connector.getMessageAdapter(packet);
+                MessageAdapter adapter = connector.getMessageAdapter(packet);
 
                 if (logger.isDebugEnabled())
                 {
                     logger.debug("Processing XMPP packet from: " + packet.getFrom());
-                    logger.debug("UMOMessageAdapter is a: " + adapter.getClass().getName());
+                    logger.debug("MessageAdapter is a: " + adapter.getClass().getName());
                 }
 
-                UMOMessage returnMessage = routeMessage(new MuleMessage(adapter), endpoint.isSynchronous());
+                MuleMessage returnMessage = routeMessage(new DefaultMuleMessage(adapter), endpoint.isSynchronous());
 
                 if (returnMessage != null && packet instanceof Message)
                 {

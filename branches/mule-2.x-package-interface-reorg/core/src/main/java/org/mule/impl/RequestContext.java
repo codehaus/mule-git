@@ -10,11 +10,11 @@
 
 package org.mule.impl;
 
+import org.mule.api.Event;
+import org.mule.api.EventContext;
+import org.mule.api.ExceptionPayload;
+import org.mule.api.MuleMessage;
 import org.mule.api.ThreadSafeAccess;
-import org.mule.api.UMOEvent;
-import org.mule.api.UMOEventContext;
-import org.mule.api.UMOExceptionPayload;
-import org.mule.api.UMOMessage;
 
 /**
  * <code>RequestContext</code> is a thread context where components can get the
@@ -43,9 +43,9 @@ public final class RequestContext
         // no-op
     }
 
-    public static UMOEventContext getEventContext()
+    public static EventContext getEventContext()
     {
-        UMOEvent event = getEvent();
+        Event event = getEvent();
         if (event != null)
         {
             return new MuleEventContext(event);
@@ -56,9 +56,9 @@ public final class RequestContext
         }
     }
 
-    public static UMOEvent getEvent()
+    public static Event getEvent()
     {
-        return (UMOEvent) currentEvent.get();
+        return (Event) currentEvent.get();
     }
 
     /**
@@ -67,26 +67,26 @@ public final class RequestContext
      * @param event - the event to set
      * @return A new mutable copy of the event set
      */
-    public static UMOEvent setEvent(UMOEvent event)
+    public static Event setEvent(Event event)
     {
         return internalSetEvent(newEvent(event, DEFAULT_ACTION));
     }
 
-    protected static UMOEvent internalSetEvent(UMOEvent event)
+    protected static Event internalSetEvent(Event event)
     {
         currentEvent.set(event);
         return event;
     }
 
-    protected static UMOMessage internalRewriteEvent(UMOMessage message, boolean safe)
+    protected static MuleMessage internalRewriteEvent(MuleMessage message, boolean safe)
     {
         if (message != null)
         {
-            UMOEvent event = getEvent();
+            Event event = getEvent();
             if (event != null)
             {
-                UMOMessage copy = newMessage(message, safe);
-                UMOEvent newEvent = new MuleEvent(copy, event);
+                MuleMessage copy = newMessage(message, safe);
+                Event newEvent = new MuleEvent(copy, event);
                 if (safe)
                 {
                     resetAccessControl(copy);
@@ -111,28 +111,28 @@ public final class RequestContext
      *
      * @param exceptionPayload
      */
-    public static void setExceptionPayload(UMOExceptionPayload exceptionPayload)
+    public static void setExceptionPayload(ExceptionPayload exceptionPayload)
     {
-        UMOEvent newEvent = newEvent(getEvent(), SAFE);
+        Event newEvent = newEvent(getEvent(), SAFE);
         newEvent.getMessage().setExceptionPayload(exceptionPayload);
         internalSetEvent(newEvent);
     }
 
-    public static UMOExceptionPayload getExceptionPayload()
+    public static ExceptionPayload getExceptionPayload()
     {
         return getEvent().getMessage().getExceptionPayload();
     }
 
-    public static UMOMessage safeMessageCopy(UMOMessage message)
+    public static MuleMessage safeMessageCopy(MuleMessage message)
     {
         return newMessage(message, SAFE);
     }
 
-    protected static UMOEvent newEvent(UMOEvent event, boolean safe)
+    protected static Event newEvent(Event event, boolean safe)
     {
         if (safe && event instanceof ThreadSafeAccess)
         {
-            return (UMOEvent) ((ThreadSafeAccess)event).newThreadCopy();
+            return (Event) ((ThreadSafeAccess)event).newThreadCopy();
         }
         else
         {
@@ -140,11 +140,11 @@ public final class RequestContext
         }
     }
 
-    protected static UMOMessage newMessage(UMOMessage message, boolean safe)
+    protected static MuleMessage newMessage(MuleMessage message, boolean safe)
     {
         if (safe && message instanceof ThreadSafeAccess)
         {
-            return (UMOMessage) ((ThreadSafeAccess)message).newThreadCopy();
+            return (MuleMessage) ((ThreadSafeAccess)message).newThreadCopy();
         }
         else
         {

@@ -11,7 +11,7 @@
 package org.mule.impl.transformer.simple;
 
 import org.mule.api.transformer.TransformerException;
-import org.mule.api.transformer.UMOTransformer;
+import org.mule.api.transformer.Transformer;
 import org.mule.impl.transformer.simple.ByteArrayToHexString;
 import org.mule.impl.transformer.simple.HexStringToByteArray;
 import org.mule.tck.AbstractTransformerTestCase;
@@ -21,12 +21,12 @@ import java.util.Arrays;
 public class HexStringByteArrayTransformersTestCase extends AbstractTransformerTestCase
 {
 
-    public UMOTransformer getTransformer()
+    public Transformer getTransformer()
     {
         return new HexStringToByteArray();
     }
 
-    public UMOTransformer getRoundTripTransformer()
+    public Transformer getRoundTripTransformer()
     {
         return new ByteArrayToHexString();
     }

@@ -10,8 +10,8 @@
 
 package org.mule.extras.acegi.i18n;
 
-import org.mule.imple.config.i18n.Message;
-import org.mule.imple.config.i18n.MessageFactory;
+import org.mule.impl.config.i18n.Message;
+import org.mule.impl.config.i18n.MessageFactory;
 
 public class AcegiMessages extends MessageFactory
 {

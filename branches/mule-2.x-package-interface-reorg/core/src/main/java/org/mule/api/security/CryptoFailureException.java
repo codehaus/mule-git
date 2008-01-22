@@ -10,16 +10,16 @@
 
 package org.mule.api.security;
 
+import org.mule.api.EncryptionStrategy;
 import org.mule.api.MuleException;
-import org.mule.api.UMOEncryptionStrategy;
-import org.mule.imple.config.i18n.CoreMessages;
-import org.mule.imple.config.i18n.Message;
+import org.mule.impl.config.i18n.CoreMessages;
+import org.mule.impl.config.i18n.Message;
 
 /**
  * <code>CryptoFailureException</code> is a generic exception thrown by an
  * CryptoStrategy if encryption or decryption fails. The constuctors of this
- * exception accept a UMOEncryptionStrategy that will be included in the exception
- * message. Implementors of UMOEncryptionStrategy should provide a toString method
+ * exception accept a EncryptionStrategy that will be included in the exception
+ * message. Implementors of EncryptionStrategy should provide a toString method
  * that exposes *only* information that maybe useful for debugging not passwords,
  * secret keys, etc.
  */
@@ -30,9 +30,9 @@ public class CryptoFailureException extends MuleException
      */
     private static final long serialVersionUID = 1336343718508294379L;
 
-    private transient UMOEncryptionStrategy encryptionStrategy;
+    private transient EncryptionStrategy encryptionStrategy;
 
-    public CryptoFailureException(Message message, UMOEncryptionStrategy strategy)
+    public CryptoFailureException(Message message, EncryptionStrategy strategy)
     {
         super(message);
         String s = (strategy == null ? "null" : strategy.toString());
@@ -40,7 +40,7 @@ public class CryptoFailureException extends MuleException
         this.encryptionStrategy = strategy;
     }
 
-    public CryptoFailureException(Message message, UMOEncryptionStrategy strategy, Throwable cause)
+    public CryptoFailureException(Message message, EncryptionStrategy strategy, Throwable cause)
     {
         super(message, cause);
         String s = (strategy == null ? "null" : strategy.toString());
@@ -48,7 +48,7 @@ public class CryptoFailureException extends MuleException
         this.encryptionStrategy = strategy;
     }
 
-    public CryptoFailureException(UMOEncryptionStrategy strategy, Throwable cause)
+    public CryptoFailureException(EncryptionStrategy strategy, Throwable cause)
     {
         super(CoreMessages.cryptoFailure(), cause);
         String s = (strategy == null ? "null" : strategy.toString());
@@ -57,7 +57,7 @@ public class CryptoFailureException extends MuleException
 
     }
 
-    public UMOEncryptionStrategy getEncryptionStrategy()
+    public EncryptionStrategy getEncryptionStrategy()
     {
         return encryptionStrategy;
     }

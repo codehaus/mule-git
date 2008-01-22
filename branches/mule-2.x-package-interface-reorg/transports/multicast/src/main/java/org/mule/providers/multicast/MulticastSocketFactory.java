@@ -9,8 +9,8 @@
  */
 package org.mule.providers.multicast;
 
-import org.mule.api.endpoint.UMOImmutableEndpoint;
-import org.mule.api.transport.UMOConnector;
+import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.api.transport.Connector;
 import org.mule.providers.udp.UdpSocketFactory;
 
 import java.io.IOException;
@@ -26,11 +26,11 @@ public class MulticastSocketFactory extends UdpSocketFactory
 
     public Object makeObject(Object key) throws Exception
     {
-        UMOImmutableEndpoint ep = (UMOImmutableEndpoint)key;
+        ImmutableEndpoint ep = (ImmutableEndpoint)key;
         MulticastSocket socket = (MulticastSocket)super.makeObject(key);
         socket.setLoopbackMode(((MulticastConnector)ep.getConnector()).isLoopback());
         int ttl  = ((MulticastConnector)ep.getConnector()).getTimeToLive();
-        if(ttl!= UMOConnector.INT_VALUE_NOT_SET)
+        if(ttl!= Connector.INT_VALUE_NOT_SET)
         {
             socket.setTimeToLive(ttl);
         }
@@ -41,7 +41,7 @@ public class MulticastSocketFactory extends UdpSocketFactory
     //@java.lang.Override
     public void destroyObject(Object key, Object object) throws Exception
     {
-        UMOImmutableEndpoint ep = (UMOImmutableEndpoint)key;
+        ImmutableEndpoint ep = (ImmutableEndpoint)key;
         InetAddress inetAddress;
         String host = ep.getEndpointURI().getHost();
         if("null".equalsIgnoreCase(host))

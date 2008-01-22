@@ -10,7 +10,7 @@
 
 package org.mule.providers.xmpp;
 
-import org.mule.api.transport.UMOConnector;
+import org.mule.api.transport.Connector;
 import org.mule.tck.providers.AbstractConnectorTestCase;
 
 import org.jivesoftware.smack.packet.Message;
@@ -18,7 +18,7 @@ import org.jivesoftware.smack.packet.Message;
 public class XmppConnectorTestCase extends AbstractConnectorTestCase
 {
     // @Override
-    public UMOConnector createConnector() throws Exception
+    public Connector createConnector() throws Exception
     {
         XmppConnector cnn = new XmppConnector();
         cnn.setName("xmppConnector");

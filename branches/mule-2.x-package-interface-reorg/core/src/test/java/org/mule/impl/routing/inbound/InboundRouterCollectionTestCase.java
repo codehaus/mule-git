@@ -13,7 +13,7 @@ package org.mule.impl.routing.inbound;
 import org.mule.api.endpoint.InvalidEndpointTypeException;
 import org.mule.impl.endpoint.InboundEndpoint;
 import org.mule.impl.endpoint.OutboundEndpoint;
-import org.mule.impl.routing.inbound.InboundRouterCollection;
+import org.mule.impl.routing.inbound.DefaultInboundRouterCollection;
 import org.mule.tck.AbstractMuleTestCase;
 
 import java.util.ArrayList;
@@ -24,7 +24,7 @@ public class InboundRouterCollectionTestCase extends AbstractMuleTestCase
 
     public void testAddGoodEndpoint()
     {
-        InboundRouterCollection router=new InboundRouterCollection();
+        DefaultInboundRouterCollection router=new DefaultInboundRouterCollection();
         InboundEndpoint endpoint=new InboundEndpoint();
         router.addEndpoint(endpoint);
         assertNotNull(router.getEndpoints());
@@ -33,7 +33,7 @@ public class InboundRouterCollectionTestCase extends AbstractMuleTestCase
 
     public void testAddBadEndpoint2()
     {
-        InboundRouterCollection router=new InboundRouterCollection();
+        DefaultInboundRouterCollection router=new DefaultInboundRouterCollection();
         try{
             router.addEndpoint(new OutboundEndpoint());
             fail("Invalid endpoint: Exception exceptions");
@@ -48,7 +48,7 @@ public class InboundRouterCollectionTestCase extends AbstractMuleTestCase
         List list= new ArrayList();
         list.add(new InboundEndpoint());
         list.add(new InboundEndpoint());
-        InboundRouterCollection router=new InboundRouterCollection();
+        DefaultInboundRouterCollection router=new DefaultInboundRouterCollection();
         assertNotNull(router.getEndpoints());
         assertEquals(0, router.getEndpoints().size());
         router.addEndpoint(new InboundEndpoint());
@@ -63,7 +63,7 @@ public class InboundRouterCollectionTestCase extends AbstractMuleTestCase
         List list= new ArrayList();
         list.add(new InboundEndpoint());
         list.add(new OutboundEndpoint());
-        InboundRouterCollection router=new InboundRouterCollection();
+        DefaultInboundRouterCollection router=new DefaultInboundRouterCollection();
         try{
             router.setEndpoints(list);
             fail("Invalid endpoint: Exception exceptions");
@@ -78,7 +78,7 @@ public class InboundRouterCollectionTestCase extends AbstractMuleTestCase
         List list= new ArrayList();
         list.add(new InboundEndpoint());
         list.add(new OutboundEndpoint());
-        InboundRouterCollection router=new InboundRouterCollection();
+        DefaultInboundRouterCollection router=new DefaultInboundRouterCollection();
         try{
             router.setEndpoints(list);
             fail("Invalid endpoint: Exception exceptions");

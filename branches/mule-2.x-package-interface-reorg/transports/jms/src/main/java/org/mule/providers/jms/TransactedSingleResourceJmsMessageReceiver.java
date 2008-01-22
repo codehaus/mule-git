@@ -10,18 +10,18 @@
 
 package org.mule.providers.jms;
 
-import org.mule.api.UMOComponent;
-import org.mule.api.UMOException;
-import org.mule.api.UMOTransaction;
-import org.mule.api.endpoint.UMOEndpoint;
+import org.mule.api.Component;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.Transaction;
+import org.mule.api.endpoint.Endpoint;
 import org.mule.api.lifecycle.CreateException;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.lifecycle.StartException;
 import org.mule.api.lifecycle.StopException;
 import org.mule.api.transaction.TransactionCallback;
-import org.mule.api.transport.UMOConnector;
-import org.mule.api.transport.UMOMessageAdapter;
-import org.mule.impl.MuleMessage;
+import org.mule.api.transport.Connector;
+import org.mule.api.transport.MessageAdapter;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.transaction.TransactionCoordination;
 import org.mule.impl.transaction.TransactionTemplate;
 import org.mule.impl.transport.AbstractMessageReceiver;
@@ -59,9 +59,9 @@ public class TransactedSingleResourceJmsMessageReceiver extends AbstractMessageR
      * @param endpoint
      * @throws InitialisationException
      */
-    public TransactedSingleResourceJmsMessageReceiver(UMOConnector connector,
-                                                      UMOComponent component,
-                                                      UMOEndpoint endpoint) throws CreateException
+    public TransactedSingleResourceJmsMessageReceiver(Connector connector,
+                                                      Component component,
+                                                      Endpoint endpoint) throws CreateException
     {
 
         super(connector, component, endpoint);
@@ -142,7 +142,7 @@ public class TransactedSingleResourceJmsMessageReceiver extends AbstractMessageR
         }
     }
 
-    protected void doStart() throws UMOException
+    protected void doStart() throws AbstractMuleException
     {
         try
         {
@@ -166,7 +166,7 @@ public class TransactedSingleResourceJmsMessageReceiver extends AbstractMessageR
         }
     }
 
-    protected void doStop() throws UMOException
+    protected void doStop() throws AbstractMuleException
     {
         try
         {
@@ -230,7 +230,7 @@ public class TransactedSingleResourceJmsMessageReceiver extends AbstractMessageR
                         public Object doInTransaction() throws Exception
                         {
                             // Get Transaction & Bind Session
-                            UMOTransaction tx = TransactionCoordination.getInstance().getTransaction();
+                            Transaction tx = TransactionCoordination.getInstance().getTransaction();
                             if (tx != null)
                             {
                                 tx.bindResource(connector.getConnection(), session);
@@ -268,8 +268,8 @@ public class TransactedSingleResourceJmsMessageReceiver extends AbstractMessageR
                                 redeliveryHandler.handleRedelivery(message);
                             }
 
-                            UMOMessageAdapter adapter = connector.getMessageAdapter(message);
-                            routeMessage(new MuleMessage(adapter));
+                            MessageAdapter adapter = connector.getMessageAdapter(message);
+                            routeMessage(new DefaultMuleMessage(adapter));
                             return null;
                         }
                     };
@@ -277,8 +277,8 @@ public class TransactedSingleResourceJmsMessageReceiver extends AbstractMessageR
                 }
                 else
                 {
-                    UMOMessageAdapter adapter = connector.getMessageAdapter(message);
-                    routeMessage(new MuleMessage(adapter));
+                    MessageAdapter adapter = connector.getMessageAdapter(message);
+                    routeMessage(new DefaultMuleMessage(adapter));
                 }
 
             }

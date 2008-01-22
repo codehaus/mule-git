@@ -11,7 +11,7 @@
 package org.mule.impl.config;
 
 import org.mule.api.config.ThreadingProfile;
-import org.mule.api.context.UMOWorkManager;
+import org.mule.api.context.WorkManager;
 
 import edu.emory.mathcs.backport.java.util.concurrent.RejectedExecutionHandler;
 import edu.emory.mathcs.backport.java.util.concurrent.ThreadFactory;
@@ -179,7 +179,7 @@ public class ChainedThreadingProfile implements ThreadingProfile
         this.workManagerFactory = workManagerFactory;
     }
 
-    public UMOWorkManager createWorkManager(String name)
+    public WorkManager createWorkManager(String name)
     {
         return workManagerFactory.createWorkManager(this, name);
     }

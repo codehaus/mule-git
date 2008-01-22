@@ -10,10 +10,10 @@
 
 package org.mule.providers.stdio;
 
-import org.mule.api.UMOComponent;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.Component;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.CreateException;
-import org.mule.api.transport.UMOMessageReceiver;
+import org.mule.api.transport.MessageReceiver;
 import org.mule.tck.providers.AbstractMessageReceiverTestCase;
 import org.mule.tck.testmodels.fruit.Orange;
 
@@ -31,7 +31,7 @@ public class StdioMessageReceiverTestCase extends AbstractMessageReceiverTestCas
     {
         StdioMessageReceiver receiver = (StdioMessageReceiver) getMessageReceiver();
 
-        UMOComponent component = getTestComponent("orange", Orange.class);
+        Component component = getTestComponent("orange", Orange.class);
         assertNotNull(component);
 
         endpoint.getConnector().start();
@@ -44,12 +44,12 @@ public class StdioMessageReceiverTestCase extends AbstractMessageReceiverTestCas
         assertTrue(receiver.getFrequency() == StdioMessageReceiver.DEFAULT_POLL_FREQUENCY);
     }
 
-    public UMOMessageReceiver getMessageReceiver() throws CreateException
+    public MessageReceiver getMessageReceiver() throws CreateException
     {
         return new StdioMessageReceiver(endpoint.getConnector(), component, endpoint, 1000);
     }
 
-    public UMOImmutableEndpoint getEndpoint() throws Exception
+    public ImmutableEndpoint getEndpoint() throws Exception
     {
         return muleContext.getRegistry().lookupEndpointFactory().getInboundEndpoint("stdio://System");
     }

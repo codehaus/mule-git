@@ -10,7 +10,7 @@
 
 package org.mule.impl.transformer.simple;
 
-import org.mule.api.transformer.UMOTransformer;
+import org.mule.api.transformer.Transformer;
 import org.mule.impl.transformer.simple.ByteArrayToSerializable;
 import org.mule.impl.transformer.simple.SerializableToByteArray;
 import org.mule.tck.AbstractTransformerTestCase;
@@ -22,12 +22,12 @@ public class SerialisedObjectTransformersTestCase extends AbstractTransformerTes
 {
     private Orange testObject = new Orange(new Integer(4), new Double(14.3), "nice!");
 
-    public UMOTransformer getTransformer() throws Exception
+    public Transformer getTransformer() throws Exception
     {
         return new SerializableToByteArray();
     }
 
-    public UMOTransformer getRoundTripTransformer() throws Exception
+    public Transformer getRoundTripTransformer() throws Exception
     {
         return new ByteArrayToSerializable();
     }

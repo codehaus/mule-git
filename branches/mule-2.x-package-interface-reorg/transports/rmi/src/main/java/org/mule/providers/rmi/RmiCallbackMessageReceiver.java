@@ -10,14 +10,14 @@
 
 package org.mule.providers.rmi;
 
-import org.mule.api.UMOComponent;
-import org.mule.api.UMOException;
-import org.mule.api.endpoint.UMOEndpoint;
-import org.mule.api.endpoint.UMOEndpointURI;
+import org.mule.api.Component;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.endpoint.Endpoint;
+import org.mule.api.endpoint.EndpointURI;
 import org.mule.api.lifecycle.CreateException;
-import org.mule.api.transport.UMOConnector;
-import org.mule.api.transport.UMOMessageAdapter;
-import org.mule.impl.MuleMessage;
+import org.mule.api.transport.Connector;
+import org.mule.api.transport.MessageAdapter;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.transport.AbstractMessageReceiver;
 import org.mule.impl.transport.ConnectException;
 import org.mule.providers.rmi.i18n.RmiMessages;
@@ -49,7 +49,7 @@ public class RmiCallbackMessageReceiver extends AbstractMessageReceiver
     private int port;
 
 
-    public RmiCallbackMessageReceiver(UMOConnector connector, UMOComponent component, UMOEndpoint endpoint)
+    public RmiCallbackMessageReceiver(Connector connector, Component component, Endpoint endpoint)
             throws CreateException
     {
         super(connector, component, endpoint);
@@ -61,7 +61,7 @@ public class RmiCallbackMessageReceiver extends AbstractMessageReceiver
 
         System.setProperty("java.security.policy", rmiPolicyPath);
 
-        UMOEndpointURI endpointUri = endpoint.getEndpointURI();
+        EndpointURI endpointUri = endpoint.getEndpointURI();
 
         port = endpointUri.getPort();
 
@@ -144,12 +144,12 @@ public class RmiCallbackMessageReceiver extends AbstractMessageReceiver
         logger.debug("Disconnected successfully.");
     }
 
-    protected void doStart() throws UMOException
+    protected void doStart() throws AbstractMuleException
     {
         // nothing to do
     }
 
-    protected void doStop() throws UMOException
+    protected void doStop() throws AbstractMuleException
     {
         // nothing to do
     }
@@ -189,12 +189,12 @@ public class RmiCallbackMessageReceiver extends AbstractMessageReceiver
      *
      * @param message
      * @return
-     * @throws org.mule.api.UMOException
+     * @throws org.mule.api.AbstractMuleException
      */
-    public Object routeMessage(Object message) throws UMOException
+    public Object routeMessage(Object message) throws AbstractMuleException
     {
-        UMOMessageAdapter adapter = connector.getMessageAdapter(message);
+        MessageAdapter adapter = connector.getMessageAdapter(message);
 
-        return (routeMessage(new MuleMessage(adapter)));
+        return (routeMessage(new DefaultMuleMessage(adapter)));
     }
 }

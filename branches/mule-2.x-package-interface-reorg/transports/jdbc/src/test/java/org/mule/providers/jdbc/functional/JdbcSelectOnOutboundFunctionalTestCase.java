@@ -10,9 +10,9 @@
 
 package org.mule.providers.jdbc.functional;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
-import org.mule.impl.MuleMessage;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.transport.NullPayload;
 
 import java.io.Serializable;
@@ -29,7 +29,7 @@ public class JdbcSelectOnOutboundFunctionalTestCase extends AbstractJdbcFunction
     public void testSelectOnOutbound() throws Exception
     {
         MuleClient client = new MuleClient();
-        UMOMessage reply = client.send("vm://jdbc.test", new MuleMessage(NullPayload.getInstance()));
+        MuleMessage reply = client.send("vm://jdbc.test", new DefaultMuleMessage(NullPayload.getInstance()));
         assertNotNull(reply.getPayload());
         assertTrue(reply.getPayload() instanceof List);
         List resultList = (List) reply.getPayload();
@@ -44,7 +44,7 @@ public class JdbcSelectOnOutboundFunctionalTestCase extends AbstractJdbcFunction
     {
         MuleClient client = new MuleClient();
         MyMessage payload = new MyMessage(2);
-        UMOMessage reply = client.send("vm://terra", new MuleMessage(payload));
+        MuleMessage reply = client.send("vm://terra", new DefaultMuleMessage(payload));
         assertNotNull(reply.getPayload());
         assertTrue(reply.getPayload() instanceof List);
         List resultList = (List) reply.getPayload();

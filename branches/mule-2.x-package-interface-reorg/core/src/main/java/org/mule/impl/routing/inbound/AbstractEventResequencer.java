@@ -10,8 +10,8 @@
 
 package org.mule.impl.routing.inbound;
 
+import org.mule.api.Event;
 import org.mule.api.MessagingException;
-import org.mule.api.UMOEvent;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -49,9 +49,9 @@ public abstract class AbstractEventResequencer extends SelectiveConsumer
     }
 
     // //@Override
-    public UMOEvent[] process(UMOEvent event) throws MessagingException
+    public Event[] process(Event event) throws MessagingException
     {
-        UMOEvent[] result = null;
+        Event[] result = null;
 
         if (this.isMatch(event))
         {
@@ -117,17 +117,17 @@ public abstract class AbstractEventResequencer extends SelectiveConsumer
     }
 
     /**
-     * @see AbstractEventAggregator#createEventGroup(UMOEvent, Object)
+     * @see AbstractEventAggregator#createEventGroup(Event, Object)
      */
-    protected EventGroup createEventGroup(UMOEvent event, Object groupId)
+    protected EventGroup createEventGroup(Event event, Object groupId)
     {
         return new EventGroup(groupId);
     }
 
     /**
-     * @see AbstractEventAggregator#getEventGroupIdForEvent(UMOEvent)
+     * @see AbstractEventAggregator#getEventGroupIdForEvent(Event)
      */
-    protected Object getEventGroupIdForEvent(UMOEvent event)
+    protected Object getEventGroupIdForEvent(Event event)
     {
         String groupId = event.getMessage().getCorrelationId();
 
@@ -174,14 +174,14 @@ public abstract class AbstractEventResequencer extends SelectiveConsumer
      *         {@link #getComparator()}. If no comparator is configured, the events
      *         are returned unsorted.
      */
-    protected UMOEvent[] resequenceEvents(EventGroup events)
+    protected Event[] resequenceEvents(EventGroup events)
     {
         if (events == null || events.size() == 0)
         {
             return EventGroup.EMPTY_EVENTS_ARRAY;
         }
 
-        UMOEvent[] result = events.toArray();
+        Event[] result = events.toArray();
         Comparator cmp = this.getComparator();
 
         if (cmp != null)

@@ -10,8 +10,8 @@
 
 package org.mule.examples.loanbroker.tests;
 
-import org.mule.api.UMOException;
-import org.mule.api.UMOMessage;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleMessage;
 import org.mule.examples.loanbroker.messages.Customer;
 import org.mule.examples.loanbroker.messages.CustomerQuoteRequest;
 import org.mule.examples.loanbroker.messages.LoanQuote;
@@ -60,7 +60,7 @@ public abstract class AbstractAsynchronousLoanBrokerTestCase extends AbstractLoa
         client.dispatch("CustomerRequests", request, null);
 
         // Wait for asynchronous response
-        UMOMessage result = client.request("CustomerResponses", getDelay());
+        MuleMessage result = client.request("CustomerResponses", getDelay());
         assertNotNull("Result is null", result);
         assertFalse("Result is null", result.getPayload() instanceof NullPayload);
         assertTrue("Result should be LoanQuote but is " + result.getPayload().getClass().getName(),
@@ -143,14 +143,14 @@ public abstract class AbstractAsynchronousLoanBrokerTestCase extends AbstractLoa
             {
                 Thread.sleep(2000);
                 MuleClient client = new MuleClient();
-                UMOMessage result = null;
+                MuleMessage result = null;
                 for ( i = 0; i < numberOfRequests; i++)
                 {
                     try
                     {
                         result = client.request("CustomerResponses", 2000);
                     }
-                    catch (UMOException e)
+                    catch (AbstractMuleException e)
                     {
                         exListener.exceptionThrown(e);
                         break;

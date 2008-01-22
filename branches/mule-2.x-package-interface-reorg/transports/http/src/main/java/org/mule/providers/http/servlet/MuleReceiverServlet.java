@@ -11,11 +11,11 @@
 package org.mule.providers.http.servlet;
 
 import org.mule.RegistryContext;
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.EndpointException;
 import org.mule.api.transport.NoReceiverForEndpointException;
-import org.mule.api.transport.UMOMessageReceiver;
-import org.mule.impl.MuleMessage;
+import org.mule.api.transport.MessageReceiver;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.endpoint.DynamicEndpointURIEndpoint;
 import org.mule.impl.endpoint.MuleEndpointURI;
 import org.mule.impl.transport.AbstractMessageReceiver;
@@ -81,9 +81,9 @@ public class MuleReceiverServlet extends AbstractReceiverServlet
     {
         try
         {
-            UMOMessageReceiver receiver = getReceiverForURI(request);
-            UMOMessage responseMessage = null;
-            UMOMessage requestMessage = new MuleMessage(new HttpRequestMessageAdapter(request));
+            MessageReceiver receiver = getReceiverForURI(request);
+            MuleMessage responseMessage = null;
+            MuleMessage requestMessage = new DefaultMuleMessage(new HttpRequestMessageAdapter(request));
             requestMessage.setProperty(HttpConnector.HTTP_METHOD_PROPERTY, "HEAD");
             setupRequestMessage(request, requestMessage);
             receiver.routeMessage(requestMessage, true);
@@ -107,9 +107,9 @@ public class MuleReceiverServlet extends AbstractReceiverServlet
     {
         try
         {
-            UMOMessageReceiver receiver = getReceiverForURI(request);
-            UMOMessage responseMessage;
-            UMOMessage requestMessage = new MuleMessage(new HttpRequestMessageAdapter(request));
+            MessageReceiver receiver = getReceiverForURI(request);
+            MuleMessage responseMessage;
+            MuleMessage requestMessage = new DefaultMuleMessage(new HttpRequestMessageAdapter(request));
             requestMessage.setProperty(HttpConnector.HTTP_METHOD_PROPERTY, "GET");
             setupRequestMessage(request, requestMessage);
             responseMessage = receiver.routeMessage(requestMessage, true);
@@ -121,7 +121,7 @@ public class MuleReceiverServlet extends AbstractReceiverServlet
         }
     }
 
-    private void setupRequestMessage(HttpServletRequest request, UMOMessage requestMessage)
+    private void setupRequestMessage(HttpServletRequest request, MuleMessage requestMessage)
     {
         requestMessage.setProperty(HttpConnector.HTTP_REQUEST_PROPERTY, request.getRequestURI());
     }
@@ -131,9 +131,9 @@ public class MuleReceiverServlet extends AbstractReceiverServlet
     {
         try
         {
-            UMOMessageReceiver receiver = getReceiverForURI(request);
-            UMOMessage responseMessage;
-            UMOMessage requestMessage = new MuleMessage(new HttpRequestMessageAdapter(request));
+            MessageReceiver receiver = getReceiverForURI(request);
+            MuleMessage responseMessage;
+            MuleMessage requestMessage = new DefaultMuleMessage(new HttpRequestMessageAdapter(request));
             requestMessage.setProperty(HttpConnector.HTTP_METHOD_PROPERTY, "POST");
             setupRequestMessage(request, requestMessage);
             responseMessage = receiver.routeMessage(requestMessage, true);
@@ -153,9 +153,9 @@ public class MuleReceiverServlet extends AbstractReceiverServlet
     {
         try
         {
-            UMOMessageReceiver receiver = getReceiverForURI(request);
-            UMOMessage responseMessage;
-            UMOMessage requestMessage = new MuleMessage(new HttpRequestMessageAdapter(request));
+            MessageReceiver receiver = getReceiverForURI(request);
+            MuleMessage responseMessage;
+            MuleMessage requestMessage = new DefaultMuleMessage(new HttpRequestMessageAdapter(request));
             requestMessage.setProperty(HttpConnector.HTTP_METHOD_PROPERTY, "OPTIONS");
             setupRequestMessage(request, requestMessage);
             responseMessage = receiver.routeMessage(requestMessage, true);
@@ -175,9 +175,9 @@ public class MuleReceiverServlet extends AbstractReceiverServlet
     {
         try
         {
-            UMOMessageReceiver receiver = getReceiverForURI(request);
-            UMOMessage responseMessage;
-            UMOMessage requestMessage = new MuleMessage(new HttpRequestMessageAdapter(request));
+            MessageReceiver receiver = getReceiverForURI(request);
+            MuleMessage responseMessage;
+            MuleMessage requestMessage = new DefaultMuleMessage(new HttpRequestMessageAdapter(request));
             requestMessage.setProperty(HttpConnector.HTTP_METHOD_PROPERTY, "PUT");
             setupRequestMessage(request, requestMessage);
             responseMessage = receiver.routeMessage(requestMessage, true);
@@ -197,9 +197,9 @@ public class MuleReceiverServlet extends AbstractReceiverServlet
     {
         try
         {
-            UMOMessageReceiver receiver = getReceiverForURI(request);
-            UMOMessage responseMessage;
-            UMOMessage requestMessage = new MuleMessage(new HttpRequestMessageAdapter(request));
+            MessageReceiver receiver = getReceiverForURI(request);
+            MuleMessage responseMessage;
+            MuleMessage requestMessage = new DefaultMuleMessage(new HttpRequestMessageAdapter(request));
             requestMessage.setProperty(HttpConnector.HTTP_METHOD_PROPERTY, "DELETE");
             setupRequestMessage(request, requestMessage);
             responseMessage = receiver.routeMessage(requestMessage, true);
@@ -219,9 +219,9 @@ public class MuleReceiverServlet extends AbstractReceiverServlet
     {
         try
         {
-            UMOMessageReceiver receiver = getReceiverForURI(request);
-            UMOMessage responseMessage;
-            UMOMessage requestMessage = new MuleMessage(new HttpRequestMessageAdapter(request));
+            MessageReceiver receiver = getReceiverForURI(request);
+            MuleMessage responseMessage;
+            MuleMessage requestMessage = new DefaultMuleMessage(new HttpRequestMessageAdapter(request));
             requestMessage.setProperty(HttpConnector.HTTP_METHOD_PROPERTY, "TRACE");
             setupRequestMessage(request, requestMessage);
             responseMessage = receiver.routeMessage(requestMessage, true);
@@ -241,9 +241,9 @@ public class MuleReceiverServlet extends AbstractReceiverServlet
     {
         try
         {
-            UMOMessageReceiver receiver = getReceiverForURI(request);
-            UMOMessage responseMessage;
-            UMOMessage requestMessage = new MuleMessage(new HttpRequestMessageAdapter(request));
+            MessageReceiver receiver = getReceiverForURI(request);
+            MuleMessage responseMessage;
+            MuleMessage requestMessage = new DefaultMuleMessage(new HttpRequestMessageAdapter(request));
             requestMessage.setProperty(HttpConnector.HTTP_METHOD_PROPERTY, "CONNECT");
             setupRequestMessage(request, requestMessage);
             responseMessage = receiver.routeMessage(requestMessage, true);
@@ -258,7 +258,7 @@ public class MuleReceiverServlet extends AbstractReceiverServlet
         }
     }
 
-    protected UMOMessageReceiver getReceiverForURI(HttpServletRequest httpServletRequest)
+    protected MessageReceiver getReceiverForURI(HttpServletRequest httpServletRequest)
             throws EndpointException
     {
         String uri = getReceiverName(httpServletRequest);
@@ -268,7 +268,7 @@ public class MuleReceiverServlet extends AbstractReceiverServlet
                     HttpMessages.unableToGetEndpointUri(httpServletRequest.getRequestURI()));
         }
 
-        UMOMessageReceiver receiver = (UMOMessageReceiver) getReceivers().get(uri);
+        MessageReceiver receiver = (MessageReceiver) getReceivers().get(uri);
 
         if (receiver == null)
         {

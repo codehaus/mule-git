@@ -14,9 +14,9 @@ import org.mule.api.MuleContext;
 import org.mule.api.config.ConfigurationException;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.lifecycle.InitialisationException;
-import org.mule.api.lifecycle.UMOLifecycleManager;
-import org.mule.api.model.UMOModel;
-import org.mule.api.transport.UMOConnector;
+import org.mule.api.lifecycle.LifecycleManager;
+import org.mule.api.model.Model;
+import org.mule.api.transport.Connector;
 import org.mule.impl.config.MuleConfiguration;
 import org.mule.impl.config.builders.AbstractConfigurationBuilder;
 import org.mule.impl.model.seda.SedaModel;
@@ -226,7 +226,7 @@ public class DefaultMuleContextFactoryTestCase extends AbstractMuleTestCase
         // TestConfigurationBuilder
         assertEquals(TEST_STRING_VALUE, muleContext.getRegistry().lookupObject(TEST_STRING_KEY));
         assertNotNull(muleContext.getRegistry().lookupConnector(TEST_CONNECTOR_NAME));
-        assertEquals(TEST_CONNECTOR_NAME, ((UMOConnector) muleContext.getRegistry().lookupConnector(
+        assertEquals(TEST_CONNECTOR_NAME, ((Connector) muleContext.getRegistry().lookupConnector(
             TEST_CONNECTOR_NAME)).getName());
     }
 
@@ -237,7 +237,7 @@ public class DefaultMuleContextFactoryTestCase extends AbstractMuleTestCase
         assertEquals(TEST_STRING_VALUE2, muleContext.getRegistry().lookupObject(TEST_STRING_KEY2));
         assertNotNull(muleContext.getRegistry().lookupModel(TEST_MODEL_NAME));
         assertEquals(TEST_MODEL_NAME,
-            ((UMOModel) muleContext.getRegistry().lookupModel(TEST_MODEL_NAME)).getName());
+            ((Model) muleContext.getRegistry().lookupModel(TEST_MODEL_NAME)).getName());
     }
 
     /**
@@ -253,7 +253,7 @@ public class DefaultMuleContextFactoryTestCase extends AbstractMuleTestCase
         protected void doConfigure(MuleContext muleContext) throws Exception
         {
             muleContext.getRegistry().registerObject(TEST_STRING_KEY, TEST_STRING_VALUE);
-            UMOConnector testConnector = new TestConnector();
+            Connector testConnector = new TestConnector();
             testConnector.setName(TEST_CONNECTOR_NAME);
             muleContext.getRegistry().registerConnector(testConnector);
         }
@@ -264,7 +264,7 @@ public class DefaultMuleContextFactoryTestCase extends AbstractMuleTestCase
         protected void doConfigure(MuleContext muleContext) throws Exception
         {
             muleContext.getRegistry().registerObject(TEST_STRING_KEY2, TEST_STRING_VALUE2);
-            UMOModel testModel = new SedaModel();
+            Model testModel = new SedaModel();
             testModel.setName(TEST_MODEL_NAME);
             muleContext.getRegistry().registerModel(testModel);
         }
@@ -285,7 +285,7 @@ public class DefaultMuleContextFactoryTestCase extends AbstractMuleTestCase
 
     static class TestMuleContext extends DefaultMuleContext
     {
-        public TestMuleContext(UMOLifecycleManager lifecycleManager)
+        public TestMuleContext(LifecycleManager lifecycleManager)
         {
             super(lifecycleManager);
         }

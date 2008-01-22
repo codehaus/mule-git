@@ -10,7 +10,7 @@
 
 package org.mule.providers.tcp;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 
@@ -36,7 +36,7 @@ public class TcpFunctionalTestCase extends FunctionalTestCase
     {
         MuleClient client = new MuleClient();
         Map props = new HashMap();
-        UMOMessage result = client.send("clientEndpoint", TEST_MESSAGE, props);
+        MuleMessage result = client.send("clientEndpoint", TEST_MESSAGE, props);
         assertEquals(TEST_MESSAGE + " Received", result.getPayloadAsString());
     }
 
@@ -47,7 +47,7 @@ public class TcpFunctionalTestCase extends FunctionalTestCase
         client.dispatch("asyncClientEndpoint", TEST_MESSAGE, props);
         // MULE-2754
         Thread.sleep(100);
-        UMOMessage result =  client.request("asyncClientEndpoint", 10000);
+        MuleMessage result =  client.request("asyncClientEndpoint", 10000);
         assertNotNull(result);
         assertEquals(TEST_MESSAGE + " Received Async", result.getPayloadAsString());
     }
@@ -60,7 +60,7 @@ public class TcpFunctionalTestCase extends FunctionalTestCase
         int count = 1000;
         for (int i = 0; i < count; i++)
         {
-            UMOMessage result = client.send("clientEndpoint", TEST_MESSAGE, props);
+            MuleMessage result = client.send("clientEndpoint", TEST_MESSAGE, props);
             assertEquals(TEST_MESSAGE + " Received", result.getPayloadAsString());
         }
         long later = System.currentTimeMillis();

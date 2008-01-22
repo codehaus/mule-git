@@ -12,7 +12,7 @@ package org.mule.impl.transformer.encryption;
 
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.security.CryptoFailureException;
-import org.mule.api.transformer.UMOTransformer;
+import org.mule.api.transformer.Transformer;
 import org.mule.impl.security.PasswordBasedEncryptionStrategy;
 import org.mule.impl.transformer.encryption.DecryptionTransformer;
 import org.mule.impl.transformer.encryption.EncryptionTransformer;
@@ -50,7 +50,7 @@ public class EncryptionTransformerTestCase extends AbstractTransformerTestCase
         return "the quick brown fox jumped over the lazy dog the quick brown fox jumped over the lazy dog the quick brown fox jumped over the lazy dog";
     }
 
-    public UMOTransformer getTransformer()
+    public Transformer getTransformer()
     {
         EncryptionTransformer transformer = new EncryptionTransformer();
         transformer.setStrategy(strat);
@@ -65,7 +65,7 @@ public class EncryptionTransformerTestCase extends AbstractTransformerTestCase
         return transformer;
     }
 
-    public UMOTransformer getRoundTripTransformer()
+    public Transformer getRoundTripTransformer()
     {
         DecryptionTransformer transformer = new DecryptionTransformer();
         transformer.setStrategy(strat);

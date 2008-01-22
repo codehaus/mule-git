@@ -11,7 +11,7 @@
 package org.mule.impl.internal.notifications;
 
 import org.mule.api.MuleContext;
-import org.mule.api.context.UMOServerNotification;
+import org.mule.api.context.ServerNotification;
 
 /**
  * <code>ManagerNotification</code> is fired when an event such as the manager
@@ -19,7 +19,7 @@ import org.mule.api.context.UMOServerNotification;
  *muleContext.
  *
  */
-public class ManagerNotification extends UMOServerNotification implements BlockingServerEvent
+public class ManagerNotification extends ServerNotification implements BlockingServerEvent
 {
     /**
      * Serial version

@@ -10,12 +10,12 @@
 
 package org.mule.impl.routing;
 
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.routing.RoutingException;
-import org.mule.impl.MuleMessage;
+import org.mule.impl.DefaultMuleMessage;
+import org.mule.impl.config.i18n.Message;
 import org.mule.impl.routing.inbound.EventGroup;
 import org.mule.impl.transport.NullPayload;
-import org.mule.imple.config.i18n.Message;
 
 /**
  * TODO document
@@ -30,30 +30,30 @@ public class AggregationException extends RoutingException
 
     private EventGroup eventGroup = null;
 
-    public AggregationException(EventGroup eventGroup, UMOImmutableEndpoint endpoint)
+    public AggregationException(EventGroup eventGroup, ImmutableEndpoint endpoint)
     {
-        super(new MuleMessage(NullPayload.getInstance()), endpoint);
+        super(new DefaultMuleMessage(NullPayload.getInstance()), endpoint);
         this.eventGroup = eventGroup;
     }
 
-    public AggregationException(EventGroup eventGroup, UMOImmutableEndpoint endpoint, Throwable cause)
+    public AggregationException(EventGroup eventGroup, ImmutableEndpoint endpoint, Throwable cause)
     {
-        super(new MuleMessage(NullPayload.getInstance()), endpoint, cause);
+        super(new DefaultMuleMessage(NullPayload.getInstance()), endpoint, cause);
         this.eventGroup = eventGroup;
     }
 
-    public AggregationException(Message message, EventGroup eventGroup, UMOImmutableEndpoint endpoint)
+    public AggregationException(Message message, EventGroup eventGroup, ImmutableEndpoint endpoint)
     {
-        super(message, new MuleMessage(NullPayload.getInstance()), endpoint);
+        super(message, new DefaultMuleMessage(NullPayload.getInstance()), endpoint);
         this.eventGroup = eventGroup;
     }
 
     public AggregationException(Message message,
                                 EventGroup eventGroup,
-                                UMOImmutableEndpoint endpoint,
+                                ImmutableEndpoint endpoint,
                                 Throwable cause)
     {
-        super(message, new MuleMessage(NullPayload.getInstance()), endpoint, cause);
+        super(message, new DefaultMuleMessage(NullPayload.getInstance()), endpoint, cause);
         this.eventGroup = eventGroup;
     }
 

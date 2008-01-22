@@ -10,7 +10,7 @@
 
 package org.mule.test.usecases.routing;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 
@@ -33,7 +33,7 @@ public class ForwardingMessageSplitterTestCase extends FunctionalTestCase
         payload.add(new Integer(3));
         payload.add(new Exception());
         client.send("vm://in.queue", payload, null);
-        UMOMessage m = client.request("vm://component.1", 2000);
+        MuleMessage m = client.request("vm://component.1", 2000);
         assertNotNull(m);
         assertTrue(m.getPayload() instanceof String);
         m = client.request("vm://component.2", 2000);

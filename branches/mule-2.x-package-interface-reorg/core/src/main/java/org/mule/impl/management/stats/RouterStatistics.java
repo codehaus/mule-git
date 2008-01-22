@@ -10,7 +10,7 @@
 
 package org.mule.impl.management.stats;
 
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.management.stats.Statistics;
 import org.mule.impl.management.stats.printers.SimplePrinter;
 
@@ -110,7 +110,7 @@ public class RouterStatistics implements Statistics
         {
             for (int i = 0; i < list.size(); i++)
             {
-                incrementRoutedMessage((UMOImmutableEndpoint) list.get(i));
+                incrementRoutedMessage((ImmutableEndpoint) list.get(i));
             }
         }
     }
@@ -120,7 +120,7 @@ public class RouterStatistics implements Statistics
      *
      * @param endpoint The endpoint
      */
-    public synchronized void incrementRoutedMessage(UMOImmutableEndpoint endpoint)
+    public synchronized void incrementRoutedMessage(ImmutableEndpoint endpoint)
     {
         if (endpoint == null)
         {

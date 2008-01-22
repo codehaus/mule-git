@@ -12,13 +12,13 @@ package org.mule.providers.vm;
 
 import org.mule.api.MuleContext;
 import org.mule.api.TransactionException;
-import org.mule.api.UMOTransaction;
-import org.mule.api.UMOTransactionFactory;
+import org.mule.api.Transaction;
+import org.mule.api.TransactionFactory;
 
-public class VMTransactionFactory implements UMOTransactionFactory
+public class VMTransactionFactory implements TransactionFactory
 {
 
-    public UMOTransaction beginTransaction(MuleContext muleContext) throws TransactionException
+    public Transaction beginTransaction(MuleContext muleContext) throws TransactionException
     {
         VMTransaction tx = new VMTransaction(muleContext);
         tx.begin();

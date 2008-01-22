@@ -10,18 +10,18 @@
 
 package org.mule.providers.cxf;
 
-import org.mule.api.UMOEventContext;
-import org.mule.api.UMOException;
-import org.mule.api.UMOMessage;
+import org.mule.api.EventContext;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleMessage;
 import org.mule.api.config.ConfigurationException;
 import org.mule.api.endpoint.EndpointNotFoundException;
-import org.mule.api.endpoint.UMOEndpointURI;
+import org.mule.api.endpoint.EndpointURI;
 import org.mule.api.lifecycle.Callable;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.lifecycle.Lifecycle;
-import org.mule.impl.MuleMessage;
-import org.mule.impl.message.ExceptionPayload;
-import org.mule.imple.config.i18n.MessageFactory;
+import org.mule.impl.DefaultMuleMessage;
+import org.mule.impl.config.i18n.MessageFactory;
+import org.mule.impl.message.DefaultExceptionPayload;
 import org.mule.providers.cxf.transport.MuleUniversalDestination;
 import org.mule.providers.cxf.transport.MuleUniversalTransport;
 import org.mule.providers.http.HttpConnector;
@@ -90,7 +90,7 @@ public class CxfServiceComponent implements Callable, Lifecycle
     }
 
 
-    public Object onCall(UMOEventContext eventContext) throws Exception
+    public Object onCall(EventContext eventContext) throws Exception
     {
         if (logger.isDebugEnabled())
         {
@@ -113,7 +113,7 @@ public class CxfServiceComponent implements Callable, Lifecycle
         }
     }
 
-    protected Object generateWSDLOrXSD(UMOEventContext eventContext, String req)
+    protected Object generateWSDLOrXSD(EventContext eventContext, String req)
         throws EndpointNotFoundException, IOException
     {
         // TODO: Is there a way to make this not so ugly?
@@ -159,13 +159,13 @@ public class CxfServiceComponent implements Callable, Lifecycle
             msg = out.toString();
         }
 
-        UMOMessage result = new MuleMessage(msg);
+        MuleMessage result = new DefaultMuleMessage(msg);
         result.setProperty(HttpConstants.HEADER_CONTENT_TYPE, ct);
 
         return result;
     }
 
-    protected Object sendToDestination(UMOEventContext ctx, String uri) throws UMOException, IOException
+    protected Object sendToDestination(EventContext ctx, String uri) throws AbstractMuleException, IOException
     {
         try
         {
@@ -222,13 +222,13 @@ public class CxfServiceComponent implements Callable, Lifecycle
             Exception ex = resMsg.getContent(Exception.class);
             if (ex != null)
             {
-                ExceptionPayload exceptionPayload = new ExceptionPayload(new Exception(result.toString()));
+                DefaultExceptionPayload exceptionPayload = new DefaultExceptionPayload(new Exception(result.toString()));
                 ctx.getMessage().setExceptionPayload(exceptionPayload);
             }
 
             return result;
         }
-        catch (UMOException e)
+        catch (AbstractMuleException e)
         {
             logger.warn("Could not dispatch message to XFire!", e);
             throw e;
@@ -243,10 +243,10 @@ public class CxfServiceComponent implements Callable, Lifecycle
      * 
      * @param context the event context
      * @return The inputstream for the current message
-     * @throws UMOException
+     * @throws AbstractMuleException
      */
 
-    protected InputStream getMessageStream(UMOEventContext context) throws UMOException
+    protected InputStream getMessageStream(EventContext context) throws AbstractMuleException
     {
         InputStream is;
         Object eventMsgPayload = context.transformMessage();
@@ -262,7 +262,7 @@ public class CxfServiceComponent implements Callable, Lifecycle
         return is;
     }
 
-    protected String getSoapAction(UMOMessage message)
+    protected String getSoapAction(MuleMessage message)
     {
         String action = (String) message.getProperty(SoapConstants.SOAP_ACTION_PROPERTY);
 
@@ -312,12 +312,12 @@ public class CxfServiceComponent implements Callable, Lifecycle
         }        
     }
 
-    public void start() throws UMOException
+    public void start() throws AbstractMuleException
     {
         // template method
     }
     
-    public void stop() throws UMOException
+    public void stop() throws AbstractMuleException
     {
         // template method
     }

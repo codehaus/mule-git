@@ -11,7 +11,7 @@
 package org.mule.impl.container;
 
 import org.mule.api.context.ObjectNotFoundException;
-import org.mule.api.context.UMOContainerContext;
+import org.mule.api.context.ContainerContext;
 import org.mule.impl.jndi.MuleInitialContextFactory;
 import org.mule.tck.model.AbstractContainerContextTestCase;
 import org.mule.tck.testmodels.fruit.Apple;
@@ -32,7 +32,7 @@ public class EjbContainerContextTestCase extends AbstractContainerContextTestCas
      * 
      * @see org.mule.tck.model.AbstractComponentResolverTestCase#getConfiguredResolver()
      */
-    public UMOContainerContext getContainerContext()
+    public ContainerContext getContainerContext()
     {
         return context;
     }
@@ -57,7 +57,7 @@ public class EjbContainerContextTestCase extends AbstractContainerContextTestCas
     // have to override base class here because the EJB container expects only beans,
     // and the fruit example classes are not
     // @Override
-    protected void doContentTest(UMOContainerContext container) throws Exception
+    protected void doContentTest(ContainerContext container) throws Exception
     {
         Object result = container.getComponent(EJB_NAME);
         assertNotNull("Component should exist in container", result);
@@ -65,7 +65,7 @@ public class EjbContainerContextTestCase extends AbstractContainerContextTestCas
 
     public void testInvalidObjectLookup() throws Exception
     {
-        UMOContainerContext container = getContainerContext();
+        ContainerContext container = getContainerContext();
         container.initialise();
         assertNotNull(container);
 

@@ -10,7 +10,7 @@
 
 package org.mule.samples.stockquote;
 
-import org.mule.imple.config.i18n.MessageFactory;
+import org.mule.impl.config.i18n.MessageFactory;
 
 /**
  * <code>LocaleMessage</code> is a convenience interface for retrieving

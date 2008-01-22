@@ -10,10 +10,10 @@
 
 package org.mule.impl.component.builder;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.impl.NoSatisfiableMethodsException;
 import org.mule.impl.TooManySatisfiableMethodsException;
-import org.mule.imple.config.i18n.CoreMessages;
+import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.util.ClassUtils;
 
 import java.lang.reflect.Method;
@@ -32,7 +32,7 @@ public class ReflectionMessageBuilder extends AbstractMessageBuilder
     // we don't want to match these methods when looking for a method
     protected final Set ignoreMethods = new HashSet(Arrays.asList(new String[]{"equals", "getInvocationHandler"}));
 
-    public Object buildMessage(UMOMessage request, UMOMessage response) throws MessageBuilderException
+    public Object buildMessage(MuleMessage request, MuleMessage response) throws MessageBuilderException
     {
         Object master = request.getPayload();
         Object property = response.getPayload();

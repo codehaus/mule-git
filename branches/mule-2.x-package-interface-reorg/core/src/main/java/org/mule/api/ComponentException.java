@@ -10,8 +10,8 @@
 
 package org.mule.api;
 
-import org.mule.imple.config.i18n.CoreMessages;
-import org.mule.imple.config.i18n.Message;
+import org.mule.impl.config.i18n.CoreMessages;
+import org.mule.impl.config.i18n.Message;
 
 /**
  * <code>ComponentException</code> should be thrown when some action on a component
@@ -25,12 +25,12 @@ public class ComponentException extends MessagingException
      */
     private static final long serialVersionUID = 56178344205041599L;
 
-    private final transient UMOComponent component;
+    private final transient Component component;
 
     /**
      * @param message the exception message
      */
-    public ComponentException(Message message, UMOMessage umoMessage, UMOComponent component)
+    public ComponentException(Message message, MuleMessage umoMessage, Component component)
     {
         super(generateMessage(message, component), umoMessage);
         this.component = component;
@@ -40,24 +40,24 @@ public class ComponentException extends MessagingException
      * @param message the exception message
      * @param cause the exception that cause this exception to be thrown
      */
-    public ComponentException(Message message, UMOMessage umoMessage, UMOComponent component, Throwable cause)
+    public ComponentException(Message message, MuleMessage umoMessage, Component component, Throwable cause)
     {
         super(generateMessage(message, component), umoMessage, cause);
         this.component = component;
     }
 
-    public ComponentException(UMOMessage umoMessage, UMOComponent component, Throwable cause)
+    public ComponentException(MuleMessage umoMessage, Component component, Throwable cause)
     {
         super(generateMessage(null, component), umoMessage, cause);
         this.component = component;
     }
 
-    public UMOComponent getComponent()
+    public Component getComponent()
     {
         return component;
     }
 
-    private static Message generateMessage(Message previousMessage, UMOComponent component)
+    private static Message generateMessage(Message previousMessage, Component component)
     {
         Message returnMessage = CoreMessages.componentCausedErrorIs(component);
         if (previousMessage != null)

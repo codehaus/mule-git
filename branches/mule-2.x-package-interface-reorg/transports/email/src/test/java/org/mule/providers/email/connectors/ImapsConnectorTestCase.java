@@ -10,7 +10,7 @@
 
 package org.mule.providers.email.connectors;
 
-import org.mule.api.transport.UMOConnector;
+import org.mule.api.transport.Connector;
 import org.mule.providers.email.ImapsConnector;
 
 import com.icegreen.greenmail.util.ServerSetup;
@@ -26,7 +26,7 @@ public class ImapsConnectorTestCase extends AbstractReceivingMailConnectorTestCa
         super(ServerSetup.PROTOCOL_IMAPS, 50011);
     }
 
-    public UMOConnector createConnector() throws Exception
+    public Connector createConnector() throws Exception
     {
         ImapsConnector connector = new ImapsConnector();
         connector.setName("ImapsConnector");

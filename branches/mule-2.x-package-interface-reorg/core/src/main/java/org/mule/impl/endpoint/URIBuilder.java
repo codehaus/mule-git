@@ -11,7 +11,7 @@
 package org.mule.impl.endpoint;
 
 import org.mule.api.endpoint.EndpointException;
-import org.mule.api.endpoint.UMOEndpointURI;
+import org.mule.api.endpoint.EndpointURI;
 import org.mule.util.ClassUtils;
 
 import java.util.HashMap;
@@ -86,7 +86,7 @@ public class URIBuilder
         // default
     }
 
-    public URIBuilder(UMOEndpointURI endpointURI)
+    public URIBuilder(EndpointURI endpointURI)
     {
         cache.set(endpointURI);
     }
@@ -164,13 +164,13 @@ public class URIBuilder
         this.queryMap = queryMap;
     }
 
-    public UMOEndpointURI getEndpoint()
+    public EndpointURI getEndpoint()
     {
         if (null == cache.get())
         {
             try
             {
-                UMOEndpointURI endpointUri = new MuleEndpointURI(getConstructor());
+                EndpointURI endpointUri = new MuleEndpointURI(getConstructor());
                 cache.compareAndSet(null, endpointUri);
             }
             catch (EndpointException e)
@@ -178,7 +178,7 @@ public class URIBuilder
                 throw (IllegalStateException)new IllegalStateException("Bad endpoint configuration").initCause(e);
             }
         }
-        return (UMOEndpointURI)cache.get();
+        return (EndpointURI)cache.get();
     }
 
     /**

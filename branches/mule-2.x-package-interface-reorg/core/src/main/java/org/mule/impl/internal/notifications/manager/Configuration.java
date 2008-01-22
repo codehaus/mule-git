@@ -10,9 +10,9 @@
 
 package org.mule.impl.internal.notifications.manager;
 
-import org.mule.api.context.UMOServerNotification;
-import org.mule.api.context.UMOServerNotificationListener;
-import org.mule.imple.config.i18n.CoreMessages;
+import org.mule.api.context.ServerNotification;
+import org.mule.api.context.ServerNotificationListener;
+import org.mule.impl.config.i18n.CoreMessages;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -42,11 +42,11 @@ class Configuration
     synchronized void addInterfaceToType(Class iface, Class type)
     {
         dirty = true;
-        if (!UMOServerNotification.class.isAssignableFrom(type))
+        if (!ServerNotification.class.isAssignableFrom(type))
         {
             throw new IllegalArgumentException(
                     CoreMessages.propertyIsNotSupportedType("type",
-                            UMOServerNotification.class, type).getMessage());
+                            ServerNotification.class, type).getMessage());
         }
         if (!interfaceToTypes.containsKey(iface))
         {
@@ -90,7 +90,7 @@ class Configuration
         }
     }
 
-    synchronized void removeListener(UMOServerNotificationListener listener)
+    synchronized void removeListener(ServerNotificationListener listener)
     {
         dirty = true;
         Set toRemove = new HashSet();
@@ -110,7 +110,7 @@ class Configuration
         dirty = true;
         for (Iterator listener = listeners.iterator(); listener.hasNext();)
         {
-            removeListener((UMOServerNotificationListener) listener.next());
+            removeListener((ServerNotificationListener) listener.next());
         }
     }
 

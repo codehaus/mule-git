@@ -12,16 +12,17 @@ package org.mule.providers.jms;
 
 import org.mule.api.MessagingException;
 import org.mule.api.TransactionException;
-import org.mule.api.UMOComponent;
-import org.mule.api.UMOException;
-import org.mule.api.UMOTransaction;
-import org.mule.api.context.UMOServerNotification;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.Component;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.Transaction;
+import org.mule.api.context.ServerNotification;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.lifecycle.StartException;
 import org.mule.api.transport.ReplyToHandler;
-import org.mule.api.transport.UMOMessageAdapter;
+import org.mule.api.transport.MessageAdapter;
 import org.mule.impl.config.ExceptionHelper;
+import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.impl.internal.notifications.ConnectionNotification;
 import org.mule.impl.internal.notifications.ConnectionNotificationListener;
 import org.mule.impl.internal.notifications.NotificationException;
@@ -29,7 +30,6 @@ import org.mule.impl.transaction.TransactionCoordination;
 import org.mule.impl.transport.AbstractConnector;
 import org.mule.impl.transport.ConnectException;
 import org.mule.impl.transport.FatalConnectException;
-import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.providers.jms.i18n.JmsMessages;
 import org.mule.providers.jms.xa.ConnectionFactoryWrapper;
 
@@ -231,7 +231,7 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
                         jmsConnector.stop();
                         jmsConnector.initialised.set(false);
                     }
-                    catch (UMOException e)
+                    catch (AbstractMuleException e)
                     {
                         logger.warn(e.getMessage(), e);
                     }
@@ -246,7 +246,7 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
                     {
                         logger.fatal("Failed to reconnect to JMS server. I'm giving up.");
                     }
-                    catch (UMOException umoex)
+                    catch (AbstractMuleException umoex)
                     {
                         throw new UnhandledException("Failed to recover a connector.", umoex);
                     }
@@ -312,21 +312,21 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
         }
     }
 
-    public UMOMessageAdapter getMessageAdapter(Object message) throws MessagingException
+    public MessageAdapter getMessageAdapter(Object message) throws MessagingException
     {
         JmsMessageAdapter adapter = (JmsMessageAdapter) super.getMessageAdapter(message);
         adapter.setSpecification(this.getSpecification());
         return adapter;
     }
 
-    protected Object getReceiverKey(UMOComponent component, UMOImmutableEndpoint endpoint)
+    protected Object getReceiverKey(Component component, ImmutableEndpoint endpoint)
     {
         return component.getName() + "~" + endpoint.getEndpointURI().getAddress();
     }
 
     public Session getSessionFromTransaction()
     {
-        UMOTransaction tx = TransactionCoordination.getInstance().getTransaction();
+        Transaction tx = TransactionCoordination.getInstance().getTransaction();
         if (tx != null)
         {
             if (tx.hasResource(connection))
@@ -349,7 +349,7 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
         return null;
     }
 
-    public Session getSession(UMOImmutableEndpoint endpoint) throws JMSException
+    public Session getSession(ImmutableEndpoint endpoint) throws JMSException
     {
         final boolean topic = getTopicResolver().isTopic(endpoint);
         return getSession(endpoint.getTransactionConfig().isTransacted(), topic);
@@ -367,7 +367,7 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
             return session;
         }
 
-        UMOTransaction tx = TransactionCoordination.getInstance().getTransaction();
+        Transaction tx = TransactionCoordination.getInstance().getTransaction();
 
         if (logger.isDebugEnabled())
         {
@@ -396,7 +396,7 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
         return session;
     }
 
-    protected void doStart() throws UMOException
+    protected void doStart() throws AbstractMuleException
     {
         if (connection != null)
         {
@@ -411,7 +411,7 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
         }
     }
 
-    protected void doStop() throws UMOException
+    protected void doStop() throws AbstractMuleException
     {
         // template method
     }
@@ -421,7 +421,7 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
         return new JmsReplyToHandler(this, getDefaultResponseTransformers());
     }
 
-    public void onNotification(UMOServerNotification notification)
+    public void onNotification(ServerNotification notification)
     {
         if (notification.getAction() == ConnectionNotification.CONNECTION_DISCONNECTED
                 || notification.getAction() == ConnectionNotification.CONNECTION_FAILED)

@@ -10,7 +10,7 @@
 
 package org.mule.impl.internal.notifications;
 
-import org.mule.api.context.UMOServerNotification;
+import org.mule.api.context.ServerNotification;
 
 /**
  * <code>SecurityNotification</code> is fired when a request for authorisation
@@ -21,7 +21,7 @@ import org.mule.api.context.UMOServerNotification;
  * @see org.mule.MuleManager
  * @see org.mule.api.context.UMOManager
  */
-public class SecurityNotification extends UMOServerNotification
+public class SecurityNotification extends ServerNotification
 {
     /**
      * Serial version

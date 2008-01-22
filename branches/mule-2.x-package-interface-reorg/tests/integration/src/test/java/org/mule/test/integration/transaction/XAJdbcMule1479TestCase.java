@@ -103,7 +103,7 @@ public class XAJdbcMule1479TestCase extends FunctionalTestCase
 
         logger.debug("########### receiving message");
 
-//        UMOMessage res = client.receive("jms://queue.out", 1000);
+//        MuleMessage res = client.receive("jms://queue.out", 1000);
 //        assertNotNull(res);
 
         Thread.sleep(5000000);

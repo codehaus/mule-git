@@ -10,7 +10,7 @@
 
 package org.mule.providers.vm;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 
@@ -34,7 +34,7 @@ public class VMQueueTestCase extends FunctionalTestCase
     {
         MuleClient client = new MuleClient();
         client.dispatch("queue", "Marco", null);
-        UMOMessage response = client.request("queue", WAIT);
+        MuleMessage response = client.request("queue", WAIT);
         assertNotNull("Response is null", response);
         assertEquals("Marco", response.getPayload());
     }
@@ -51,7 +51,7 @@ public class VMQueueTestCase extends FunctionalTestCase
 
         for (int i = 0; i < 3; ++i)
         {
-            UMOMessage response = client.request("queue", WAIT);
+            MuleMessage response = client.request("queue", WAIT);
             assertNotNull("Response is null", response);
             String person = (String) response.getPayload();
             assertTrue(person, polos.contains(person));
@@ -71,7 +71,7 @@ public class VMQueueTestCase extends FunctionalTestCase
 
         for (int i = 0; i < 3; ++i)
         {
-            UMOMessage response = client.request("queue", WAIT);
+            MuleMessage response = client.request("queue", WAIT);
             assertNotNull("Response is null", response);
             String person = (String) response.getPayload();
             String name = new StringTokenizer(person).nextToken();
@@ -92,7 +92,7 @@ public class VMQueueTestCase extends FunctionalTestCase
 
         for (int i = 0; i < 3; ++i)
         {
-            UMOMessage response = client.request("queue", WAIT);
+            MuleMessage response = client.request("queue", WAIT);
             assertNotNull("Response is null", response);
             String person = (String) response.getPayload();
             String name = new StringTokenizer(person).nextToken();

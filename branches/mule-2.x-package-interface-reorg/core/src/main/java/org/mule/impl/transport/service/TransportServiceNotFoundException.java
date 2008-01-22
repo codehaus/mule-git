@@ -10,7 +10,7 @@
 
 package org.mule.impl.transport.service;
 
-import org.mule.imple.config.i18n.MessageFactory;
+import org.mule.impl.config.i18n.MessageFactory;
 
 /**
  * <code>TransportServiceNotFoundException</code> is thorown if no matching service

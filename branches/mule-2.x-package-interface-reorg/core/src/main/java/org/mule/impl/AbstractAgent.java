@@ -10,15 +10,15 @@
 package org.mule.impl;
 
 import org.mule.api.MuleContext;
+import org.mule.api.context.Agent;
 import org.mule.api.context.MuleContextAware;
-import org.mule.api.context.UMOAgent;
 import org.mule.api.lifecycle.InitialisationException;
 
 /**
  * Implements common methods for all Agents. Importantly, the Management context is made available to Agents that
  * extend this.
  */
-public abstract class AbstractAgent implements UMOAgent, MuleContextAware
+public abstract class AbstractAgent implements Agent, MuleContextAware
 {
 
     protected MuleContext muleContext;

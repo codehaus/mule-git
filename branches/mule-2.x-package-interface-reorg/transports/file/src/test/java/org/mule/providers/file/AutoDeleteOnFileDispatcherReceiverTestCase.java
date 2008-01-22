@@ -11,9 +11,9 @@
 package org.mule.providers.file;
 
 import org.mule.RegistryContext;
-import org.mule.api.UMOEvent;
-import org.mule.api.UMOMessage;
-import org.mule.api.transport.UMOConnector;
+import org.mule.api.Event;
+import org.mule.api.MuleMessage;
+import org.mule.api.transport.Connector;
 import org.mule.impl.RequestContext;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.util.FileUtils;
@@ -26,16 +26,16 @@ public class AutoDeleteOnFileDispatcherReceiverTestCase extends AbstractMuleTest
     private File validMessage;
     private String tempDirName = "input";
     File tempDir;
-    UMOConnector connector;
+    Connector connector;
 
     public void testAutoDeleteFalseOnDispatcher() throws Exception
     {
         ((FileConnector)connector).setAutoDelete(false);
 
-        UMOEvent event = getTestEvent("TestData");
+        Event event = getTestEvent("TestData");
         event = RequestContext.setEvent(event);
 
-        UMOMessage message = RequestContext.getEventContext().receiveEvent(getTestEndpointURI()+"/"+tempDirName+"?connector=FileConnector", 50000);
+        MuleMessage message = RequestContext.getEventContext().receiveEvent(getTestEndpointURI()+"/"+tempDirName+"?connector=FileConnector", 50000);
         // read the payload into a string so the file is deleted on InputStream.close()
         assertNotNull(message.getPayloadAsString());
 
@@ -52,10 +52,10 @@ public class AutoDeleteOnFileDispatcherReceiverTestCase extends AbstractMuleTest
     {
         ((FileConnector)connector).setAutoDelete(true);
 
-        UMOEvent event = getTestEvent("TestData");
+        Event event = getTestEvent("TestData");
         event = RequestContext.setEvent(event);
 
-        UMOMessage message = RequestContext.getEventContext().receiveEvent(getTestEndpointURI()+"/"+tempDirName, 50000);
+        MuleMessage message = RequestContext.getEventContext().receiveEvent(getTestEndpointURI()+"/"+tempDirName, 50000);
         assertNotNull(message.getPayload());
 
         File[] files = tempDir.listFiles();
@@ -84,8 +84,8 @@ public class AutoDeleteOnFileDispatcherReceiverTestCase extends AbstractMuleTest
         super.doTearDown();
     }
 
-    public UMOConnector getConnector() throws Exception {
-        UMOConnector connector = new FileConnector();
+    public Connector getConnector() throws Exception {
+        Connector connector = new FileConnector();
         connector.setName("FileConnector");
         connector.setMuleContext(muleContext);
         muleContext.getRegistry().registerConnector(connector);

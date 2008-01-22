@@ -10,14 +10,14 @@
 
 package org.mule.impl.internal.notifications;
 
-import org.mule.api.context.UMOServerNotificationListener;
+import org.mule.api.context.ServerNotificationListener;
 
 /**
  * <code>ExceptionNotificationListener</code> is an observer interface that
  * objects can implement and then register themselves with the Mule manager to be
  * notified when a Exception event occurs.
  */
-public interface ExceptionNotificationListener extends UMOServerNotificationListener
+public interface ExceptionNotificationListener extends ServerNotificationListener
 {
     // no methods
 }

@@ -10,9 +10,9 @@
 
 package org.mule.test.integration.providers.axis;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
-import org.mule.impl.MuleMessage;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.providers.soap.axis.AxisConnector;
 import org.mule.tck.FunctionalTestCase;
 
@@ -38,8 +38,8 @@ public abstract class AbstractAxisOverJMSWithTransactionsTestCase extends Functi
 
     public void testTransactionsOverAxis() throws Exception{
         MuleClient client = new MuleClient();
-        client.dispatch("axis:jms://TestComponent?method=echo", new MuleMessage("test"));
-        UMOMessage message = client.request("jms://testout", 5000);
+        client.dispatch("axis:jms://TestComponent?method=echo", new DefaultMuleMessage("test"));
+        MuleMessage message = client.request("jms://testout", 5000);
         assertNotNull(message.getPayload());
         assertTrue(message.getPayloadAsString().equals("test"));
     }

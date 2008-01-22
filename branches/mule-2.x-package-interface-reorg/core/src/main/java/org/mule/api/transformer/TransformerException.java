@@ -11,8 +11,8 @@
 package org.mule.api.transformer;
 
 import org.mule.api.endpoint.EndpointException;
+import org.mule.impl.config.i18n.Message;
 import org.mule.impl.transformer.TransformerUtils;
-import org.mule.imple.config.i18n.Message;
 
 import java.util.List;
 
@@ -28,12 +28,12 @@ public class TransformerException extends EndpointException
      */
     private static final long serialVersionUID = 2943589828020763649L;
 
-    private transient UMOTransformer transformer;
+    private transient Transformer transformer;
 
     /**
      * @param message the exception message
      */
-    public TransformerException(Message message, UMOTransformer transformer)
+    public TransformerException(Message message, Transformer transformer)
     {
         super(message);
         this.transformer = transformer;
@@ -51,7 +51,7 @@ public class TransformerException extends EndpointException
      * @param message the exception message
      * @param cause the exception that cause this exception to be thrown
      */
-    public TransformerException(Message message, UMOTransformer transformer, Throwable cause)
+    public TransformerException(Message message, Transformer transformer, Throwable cause)
     {
         super(message, cause);
         this.transformer = transformer;
@@ -65,7 +65,7 @@ public class TransformerException extends EndpointException
         addInfo("Transformer", TransformerUtils.toString(transformers));
     }
 
-    public TransformerException(UMOTransformer transformer, Throwable cause)
+    public TransformerException(Transformer transformer, Throwable cause)
     {
         super(cause);
         this.transformer = transformer;
@@ -96,7 +96,7 @@ public class TransformerException extends EndpointException
         super(message);
     }
 
-    public UMOTransformer getTransformer()
+    public Transformer getTransformer()
     {
         return transformer;
     }

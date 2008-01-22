@@ -10,33 +10,33 @@
 package org.mule.impl;
 
 import org.mule.RegistryContext;
+import org.mule.api.AbstractMuleException;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleRuntimeException;
-import org.mule.api.UMOException;
 import org.mule.api.config.MuleProperties;
-import org.mule.api.context.UMOAgent;
-import org.mule.api.context.UMOServerNotification;
-import org.mule.api.context.UMOServerNotificationListener;
-import org.mule.api.context.UMOTransactionManagerFactory;
-import org.mule.api.context.UMOWorkManager;
+import org.mule.api.context.Agent;
+import org.mule.api.context.ServerNotification;
+import org.mule.api.context.ServerNotificationListener;
+import org.mule.api.context.TransactionManagerFactory;
+import org.mule.api.context.WorkManager;
 import org.mule.api.lifecycle.Disposable;
 import org.mule.api.lifecycle.FatalException;
 import org.mule.api.lifecycle.Initialisable;
 import org.mule.api.lifecycle.InitialisationException;
+import org.mule.api.lifecycle.LifecycleManager;
 import org.mule.api.lifecycle.Startable;
 import org.mule.api.lifecycle.Stoppable;
-import org.mule.api.lifecycle.UMOLifecycleManager;
 import org.mule.api.registry.RegistrationException;
 import org.mule.api.registry.Registry;
-import org.mule.api.security.UMOSecurityManager;
-import org.mule.api.store.UMOStore;
+import org.mule.api.security.SecurityManager;
+import org.mule.api.store.Store;
 import org.mule.impl.config.MuleConfiguration;
 import org.mule.impl.config.MuleManifest;
+import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.impl.internal.notifications.ManagerNotification;
 import org.mule.impl.internal.notifications.NotificationException;
 import org.mule.impl.internal.notifications.manager.ServerNotificationManager;
 import org.mule.impl.management.stats.AllStatistics;
-import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.util.FileUtils;
 import org.mule.util.StringMessageUtils;
 import org.mule.util.StringUtils;
@@ -83,13 +83,13 @@ public class DefaultMuleContext implements MuleContext
     /** stats used for management */
     private AllStatistics stats = new AllStatistics();
 
-    private UMOWorkManager workManager;
+    private WorkManager workManager;
 
     /**
      * LifecycleManager for the MuleContext.  Note: this is NOT the same lifecycle manager
      * as the one in the Registry.
      */
-    protected UMOLifecycleManager lifecycleManager;
+    protected LifecycleManager lifecycleManager;
 
     protected Directories directories;
 
@@ -97,7 +97,7 @@ public class DefaultMuleContext implements MuleContext
     
     protected ServerNotificationManager notificationManager;
 
-    public DefaultMuleContext(UMOLifecycleManager lifecycleManager)
+    public DefaultMuleContext(LifecycleManager lifecycleManager)
     {
         if (lifecycleManager == null)
         {
@@ -182,7 +182,7 @@ public class DefaultMuleContext implements MuleContext
         systemName = domain + "." + clusterId + "." + id;
     }
 
-    public synchronized void start() throws UMOException
+    public synchronized void start() throws AbstractMuleException
     {
         lifecycleManager.checkPhase(Startable.PHASE_NAME);
         if (!isStarted())
@@ -214,10 +214,10 @@ public class DefaultMuleContext implements MuleContext
      * Stops the <code>MuleManager</code> which stops all sessions and
      * connectors
      *
-     * @throws UMOException if either any of the sessions or connectors fail to
+     * @throws AbstractMuleException if either any of the sessions or connectors fail to
      *                      stop
      */
-    public synchronized void stop() throws UMOException
+    public synchronized void stop() throws AbstractMuleException
     {
         lifecycleManager.checkPhase(Stoppable.PHASE_NAME);
 
@@ -245,7 +245,7 @@ public class DefaultMuleContext implements MuleContext
                 stop();
             }
         }
-        catch (UMOException e)
+        catch (AbstractMuleException e)
         {
             logger.error("Failed to stop manager: " + e.getMessage(), e);
         }
@@ -254,7 +254,7 @@ public class DefaultMuleContext implements MuleContext
         {
             lifecycleManager.firePhase(this, Disposable.PHASE_NAME);
         }
-        catch (UMOException e)
+        catch (AbstractMuleException e)
         {
             logger.debug("Failed to cleanly dispose Mule: " + e.getMessage(), e);
         }
@@ -383,7 +383,7 @@ public class DefaultMuleContext implements MuleContext
         }
     }
 
-    public UMOLifecycleManager getLifecycleManager()
+    public LifecycleManager getLifecycleManager()
     {
         return lifecycleManager;
     }
@@ -398,19 +398,19 @@ public class DefaultMuleContext implements MuleContext
         this.systemName = systemName;
     }
 
-    public UMOStore getStore(String name) throws UMOException
+    public Store getStore(String name) throws AbstractMuleException
     {
         //TODO LM: get store from registry
         return null;
     }
 
-    public UMOStore createStore(String name) throws UMOException
+    public Store createStore(String name) throws AbstractMuleException
     {
         //TODO LM: backed by registry
         return null;
     }
 
-    public void removeStore(UMOStore store)
+    public void removeStore(Store store)
     {
         //TODO LM: get store from registry
         store.dispose();
@@ -447,12 +447,12 @@ public class DefaultMuleContext implements MuleContext
         return directories;
     }
 
-    public void registerListener(UMOServerNotificationListener l) throws NotificationException
+    public void registerListener(ServerNotificationListener l) throws NotificationException
     {
         registerListener(l, null);
     }
 
-    public void registerListener(UMOServerNotificationListener l, String resourceIdentifier) throws NotificationException
+    public void registerListener(ServerNotificationListener l, String resourceIdentifier) throws NotificationException
     {
         ServerNotificationManager notificationManager = getNotificationManager();
         if (notificationManager == null)
@@ -462,7 +462,7 @@ public class DefaultMuleContext implements MuleContext
         notificationManager.addListenerSubscription(l, resourceIdentifier);
     }
 
-    public void unregisterListener(UMOServerNotificationListener l)
+    public void unregisterListener(ServerNotificationListener l)
     {
         ServerNotificationManager notificationManager = getNotificationManager();
         if (notificationManager != null)
@@ -481,7 +481,7 @@ public class DefaultMuleContext implements MuleContext
      * @throws UnsupportedOperationException if the notification fired is not a
      *                                       {@link org.mule.impl.internal.notifications.CustomNotification}
      */
-    public void fireNotification(UMOServerNotification notification)
+    public void fireNotification(ServerNotification notification)
     {
         ServerNotificationManager notificationManager = getNotificationManager();
         if (notificationManager != null)
@@ -540,7 +540,7 @@ public class DefaultMuleContext implements MuleContext
      *                        authenticate and authorise incoming and outgoing event traffic
      *                        and service invocations
      */
-    public void setSecurityManager(UMOSecurityManager securityManager) throws RegistrationException
+    public void setSecurityManager(SecurityManager securityManager) throws RegistrationException
     {
         checkLifecycleForPropertySet(MuleProperties.OBJECT_SECURITY_MANAGER, Initialisable.PHASE_NAME);
         getRegistry().registerObject(MuleProperties.OBJECT_SECURITY_MANAGER, securityManager);
@@ -554,16 +554,16 @@ public class DefaultMuleContext implements MuleContext
      *         and authorise incoming and outgoing event traffic and service
      *         invocations
      */
-    public UMOSecurityManager getSecurityManager()
+    public SecurityManager getSecurityManager()
     {
-        UMOSecurityManager securityManager = (UMOSecurityManager) getRegistry().lookupObject(
+        SecurityManager securityManager = (SecurityManager) getRegistry().lookupObject(
             MuleProperties.OBJECT_SECURITY_MANAGER);
         if (securityManager == null)
         {
-            Collection temp = getRegistry().lookupObjects(UMOSecurityManager.class);
+            Collection temp = getRegistry().lookupObjects(SecurityManager.class);
             if (temp.size() > 0)
             {
-                securityManager = ((UMOSecurityManager) temp.iterator().next());
+                securityManager = ((SecurityManager) temp.iterator().next());
             }
         }
         return securityManager;
@@ -586,7 +586,7 @@ public class DefaultMuleContext implements MuleContext
      * @see org.mule.api.config.ThreadingProfile
      * @see MuleConfiguration
      */
-    public UMOWorkManager getWorkManager()
+    public WorkManager getWorkManager()
     {
         return workManager;
     }
@@ -611,7 +611,7 @@ public class DefaultMuleContext implements MuleContext
      * @see MuleConfiguration
      * @see org.mule.impl.work.MuleWorkManager
      */
-    public void setWorkManager(UMOWorkManager workManager)
+    public void setWorkManager(WorkManager workManager)
     {
         checkLifecycleForPropertySet("workManager", Initialisable.PHASE_NAME);
         this.workManager = workManager;
@@ -672,12 +672,12 @@ public class DefaultMuleContext implements MuleContext
             MuleProperties.OBJECT_TRANSACTION_MANAGER);
         if (transactionManager == null)
         {
-            Collection temp = getRegistry().lookupObjects(UMOTransactionManagerFactory.class);
+            Collection temp = getRegistry().lookupObjects(TransactionManagerFactory.class);
             if (temp.size() > 0)
             {
                 try
                 {
-                    transactionManager = (((UMOTransactionManagerFactory) temp.iterator().next()).create());
+                    transactionManager = (((TransactionManagerFactory) temp.iterator().next()).create());
                 }
                 catch (Exception e)
                 {
@@ -760,10 +760,10 @@ public class DefaultMuleContext implements MuleContext
         else
         {
             message.add(CoreMessages.agentsRunning().getMessage());
-            UMOAgent umoAgent;
+            Agent umoAgent;
             for (Iterator iterator = agents.iterator(); iterator.hasNext();)
             {
-                umoAgent = (UMOAgent) iterator.next();
+                umoAgent = (Agent) iterator.next();
                 message.add("  " + umoAgent.getDescription());
             }
         }
@@ -810,7 +810,7 @@ public class DefaultMuleContext implements MuleContext
         }
     }
 
-    public void setLifecycleManager(UMOLifecycleManager lifecycleManager)
+    public void setLifecycleManager(LifecycleManager lifecycleManager)
     {
         this.lifecycleManager = lifecycleManager;
     }
@@ -829,7 +829,7 @@ public class DefaultMuleContext implements MuleContext
      * Apply current phase of the LifecycleManager.  Note: this is NOT the same lifecycle manager
      * as the one in the Registry.
      */
-    public void applyLifecycle(Object object) throws UMOException
+    public void applyLifecycle(Object object) throws AbstractMuleException
     {
         lifecycleManager.applyLifecycle(this, object);
     }

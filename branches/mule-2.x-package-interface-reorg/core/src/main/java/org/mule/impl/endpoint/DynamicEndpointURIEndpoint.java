@@ -10,18 +10,18 @@
 
 package org.mule.impl.endpoint;
 
+import org.mule.api.Event;
+import org.mule.api.Filter;
 import org.mule.api.MuleContext;
-import org.mule.api.UMOEvent;
-import org.mule.api.UMOFilter;
-import org.mule.api.UMOMessage;
-import org.mule.api.UMOTransactionConfig;
-import org.mule.api.endpoint.UMOEndpointURI;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.MuleMessage;
+import org.mule.api.TransactionConfig;
+import org.mule.api.endpoint.EndpointURI;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.InitialisationException;
-import org.mule.api.security.UMOEndpointSecurityFilter;
+import org.mule.api.security.EndpointSecurityFilter;
 import org.mule.api.transport.ConnectionStrategy;
+import org.mule.api.transport.Connector;
 import org.mule.api.transport.DispatchException;
-import org.mule.api.transport.UMOConnector;
 
 import java.util.List;
 import java.util.Map;
@@ -29,26 +29,26 @@ import java.util.Map;
 /**
  * Allow's EndpointURI to be set and changed dynamically by wrapping up an immutable endpoint instance.
  */
-public class DynamicEndpointURIEndpoint implements UMOImmutableEndpoint
+public class DynamicEndpointURIEndpoint implements ImmutableEndpoint
 {
 
     private static final long serialVersionUID = -2814979100270307813L;
 
-    private UMOImmutableEndpoint endpoint;
-    private UMOEndpointURI dynamicEndpointURI;
+    private ImmutableEndpoint endpoint;
+    private EndpointURI dynamicEndpointURI;
 
-    public DynamicEndpointURIEndpoint(UMOImmutableEndpoint endpoint)
+    public DynamicEndpointURIEndpoint(ImmutableEndpoint endpoint)
     {
         this.endpoint = endpoint;
     }
 
-    public DynamicEndpointURIEndpoint(UMOImmutableEndpoint endpoint, UMOEndpointURI dynamicEndpointURI)
+    public DynamicEndpointURIEndpoint(ImmutableEndpoint endpoint, EndpointURI dynamicEndpointURI)
     {
         this.endpoint = endpoint;
         setEndpointURI(dynamicEndpointURI);
     }
 
-    public UMOEndpointURI getEndpointURI()
+    public EndpointURI getEndpointURI()
     {
         if (dynamicEndpointURI != null)
         {
@@ -60,7 +60,7 @@ public class DynamicEndpointURIEndpoint implements UMOImmutableEndpoint
         }
     }
 
-    public void setEndpointURI(UMOEndpointURI dynamicEndpointURI)
+    public void setEndpointURI(EndpointURI dynamicEndpointURI)
     {
         this.dynamicEndpointURI = dynamicEndpointURI;
     }
@@ -75,7 +75,7 @@ public class DynamicEndpointURIEndpoint implements UMOImmutableEndpoint
         return endpoint.canSend();
     }
 
-    public void dispatch(UMOEvent event) throws DispatchException
+    public void dispatch(Event event) throws DispatchException
     {
         endpoint.dispatch(event);
     }
@@ -85,7 +85,7 @@ public class DynamicEndpointURIEndpoint implements UMOImmutableEndpoint
         return endpoint.getConnectionStrategy();
     }
 
-    public UMOConnector getConnector()
+    public Connector getConnector()
     {
         return endpoint.getConnector();
     }
@@ -95,7 +95,7 @@ public class DynamicEndpointURIEndpoint implements UMOImmutableEndpoint
         return endpoint.getEncoding();
     }
 
-    public UMOFilter getFilter()
+    public Filter getFilter()
     {
         return endpoint.getFilter();
     }
@@ -140,12 +140,12 @@ public class DynamicEndpointURIEndpoint implements UMOImmutableEndpoint
         return endpoint.getResponseTransformers();
     }
 
-    public UMOEndpointSecurityFilter getSecurityFilter()
+    public EndpointSecurityFilter getSecurityFilter()
     {
         return endpoint.getSecurityFilter();
     }
 
-    public UMOTransactionConfig getTransactionConfig()
+    public TransactionConfig getTransactionConfig()
     {
         return endpoint.getTransactionConfig();
     }
@@ -185,12 +185,12 @@ public class DynamicEndpointURIEndpoint implements UMOImmutableEndpoint
         return endpoint.isSynchronous();
     }
 
-    public UMOMessage request(long timeout) throws Exception
+    public MuleMessage request(long timeout) throws Exception
     {
         return endpoint.request(timeout);
     }
 
-    public UMOMessage send(UMOEvent event) throws DispatchException
+    public MuleMessage send(Event event) throws DispatchException
     {
         return endpoint.send(event);
     }

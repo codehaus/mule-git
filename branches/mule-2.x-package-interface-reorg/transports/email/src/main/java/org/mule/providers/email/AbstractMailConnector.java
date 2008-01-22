@@ -10,9 +10,9 @@
 
 package org.mule.providers.email;
 
-import org.mule.api.UMOException;
-import org.mule.api.endpoint.UMOEndpointURI;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.endpoint.EndpointURI;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.impl.transport.AbstractConnector;
 import org.mule.util.StringUtils;
@@ -78,7 +78,7 @@ public abstract class AbstractMailConnector extends AbstractConnector
         this.mailboxFolder = mailboxFolder;
     }
 
-    public synchronized SessionDetails getSessionDetails(UMOImmutableEndpoint endpoint)
+    public synchronized SessionDetails getSessionDetails(ImmutableEndpoint endpoint)
     {
         SessionDetails sessionDetails = (SessionDetails) sessions.get(endpoint);
         if (null == sessionDetails)
@@ -89,7 +89,7 @@ public abstract class AbstractMailConnector extends AbstractConnector
         return sessionDetails;
     }
     
-    public URLName urlFromEndpoint(UMOImmutableEndpoint endpoint)
+    public URLName urlFromEndpoint(ImmutableEndpoint endpoint)
     {
         String inbox = endpoint.getEndpointURI().getPath();
         if (inbox.length() == 0)
@@ -101,7 +101,7 @@ public abstract class AbstractMailConnector extends AbstractConnector
             inbox = inbox.substring(1);
         }
 
-        UMOEndpointURI uri = endpoint.getEndpointURI();
+        EndpointURI uri = endpoint.getEndpointURI();
         return new URLName(uri.getScheme(), uri.getHost(), uri.getPort(), inbox,
                 uri.getUser(), uri.getPassword());
     }
@@ -161,7 +161,7 @@ public abstract class AbstractMailConnector extends AbstractConnector
         local.setProperty("mail." + getBaseProtocol() + ".rsetbeforequit", "true");
     }
 
-    protected SessionDetails newSession(UMOImmutableEndpoint endpoint)
+    protected SessionDetails newSession(ImmutableEndpoint endpoint)
     {
         URLName url = urlFromEndpoint(endpoint);
 
@@ -235,12 +235,12 @@ public abstract class AbstractMailConnector extends AbstractConnector
         // template method, nothing to do
     }
 
-    protected void doStart() throws UMOException
+    protected void doStart() throws AbstractMuleException
     {
         // template method, nothing to do
     }
 
-    protected void doStop() throws UMOException
+    protected void doStop() throws AbstractMuleException
     {
         // template method, nothing to do
     }

@@ -11,19 +11,19 @@
 package org.mule.providers.ftp;
 
 import org.mule.api.MuleRuntimeException;
-import org.mule.api.UMOComponent;
-import org.mule.api.UMOException;
-import org.mule.api.UMOMessage;
-import org.mule.api.endpoint.UMOEndpointURI;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.Component;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleMessage;
+import org.mule.api.endpoint.EndpointURI;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.transport.ConnectorException;
 import org.mule.api.transport.DispatchException;
-import org.mule.api.transport.UMOMessageReceiver;
+import org.mule.api.transport.MessageReceiver;
+import org.mule.impl.config.i18n.CoreMessages;
+import org.mule.impl.config.i18n.MessageFactory;
 import org.mule.impl.model.streaming.CallbackOutputStream;
 import org.mule.impl.transport.AbstractConnector;
-import org.mule.imple.config.i18n.CoreMessages;
-import org.mule.imple.config.i18n.MessageFactory;
 import org.mule.providers.file.FilenameParser;
 import org.mule.providers.file.SimpleFilenameParser;
 import org.mule.util.ClassUtils;
@@ -88,7 +88,7 @@ public class FtpConnector extends AbstractConnector
         return FTP;
     }
 
-    public UMOMessageReceiver createReceiver(UMOComponent component, UMOImmutableEndpoint endpoint) throws Exception
+    public MessageReceiver createReceiver(Component component, ImmutableEndpoint endpoint) throws Exception
     {
         long polling = pollingFrequency;
         Map props = endpoint.getProperties();
@@ -147,7 +147,7 @@ public class FtpConnector extends AbstractConnector
         this.connectionFactoryClass = connectionFactoryClass;
     }
 
-    public FTPClient getFtp(UMOEndpointURI uri) throws Exception
+    public FTPClient getFtp(EndpointURI uri) throws Exception
     {
         if (logger.isDebugEnabled())
         {
@@ -156,7 +156,7 @@ public class FtpConnector extends AbstractConnector
         return (FTPClient) getFtpPool(uri).borrowObject();
     }
 
-    public void releaseFtp(UMOEndpointURI uri, FTPClient client) throws Exception
+    public void releaseFtp(EndpointURI uri, FTPClient client) throws Exception
     {
         if (logger.isDebugEnabled())
         {
@@ -172,7 +172,7 @@ public class FtpConnector extends AbstractConnector
         }
     }
 
-    public void destroyFtp(UMOEndpointURI uri, FTPClient client) throws Exception
+    public void destroyFtp(EndpointURI uri, FTPClient client) throws Exception
     {
         if (logger.isDebugEnabled())
         {
@@ -189,7 +189,7 @@ public class FtpConnector extends AbstractConnector
         }
     }
 
-    protected synchronized ObjectPool getFtpPool(UMOEndpointURI uri)
+    protected synchronized ObjectPool getFtpPool(EndpointURI uri)
     {
         if (logger.isDebugEnabled())
         {
@@ -251,12 +251,12 @@ public class FtpConnector extends AbstractConnector
         // template method
     }
 
-    protected void doStart() throws UMOException
+    protected void doStart() throws AbstractMuleException
     {
         // template method
     }
 
-    protected void doStop() throws UMOException
+    protected void doStop() throws AbstractMuleException
     {
         if (logger.isDebugEnabled())
         {
@@ -335,7 +335,7 @@ public class FtpConnector extends AbstractConnector
      * 
      * @see #setPassive(boolean)
      */
-    public void enterActiveOrPassiveMode(FTPClient client, UMOImmutableEndpoint endpoint)
+    public void enterActiveOrPassiveMode(FTPClient client, ImmutableEndpoint endpoint)
     {
         // well, no endpoint URI here, as we have to use the most common denominator
         // in API :(
@@ -430,7 +430,7 @@ public class FtpConnector extends AbstractConnector
      * 
      * @see #setBinary(boolean)
      */
-    public void setupFileType(FTPClient client, UMOImmutableEndpoint endpoint) throws Exception
+    public void setupFileType(FTPClient client, ImmutableEndpoint endpoint) throws Exception
     {
         int type;
 
@@ -490,14 +490,14 @@ public class FtpConnector extends AbstractConnector
      * @param message the current message being processed
      * @return the output stream to use for this request or null if the transport
      *         does not support streaming
-     * @throws org.mule.api.UMOException
+     * @throws org.mule.api.AbstractMuleException
      */
-    public OutputStream getOutputStream(UMOImmutableEndpoint endpoint, UMOMessage message)
-        throws UMOException
+    public OutputStream getOutputStream(ImmutableEndpoint endpoint, MuleMessage message)
+        throws AbstractMuleException
     {
         try
         {
-            final UMOEndpointURI uri = endpoint.getEndpointURI();
+            final EndpointURI uri = endpoint.getEndpointURI();
             String filename = getFilename(endpoint, message);
 
             final FTPClient client = this.createFtpClient(endpoint);
@@ -538,7 +538,7 @@ public class FtpConnector extends AbstractConnector
         }
     }
 
-    private String getFilename(UMOImmutableEndpoint endpoint, UMOMessage message) throws IOException
+    private String getFilename(ImmutableEndpoint endpoint, MuleMessage message) throws IOException
     {
         String filename = (String)message.getProperty(FtpConnector.PROPERTY_FILENAME);
         if (filename == null)
@@ -558,7 +558,7 @@ public class FtpConnector extends AbstractConnector
         return filename;
     }
 
-    private String generateFilename(UMOMessage message, String pattern)
+    private String generateFilename(MuleMessage message, String pattern)
     {
         if (pattern == null)
         {
@@ -571,9 +571,9 @@ public class FtpConnector extends AbstractConnector
      * Creates a new FTPClient that logs in and changes the working directory using the data
      * provided in <code>endpoint</code>.
      */
-    protected FTPClient createFtpClient(UMOImmutableEndpoint endpoint) throws Exception
+    protected FTPClient createFtpClient(ImmutableEndpoint endpoint) throws Exception
     {
-        UMOEndpointURI uri = endpoint.getEndpointURI();
+        EndpointURI uri = endpoint.getEndpointURI();
         FTPClient client = this.getFtp(uri);
 
         this.enterActiveOrPassiveMode(client, endpoint);

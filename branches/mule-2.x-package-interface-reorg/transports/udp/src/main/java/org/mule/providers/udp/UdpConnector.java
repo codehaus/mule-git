@@ -10,9 +10,9 @@
 
 package org.mule.providers.udp;
 
-import org.mule.api.UMOComponent;
-import org.mule.api.UMOException;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.Component;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.impl.transport.AbstractConnector;
 
@@ -71,12 +71,12 @@ public class UdpConnector extends AbstractConnector
         dispatcherSocketsPool.clear();
     }
 
-    protected void doStart() throws UMOException
+    protected void doStart() throws AbstractMuleException
     {
         // template method
     }
 
-    protected void doStop() throws UMOException
+    protected void doStop() throws AbstractMuleException
     {
         // template method
     }
@@ -170,18 +170,18 @@ public class UdpConnector extends AbstractConnector
      * @param endpoint
      * @return
      */
-    DatagramSocket getSocket(UMOImmutableEndpoint endpoint) throws Exception
+    DatagramSocket getSocket(ImmutableEndpoint endpoint) throws Exception
     {
         return (DatagramSocket) dispatcherSocketsPool.borrowObject(endpoint);
     }
 
-    void releaseSocket(DatagramSocket socket, UMOImmutableEndpoint endpoint) throws Exception
+    void releaseSocket(DatagramSocket socket, ImmutableEndpoint endpoint) throws Exception
     {
         dispatcherSocketsPool.returnObject(endpoint, socket);
     }
 
 
-    protected Object getReceiverKey(UMOComponent component, UMOImmutableEndpoint endpoint)
+    protected Object getReceiverKey(Component component, ImmutableEndpoint endpoint)
     {
         return endpoint.getEndpointURI().getAddress() + "/" + component.getName();
     }

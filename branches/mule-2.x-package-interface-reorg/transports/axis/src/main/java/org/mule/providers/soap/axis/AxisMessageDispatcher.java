@@ -10,17 +10,17 @@
 
 package org.mule.providers.soap.axis;
 
-import org.mule.api.UMOEvent;
-import org.mule.api.UMOMessage;
+import org.mule.api.Event;
+import org.mule.api.MuleMessage;
 import org.mule.api.config.MuleProperties;
-import org.mule.api.endpoint.UMOEndpointURI;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.endpoint.EndpointURI;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.transformer.TransformerException;
 import org.mule.api.transport.DispatchException;
-import org.mule.impl.MuleMessage;
+import org.mule.impl.DefaultMuleMessage;
+import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.impl.transport.AbstractMessageDispatcher;
 import org.mule.impl.transport.NullPayload;
-import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.providers.soap.NamedParameter;
 import org.mule.providers.soap.SoapConstants;
 import org.mule.providers.soap.SoapMethod;
@@ -63,7 +63,7 @@ public class AxisMessageDispatcher extends AbstractMessageDispatcher
     protected Service service;
     private Map callParameters;
 
-    public AxisMessageDispatcher(UMOImmutableEndpoint endpoint)
+    public AxisMessageDispatcher(ImmutableEndpoint endpoint)
     {
         super(endpoint);
         this.connector = (AxisConnector)endpoint.getConnector();
@@ -91,7 +91,7 @@ public class AxisMessageDispatcher extends AbstractMessageDispatcher
         // template method
     }
 
-    protected synchronized EngineConfiguration getClientConfig(UMOImmutableEndpoint endpoint)
+    protected synchronized EngineConfiguration getClientConfig(ImmutableEndpoint endpoint)
     {
         if (clientConfig == null)
         {
@@ -111,14 +111,14 @@ public class AxisMessageDispatcher extends AbstractMessageDispatcher
         return clientConfig;
     }
 
-    protected Service createService(UMOImmutableEndpoint endpoint) throws Exception
+    protected Service createService(ImmutableEndpoint endpoint) throws Exception
     {
         // Create a simple axis service without wsdl
         EngineConfiguration config = getClientConfig(endpoint);
         return new Service(config);
     }
 
-    protected void doDispatch(UMOEvent event) throws Exception
+    protected void doDispatch(Event event) throws Exception
     {
         Object[] args = getArgs(event);
         Call call = getCall(event, args);
@@ -131,7 +131,7 @@ public class AxisMessageDispatcher extends AbstractMessageDispatcher
         call.invoke(args);
     }
 
-    protected UMOMessage doSend(UMOEvent event) throws Exception
+    protected MuleMessage doSend(Event event) throws Exception
     {
         Call call;
         Object result;
@@ -144,15 +144,15 @@ public class AxisMessageDispatcher extends AbstractMessageDispatcher
         }
         else
         {
-            UMOMessage resultMessage = new MuleMessage(result, event.getMessage());
+            MuleMessage resultMessage = new DefaultMuleMessage(result, event.getMessage());
             setMessageContextProperties(resultMessage, call.getMessageContext());
             return resultMessage;
         }
     }
 
-    protected Call getCall(UMOEvent event, Object[] args) throws Exception
+    protected Call getCall(Event event, Object[] args) throws Exception
     {
-        UMOEndpointURI endpointUri = event.getEndpoint().getEndpointURI();
+        EndpointURI endpointUri = event.getEndpoint().getEndpointURI();
         Object method = getInitialMethod(event); // changes object state
         Call call = (Call) service.createCall();
         parseStyle(event, call);
@@ -185,7 +185,7 @@ public class AxisMessageDispatcher extends AbstractMessageDispatcher
         return call;
     }
 
-    protected void addAttachments(UMOEvent event, Call call)
+    protected void addAttachments(Event event, Call call)
     {
         // Add any attachments to the call
         for (Iterator iterator = event.getMessage().getAttachmentNames().iterator(); iterator.hasNext();)
@@ -197,7 +197,7 @@ public class AxisMessageDispatcher extends AbstractMessageDispatcher
         }
     }
     
-    protected void setSoapAction(UMOEvent event, UMOEndpointURI endpointUri, Call call)
+    protected void setSoapAction(Event event, EndpointURI endpointUri, Call call)
     {
         // Set custom soap action if set on the event or endpoint
         String soapAction = (String)event.getMessage().getProperty(SoapConstants.SOAP_ACTION_PROPERTY);
@@ -213,7 +213,7 @@ public class AxisMessageDispatcher extends AbstractMessageDispatcher
         }
     }
 
-    protected void buildSoapMethods(UMOEvent event, Call call, Object method, String methodNamespace, Object[] args)
+    protected void buildSoapMethods(Event event, Call call, Object method, String methodNamespace, Object[] args)
     {
         List params = new ArrayList();
         for (int i = 0; i < args.length; i++)
@@ -274,7 +274,7 @@ public class AxisMessageDispatcher extends AbstractMessageDispatcher
         event.getMessage().setProperty(AxisConnector.SOAP_METHODS, map);
     }
 
-    protected void setUserCredentials(UMOEndpointURI endpointUri, Call call)
+    protected void setUserCredentials(EndpointURI endpointUri, Call call)
     {
         if (endpointUri.getUserInfo() != null)
         {
@@ -283,7 +283,7 @@ public class AxisMessageDispatcher extends AbstractMessageDispatcher
         }
     }
 
-    protected void setCustomProperties(UMOEvent event, Call call)
+    protected void setCustomProperties(Event event, Call call)
     {
         for (Iterator iter = event.getMessage().getPropertyNames().iterator(); iter.hasNext();)
         {
@@ -299,7 +299,7 @@ public class AxisMessageDispatcher extends AbstractMessageDispatcher
         }
     }
 
-    protected Object refineMethod(UMOEvent event, Call call, Object method)
+    protected Object refineMethod(Event event, Call call, Object method)
     {
         if (method instanceof String)
         {
@@ -327,7 +327,7 @@ public class AxisMessageDispatcher extends AbstractMessageDispatcher
         return method;
     }
 
-    protected void parseUse(UMOEvent event, Call call)
+    protected void parseUse(Event event, Call call)
     {
         // Set use: Endcoded/Literal
         String use = event.getMessage().getStringProperty(AxisConnector.USE, null);
@@ -346,7 +346,7 @@ public class AxisMessageDispatcher extends AbstractMessageDispatcher
         }
     }
 
-    protected void parseStyle(UMOEvent event, Call call)
+    protected void parseStyle(Event event, Call call)
     {
         // Note that Axis has specific rules to how these two variables are
         // combined. This is handled for us
@@ -367,7 +367,7 @@ public class AxisMessageDispatcher extends AbstractMessageDispatcher
         }
     }
 
-    protected Object getInitialMethod(UMOEvent event) throws DispatchException
+    protected Object getInitialMethod(Event event) throws DispatchException
     {
         Object method = event.getMessage().getProperty(MuleProperties.MULE_METHOD_PROPERTY);
         if (method == null)
@@ -394,7 +394,7 @@ public class AxisMessageDispatcher extends AbstractMessageDispatcher
         return method;
     }
 
-    private Object[] getArgs(UMOEvent event) throws TransformerException
+    private Object[] getArgs(Event event) throws TransformerException
     {
         Object payload = event.transformMessage();
         Object[] args;
@@ -422,7 +422,7 @@ public class AxisMessageDispatcher extends AbstractMessageDispatcher
         return args;
     }
 
-    protected void setMessageContextProperties(UMOMessage message, MessageContext ctx)
+    protected void setMessageContextProperties(MuleMessage message, MessageContext ctx)
     {
         String temp = ctx.getStrProp(MuleProperties.MULE_CORRELATION_ID_PROPERTY);
         if (StringUtils.isNotBlank(temp))
@@ -446,7 +446,7 @@ public class AxisMessageDispatcher extends AbstractMessageDispatcher
         }
     }
 
-    protected void setMessageContextAttachments(UMOMessage message, MessageContext ctx) throws Exception
+    protected void setMessageContextAttachments(MuleMessage message, MessageContext ctx) throws Exception
     {
         int x = 0;
         for (Iterator iterator = ctx.getMessage().getAttachments(); iterator.hasNext(); x++)
@@ -456,7 +456,7 @@ public class AxisMessageDispatcher extends AbstractMessageDispatcher
         }
     }
 
-    protected static UMOMessage createMessage(Object result, Call call)
+    protected static MuleMessage createMessage(Object result, Call call)
     {
         if (result == null)
         {
@@ -473,14 +473,14 @@ public class AxisMessageDispatcher extends AbstractMessageDispatcher
         props.put("soap.message", call.getMessageContext().getMessage());
         call.clearHeaders();
         call.clearOperation();
-        return new MuleMessage(result, props);
+        return new DefaultMuleMessage(result, props);
     }
 
-    public String parseSoapAction(String soapAction, QName method, UMOEvent event)
+    public String parseSoapAction(String soapAction, QName method, Event event)
     {
-        UMOEndpointURI endpointURI = event.getEndpoint().getEndpointURI();
+        EndpointURI endpointURI = event.getEndpoint().getEndpointURI();
         Map properties = new HashMap();
-        UMOMessage msg = event.getMessage();
+        MuleMessage msg = event.getMessage();
         for (Iterator iterator = msg.getPropertyNames().iterator(); iterator.hasNext();)
         {
             String propertyKey = (String)iterator.next();
@@ -513,7 +513,7 @@ public class AxisMessageDispatcher extends AbstractMessageDispatcher
         return soapAction;
     }
 
-    private void setCallParams(Call call, UMOEvent event, QName method) throws ClassNotFoundException
+    private void setCallParams(Call call, Event event, QName method) throws ClassNotFoundException
     {
         synchronized (this)
         {
@@ -551,7 +551,7 @@ public class AxisMessageDispatcher extends AbstractMessageDispatcher
         }
     }
 
-    private void loadCallParams(UMOEvent event, String namespace) throws ClassNotFoundException
+    private void loadCallParams(Event event, String namespace) throws ClassNotFoundException
     {
         Map methodCalls = (Map)event.getMessage().getProperty(AxisConnector.SOAP_METHODS);
         if (methodCalls == null)

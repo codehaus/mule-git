@@ -11,16 +11,16 @@
 package org.mule.providers.jdbc;
 
 import org.mule.api.TransactionException;
-import org.mule.api.UMOComponent;
-import org.mule.api.UMOException;
-import org.mule.api.UMOTransaction;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.Component;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.Transaction;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.InitialisationException;
-import org.mule.api.transport.UMOMessageReceiver;
+import org.mule.api.transport.MessageReceiver;
 import org.mule.impl.config.ExceptionHelper;
+import org.mule.impl.config.i18n.MessageFactory;
 import org.mule.impl.transaction.TransactionCoordination;
 import org.mule.impl.transport.AbstractConnector;
-import org.mule.imple.config.i18n.MessageFactory;
 import org.mule.util.properties.PropertyExtractorManager;
 
 import java.sql.Connection;
@@ -77,7 +77,7 @@ public class JdbcConnector extends AbstractConnector
         }
     }
 
-    public UMOMessageReceiver createReceiver(UMOComponent component, UMOImmutableEndpoint endpoint) throws Exception
+    public MessageReceiver createReceiver(Component component, ImmutableEndpoint endpoint) throws Exception
     {
         Map props = endpoint.getProperties();
         if (props != null)
@@ -98,7 +98,7 @@ public class JdbcConnector extends AbstractConnector
         return getServiceDescriptor().createMessageReceiver(this, component, endpoint, params);
     }
 
-    public String[] getReadAndAckStatements(UMOImmutableEndpoint endpoint)
+    public String[] getReadAndAckStatements(ImmutableEndpoint endpoint)
     {
         String str;
         // Find read statement
@@ -159,7 +159,7 @@ public class JdbcConnector extends AbstractConnector
         return new String[]{readStmt, ackStmt};
     }
 
-    public String getQuery(UMOImmutableEndpoint endpoint, String stmt)
+    public String getQuery(ImmutableEndpoint endpoint, String stmt)
     {
         Object query = null;
         if (endpoint != null && endpoint.getProperties() != null)
@@ -182,7 +182,7 @@ public class JdbcConnector extends AbstractConnector
 
     public Connection getConnection() throws Exception
     {
-        UMOTransaction tx = TransactionCoordination.getInstance().getTransaction();
+        Transaction tx = TransactionCoordination.getInstance().getTransaction();
         if (tx != null)
         {
             if (tx.hasResource(dataSource))
@@ -235,7 +235,7 @@ public class JdbcConnector extends AbstractConnector
         return sb.toString();
     }
 
-    public Object[] getParams(UMOImmutableEndpoint endpoint, List paramNames, Object message, String query)
+    public Object[] getParams(ImmutableEndpoint endpoint, List paramNames, Object message, String query)
         throws Exception
     {
 
@@ -285,12 +285,12 @@ public class JdbcConnector extends AbstractConnector
         // template method
     }
 
-    protected void doStart() throws UMOException
+    protected void doStart() throws AbstractMuleException
     {
         // template method
     }
 
-    protected void doStop() throws UMOException
+    protected void doStop() throws AbstractMuleException
     {
         // template method
     }

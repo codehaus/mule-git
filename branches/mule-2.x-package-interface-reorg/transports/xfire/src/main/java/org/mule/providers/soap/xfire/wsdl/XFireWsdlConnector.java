@@ -10,8 +10,8 @@
 
 package org.mule.providers.soap.xfire.wsdl;
 
-import org.mule.api.endpoint.UMOEndpointURI;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.endpoint.EndpointURI;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.impl.transport.AbstractConnectable;
 import org.mule.providers.soap.xfire.XFireConnector;
 import org.mule.util.StringUtils;
@@ -46,7 +46,7 @@ public class XFireWsdlConnector extends XFireConnector
         return WSDL_XFIRE;
     }
 
-    protected Client doClientConnect(UMOImmutableEndpoint endpoint, AbstractConnectable connectable) throws Exception
+    protected Client doClientConnect(ImmutableEndpoint endpoint, AbstractConnectable connectable) throws Exception
     {
         try
         {
@@ -83,9 +83,9 @@ public class XFireWsdlConnector extends XFireConnector
         }
     }
 
-    protected Client createXFireWsdlClient(UMOImmutableEndpoint endpoint, Service service, XFire xfire, String wsdlUrl) throws Exception
+    protected Client createXFireWsdlClient(ImmutableEndpoint endpoint, Service service, XFire xfire, String wsdlUrl) throws Exception
     {
-        UMOEndpointURI uri = endpoint.getEndpointURI();
+        EndpointURI uri = endpoint.getEndpointURI();
         Client client = new Client(new URL(wsdlUrl));
         client.setXFire(xfire);
         client.setEndpointUri(uri.toString());

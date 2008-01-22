@@ -10,10 +10,10 @@
 
 package org.mule.providers.udp;
 
-import org.mule.api.UMOComponent;
-import org.mule.api.endpoint.UMOEndpoint;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
-import org.mule.api.transport.UMOConnector;
+import org.mule.api.Component;
+import org.mule.api.endpoint.Endpoint;
+import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.api.transport.Connector;
 import org.mule.tck.providers.AbstractConnectorTestCase;
 import org.mule.tck.testmodels.fruit.Orange;
 
@@ -23,7 +23,7 @@ public class UdpConnectorTestCase extends AbstractConnectorTestCase
 {
 
     // @Override
-    public UMOConnector createConnector() throws Exception
+    public Connector createConnector() throws Exception
     {
         UdpConnector c = new UdpConnector();
         c.setName("UdpConnector");
@@ -42,9 +42,9 @@ public class UdpConnectorTestCase extends AbstractConnectorTestCase
 
     public void testValidListener() throws Exception
     {
-        UMOComponent component = getTestComponent("orange", Orange.class);
-        UMOEndpoint endpoint = getTestEndpoint("Test", UMOEndpoint.ENDPOINT_TYPE_RECEIVER);
-        UMOConnector connector = getConnector();
+        Component component = getTestComponent("orange", Orange.class);
+        Endpoint endpoint = getTestEndpoint("Test", Endpoint.ENDPOINT_TYPE_RECEIVER);
+        Connector connector = getConnector();
 
         try
         {
@@ -58,7 +58,7 @@ public class UdpConnectorTestCase extends AbstractConnectorTestCase
             // expected
         }
 
-        endpoint = getTestEndpoint("Test", UMOEndpoint.ENDPOINT_TYPE_RECEIVER);
+        endpoint = getTestEndpoint("Test", Endpoint.ENDPOINT_TYPE_RECEIVER);
         try
         {
             endpoint.setEndpointURI(null);
@@ -70,7 +70,7 @@ public class UdpConnectorTestCase extends AbstractConnectorTestCase
             // expected
         }
 
-        UMOImmutableEndpoint endpoint2 = muleContext.getRegistry()
+        ImmutableEndpoint endpoint2 = muleContext.getRegistry()
             .lookupEndpointFactory()
             .getOutboundEndpoint("udp://localhost:3456");
 

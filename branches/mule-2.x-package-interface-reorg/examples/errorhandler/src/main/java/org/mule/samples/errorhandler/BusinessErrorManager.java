@@ -10,8 +10,8 @@
 
 package org.mule.samples.errorhandler;
 
-import org.mule.api.UMOEventContext;
-import org.mule.api.UMOException;
+import org.mule.api.EventContext;
+import org.mule.api.AbstractMuleException;
 import org.mule.api.lifecycle.Callable;
 import org.mule.util.StringMessageUtils;
 
@@ -31,7 +31,7 @@ public class BusinessErrorManager implements Callable
     /** logger used by this class */
     private static final Log logger = LogFactory.getLog(BusinessErrorManager.class);
 
-    public Object onCall(UMOEventContext context) throws UMOException
+    public Object onCall(EventContext context) throws AbstractMuleException
     {
         ErrorMessage msg = (ErrorMessage)context.transformMessage();
         // Do something with the error message

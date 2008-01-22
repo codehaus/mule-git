@@ -15,7 +15,7 @@ import org.mule.impl.endpoint.MuleEndpointURI;
 import java.beans.PropertyEditorSupport;
 
 /**
- * Translates a connector name property into the corresponding {@link org.mule.api.transport.UMOConnector}
+ * Translates a connector name property into the corresponding {@link org.mule.api.transport.Connector}
  * instance.
  */
 public class EndpointURIPropertyEditor extends PropertyEditorSupport

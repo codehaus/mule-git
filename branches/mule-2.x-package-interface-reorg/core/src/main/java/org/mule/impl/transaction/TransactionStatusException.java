@@ -11,8 +11,8 @@
 package org.mule.impl.transaction;
 
 import org.mule.api.TransactionException;
-import org.mule.imple.config.i18n.CoreMessages;
-import org.mule.imple.config.i18n.Message;
+import org.mule.impl.config.i18n.CoreMessages;
+import org.mule.impl.config.i18n.Message;
 
 public class TransactionStatusException extends TransactionException
 {

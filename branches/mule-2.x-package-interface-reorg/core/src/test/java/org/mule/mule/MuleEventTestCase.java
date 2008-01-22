@@ -10,13 +10,13 @@
 
 package org.mule.mule;
 
-import org.mule.api.UMOEvent;
-import org.mule.api.UMOMessage;
-import org.mule.api.endpoint.UMOEndpoint;
-import org.mule.api.security.UMOCredentials;
+import org.mule.api.Event;
+import org.mule.api.MuleMessage;
+import org.mule.api.endpoint.Endpoint;
+import org.mule.api.security.Credentials;
 import org.mule.api.transformer.TransformerException;
 import org.mule.impl.MuleEvent;
-import org.mule.impl.MuleMessage;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.RequestContext;
 import org.mule.impl.ResponseOutputStream;
 import org.mule.impl.endpoint.MuleEndpointURI;
@@ -62,9 +62,9 @@ public class MuleEventTestCase extends AbstractMuleTestCase
     public void testEventTransformer() throws Exception
     {
         String data = "Test Data";
-        UMOEndpoint endpoint = getTestEndpoint("Test", UMOEndpoint.ENDPOINT_TYPE_SENDER);
+        Endpoint endpoint = getTestEndpoint("Test", Endpoint.ENDPOINT_TYPE_SENDER);
         endpoint.setTransformers(CollectionUtils.singletonList(new TestEventTransformer()));
-        UMOEvent event = getTestEvent(data, endpoint);
+        Event event = getTestEvent(data, endpoint);
         RequestContext.setEvent(event);
         
         assertEquals("Event data should equal " + data, data, event.getMessage().getPayload());
@@ -78,9 +78,9 @@ public class MuleEventTestCase extends AbstractMuleTestCase
     public void testEventRewrite() throws Exception
     {
         String data = "Test Data";
-        UMOEndpoint endpoint = getTestEndpoint("Test", UMOEndpoint.ENDPOINT_TYPE_SENDER);
+        Endpoint endpoint = getTestEndpoint("Test", Endpoint.ENDPOINT_TYPE_SENDER);
         endpoint.setTransformers(CollectionUtils.singletonList(new TestEventTransformer()));
-        MuleEvent event = new MuleEvent(new MuleMessage(data), endpoint,
+        MuleEvent event = new MuleEvent(new DefaultMuleMessage(data), endpoint,
             getTestSession(getTestComponent("apple", Apple.class)), true,
             new ResponseOutputStream(System.out));
 
@@ -91,7 +91,7 @@ public class MuleEventTestCase extends AbstractMuleTestCase
         assertNotNull(event.getMessage());
         assertEquals(data, event.getMessageAsString());
 
-        UMOEvent event2 = new MuleEvent(new MuleMessage("New Data"), event);
+        Event event2 = new MuleEvent(new DefaultMuleMessage("New Data"), event);
         assertNotNull(event2.getId());
         assertEquals(event.getId(), event2.getId());
         assertNotNull(event2.getSession());
@@ -104,17 +104,17 @@ public class MuleEventTestCase extends AbstractMuleTestCase
 
     public void testProperties() throws Exception
     {
-        UMOEvent prevEvent;
+        Event prevEvent;
         Properties props;
-        UMOMessage msg;
-        UMOEndpoint endpoint;
-        UMOEvent event;
+        MuleMessage msg;
+        Endpoint endpoint;
+        Event event;
 
         // nowhere
         prevEvent = getTestEvent("payload");
         props = new Properties();
-        msg = new MuleMessage("payload", props);
-        endpoint = getTestEndpoint("Test", UMOEndpoint.ENDPOINT_TYPE_SENDER);
+        msg = new DefaultMuleMessage("payload", props);
+        endpoint = getTestEndpoint("Test", Endpoint.ENDPOINT_TYPE_SENDER);
         props = new Properties();
         endpoint.setProperties(props);
         event = new MuleEvent(msg, endpoint, prevEvent.getComponent(), prevEvent);
@@ -138,15 +138,15 @@ public class MuleEventTestCase extends AbstractMuleTestCase
         // in previous event + message => message
         props = new Properties();
         props.put("prop", "value1");
-        msg = new MuleMessage("payload", props);
-        endpoint = getTestEndpoint("Test", UMOEndpoint.ENDPOINT_TYPE_SENDER);
+        msg = new DefaultMuleMessage("payload", props);
+        endpoint = getTestEndpoint("Test", Endpoint.ENDPOINT_TYPE_SENDER);
         event = new MuleEvent(msg, endpoint, prevEvent.getComponent(), prevEvent);
         assertEquals("value1", event.getMessage().getProperty("prop"));
 
         // in previous event + endpoint + message => message
         props = new Properties();
         props.put("prop", "value1");
-        msg = new MuleMessage("payload", props);
+        msg = new DefaultMuleMessage("payload", props);
 
         Properties props2 = new Properties();
         props2.put("prop", "value2");
@@ -161,13 +161,13 @@ public class MuleEventTestCase extends AbstractMuleTestCase
      */
     public void testNoPasswordNoNullPointerException() throws Exception
     {
-        UMOEndpoint endpoint = getTestEndpoint("AuthTest", UMOEndpoint.ENDPOINT_TYPE_SENDER);
+        Endpoint endpoint = getTestEndpoint("AuthTest", Endpoint.ENDPOINT_TYPE_SENDER);
         // provide the username, but not the password, as is the case for SMTP
         // cannot set SMTP endpoint type, because the module doesn't have this
         // dependency
         endpoint.setEndpointURI(new MuleEndpointURI("test://john.doe@xyz.fr"));
-        UMOEvent event = getTestEvent(new Object(), endpoint);
-        UMOCredentials credentials = event.getCredentials();
+        Event event = getTestEvent(new Object(), endpoint);
+        Credentials credentials = event.getCredentials();
         assertNull("Credentials must not be created for endpoints without a password.", credentials);
     }
 

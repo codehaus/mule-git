@@ -10,18 +10,18 @@
 
 package org.mule.impl.internal.admin;
 
-import org.mule.api.UMOEvent;
-import org.mule.api.UMOMessage;
-import org.mule.api.UMOSession;
-import org.mule.api.context.UMOServerNotification;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.Event;
+import org.mule.api.MuleMessage;
+import org.mule.api.Session;
+import org.mule.api.context.ServerNotification;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.InitialisationException;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.MuleEvent;
-import org.mule.impl.MuleMessage;
 import org.mule.impl.MuleSession;
 import org.mule.impl.NullSessionHandler;
+import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.impl.transport.NullPayload;
-import org.mule.imple.config.i18n.CoreMessages;
 
 import java.util.Map;
 
@@ -33,8 +33,8 @@ public class EndpointNotificationLoggerAgent extends AbstractNotificationLoggerA
 {
 
     private String endpointAddress;
-    private UMOImmutableEndpoint logEndpoint = null;
-    private UMOSession session;
+    private ImmutableEndpoint logEndpoint = null;
+    private Session session;
 
 
     public EndpointNotificationLoggerAgent()
@@ -57,7 +57,7 @@ public class EndpointNotificationLoggerAgent extends AbstractNotificationLoggerA
                     CoreMessages.propertiesNotSet("endpointAddress"), this);
             }
             // Create a session for sending notifications
-            session = new MuleSession(new MuleMessage(NullPayload.getInstance(), (Map) null), new NullSessionHandler());
+            session = new MuleSession(new DefaultMuleMessage(NullPayload.getInstance(), (Map) null), new NullSessionHandler());
         }
         catch (Exception e)
         {
@@ -65,14 +65,14 @@ public class EndpointNotificationLoggerAgent extends AbstractNotificationLoggerA
         }
     }
 
-    protected void logEvent(UMOServerNotification e)
+    protected void logEvent(ServerNotification e)
     {
         if (logEndpoint != null)
         {
             try
             {
-                UMOMessage msg = new MuleMessage(e.toString(), (Map) null);
-                UMOEvent event = new MuleEvent(msg, logEndpoint, session, false);
+                MuleMessage msg = new DefaultMuleMessage(e.toString(), (Map) null);
+                Event event = new MuleEvent(msg, logEndpoint, session, false);
                 logEndpoint.dispatch(event);
             }
             catch (Exception e1)

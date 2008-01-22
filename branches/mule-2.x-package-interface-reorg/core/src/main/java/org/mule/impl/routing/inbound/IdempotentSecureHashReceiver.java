@@ -10,8 +10,8 @@
 
 package org.mule.impl.routing.inbound;
 
+import org.mule.api.Event;
 import org.mule.api.MessagingException;
-import org.mule.api.UMOEvent;
 import org.mule.api.routing.RoutingException;
 import org.mule.api.transformer.TransformerException;
 import org.mule.impl.transformer.simple.ByteArrayToHexString;
@@ -40,7 +40,7 @@ public class IdempotentSecureHashReceiver extends IdempotentReceiver
     private final ByteArrayToHexString byteArrayToHexString = new ByteArrayToHexString();
 
     // @Override
-    protected Object getIdForEvent(UMOEvent event) throws MessagingException
+    protected Object getIdForEvent(Event event) throws MessagingException
     {
         try
         {

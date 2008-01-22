@@ -10,10 +10,10 @@
 
 package org.mule.providers.http;
 
-import org.mule.api.UMOException;
-import org.mule.api.UMOMessage;
-import org.mule.api.UMOSession;
-import org.mule.api.transport.UMOSessionHandler;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleMessage;
+import org.mule.api.Session;
+import org.mule.api.transport.SessionHandler;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -26,7 +26,7 @@ import org.apache.commons.logging.LogFactory;
 /**
  * Will read and write Http Cookie information to and from the Mule Session
  */
-public class HttpSessionHandler implements UMOSessionHandler
+public class HttpSessionHandler implements SessionHandler
 {
 
     /**
@@ -34,7 +34,7 @@ public class HttpSessionHandler implements UMOSessionHandler
      */
     protected transient Log logger = LogFactory.getLog(getClass());
 
-    public void retrieveSessionInfoFromMessage(UMOMessage message, UMOSession session) throws UMOException
+    public void retrieveSessionInfoFromMessage(MuleMessage message, Session session) throws AbstractMuleException
     {
         Cookie[] cookies = (Cookie[])message.getProperty(HttpConnector.HTTP_COOKIES_PROPERTY);
         if (cookies != null)
@@ -51,7 +51,7 @@ public class HttpSessionHandler implements UMOSessionHandler
         }
     }
 
-    public void storeSessionInfoToMessage(UMOSession session, UMOMessage message) throws UMOException
+    public void storeSessionInfoToMessage(Session session, MuleMessage message) throws AbstractMuleException
     {
         Object name;
         Object value;

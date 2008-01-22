@@ -11,11 +11,11 @@
 package org.mule.impl.model;
 
 import org.mule.api.config.MuleProperties;
+import org.mule.api.model.Model;
 import org.mule.api.model.ModelServiceDescriptor;
-import org.mule.api.model.UMOModel;
 import org.mule.api.registry.AbstractServiceDescriptor;
 import org.mule.api.registry.ServiceException;
-import org.mule.imple.config.i18n.CoreMessages;
+import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.util.BeanUtils;
 import org.mule.util.ClassUtils;
 
@@ -36,12 +36,12 @@ public class DefaultModelServiceDescriptor extends AbstractServiceDescriptor imp
         modelClass = removeProperty(MuleProperties.MODEL_CLASS, properties);
     }
 
-    public UMOModel createModel() throws ServiceException
+    public Model createModel() throws ServiceException
     {
         if (modelClass != null)
         {
             try {
-                UMOModel model = (UMOModel)ClassUtils.instanciateClass(modelClass, ClassUtils.NO_ARGS, ModelFactory.class);
+                Model model = (Model)ClassUtils.instanciateClass(modelClass, ClassUtils.NO_ARGS, ModelFactory.class);
                 BeanUtils.populateWithoutFail(model, properties, false);
                 return model;
             }

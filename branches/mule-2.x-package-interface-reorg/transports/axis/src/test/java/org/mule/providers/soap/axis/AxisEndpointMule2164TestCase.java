@@ -10,7 +10,7 @@
 
 package org.mule.providers.soap.axis;
 
-import org.mule.api.endpoint.UMOEndpointURI;
+import org.mule.api.endpoint.EndpointURI;
 import org.mule.impl.endpoint.MuleEndpointURI;
 import org.mule.tck.AbstractMuleTestCase;
 
@@ -29,7 +29,7 @@ public class AxisEndpointMule2164TestCase extends AbstractMuleTestCase
         assertEquals("http://localhost:8080?param=1", endpointUri.getAddress());
 
         // Reconstruct MuleEndpointURI and test values
-        UMOEndpointURI newEndpointUri = new MuleEndpointURI(endpointUri);
+        EndpointURI newEndpointUri = new MuleEndpointURI(endpointUri);
         newEndpointUri.initialise();
         assertEquals("http", newEndpointUri.getScheme());
         assertEquals("axis", newEndpointUri.getSchemeMetaInfo());
@@ -50,7 +50,7 @@ public class AxisEndpointMule2164TestCase extends AbstractMuleTestCase
         endpointUri.initialise();
 
         // Reconstruct MuleEndpointURI and test values
-        UMOEndpointURI newEndpointUri = new MuleEndpointURI(endpointUri);
+        EndpointURI newEndpointUri = new MuleEndpointURI(endpointUri);
         newEndpointUri.initialise();
         assertEquals("jms", newEndpointUri.getScheme());
         assertEquals("axis", newEndpointUri.getSchemeMetaInfo());

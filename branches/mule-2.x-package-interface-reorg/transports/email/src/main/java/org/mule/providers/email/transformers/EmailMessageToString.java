@@ -44,7 +44,7 @@ public class EmailMessageToString extends AbstractTransformer
              * are handled by the mail message adapter. If Transformers need access
              * to these properties they should extends from
              * AbstractEventAwareTransformer and extract these properties from the
-             * passed UMOEventContext
+             * passed EventContext
              */
 
             // For this impl we just pass back the email content

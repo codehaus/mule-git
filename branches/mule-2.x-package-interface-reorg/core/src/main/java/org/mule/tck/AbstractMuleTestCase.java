@@ -12,16 +12,16 @@ package org.mule.tck;
 
 import org.mule.MuleServer;
 import org.mule.RegistryContext;
+import org.mule.api.Component;
+import org.mule.api.Event;
+import org.mule.api.EventContext;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleContextFactory;
-import org.mule.api.UMOComponent;
-import org.mule.api.UMOEvent;
-import org.mule.api.UMOEventContext;
-import org.mule.api.UMOSession;
+import org.mule.api.Session;
 import org.mule.api.config.ConfigurationBuilder;
-import org.mule.api.endpoint.UMOEndpoint;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
-import org.mule.api.transformer.UMOTransformer;
+import org.mule.api.endpoint.Endpoint;
+import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.api.transformer.Transformer;
 import org.mule.impl.DefaultMuleContextBuilder;
 import org.mule.impl.DefaultMuleContextFactory;
 import org.mule.impl.config.builders.DefaultsConfigurationBuilder;
@@ -458,43 +458,43 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
         // template method
     }
 
-    public static UMOEndpoint getTestEndpoint(String name, String type) throws Exception
+    public static Endpoint getTestEndpoint(String name, String type) throws Exception
     {
         return MuleTestUtils.getTestEndpoint(name, type, muleContext);
     }
 
-    public static UMOEvent getTestEvent(Object data, UMOComponent component) throws Exception
+    public static Event getTestEvent(Object data, Component component) throws Exception
     {
         return MuleTestUtils.getTestEvent(data, component, muleContext);
     }
 
-    public static UMOEvent getTestEvent(Object data) throws Exception
+    public static Event getTestEvent(Object data) throws Exception
     {
         return MuleTestUtils.getTestEvent(data, muleContext);
     }
 
-    public static UMOEventContext getTestEventContext(Object data) throws Exception
+    public static EventContext getTestEventContext(Object data) throws Exception
     {
         return MuleTestUtils.getTestEventContext(data, muleContext);
     }
 
-    public static UMOTransformer getTestTransformer() throws Exception
+    public static Transformer getTestTransformer() throws Exception
     {
         return MuleTestUtils.getTestTransformer();
     }
 
-    public static UMOEvent getTestEvent(Object data, UMOImmutableEndpoint endpoint) throws Exception
+    public static Event getTestEvent(Object data, ImmutableEndpoint endpoint) throws Exception
     {
         return MuleTestUtils.getTestEvent(data, endpoint, muleContext);
     }
 
-    public static UMOEvent getTestEvent(Object data, UMOComponent component, UMOImmutableEndpoint endpoint)
+    public static Event getTestEvent(Object data, Component component, ImmutableEndpoint endpoint)
         throws Exception
     {
         return MuleTestUtils.getTestEvent(data, component, endpoint, muleContext);
     }
 
-    public static UMOSession getTestSession(UMOComponent component)
+    public static Session getTestSession(Component component)
     {
         return MuleTestUtils.getTestSession(component);
     }
@@ -504,17 +504,17 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
         return MuleTestUtils.getTestConnector(muleContext);
     }
 
-    public static UMOComponent getTestComponent() throws Exception
+    public static Component getTestComponent() throws Exception
     {
         return MuleTestUtils.getTestComponent(muleContext);
     }
 
-    public static UMOComponent getTestComponent(String name, Class clazz) throws Exception
+    public static Component getTestComponent(String name, Class clazz) throws Exception
     {
         return MuleTestUtils.getTestComponent(name, clazz, muleContext);
     }
 
-    public static UMOComponent getTestComponent(String name, Class clazz, Map props) throws Exception
+    public static Component getTestComponent(String name, Class clazz, Map props) throws Exception
     {
         return MuleTestUtils.getTestComponent(name, clazz, props, muleContext);
     }

@@ -11,7 +11,7 @@
 package org.mule.api;
 
 import org.mule.api.transformer.TransformerException;
-import org.mule.impl.MuleMessage;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.util.concurrent.DaemonThreadFactory;
 
 import java.util.List;
@@ -25,7 +25,7 @@ import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 import edu.emory.mathcs.backport.java.util.concurrent.TimeoutException;
 
 /**
- * <code>FutureMessageResult</code> is an UMOMessage result of a remote invocation
+ * <code>FutureMessageResult</code> is an MuleMessage result of a remote invocation
  * on a Mule Server. This object makes the result available to the client code once
  * the request has been processed. This execution happens asynchronously.
  */
@@ -101,29 +101,29 @@ public class FutureMessageResult extends FutureTask
         }
     }
 
-    public UMOMessage getMessage() throws InterruptedException, ExecutionException, TransformerException
+    public MuleMessage getMessage() throws InterruptedException, ExecutionException, TransformerException
     {
         return this.getMessage(this.get());
     }
 
-    public UMOMessage getMessage(long timeout)
+    public MuleMessage getMessage(long timeout)
         throws InterruptedException, ExecutionException, TimeoutException, TransformerException
     {
         return this.getMessage(this.get(timeout, TimeUnit.MILLISECONDS));
     }
 
-    private UMOMessage getMessage(Object obj) throws TransformerException
+    private MuleMessage getMessage(Object obj) throws TransformerException
     {
-        UMOMessage result = null;
+        MuleMessage result = null;
         if (obj != null)
         {
-            if (obj instanceof UMOMessage)
+            if (obj instanceof MuleMessage)
             {
-                result = (UMOMessage)obj;
+                result = (MuleMessage)obj;
             }
             else
             {
-                result = new MuleMessage(obj);
+                result = new DefaultMuleMessage(obj);
             }
 
             synchronized (this)

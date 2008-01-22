@@ -10,8 +10,8 @@
 
 package org.mule.providers.quartz.jobs;
 
-import org.mule.api.UMOException;
-import org.mule.api.UMOMessage;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.providers.quartz.QuartzConnector;
 import org.mule.providers.quartz.i18n.QuartzMessages;
@@ -60,7 +60,7 @@ public class MuleClientReceiveJob implements Job
         {
             MuleClient client = new MuleClient();
             logger.debug("Attempting to receive event on: " + receiveEndpoint);
-            UMOMessage result = client.request(receiveEndpoint, timeout);
+            MuleMessage result = client.request(receiveEndpoint, timeout);
             if (result != null)
             {
                 logger.debug("Received event on: " + receiveEndpoint);
@@ -69,7 +69,7 @@ public class MuleClientReceiveJob implements Job
                 client.dispatch(dispatchEndpoint, result);
             }
         }
-        catch (UMOException e)
+        catch (AbstractMuleException e)
         {
             throw new JobExecutionException(e);
         }

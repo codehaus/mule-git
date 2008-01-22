@@ -10,13 +10,13 @@
 
 package org.mule.impl.routing.inbound;
 
-import org.mule.api.UMOEvent;
+import org.mule.api.Event;
 
 import java.util.Comparator;
 
 /**
  * <code>CorrelationSequenceComparator</code> is a {@link Comparator} for
- * {@link UMOEvent}s using their respective correlation sequences.
+ * {@link Event}s using their respective correlation sequences.
  */
 public final class CorrelationSequenceComparator implements Comparator
 {
@@ -28,8 +28,8 @@ public final class CorrelationSequenceComparator implements Comparator
 
     public int compare(Object o1, Object o2)
     {
-        int val1 = ((UMOEvent)o1).getMessage().getCorrelationSequence();
-        int val2 = ((UMOEvent)o2).getMessage().getCorrelationSequence();
+        int val1 = ((Event)o1).getMessage().getCorrelationSequence();
+        int val2 = ((Event)o2).getMessage().getCorrelationSequence();
 
         if (val1 == val2)
         {

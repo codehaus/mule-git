@@ -10,11 +10,11 @@
 
 package org.mule.providers.quartz;
 
-import org.mule.api.UMOException;
+import org.mule.api.AbstractMuleException;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.transport.ConnectorException;
+import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.impl.transport.AbstractConnector;
-import org.mule.imple.config.i18n.CoreMessages;
 
 import java.util.Properties;
 
@@ -100,7 +100,7 @@ public class QuartzConnector extends AbstractConnector
         // template method
     }
 
-    protected void doStart() throws UMOException
+    protected void doStart() throws AbstractMuleException
     {
         try
         {
@@ -112,7 +112,7 @@ public class QuartzConnector extends AbstractConnector
         }
     }
 
-    protected void doStop() throws UMOException
+    protected void doStop() throws AbstractMuleException
     {
         try
         {

@@ -11,8 +11,8 @@
 package org.mule.impl.transformer;
 
 import org.mule.api.transformer.TransformerException;
-import org.mule.api.transformer.UMOTransformer;
-import org.mule.impl.MuleMessage;
+import org.mule.api.transformer.Transformer;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.transformer.AbstractTransformer;
 import org.mule.tck.AbstractMuleTestCase;
 
@@ -25,7 +25,7 @@ import java.util.Arrays;
 public class TransformerChainingTestCase extends AbstractMuleTestCase
 {
 
-    public UMOTransformer getTransformer() throws Exception
+    public Transformer getTransformer() throws Exception
     {
         AbstractTransformer transformer = new AbstractTransformer()
         {
@@ -50,7 +50,7 @@ public class TransformerChainingTestCase extends AbstractMuleTestCase
         transformer.setIgnoreBadInput(true);
         final AtomicBoolean nextCalled = new AtomicBoolean(false);
         final Object marker = new Object();
-        UMOTransformer transformer2 = new AbstractTransformer()
+        Transformer transformer2 = new AbstractTransformer()
         {
             protected Object doTransform(Object src, String encoding) throws TransformerException
             {
@@ -58,8 +58,8 @@ public class TransformerChainingTestCase extends AbstractMuleTestCase
                 return marker;
             }
         };
-        MuleMessage message = new MuleMessage(this);
-        message.applyTransformers(Arrays.asList(new UMOTransformer[]{transformer, transformer2}));
+        DefaultMuleMessage message = new DefaultMuleMessage(this);
+        message.applyTransformers(Arrays.asList(new Transformer[]{transformer, transformer2}));
 
         Object result = message.getPayload();
         assertNotNull(result);

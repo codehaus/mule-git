@@ -11,7 +11,7 @@
 package org.mule.impl.config;
 
 import org.mule.api.config.ThreadingProfile;
-import org.mule.api.context.UMOWorkManager;
+import org.mule.api.context.WorkManager;
 import org.mule.impl.work.MuleWorkManager;
 import org.mule.util.StringUtils;
 import org.mule.util.concurrent.NamedThreadFactory;
@@ -165,7 +165,7 @@ public class ImmutableThreadingProfile implements ThreadingProfile
         throw new UnsupportedOperationException(getClass().getName());
     }
 
-    public UMOWorkManager createWorkManager(String name)
+    public WorkManager createWorkManager(String name)
     {
         return workManagerFactory.createWorkManager(this, name);
     }
@@ -203,7 +203,7 @@ public class ImmutableThreadingProfile implements ThreadingProfile
     public static class DefaultWorkManagerFactory implements WorkManagerFactory
     {
 
-        public UMOWorkManager createWorkManager(ThreadingProfile profile, String name)
+        public WorkManager createWorkManager(ThreadingProfile profile, String name)
         {
             return new MuleWorkManager(profile, name);
         }

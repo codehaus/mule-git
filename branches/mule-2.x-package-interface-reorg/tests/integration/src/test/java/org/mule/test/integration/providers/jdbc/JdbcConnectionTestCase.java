@@ -11,10 +11,10 @@
 package org.mule.test.integration.providers.jdbc;
 
 
-import org.mule.api.UMOComponent;
-import org.mule.api.endpoint.UMOEndpointBuilder;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
-import org.mule.api.transport.UMOConnector;
+import org.mule.api.Component;
+import org.mule.api.endpoint.EndpointBuilder;
+import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.api.transport.Connector;
 import org.mule.impl.endpoint.EndpointURIEndpointBuilder;
 import org.mule.impl.transport.SimpleRetryConnectionStrategy;
 import org.mule.providers.jdbc.JdbcConnector;
@@ -36,7 +36,7 @@ public class JdbcConnectionTestCase extends AbstractJdbcFunctionalTestCase
         // the entire test seems to be incomplete, see the comments below..
     }
 
-    public UMOConnector createConnector() throws Exception
+    public Connector createConnector() throws Exception
     {
         connector = (JdbcConnector)super.createConnector();
         SimpleRetryConnectionStrategy strategy = new SimpleRetryConnectionStrategy();
@@ -50,13 +50,13 @@ public class JdbcConnectionTestCase extends AbstractJdbcFunctionalTestCase
     public void testReconnection() throws Exception
     {
 
-        UMOComponent component = getTestComponent("anOrange", Orange.class);
+        Component component = getTestComponent("anOrange", Orange.class);
         component.setModel(model);
         muleContext.getRegistry().registerComponent(component);
-        UMOEndpointBuilder endpointBuilder = new EndpointURIEndpointBuilder("jdbc://test?sql=SELECT * FROM TABLE", muleContext);
+        EndpointBuilder endpointBuilder = new EndpointURIEndpointBuilder("jdbc://test?sql=SELECT * FROM TABLE", muleContext);
         endpointBuilder.setName("test");
         endpointBuilder.setConnector(connector);
-        UMOImmutableEndpoint endpoint = muleContext.getRegistry().lookupEndpointFactory().getInboundEndpoint(
+        ImmutableEndpoint endpoint = muleContext.getRegistry().lookupEndpointFactory().getInboundEndpoint(
             endpointBuilder);
         muleContext.start();
         connector.registerListener(component, endpoint);

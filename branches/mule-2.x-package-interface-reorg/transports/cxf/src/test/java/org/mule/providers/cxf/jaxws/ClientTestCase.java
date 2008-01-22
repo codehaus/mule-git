@@ -10,7 +10,7 @@
 
 package org.mule.providers.cxf.jaxws;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 
@@ -35,7 +35,7 @@ public class ClientTestCase extends FunctionalTestCase
         MuleClient client = new MuleClient();
         Map<String, Object> props = new HashMap<String, Object>();
         props.put("operation", "greetMe");
-        UMOMessage result = client.send("clientEndpoint", "Dan", props);
+        MuleMessage result = client.send("clientEndpoint", "Dan", props);
         assertEquals("Hello Dan", result.getPayload());
         
         GreeterImpl impl = (GreeterImpl) muleContext.getRegistry().lookupObject("greeterService");

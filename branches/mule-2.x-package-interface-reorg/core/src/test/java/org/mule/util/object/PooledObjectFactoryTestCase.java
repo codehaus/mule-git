@@ -10,7 +10,7 @@
 
 package org.mule.util.object;
 
-import org.mule.api.UMOComponent;
+import org.mule.api.Component;
 import org.mule.impl.config.PoolingProfile;
 import org.mule.impl.model.seda.SedaComponent;
 import org.mule.impl.model.seda.SedaModel;
@@ -251,7 +251,7 @@ public class PooledObjectFactoryTestCase extends AbstractMuleTestCase
         model.setMuleContext(muleContext);
         muleContext.applyLifecycle(model);
         
-        UMOComponent c = new SedaComponent();
+        Component c = new SedaComponent();
         c.setName("test");
         PooledObjectFactory of = new PooledObjectFactory(Orange.class, getDefaultPoolingProfile());
         of.initialise();        

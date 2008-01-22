@@ -11,8 +11,8 @@
 package org.mule.impl.transport;
 
 import org.mule.api.lifecycle.LifecycleException;
-import org.mule.api.transport.UMOConnectable;
-import org.mule.imple.config.i18n.Message;
+import org.mule.api.transport.Connectable;
+import org.mule.impl.config.i18n.Message;
 
 /** TODO document */
 public class ConnectException extends LifecycleException
@@ -20,17 +20,17 @@ public class ConnectException extends LifecycleException
     /** Serial version */
     private static final long serialVersionUID = -7802483584780922653L;
 
-    public ConnectException(Message message, UMOConnectable component)
+    public ConnectException(Message message, Connectable component)
     {
         super(message, component);
     }
 
-    public ConnectException(Message message, Throwable cause, UMOConnectable component)
+    public ConnectException(Message message, Throwable cause, Connectable component)
     {
         super(message, cause, component);
     }
 
-    public ConnectException(Throwable cause, UMOConnectable component)
+    public ConnectException(Throwable cause, Connectable component)
     {
         super(cause, component);
     }

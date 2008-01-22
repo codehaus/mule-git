@@ -10,8 +10,8 @@
 
 package org.mule.test.usecases.routing.response;
 
-import org.mule.api.UMOEvent;
-import org.mule.api.UMOMessage;
+import org.mule.api.Event;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.test.usecases.service.DummyResponseAggregator;
@@ -29,7 +29,7 @@ public class ResponseAggregatorTestCase extends FunctionalTestCase
     public void testSyncResponse() throws Exception
     {
         MuleClient client = new MuleClient();
-        UMOMessage message = client.send("http://localhost:28081", "request", null);
+        MuleMessage message = client.send("http://localhost:28081", "request", null);
         assertNotNull(message);
         assertEquals("Received: request", new String(message.getPayloadAsBytes()));
     }
@@ -39,8 +39,8 @@ public class ResponseAggregatorTestCase extends FunctionalTestCase
         // relax access to get to the responseEvents
         RelaxedResponseAggregator aggregator = new RelaxedResponseAggregator();
 
-        UMOEvent event = getTestEvent("message1");
-        final UMOMessage message = event.getMessage();
+        Event event = getTestEvent("message1");
+        final MuleMessage message = event.getMessage();
         final String id = message.getUniqueId();
         message.setCorrelationId(id);
         message.setCorrelationGroupSize(1);

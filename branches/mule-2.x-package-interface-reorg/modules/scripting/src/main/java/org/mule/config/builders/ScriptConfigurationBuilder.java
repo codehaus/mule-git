@@ -11,7 +11,7 @@
 package org.mule.config.builders;
 
 import org.mule.api.MuleContext;
-import org.mule.api.UMOException;
+import org.mule.api.AbstractMuleException;
 import org.mule.components.script.jsr223.Scriptable;
 import org.mule.config.builders.i18n.BuildersMessages;
 import org.mule.impl.config.builders.AbstractResourceConfigurationBuilder;
@@ -28,17 +28,17 @@ public class ScriptConfigurationBuilder extends AbstractResourceConfigurationBui
     protected MuleContext muleContext = null;
     protected boolean initialised = false;
 
-    public ScriptConfigurationBuilder(String configResource) throws UMOException
+    public ScriptConfigurationBuilder(String configResource) throws AbstractMuleException
     {
         this(System.getProperty(SCRIPT_ENGINE_NAME_PROPERTY), configResource);
     }
 
-    public ScriptConfigurationBuilder(String[] configResources) throws UMOException
+    public ScriptConfigurationBuilder(String[] configResources) throws AbstractMuleException
     {
         this(System.getProperty(SCRIPT_ENGINE_NAME_PROPERTY), configResources);
     }
 
-    public ScriptConfigurationBuilder(String scriptEngineName, String configResource) throws UMOException
+    public ScriptConfigurationBuilder(String scriptEngineName, String configResource) throws AbstractMuleException
     {
         super(configResource);
         if (scriptEngineName == null)
@@ -49,7 +49,7 @@ public class ScriptConfigurationBuilder extends AbstractResourceConfigurationBui
         scriptComponent.setScriptEngineName(scriptEngineName);
     }
 
-    public ScriptConfigurationBuilder(String scriptEngineName, String[] configResources) throws UMOException
+    public ScriptConfigurationBuilder(String scriptEngineName, String[] configResources) throws AbstractMuleException
     {
         super(configResources);
         if (scriptEngineName == null)

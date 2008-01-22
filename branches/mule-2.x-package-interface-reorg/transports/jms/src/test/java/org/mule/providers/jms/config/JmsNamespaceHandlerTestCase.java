@@ -9,9 +9,9 @@
  */
 package org.mule.providers.jms.config;
 
-import org.mule.api.UMOFilter;
+import org.mule.api.Filter;
 import org.mule.api.endpoint.EndpointException;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.impl.routing.filters.logic.NotFilter;
 import org.mule.providers.jms.DefaultRedeliveryHandler;
@@ -131,24 +131,24 @@ public class JmsNamespaceHandlerTestCase extends FunctionalTestCase
 
     public void testEndpointConfig() throws EndpointException, InitialisationException
     {
-        UMOImmutableEndpoint endpoint1 = muleContext.getRegistry().lookupEndpointBuilder("endpoint1").buildInboundEndpoint();
+        ImmutableEndpoint endpoint1 = muleContext.getRegistry().lookupEndpointBuilder("endpoint1").buildInboundEndpoint();
         assertNotNull(endpoint1);
-        UMOFilter filter1 = endpoint1.getFilter();
+        Filter filter1 = endpoint1.getFilter();
         assertNotNull(filter1);
         assertTrue(filter1 instanceof JmsSelectorFilter);
-        UMOImmutableEndpoint endpoint2 = muleContext.getRegistry().lookupEndpointBuilder("endpoint2").buildOutboundEndpoint();
+        ImmutableEndpoint endpoint2 = muleContext.getRegistry().lookupEndpointBuilder("endpoint2").buildOutboundEndpoint();
         assertNotNull(endpoint2);
-        UMOFilter filter2 = endpoint2.getFilter();
+        Filter filter2 = endpoint2.getFilter();
         assertNotNull(filter2);
         assertTrue(filter2 instanceof NotFilter);
-        UMOFilter filter3 = ((NotFilter) filter2).getFilter();
+        Filter filter3 = ((NotFilter) filter2).getFilter();
         assertNotNull(filter3);
         assertTrue(filter3 instanceof JmsPropertyFilter);
     }
 
     public void testCustomTransactions() throws EndpointException, InitialisationException
     {
-        UMOImmutableEndpoint endpoint3 = muleContext.getRegistry().lookupEndpointBuilder("endpoint3").buildInboundEndpoint();
+        ImmutableEndpoint endpoint3 = muleContext.getRegistry().lookupEndpointBuilder("endpoint3").buildInboundEndpoint();
         assertNotNull(endpoint3);
         TestTransactionFactory factory = (TestTransactionFactory) endpoint3.getTransactionConfig().getFactory();
         assertNotNull(factory);

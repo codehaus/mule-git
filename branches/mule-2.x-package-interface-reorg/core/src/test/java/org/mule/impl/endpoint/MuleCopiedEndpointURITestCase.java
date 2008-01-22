@@ -10,8 +10,8 @@
 
 package org.mule.impl.endpoint;
 
-import org.mule.api.endpoint.UMOEndpoint;
-import org.mule.api.endpoint.UMOEndpointURI;
+import org.mule.api.endpoint.Endpoint;
+import org.mule.api.endpoint.EndpointURI;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.tck.MuleTestUtils;
 
@@ -26,16 +26,16 @@ public class MuleCopiedEndpointURITestCase extends AbstractMuleTestCase
     {
 
         // Create and test values
-        UMOEndpoint endpoint = MuleTestUtils.getTestSchemeMetaInfoEndpoint("testEndpoint",
-            UMOEndpoint.ENDPOINT_TYPE_SENDER, "protocol", muleContext);
-        UMOEndpointURI endpointUri = endpoint.getEndpointURI();
+        Endpoint endpoint = MuleTestUtils.getTestSchemeMetaInfoEndpoint("testEndpoint",
+            Endpoint.ENDPOINT_TYPE_SENDER, "protocol", muleContext);
+        EndpointURI endpointUri = endpoint.getEndpointURI();
         assertEquals("protocol", endpointUri.getScheme());
         assertEquals("test", endpointUri.getSchemeMetaInfo());
         assertEquals("test:protocol", endpointUri.getFullScheme());
         assertEquals("test", endpointUri.getAddress());
 
         // Copy and test values
-        UMOEndpointURI newEndpointUri = new MuleEndpointURI(endpointUri);
+        EndpointURI newEndpointUri = new MuleEndpointURI(endpointUri);
         newEndpointUri.initialise();
         assertEquals("protocol", newEndpointUri.getScheme());
         assertEquals("test", newEndpointUri.getSchemeMetaInfo());

@@ -87,11 +87,11 @@ import org.mule.impl.routing.inbound.CorrelationEventResequencer;
 import org.mule.impl.routing.inbound.IdempotentReceiver;
 import org.mule.impl.routing.inbound.IdempotentSecureHashReceiver;
 import org.mule.impl.routing.inbound.InboundPassThroughRouter;
-import org.mule.impl.routing.inbound.InboundRouterCollection;
+import org.mule.impl.routing.inbound.DefaultInboundRouterCollection;
 import org.mule.impl.routing.inbound.MessageChunkingAggregator;
 import org.mule.impl.routing.inbound.SelectiveConsumer;
 import org.mule.impl.routing.inbound.WireTap;
-import org.mule.impl.routing.nested.NestedRouter;
+import org.mule.impl.routing.nested.DefaultNestedRouter;
 import org.mule.impl.routing.outbound.ChainingRouter;
 import org.mule.impl.routing.outbound.EndpointSelector;
 import org.mule.impl.routing.outbound.ExceptionBasedRouter;
@@ -100,10 +100,10 @@ import org.mule.impl.routing.outbound.FilteringOutboundRouter;
 import org.mule.impl.routing.outbound.MessageChunkingRouter;
 import org.mule.impl.routing.outbound.MulticastingRouter;
 import org.mule.impl.routing.outbound.OutboundPassThroughRouter;
-import org.mule.impl.routing.outbound.OutboundRouterCollection;
+import org.mule.impl.routing.outbound.DefaultOutboundRouterCollection;
 import org.mule.impl.routing.outbound.StaticRecipientList;
 import org.mule.impl.routing.outbound.TemplateEndpointRouter;
-import org.mule.impl.routing.response.ResponseRouterCollection;
+import org.mule.impl.routing.response.DefaultResponseRouterCollection;
 import org.mule.impl.routing.response.SingleResponseRouter;
 import org.mule.impl.security.PasswordBasedEncryptionStrategy;
 import org.mule.impl.security.SecretKeyEncryptionStrategy;
@@ -262,7 +262,7 @@ public class MuleNamespaceHandler extends AbstractMuleNamespaceHandler
 
         // Pojo Components
         registerBeanDefinitionParser("component", new ComponentDefinitionParser());
-        registerMuleBeanDefinitionParser("binding", new BindingDefinitionParser("nestedRouter.routers", NestedRouter.class)).addCollection("nestedRouter.routers");
+        registerMuleBeanDefinitionParser("binding", new BindingDefinitionParser("nestedRouter.routers", DefaultNestedRouter.class)).addCollection("nestedRouter.routers");
 
         // Other Components
         registerBeanDefinitionParser("bridge-component", new SimplePojoServiceDefinitionParser(PassThroughComponent.class));
@@ -278,9 +278,9 @@ public class MuleNamespaceHandler extends AbstractMuleNamespaceHandler
         registerBeanDefinitionParser("spring-factory-bean", new SpringFactoryBeanDefinitionParser());
 
         //Routers
-        registerBeanDefinitionParser("inbound", new ChildDefinitionParser("inboundRouter", InboundRouterCollection.class));
-        registerBeanDefinitionParser("outbound", new ChildDefinitionParser("outboundRouter", OutboundRouterCollection.class));
-        registerBeanDefinitionParser("async-reply", new ChildDefinitionParser("responseRouter", ResponseRouterCollection.class));
+        registerBeanDefinitionParser("inbound", new ChildDefinitionParser("inboundRouter", DefaultInboundRouterCollection.class));
+        registerBeanDefinitionParser("outbound", new ChildDefinitionParser("outboundRouter", DefaultOutboundRouterCollection.class));
+        registerBeanDefinitionParser("async-reply", new ChildDefinitionParser("responseRouter", DefaultResponseRouterCollection.class));
 
         //Inbound Routers
         registerBeanDefinitionParser("forwarding-router", new ForwardingRouterDefinitionParser());

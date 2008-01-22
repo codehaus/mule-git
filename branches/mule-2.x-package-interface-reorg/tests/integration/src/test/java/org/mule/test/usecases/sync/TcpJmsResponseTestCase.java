@@ -10,7 +10,7 @@
 
 package org.mule.test.usecases.sync;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 
@@ -25,7 +25,7 @@ public class TcpJmsResponseTestCase extends FunctionalTestCase
     public void testSyncResponse() throws Exception
     {
         MuleClient client = new MuleClient();
-        UMOMessage message = client.send("tcp://localhost:4444", "request", null);
+        MuleMessage message = client.send("tcp://localhost:4444", "request", null);
         assertNotNull(message);
         assertEquals("Received: request", message.getPayloadAsString());
     }

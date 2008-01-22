@@ -10,18 +10,18 @@
 
 package org.mule.api.transport;
 
-import org.mule.api.UMOException;
-import org.mule.imple.config.i18n.CoreMessages;
-import org.mule.imple.config.i18n.Message;
+import org.mule.api.AbstractMuleException;
+import org.mule.impl.config.i18n.CoreMessages;
+import org.mule.impl.config.i18n.Message;
 
 /**
- * <code>ConnectorException</code> Is thrown in the context of a UMOConnector,
+ * <code>ConnectorException</code> Is thrown in the context of a Connector,
  * usually some sort of transport level error where the connection has failed. This
  * exception maintains a reference to the connector.
  * 
- * @see UMOConnector
+ * @see Connector
  */
-public class ConnectorException extends UMOException
+public class ConnectorException extends AbstractMuleException
 {
     /**
      * Serial version
@@ -31,13 +31,13 @@ public class ConnectorException extends UMOException
     /**
      * The connector relevant to this exception
      */
-    private transient UMOConnector connector;
+    private transient Connector connector;
 
     /**
      * @param message the exception message
      * @param connector where the exception occurred or is being thrown
      */
-    public ConnectorException(Message message, UMOConnector connector)
+    public ConnectorException(Message message, Connector connector)
     {
         super(generateMessage(message, connector));
         this.connector = connector;
@@ -48,13 +48,13 @@ public class ConnectorException extends UMOException
      * @param connector where the exception occurred or is being thrown
      * @param cause the exception that cause this exception to be thrown
      */
-    public ConnectorException(Message message, UMOConnector connector, Throwable cause)
+    public ConnectorException(Message message, Connector connector, Throwable cause)
     {
         super(generateMessage(message, connector), cause);
         this.connector = connector;
     }
 
-    private static Message generateMessage(Message message, UMOConnector connector)
+    private static Message generateMessage(Message message, Connector connector)
     {
         Message m = CoreMessages.connectorCausedError(connector);
         if (message != null)
@@ -64,7 +64,7 @@ public class ConnectorException extends UMOException
         return message;
     }
 
-    public UMOConnector getConnector()
+    public Connector getConnector()
     {
         return connector;
     }

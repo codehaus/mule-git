@@ -9,7 +9,7 @@
  */
 package org.mule.providers.stdio;
 
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.tck.FunctionalTestCase;
 
 public class StdioNamespaceHandlerTestCase extends FunctionalTestCase
@@ -58,7 +58,7 @@ public class StdioNamespaceHandlerTestCase extends FunctionalTestCase
 
     protected void testEndpointAttribute(String name, String address)
     {
-        UMOImmutableEndpoint endpoint = muleContext.getRegistry().lookupEndpoint(name);
+        ImmutableEndpoint endpoint = muleContext.getRegistry().lookupEndpoint(name);
         assertNotNull("Null " + name, endpoint);
         assertEquals(address, endpoint.getEndpointURI().getAddress());
     }

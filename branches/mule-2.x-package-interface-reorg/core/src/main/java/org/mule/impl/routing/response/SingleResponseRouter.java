@@ -10,8 +10,8 @@
 
 package org.mule.impl.routing.response;
 
-import org.mule.api.UMOEvent;
-import org.mule.api.UMOMessage;
+import org.mule.api.Event;
+import org.mule.api.MuleMessage;
 import org.mule.api.routing.RoutingException;
 import org.mule.impl.routing.inbound.EventGroup;
 
@@ -54,9 +54,9 @@ public class SingleResponseRouter extends AbstractResponseAggregator
      *             exception handler for this componenet
      * @see {@link AbstractResponseAggregator#aggregateEvents(EventGroup)}
      */
-    protected UMOMessage aggregateEvents(EventGroup events) throws RoutingException
+    protected MuleMessage aggregateEvents(EventGroup events) throws RoutingException
     {
-        return ((UMOEvent) events.iterator().next()).getMessage();
+        return ((Event) events.iterator().next()).getMessage();
     }
 
 }

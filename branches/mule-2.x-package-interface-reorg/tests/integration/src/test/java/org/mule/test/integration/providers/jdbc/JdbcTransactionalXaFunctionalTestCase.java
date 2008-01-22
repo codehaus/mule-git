@@ -10,7 +10,7 @@
 
 package org.mule.test.integration.providers.jdbc;
 
-import org.mule.api.UMOTransactionFactory;
+import org.mule.api.TransactionFactory;
 import org.mule.impl.transaction.XaTransactionFactory;
 import org.mule.providers.jdbc.xa.DataSourceWrapper;
 
@@ -40,7 +40,7 @@ public class JdbcTransactionalXaFunctionalTestCase extends AbstractJdbcTransacti
        muleContext.setTransactionManager(txManager);
     }
 
-    protected UMOTransactionFactory getTransactionFactory()
+    protected TransactionFactory getTransactionFactory()
     {
         return new XaTransactionFactory();
     }

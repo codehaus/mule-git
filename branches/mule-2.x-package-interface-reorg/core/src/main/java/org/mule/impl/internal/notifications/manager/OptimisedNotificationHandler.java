@@ -10,7 +10,7 @@
 
 package org.mule.impl.internal.notifications.manager;
 
-import org.mule.api.context.UMOServerNotification;
+import org.mule.api.context.ServerNotification;
 
 /**
  * Optimized to make a quick decision on a particular class of messages.
@@ -57,7 +57,7 @@ public class OptimisedNotificationHandler implements ServerNotificationHandler
         }
     }
 
-    public void fireNotification(UMOServerNotification notification)
+    public void fireNotification(ServerNotification notification)
     {
         if (isNotificationEnabled(notification.getClass()))
         {

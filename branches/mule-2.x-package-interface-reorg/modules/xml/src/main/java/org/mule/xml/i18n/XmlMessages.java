@@ -9,8 +9,8 @@
  */
 package org.mule.xml.i18n;
 
-import org.mule.imple.config.i18n.Message;
-import org.mule.imple.config.i18n.MessageFactory;
+import org.mule.impl.config.i18n.Message;
+import org.mule.impl.config.i18n.MessageFactory;
 
 /** TODO */
 public class XmlMessages extends MessageFactory

@@ -9,11 +9,11 @@
  */
 package org.mule.impl.lifecycle.phases;
 
+import org.mule.api.AbstractMuleException;
 import org.mule.api.MuleContext;
-import org.mule.api.UMOException;
 import org.mule.api.lifecycle.Disposable;
 import org.mule.api.lifecycle.Initialisable;
-import org.mule.impl.lifecycle.LifecyclePhase;
+import org.mule.impl.lifecycle.DefaultLifecyclePhase;
 
 /**
  * Objects are disposed of via the Registry since the Registry manages the creation/initialisation of the objects
@@ -21,14 +21,14 @@ import org.mule.impl.lifecycle.LifecyclePhase;
  * {@link org.mule.impl.DefaultMuleContext} so the dispose Lifecycle phase for the {@link org.mule.impl.DefaultMuleContext}
  * needs to call dispose on the Registry.
  */
-public class MuleContextDisposePhase extends LifecyclePhase
+public class MuleContextDisposePhase extends DefaultLifecyclePhase
 {
     public MuleContextDisposePhase()
     {
         super(Disposable.PHASE_NAME, Disposable.class, Initialisable.PHASE_NAME);
     }
 
-    public void fireLifecycle(MuleContext muleContext, String currentPhase) throws UMOException
+    public void fireLifecycle(MuleContext muleContext, String currentPhase) throws AbstractMuleException
     {
         //Delegate this to the Registry
         if (muleContext.getRegistry() != null)

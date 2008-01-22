@@ -10,7 +10,7 @@
 
 package org.mule.providers.soap.xfire;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.providers.http.HttpConnector;
 import org.mule.providers.http.HttpConstants;
@@ -68,7 +68,7 @@ public class XFireWsdlCallTestCase extends FunctionalTestCase
         Map props = new HashMap();
         props.put(HttpConnector.HTTP_METHOD_PROPERTY, "GET");
         MuleClient client = new MuleClient();
-        UMOMessage result = client.send("http://localhost:" + HTTP_PORT
+        MuleMessage result = client.send("http://localhost:" + HTTP_PORT
                                         + "/services/mycomponent?wsdl", null, props);
 
         assertNotNull(result);
@@ -100,7 +100,7 @@ public class XFireWsdlCallTestCase extends FunctionalTestCase
         MuleClient client = new MuleClient();
         Map props = new HashMap();
         props.put("http.method", "GET");
-        UMOMessage reply = client.send("http://localhost:63082/xfireService?wsdl", null, props);
+        MuleMessage reply = client.send("http://localhost:63082/xfireService?wsdl", null, props);
 
         assertNotNull(reply);
         assertNotNull(reply.getPayload());

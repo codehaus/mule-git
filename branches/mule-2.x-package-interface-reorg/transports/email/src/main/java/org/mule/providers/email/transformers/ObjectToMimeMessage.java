@@ -10,8 +10,8 @@
 
 package org.mule.providers.email.transformers;
 
-import org.mule.api.UMOEventContext;
-import org.mule.api.UMOMessage;
+import org.mule.api.EventContext;
+import org.mule.api.MuleMessage;
 import org.mule.api.transformer.TransformerException;
 import org.mule.impl.transformer.simple.SerializableToByteArray;
 import org.mule.providers.email.MailMessageAdapter;
@@ -36,7 +36,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * Transforms a javax.mail.Message to a UMOMessage, with support for attachments
+ * Transforms a javax.mail.Message to a MuleMessage, with support for attachments
  */
 public class ObjectToMimeMessage extends StringToEmailMessage
 {
@@ -44,7 +44,7 @@ public class ObjectToMimeMessage extends StringToEmailMessage
     private Log logger = LogFactory.getLog(getClass());
     
     // @Override
-    protected void setContent(Object payload, Message msg, String contentType, UMOMessage message)
+    protected void setContent(Object payload, Message msg, String contentType, MuleMessage message)
         throws Exception
     {
 
@@ -72,7 +72,7 @@ public class ObjectToMimeMessage extends StringToEmailMessage
         super.setContent(payload, msg, contentType, message);
     }
 
-    protected void addBodyPartHeaders(BodyPart part, String name, UMOMessage message)
+    protected void addBodyPartHeaders(BodyPart part, String name, MuleMessage message)
     {
         Map headers = (Map)message.getProperty(
             name + MailMessageAdapter.ATTACHMENT_HEADERS_PROPERTY_POSTFIX);

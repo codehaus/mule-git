@@ -10,15 +10,15 @@
 
 package org.mule.api.endpoint;
 
-import org.mule.api.UMOException;
-import org.mule.imple.config.i18n.Message;
+import org.mule.api.AbstractMuleException;
+import org.mule.impl.config.i18n.Message;
 
 /**
  * <code>EndpointException</code> is an abstract exception extended by endpoint
  * specific exceptions.
  */
 
-public class EndpointException extends UMOException
+public class EndpointException extends AbstractMuleException
 {
     /**
      * Serial version

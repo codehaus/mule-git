@@ -10,23 +10,23 @@
 package org.mule.providers.tcp;
 
 import org.mule.api.TransactionException;
-import org.mule.api.UMOComponent;
-import org.mule.api.UMOException;
-import org.mule.api.UMOMessage;
-import org.mule.api.UMOTransaction;
+import org.mule.api.Component;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleMessage;
+import org.mule.api.Transaction;
 import org.mule.api.config.MuleProperties;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.CreateException;
 import org.mule.api.lifecycle.Disposable;
 import org.mule.api.lifecycle.DisposeException;
-import org.mule.api.transport.UMOConnector;
-import org.mule.api.transport.UMOMessageAdapter;
-import org.mule.impl.MuleMessage;
+import org.mule.api.transport.Connector;
+import org.mule.api.transport.MessageAdapter;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.ResponseOutputStream;
+import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.impl.transport.AbstractMessageReceiver;
 import org.mule.impl.transport.AbstractReceiverResourceWorker;
 import org.mule.impl.transport.ConnectException;
-import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.providers.tcp.i18n.TcpMessages;
 
 import java.io.BufferedInputStream;
@@ -57,7 +57,7 @@ public class TcpMessageReceiver extends AbstractMessageReceiver implements Work
 {
     private ServerSocket serverSocket = null;
 
-    public TcpMessageReceiver(UMOConnector connector, UMOComponent component, UMOImmutableEndpoint endpoint)
+    public TcpMessageReceiver(Connector connector, Component component, ImmutableEndpoint endpoint)
             throws CreateException
     {
         super(connector, component, endpoint);
@@ -110,12 +110,12 @@ public class TcpMessageReceiver extends AbstractMessageReceiver implements Work
         }
     }
 
-    protected void doStart() throws UMOException
+    protected void doStart() throws AbstractMuleException
     {
         // nothing to do
     }
 
-    protected void doStop() throws UMOException
+    protected void doStop() throws AbstractMuleException
     {
         // nothing to do
     }
@@ -336,7 +336,7 @@ public class TcpMessageReceiver extends AbstractMessageReceiver implements Work
             socket.shutdownOutput();
         }
 
-        protected void bindTransaction(UMOTransaction tx) throws TransactionException
+        protected void bindTransaction(Transaction tx) throws TransactionException
         {
             //nothing to do
         }
@@ -399,9 +399,9 @@ public class TcpMessageReceiver extends AbstractMessageReceiver implements Work
 
         protected Object processData(Object data) throws Exception
         {
-            UMOMessageAdapter adapter = connector.getMessageAdapter(data);
+            MessageAdapter adapter = connector.getMessageAdapter(data);
             OutputStream os = ((TcpConnector) connector).getTcpProtocol().createResponse(socket);
-            UMOMessage returnMessage = routeMessage(new MuleMessage(adapter), endpoint.isSynchronous(), os);
+            MuleMessage returnMessage = routeMessage(new DefaultMuleMessage(adapter), endpoint.isSynchronous(), os);
             if (returnMessage != null)
             {
                 return returnMessage;
@@ -412,7 +412,7 @@ public class TcpMessageReceiver extends AbstractMessageReceiver implements Work
             }
         }
 
-        protected void preRouteMuleMessage(final MuleMessage message) throws Exception
+        protected void preRouteMuleMessage(final DefaultMuleMessage message) throws Exception
         {
             super.preRouteMuleMessage(message);
 

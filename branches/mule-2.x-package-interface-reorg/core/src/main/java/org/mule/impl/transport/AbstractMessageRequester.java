@@ -10,20 +10,20 @@
 
 package org.mule.impl.transport;
 
-import org.mule.api.UMOMessage;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.MuleMessage;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.transport.DispatchException;
+import org.mule.api.transport.MessageRequester;
 import org.mule.api.transport.ReceiveException;
-import org.mule.api.transport.UMOMessageRequester;
 import org.mule.impl.internal.notifications.MessageNotification;
 
 /**
  * Provide a default dispatch (client) support for handling threads lifecycle and validation.
  */
-public abstract class AbstractMessageRequester extends AbstractConnectable implements UMOMessageRequester
+public abstract class AbstractMessageRequester extends AbstractConnectable implements MessageRequester
 {
     
-    public AbstractMessageRequester(UMOImmutableEndpoint endpoint)
+    public AbstractMessageRequester(ImmutableEndpoint endpoint)
     {
         super(endpoint);
     }
@@ -35,17 +35,17 @@ public abstract class AbstractMessageRequester extends AbstractConnectable imple
      *            The call should return immediately if there is data available. If
      *            no data becomes available before the timeout elapses, null will be
      *            returned
-     * @return the result of the request wrapped in a UMOMessage object. Null will be
+     * @return the result of the request wrapped in a MuleMessage object. Null will be
      *         returned if no data was avaialable
      * @throws Exception if the call to the underlying protocal cuases an exception
      */
-    public final UMOMessage request(long timeout) throws Exception
+    public final MuleMessage request(long timeout) throws Exception
     {
         try
         {
             // Make sure we are connected
             connectionStrategy.connect(this);
-            UMOMessage result = doRequest(timeout);
+            MuleMessage result = doRequest(timeout);
             if (result != null && connector.isEnableMessageEvents())
             {
                 connector.fireNotification(new MessageNotification(result, endpoint, null,
@@ -72,10 +72,10 @@ public abstract class AbstractMessageRequester extends AbstractConnectable imple
      *            The call should return immediately if there is data available. If
      *            no data becomes available before the timeout elapses, null will be
      *            returned
-     * @return the result of the request wrapped in a UMOMessage object. Null will be
+     * @return the result of the request wrapped in a MuleMessage object. Null will be
      *         returned if no data was avaialable
      * @throws Exception if the call to the underlying protocal cuases an exception
      */
-    protected abstract UMOMessage doRequest(long timeout) throws Exception;
+    protected abstract MuleMessage doRequest(long timeout) throws Exception;
 
 }

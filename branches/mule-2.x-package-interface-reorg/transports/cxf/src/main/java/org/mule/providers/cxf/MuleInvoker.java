@@ -11,11 +11,11 @@
 package org.mule.providers.cxf;
 
 import org.mule.api.ComponentException;
-import org.mule.api.UMOException;
-import org.mule.api.UMOMessage;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleMessage;
 import org.mule.api.config.MuleProperties;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
-import org.mule.impl.MuleMessage;
+import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.transport.NullPayload;
 
 import java.lang.reflect.Method;
@@ -49,7 +49,7 @@ public class MuleInvoker implements Invoker
             MethodDispatcher.class.getName());
         Method m = md.getMethod(bop);
 
-        UMOMessage message = null;
+        MuleMessage message = null;
         try
         {
             CxfMessageAdapter messageAdapter = (CxfMessageAdapter) receiver.getConnector().getMessageAdapter(
@@ -60,9 +60,9 @@ public class MuleInvoker implements Invoker
                 messageAdapter.setProperty(MuleProperties.MULE_METHOD_PROPERTY, m);
             }
 
-            message = receiver.routeMessage(new MuleMessage(messageAdapter), synchronous);
+            message = receiver.routeMessage(new DefaultMuleMessage(messageAdapter), synchronous);
         }
-        catch (UMOException e)
+        catch (AbstractMuleException e)
         {
             throw new Fault(e);
         }
@@ -100,7 +100,7 @@ public class MuleInvoker implements Invoker
         }
     }
 
-    public UMOImmutableEndpoint getEndpoint()
+    public ImmutableEndpoint getEndpoint()
     {
         return receiver.getEndpoint();
     }

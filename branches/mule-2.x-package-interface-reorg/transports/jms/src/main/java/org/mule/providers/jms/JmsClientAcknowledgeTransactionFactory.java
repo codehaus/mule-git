@@ -12,22 +12,22 @@ package org.mule.providers.jms;
 
 import org.mule.api.MuleContext;
 import org.mule.api.TransactionException;
-import org.mule.api.UMOTransaction;
-import org.mule.api.UMOTransactionFactory;
+import org.mule.api.Transaction;
+import org.mule.api.TransactionFactory;
 
 /**
  * <code>JmsClientAcknowledgeTransactionFactory</code> creates a JMS Client
  * Acknowledge Transaction using a JMS Message.
  */
 
-public class JmsClientAcknowledgeTransactionFactory implements UMOTransactionFactory
+public class JmsClientAcknowledgeTransactionFactory implements TransactionFactory
 {
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.api.UMOTransactionFactory#beginTransaction(java.lang.Object)
+     * @see org.mule.api.TransactionFactory#beginTransaction(java.lang.Object)
      */
-    public UMOTransaction beginTransaction(MuleContext muleContext) throws TransactionException
+    public Transaction beginTransaction(MuleContext muleContext) throws TransactionException
     {
         JmsClientAcknowledgeTransaction tx = new JmsClientAcknowledgeTransaction();
         tx.begin();

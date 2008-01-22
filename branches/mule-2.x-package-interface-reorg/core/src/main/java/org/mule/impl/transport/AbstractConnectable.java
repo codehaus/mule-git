@@ -10,15 +10,15 @@
 
 package org.mule.impl.transport;
 
+import org.mule.api.AbstractMuleException;
 import org.mule.api.MuleRuntimeException;
-import org.mule.api.UMOException;
-import org.mule.api.context.UMOWorkManager;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.context.WorkManager;
+import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.api.transport.Connectable;
 import org.mule.api.transport.ConnectionStrategy;
-import org.mule.api.transport.UMOConnectable;
-import org.mule.api.transport.UMOConnector;
+import org.mule.api.transport.Connector;
+import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.impl.internal.notifications.ConnectionNotification;
-import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.util.ClassUtils;
 
 import java.beans.ExceptionListener;
@@ -29,7 +29,7 @@ import org.apache.commons.logging.LogFactory;
 /**
  * Provide a default dispatch (client) support for handling threads lifecycle and validation.
  */
-public abstract class AbstractConnectable implements UMOConnectable, ExceptionListener
+public abstract class AbstractConnectable implements Connectable, ExceptionListener
 {
 
     /**
@@ -40,9 +40,9 @@ public abstract class AbstractConnectable implements UMOConnectable, ExceptionLi
     /**
      * Thread pool of Connector sessions
      */
-    protected UMOWorkManager workManager = null;
+    protected WorkManager workManager = null;
 
-    protected final UMOImmutableEndpoint endpoint;
+    protected final ImmutableEndpoint endpoint;
     protected final AbstractConnector connector;
 
     protected boolean disposed = false;
@@ -52,7 +52,7 @@ public abstract class AbstractConnectable implements UMOConnectable, ExceptionLi
     protected volatile boolean connecting = false;
     protected volatile boolean connected = false;
 
-    public AbstractConnectable(UMOImmutableEndpoint endpoint)
+    public AbstractConnectable(ImmutableEndpoint endpoint)
     {
         this.endpoint = endpoint;
         this.connector = (AbstractConnector) endpoint.getConnector();
@@ -80,7 +80,7 @@ public abstract class AbstractConnectable implements UMOConnectable, ExceptionLi
             {
                 workManager = connector.getDispatcherWorkManager();
             }
-            catch (UMOException e)
+            catch (AbstractMuleException e)
             {
                 disposeAndLogException();
                 throw new MuleRuntimeException(CoreMessages.failedToStart("WorkManager"), e);
@@ -166,12 +166,12 @@ public abstract class AbstractConnectable implements UMOConnectable, ExceptionLi
         }
     }
 
-    public UMOConnector getConnector()
+    public Connector getConnector()
     {
         return connector;
     }
 
-    public UMOImmutableEndpoint getEndpoint()
+    public ImmutableEndpoint getEndpoint()
     {
         return endpoint;
     }
@@ -255,7 +255,7 @@ public abstract class AbstractConnectable implements UMOConnectable, ExceptionLi
             ConnectionNotification.CONNECTION_DISCONNECTED));
     }
 
-    protected String getConnectEventId(UMOImmutableEndpoint endpoint)
+    protected String getConnectEventId(ImmutableEndpoint endpoint)
     {
         return connector.getName() + ".dispatcher(" + endpoint.getEndpointURI().getUri() + ")";
     }

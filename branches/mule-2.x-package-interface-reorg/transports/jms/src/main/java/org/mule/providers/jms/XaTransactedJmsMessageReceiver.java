@@ -10,13 +10,13 @@
 
 package org.mule.providers.jms;
 
-import org.mule.api.UMOComponent;
-import org.mule.api.UMOTransaction;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.Component;
+import org.mule.api.Transaction;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.CreateException;
-import org.mule.api.transport.UMOConnector;
-import org.mule.api.transport.UMOMessageAdapter;
-import org.mule.impl.MuleMessage;
+import org.mule.api.transport.Connector;
+import org.mule.api.transport.MessageAdapter;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.transaction.TransactionCoordination;
 import org.mule.impl.transport.ConnectException;
 import org.mule.impl.transport.SingleAttemptConnectionStrategy;
@@ -72,7 +72,7 @@ public class XaTransactedJmsMessageReceiver extends TransactedPollingMessageRece
         }
     }
 
-    public XaTransactedJmsMessageReceiver(UMOConnector umoConnector, UMOComponent component, UMOImmutableEndpoint endpoint)
+    public XaTransactedJmsMessageReceiver(Connector umoConnector, Component component, ImmutableEndpoint endpoint)
         throws CreateException
     {
         super(umoConnector, component, endpoint);
@@ -204,7 +204,7 @@ public class XaTransactedJmsMessageReceiver extends TransactedPollingMessageRece
         // bound to it yet
         JmsThreadContext ctx = context.getContext();
 
-        UMOTransaction tx = TransactionCoordination.getInstance().getTransaction();
+        Transaction tx = TransactionCoordination.getInstance().getTransaction();
         if (tx != null)
         {
             tx.bindResource(connector.getConnection(), ctx.session);
@@ -271,8 +271,8 @@ public class XaTransactedJmsMessageReceiver extends TransactedPollingMessageRece
             tx.bindResource(message, null);
         }
 
-        UMOMessageAdapter adapter = connector.getMessageAdapter(message);
-        routeMessage(new MuleMessage(adapter));
+        MessageAdapter adapter = connector.getMessageAdapter(message);
+        routeMessage(new DefaultMuleMessage(adapter));
         return null;
     }
 

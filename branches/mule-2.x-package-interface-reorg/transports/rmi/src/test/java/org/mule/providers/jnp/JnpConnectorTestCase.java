@@ -10,14 +10,14 @@
 
 package org.mule.providers.jnp;
 
-import org.mule.api.transport.UMOConnector;
+import org.mule.api.transport.Connector;
 import org.mule.tck.providers.AbstractConnectorTestCase;
 
 public class JnpConnectorTestCase extends AbstractConnectorTestCase
 {
 
     // @Override
-    public UMOConnector createConnector() throws Exception
+    public Connector createConnector() throws Exception
     {
         JnpConnector c = new JnpConnector();
         c.setName("JnpConnector");

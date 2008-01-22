@@ -10,14 +10,14 @@
 
 package org.mule.providers.soap.xfire;
 
-import org.mule.api.UMOEventContext;
-import org.mule.api.UMOException;
-import org.mule.api.UMOMessage;
+import org.mule.api.EventContext;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleMessage;
 import org.mule.api.lifecycle.Callable;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.lifecycle.Lifecycle;
-import org.mule.impl.MuleMessage;
-import org.mule.imple.config.i18n.MessageFactory;
+import org.mule.impl.DefaultMuleMessage;
+import org.mule.impl.config.i18n.MessageFactory;
 import org.mule.providers.http.HttpConnector;
 import org.mule.providers.http.HttpConstants;
 import org.mule.providers.soap.SoapConstants;
@@ -64,7 +64,7 @@ public class XFireServiceComponent implements Callable, Lifecycle
         super();
     }
    
-    public Object onCall(UMOEventContext eventContext) throws Exception
+    public Object onCall(EventContext eventContext) throws Exception
     {
         if(logger.isDebugEnabled())
         {
@@ -100,7 +100,7 @@ public class XFireServiceComponent implements Callable, Lifecycle
         {
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             getXfire().generateWSDL(getServiceName(eventContext), out);
-            UMOMessage result = new MuleMessage(out.toString(eventContext.getEncoding()));
+            MuleMessage result = new DefaultMuleMessage(out.toString(eventContext.getEncoding()));
             result.setProperty(HttpConstants.HEADER_CONTENT_TYPE, "text/xml");
             return result;
         }
@@ -111,7 +111,7 @@ public class XFireServiceComponent implements Callable, Lifecycle
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             HtmlServiceWriter writer = new HtmlServiceWriter();
             writer.write(out, getServiceRegistry().getService(getServiceName(eventContext)));
-            UMOMessage result = new MuleMessage(out.toString(eventContext.getEncoding()));
+            MuleMessage result = new DefaultMuleMessage(out.toString(eventContext.getEncoding()));
             result.setProperty(HttpConstants.HEADER_CONTENT_TYPE, "text/xml");
             return result;
         }
@@ -129,12 +129,12 @@ public class XFireServiceComponent implements Callable, Lifecycle
 
     }
 
-    public void start() throws UMOException
+    public void start() throws AbstractMuleException
     {
         // template method
     }
 
-    public void stop() throws UMOException
+    public void stop() throws AbstractMuleException
     {
         // template method
     }
@@ -165,9 +165,9 @@ public class XFireServiceComponent implements Callable, Lifecycle
      * 
      * @param context the event context
      * @return The inputstream for the current message
-     * @throws UMOException
+     * @throws AbstractMuleException
      */
-    protected InputStream getMessageStream(UMOEventContext context) throws UMOException
+    protected InputStream getMessageStream(EventContext context) throws AbstractMuleException
     {
         return (InputStream) context.getMessage().getPayload(InputStream.class);
     }
@@ -178,7 +178,7 @@ public class XFireServiceComponent implements Callable, Lifecycle
      * @param context the context from which to find the service name
      * @return the service that is mapped to the specified request.
      */
-    protected String getServiceName(UMOEventContext context)
+    protected String getServiceName(EventContext context)
     {
         String pathInfo = context.getEndpointURI().getPath();
 

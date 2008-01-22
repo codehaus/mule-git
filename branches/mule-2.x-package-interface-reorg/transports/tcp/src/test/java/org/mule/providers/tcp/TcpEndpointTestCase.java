@@ -10,7 +10,7 @@
 
 package org.mule.providers.tcp;
 
-import org.mule.api.endpoint.UMOEndpointURI;
+import org.mule.api.endpoint.EndpointURI;
 import org.mule.impl.endpoint.MuleEndpointURI;
 import org.mule.tck.AbstractMuleTestCase;
 
@@ -19,7 +19,7 @@ public class TcpEndpointTestCase extends AbstractMuleTestCase
 
     public void testHostPortUrl() throws Exception
     {
-        UMOEndpointURI url = new MuleEndpointURI("tcp://localhost:7856");
+        EndpointURI url = new MuleEndpointURI("tcp://localhost:7856");
         url.initialise();
         assertEquals(TcpConnector.TCP, url.getScheme());
         assertEquals("tcp://localhost:7856", url.getAddress());
@@ -32,7 +32,7 @@ public class TcpEndpointTestCase extends AbstractMuleTestCase
 
     public void testQueryParams1() throws Exception
     {
-        UMOEndpointURI url = new MuleEndpointURI("tcp://localhost:7856?param=1");
+        EndpointURI url = new MuleEndpointURI("tcp://localhost:7856?param=1");
         url.initialise();
 
         assertEquals(TcpConnector.TCP, url.getScheme());
@@ -47,7 +47,7 @@ public class TcpEndpointTestCase extends AbstractMuleTestCase
 
     public void testQueryParams2() throws Exception
     {
-        UMOEndpointURI url = new MuleEndpointURI(
+        EndpointURI url = new MuleEndpointURI(
             "tcp://localhost:7856?param=1&endpointName=tcpProvider&blankParam=");
         url.initialise();
         

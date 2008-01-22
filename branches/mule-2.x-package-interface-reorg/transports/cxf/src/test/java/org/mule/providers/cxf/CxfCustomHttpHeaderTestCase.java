@@ -10,9 +10,9 @@
 
 package org.mule.providers.cxf;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.api.config.MuleProperties;
-import org.mule.api.context.UMOServerNotification;
+import org.mule.api.context.ServerNotification;
 import org.mule.extras.client.MuleClient;
 import org.mule.impl.internal.notifications.MessageNotification;
 import org.mule.impl.internal.notifications.MessageNotificationListener;
@@ -25,7 +25,7 @@ public class CxfCustomHttpHeaderTestCase extends FunctionalTestCase implements M
 {
     protected static final String endpointAddress = "http://localhost:63181/services/TestComponent?method=onReceive";
 
-    private UMOMessage notificationMsg = null;
+    private MuleMessage notificationMsg = null;
     private CountDownLatch latch = null;
 
     protected void doSetUp() throws Exception
@@ -50,7 +50,7 @@ public class CxfCustomHttpHeaderTestCase extends FunctionalTestCase implements M
         props.put(myProperty, myProperty);
 
         MuleClient client = new MuleClient();
-        UMOMessage reply = client.send("cxf:" + endpointAddress, payload, props);
+        MuleMessage reply = client.send("cxf:" + endpointAddress, payload, props);
 
         assertNotNull(reply);
         assertNotNull(reply.getPayload());
@@ -72,14 +72,14 @@ public class CxfCustomHttpHeaderTestCase extends FunctionalTestCase implements M
         assertEquals(myProperty, notificationMsg.getProperty(myProperty));
     }
 
-    public void onNotification(UMOServerNotification notification)
+    public void onNotification(ServerNotification notification)
     {
         if (notification instanceof MessageNotification)
         {
             String uri = ((MessageNotification) notification).getEndpoint().getEndpointURI().toString();
             if (endpointAddress.equals(uri))
             {
-                notificationMsg = (UMOMessage) notification.getSource();
+                notificationMsg = (MuleMessage) notification.getSource();
                 latch.countDown();
             }
         }

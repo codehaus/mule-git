@@ -12,8 +12,8 @@ package org.mule.impl;
 
 import org.mule.api.MuleContext;
 import org.mule.api.MuleContextBuilder;
-import org.mule.api.context.UMOWorkManager;
-import org.mule.api.lifecycle.UMOLifecycleManager;
+import org.mule.api.context.WorkManager;
+import org.mule.api.lifecycle.LifecycleManager;
 import org.mule.impl.config.MuleConfiguration;
 import org.mule.impl.internal.notifications.AdminNotification;
 import org.mule.impl.internal.notifications.AdminNotificationListener;
@@ -52,8 +52,8 @@ import org.apache.commons.logging.LogFactory;
 /**
  * Implementation of {@link MuleContextBuilder} that uses {@link DefaultMuleContext}
  * as the default {@link MuleContext} implementation and builds it with defaults
- * values for {@link MuleConfiguration}, {@link UMOLifecycleManager},
- * {@link UMOWorkManager} and {@link ServerNotificationManager}.
+ * values for {@link MuleConfiguration}, {@link LifecycleManager},
+ * {@link WorkManager} and {@link ServerNotificationManager}.
  */
 public class DefaultMuleContextBuilder implements MuleContextBuilder
 {
@@ -62,9 +62,9 @@ public class DefaultMuleContextBuilder implements MuleContextBuilder
 
     protected MuleConfiguration muleConfiguration;
 
-    protected UMOLifecycleManager lifecycleManager;
+    protected LifecycleManager lifecycleManager;
 
-    protected UMOWorkManager workManager;
+    protected WorkManager workManager;
 
     protected ServerNotificationManager notificationManager;
 
@@ -87,7 +87,7 @@ public class DefaultMuleContextBuilder implements MuleContextBuilder
         return this;
     }
 
-    public DefaultMuleContextBuilder setWorkManager(UMOWorkManager workManager)
+    public DefaultMuleContextBuilder setWorkManager(WorkManager workManager)
     {
         this.workManager = workManager;
         return this;
@@ -99,7 +99,7 @@ public class DefaultMuleContextBuilder implements MuleContextBuilder
         return this;
     }
 
-    public DefaultMuleContextBuilder setLifecycleManager(UMOLifecycleManager lifecycleManager)
+    public DefaultMuleContextBuilder setLifecycleManager(LifecycleManager lifecycleManager)
     {
         this.lifecycleManager = lifecycleManager;
         return this;
@@ -118,7 +118,7 @@ public class DefaultMuleContextBuilder implements MuleContextBuilder
         }
     }
 
-    protected UMOLifecycleManager getLifecycleManager()
+    protected LifecycleManager getLifecycleManager()
     {
         if (lifecycleManager != null)
         {
@@ -126,7 +126,7 @@ public class DefaultMuleContextBuilder implements MuleContextBuilder
         }
         else
         {
-            UMOLifecycleManager lifecycleManager = new GenericLifecycleManager();
+            LifecycleManager lifecycleManager = new GenericLifecycleManager();
             lifecycleManager.registerLifecycle(new MuleContextInitialisePhase());
             lifecycleManager.registerLifecycle(new MuleContextStartPhase());
             lifecycleManager.registerLifecycle(new MuleContextStopPhase());
@@ -135,7 +135,7 @@ public class DefaultMuleContextBuilder implements MuleContextBuilder
         }
     }
 
-    protected UMOWorkManager getWorkManager()
+    protected WorkManager getWorkManager()
     {
         if (workManager != null)
         {

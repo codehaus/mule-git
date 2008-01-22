@@ -9,7 +9,7 @@
  */
 package org.mule.impl.model.resolvers;
 
-import org.mule.api.UMOEventContext;
+import org.mule.api.EventContext;
 import org.mule.api.transformer.TransformerException;
 import org.mule.util.ClassUtils;
 
@@ -34,7 +34,7 @@ public class ArrayEntryPointResolver extends AbstractArgumentEntryPointResolver
     }
 
     //@java.lang.Override
-    protected Object[] getPayloadFromMessage(UMOEventContext context) throws TransformerException
+    protected Object[] getPayloadFromMessage(EventContext context) throws TransformerException
     {
         Object temp;
         if (isTransformFirst())

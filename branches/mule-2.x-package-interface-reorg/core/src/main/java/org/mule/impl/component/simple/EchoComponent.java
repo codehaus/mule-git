@@ -10,7 +10,7 @@
 
 package org.mule.impl.component.simple;
 
-import org.mule.api.UMOEventContext;
+import org.mule.api.EventContext;
 import org.mule.api.component.EchoService;
 
 /**
@@ -20,7 +20,7 @@ import org.mule.api.component.EchoService;
 public class EchoComponent extends LogComponent implements EchoService
 {
 
-    public Object onCall(UMOEventContext context) throws Exception
+    public Object onCall(EventContext context) throws Exception
     {
         super.onCall(context);
         return context.transformMessage();

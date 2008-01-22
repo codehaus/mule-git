@@ -10,7 +10,7 @@
 
 package org.mule.providers.file;
 
-import org.mule.api.transport.UMOMessageAdapter;
+import org.mule.api.transport.MessageAdapter;
 import org.mule.util.DateUtils;
 import org.mule.util.TemplateParser;
 import org.mule.util.UUID;
@@ -43,7 +43,7 @@ public class SimpleFilenameParser implements FilenameParser
 
     private final AtomicLong count = new AtomicLong(0);
 
-    public String getFilename(UMOMessageAdapter adapter, String pattern)
+    public String getFilename(MessageAdapter adapter, String pattern)
     {
         if (pattern == null)
         {
@@ -62,7 +62,7 @@ public class SimpleFilenameParser implements FilenameParser
         }
     }
 
-    protected String getFilename(final UMOMessageAdapter adapter, String pattern, TemplateParser parser)
+    protected String getFilename(final MessageAdapter adapter, String pattern, TemplateParser parser)
     {
         return parser.parse(new TemplateParser.TemplateCallback()
         {

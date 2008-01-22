@@ -10,10 +10,10 @@
 
 package org.mule.providers.soap.axis;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.api.transport.DispatchException;
 import org.mule.extras.client.MuleClient;
-import org.mule.impl.MuleMessage;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.transport.NullPayload;
 import org.mule.tck.FunctionalTestCase;
 
@@ -23,7 +23,7 @@ public class AxisConnectorJmsEndpointFormatTestCase extends FunctionalTestCase
     public void testAxisOverJmsWithQueueNameSameAsComponentName() throws Exception
     {
         MuleClient client = new MuleClient();
-        UMOMessage result = client.send("componentName", new MuleMessage("test1"));
+        MuleMessage result = client.send("componentName", new DefaultMuleMessage("test1"));
         assertNotNull(result.getPayload());
         assertEquals("test1", result.getPayloadAsString());
     }
@@ -31,7 +31,7 @@ public class AxisConnectorJmsEndpointFormatTestCase extends FunctionalTestCase
     public void testAxisOverJmsWithQueueNameDifferentFromComponentName() throws Exception
     {
         MuleClient client = new MuleClient();
-        UMOMessage result = client.send("soapActionDefined", new MuleMessage("test2"));
+        MuleMessage result = client.send("soapActionDefined", new DefaultMuleMessage("test2"));
         assertNotNull(result.getPayload());
         assertEquals("test2", result.getPayloadAsString());
     }
@@ -42,7 +42,7 @@ public class AxisConnectorJmsEndpointFormatTestCase extends FunctionalTestCase
         Exception exception = null;
         try
         {
-            client.send("noMethodDefined", new MuleMessage("test3"));
+            client.send("noMethodDefined", new DefaultMuleMessage("test3"));
         }
         catch (Exception e)
         {
@@ -59,7 +59,7 @@ public class AxisConnectorJmsEndpointFormatTestCase extends FunctionalTestCase
         Exception exception = null;
         try
         {
-            UMOMessage msg = client.send("noSoapActionDefined", new MuleMessage("test4"));
+            MuleMessage msg = client.send("noSoapActionDefined", new DefaultMuleMessage("test4"));
             assertEquals(NullPayload.getInstance(), msg.getPayload());
         }
         catch (Exception e)

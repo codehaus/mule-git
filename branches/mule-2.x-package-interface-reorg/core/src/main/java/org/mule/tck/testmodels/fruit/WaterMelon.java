@@ -10,8 +10,8 @@
 
 package org.mule.tck.testmodels.fruit;
 
-import org.mule.api.UMOEvent;
-import org.mule.api.UMOException;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.Event;
 import org.mule.api.lifecycle.Disposable;
 import org.mule.api.lifecycle.Startable;
 import org.mule.api.lifecycle.Stoppable;
@@ -44,7 +44,7 @@ public class WaterMelon implements Fruit, Startable, Stoppable, Disposable
         super();
     }
 
-    public WaterMelon(HashMap props) throws UMOException
+    public WaterMelon(HashMap props) throws AbstractMuleException
     {
         logger.info("Initialisaing Water melon with hashmap constructor");
         setBrand((String) props.get("namespace.brand"));
@@ -63,7 +63,7 @@ public class WaterMelon implements Fruit, Startable, Stoppable, Disposable
         return bitten;
     }
 
-    public void myEventHandler(UMOEvent event) throws UMOException
+    public void myEventHandler(Event event) throws AbstractMuleException
     {
         logger.debug("Water Melon received an event in MyEventHandler! Event says: "
                      + event.getMessageAsString());

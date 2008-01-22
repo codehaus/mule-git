@@ -11,9 +11,9 @@
 package org.mule.providers.quartz;
 
 import org.mule.RegistryContext;
-import org.mule.api.UMOEvent;
-import org.mule.api.UMOMessage;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.Event;
+import org.mule.api.MuleMessage;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.transport.DispatchException;
 import org.mule.impl.transport.AbstractMessageDispatcher;
 import org.mule.providers.quartz.i18n.QuartzMessages;
@@ -39,7 +39,7 @@ import org.quartz.Trigger;
 public class QuartzMessageDispatcher extends AbstractMessageDispatcher
 {
 
-    public QuartzMessageDispatcher(UMOImmutableEndpoint endpoint)
+    public QuartzMessageDispatcher(ImmutableEndpoint endpoint)
     {
         super(endpoint);
     }
@@ -49,14 +49,14 @@ public class QuartzMessageDispatcher extends AbstractMessageDispatcher
         // template method
     }
 
-    protected void doDispatch(UMOEvent event) throws Exception
+    protected void doDispatch(Event event) throws Exception
     {
         JobDetail jobDetail = new JobDetail();
         // make the job name unique per endpoint (MULE-753)
         jobDetail.setName(event.getEndpoint().getEndpointURI().toString() + "-" + event.getId());
 
         JobDataMap jobDataMap = new JobDataMap();
-        UMOMessage msg = event.getMessage();
+        MuleMessage msg = event.getMessage();
         for (Iterator iterator = msg.getPropertyNames().iterator(); iterator.hasNext();)
         {
             String propertyKey = (String)iterator.next();
@@ -183,7 +183,7 @@ public class QuartzMessageDispatcher extends AbstractMessageDispatcher
         scheduler.scheduleJob(jobDetail, trigger);
     }
 
-    protected UMOMessage doSend(UMOEvent event) throws Exception
+    protected MuleMessage doSend(Event event) throws Exception
     {
         doDispatch(event);
         return null;

@@ -10,9 +10,9 @@
 
 package org.mule.providers.ssl;
 
-import org.mule.api.UMOEventContext;
-import org.mule.api.UMOException;
-import org.mule.api.UMOMessage;
+import org.mule.api.EventContext;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.impl.ResponseOutputStream;
 import org.mule.tck.FunctionalTestCase;
@@ -47,7 +47,7 @@ public class SslConnectorFunctionalTestCase extends FunctionalTestCase
         return "ssl-connector-functional-test.xml";
     }
 
-    protected URI getUri() throws UMOException
+    protected URI getUri() throws AbstractMuleException
     {
         return muleContext.getRegistry()
             .lookupEndpointFactory()
@@ -99,7 +99,7 @@ public class SslConnectorFunctionalTestCase extends FunctionalTestCase
         assertTrue("FunctionalTestComponent expected", ftc instanceof FunctionalTestComponent);
         ((FunctionalTestComponent) ftc).setEventCallback(new EventCallback()
         {
-            public void eventReceived(UMOEventContext context, Object component)
+            public void eventReceived(EventContext context, Object component)
             {
                 callbackCount.countDown();
                 assertNull(context.getCurrentTransaction());
@@ -127,7 +127,7 @@ public class SslConnectorFunctionalTestCase extends FunctionalTestCase
         assertTrue("FunctionalTestComponent expected", ftc instanceof FunctionalTestComponent);
         ((FunctionalTestComponent) ftc).setEventCallback(new EventCallback()
         {
-            public void eventReceived(UMOEventContext context, Object component) throws Exception
+            public void eventReceived(EventContext context, Object component) throws Exception
             {
                 try
                 {
@@ -152,7 +152,7 @@ public class SslConnectorFunctionalTestCase extends FunctionalTestCase
         });
 
         MuleClient client = new MuleClient();
-        UMOMessage response = client.send(getUri().toString(), TEST_MESSAGE, null);
+        MuleMessage response = client.send(getUri().toString(), TEST_MESSAGE, null);
         callbackCount.await(3000999, TimeUnit.MILLISECONDS);
         assertEquals(0, callbackCount.getCount());
         assertEquals(TEST_MESSAGE_RESPONSE, response.getPayloadAsString());

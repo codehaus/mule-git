@@ -10,15 +10,15 @@
 
 package org.mule.providers.http;
 
-import org.mule.api.UMOComponent;
-import org.mule.api.UMOEvent;
-import org.mule.api.UMOMessage;
-import org.mule.api.endpoint.UMOEndpoint;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.Component;
+import org.mule.api.Event;
+import org.mule.api.MuleMessage;
+import org.mule.api.endpoint.Endpoint;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.InitialisationException;
-import org.mule.api.transport.UMOConnector;
-import org.mule.api.transport.UMOMessageReceiver;
-import org.mule.imple.config.i18n.CoreMessages;
+import org.mule.api.transport.Connector;
+import org.mule.api.transport.MessageReceiver;
+import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.providers.tcp.TcpConnector;
 
 import java.util.HashMap;
@@ -38,7 +38,7 @@ import org.apache.commons.codec.binary.Base64;
 
 /**
  * <code>HttpConnector</code> provides a way of receiving and sending http requests
- * and responses. The UMOConnector itself handles dispatching http requests. The
+ * and responses. The Connector itself handles dispatching http requests. The
  * <code>HttpMessageReceiver</code> handles the receiving requests and processing
  * of headers This endpoint recognises the following properties - <p/>
  * <ul>
@@ -134,9 +134,9 @@ public class HttpConnector extends TcpConnector
     }
 
     /**
-     * @see UMOConnector#registerListener(UMOComponent, UMOEndpoint)
+     * @see Connector#registerListener(Component, Endpoint)
      */
-    public UMOMessageReceiver registerListener(UMOComponent component, UMOImmutableEndpoint endpoint) throws Exception
+    public MessageReceiver registerListener(Component component, ImmutableEndpoint endpoint) throws Exception
     {
         if (endpoint != null)
         {
@@ -173,7 +173,7 @@ public class HttpConnector extends TcpConnector
      * @param endpoint the endpoint being registered for the component
      * @return the key to store the newly created receiver against
      */
-    protected Object getReceiverKey(UMOComponent component, UMOImmutableEndpoint endpoint)
+    protected Object getReceiverKey(Component component, ImmutableEndpoint endpoint)
     {
         String key = endpoint.getEndpointURI().toString();
         int i = key.indexOf('?');
@@ -185,7 +185,7 @@ public class HttpConnector extends TcpConnector
     }
 
     /**
-     * @see org.mule.api.transport.UMOConnector#getProtocol()
+     * @see org.mule.api.transport.Connector#getProtocol()
      */
     public String getProtocol()
     {
@@ -315,14 +315,14 @@ public class HttpConnector extends TcpConnector
         return client;
     }
 
-    protected void setupClientAuthorization(UMOEvent event, HttpMethod httpMethod,
-                                            HttpClient client, UMOImmutableEndpoint endpoint)
+    protected void setupClientAuthorization(Event event, HttpMethod httpMethod,
+                                            HttpClient client, ImmutableEndpoint endpoint)
             throws UnsupportedEncodingException
     {
         httpMethod.setDoAuthentication(true);
         if (event != null && event.getCredentials() != null)
         {
-            UMOMessage msg = event.getMessage();
+            MuleMessage msg = event.getMessage();
             String authScopeHost = msg.getStringProperty(HTTP_PREFIX + "auth.scope.host", null);
             int authScopePort = msg.getIntProperty(HTTP_PREFIX + "auth.scope.port", -1);
             String authScopeRealm = msg.getStringProperty(HTTP_PREFIX + "auth.scope.realm", null);

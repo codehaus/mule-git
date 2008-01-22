@@ -10,7 +10,7 @@
 package org.mule.impl.lifecycle;
 
 import org.mule.api.MuleContext;
-import org.mule.api.context.UMOServerNotification;
+import org.mule.api.context.ServerNotification;
 
 /**
  * TODO
@@ -18,30 +18,30 @@ import org.mule.api.context.UMOServerNotification;
 public class LifecycleObject
 {
     private Class type;
-    private UMOServerNotification preNotification;
-    private UMOServerNotification postNotification;
+    private ServerNotification preNotification;
+    private ServerNotification postNotification;
 
     public LifecycleObject(Class type)
     {
         this.type = type;
     }
 
-    public UMOServerNotification getPostNotification()
+    public ServerNotification getPostNotification()
     {
         return postNotification;
     }
 
-    public void setPostNotification(UMOServerNotification postNotification)
+    public void setPostNotification(ServerNotification postNotification)
     {
         this.postNotification = postNotification;
     }
 
-    public UMOServerNotification getPreNotification()
+    public ServerNotification getPreNotification()
     {
         return preNotification;
     }
 
-    public void setPreNotification(UMOServerNotification preNotification)
+    public void setPreNotification(ServerNotification preNotification)
     {
         this.preNotification = preNotification;
     }

@@ -10,11 +10,11 @@
 
 package org.mule.impl.routing.outbound;
 
-import org.mule.api.UMOMessage;
-import org.mule.api.UMOSession;
+import org.mule.api.MuleMessage;
+import org.mule.api.Session;
 import org.mule.api.routing.RoutingException;
-import org.mule.impl.MuleMessage;
-import org.mule.imple.config.i18n.CoreMessages;
+import org.mule.impl.DefaultMuleMessage;
+import org.mule.impl.config.i18n.CoreMessages;
 
 /**
  * A router that breaks up the current message onto smaller parts and sends them to the
@@ -48,7 +48,7 @@ public class MessageChunkingRouter extends FilteringOutboundRouter
         this.numberOfMessages = numberOfMessages;
     }
 
-    public UMOMessage route(UMOMessage message, UMOSession session, boolean synchronous)
+    public MuleMessage route(MuleMessage message, Session session, boolean synchronous)
         throws RoutingException
     {
         if (messageSize == 0 && numberOfMessages < 2)
@@ -74,7 +74,7 @@ public class MessageChunkingRouter extends FilteringOutboundRouter
                 parts++;
             }
             int len = messageSize;
-            UMOMessage part = null;
+            MuleMessage part = null;
             int count = 0;
             int pos = 0;
             byte[] buffer = null;
@@ -89,7 +89,7 @@ public class MessageChunkingRouter extends FilteringOutboundRouter
                     buffer = new byte[len];
                     System.arraycopy(data, pos, buffer, 0, buffer.length);
                     pos += len;
-                    part = new MuleMessage(buffer, message);
+                    part = new DefaultMuleMessage(buffer, message);
                     part.setCorrelationId(message.getUniqueId());
                     part.setCorrelationGroupSize(parts);
                     part.setCorrelationSequence(count);

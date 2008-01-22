@@ -10,14 +10,14 @@
 
 package org.mule.impl.internal.notifications;
 
-import org.mule.api.context.UMOServerNotificationListener;
+import org.mule.api.context.ServerNotificationListener;
 
 /**
  * <code>ConnectionNotificationListener</code> is an observer interface that
  * objects can implement and then register themselves with the Mule manager to be
  * notified when a Connection event occurs.
  */
-public interface ConnectionNotificationListener extends UMOServerNotificationListener
+public interface ConnectionNotificationListener extends ServerNotificationListener
 {
     // no methods
 }

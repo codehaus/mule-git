@@ -10,7 +10,7 @@
 
 package org.mule.providers.cxf.client;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 
@@ -27,7 +27,7 @@ public class GeneratedClientTestCase extends FunctionalTestCase
                      + "<soap:Body>" + "<test> foo </test>" + "</soap:Body>" + "</soap:Envelope>";
 
         MuleClient client = new MuleClient();
-        UMOMessage result = client.send("http://localhost:63081/services/Echo", msg, null);
+        MuleMessage result = client.send("http://localhost:63081/services/Echo", msg, null);
         byte[] res = (byte[]) result.getPayload();
         String resString = new String(res);
 

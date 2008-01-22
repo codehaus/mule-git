@@ -11,8 +11,8 @@
 package org.mule.providers.http.components;
 
 import org.mule.api.MessagingException;
-import org.mule.api.UMOMessage;
-import org.mule.imple.config.i18n.Message;
+import org.mule.api.MuleMessage;
+import org.mule.impl.config.i18n.Message;
 
 public class RestServiceException extends MessagingException
 {
@@ -21,12 +21,12 @@ public class RestServiceException extends MessagingException
      */
     private static final long serialVersionUID = -1026055907767407433L;
 
-    public RestServiceException(Message message, UMOMessage umoMessage)
+    public RestServiceException(Message message, MuleMessage umoMessage)
     {
         super(message, umoMessage);
     }
 
-    public RestServiceException(Message message, UMOMessage umoMessage, Throwable cause)
+    public RestServiceException(Message message, MuleMessage umoMessage, Throwable cause)
     {
         super(message, umoMessage, cause);
     }

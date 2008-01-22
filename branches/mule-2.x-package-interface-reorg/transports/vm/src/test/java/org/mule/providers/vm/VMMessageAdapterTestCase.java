@@ -10,11 +10,11 @@
 
 package org.mule.providers.vm;
 
-import org.mule.api.UMOException;
-import org.mule.api.UMOMessage;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleMessage;
 import org.mule.api.transport.MessageTypeNotSupportedException;
-import org.mule.api.transport.UMOMessageAdapter;
-import org.mule.impl.MuleMessage;
+import org.mule.api.transport.MessageAdapter;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.transport.DefaultMessageAdapter;
 import org.mule.tck.providers.AbstractMessageAdapterTestCase;
 
@@ -29,11 +29,11 @@ public class VMMessageAdapterTestCase extends AbstractMessageAdapterTestCase
      * 
      * @see org.mule.tck.providers.AbstractMessageAdapterTestCase#createAdapter()
      */
-    public UMOMessageAdapter createAdapter(Object payload) throws MessageTypeNotSupportedException
+    public MessageAdapter createAdapter(Object payload) throws MessageTypeNotSupportedException
     {
-        if (payload instanceof UMOMessage)
+        if (payload instanceof MuleMessage)
         {
-            return new DefaultMessageAdapter((UMOMessage)payload);
+            return new DefaultMessageAdapter((MuleMessage)payload);
         }
         else
         {
@@ -46,9 +46,9 @@ public class VMMessageAdapterTestCase extends AbstractMessageAdapterTestCase
      * 
      * @see org.mule.tck.providers.AbstractMessageAdapterTestCase#getValidMessage()
      */
-    public Object getValidMessage() throws UMOException
+    public Object getValidMessage() throws AbstractMuleException
     {
-        return new MuleMessage("Valid Message");
+        return new DefaultMuleMessage("Valid Message");
     }
 
     /*

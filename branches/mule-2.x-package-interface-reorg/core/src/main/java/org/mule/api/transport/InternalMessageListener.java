@@ -10,9 +10,9 @@
 
 package org.mule.api.transport;
 
-import org.mule.api.UMOException;
-import org.mule.api.UMOMessage;
-import org.mule.api.UMOTransaction;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleMessage;
+import org.mule.api.Transaction;
 
 import java.io.OutputStream;
 
@@ -22,9 +22,9 @@ import java.io.OutputStream;
  */
 public interface InternalMessageListener
 {
-    UMOMessage onMessage(UMOMessage message,
-                         UMOTransaction trans,
+    MuleMessage onMessage(MuleMessage message,
+                         Transaction trans,
                          boolean synchronous,
-                         OutputStream outputStream) throws UMOException;
+                         OutputStream outputStream) throws AbstractMuleException;
 
 }

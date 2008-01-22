@@ -10,7 +10,7 @@
 
 package org.mule.providers.soap;
 
-import org.mule.imple.config.i18n.CoreMessages;
+import org.mule.impl.config.i18n.CoreMessages;
 
 import javax.xml.namespace.QName;
 import javax.xml.rpc.ParameterMode;

@@ -10,7 +10,7 @@
 
 package org.mule.providers.tcp.issues;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 
@@ -46,7 +46,7 @@ public class LengthProtocolLengthTestCase extends FunctionalTestCase
         MuleClient client = new MuleClient();
         if (ok)
         {
-            UMOMessage response = client.send(endpoint, message, null);
+            MuleMessage response = client.send(endpoint, message, null);
             assertNotNull(response);
             assertNotNull(response.getPayload());
             assertTrue(Arrays.equals(message, response.getPayloadAsBytes()));
@@ -57,7 +57,7 @@ public class LengthProtocolLengthTestCase extends FunctionalTestCase
         }
     }
 
-    protected void assertResponseBad(UMOMessage message)
+    protected void assertResponseBad(MuleMessage message)
     {
         try
         {

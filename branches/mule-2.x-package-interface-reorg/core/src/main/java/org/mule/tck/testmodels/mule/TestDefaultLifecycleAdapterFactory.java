@@ -10,14 +10,14 @@
 
 package org.mule.tck.testmodels.mule;
 
-import org.mule.api.UMOComponent;
-import org.mule.api.UMOException;
-import org.mule.api.lifecycle.UMOLifecycleAdapter;
-import org.mule.api.lifecycle.UMOLifecycleAdapterFactory;
-import org.mule.api.model.UMOEntryPointResolverSet;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.Component;
+import org.mule.api.lifecycle.LifecycleAdapter;
+import org.mule.api.lifecycle.LifecycleAdapterFactory;
+import org.mule.api.model.EntryPointResolverSet;
 
 
-public class TestDefaultLifecycleAdapterFactory implements UMOLifecycleAdapterFactory
+public class TestDefaultLifecycleAdapterFactory implements LifecycleAdapterFactory
 {
     public TestDefaultLifecycleAdapterFactory()
     {
@@ -27,12 +27,12 @@ public class TestDefaultLifecycleAdapterFactory implements UMOLifecycleAdapterFa
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.api.lifecycle.UMOLifecycleAdapterFactory#create(java.lang.Object,
-     *      org.mule.api.UMODescriptor, org.mule.api.model.UMOEntryPointResolver)
+     * @see org.mule.api.lifecycle.LifecycleAdapterFactory#create(java.lang.Object,
+     *      org.mule.api.UMODescriptor, org.mule.api.model.EntryPointResolver)
      */
-    public UMOLifecycleAdapter create(Object pojoService,
-                                      UMOComponent component,
-                                      UMOEntryPointResolverSet resolver) throws UMOException
+    public LifecycleAdapter create(Object pojoService,
+                                      Component component,
+                                      EntryPointResolverSet resolver) throws AbstractMuleException
     {
         return new TestDefaultLifecycleAdapter(pojoService, component, resolver);
     }

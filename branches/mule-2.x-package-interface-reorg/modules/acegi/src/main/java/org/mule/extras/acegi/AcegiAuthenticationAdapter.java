@@ -10,7 +10,7 @@
 
 package org.mule.extras.acegi;
 
-import org.mule.api.security.UMOAuthentication;
+import org.mule.api.security.MuleAuthentication;
 
 import java.util.Map;
 
@@ -20,7 +20,7 @@ import org.acegisecurity.GrantedAuthority;
 /**
  * <code>AcegiAuthenticationAdapter</code> TODO
  */
-public class AcegiAuthenticationAdapter implements UMOAuthentication
+public class AcegiAuthenticationAdapter implements MuleAuthentication
 {
     private Authentication delegate;
     private Map properties;

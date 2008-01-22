@@ -10,15 +10,15 @@
 
 package org.mule.api.security;
 
-import org.mule.api.UMOException;
-import org.mule.imple.config.i18n.CoreMessages;
+import org.mule.api.AbstractMuleException;
+import org.mule.impl.config.i18n.CoreMessages;
 
 /**
  * <code>EncryptionStrategyNotFoundException</code> is thrown by the
- * UMOSecurityManager when an encryption scheme is set in a property or header that
+ * SecurityManager when an encryption scheme is set in a property or header that
  * has not been registered witrh the manager
  */
-public class EncryptionStrategyNotFoundException extends UMOException
+public class EncryptionStrategyNotFoundException extends AbstractMuleException
 {
     /**
      * Serial version

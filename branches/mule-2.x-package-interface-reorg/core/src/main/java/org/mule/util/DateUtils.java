@@ -10,7 +10,7 @@
 
 package org.mule.util;
 
-import org.mule.imple.config.i18n.CoreMessages;
+import org.mule.impl.config.i18n.CoreMessages;
 
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;

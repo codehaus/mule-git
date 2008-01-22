@@ -10,15 +10,15 @@
 
 package org.mule.providers.soap.axis;
 
-import org.mule.api.UMOComponent;
-import org.mule.api.UMOException;
-import org.mule.api.endpoint.UMOEndpoint;
-import org.mule.api.endpoint.UMOEndpointURI;
+import org.mule.api.Component;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.endpoint.Endpoint;
+import org.mule.api.endpoint.EndpointURI;
 import org.mule.api.lifecycle.CreateException;
 import org.mule.api.lifecycle.InitialisationException;
-import org.mule.api.transport.UMOConnector;
+import org.mule.api.transport.Connector;
+import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.impl.transport.AbstractMessageReceiver;
-import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.providers.soap.NamedParameter;
 import org.mule.providers.soap.SoapMethod;
 import org.mule.providers.soap.axis.extensions.MuleMsgProvider;
@@ -57,7 +57,7 @@ public class AxisMessageReceiver extends AbstractMessageReceiver
     protected AxisConnector connector;
     protected SOAPService service;
 
-    public AxisMessageReceiver(UMOConnector connector, UMOComponent component, UMOEndpoint endpoint)
+    public AxisMessageReceiver(Connector connector, Component component, Endpoint endpoint)
             throws CreateException
     {
 
@@ -86,7 +86,7 @@ public class AxisMessageReceiver extends AbstractMessageReceiver
         String use = (String) endpoint.getProperties().get(AxisConnector.USE);
         String doc = (String) endpoint.getProperties().get("documentation");
 
-        UMOEndpointURI uri = endpoint.getEndpointURI();
+        EndpointURI uri = endpoint.getEndpointURI();
         String serviceName = component.getName();
 
         SOAPService existing = this.connector.getAxis().getService(serviceName);
@@ -350,7 +350,7 @@ public class AxisMessageReceiver extends AbstractMessageReceiver
         {
             doStop();
         }
-        catch (UMOException e)
+        catch (AbstractMuleException e)
         {
             logger.error(e.getMessage(), e);
         }
@@ -360,7 +360,7 @@ public class AxisMessageReceiver extends AbstractMessageReceiver
         connector.unregisterReceiverWithMuleService(this, endpoint.getEndpointURI());
     }
 
-    protected void doStart() throws UMOException
+    protected void doStart() throws AbstractMuleException
     {
         if (service != null)
         {
@@ -368,7 +368,7 @@ public class AxisMessageReceiver extends AbstractMessageReceiver
         }
     }
 
-    protected void doStop() throws UMOException
+    protected void doStop() throws AbstractMuleException
     {
         if (service != null)
         {

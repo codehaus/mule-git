@@ -10,11 +10,11 @@
 
 package org.mule.impl.routing.inbound;
 
+import org.mule.api.AbstractMuleException;
+import org.mule.api.Event;
 import org.mule.api.MessagingException;
-import org.mule.api.UMOEvent;
-import org.mule.api.UMOException;
-import org.mule.api.UMOSession;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.Session;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.transport.DispatchException;
 import org.mule.impl.MuleEvent;
 import org.mule.impl.MuleSession;
@@ -29,9 +29,9 @@ import org.mule.impl.RequestContext;
  */
 public class WireTap extends SelectiveConsumer
 {
-    private volatile UMOImmutableEndpoint tap;
+    private volatile ImmutableEndpoint tap;
 
-    public boolean isMatch(UMOEvent event) throws MessagingException
+    public boolean isMatch(Event event) throws MessagingException
     {
         if (tap != null)
         {
@@ -44,33 +44,33 @@ public class WireTap extends SelectiveConsumer
         }
     }
 
-    public UMOEvent[] process(UMOEvent event) throws MessagingException
+    public Event[] process(Event event) throws MessagingException
     {
         RequestContext.setEvent(null);
         try
         {
             //We have to create a new session for this dispatch, since the session may get altered
             //using this call, changing the behaviour of the request
-            UMOSession session = new MuleSession(event.getMessage(), new NullSessionHandler());
+            Session session = new MuleSession(event.getMessage(), new NullSessionHandler());
             tap.dispatch(new MuleEvent(event.getMessage(), tap, session, false));
         }
         catch (MessagingException e)
         {
             throw e;
         }
-        catch (UMOException e)
+        catch (AbstractMuleException e)
         {
             throw new DispatchException(event.getMessage(), tap, e);
         }
         return super.process(event);
     }
 
-    public UMOImmutableEndpoint getEndpoint()
+    public ImmutableEndpoint getEndpoint()
     {
         return tap;
     }
 
-    public void setEndpoint(UMOImmutableEndpoint endpoint) throws UMOException
+    public void setEndpoint(ImmutableEndpoint endpoint) throws AbstractMuleException
     {
         this.tap = endpoint;
     }

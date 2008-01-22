@@ -13,8 +13,8 @@ package org.mule.impl.endpoint;
 import org.mule.api.MuleContext;
 import org.mule.api.context.MuleContextAware;
 import org.mule.api.endpoint.EndpointException;
-import org.mule.api.endpoint.UMOEndpointURI;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.endpoint.EndpointURI;
+import org.mule.api.endpoint.ImmutableEndpoint;
 
 public class EndpointURIEndpointBuilder extends AbstractEndpointBuilder implements MuleContextAware
 {
@@ -62,7 +62,7 @@ public class EndpointURIEndpointBuilder extends AbstractEndpointBuilder implemen
     /**
      * @deprecated
      */
-    public EndpointURIEndpointBuilder(UMOEndpointURI endpointURI, MuleContext muleContext)
+    public EndpointURIEndpointBuilder(EndpointURI endpointURI, MuleContext muleContext)
     {
         this(new URIBuilder(endpointURI), muleContext);
     }
@@ -70,7 +70,7 @@ public class EndpointURIEndpointBuilder extends AbstractEndpointBuilder implemen
     /**
      * @deprecated
      */
-    public EndpointURIEndpointBuilder(UMOImmutableEndpoint source, MuleContext muleContext)
+    public EndpointURIEndpointBuilder(ImmutableEndpoint source, MuleContext muleContext)
     {
         this(source.getEndpointURI(), muleContext);
         setName(source.getName());

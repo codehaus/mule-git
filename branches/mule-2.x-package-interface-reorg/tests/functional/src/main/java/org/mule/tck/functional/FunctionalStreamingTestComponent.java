@@ -10,7 +10,7 @@
 
 package org.mule.tck.functional;
 
-import org.mule.api.UMOEventContext;
+import org.mule.api.EventContext;
 import org.mule.api.lifecycle.Callable;
 import org.mule.util.ClassUtils;
 import org.mule.util.StringMessageUtils;
@@ -70,7 +70,7 @@ public class FunctionalStreamingTestComponent implements Callable
         return number;
     }
 
-    public Object onCall(UMOEventContext context) throws Exception
+    public Object onCall(EventContext context) throws Exception
     {
         InputStream in = (InputStream) context.getMessage().getPayload(InputStream.class);
         try
@@ -142,7 +142,7 @@ public class FunctionalStreamingTestComponent implements Callable
 
     private void doCallback(byte[] startData, int startDataSize,
                             byte[] endData, int endDataSize, int endRingPointer,
-                            long streamLength, UMOEventContext context) throws Exception
+                            long streamLength, EventContext context) throws Exception
     {
         // make a nice summary of the data
         StringBuffer result = new StringBuffer("Received stream");

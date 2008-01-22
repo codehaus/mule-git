@@ -10,19 +10,19 @@
 
 package org.mule.impl.transport;
 
-import org.mule.api.UMOException;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
-import org.mule.api.transport.UMOMessageRequester;
-import org.mule.api.transport.UMOMessageRequesterFactory;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.api.transport.MessageRequester;
+import org.mule.api.transport.MessageRequesterFactory;
 import org.mule.util.ClassUtils;
 
 /**
- * A base implementation of the {@link org.mule.api.transport.UMOMessageRequesterFactory} interface for managing the
+ * A base implementation of the {@link org.mule.api.transport.MessageRequesterFactory} interface for managing the
  * lifecycle of message requesters.
  *
- * @see org.mule.api.transport.UMOMessageDispatcherFactory
+ * @see org.mule.api.transport.MessageDispatcherFactory
  */
-public abstract class AbstractMessageRequesterFactory implements UMOMessageRequesterFactory
+public abstract class AbstractMessageRequesterFactory implements MessageRequesterFactory
 {
 
     public AbstractMessageRequesterFactory()
@@ -32,9 +32,9 @@ public abstract class AbstractMessageRequesterFactory implements UMOMessageReque
 
     /**
      * This default implementation of
-     * {@link org.mule.api.transport.UMOMessageDispatcherFactory#isCreateDispatcherPerRequest()} returns
+     * {@link org.mule.api.transport.MessageDispatcherFactory#isCreateDispatcherPerRequest()} returns
      * <code>false</code>, which means that dispatchers are pooled according to
-     * their lifecycle as described in {@link org.mule.api.transport.UMOMessageRequester}.
+     * their lifecycle as described in {@link org.mule.api.transport.MessageRequester}.
      *
      * @return <code>false</code> by default, unless overwritten by a subclass.
      */
@@ -43,24 +43,24 @@ public abstract class AbstractMessageRequesterFactory implements UMOMessageReque
         return false;
     }
 
-    public abstract UMOMessageRequester create(UMOImmutableEndpoint endpoint) throws UMOException;
+    public abstract MessageRequester create(ImmutableEndpoint endpoint) throws AbstractMuleException;
 
-    public void activate(UMOImmutableEndpoint endpoint, UMOMessageRequester requester) throws UMOException
+    public void activate(ImmutableEndpoint endpoint, MessageRequester requester) throws AbstractMuleException
     {
         requester.activate();
     }
 
-    public void destroy(UMOImmutableEndpoint endpoint, UMOMessageRequester requester)
+    public void destroy(ImmutableEndpoint endpoint, MessageRequester requester)
     {
         requester.dispose();
     }
 
-    public void passivate(UMOImmutableEndpoint endpoint, UMOMessageRequester requester)
+    public void passivate(ImmutableEndpoint endpoint, MessageRequester requester)
     {
         requester.passivate();
     }
 
-    public boolean validate(UMOImmutableEndpoint endpoint, UMOMessageRequester requester)
+    public boolean validate(ImmutableEndpoint endpoint, MessageRequester requester)
     {
         // Unless requesters are to be disposed of after every request, we check if
         // the requester is still valid or has e.g. disposed itself after an

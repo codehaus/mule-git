@@ -10,8 +10,8 @@
 
 package org.mule.impl;
 
-import org.mule.api.UMOEvent;
-import org.mule.api.UMOMessage;
+import org.mule.api.Event;
+import org.mule.api.MuleMessage;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -46,7 +46,7 @@ public final class OptimizedRequestContext
      * @param event - the event to set
      * @return The event set
      */
-    public static UMOEvent unsafeSetEvent(UMOEvent event)
+    public static Event unsafeSetEvent(Event event)
     {
         documentUnsafeCall("unsafeSetEvent");
         return RequestContext.internalSetEvent(event);
@@ -58,7 +58,7 @@ public final class OptimizedRequestContext
      * @param event - the event to set
      * @return A new mutable copy of the event set
      */
-    public static UMOEvent criticalSetEvent(UMOEvent event)
+    public static Event criticalSetEvent(Event event)
     {
         return RequestContext.internalSetEvent(RequestContext.newEvent(event, RequestContext.SAFE));
     }
@@ -71,7 +71,7 @@ public final class OptimizedRequestContext
      * @param message - the new message payload
      * @return The message set
      */
-    public static UMOMessage unsafeRewriteEvent(UMOMessage message)
+    public static MuleMessage unsafeRewriteEvent(MuleMessage message)
     {
         documentUnsafeCall("unsafeRewriteEvent");
         return RequestContext.internalRewriteEvent(message, RequestContext.UNSAFE);

@@ -10,11 +10,11 @@
 
 package org.mule.providers.ssl;
 
-import org.mule.api.UMOComponent;
-import org.mule.api.endpoint.UMOEndpoint;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.Component;
+import org.mule.api.endpoint.Endpoint;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.InitialisationException;
-import org.mule.api.transport.UMOConnector;
+import org.mule.api.transport.Connector;
 import org.mule.tck.providers.AbstractConnectorTestCase;
 import org.mule.tck.testmodels.fruit.Orange;
 
@@ -24,7 +24,7 @@ public class SslConnectorTestCase extends AbstractConnectorTestCase
 {
 
     // @Override
-    public UMOConnector createConnector() throws Exception
+    public Connector createConnector() throws Exception
     {
         return createConnector(true);
     }
@@ -71,9 +71,9 @@ public class SslConnectorTestCase extends AbstractConnectorTestCase
 
     public void testValidListener() throws Exception
     {
-        UMOComponent component = getTestComponent("orange", Orange.class);
-        UMOEndpoint endpoint = getTestEndpoint("Test", UMOEndpoint.ENDPOINT_TYPE_RECEIVER);
-        UMOConnector connector = getConnector();
+        Component component = getTestComponent("orange", Orange.class);
+        Endpoint endpoint = getTestEndpoint("Test", Endpoint.ENDPOINT_TYPE_RECEIVER);
+        Connector connector = getConnector();
 
         try
         {
@@ -99,7 +99,7 @@ public class SslConnectorTestCase extends AbstractConnectorTestCase
         }
 
         
-        UMOImmutableEndpoint endpoint2 = muleContext.getRegistry()
+        ImmutableEndpoint endpoint2 = muleContext.getRegistry()
             .lookupEndpointFactory()
             .getOutboundEndpoint("ssl://localhost:30303");
 

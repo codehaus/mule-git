@@ -10,7 +10,7 @@
 
 package org.mule.providers.http.functional;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.providers.http.HttpConnector;
 import org.mule.providers.http.HttpConstants;
@@ -32,7 +32,7 @@ public class HttpEncodingFunctionalTestCase extends HttpFunctionalTestCase
         MuleClient client = new MuleClient();
         Map messageProperties = new HashMap();
         messageProperties.put(HttpConstants.HEADER_CONTENT_TYPE, getSendEncoding());
-        UMOMessage reply = client.send("clientEndpoint", TEST_MESSAGE, messageProperties);
+        MuleMessage reply = client.send("clientEndpoint", TEST_MESSAGE, messageProperties);
         assertNotNull(reply);
         assertEquals("200", reply.getProperty(HttpConnector.HTTP_STATUS_PROPERTY));
         assertEquals(TEST_MESSAGE + " Received", reply.getPayloadAsString());

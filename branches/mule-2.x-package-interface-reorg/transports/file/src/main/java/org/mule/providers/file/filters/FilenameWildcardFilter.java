@@ -10,7 +10,7 @@
 
 package org.mule.providers.file.filters;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.impl.routing.filters.WildcardFilter;
 import org.mule.providers.file.FileConnector;
 
@@ -35,7 +35,7 @@ public class FilenameWildcardFilter extends WildcardFilter implements FilenameFi
     }
 
     /**
-     * UMOFilter condition decider method. <p/> Returns
+     * Filter condition decider method. <p/> Returns
      * <code>boolean</code> <code>TRUE</code> if the file conforms to an
      * acceptable pattern or <code>FALSE</code> otherwise.
      * 
@@ -56,7 +56,7 @@ public class FilenameWildcardFilter extends WildcardFilter implements FilenameFi
         }
     }
 
-    public boolean accept(UMOMessage message)
+    public boolean accept(MuleMessage message)
     {
         return accept(message.getProperty(FileConnector.PROPERTY_ORIGINAL_FILENAME));
     }

@@ -11,8 +11,8 @@
 package org.mule.management.mbeans;
 
 import org.mule.MuleServer;
-import org.mule.api.UMOComponent;
-import org.mule.api.UMOException;
+import org.mule.api.Component;
+import org.mule.api.AbstractMuleException;
 import org.mule.impl.management.stats.ComponentStatistics;
 import org.mule.impl.model.AbstractComponent;
 import org.mule.impl.model.seda.SedaComponent;
@@ -55,7 +55,7 @@ public class ComponentService implements ComponentServiceMBean, MBeanRegistratio
 
     public int getQueueSize()
     {
-        UMOComponent c = getComponent();
+        Component c = getComponent();
         if (c instanceof SedaComponent)
         {
             return ((SedaComponent)c).getQueueSize();
@@ -74,10 +74,10 @@ public class ComponentService implements ComponentServiceMBean, MBeanRegistratio
      * Muleconfiguration to true. this causes all internal queues to store their
      * state.
      * 
-     * @throws org.mule.api.UMOException if the component failed to pause.
+     * @throws org.mule.api.AbstractMuleException if the component failed to pause.
      * @see org.mule.impl.config.MuleConfiguration
      */
-    public void pause() throws UMOException
+    public void pause() throws AbstractMuleException
     {
         getComponent().pause();
     }
@@ -86,9 +86,9 @@ public class ComponentService implements ComponentServiceMBean, MBeanRegistratio
      * Resumes the Component that has been paused. If the component is not paused
      * nothing is executed.
      * 
-     * @throws org.mule.api.UMOException if the component failed to resume
+     * @throws org.mule.api.AbstractMuleException if the component failed to resume
      */
-    public void resume() throws UMOException
+    public void resume() throws AbstractMuleException
     {
         getComponent().resume();
     }
@@ -103,12 +103,12 @@ public class ComponentService implements ComponentServiceMBean, MBeanRegistratio
         return getComponent().isStopped();
     }
 
-    public void stop() throws UMOException
+    public void stop() throws AbstractMuleException
     {
         getComponent().stop();
     }
 
-    public void forceStop() throws UMOException
+    public void forceStop() throws AbstractMuleException
     {
         getComponent().forceStop();
     }
@@ -118,12 +118,12 @@ public class ComponentService implements ComponentServiceMBean, MBeanRegistratio
         return getComponent().isStopping();
     }
 
-    public void dispose() throws UMOException
+    public void dispose() throws AbstractMuleException
     {
         getComponent().dispose();
     }
 
-    public void start() throws UMOException
+    public void start() throws AbstractMuleException
     {
         getComponent().start();
     }

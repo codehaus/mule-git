@@ -10,7 +10,7 @@
 
 package org.mule.transaction;
 
-import org.mule.api.UMOTransaction;
+import org.mule.api.Transaction;
 import org.mule.impl.transaction.IllegalTransactionStateException;
 import org.mule.impl.transaction.TransactionCoordination;
 import org.mule.tck.AbstractMuleTestCase;
@@ -34,8 +34,8 @@ public class TransactionCoordinationTestCase extends AbstractMuleTestCase
     public void testBindTransaction() throws Exception
     {
         assertNull(tc.getTransaction());
-        Mock mockTx = new Mock(UMOTransaction.class, "trans");
-        UMOTransaction tx = (UMOTransaction)mockTx.proxy();
+        Mock mockTx = new Mock(Transaction.class, "trans");
+        Transaction tx = (Transaction)mockTx.proxy();
 
         tc.bindTransaction(tx);
         assertEquals(tx, tc.getTransaction());
@@ -45,15 +45,15 @@ public class TransactionCoordinationTestCase extends AbstractMuleTestCase
     public void testBindTransactionWithAlreadyBound() throws Exception
     {
         assertNull(tc.getTransaction());
-        Mock mockTx = new Mock(UMOTransaction.class, "trans");
-        UMOTransaction tx = (UMOTransaction)mockTx.proxy();
+        Mock mockTx = new Mock(Transaction.class, "trans");
+        Transaction tx = (Transaction)mockTx.proxy();
 
         tc.bindTransaction(tx);
         assertEquals(tx, tc.getTransaction());
 
         try
         {
-            UMOTransaction tx2 = (UMOTransaction)new Mock(UMOTransaction.class, "trans").proxy();
+            Transaction tx2 = (Transaction)new Mock(Transaction.class, "trans").proxy();
             tc.bindTransaction(tx2);
             fail();
         }
@@ -68,16 +68,16 @@ public class TransactionCoordinationTestCase extends AbstractMuleTestCase
     public void testUnbindTransactionWithoutBound() throws Exception
     {
         assertNull(tc.getTransaction());
-        Mock mockTx = new Mock(UMOTransaction.class, "trans");
-        UMOTransaction tx = (UMOTransaction)mockTx.proxy();
+        Mock mockTx = new Mock(Transaction.class, "trans");
+        Transaction tx = (Transaction)mockTx.proxy();
         tc.unbindTransaction(tx);
     }
 
     public void testSetInstanceWithBound() throws Exception
     {
         assertNull(tc.getTransaction());
-        Mock mockTx = new Mock(UMOTransaction.class, "trans");
-        UMOTransaction tx = (UMOTransaction)mockTx.proxy();
+        Mock mockTx = new Mock(Transaction.class, "trans");
+        Transaction tx = (Transaction)mockTx.proxy();
 
         tc.bindTransaction(tx);
 

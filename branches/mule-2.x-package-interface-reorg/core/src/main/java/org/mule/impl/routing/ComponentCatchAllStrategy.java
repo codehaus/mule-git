@@ -10,11 +10,11 @@
 
 package org.mule.impl.routing;
 
-import org.mule.api.UMOEvent;
-import org.mule.api.UMOException;
-import org.mule.api.UMOMessage;
-import org.mule.api.UMOSession;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.Event;
+import org.mule.api.MuleMessage;
+import org.mule.api.Session;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.routing.ComponentRoutingException;
 import org.mule.api.routing.RoutingException;
 import org.mule.impl.MuleEvent;
@@ -26,20 +26,20 @@ import org.mule.impl.RequestContext;
  */
 public class ComponentCatchAllStrategy extends AbstractCatchAllStrategy
 {
-    public void setEndpoint(UMOImmutableEndpoint endpoint)
+    public void setEndpoint(ImmutableEndpoint endpoint)
     {
         throw new UnsupportedOperationException("The endpoint cannot be set on this catch all");
     }
 
-    public UMOImmutableEndpoint getEndpoint()
+    public ImmutableEndpoint getEndpoint()
     {
         return null;
     }
 
-    public synchronized UMOMessage catchMessage(UMOMessage message, UMOSession session, boolean synchronous)
+    public synchronized MuleMessage catchMessage(MuleMessage message, Session session, boolean synchronous)
         throws RoutingException
     {
-        UMOEvent event = RequestContext.getEvent();
+        Event event = RequestContext.getEvent();
         logger.debug("Catch all strategy handling event: " + event);
         try
         {
@@ -57,7 +57,7 @@ public class ComponentCatchAllStrategy extends AbstractCatchAllStrategy
                 return null;
             }
         }
-        catch (UMOException e)
+        catch (AbstractMuleException e)
         {
             throw new ComponentRoutingException(event.getMessage(), event.getEndpoint(),
                 session.getComponent(), e);

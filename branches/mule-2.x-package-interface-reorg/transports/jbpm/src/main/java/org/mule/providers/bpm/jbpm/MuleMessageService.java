@@ -10,7 +10,7 @@
 
 package org.mule.providers.bpm.jbpm;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 
 import java.util.Map;
 
@@ -46,7 +46,7 @@ public class MuleMessageService implements org.jbpm.msg.MessageService
 
     // TODO This should be replaced by the standard send() method below, which would
     // make Mule the default messaging service within jBpm.
-    public UMOMessage generateMessage(String endpoint,
+    public MuleMessage generateMessage(String endpoint,
                                       Object payloadObject,
                                       Map messageProperties,
                                       boolean synchronous) throws Exception

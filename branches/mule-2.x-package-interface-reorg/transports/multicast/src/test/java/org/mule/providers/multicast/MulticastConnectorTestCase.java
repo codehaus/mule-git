@@ -10,10 +10,10 @@
 
 package org.mule.providers.multicast;
 
-import org.mule.api.UMOComponent;
-import org.mule.api.endpoint.UMOEndpoint;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
-import org.mule.api.transport.UMOConnector;
+import org.mule.api.Component;
+import org.mule.api.endpoint.Endpoint;
+import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.api.transport.Connector;
 import org.mule.tck.providers.AbstractConnectorTestCase;
 import org.mule.tck.testmodels.fruit.Orange;
 
@@ -23,7 +23,7 @@ public class MulticastConnectorTestCase extends AbstractConnectorTestCase
 {
 
     // @Override
-    public UMOConnector createConnector() throws Exception
+    public Connector createConnector() throws Exception
     {
         MulticastConnector c = new MulticastConnector();
         c.setName("MulticastConnector");
@@ -42,9 +42,9 @@ public class MulticastConnectorTestCase extends AbstractConnectorTestCase
 
     public void testValidListener() throws Exception
     {
-        UMOComponent component = getTestComponent("orange", Orange.class);
-        UMOEndpoint endpoint = getTestEndpoint("Test", UMOImmutableEndpoint.ENDPOINT_TYPE_RECEIVER);
-        UMOConnector connector = getConnector();
+        Component component = getTestComponent("orange", Orange.class);
+        Endpoint endpoint = getTestEndpoint("Test", ImmutableEndpoint.ENDPOINT_TYPE_RECEIVER);
+        Connector connector = getConnector();
 
         try
         {
@@ -69,7 +69,7 @@ public class MulticastConnectorTestCase extends AbstractConnectorTestCase
             // expected
         }
 
-        UMOImmutableEndpoint endpoint2 = muleContext.getRegistry()
+        ImmutableEndpoint endpoint2 = muleContext.getRegistry()
             .lookupEndpointFactory()
             .getOutboundEndpoint("multicast://228.2.3.4:10100");
 

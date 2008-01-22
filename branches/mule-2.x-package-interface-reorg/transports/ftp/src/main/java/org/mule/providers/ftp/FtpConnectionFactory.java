@@ -10,7 +10,7 @@
 
 package org.mule.providers.ftp;
 
-import org.mule.api.endpoint.UMOEndpointURI;
+import org.mule.api.endpoint.EndpointURI;
 
 import java.io.IOException;
 
@@ -21,9 +21,9 @@ import org.apache.commons.pool.PoolableObjectFactory;
 
 public class FtpConnectionFactory implements PoolableObjectFactory
 {
-    private UMOEndpointURI uri;
+    private EndpointURI uri;
 
-    public FtpConnectionFactory(UMOEndpointURI uri)
+    public FtpConnectionFactory(EndpointURI uri)
     {
         this.uri = uri;
     }

@@ -27,9 +27,9 @@
 
 package org.mule.impl.work;
 
-import org.mule.api.UMOException;
+import org.mule.api.AbstractMuleException;
 import org.mule.api.config.ThreadingProfile;
-import org.mule.api.context.UMOWorkManager;
+import org.mule.api.context.WorkManager;
 import org.mule.api.work.WorkExecutor;
 
 import java.text.MessageFormat;
@@ -54,7 +54,7 @@ import org.apache.commons.logging.LogFactory;
  * thread allocation for Mule components and connectors. This code has been adapted
  * from the Geronimo implementation.
  */
-public class MuleWorkManager implements UMOWorkManager
+public class MuleWorkManager implements WorkManager
 {
     /**
      * logger used by this class
@@ -98,7 +98,7 @@ public class MuleWorkManager implements UMOWorkManager
         this.name = name;
     }
 
-    public synchronized void start() throws UMOException
+    public synchronized void start() throws AbstractMuleException
     {
         if (workExecutorService == null)
         {

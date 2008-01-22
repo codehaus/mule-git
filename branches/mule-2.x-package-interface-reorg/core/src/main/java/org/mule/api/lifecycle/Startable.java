@@ -10,18 +10,18 @@
 
 package org.mule.api.lifecycle;
 
-import org.mule.api.UMOException;
+import org.mule.api.AbstractMuleException;
 
 /**
  * <code>Startable</code> provides an object with a {@link #start()} method
  * which gets called when the Mule instance gets started.  This is mostly used by
  * infrastructure components, but can also be implemented by service objects
  *
- * @see UMOLifecycleAdapter
+ * @see LifecycleAdapter
  */
 public interface Startable
 {
     static final String PHASE_NAME = "start";
 
-    void start() throws UMOException;
+    void start() throws AbstractMuleException;
 }

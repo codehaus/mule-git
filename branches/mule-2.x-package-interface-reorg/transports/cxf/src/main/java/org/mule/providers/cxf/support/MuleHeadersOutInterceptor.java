@@ -27,7 +27,7 @@ import org.apache.cxf.interceptor.Fault;
 import org.apache.cxf.message.Message;
 import org.apache.cxf.phase.Phase;
 
-import org.mule.api.UMOEvent;
+import org.mule.api.Event;
 import org.mule.providers.soap.MuleSoapHeaders;
 
 import org.w3c.dom.Document;
@@ -53,7 +53,7 @@ public class MuleHeadersOutInterceptor extends BaseMuleHeaderInterceptor
         }
 
         SoapMessage message = (SoapMessage) m;
-        UMOEvent event = (UMOEvent) message.get(MULE_EVENT_PROPERTY);
+        Event event = (Event) message.get(MULE_EVENT_PROPERTY);
 
         if (event == null)
         {

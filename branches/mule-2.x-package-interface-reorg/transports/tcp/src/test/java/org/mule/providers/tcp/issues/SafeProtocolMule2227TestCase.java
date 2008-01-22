@@ -10,7 +10,7 @@
 
 package org.mule.providers.tcp.issues;
 
-import org.mule.api.UMOException;
+import org.mule.api.AbstractMuleException;
 import org.mule.extras.client.MuleClient;
 import org.mule.providers.tcp.protocols.SafeProtocolTestCase;
 
@@ -31,7 +31,7 @@ public class SafeProtocolMule2227TestCase extends SafeProtocolTestCase
 
     // update - we now do have a maximum size
 
-    public void testSafeToUnsafe() throws UMOException
+    public void testSafeToUnsafe() throws AbstractMuleException
     {
         MuleClient client = new MuleClient();
         // this may fail, but should not crash

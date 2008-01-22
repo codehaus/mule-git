@@ -11,10 +11,10 @@
 package org.mule.providers.http.issues;
 
 import org.mule.api.MuleException;
-import org.mule.api.UMOEventContext;
+import org.mule.api.EventContext;
 import org.mule.api.lifecycle.Callable;
 import org.mule.impl.RequestContext;
-import org.mule.imple.config.i18n.MessageFactory;
+import org.mule.impl.config.i18n.MessageFactory;
 import org.mule.tck.functional.EventCallback;
 import org.mule.tck.functional.FunctionalTestNotification;
 import org.mule.util.StringMessageUtils;
@@ -50,7 +50,7 @@ public class NoTransformFunctionalTestComponent implements Callable
     /**
      * {@inheritDoc}
      */
-    public Object onCall(UMOEventContext context) throws Exception
+    public Object onCall(EventContext context) throws Exception
     {
         String contents = context.getMessageAsString();
         String msg = StringMessageUtils.getBoilerPlate("Message Received in component: "
@@ -106,7 +106,7 @@ public class NoTransformFunctionalTestComponent implements Callable
      */
     public Object onReceive(Object data) throws Exception
     {
-        UMOEventContext context = RequestContext.getEventContext();
+        EventContext context = RequestContext.getEventContext();
 
         String contents = data.toString();
         String msg = StringMessageUtils.getBoilerPlate("Message Received in component: "

@@ -10,11 +10,11 @@
 
 package org.mule.providers.soap.xfire;
 
-import org.mule.api.UMOComponent;
-import org.mule.api.UMOException;
-import org.mule.api.endpoint.UMOEndpoint;
+import org.mule.api.Component;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.endpoint.Endpoint;
 import org.mule.api.lifecycle.CreateException;
-import org.mule.api.transport.UMOConnector;
+import org.mule.api.transport.Connector;
 import org.mule.impl.config.converters.QNameConverter;
 import org.mule.impl.transport.AbstractMessageReceiver;
 import org.mule.providers.soap.SoapConstants;
@@ -49,7 +49,7 @@ public class XFireMessageReceiver extends AbstractMessageReceiver
 
     protected List serviceInterfaces;
 
-    public XFireMessageReceiver(UMOConnector umoConnector, UMOComponent component, UMOEndpoint umoEndpoint)
+    public XFireMessageReceiver(Connector umoConnector, Component component, Endpoint umoEndpoint)
         throws CreateException
     {
         super(umoConnector, component, umoEndpoint);
@@ -187,12 +187,12 @@ public class XFireMessageReceiver extends AbstractMessageReceiver
         connector.getXfire().getServiceRegistry().unregister(service);
     }
 
-    public void doStart() throws UMOException
+    public void doStart() throws AbstractMuleException
     {
         // nothing to do
     }
 
-    public void doStop() throws UMOException
+    public void doStop() throws AbstractMuleException
     {
         // nothing to do
     }

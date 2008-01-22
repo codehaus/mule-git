@@ -10,8 +10,8 @@
 
 package org.mule.providers.email.filters;
 
-import org.mule.api.UMOFilter;
-import org.mule.api.UMOMessage;
+import org.mule.api.Filter;
+import org.mule.api.MuleMessage;
 import org.mule.util.ClassUtils;
 
 import javax.mail.Message;
@@ -23,14 +23,14 @@ import org.apache.commons.logging.LogFactory;
  * <code>AbstractMailFilter</code> is a base class for all javax.mail.Message
  * filters.
  */
-public abstract class AbstractMailFilter implements UMOFilter
+public abstract class AbstractMailFilter implements Filter
 {
     /**
      * logger used by this class
      */
     protected transient Log logger = LogFactory.getLog(getClass());
 
-    public final boolean accept(UMOMessage message)
+    public final boolean accept(MuleMessage message)
     {
         if (message == null)
         {

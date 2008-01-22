@@ -10,15 +10,15 @@
 
 package org.mule;
 
+import org.mule.api.AbstractMuleException;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleException;
-import org.mule.api.UMOException;
 import org.mule.api.config.ConfigurationBuilder;
 import org.mule.impl.DefaultMuleContextFactory;
 import org.mule.impl.MuleShutdownHook;
 import org.mule.impl.config.ExceptionHelper;
-import org.mule.imple.config.i18n.CoreMessages;
-import org.mule.imple.config.i18n.Message;
+import org.mule.impl.config.i18n.CoreMessages;
+import org.mule.impl.config.i18n.Message;
 import org.mule.util.ClassUtils;
 import org.mule.util.IOUtils;
 import org.mule.util.MuleUrlStreamHandlerFactory;
@@ -343,7 +343,7 @@ public class MuleServer implements Runnable
     public void shutdown(Throwable e)
     {
         Message msg = CoreMessages.fatalErrorWhileRunning();
-        UMOException muleException = ExceptionHelper.getRootMuleException(e);
+        AbstractMuleException muleException = ExceptionHelper.getRootMuleException(e);
         if (muleException != null)
         {
             logger.fatal(muleException.getDetailedMessage());

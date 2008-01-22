@@ -10,16 +10,16 @@
 
 package org.mule.impl.transport;
 
+import org.mule.api.AbstractMuleException;
+import org.mule.api.Event;
+import org.mule.api.MuleMessage;
+import org.mule.api.Transaction;
 import org.mule.api.TransactionException;
-import org.mule.api.UMOEvent;
-import org.mule.api.UMOException;
-import org.mule.api.UMOMessage;
-import org.mule.api.UMOTransaction;
 import org.mule.api.config.MuleProperties;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
-import org.mule.api.routing.UMOResponseRouterCollection;
+import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.api.routing.ResponseRouterCollection;
 import org.mule.api.transport.DispatchException;
-import org.mule.api.transport.UMOMessageDispatcher;
+import org.mule.api.transport.MessageDispatcher;
 import org.mule.impl.OptimizedRequestContext;
 import org.mule.impl.RequestContext;
 import org.mule.impl.internal.notifications.MessageNotification;
@@ -32,10 +32,10 @@ import javax.resource.spi.work.WorkManager;
 /**
  * Provide a default dispatch (client) support for handling threads lifecycle and validation.
  */
-public abstract class AbstractMessageDispatcher extends AbstractConnectable implements UMOMessageDispatcher
+public abstract class AbstractMessageDispatcher extends AbstractConnectable implements MessageDispatcher
 {
 
-    public AbstractMessageDispatcher(UMOImmutableEndpoint endpoint)
+    public AbstractMessageDispatcher(ImmutableEndpoint endpoint)
     {
         super(endpoint);
     }
@@ -43,9 +43,9 @@ public abstract class AbstractMessageDispatcher extends AbstractConnectable impl
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.api.transport.UMOMessageDispatcher#dispatch(org.mule.api.UMOEvent)
+     * @see org.mule.api.transport.MessageDispatcher#dispatch(org.mule.api.Event)
      */
-    public final void dispatch(UMOEvent event) throws DispatchException
+    public final void dispatch(Event event) throws DispatchException
     {
         event.setSynchronous(false);
         event.getMessage().setProperty(MuleProperties.MULE_ENDPOINT_PROPERTY,
@@ -53,7 +53,7 @@ public abstract class AbstractMessageDispatcher extends AbstractConnectable impl
         event = OptimizedRequestContext.criticalSetEvent(event); // MULE-2112
 
         // Apply Security filter if one is set
-        UMOImmutableEndpoint endpoint = event.getEndpoint();
+        ImmutableEndpoint endpoint = event.getEndpoint();
         if (endpoint.getSecurityFilter() != null)
         {
             try
@@ -69,7 +69,7 @@ public abstract class AbstractMessageDispatcher extends AbstractConnectable impl
                 connector.handleException(e);
                 return;
             }
-            catch (UMOException e)
+            catch (AbstractMuleException e)
             {
                 disposeAndLogException();
                 throw new DispatchException(event.getMessage(), event.getEndpoint(), e);
@@ -78,7 +78,7 @@ public abstract class AbstractMessageDispatcher extends AbstractConnectable impl
 
         try
         {
-            UMOTransaction tx = TransactionCoordination.getInstance().getTransaction();
+            Transaction tx = TransactionCoordination.getInstance().getTransaction();
             if (isDoThreading() && !event.isSynchronous() && tx == null)
             {
                 workManager.scheduleWork(new Worker(event), WorkManager.INDEFINITE, null, connector);
@@ -112,7 +112,7 @@ public abstract class AbstractMessageDispatcher extends AbstractConnectable impl
         }
     }
 
-    public final UMOMessage send(UMOEvent event) throws DispatchException
+    public final MuleMessage send(Event event) throws DispatchException
     {
         // No point continuing if the component has rolledback the transaction
         if (isTransactionRollback())
@@ -126,7 +126,7 @@ public abstract class AbstractMessageDispatcher extends AbstractConnectable impl
         event = OptimizedRequestContext.unsafeSetEvent(event);
 
         // Apply Security filter if one is set
-        UMOImmutableEndpoint endpoint = event.getEndpoint();
+        ImmutableEndpoint endpoint = event.getEndpoint();
         if (endpoint.getSecurityFilter() != null)
         {
             try
@@ -141,7 +141,7 @@ public abstract class AbstractMessageDispatcher extends AbstractConnectable impl
                 connector.handleException(e);
                 return event.getMessage();
             }
-            catch (UMOException e)
+            catch (AbstractMuleException e)
             {
                 disposeAndLogException();
                 throw new DispatchException(event.getMessage(), event.getEndpoint(), e);
@@ -153,7 +153,7 @@ public abstract class AbstractMessageDispatcher extends AbstractConnectable impl
             // Make sure we are connected
             connectionStrategy.connect(this);
 
-            UMOMessage result = doSend(event);
+            MuleMessage result = doSend(event);
             if (connector.isEnableMessageEvents())
             {
                 String component = null;
@@ -204,7 +204,7 @@ public abstract class AbstractMessageDispatcher extends AbstractConnectable impl
      * @return true if a response channel should be used to get a resposne from the
      *         event dispatch.
      */
-    protected boolean useRemoteSync(UMOEvent event)
+    protected boolean useRemoteSync(Event event)
     {
         boolean remoteSync = false;
         if (event.getEndpoint().getConnector().isRemoteSyncEnabled())
@@ -217,7 +217,7 @@ public abstract class AbstractMessageDispatcher extends AbstractConnectable impl
                 // component will be null for client calls
                 if (event.getComponent() != null)
                 {
-                    UMOResponseRouterCollection responseRouters = event.getComponent().getResponseRouter();
+                    ResponseRouterCollection responseRouters = event.getComponent().getResponseRouter();
                     if (responseRouters != null && responseRouters.hasEndpoints())
                     {
                         remoteSync = false;
@@ -238,9 +238,9 @@ public abstract class AbstractMessageDispatcher extends AbstractConnectable impl
 
     private class Worker implements Work
     {
-        private UMOEvent event;
+        private Event event;
 
-        public Worker(UMOEvent event)
+        public Worker(Event event)
         {
             this.event = event;
         }
@@ -292,7 +292,7 @@ public abstract class AbstractMessageDispatcher extends AbstractConnectable impl
     {
         try
         {
-            UMOTransaction tx = TransactionCoordination.getInstance().getTransaction();
+            Transaction tx = TransactionCoordination.getInstance().getTransaction();
             if (tx != null && tx.isRollbackOnly())
             {
                 return true;
@@ -306,8 +306,8 @@ public abstract class AbstractMessageDispatcher extends AbstractConnectable impl
         return false;
     }
 
-    protected abstract void doDispatch(UMOEvent event) throws Exception;
+    protected abstract void doDispatch(Event event) throws Exception;
 
-    protected abstract UMOMessage doSend(UMOEvent event) throws Exception;
+    protected abstract MuleMessage doSend(Event event) throws Exception;
                                              
 }

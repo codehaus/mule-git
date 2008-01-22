@@ -11,8 +11,8 @@
 package org.mule.impl.transport;
 
 import org.mule.api.lifecycle.FatalException;
-import org.mule.api.transport.UMOConnectable;
-import org.mule.imple.config.i18n.Message;
+import org.mule.api.transport.Connectable;
+import org.mule.impl.config.i18n.Message;
 
 /** TODO document */
 public class FatalConnectException extends FatalException
@@ -20,17 +20,17 @@ public class FatalConnectException extends FatalException
     /** Serial version */
     private static final long serialVersionUID = 3300563235465630595L;
 
-    public FatalConnectException(Message message, UMOConnectable component)
+    public FatalConnectException(Message message, Connectable component)
     {
         super(message, component);
     }
 
-    public FatalConnectException(Message message, Throwable cause, UMOConnectable component)
+    public FatalConnectException(Message message, Throwable cause, Connectable component)
     {
         super(message, cause, component);
     }
 
-    public FatalConnectException(Throwable cause, UMOConnectable component)
+    public FatalConnectException(Throwable cause, Connectable component)
     {
         super(cause, component);
     }

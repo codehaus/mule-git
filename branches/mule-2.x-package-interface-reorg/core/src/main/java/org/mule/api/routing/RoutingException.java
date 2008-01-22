@@ -11,15 +11,15 @@
 package org.mule.api.routing;
 
 import org.mule.api.MessagingException;
-import org.mule.api.UMOMessage;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
-import org.mule.imple.config.i18n.CoreMessages;
-import org.mule.imple.config.i18n.Message;
+import org.mule.api.MuleMessage;
+import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.impl.config.i18n.CoreMessages;
+import org.mule.impl.config.i18n.Message;
 
 /**
  * <code>RoutingException</code> is a base class for all routing exceptions.
- * Routing exceptions are only thrown for InboundRouterCollection and
- * OutboundRouterCollection and deriving types. Mule itself does not throw routing
+ * Routing exceptions are only thrown for DefaultInboundRouterCollection and
+ * DefaultOutboundRouterCollection and deriving types. Mule itself does not throw routing
  * exceptions when routing internal events.
  */
 public class RoutingException extends MessagingException
@@ -29,41 +29,41 @@ public class RoutingException extends MessagingException
      */
     private static final long serialVersionUID = 2478458847072048645L;
 
-    protected final transient UMOImmutableEndpoint endpoint;
+    protected final transient ImmutableEndpoint endpoint;
 
-    public RoutingException(UMOMessage message, UMOImmutableEndpoint endpoint)
+    public RoutingException(MuleMessage message, ImmutableEndpoint endpoint)
     {
         super(generateMessage(null, endpoint), message);
         this.endpoint = endpoint;
     }
 
-    public RoutingException(UMOMessage umoMessage, UMOImmutableEndpoint endpoint, Throwable cause)
+    public RoutingException(MuleMessage umoMessage, ImmutableEndpoint endpoint, Throwable cause)
     {
         super(generateMessage(null, endpoint), umoMessage, cause);
         this.endpoint = endpoint;
     }
 
-    public RoutingException(Message message, UMOMessage umoMessage, UMOImmutableEndpoint endpoint)
+    public RoutingException(Message message, MuleMessage umoMessage, ImmutableEndpoint endpoint)
     {
         super(generateMessage(message, endpoint), umoMessage);
         this.endpoint = endpoint;
     }
 
     public RoutingException(Message message,
-                            UMOMessage umoMessage,
-                            UMOImmutableEndpoint endpoint,
+                            MuleMessage umoMessage,
+                            ImmutableEndpoint endpoint,
                             Throwable cause)
     {
         super(generateMessage(message, endpoint), umoMessage, cause);
         this.endpoint = endpoint;
     }
 
-    public UMOImmutableEndpoint getEndpoint()
+    public ImmutableEndpoint getEndpoint()
     {
         return endpoint;
     }
 
-    private static Message generateMessage(Message message, UMOImmutableEndpoint endpoint)
+    private static Message generateMessage(Message message, ImmutableEndpoint endpoint)
     {
         Message m = CoreMessages.failedToRouterViaEndpoint(endpoint);
         if (message != null)

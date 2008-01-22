@@ -11,7 +11,7 @@
 package org.mule.providers.soap.axis.extensions;
 
 import org.mule.MuleServer;
-import org.mule.api.UMOComponent;
+import org.mule.api.Component;
 import org.mule.impl.RequestContext;
 import org.mule.providers.soap.axis.AxisConnector;
 import org.mule.providers.soap.axis.AxisMessageReceiver;
@@ -82,7 +82,7 @@ public class MuleRPCProvider extends RPCProvider
     protected Class getServiceClass(String s, SOAPService soapService, MessageContext messageContext)
         throws AxisFault
     {
-        UMOComponent component = MuleServer.getMuleContext().getRegistry().lookupComponent(soapService.getName());
+        Component component = MuleServer.getMuleContext().getRegistry().lookupComponent(soapService.getName());
         try
         {
             Class[] classes = AxisServiceProxy.getInterfacesForComponent(component);

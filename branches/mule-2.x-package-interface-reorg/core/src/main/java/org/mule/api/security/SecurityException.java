@@ -11,20 +11,20 @@
 package org.mule.api.security;
 
 import org.mule.api.MessagingException;
-import org.mule.api.UMOMessage;
-import org.mule.imple.config.i18n.Message;
+import org.mule.api.MuleMessage;
+import org.mule.impl.config.i18n.Message;
 
 /**
  * <code>SecurityException</code> is a generic security exception
  */
 public abstract class SecurityException extends MessagingException
 {
-    protected SecurityException(Message message, UMOMessage umoMessage)
+    protected SecurityException(Message message, MuleMessage umoMessage)
     {
         super(message, umoMessage);
     }
 
-    protected SecurityException(Message message, UMOMessage umoMessage, Throwable cause)
+    protected SecurityException(Message message, MuleMessage umoMessage, Throwable cause)
     {
         super(message, umoMessage, cause);
     }

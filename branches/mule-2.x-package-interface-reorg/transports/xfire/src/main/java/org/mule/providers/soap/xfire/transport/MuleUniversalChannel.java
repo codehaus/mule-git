@@ -12,15 +12,15 @@ package org.mule.providers.soap.xfire.transport;
 
 
 import org.mule.RegistryContext;
-import org.mule.api.UMOEvent;
-import org.mule.api.UMOException;
-import org.mule.api.UMOMessage;
+import org.mule.api.Event;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleMessage;
 import org.mule.api.config.MuleProperties;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.transport.OutputHandler;
-import org.mule.api.transport.UMOMessageAdapter;
+import org.mule.api.transport.MessageAdapter;
 import org.mule.impl.MuleEvent;
-import org.mule.impl.MuleMessage;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.RequestContext;
 import org.mule.impl.transport.DefaultMessageAdapter;
 import org.mule.providers.http.HttpConnector;
@@ -201,7 +201,7 @@ public class MuleUniversalChannel extends AbstractChannel
     {
         OutputHandler handler = new OutputHandler()
         {
-            public void write(UMOEvent event, OutputStream out) throws IOException
+            public void write(Event event, OutputStream out) throws IOException
             {
                 try
                 {
@@ -243,7 +243,7 @@ public class MuleUniversalChannel extends AbstractChannel
         writeHeaders(message, sp);
 
         // Allow custom http headers when using xfire (MULE-923)
-        UMOMessage msg = RequestContext.getEvent().getMessage();
+        MuleMessage msg = RequestContext.getEvent().getMessage();
         for (Iterator i = msg.getPropertyNames().iterator(); i.hasNext();)
         {
             String propertyName = (String) i.next();
@@ -256,7 +256,7 @@ public class MuleUniversalChannel extends AbstractChannel
             }
         }
 
-        UMOMessage result = send(getUri(), sp);
+        MuleMessage result = send(getUri(), sp);
         if (result != null)
         {
             InMessage inMessage;
@@ -302,7 +302,7 @@ public class MuleUniversalChannel extends AbstractChannel
 
     }
 
-    public void writeHeaders(OutMessage message, UMOMessageAdapter msg)
+    public void writeHeaders(OutMessage message, MessageAdapter msg)
     {
         msg.setProperty(HttpConstants.HEADER_CONTENT_TYPE, getSoapMimeType(message));
         msg.setProperty(SoapConstants.SOAP_ACTION, message.getProperty(SoapConstants.SOAP_ACTION));
@@ -334,11 +334,11 @@ public class MuleUniversalChannel extends AbstractChannel
         return false;
     }
 
-    protected UMOMessage send(String uri, UMOMessageAdapter adapter) throws UMOException
+    protected MuleMessage send(String uri, MessageAdapter adapter) throws AbstractMuleException
     {
-        UMOImmutableEndpoint ep = RegistryContext.getRegistry().lookupEndpointFactory().getOutboundEndpoint(uri);
-        UMOMessage message = new MuleMessage(adapter);
-        UMOEvent event = new MuleEvent(message, ep, RequestContext.getEventContext().getSession(), true);
+        ImmutableEndpoint ep = RegistryContext.getRegistry().lookupEndpointFactory().getOutboundEndpoint(uri);
+        MuleMessage message = new DefaultMuleMessage(adapter);
+        Event event = new MuleEvent(message, ep, RequestContext.getEventContext().getSession(), true);
         return ep.send(event);
     }
 

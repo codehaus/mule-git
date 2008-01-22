@@ -10,7 +10,7 @@
 
 package org.mule.impl.transaction;
 
-import org.mule.imple.config.i18n.Message;
+import org.mule.impl.config.i18n.Message;
 
 /**
  * <code>IllegalTransactionStateException</code> TODO (document class)

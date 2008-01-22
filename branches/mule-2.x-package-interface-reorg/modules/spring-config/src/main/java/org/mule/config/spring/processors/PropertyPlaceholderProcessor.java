@@ -13,7 +13,7 @@ import org.mule.RegistryContext;
 import org.mule.api.MuleContext;
 import org.mule.api.config.PropertyFactory;
 import org.mule.api.context.MuleContextAware;
-import org.mule.imple.config.i18n.CoreMessages;
+import org.mule.impl.config.i18n.CoreMessages;
 
 import java.io.IOException;
 import java.util.HashMap;

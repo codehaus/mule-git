@@ -9,7 +9,7 @@
  */
 package org.mule.providers.vm.functional;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.impl.transaction.TransactionCoordination;
 import org.mule.tck.FunctionalTestCase;
@@ -25,7 +25,7 @@ public class VmTransactionTestCase extends FunctionalTestCase
     {
         MuleClient client = new MuleClient();
         client.dispatch("vm://in", "TEST", null);
-        UMOMessage message = client.request("vm://out", 10000);
+        MuleMessage message = client.request("vm://out", 10000);
         assertNotNull(message);
 
     }

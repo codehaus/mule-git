@@ -9,10 +9,10 @@
  */
 package org.mule.impl.model.resolvers;
 
-import org.mule.api.UMOEventContext;
+import org.mule.api.EventContext;
+import org.mule.api.model.EntryPointResolver;
+import org.mule.api.model.EntryPointResolverSet;
 import org.mule.api.model.InvocationResult;
-import org.mule.api.model.UMOEntryPointResolver;
-import org.mule.api.model.UMOEntryPointResolverSet;
 import org.mule.util.CollectionUtils;
 
 import java.util.Iterator;
@@ -26,13 +26,13 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * Provides the default implementation of an {@link org.mule.api.model.UMOEntryPointResolverSet}
+ * Provides the default implementation of an {@link org.mule.api.model.EntryPointResolverSet}
  * It resolves a method to call on the given component when an event is received.
  * This object maintains a set of Resolvers that will be used in order to resolve
  * an entrypoint on a service object until one is found or until the set is
  * exhausted.
  */
-public class DefaultEntryPointResolverSet implements UMOEntryPointResolverSet
+public class DefaultEntryPointResolverSet implements EntryPointResolverSet
 {
 
     protected final Log logger = LogFactory.getLog(getClass());
@@ -40,13 +40,13 @@ public class DefaultEntryPointResolverSet implements UMOEntryPointResolverSet
     private final Set entryPointResolvers = new LinkedHashSet(4);
     private List exceptions = new CopyOnWriteArrayList();
 
-    public Object invoke(Object component, UMOEventContext context) throws Exception
+    public Object invoke(Object component, EventContext context) throws Exception
     {
         try
         {
             for (Iterator iterator = entryPointResolvers.iterator(); iterator.hasNext();)
             {
-                UMOEntryPointResolver resolver = (UMOEntryPointResolver) iterator.next();
+                EntryPointResolver resolver = (EntryPointResolver) iterator.next();
                 InvocationResult result = resolver.invoke(component, context);
                 if (result.getState() == InvocationResult.STATE_INVOKED_SUCESSFUL)
                 {
@@ -80,7 +80,7 @@ public class DefaultEntryPointResolverSet implements UMOEntryPointResolverSet
         this.entryPointResolvers.addAll(entryPointResolvers);
     }
 
-    public void addEntryPointResolver(UMOEntryPointResolver resolver)
+    public void addEntryPointResolver(EntryPointResolver resolver)
     {
         synchronized (entryPointResolvers)
         {
@@ -88,7 +88,7 @@ public class DefaultEntryPointResolverSet implements UMOEntryPointResolverSet
         }
     }
 
-    public boolean removeEntryPointResolver(UMOEntryPointResolver resolver)
+    public boolean removeEntryPointResolver(EntryPointResolver resolver)
     {
         return this.entryPointResolvers.remove(resolver);
     }

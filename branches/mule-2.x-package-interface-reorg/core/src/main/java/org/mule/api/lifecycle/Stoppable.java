@@ -10,7 +10,7 @@
 
 package org.mule.api.lifecycle;
 
-import org.mule.api.UMOException;
+import org.mule.api.AbstractMuleException;
 
 /**
  * <code>Stoppable</code> TODO (document class)
@@ -19,5 +19,5 @@ public interface Stoppable
 {
     public static final String PHASE_NAME = "stop";
     
-    void stop() throws UMOException;
+    void stop() throws AbstractMuleException;
 }

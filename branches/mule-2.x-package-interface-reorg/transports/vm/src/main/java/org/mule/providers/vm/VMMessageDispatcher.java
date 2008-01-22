@@ -10,14 +10,14 @@
 
 package org.mule.providers.vm;
 
-import org.mule.api.UMOEvent;
-import org.mule.api.UMOMessage;
-import org.mule.api.endpoint.UMOEndpointURI;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.Event;
+import org.mule.api.MuleMessage;
+import org.mule.api.endpoint.EndpointURI;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.transport.DispatchException;
 import org.mule.api.transport.NoReceiverForEndpointException;
+import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.impl.transport.AbstractMessageDispatcher;
-import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.providers.vm.i18n.VMMessages;
 import org.mule.util.queue.Queue;
 import org.mule.util.queue.QueueSession;
@@ -30,15 +30,15 @@ public class VMMessageDispatcher extends AbstractMessageDispatcher
 {
     private final VMConnector connector;
 
-    public VMMessageDispatcher(UMOImmutableEndpoint endpoint)
+    public VMMessageDispatcher(ImmutableEndpoint endpoint)
     {
         super(endpoint);
         this.connector = (VMConnector) endpoint.getConnector();
     }
 
-    protected void doDispatch(UMOEvent event) throws Exception
+    protected void doDispatch(Event event) throws Exception
     {
-        UMOEndpointURI endpointUri = event.getEndpoint().getEndpointURI();
+        EndpointURI endpointUri = event.getEndpoint().getEndpointURI();
         //Apply any outbound transformers on this event before we dispatch
         event.transformMessage();
 
@@ -61,7 +61,7 @@ public class VMMessageDispatcher extends AbstractMessageDispatcher
                 logger.warn("No receiver for endpointUri: " + event.getEndpoint().getEndpointURI());
                 return;
             }
-            UMOMessage message = event.getMessage(); 
+            MuleMessage message = event.getMessage(); 
             connector.getSessionHandler().storeSessionInfoToMessage(event.getSession(), message);
             receiver.onMessage(message);
         }
@@ -71,10 +71,10 @@ public class VMMessageDispatcher extends AbstractMessageDispatcher
         }
     }
 
-    protected UMOMessage doSend(UMOEvent event) throws Exception
+    protected MuleMessage doSend(Event event) throws Exception
     {
-        UMOMessage retMessage;
-        UMOEndpointURI endpointUri = event.getEndpoint().getEndpointURI();
+        MuleMessage retMessage;
+        EndpointURI endpointUri = event.getEndpoint().getEndpointURI();
         VMMessageReceiver receiver = connector.getReceiver(endpointUri);
         //Apply any outbound transformers on this event before we dispatch
         event.transformMessage();
@@ -99,9 +99,9 @@ public class VMMessageDispatcher extends AbstractMessageDispatcher
             }
         }
 
-        UMOMessage message = event.getMessage(); 
+        MuleMessage message = event.getMessage(); 
         connector.getSessionHandler().storeSessionInfoToMessage(event.getSession(), message);
-        retMessage = (UMOMessage) receiver.onCall(message, event.isSynchronous());
+        retMessage = (MuleMessage) receiver.onCall(message, event.isSynchronous());
 
         if (logger.isDebugEnabled())
         {

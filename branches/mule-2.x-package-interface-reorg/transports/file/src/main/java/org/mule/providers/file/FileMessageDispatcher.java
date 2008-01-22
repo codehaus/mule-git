@@ -18,12 +18,12 @@ import java.net.URLDecoder;
 
 import org.mule.RegistryContext;
 import org.mule.api.MuleException;
-import org.mule.api.UMOEvent;
-import org.mule.api.UMOException;
-import org.mule.api.UMOMessage;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.Event;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleMessage;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.transport.OutputHandler;
-import org.mule.impl.MuleMessage;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.transport.AbstractMessageDispatcher;
 import org.mule.providers.file.filters.FilenameWildcardFilter;
 import org.mule.providers.file.i18n.FileMessages;
@@ -37,7 +37,7 @@ public class FileMessageDispatcher extends AbstractMessageDispatcher
 {
     private final FileConnector connector;
 
-    public FileMessageDispatcher(UMOImmutableEndpoint endpoint)
+    public FileMessageDispatcher(ImmutableEndpoint endpoint)
     {
         super(endpoint);
         this.connector = (FileConnector) endpoint.getConnector();
@@ -46,13 +46,13 @@ public class FileMessageDispatcher extends AbstractMessageDispatcher
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.api.transport.UMOConnectorSession#dispatch(org.mule.api.UMOEvent)
+     * @see org.mule.api.transport.UMOConnectorSession#dispatch(org.mule.api.Event)
      */
-    protected void doDispatch(UMOEvent event) throws Exception
+    protected void doDispatch(Event event) throws Exception
     {
         Object data = event.transformMessage();
         // Wrap the transformed message before passing it to the filename parser
-        UMOMessage message = new MuleMessage(data, event.getMessage());
+        MuleMessage message = new DefaultMuleMessage(data, event.getMessage());
 
         FileOutputStream fos = (FileOutputStream) connector.getOutputStream(event.getEndpoint(), message);
         try 
@@ -92,14 +92,14 @@ public class FileMessageDispatcher extends AbstractMessageDispatcher
     /**
      * There is no associated session for a file connector
      * 
-     * @throws UMOException
+     * @throws AbstractMuleException
      */
-    public Object getDelegateSession() throws UMOException
+    public Object getDelegateSession() throws AbstractMuleException
     {
         return null;
     }
 
-    protected static File getNextFile(String dir, FilenameFilter filter) throws UMOException
+    protected static File getNextFile(String dir, FilenameFilter filter) throws AbstractMuleException
     {
         File[] files;
         File file = FileUtils.newFile(dir);
@@ -139,9 +139,9 @@ public class FileMessageDispatcher extends AbstractMessageDispatcher
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.api.transport.UMOConnectorSession#send(org.mule.api.UMOEvent)
+     * @see org.mule.api.transport.UMOConnectorSession#send(org.mule.api.Event)
      */
-    protected UMOMessage doSend(UMOEvent event) throws Exception
+    protected MuleMessage doSend(Event event) throws Exception
     {
         doDispatch(event);
         return event.getMessage();

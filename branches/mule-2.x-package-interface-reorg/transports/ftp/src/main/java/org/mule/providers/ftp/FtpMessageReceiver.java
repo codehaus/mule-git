@@ -10,13 +10,13 @@
 
 package org.mule.providers.ftp;
 
-import org.mule.api.UMOComponent;
-import org.mule.api.UMOMessage;
-import org.mule.api.endpoint.UMOEndpoint;
-import org.mule.api.endpoint.UMOEndpointURI;
+import org.mule.api.Component;
+import org.mule.api.MuleMessage;
+import org.mule.api.endpoint.Endpoint;
+import org.mule.api.endpoint.EndpointURI;
 import org.mule.api.lifecycle.CreateException;
-import org.mule.api.transport.UMOConnector;
-import org.mule.impl.MuleMessage;
+import org.mule.api.transport.Connector;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.transport.AbstractPollingMessageReceiver;
 import org.mule.providers.file.FileConnector;
 
@@ -47,9 +47,9 @@ public class FtpMessageReceiver extends AbstractPollingMessageReceiver
     protected final Set scheduledFiles = Collections.synchronizedSet(new HashSet());
     protected final Set currentFiles = Collections.synchronizedSet(new HashSet());
 
-    public FtpMessageReceiver(UMOConnector connector,
-                              UMOComponent component,
-                              UMOEndpoint endpoint,
+    public FtpMessageReceiver(Connector connector,
+                              Component component,
+                              Endpoint endpoint,
                               long frequency) throws CreateException
     {
         super(connector, component, endpoint);
@@ -141,14 +141,14 @@ public class FtpMessageReceiver extends AbstractPollingMessageReceiver
 
             final String fileName = file.getName();
 
-            UMOMessage message;
+            MuleMessage message;
             InputStream stream = client.retrieveFileStream(fileName);
             if (stream == null)
             {
                 throw new IOException(MessageFormat.format("Failed to retrieve file {0}. Ftp error: {1}",
                         new Object[]{fileName, new Integer(client.getReplyCode())}));
             }
-            message = new MuleMessage(connector.getMessageAdapter(stream));
+            message = new DefaultMuleMessage(connector.getMessageAdapter(stream));
             
 
             message.setProperty(FileConnector.PROPERTY_ORIGINAL_FILENAME, fileName);

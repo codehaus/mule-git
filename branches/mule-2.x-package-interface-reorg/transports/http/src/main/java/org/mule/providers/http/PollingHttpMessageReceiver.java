@@ -10,15 +10,15 @@
 
 package org.mule.providers.http;
 
-import org.mule.api.UMOComponent;
-import org.mule.api.UMOEvent;
-import org.mule.api.UMOMessage;
-import org.mule.api.UMOSession;
-import org.mule.api.endpoint.UMOEndpoint;
+import org.mule.api.Component;
+import org.mule.api.Event;
+import org.mule.api.MuleMessage;
+import org.mule.api.Session;
+import org.mule.api.endpoint.Endpoint;
 import org.mule.api.lifecycle.CreateException;
-import org.mule.api.transport.UMOConnector;
+import org.mule.api.transport.Connector;
 import org.mule.impl.MuleEvent;
-import org.mule.impl.MuleMessage;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.MuleSession;
 import org.mule.impl.transport.AbstractPollingMessageReceiver;
 import org.mule.impl.transport.DefaultMessageAdapter;
@@ -33,9 +33,9 @@ public class PollingHttpMessageReceiver extends AbstractPollingMessageReceiver
     protected String etag = null;
     private boolean checkEtag;
     
-    public PollingHttpMessageReceiver(UMOConnector connector,
-                                      UMOComponent component,
-                                      final UMOEndpoint endpoint) throws CreateException
+    public PollingHttpMessageReceiver(Connector connector,
+                                      Component component,
+                                      final Endpoint endpoint) throws CreateException
     {
 
         super(connector, component, endpoint);
@@ -66,7 +66,7 @@ public class PollingHttpMessageReceiver extends AbstractPollingMessageReceiver
 
     public void poll() throws Exception
     {
-        UMOMessage req = new MuleMessage(new DefaultMessageAdapter(""));
+        MuleMessage req = new DefaultMuleMessage(new DefaultMessageAdapter(""));
         if (etag != null && checkEtag)
         {
             Map customHeaders = Collections.singletonMap(HttpConstants.HEADER_IF_NONE_MATCH, etag);
@@ -74,10 +74,10 @@ public class PollingHttpMessageReceiver extends AbstractPollingMessageReceiver
         }
         req.setProperty(HttpConnector.HTTP_METHOD_PROPERTY, "GET");
         
-        UMOSession session = new MuleSession(component);
-        UMOEvent event = new MuleEvent(req, endpoint, session, true);
+        Session session = new MuleSession(component);
+        Event event = new MuleEvent(req, endpoint, session, true);
         
-        UMOMessage message = connector.send(endpoint, event);
+        MuleMessage message = connector.send(endpoint, event);
         
         int status = message.getIntProperty(HttpConnector.HTTP_STATUS_PROPERTY, 0);        
         etag = message.getStringProperty(HttpConstants.HEADER_ETAG, null);

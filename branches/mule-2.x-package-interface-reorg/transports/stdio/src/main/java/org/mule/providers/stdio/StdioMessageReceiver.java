@@ -10,12 +10,12 @@
 
 package org.mule.providers.stdio;
 
-import org.mule.api.UMOComponent;
-import org.mule.api.UMOMessage;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.Component;
+import org.mule.api.MuleMessage;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.CreateException;
-import org.mule.api.transport.UMOConnector;
-import org.mule.impl.MuleMessage;
+import org.mule.api.transport.Connector;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.transport.AbstractPollingMessageReceiver;
 
 import java.io.InputStream;
@@ -39,9 +39,9 @@ public class StdioMessageReceiver extends AbstractPollingMessageReceiver
 
     private boolean sendStream;
 
-    public StdioMessageReceiver(UMOConnector connector,
-                                UMOComponent component,
-                                UMOImmutableEndpoint endpoint,
+    public StdioMessageReceiver(Connector connector,
+                                Component component,
+                                ImmutableEndpoint endpoint,
                                 long checkFrequency) throws CreateException
     {
         super(connector, component, endpoint);
@@ -110,7 +110,7 @@ public class StdioMessageReceiver extends AbstractPollingMessageReceiver
                 int i = in.read();
                 //Roll back our read
                 in.unread(i);
-                UMOMessage umoMessage = new MuleMessage(connector.getMessageAdapter(in));
+                MuleMessage umoMessage = new DefaultMuleMessage(connector.getMessageAdapter(in));
                 routeMessage(umoMessage, endpoint.isSynchronous());
             }
             else
@@ -146,7 +146,7 @@ public class StdioMessageReceiver extends AbstractPollingMessageReceiver
                     finalMessageString = fullBuffer.toString();
                 }
 
-                UMOMessage umoMessage = new MuleMessage(connector.getMessageAdapter(finalMessageString));
+                MuleMessage umoMessage = new DefaultMuleMessage(connector.getMessageAdapter(finalMessageString));
                 routeMessage(umoMessage, endpoint.isSynchronous());
             }
 

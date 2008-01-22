@@ -10,10 +10,10 @@
 
 package org.mule.impl;
 
-import org.mule.api.UMOComponent;
-import org.mule.api.UMOEvent;
-import org.mule.api.UMOMessage;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.Component;
+import org.mule.api.Event;
+import org.mule.api.MuleMessage;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.impl.management.stats.ComponentStatistics;
 import org.mule.impl.model.AbstractComponent;
 
@@ -27,7 +27,7 @@ public class DefaultComponentExceptionStrategy extends DefaultExceptionStrategy
     /**
      * The component to which the Exception handler belongs
      */
-    protected UMOComponent component;
+    protected Component component;
 
     protected ComponentStatistics statistics;
 
@@ -42,7 +42,7 @@ public class DefaultComponentExceptionStrategy extends DefaultExceptionStrategy
      * @param component the owner of this exception strategy
      * @see DefaultLifecycleAdapter
      */
-    public DefaultComponentExceptionStrategy(UMOComponent component)
+    public DefaultComponentExceptionStrategy(Component component)
     {
         super();
         setComponent(component);
@@ -51,7 +51,7 @@ public class DefaultComponentExceptionStrategy extends DefaultExceptionStrategy
     /**
      * @return the UniversalMessageObject to which this handler is attached
      */
-    public UMOComponent getComponent()
+    public Component getComponent()
     {
         return component;
     }
@@ -63,7 +63,7 @@ public class DefaultComponentExceptionStrategy extends DefaultExceptionStrategy
         // and thus there is no concurrency problem
         if (component == null)
         {
-            UMOEvent event = RequestContext.getEvent();
+            Event event = RequestContext.getEvent();
             if (event == null)
             {
                 // very bad should not happen
@@ -84,7 +84,7 @@ public class DefaultComponentExceptionStrategy extends DefaultExceptionStrategy
         super.defaultHandler(t);
     }
 
-    protected void logFatal(UMOMessage message, Throwable t)
+    protected void logFatal(MuleMessage message, Throwable t)
     {
         super.logFatal(message, t);
         if (statistics != null)
@@ -93,9 +93,9 @@ public class DefaultComponentExceptionStrategy extends DefaultExceptionStrategy
         }
     }
 
-    protected void routeException(UMOMessage message, UMOImmutableEndpoint failedEndpoint, Throwable t)
+    protected void routeException(MuleMessage message, ImmutableEndpoint failedEndpoint, Throwable t)
     {
-        UMOImmutableEndpoint ep = getEndpoint(t);
+        ImmutableEndpoint ep = getEndpoint(t);
         if (ep != null)
         {
             super.routeException(message, failedEndpoint, t);
@@ -106,7 +106,7 @@ public class DefaultComponentExceptionStrategy extends DefaultExceptionStrategy
         }
     }
 
-    public void setComponent(UMOComponent component)
+    public void setComponent(Component component)
     {
         this.component = component;
         if (component instanceof AbstractComponent)

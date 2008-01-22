@@ -10,8 +10,8 @@
 
 package org.mule.impl.internal.notifications.manager;
 
-import org.mule.api.context.UMOServerNotification;
-import org.mule.api.context.UMOServerNotificationListener;
+import org.mule.api.context.ServerNotification;
+import org.mule.api.context.ServerNotificationListener;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -52,7 +52,7 @@ class Policy
         for (Iterator pairs = listenerSubscriptionPairs.iterator(); pairs.hasNext();)
         {
             ListenerSubscriptionPair pair = (ListenerSubscriptionPair) pairs.next();
-            UMOServerNotificationListener listener = pair.getListener();
+            ServerNotificationListener listener = pair.getListener();
             for (Iterator interfaces = interfaceToEvents.keySet().iterator(); interfaces.hasNext();)
             {
                 Class iface = (Class) interfaces.next();
@@ -106,7 +106,7 @@ class Policy
         return true;
     }
 
-    void dispatch(UMOServerNotification notification)
+    void dispatch(ServerNotification notification)
     {
         if (null != notification)
         {

@@ -11,13 +11,13 @@
 package org.mule.impl.internal.admin;
 
 import org.mule.RegistryContext;
-import org.mule.api.UMOComponent;
-import org.mule.api.UMOException;
-import org.mule.api.endpoint.UMOEndpointBuilder;
-import org.mule.api.endpoint.UMOEndpointURI;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.Component;
+import org.mule.api.endpoint.EndpointBuilder;
+import org.mule.api.endpoint.EndpointURI;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.transformer.wire.WireFormat;
-import org.mule.api.transport.UMOConnector;
+import org.mule.api.transport.Connector;
 import org.mule.impl.AbstractAgent;
 import org.mule.impl.AlreadyInitialisedException;
 import org.mule.impl.endpoint.EndpointURIEndpointBuilder;
@@ -64,12 +64,12 @@ public class MuleAdminAgent extends AbstractAgent
         return getName() + ": accepting connections on " + serverUri;
     }
 
-    public void start() throws UMOException
+    public void start() throws AbstractMuleException
     {
         // nothing to do (yet?)
     }
 
-    public void stop() throws UMOException
+    public void stop() throws AbstractMuleException
     {
         // nothing to do (yet?)
     }
@@ -123,16 +123,16 @@ public class MuleAdminAgent extends AbstractAgent
                 }
 
                 // Check to see if we have an endpoint identifier
-                UMOEndpointBuilder endpointBuilder = muleContext.getRegistry().lookupEndpointBuilder(serverUri);
+                EndpointBuilder endpointBuilder = muleContext.getRegistry().lookupEndpointBuilder(serverUri);
                 // Check to see if we have an endpoint identifier
                 if (endpointBuilder == null)
                 {
-                    UMOEndpointURI uri = new MuleEndpointURI(serverUri);
+                    EndpointURI uri = new MuleEndpointURI(serverUri);
                     endpointBuilder = new EndpointURIEndpointBuilder(uri, muleContext);
                     endpointBuilder.setSynchronous(true);
 
                     // TODO DF: Doesn't the EndpointBuilder do this?
-                    UMOConnector connector = TransportFactory.getOrCreateConnectorByProtocol(uri, muleContext);
+                    Connector connector = TransportFactory.getOrCreateConnectorByProtocol(uri, muleContext);
                     // If this connector has already been initialised i.e. it's a
                     // pre-existing connector don't reinit
                     if (muleContext.getRegistry().lookupConnector(connector.getName()) == null)
@@ -144,13 +144,13 @@ public class MuleAdminAgent extends AbstractAgent
                     endpointBuilder.setConnector(connector);
                 }
                 logger.info("Registering Admin listener on: " + serverUri);
-                UMOComponent component = MuleManagerComponent.getComponent(endpointBuilder, wireFormat,
+                Component component = MuleManagerComponent.getComponent(endpointBuilder, wireFormat,
                     RegistryContext.getConfiguration().getDefaultEncoding(), RegistryContext.getConfiguration()
                         .getDefaultSynchronousEventTimeout(), muleContext);
                 muleContext.getRegistry().registerComponent(component);
             }
         }
-        catch (UMOException e)
+        catch (AbstractMuleException e)
         {
             throw new InitialisationException(e, this);
         }

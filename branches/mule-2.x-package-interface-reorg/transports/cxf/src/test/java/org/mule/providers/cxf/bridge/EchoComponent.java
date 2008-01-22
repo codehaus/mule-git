@@ -1,8 +1,8 @@
 
 package org.mule.providers.cxf.bridge;
 
-import org.mule.api.UMOEventContext;
-import org.mule.api.UMOMessage;
+import org.mule.api.EventContext;
+import org.mule.api.MuleMessage;
 import org.mule.api.lifecycle.Callable;
 
 import javax.xml.transform.Source;
@@ -10,9 +10,9 @@ import javax.xml.transform.Source;
 public class EchoComponent implements Callable
 {
 
-    public Object onCall(UMOEventContext eventContext) throws Exception
+    public Object onCall(EventContext eventContext) throws Exception
     {
-        UMOMessage message = eventContext.getMessage();
+        MuleMessage message = eventContext.getMessage();
         Source s = (Source) message.getPayload();
         return s;
     }

@@ -10,7 +10,7 @@
 
 package org.mule.extras.spring.events;
 
-import org.mule.api.UMOEventContext;
+import org.mule.api.EventContext;
 import org.mule.api.endpoint.MalformedEndpointException;
 
 import java.util.Collections;
@@ -32,7 +32,7 @@ public class MuleApplicationEvent extends ApplicationEvent
      */
     private static final long serialVersionUID = 5297176859050194632L;
 
-    private final UMOEventContext context;
+    private final EventContext context;
     private final String endpoint;
     private final ApplicationContext applicationContext;
     private final Map properties = Collections.synchronizedMap(new HashMap());
@@ -45,7 +45,7 @@ public class MuleApplicationEvent extends ApplicationEvent
         this.context = null;
     }
 
-    MuleApplicationEvent(Object message, UMOEventContext context, ApplicationContext appContext)
+    MuleApplicationEvent(Object message, EventContext context, ApplicationContext appContext)
         throws MalformedEndpointException
     {
         super(message);
@@ -54,7 +54,7 @@ public class MuleApplicationEvent extends ApplicationEvent
         this.applicationContext = appContext;
     }
 
-    public UMOEventContext getMuleEventContext()
+    public EventContext getMuleEventContext()
     {
         return context;
     }

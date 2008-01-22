@@ -10,7 +10,7 @@
 
 package org.mule.providers.tcp;
 
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.endpoint.ImmutableEndpoint;
 
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -25,9 +25,9 @@ public class TcpSocketKey
 {
 
     private InetSocketAddress address;
-    private UMOImmutableEndpoint endpoint;
+    private ImmutableEndpoint endpoint;
 
-    public TcpSocketKey(UMOImmutableEndpoint endpoint)
+    public TcpSocketKey(ImmutableEndpoint endpoint)
     {
         if (!(endpoint.getConnector() instanceof TcpConnector))
         {
@@ -49,7 +49,7 @@ public class TcpSocketKey
         return address.hashCode();
     }
 
-    public UMOImmutableEndpoint getEndpoint()
+    public ImmutableEndpoint getEndpoint()
     {
         return endpoint;
     }

@@ -10,9 +10,9 @@
 
 package org.mule.providers.tcp.integration;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
-import org.mule.impl.MuleMessage;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.tck.FunctionalTestCase;
 
 /**
@@ -60,12 +60,12 @@ public class MuleMessageProtocolChunkingTestCase extends FunctionalTestCase
 
         for (int i = 0; i < messages; i++)
         {
-            client.dispatch("vm://in", new MuleMessage(message));
+            client.dispatch("vm://in", new DefaultMuleMessage(message));
         }
 
         for (int i = 0; i < messages; i++)
         {
-            UMOMessage msg = client.request("vm://out", WAIT_MS);
+            MuleMessage msg = client.request("vm://out", WAIT_MS);
             assertNotNull(msg);
             assertTrue(msg.getPayload() instanceof MessageObject);
             MessageObject received = (MessageObject)msg.getPayload();
@@ -81,11 +81,11 @@ public class MuleMessageProtocolChunkingTestCase extends FunctionalTestCase
 
         for (int i = 0; i < messages; i++)
         {
-            client.dispatch("vm://in", new MuleMessage(message));
+            client.dispatch("vm://in", new DefaultMuleMessage(message));
         }
         for (int i = 0; i < messages; i++)
         {
-            UMOMessage msg = client.request("vm://out", WAIT_MS);
+            MuleMessage msg = client.request("vm://out", WAIT_MS);
             assertEquals(message, new String((byte[])msg.getPayload()));
         }
     }

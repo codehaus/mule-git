@@ -10,14 +10,14 @@
 
 package org.mule.providers.email;
 
-import org.mule.api.UMOEvent;
-import org.mule.api.UMOMessage;
+import org.mule.api.Event;
+import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.EndpointException;
-import org.mule.api.endpoint.UMOEndpointURI;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.endpoint.EndpointURI;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.transport.DispatchException;
+import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.impl.transport.AbstractMessageDispatcher;
-import org.mule.imple.config.i18n.CoreMessages;
 
 import java.util.Calendar;
 
@@ -35,7 +35,7 @@ public class SmtpMessageDispatcher extends AbstractMessageDispatcher
 {
     private volatile Transport transport;
 
-    public SmtpMessageDispatcher(UMOImmutableEndpoint endpoint)
+    public SmtpMessageDispatcher(ImmutableEndpoint endpoint)
     {
         super(endpoint);
     }
@@ -52,13 +52,13 @@ public class SmtpMessageDispatcher extends AbstractMessageDispatcher
             try
             {
                 transport = castConnector().getSessionDetails(endpoint).newTransport();
-                UMOEndpointURI uri = endpoint.getEndpointURI();
+                EndpointURI uri = endpoint.getEndpointURI();
                 transport.connect(uri.getHost(), uri.getPort(), uri.getUser(), uri.getPassword());
             }
             catch (Exception e)
             {
                 throw new EndpointException(
-                    org.mule.imple.config.i18n.MessageFactory.createStaticMessage("Unable to connect to mail transport."),
+                    org.mule.impl.config.i18n.MessageFactory.createStaticMessage("Unable to connect to mail transport."),
                     e);
             }
         }
@@ -79,7 +79,7 @@ public class SmtpMessageDispatcher extends AbstractMessageDispatcher
         }
     }
 
-    protected void doDispatch(UMOEvent event)
+    protected void doDispatch(Event event)
     {
         try
         {
@@ -103,7 +103,7 @@ public class SmtpMessageDispatcher extends AbstractMessageDispatcher
         }
     }
 
-    protected UMOMessage doSend(UMOEvent event) throws Exception
+    protected MuleMessage doSend(Event event) throws Exception
     {
         doDispatch(event);
         return null;
@@ -120,7 +120,7 @@ public class SmtpMessageDispatcher extends AbstractMessageDispatcher
          */
         if (!transport.isConnected())
         {
-            UMOEndpointURI uri = endpoint.getEndpointURI();
+            EndpointURI uri = endpoint.getEndpointURI();
             if (logger.isInfoEnabled())
             {
                 logger.info("Connection closed by remote server. Reconnecting.");

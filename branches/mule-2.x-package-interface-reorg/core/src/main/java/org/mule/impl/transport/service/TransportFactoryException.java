@@ -11,7 +11,7 @@
 package org.mule.impl.transport.service;
 
 import org.mule.api.endpoint.EndpointException;
-import org.mule.imple.config.i18n.Message;
+import org.mule.impl.config.i18n.Message;
 
 /**
  * <code>TransportFactoryException</code> is thrown by the endpoint factory if the

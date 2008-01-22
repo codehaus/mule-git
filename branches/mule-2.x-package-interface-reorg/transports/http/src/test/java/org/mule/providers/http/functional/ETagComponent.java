@@ -10,9 +10,9 @@
 
 package org.mule.providers.http.functional;
 
-import org.mule.api.UMOEventContext;
-import org.mule.api.UMOMessage;
-import org.mule.impl.MuleMessage;
+import org.mule.api.EventContext;
+import org.mule.api.MuleMessage;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.transport.DefaultMessageAdapter;
 import org.mule.providers.http.HttpConnector;
 import org.mule.providers.http.HttpConstants;
@@ -21,16 +21,16 @@ public class ETagComponent implements org.mule.api.lifecycle.Callable
 {
     String ETAG_VALUE = "0123456789";
     
-    public Object onCall(UMOEventContext eventContext) throws Exception
+    public Object onCall(EventContext eventContext) throws Exception
     {
-        UMOMessage msg = eventContext.getMessage();
+        MuleMessage msg = eventContext.getMessage();
         
         String etag = msg.getStringProperty(HttpConstants.HEADER_IF_NONE_MATCH, null);
         if (etag != null && etag.equals(ETAG_VALUE))
         {
            DefaultMessageAdapter res = new DefaultMessageAdapter("");
            res.setIntProperty(HttpConnector.HTTP_STATUS_PROPERTY, 304);
-           msg = new MuleMessage(res);
+           msg = new DefaultMuleMessage(res);
         }
         
         msg.setProperty(HttpConstants.HEADER_ETAG, ETAG_VALUE);

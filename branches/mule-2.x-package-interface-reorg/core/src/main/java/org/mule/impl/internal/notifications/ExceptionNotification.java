@@ -10,9 +10,9 @@
 
 package org.mule.impl.internal.notifications;
 
-import org.mule.api.context.UMOServerNotification;
+import org.mule.api.context.ServerNotification;
 
-public class ExceptionNotification extends UMOServerNotification
+public class ExceptionNotification extends ServerNotification
 {
     /**
      * Serial version.

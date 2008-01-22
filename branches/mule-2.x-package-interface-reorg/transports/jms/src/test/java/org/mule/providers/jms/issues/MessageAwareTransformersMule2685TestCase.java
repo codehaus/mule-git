@@ -10,9 +10,9 @@
 
 package org.mule.providers.jms.issues;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.api.transformer.TransformerException;
-import org.mule.impl.MuleMessage;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.RequestContext;
 import org.mule.impl.routing.outbound.StaticRecipientList;
 import org.mule.impl.transformer.AbstractMessageAwareTransformer;
@@ -66,10 +66,10 @@ public class MessageAwareTransformersMule2685TestCase extends AbstractJmsFunctio
     {
         RequestContext.setEvent(getTestEvent("test"));
 
-        UMOMessage message = new MuleMessage("This is a test TextMessage");
+        MuleMessage message = new DefaultMuleMessage("This is a test TextMessage");
 
         SetTestRecipientsTransformer trans = new SetTestRecipientsTransformer();
-        UMOMessage result1 = (UMOMessage) trans.transform(message);
+        MuleMessage result1 = (MuleMessage) trans.transform(message);
 
         // Check that transformer 1 set message property ok.
         assertEquals("vm://recipient1, vm://recipient1, vm://recipient3", result1.getProperty("recipients"));
@@ -114,10 +114,10 @@ public class MessageAwareTransformersMule2685TestCase extends AbstractJmsFunctio
 
         public SetTestRecipientsTransformer()
         {
-            registerSourceType(UMOMessage.class);
+            registerSourceType(MuleMessage.class);
         }
 
-        public Object transform(UMOMessage message, String outputEncoding) throws TransformerException
+        public Object transform(MuleMessage message, String outputEncoding) throws TransformerException
         {
 
             String recipients = "vm://recipient1, vm://recipient1, vm://recipient3";

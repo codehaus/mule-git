@@ -10,7 +10,7 @@
 
 package org.mule.impl;
 
-import org.mule.api.context.UMOServerNotification;
+import org.mule.api.context.ServerNotification;
 import org.mule.impl.internal.notifications.ExceptionNotification;
 import org.mule.impl.internal.notifications.ExceptionNotificationListener;
 import org.mule.tck.AbstractMuleTestCase;
@@ -38,12 +38,12 @@ public class DefaultExceptionStrategyTestCase extends AbstractMuleTestCase
 
         muleContext.registerListener(new ExceptionNotificationListener()
         {
-            public void onNotification(UMOServerNotification notification)
+            public void onNotification(ServerNotification notification)
             {
                 if (notification.getAction() == ExceptionNotification.EXCEPTION_ACTION)
                 {
                     assertEquals("exception", notification.getActionName());
-                    assertEquals("Wrong info type", UMOServerNotification.TYPE_ERROR, notification.getType());
+                    assertEquals("Wrong info type", ServerNotification.TYPE_ERROR, notification.getType());
                     notificationCount.incrementAndGet();
                     latch.countDown();
                 }

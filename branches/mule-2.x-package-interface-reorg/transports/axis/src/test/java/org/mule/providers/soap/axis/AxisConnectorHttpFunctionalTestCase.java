@@ -10,10 +10,10 @@
 
 package org.mule.providers.soap.axis;
 
-import org.mule.api.UMOComponent;
-import org.mule.api.UMOException;
-import org.mule.api.endpoint.UMOEndpoint;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.Component;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.endpoint.Endpoint;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.impl.config.ExceptionHelper;
 import org.mule.impl.endpoint.MuleEndpointURI;
@@ -57,14 +57,14 @@ public class AxisConnectorHttpFunctionalTestCase extends AbstractSoapUrlEndpoint
         try
         {
             // TODO MULE-2228 Simplify this API
-            UMOComponent c = MuleTestUtils.getTestComponent("testComponentWithoutInterfaces", ComponentWithoutInterfaces.class, null, muleContext, false);
-            UMOImmutableEndpoint ep = muleContext.getRegistry().lookupEndpointFactory().getEndpoint(
-                new MuleEndpointURI(getComponentWithoutInterfacesEndpoint()), UMOEndpoint.ENDPOINT_TYPE_RECEIVER);
+            Component c = MuleTestUtils.getTestComponent("testComponentWithoutInterfaces", ComponentWithoutInterfaces.class, null, muleContext, false);
+            ImmutableEndpoint ep = muleContext.getRegistry().lookupEndpointFactory().getEndpoint(
+                new MuleEndpointURI(getComponentWithoutInterfacesEndpoint()), Endpoint.ENDPOINT_TYPE_RECEIVER);
             c.getInboundRouter().addEndpoint(ep);
             muleContext.getRegistry().registerComponent(c);
             fail("Expected exception");
         }
-        catch (UMOException e)
+        catch (AbstractMuleException e)
         {
             e = ExceptionHelper.getRootMuleException(e);
             assertTrue(e instanceof InitialisationException);

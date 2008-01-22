@@ -10,10 +10,10 @@
 
 package org.mule.impl;
 
+import org.mule.api.Component;
 import org.mule.api.ComponentException;
-import org.mule.api.UMOComponent;
-import org.mule.api.UMOMessage;
-import org.mule.imple.config.i18n.Message;
+import org.mule.api.MuleMessage;
+import org.mule.impl.config.i18n.Message;
 
 /**
  * <code>FailedToQueueEventException</code> is thrown when an event cannot be put
@@ -27,20 +27,20 @@ public class FailedToQueueEventException extends ComponentException
      */
     private static final long serialVersionUID = -8368283988424746098L;
 
-    public FailedToQueueEventException(Message message, UMOMessage umoMessage, UMOComponent component)
+    public FailedToQueueEventException(Message message, MuleMessage umoMessage, Component component)
     {
         super(message, umoMessage, component);
     }
 
     public FailedToQueueEventException(Message message,
-                                       UMOMessage umoMessage,
-                                       UMOComponent component,
+                                       MuleMessage umoMessage,
+                                       Component component,
                                        Throwable cause)
     {
         super(message, umoMessage, component, cause);
     }
 
-    public FailedToQueueEventException(UMOMessage umoMessage, UMOComponent component, Throwable cause)
+    public FailedToQueueEventException(MuleMessage umoMessage, Component component, Throwable cause)
     {
         super(umoMessage, component, cause);
     }

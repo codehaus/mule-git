@@ -11,34 +11,34 @@
 package org.mule.impl.internal.admin;
 
 import org.mule.MuleServer;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.Component;
+import org.mule.api.Event;
+import org.mule.api.EventContext;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleException;
-import org.mule.api.UMOComponent;
-import org.mule.api.UMOEvent;
-import org.mule.api.UMOEventContext;
-import org.mule.api.UMOException;
-import org.mule.api.UMOMessage;
-import org.mule.api.UMOSession;
+import org.mule.api.MuleMessage;
+import org.mule.api.Session;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.context.MuleContextAware;
-import org.mule.api.endpoint.UMOEndpointBuilder;
-import org.mule.api.endpoint.UMOEndpointFactory;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.endpoint.EndpointBuilder;
+import org.mule.api.endpoint.EndpointFactory;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.Callable;
 import org.mule.api.lifecycle.Initialisable;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.transformer.wire.WireFormat;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.MuleEvent;
-import org.mule.impl.MuleMessage;
 import org.mule.impl.MuleSession;
 import org.mule.impl.RequestContext;
+import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.impl.endpoint.EndpointURIEndpointBuilder;
 import org.mule.impl.internal.notifications.AdminNotification;
-import org.mule.impl.message.ExceptionPayload;
+import org.mule.impl.message.DefaultExceptionPayload;
 import org.mule.impl.model.seda.SedaComponent;
 import org.mule.impl.transport.AbstractConnector;
 import org.mule.impl.transport.NullPayload;
-import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.util.MapUtils;
 import org.mule.util.object.PrototypeObjectFactory;
 
@@ -87,7 +87,7 @@ public class MuleManagerComponent implements Callable, Initialisable, MuleContex
             throw new InitialisationException(CoreMessages.objectIsNull("wireFormat"), this);
         }
     }
-    public Object onCall(UMOEventContext context) throws Exception
+    public Object onCall(EventContext context) throws Exception
     {
         Object result;
         logger.debug("Message received by MuleManagerComponent");
@@ -114,10 +114,10 @@ public class MuleManagerComponent implements Callable, Initialisable, MuleContex
         return result;
     }
 
-    protected Object invokeAction(AdminNotification action, UMOEventContext context) throws UMOException
+    protected Object invokeAction(AdminNotification action, EventContext context) throws AbstractMuleException
     {
         String destComponent = null;
-        UMOMessage result = null;
+        MuleMessage result = null;
         String endpoint = action.getResourceIdentifier();
         if (action.getResourceIdentifier().startsWith("mule:"))
         {
@@ -130,17 +130,17 @@ public class MuleManagerComponent implements Callable, Initialisable, MuleContex
 
         if (destComponent != null)
         {
-            UMOSession session = new MuleSession(MuleServer.getMuleContext().getRegistry().lookupComponent(
+            Session session = new MuleSession(MuleServer.getMuleContext().getRegistry().lookupComponent(
                 destComponent));
             // Need to do this otherise when the event is invoked the
             // transformer associated with the Mule Admin queue will be invoked, but
             // the message will not be of expected type
             MuleContext muleContext = MuleServer.getMuleContext();
-            UMOEndpointBuilder builder = new EndpointURIEndpointBuilder(RequestContext.getEvent().getEndpoint(), muleContext);
+            EndpointBuilder builder = new EndpointURIEndpointBuilder(RequestContext.getEvent().getEndpoint(), muleContext);
             // TODO - is this correct? it stops any other transformer from being set
             builder.setTransformers(new LinkedList());
-            UMOImmutableEndpoint ep = muleContext.getRegistry().lookupEndpointFactory().getInboundEndpoint(builder);
-            UMOEvent event = new MuleEvent(action.getMessage(), ep, context.getSession(), context.isSynchronous());
+            ImmutableEndpoint ep = muleContext.getRegistry().lookupEndpointFactory().getInboundEndpoint(builder);
+            Event event = new MuleEvent(action.getMessage(), ep, context.getSession(), context.isSynchronous());
             event = RequestContext.setEvent(event);
 
             if (context.isSynchronous())
@@ -163,10 +163,10 @@ public class MuleManagerComponent implements Callable, Initialisable, MuleContex
         }
     }
 
-    protected Object sendAction(AdminNotification action, UMOEventContext context) throws UMOException
+    protected Object sendAction(AdminNotification action, EventContext context) throws AbstractMuleException
     {
-        UMOMessage result = null;
-        UMOImmutableEndpoint endpoint = null;
+        MuleMessage result = null;
+        ImmutableEndpoint endpoint = null;
         MuleContext muleContext = context.getMuleContext();
         try
         {
@@ -179,8 +179,8 @@ public class MuleManagerComponent implements Callable, Initialisable, MuleContex
             }
             else
             {
-                UMOEndpointFactory endpointFactory = muleContext.getRegistry().lookupEndpointFactory();
-                UMOEndpointBuilder endpointBuilder = endpointFactory.getEndpointBuilder(action.getResourceIdentifier());
+                EndpointFactory endpointFactory = muleContext.getRegistry().lookupEndpointFactory();
+                EndpointBuilder endpointBuilder = endpointFactory.getEndpointBuilder(action.getResourceIdentifier());
                 endpointBuilder.setRemoteSync(true);
                 endpoint = muleContext.getRegistry().lookupEndpointFactory().getOutboundEndpoint(endpointBuilder);
                 result = context.sendEvent(action.getMessage(), endpoint);
@@ -202,12 +202,12 @@ public class MuleManagerComponent implements Callable, Initialisable, MuleContex
         }
     }
 
-    protected Object receiveAction(AdminNotification action, UMOEventContext context) throws UMOException
+    protected Object receiveAction(AdminNotification action, EventContext context) throws AbstractMuleException
     {
-        UMOMessage result = null;
+        MuleMessage result = null;
         try
         {
-            UMOImmutableEndpoint endpoint = context.getMuleContext()
+            ImmutableEndpoint endpoint = context.getMuleContext()
                 .getRegistry()
                 .lookupEndpointFactory()
                 .getOutboundEndpoint(action.getResourceIdentifier());
@@ -241,15 +241,15 @@ public class MuleManagerComponent implements Callable, Initialisable, MuleContex
     }
 
 
-    public static final UMOComponent getComponent(UMOEndpointBuilder endpointBuilder,
+    public static final Component getComponent(EndpointBuilder endpointBuilder,
                                                     WireFormat wireFormat,
                                                     String encoding,
                                                     int eventTimeout,
-                                                    MuleContext muleContext) throws UMOException
+                                                    MuleContext muleContext) throws AbstractMuleException
     {
         try
         {
-            UMOComponent component = new SedaComponent();
+            Component component = new SedaComponent();
             component.setName(MANAGER_COMPONENT_NAME);
             component.setModel(muleContext.getRegistry().lookupSystemModel());
 
@@ -263,7 +263,7 @@ public class MuleManagerComponent implements Callable, Initialisable, MuleContex
             //component.initialise();
     
             endpointBuilder.setName(MANAGER_ENDPOINT_NAME);
-            UMOImmutableEndpoint endpoint = muleContext.getRegistry()
+            ImmutableEndpoint endpoint = muleContext.getRegistry()
                 .lookupEndpointFactory()
                 .getInboundEndpoint(endpointBuilder);
             component.getInboundRouter().addEndpoint(endpoint);
@@ -277,7 +277,7 @@ public class MuleManagerComponent implements Callable, Initialisable, MuleContex
     }
 
     /**
-     * Wraps an exception into a MuleMessage with an Exception payload and returns
+     * Wraps an exception into a DefaultMuleMessage with an Exception payload and returns
      * the Xml representation of it
      * 
      * @param result the result of the invocation or null if the exception occurred
@@ -285,14 +285,14 @@ public class MuleManagerComponent implements Callable, Initialisable, MuleContex
      * @param e the Exception thrown
      * @return an Xml String message result
      */
-    protected Object handleException(UMOMessage result, Throwable e)
+    protected Object handleException(MuleMessage result, Throwable e)
     {
         logger.error("Failed to process admin request: " + e.getMessage(), e);
         if (result == null)
         {
-            result = new MuleMessage(NullPayload.getInstance(), (Map) null);
+            result = new DefaultMuleMessage(NullPayload.getInstance(), (Map) null);
         }
-        result.setExceptionPayload(new ExceptionPayload(e));
+        result.setExceptionPayload(new DefaultExceptionPayload(e));
         try
         {
             ByteArrayOutputStream out = new ByteArrayOutputStream();

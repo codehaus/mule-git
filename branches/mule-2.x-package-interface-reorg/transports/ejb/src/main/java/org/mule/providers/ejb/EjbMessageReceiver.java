@@ -10,10 +10,10 @@
 
 package org.mule.providers.ejb;
 
-import org.mule.api.UMOComponent;
-import org.mule.api.endpoint.UMOEndpoint;
+import org.mule.api.Component;
+import org.mule.api.endpoint.Endpoint;
 import org.mule.api.lifecycle.CreateException;
-import org.mule.api.transport.UMOConnector;
+import org.mule.api.transport.Connector;
 import org.mule.providers.rmi.RmiMessageReceiver;
 
 /**
@@ -26,9 +26,9 @@ import org.mule.providers.rmi.RmiMessageReceiver;
 public class EjbMessageReceiver extends RmiMessageReceiver
 {
 
-    public EjbMessageReceiver(UMOConnector connector,
-                              UMOComponent component,
-                              UMOEndpoint endpoint,
+    public EjbMessageReceiver(Connector connector,
+                              Component component,
+                              Endpoint endpoint,
                               long frequency) throws CreateException
     {
         super(connector, component, endpoint, frequency);

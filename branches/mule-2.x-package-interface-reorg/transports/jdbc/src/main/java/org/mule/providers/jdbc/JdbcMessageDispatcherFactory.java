@@ -10,9 +10,9 @@
 
 package org.mule.providers.jdbc;
 
-import org.mule.api.UMOException;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
-import org.mule.api.transport.UMOMessageDispatcher;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.api.transport.MessageDispatcher;
 import org.mule.impl.transport.AbstractMessageDispatcherFactory;
 
 /**
@@ -24,9 +24,9 @@ public class JdbcMessageDispatcherFactory extends AbstractMessageDispatcherFacto
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.api.transport.UMOMessageDispatcherFactory#create(org.mule.api.transport.UMOConnector)
+     * @see org.mule.api.transport.MessageDispatcherFactory#create(org.mule.api.transport.Connector)
      */
-    public UMOMessageDispatcher create(UMOImmutableEndpoint endpoint) throws UMOException
+    public MessageDispatcher create(ImmutableEndpoint endpoint) throws AbstractMuleException
     {
         return new JdbcMessageDispatcher(endpoint);
     }

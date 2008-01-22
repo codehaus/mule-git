@@ -12,13 +12,13 @@ package org.mule.impl.transport.service;
 
 import org.mule.RegistryContext;
 import org.mule.api.MuleContext;
-import org.mule.api.endpoint.UMOEndpointURI;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.endpoint.EndpointURI;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.registry.ServiceDescriptorFactory;
 import org.mule.api.registry.ServiceException;
-import org.mule.api.transport.UMOConnector;
+import org.mule.api.transport.Connector;
+import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.impl.transport.AbstractConnector;
-import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.util.BeanUtils;
 import org.mule.util.ObjectNameHelper;
 
@@ -55,12 +55,12 @@ public class TransportFactory
      * @return a new Connector
      * @throws TransportFactoryException
      */
-    public static UMOConnector createConnector(UMOEndpointURI url, MuleContext muleContext) throws TransportFactoryException
+    public static Connector createConnector(EndpointURI url, MuleContext muleContext) throws TransportFactoryException
     {
 
         try
         {
-            UMOConnector connector;
+            Connector connector;
             String scheme = url.getSchemeMetaInfo();
 
             TransportServiceDescriptor sd = (TransportServiceDescriptor)
@@ -108,7 +108,7 @@ public class TransportFactory
         }
     }
 
-    public static UMOConnector getOrCreateConnectorByProtocol(UMOImmutableEndpoint endpoint, MuleContext muleContext)
+    public static Connector getOrCreateConnectorByProtocol(ImmutableEndpoint endpoint, MuleContext muleContext)
         throws TransportFactoryException
     {
         return getOrCreateConnectorByProtocol(endpoint.getEndpointURI(), muleContext);
@@ -117,21 +117,21 @@ public class TransportFactory
     /**
      * Returns an initialized connector.
      */
-    public static UMOConnector getOrCreateConnectorByProtocol(UMOEndpointURI uri, MuleContext muleContext)
+    public static Connector getOrCreateConnectorByProtocol(EndpointURI uri, MuleContext muleContext)
         throws TransportFactoryException
     {
         String connectorName = uri.getConnectorName();
         if (null != connectorName)
         {
             // TODO this lookup fails currently on Mule 2.x! MuleAdminAgentTestCase
-            UMOConnector connector = RegistryContext.getRegistry().lookupConnector(connectorName);
+            Connector connector = RegistryContext.getRegistry().lookupConnector(connectorName);
             if (connector != null)
             {
                 return connector;
             }
         }
 
-        UMOConnector connector = getConnectorByProtocol(uri.getFullScheme());
+        Connector connector = getConnectorByProtocol(uri.getFullScheme());
         if (connector == null)
         {
             connector = createConnector(uri, muleContext);
@@ -149,14 +149,14 @@ public class TransportFactory
         return connector;
     }
 
-    public static UMOConnector getConnectorByProtocol(String protocol)
+    public static Connector getConnectorByProtocol(String protocol)
     {
-        UMOConnector connector;
-        UMOConnector resultConnector = null;
+        Connector connector;
+        Connector resultConnector = null;
         Collection connectors = RegistryContext.getRegistry().getConnectors();
         for (Iterator iterator = connectors.iterator(); iterator.hasNext();)
         {
-            connector = (UMOConnector)iterator.next();
+            connector = (Connector)iterator.next();
             if (connector.supportsProtocol(protocol))
             {
                 if(resultConnector==null)

@@ -10,9 +10,9 @@
 
 package org.mule.providers.file;
 
-import org.mule.api.UMOComponent;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
-import org.mule.api.transport.UMOMessageReceiver;
+import org.mule.api.Component;
+import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.api.transport.MessageReceiver;
 import org.mule.tck.MuleTestUtils;
 import org.mule.tck.providers.AbstractMessageReceiverTestCase;
 import org.mule.util.FileUtils;
@@ -39,19 +39,19 @@ public class FileMessageReceiverTestCase extends AbstractMessageReceiverTestCase
      * 
      * @see org.mule.tck.providers.AbstractMessageReceiverTestCase#getMessageReceiver()
      */
-    public UMOMessageReceiver getMessageReceiver() throws Exception
+    public MessageReceiver getMessageReceiver() throws Exception
     {
         endpoint.getConnector().start();
-        Mock mockComponent = new Mock(UMOComponent.class);
+        Mock mockComponent = new Mock(Component.class);
         mockComponent.expectAndReturn("getResponseRouter", null);
         read.deleteOnExit();
         move.deleteOnExit();
 
-        return new FileMessageReceiver(endpoint.getConnector(), (UMOComponent)mockComponent.proxy(),
+        return new FileMessageReceiver(endpoint.getConnector(), (Component)mockComponent.proxy(),
             endpoint, read.getAbsolutePath(), move.getAbsolutePath(), null, 1000);
     }
 
-    public UMOImmutableEndpoint getEndpoint() throws Exception
+    public ImmutableEndpoint getEndpoint() throws Exception
     {
         return muleContext.getRegistry().lookupEndpointFactory().getInboundEndpoint("file://./simple");
     }

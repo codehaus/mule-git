@@ -10,9 +10,9 @@
 
 package org.mule.providers.email;
 
-import org.mule.api.UMOComponent;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
-import org.mule.api.transport.UMOMessageReceiver;
+import org.mule.api.Component;
+import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.api.transport.MessageReceiver;
 
 /**
  * Support for connecting to and receiving email from a mailbox (the exact protocol depends on
@@ -85,7 +85,7 @@ public abstract class AbstractRetrieveMailConnector extends AbstractMailConnecto
      * @see org.mule.impl.transport.UMOConnector#registerListener(javax.jms.MessageListener,
      *      java.lang.String)
      */
-    public UMOMessageReceiver createReceiver(UMOComponent component, UMOImmutableEndpoint endpoint) throws Exception
+    public MessageReceiver createReceiver(Component component, ImmutableEndpoint endpoint) throws Exception
     {
         Object[] args = {new Long(checkFrequency), Boolean.valueOf(isBackupEnabled()), backupFolder};
         return serviceDescriptor.createMessageReceiver(this, component, endpoint, args);

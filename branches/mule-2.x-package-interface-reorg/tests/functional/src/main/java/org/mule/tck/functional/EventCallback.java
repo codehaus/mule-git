@@ -10,7 +10,7 @@
 
 package org.mule.tck.functional;
 
-import org.mule.api.UMOEventContext;
+import org.mule.api.EventContext;
 
 /**
  * The scope of the Event Callback is to be able to get a the message currently
@@ -23,5 +23,5 @@ import org.mule.api.UMOEventContext;
 
 public interface EventCallback
 {
-    public void eventReceived(UMOEventContext context, Object component) throws Exception;
+    public void eventReceived(EventContext context, Object component) throws Exception;
 }

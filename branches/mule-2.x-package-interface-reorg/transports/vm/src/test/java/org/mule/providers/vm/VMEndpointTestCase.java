@@ -10,7 +10,7 @@
 
 package org.mule.providers.vm;
 
-import org.mule.api.endpoint.UMOEndpointURI;
+import org.mule.api.endpoint.EndpointURI;
 import org.mule.impl.endpoint.MuleEndpointURI;
 import org.mule.tck.AbstractMuleTestCase;
 
@@ -18,7 +18,7 @@ public class VMEndpointTestCase extends AbstractMuleTestCase
 {
     public void testUrlWithProvider() throws Exception
     {
-        UMOEndpointURI url = new MuleEndpointURI("vm://some.queue?endpointName=vmProvider");
+        EndpointURI url = new MuleEndpointURI("vm://some.queue?endpointName=vmProvider");
         url.initialise();
         assertEquals(VMConnector.VM, url.getScheme());
         assertEquals("some.queue", url.getAddress());

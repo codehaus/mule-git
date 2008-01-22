@@ -10,7 +10,7 @@
 
 package org.mule.providers.cxf;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.util.IOUtils;
@@ -32,7 +32,7 @@ public class CxfBasicTestCase extends FunctionalTestCase
     public void testEchoService() throws Exception
     {
         MuleClient client = new MuleClient();
-        UMOMessage result = client.send("cxf:http://localhost:63081/services/Echo?method=echo", "Hello!",
+        MuleMessage result = client.send("cxf:http://localhost:63081/services/Echo?method=echo", "Hello!",
             null);
         assertEquals("Hello!", result.getPayload());
     }
@@ -40,7 +40,7 @@ public class CxfBasicTestCase extends FunctionalTestCase
     public void testEchoServiceSynchronous() throws Exception
     {
         MuleClient client = new MuleClient();
-        UMOMessage result = client.send("cxf:http://localhost:63083/services/Echo3?method=echo", "Hello!",
+        MuleMessage result = client.send("cxf:http://localhost:63083/services/Echo3?method=echo", "Hello!",
             null);
         assertEquals("Hello!", result.getPayload());
     }
@@ -48,7 +48,7 @@ public class CxfBasicTestCase extends FunctionalTestCase
     public void testEchoWsdl() throws Exception
     {
         MuleClient client = new MuleClient();
-        UMOMessage result = client.request("http://localhost:63081/services/Echo?wsdl", 5000);
+        MuleMessage result = client.request("http://localhost:63081/services/Echo?wsdl", 5000);
         assertNotNull(result.getPayload());
         XMLUnit.compareXML(echoWsdl, result.getPayloadAsString());
     }

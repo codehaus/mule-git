@@ -10,24 +10,24 @@
 
 package org.mule.impl.security.filters;
 
-import org.mule.api.UMOEncryptionStrategy;
-import org.mule.api.UMOEvent;
+import org.mule.api.EncryptionStrategy;
+import org.mule.api.Event;
 import org.mule.api.lifecycle.InitialisationException;
+import org.mule.api.security.Credentials;
 import org.mule.api.security.CredentialsNotSetException;
 import org.mule.api.security.CryptoFailureException;
 import org.mule.api.security.EncryptionStrategyNotFoundException;
+import org.mule.api.security.MuleAuthentication;
+import org.mule.api.security.SecurityContext;
 import org.mule.api.security.SecurityException;
 import org.mule.api.security.SecurityProviderNotFoundException;
-import org.mule.api.security.UMOAuthentication;
-import org.mule.api.security.UMOCredentials;
-import org.mule.api.security.UMOSecurityContext;
 import org.mule.api.security.UnauthorisedException;
 import org.mule.api.security.UnknownAuthenticationTypeException;
+import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.impl.security.AbstractEndpointSecurityFilter;
-import org.mule.impl.security.MuleAuthentication;
+import org.mule.impl.security.DefaultMuleAuthentication;
 import org.mule.impl.security.MuleCredentials;
 import org.mule.impl.security.MuleHeaderCredentialsAccessor;
-import org.mule.imple.config.i18n.CoreMessages;
 
 /**
  * <code>MuleEncryptionEndpointSecurityFilter</code> provides password-based
@@ -35,14 +35,14 @@ import org.mule.imple.config.i18n.CoreMessages;
  */
 public class MuleEncryptionEndpointSecurityFilter extends AbstractEndpointSecurityFilter
 {
-    private UMOEncryptionStrategy strategy;
+    private EncryptionStrategy strategy;
 
     public MuleEncryptionEndpointSecurityFilter()
     {
         setCredentialsAccessor(new MuleHeaderCredentialsAccessor());
     }
 
-    protected final void authenticateInbound(UMOEvent event)
+    protected final void authenticateInbound(Event event)
         throws SecurityException, CryptoFailureException, EncryptionStrategyNotFoundException,
         UnknownAuthenticationTypeException
     {
@@ -53,10 +53,10 @@ public class MuleEncryptionEndpointSecurityFilter extends AbstractEndpointSecuri
                 event.getEndpoint(), this);
         }
 
-        UMOCredentials user = new MuleCredentials(userHeader, getSecurityManager());
+        Credentials user = new MuleCredentials(userHeader, getSecurityManager());
 
-        UMOAuthentication authResult;
-        UMOAuthentication umoAuthentication = new MuleAuthentication(user);
+        MuleAuthentication authResult;
+        MuleAuthentication umoAuthentication = new DefaultMuleAuthentication(user);
         try
         {
             authResult = getSecurityManager().authenticate(umoAuthentication);
@@ -79,12 +79,12 @@ public class MuleEncryptionEndpointSecurityFilter extends AbstractEndpointSecuri
             logger.debug("Authentication success: " + authResult.toString());
         }
 
-        UMOSecurityContext context = getSecurityManager().createSecurityContext(authResult);
+        SecurityContext context = getSecurityManager().createSecurityContext(authResult);
         context.setAuthentication(authResult);
         event.getSession().setSecurityContext(context);
     }
 
-    protected void authenticateOutbound(UMOEvent event)
+    protected void authenticateOutbound(Event event)
         throws SecurityException, SecurityProviderNotFoundException, CryptoFailureException
     {
         if (event.getSession().getSecurityContext() == null)
@@ -99,7 +99,7 @@ public class MuleEncryptionEndpointSecurityFilter extends AbstractEndpointSecuri
                 return;
             }
         }
-        UMOAuthentication auth = event.getSession().getSecurityContext().getAuthentication();
+        MuleAuthentication auth = event.getSession().getSecurityContext().getAuthentication();
         if (isAuthenticate())
         {
             auth = getSecurityManager().authenticate(auth);
@@ -123,12 +123,12 @@ public class MuleEncryptionEndpointSecurityFilter extends AbstractEndpointSecuri
         }
     }
 
-    public UMOEncryptionStrategy getStrategy()
+    public EncryptionStrategy getStrategy()
     {
         return strategy;
     }
 
-    public void setStrategy(UMOEncryptionStrategy strategy)
+    public void setStrategy(EncryptionStrategy strategy)
     {
         this.strategy = strategy;
     }

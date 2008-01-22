@@ -10,17 +10,17 @@
 
 package org.mule.impl;
 
-import org.mule.api.UMOException;
-import org.mule.imple.config.i18n.CoreMessages;
+import org.mule.api.AbstractMuleException;
+import org.mule.impl.config.i18n.CoreMessages;
 
 /**
  * <code>TooManySatisfiableMethodsException</code> is thrown by EntryPointResolvers
  * when the component passed has more than one method that meets the criteria of the
  * configured EntryPointResolver.
  *
- * @see org.mule.api.model.UMOEntryPointResolver
+ * @see org.mule.api.model.EntryPointResolver
  */
-public class TooManySatisfiableMethodsException extends UMOException
+public class TooManySatisfiableMethodsException extends AbstractMuleException
 {
     /** Serial version */
     private static final long serialVersionUID = 7856775581858822364L;

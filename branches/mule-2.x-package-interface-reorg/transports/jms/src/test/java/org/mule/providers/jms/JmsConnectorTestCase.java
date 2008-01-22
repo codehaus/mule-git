@@ -10,7 +10,7 @@
 
 package org.mule.providers.jms;
 
-import org.mule.api.transport.UMOConnector;
+import org.mule.api.transport.Connector;
 import org.mule.tck.providers.AbstractConnectorTestCase;
 
 import com.mockobjects.dynamic.C;
@@ -32,7 +32,7 @@ public class JmsConnectorTestCase extends AbstractConnectorTestCase
      * @see org.mule.tck.providers.AbstractConnectorTestCase#getConnectorName()
      */
     // @Override
-    public UMOConnector createConnector() throws Exception
+    public Connector createConnector() throws Exception
     {
         JmsConnector newConnector = new JmsConnector();
         newConnector.setName("TestConnector");

@@ -10,13 +10,13 @@
 
 package org.mule.impl.security;
 
-import org.mule.api.UMOEncryptionStrategy;
+import org.mule.api.EncryptionStrategy;
 import org.mule.api.config.MuleProperties;
+import org.mule.api.security.Credentials;
 import org.mule.api.security.CryptoFailureException;
 import org.mule.api.security.EncryptionStrategyNotFoundException;
-import org.mule.api.security.UMOCredentials;
-import org.mule.api.security.UMOSecurityManager;
-import org.mule.imple.config.i18n.CoreMessages;
+import org.mule.api.security.SecurityManager;
+import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.util.ArrayUtils;
 
 import java.util.StringTokenizer;
@@ -26,7 +26,7 @@ import java.util.StringTokenizer;
  * that can be stored in a message header.
  */
 
-public class MuleCredentials implements UMOCredentials
+public class MuleCredentials implements Credentials
 {
     public static final String TOKEN_DELIM = "::";
 
@@ -47,7 +47,7 @@ public class MuleCredentials implements UMOCredentials
         this.roles = roles;
     }
 
-    public MuleCredentials(String header, UMOSecurityManager sm) throws EncryptionStrategyNotFoundException, CryptoFailureException
+    public MuleCredentials(String header, SecurityManager sm) throws EncryptionStrategyNotFoundException, CryptoFailureException
     {
 
         int i = header.indexOf(' ');
@@ -62,7 +62,7 @@ public class MuleCredentials implements UMOCredentials
 
         if (!scheme.equalsIgnoreCase("plain"))
         {
-            UMOEncryptionStrategy es = sm.getEncryptionStrategy(scheme);
+            EncryptionStrategy es = sm.getEncryptionStrategy(scheme);
             if (es == null)
             {
                 throw new EncryptionStrategyNotFoundException(scheme);
@@ -123,7 +123,7 @@ public class MuleCredentials implements UMOCredentials
     public static String createHeader(String username,
                                       String password,
                                       String encryptionName,
-                                      UMOEncryptionStrategy es) throws CryptoFailureException
+                                      EncryptionStrategy es) throws CryptoFailureException
     {
         StringBuffer buf = new StringBuffer();
         buf.append(encryptionName).append(" ");

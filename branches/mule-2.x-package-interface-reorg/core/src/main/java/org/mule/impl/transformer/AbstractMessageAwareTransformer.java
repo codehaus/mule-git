@@ -10,12 +10,12 @@
 
 package org.mule.impl.transformer;
 
-import org.mule.api.UMOEventContext;
-import org.mule.api.UMOMessage;
+import org.mule.api.EventContext;
+import org.mule.api.MuleMessage;
 import org.mule.api.transformer.TransformerException;
-import org.mule.impl.MuleMessage;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.RequestContext;
-import org.mule.imple.config.i18n.CoreMessages;
+import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.util.DebugOptions;
 
 /**
@@ -24,11 +24,11 @@ import org.mule.util.DebugOptions;
  * with the current message useful to the transform. Note that when part of a
  * transform chain, the Message payload reflects the pre-transform message state,
  * unless there is no current event for this thread, then the message will be a new
- * MuleMessage with the src as its payload. Transformers should always work on the
+ * DefaultMuleMessage with the src as its payload. Transformers should always work on the
  * src object not the message payload.
  *
- * @see org.mule.api.UMOMessage
- * @see org.mule.impl.MuleMessage
+ * @see org.mule.api.MuleMessage
+ * @see org.mule.impl.DefaultMuleMessage
  */
 
 public abstract class AbstractMessageAwareTransformer extends AbstractTransformer
@@ -36,25 +36,25 @@ public abstract class AbstractMessageAwareTransformer extends AbstractTransforme
 
     public boolean isSourceTypeSupported(Class aClass, boolean exactMatch)
     {
-        //TODO RM* This is a bit of hack since we could just register UMOMessage as a supportedType, but this has some
+        //TODO RM* This is a bit of hack since we could just register MuleMessage as a supportedType, but this has some
         //funny behaviour in certain ObjectToXml transformers
-        return (super.isSourceTypeSupported(aClass, exactMatch) || UMOMessage.class.isAssignableFrom(aClass)); 
+        return (super.isSourceTypeSupported(aClass, exactMatch) || MuleMessage.class.isAssignableFrom(aClass)); 
     }
 
     public final Object doTransform(Object src, String encoding) throws TransformerException
     {
-        UMOMessage message;
-        if(src instanceof UMOMessage)
+        MuleMessage message;
+        if(src instanceof MuleMessage)
         {
-            message = (UMOMessage)src;
+            message = (MuleMessage)src;
         }
         else if(DebugOptions.isAutoWrapMessageAwareTransform())
         {
-            message = new MuleMessage(src);
+            message = new DefaultMuleMessage(src);
         }
         else
         {
-            UMOEventContext event = RequestContext.getEventContext();
+            EventContext event = RequestContext.getEventContext();
             if (event == null)
             {
                 throw new TransformerException(CoreMessages.noCurrentEventForTransformer(), this);
@@ -68,7 +68,7 @@ public abstract class AbstractMessageAwareTransformer extends AbstractTransforme
         return transform(message, encoding);
     }
 
-    public abstract Object transform(UMOMessage message, String outputEncoding)
+    public abstract Object transform(MuleMessage message, String outputEncoding)
         throws TransformerException;
 
 }

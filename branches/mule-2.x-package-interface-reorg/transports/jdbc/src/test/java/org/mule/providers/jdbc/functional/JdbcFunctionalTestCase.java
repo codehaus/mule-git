@@ -10,9 +10,9 @@
 
 package org.mule.providers.jdbc.functional;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
-import org.mule.impl.MuleMessage;
+import org.mule.impl.DefaultMuleMessage;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -37,7 +37,7 @@ public class JdbcFunctionalTestCase extends AbstractJdbcFunctionalTestCase
     public void testDirectSql() throws Exception
     {
         MuleClient client = new MuleClient();
-        UMOMessage message = client.request("jdbc://?sql=SELECT * FROM TEST", 1000);
+        MuleMessage message = client.request("jdbc://?sql=SELECT * FROM TEST", 1000);
         assertResultSetEmpty(message);
         
         QueryRunner qr = jdbcConnector.getQueryRunner();
@@ -50,7 +50,7 @@ public class JdbcFunctionalTestCase extends AbstractJdbcFunctionalTestCase
     public void testSend() throws Exception
     {
         MuleClient client = new MuleClient();
-        client.send("jdbc://writeTest?type=2", new MuleMessage(DEFAULT_MESSAGE));
+        client.send("jdbc://writeTest?type=2", new DefaultMuleMessage(DEFAULT_MESSAGE));
 
         QueryRunner qr = jdbcConnector.getQueryRunner();
         Object[] obj2 = 
@@ -65,7 +65,7 @@ public class JdbcFunctionalTestCase extends AbstractJdbcFunctionalTestCase
         MuleClient client = new MuleClient();
         Map map = new HashMap();
         map.put("data", DEFAULT_MESSAGE);
-        client.send("jdbc://writeMap?type=2", new MuleMessage(map));
+        client.send("jdbc://writeMap?type=2", new DefaultMuleMessage(map));
 
         QueryRunner qr = jdbcConnector.getQueryRunner();
         Object[] obj2 = 
@@ -78,7 +78,7 @@ public class JdbcFunctionalTestCase extends AbstractJdbcFunctionalTestCase
     public void testReceive() throws Exception
     {
         MuleClient client = new MuleClient();
-        UMOMessage message = client.request("jdbc://getTest?type=1", 1000);
+        MuleMessage message = client.request("jdbc://getTest?type=1", 1000);
         assertResultSetEmpty(message);
 
         QueryRunner qr = jdbcConnector.getQueryRunner();

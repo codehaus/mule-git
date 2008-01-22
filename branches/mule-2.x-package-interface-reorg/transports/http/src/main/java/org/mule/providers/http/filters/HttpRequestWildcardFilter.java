@@ -10,7 +10,7 @@
 
 package org.mule.providers.http.filters;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.impl.routing.filters.WildcardFilter;
 import org.mule.providers.http.HttpConnector;
 
@@ -33,9 +33,9 @@ public class HttpRequestWildcardFilter extends WildcardFilter
 
     public boolean accept(Object object)
     {
-        if (object instanceof UMOMessage)
+        if (object instanceof MuleMessage)
         {
-            object = ((UMOMessage) object).getProperty(HttpConnector.HTTP_REQUEST_PROPERTY);
+            object = ((MuleMessage) object).getProperty(HttpConnector.HTTP_REQUEST_PROPERTY);
         }
 
         return super.accept(object);

@@ -10,13 +10,13 @@
 
 package org.mule.management;
 
-import org.mule.api.context.UMOServerNotification;
-import org.mule.api.context.UMOServerNotificationListener;
+import org.mule.api.context.ServerNotification;
+import org.mule.api.context.ServerNotificationListener;
 
-public class DummyListener implements UMOServerNotificationListener
+public class DummyListener implements ServerNotificationListener
 {
 
-    public void onNotification(UMOServerNotification notification)
+    public void onNotification(ServerNotification notification)
     {
         // empty
     }

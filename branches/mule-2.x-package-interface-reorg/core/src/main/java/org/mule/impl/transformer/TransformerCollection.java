@@ -9,9 +9,9 @@
  */
 package org.mule.impl.transformer;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
+import org.mule.api.transformer.Transformer;
 import org.mule.api.transformer.TransformerException;
-import org.mule.api.transformer.UMOTransformer;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -31,7 +31,7 @@ public class TransformerCollection extends AbstractMessageAwareTransformer
         this.transformers = transformers;
     }
 
-    public TransformerCollection(UMOTransformer[] transformers)
+    public TransformerCollection(Transformer[] transformers)
     {
         if (transformers.length < 1)
         {
@@ -40,25 +40,25 @@ public class TransformerCollection extends AbstractMessageAwareTransformer
         this.transformers = Arrays.asList(transformers);
     }
 
-    public Object transform(UMOMessage message, String outputEncoding) throws TransformerException
+    public Object transform(MuleMessage message, String outputEncoding) throws TransformerException
     {
-        UMOMessage result = message;
+        MuleMessage result = message;
         Object temp = message;
-        UMOTransformer lastTransformer = null;
+        Transformer lastTransformer = null;
         for (Iterator iterator = transformers.iterator(); iterator.hasNext();)
         {
-            lastTransformer = (UMOTransformer) iterator.next();
+            lastTransformer = (Transformer) iterator.next();
             temp = lastTransformer.transform(temp);
-            if (temp instanceof UMOMessage)
+            if (temp instanceof MuleMessage)
             {
-                result = (UMOMessage) temp;
+                result = (MuleMessage) temp;
             }
             else
             {
                 result.setPayload(temp);
             }
         }
-        if (lastTransformer != null && lastTransformer.getReturnClass().equals(UMOMessage.class))
+        if (lastTransformer != null && lastTransformer.getReturnClass().equals(MuleMessage.class))
         {
             return result;
         }

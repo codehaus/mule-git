@@ -10,7 +10,7 @@
 
 package org.mule.providers.soap.axis.functional;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.providers.http.HttpConnector;
 import org.mule.tck.FunctionalTestCase;
@@ -46,7 +46,7 @@ public class WsdlGenerationTestCase extends FunctionalTestCase
         props.put(HttpConnector.HTTP_METHOD_PROPERTY, "GET");
         MuleClient client = new MuleClient();
 
-        UMOMessage result = client.send("http://localhost:62081/services/EchoService1?wsdl", null, props);
+        MuleMessage result = client.send("http://localhost:62081/services/EchoService1?wsdl", null, props);
         assertNotNull(result);
         String wsdl = result.getPayloadAsString();
         Document doc = DocumentHelper.parseText(wsdl);
@@ -75,7 +75,7 @@ public class WsdlGenerationTestCase extends FunctionalTestCase
         props.put(HttpConnector.HTTP_METHOD_PROPERTY, "GET");
         MuleClient client = new MuleClient();
 
-        UMOMessage result = client.send("http://localhost:62082/services/EchoService2?wsdl", null, props);
+        MuleMessage result = client.send("http://localhost:62082/services/EchoService2?wsdl", null, props);
         assertNotNull(result);
         String wsdl = result.getPayloadAsString();
         Document doc = DocumentHelper.parseText(wsdl);
@@ -99,7 +99,7 @@ public class WsdlGenerationTestCase extends FunctionalTestCase
         props.put(HttpConnector.HTTP_METHOD_PROPERTY, "GET");
         MuleClient client = new MuleClient();
 
-        UMOMessage result = client.send("http://localhost:62083/services/EchoService3?wsdl", null, props);
+        MuleMessage result = client.send("http://localhost:62083/services/EchoService3?wsdl", null, props);
         assertNotNull(result);
         String wsdl = result.getPayloadAsString();
         Document doc = DocumentHelper.parseText(wsdl);

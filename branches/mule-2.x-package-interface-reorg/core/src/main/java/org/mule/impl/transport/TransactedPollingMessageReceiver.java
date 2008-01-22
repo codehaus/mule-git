@@ -10,13 +10,13 @@
 
 package org.mule.impl.transport;
 
-import org.mule.api.UMOComponent;
-import org.mule.api.UMOException;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.Component;
 import org.mule.api.config.ThreadingProfile;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.CreateException;
 import org.mule.api.transaction.TransactionCallback;
-import org.mule.api.transport.UMOConnector;
+import org.mule.api.transport.Connector;
 import org.mule.impl.transaction.TransactionTemplate;
 
 import java.util.Iterator;
@@ -40,9 +40,9 @@ public abstract class TransactedPollingMessageReceiver extends AbstractPollingMe
     /** determines whether Multiple receivers are created to improve throughput */
     private boolean useMultipleReceivers = true;
 
-    public TransactedPollingMessageReceiver(UMOConnector connector,
-                                            UMOComponent component,
-                                            final UMOImmutableEndpoint endpoint) throws CreateException
+    public TransactedPollingMessageReceiver(Connector connector,
+                                            Component component,
+                                            final ImmutableEndpoint endpoint) throws CreateException
     {
         super(connector, component, endpoint);
         this.setReceiveMessagesInTransaction(endpoint.getTransactionConfig().getFactory() != null);
@@ -50,12 +50,12 @@ public abstract class TransactedPollingMessageReceiver extends AbstractPollingMe
 
     /**
      * @deprecated please use
-     *             {@link #TransactedPollingMessageReceiver(UMOConnector,UMOComponent,UMOImmutableEndpoint,long,TimeUnit)}
+     *             {@link #TransactedPollingMessageReceiver(Connector,Component,ImmutableEndpoint,long,TimeUnit)}
      *             instead
      */
-    public TransactedPollingMessageReceiver(UMOConnector connector,
-                                            UMOComponent component,
-                                            final UMOImmutableEndpoint endpoint,
+    public TransactedPollingMessageReceiver(Connector connector,
+                                            Component component,
+                                            final ImmutableEndpoint endpoint,
                                             long frequency) throws CreateException
     {
         this(connector, component, endpoint);
@@ -83,7 +83,7 @@ public abstract class TransactedPollingMessageReceiver extends AbstractPollingMe
     }
 
     // @Override
-    public void doStart() throws UMOException
+    public void doStart() throws AbstractMuleException
     {
         // Connector property overrides any implied value
         this.setUseMultipleTransactedReceivers(connector.isCreateMultipleTransactedReceivers());

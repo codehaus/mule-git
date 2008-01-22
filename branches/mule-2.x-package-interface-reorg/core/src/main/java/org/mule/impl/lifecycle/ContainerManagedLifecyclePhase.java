@@ -9,14 +9,14 @@
  */
 package org.mule.impl.lifecycle;
 
+import org.mule.api.AbstractMuleException;
 import org.mule.api.MuleContext;
-import org.mule.api.UMOException;
 
 /**
  * A container-managed lifecycle phase is called by the container itself. This class acts as a marker to enable
  * tracking of phases even if Mule does not initiate the phase
  */
-public class ContainerManagedLifecyclePhase extends LifecyclePhase
+public class ContainerManagedLifecyclePhase extends DefaultLifecyclePhase
 {
     public ContainerManagedLifecyclePhase(String name, Class lifecycleClass, String oppositePhaseName)
     {
@@ -24,7 +24,7 @@ public class ContainerManagedLifecyclePhase extends LifecyclePhase
     }
 
     //@java.lang.Override
-    public void fireLifecycle(MuleContext muleContext, String currentPhase) throws UMOException
+    public void fireLifecycle(MuleContext muleContext, String currentPhase) throws AbstractMuleException
     {
         //The container manages this lifecycle
         return;

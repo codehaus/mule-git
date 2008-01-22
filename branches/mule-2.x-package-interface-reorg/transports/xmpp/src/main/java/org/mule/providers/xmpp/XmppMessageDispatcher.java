@@ -10,11 +10,11 @@
 
 package org.mule.providers.xmpp;
 
-import org.mule.api.UMOEvent;
-import org.mule.api.UMOMessage;
-import org.mule.api.endpoint.UMOEndpointURI;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
-import org.mule.impl.MuleMessage;
+import org.mule.api.Event;
+import org.mule.api.MuleMessage;
+import org.mule.api.endpoint.EndpointURI;
+import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.transport.AbstractMessageDispatcher;
 
 import org.jivesoftware.smack.Chat;
@@ -33,7 +33,7 @@ public class XmppMessageDispatcher extends AbstractMessageDispatcher
     private volatile Chat chat;
     private volatile GroupChat groupChat;
 
-    public XmppMessageDispatcher(UMOImmutableEndpoint endpoint)
+    public XmppMessageDispatcher(ImmutableEndpoint endpoint)
     {
         super(endpoint);
         this.connector = (XmppConnector)endpoint.getConnector();
@@ -43,7 +43,7 @@ public class XmppMessageDispatcher extends AbstractMessageDispatcher
     {
         if (xmppConnection == null)
         {
-            UMOEndpointURI uri = endpoint.getEndpointURI();
+            EndpointURI uri = endpoint.getEndpointURI();
             xmppConnection = connector.createXmppConnection(uri);
         }
     }
@@ -72,12 +72,12 @@ public class XmppMessageDispatcher extends AbstractMessageDispatcher
         // template method
     }
 
-    protected void doDispatch(UMOEvent event) throws Exception
+    protected void doDispatch(Event event) throws Exception
     {
         sendMessage(event);
     }
 
-    protected UMOMessage doSend(UMOEvent event) throws Exception
+    protected MuleMessage doSend(Event event) throws Exception
     {
         sendMessage(event);
 
@@ -100,17 +100,17 @@ public class XmppMessageDispatcher extends AbstractMessageDispatcher
                 {
                     logger.debug("Got a response from chat: " + chat);
                 }
-                return new MuleMessage(connector.getMessageAdapter(response));
+                return new DefaultMuleMessage(connector.getMessageAdapter(response));
             }
         }
         return null;
     }
 
-    protected void sendMessage(UMOEvent event) throws Exception
+    protected void sendMessage(Event event) throws Exception
     {
         if (chat == null && groupChat == null)
         {
-            UMOMessage msg = event.getMessage();
+            MuleMessage msg = event.getMessage();
             boolean group = msg.getBooleanProperty(XmppConnector.XMPP_GROUP_CHAT, false);
             String nickname = msg.getStringProperty(XmppConnector.XMPP_NICKNAME, "mule");
             String recipient = event.getEndpoint().getEndpointURI().getPath().substring(1);

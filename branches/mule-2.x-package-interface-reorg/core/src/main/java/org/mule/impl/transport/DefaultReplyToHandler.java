@@ -11,18 +11,18 @@
 package org.mule.impl.transport;
 
 import org.mule.RegistryContext;
-import org.mule.api.UMOEvent;
-import org.mule.api.UMOException;
-import org.mule.api.UMOMessage;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.Event;
+import org.mule.api.MuleMessage;
 import org.mule.api.config.MuleProperties;
-import org.mule.api.endpoint.UMOEndpointBuilder;
-import org.mule.api.endpoint.UMOEndpointFactory;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.endpoint.EndpointBuilder;
+import org.mule.api.endpoint.EndpointFactory;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.transport.DispatchException;
 import org.mule.api.transport.ReplyToHandler;
 import org.mule.impl.MuleEvent;
+import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.impl.model.AbstractComponent;
-import org.mule.imple.config.i18n.CoreMessages;
 
 import java.util.HashMap;
 import java.util.List;
@@ -51,7 +51,7 @@ public class DefaultReplyToHandler implements ReplyToHandler
         this.transformers = transformers;
     }
 
-    public void processReplyTo(UMOEvent event, UMOMessage returnMessage, Object replyTo) throws UMOException
+    public void processReplyTo(Event event, MuleMessage returnMessage, Object replyTo) throws AbstractMuleException
     {
         if (logger.isDebugEnabled())
         {
@@ -61,14 +61,14 @@ public class DefaultReplyToHandler implements ReplyToHandler
         String replyToEndpoint = replyTo.toString();
 
         // get the endpoint for this url
-        UMOImmutableEndpoint endpoint = getEndpoint(event, replyToEndpoint);
+        ImmutableEndpoint endpoint = getEndpoint(event, replyToEndpoint);
 
         // make sure remove the replyTo property as not cause a a forever
         // replyto loop
         returnMessage.removeProperty(MuleProperties.MULE_REPLY_TO_PROPERTY);
 
         // Create the replyTo event asynchronous
-        UMOEvent replyToEvent = new MuleEvent(returnMessage, endpoint, event.getSession(), false);
+        Event replyToEvent = new MuleEvent(returnMessage, endpoint, event.getSession(), false);
 
         // dispatch the event
         try
@@ -89,13 +89,13 @@ public class DefaultReplyToHandler implements ReplyToHandler
 
     }
 
-    protected synchronized UMOImmutableEndpoint getEndpoint(UMOEvent event, String endpointUri) throws UMOException
+    protected synchronized ImmutableEndpoint getEndpoint(Event event, String endpointUri) throws AbstractMuleException
     {
-        UMOImmutableEndpoint endpoint = (UMOImmutableEndpoint) endpointCache.get(endpointUri);
+        ImmutableEndpoint endpoint = (ImmutableEndpoint) endpointCache.get(endpointUri);
         if (endpoint == null)
         {
-            UMOEndpointFactory endpointFactory = RegistryContext.getRegistry().lookupEndpointFactory();
-            UMOEndpointBuilder endpointBuilder = endpointFactory.getEndpointBuilder(endpointUri);
+            EndpointFactory endpointFactory = RegistryContext.getRegistry().lookupEndpointFactory();
+            EndpointBuilder endpointBuilder = endpointFactory.getEndpointBuilder(endpointUri);
             if (transformers == null)
             {
                 transformers = event.getEndpoint().getResponseTransformers();

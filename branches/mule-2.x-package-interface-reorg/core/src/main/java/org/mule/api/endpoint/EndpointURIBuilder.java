@@ -20,5 +20,5 @@ import java.net.URI;
 
 public interface EndpointURIBuilder
 {
-    UMOEndpointURI build(URI uri) throws MalformedEndpointException;
+    EndpointURI build(URI uri) throws MalformedEndpointException;
 }

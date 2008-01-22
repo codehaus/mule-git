@@ -10,12 +10,12 @@
 
 package org.mule.impl.transformer.wire;
 
+import org.mule.api.AbstractMuleException;
 import org.mule.api.MuleException;
-import org.mule.api.UMOException;
+import org.mule.api.transformer.Transformer;
 import org.mule.api.transformer.TransformerException;
-import org.mule.api.transformer.UMOTransformer;
 import org.mule.api.transformer.wire.WireFormat;
-import org.mule.imple.config.i18n.CoreMessages;
+import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.util.IOUtils;
 
 import java.io.IOException;
@@ -37,10 +37,10 @@ public class TransformerPairWireFormat implements WireFormat
      */
     protected transient Log logger = LogFactory.getLog(getClass());
 
-    protected UMOTransformer inboundTransformer;
-    protected UMOTransformer outboundTransformer;
+    protected Transformer inboundTransformer;
+    protected Transformer outboundTransformer;
 
-    public Object read(InputStream in) throws UMOException
+    public Object read(InputStream in) throws AbstractMuleException
     {
         if (inboundTransformer == null)
         {
@@ -65,7 +65,7 @@ public class TransformerPairWireFormat implements WireFormat
         }
     }
 
-    public void write(OutputStream out, Object o, String encoding) throws UMOException
+    public void write(OutputStream out, Object o, String encoding) throws AbstractMuleException
     {
         if (outboundTransformer == null)
         {
@@ -114,22 +114,22 @@ public class TransformerPairWireFormat implements WireFormat
         }
     }
 
-    public UMOTransformer getInboundTransformer()
+    public Transformer getInboundTransformer()
     {
         return inboundTransformer;
     }
 
-    public void setInboundTransformer(UMOTransformer inboundTransformer)
+    public void setInboundTransformer(Transformer inboundTransformer)
     {
         this.inboundTransformer = inboundTransformer;
     }
 
-    public UMOTransformer getOutboundTransformer()
+    public Transformer getOutboundTransformer()
     {
         return outboundTransformer;
     }
 
-    public void setOutboundTransformer(UMOTransformer outboundTransformer)
+    public void setOutboundTransformer(Transformer outboundTransformer)
     {
         this.outboundTransformer = outboundTransformer;
     }

@@ -10,9 +10,9 @@
 
 package org.mule.providers.soap.xfire;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
-import org.mule.impl.MuleMessage;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.tck.testmodels.services.Person;
 import org.mule.tck.testmodels.services.PersonResponse;
@@ -23,7 +23,7 @@ public class WsdlComplexTypeMethodTestCase extends FunctionalTestCase
     public void testSendComplexTypeUsingWSDLXfire() throws Exception
     {
         MuleClient client = new MuleClient();
-        UMOMessage result = client.send("wsdlEndpoint", new MuleMessage(new Person("Jane", "Doe")));
+        MuleMessage result = client.send("wsdlEndpoint", new DefaultMuleMessage(new Person("Jane", "Doe")));
         assertNotNull(result.getPayload());
         assertTrue(result.getPayload() instanceof PersonResponse);
         assertTrue(((PersonResponse)result.getPayload()).getPerson().getFirstName().equalsIgnoreCase("Jane"));

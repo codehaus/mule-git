@@ -10,9 +10,9 @@
 
 package org.mule.providers.http;
 
-import org.mule.api.UMOMessage;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
-import org.mule.api.transformer.UMOTransformer;
+import org.mule.api.MuleMessage;
+import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.api.transformer.Transformer;
 import org.mule.api.transport.ReceiveException;
 import org.mule.impl.transport.AbstractMessageRequester;
 import org.mule.providers.http.i18n.HttpMessages;
@@ -33,9 +33,9 @@ public class HttpClientMessageRequester extends AbstractMessageRequester
 
     private final HttpConnector connector;
     private volatile HttpClient client = null;
-    private final UMOTransformer receiveTransformer;
+    private final Transformer receiveTransformer;
 
-    public HttpClientMessageRequester(UMOImmutableEndpoint endpoint)
+    public HttpClientMessageRequester(ImmutableEndpoint endpoint)
     {
         super(endpoint);
         this.connector = (HttpConnector) endpoint.getConnector();
@@ -62,11 +62,11 @@ public class HttpClientMessageRequester extends AbstractMessageRequester
      *            The call should return immediately if there is data available. If
      *            no data becomes available before the timeout elapses, null will be
      *            returned
-     * @return the result of the request wrapped in a UMOMessage object. Null will be
+     * @return the result of the request wrapped in a MuleMessage object. Null will be
      *         returned if no data was avaialable
      * @throws Exception if the call to the underlying protocal cuases an exception
      */
-    protected UMOMessage doRequest(long timeout) throws Exception
+    protected MuleMessage doRequest(long timeout) throws Exception
     {
         HttpMethod httpMethod = new GetMethod(endpoint.getEndpointURI().getAddress());
         connector.setupClientAuthorization(null, httpMethod, client, endpoint);
@@ -79,7 +79,7 @@ public class HttpClientMessageRequester extends AbstractMessageRequester
 
             if (httpMethod.getStatusCode() == HttpStatus.SC_OK)
             {
-                UMOMessage res = (UMOMessage) receiveTransformer.transform(httpMethod);
+                MuleMessage res = (MuleMessage) receiveTransformer.transform(httpMethod);
                 if (StringUtils.EMPTY.equals(res.getPayload()))
                 {
                     releaseConn = true;

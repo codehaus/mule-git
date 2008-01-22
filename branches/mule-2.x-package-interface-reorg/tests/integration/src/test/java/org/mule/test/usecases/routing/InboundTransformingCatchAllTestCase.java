@@ -10,9 +10,9 @@
 
 package org.mule.test.usecases.routing;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
-import org.mule.impl.MuleMessage;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.tck.FunctionalTestCase;
 
 /*
@@ -25,12 +25,12 @@ public class InboundTransformingCatchAllTestCase extends FunctionalTestCase
     public void testNormal() throws Exception
     {
         MuleClient client = new MuleClient();
-        client.dispatch("vm://in1", new MuleMessage("HELLO!"));
-        UMOMessage msg = client.request("vm://catchall", 3000);
+        client.dispatch("vm://in1", new DefaultMuleMessage("HELLO!"));
+        MuleMessage msg = client.request("vm://catchall", 3000);
         assertNotNull(msg);
         assertTrue(msg.getPayload() instanceof String);
 
-        client.dispatch("vm://in2", new MuleMessage("HELLO!"));
+        client.dispatch("vm://in2", new DefaultMuleMessage("HELLO!"));
         msg = client.request("vm://catchall", 3000);
         assertNotNull(msg);
         assertTrue(msg.getPayload() instanceof byte[]);

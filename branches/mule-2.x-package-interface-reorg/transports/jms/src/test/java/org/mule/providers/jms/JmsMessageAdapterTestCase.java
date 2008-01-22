@@ -11,7 +11,7 @@
 package org.mule.providers.jms;
 
 import org.mule.api.MessagingException;
-import org.mule.api.transport.UMOMessageAdapter;
+import org.mule.api.transport.MessageAdapter;
 import org.mule.tck.providers.AbstractMessageAdapterTestCase;
 
 public class JmsMessageAdapterTestCase extends AbstractMessageAdapterTestCase
@@ -21,7 +21,7 @@ public class JmsMessageAdapterTestCase extends AbstractMessageAdapterTestCase
      * 
      * @see org.mule.tck.providers.AbstractMessageAdapterTestCase#createAdapter()
      */
-    public UMOMessageAdapter createAdapter(Object payload) throws MessagingException
+    public MessageAdapter createAdapter(Object payload) throws MessagingException
     {
         return new JmsMessageAdapter(payload);
     }

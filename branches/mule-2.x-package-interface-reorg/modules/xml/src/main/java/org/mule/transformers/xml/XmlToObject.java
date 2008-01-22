@@ -10,7 +10,7 @@
 
 package org.mule.transformers.xml;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.api.transformer.TransformerException;
 
 import java.io.ByteArrayInputStream;
@@ -41,7 +41,7 @@ public class XmlToObject extends AbstractXStreamTransformer
         setReturnClass(Object.class);
     }
 
-    public Object transform(UMOMessage message, String outputEncoding) throws TransformerException
+    public Object transform(MuleMessage message, String outputEncoding) throws TransformerException
     {
         Object src = message.getPayload();
         if (src instanceof byte[])

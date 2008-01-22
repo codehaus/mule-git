@@ -10,18 +10,18 @@
 
 package org.mule.api.registry;
 
-import org.mule.api.UMOComponent;
-import org.mule.api.UMOException;
-import org.mule.api.context.UMOAgent;
-import org.mule.api.endpoint.UMOEndpointBuilder;
-import org.mule.api.endpoint.UMOEndpointFactory;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.Component;
+import org.mule.api.context.Agent;
+import org.mule.api.endpoint.EndpointBuilder;
+import org.mule.api.endpoint.EndpointFactory;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.Disposable;
 import org.mule.api.lifecycle.Initialisable;
-import org.mule.api.model.UMOModel;
+import org.mule.api.model.Model;
+import org.mule.api.transformer.Transformer;
 import org.mule.api.transformer.TransformerException;
-import org.mule.api.transformer.UMOTransformer;
-import org.mule.api.transport.UMOConnector;
+import org.mule.api.transport.Connector;
 import org.mule.impl.config.MuleConfiguration;
 
 import java.util.Collection;
@@ -61,7 +61,7 @@ public interface Registry extends Initialisable, Disposable
     
     // TODO Not sure these methods are needed since the generic ones above can be used.
 
-    UMOConnector lookupConnector(String name);
+    Connector lookupConnector(String name);
 
     /**
      * Looks up an returns endpoints registered in the registry by their idendifier (currently endpoint name)<br/><br/
@@ -73,23 +73,23 @@ public interface Registry extends Initialisable, Disposable
      * @see #lookupInboundEndpoint(String, org.mule.api.MuleContext)
      * @see #lookupResponseEndpoint(String, org.mule.api.MuleContext)
      */
-    UMOImmutableEndpoint lookupEndpoint(String name);
+    ImmutableEndpoint lookupEndpoint(String name);
 
     /**
      * Looks-up endpoint builders which can be used to repeatably create endpoints with the same configuration.
      * These endpoint builder are either global endpoints or they are builders used to create named
      * endpoints configured on routers and exception strategies.
      */
-    UMOEndpointBuilder lookupEndpointBuilder(String name);
+    EndpointBuilder lookupEndpointBuilder(String name);
 
-    UMOEndpointFactory lookupEndpointFactory();
+    EndpointFactory lookupEndpointFactory();
 
-    UMOTransformer lookupTransformer(String name);
+    Transformer lookupTransformer(String name);
 
-    UMOComponent lookupComponent(String component);
+    Component lookupComponent(String component);
 
     /**
-     * This method will return a list of {@link org.mule.api.transformer.UMOTransformer} objects that accept the given
+     * This method will return a list of {@link org.mule.api.transformer.Transformer} objects that accept the given
      * input and return the given output type of object
      *
      * @param input  The  desiered input type for the transformer
@@ -106,17 +106,17 @@ public interface Registry extends Initialisable, Disposable
      * @return A transformer that exactly matches or the will accept the input and output parameters
      * @throws TransformerException will be thrown if there is more than one match
      */
-    UMOTransformer lookupTransformer(Class input, Class output) throws TransformerException;
+    Transformer lookupTransformer(Class input, Class output) throws TransformerException;
 
-    Collection/*<UMOComponent>*/ lookupComponents(String model);
+    Collection/*<Component>*/ lookupComponents(String model);
 
-    Collection/*<UMOComponent>*/ lookupComponents();
+    Collection/*<Component>*/ lookupComponents();
 
-    UMOModel lookupModel(String name);
+    Model lookupModel(String name);
 
-    UMOModel lookupSystemModel();
+    Model lookupSystemModel();
 
-    UMOAgent lookupAgent(String agentName);
+    Agent lookupAgent(String agentName);
 
     // TODO MULE-2162 MuleConfiguration belongs in the MuleContext rather than the Registry
     MuleConfiguration getConfiguration();
@@ -146,38 +146,38 @@ public interface Registry extends Initialisable, Disposable
 
     void registerObjects(Map objects) throws RegistrationException;
 
-    void unregisterObject(String key) throws UMOException;
+    void unregisterObject(String key) throws AbstractMuleException;
 
     // TODO MULE-2139 The following methods are Mule-specific and should be split out into a separate class;
     // leave this one as a "pure" registry interface.
 
-    void registerConnector(UMOConnector connector) throws UMOException;
+    void registerConnector(Connector connector) throws AbstractMuleException;
 
-    void unregisterConnector(String connectorName) throws UMOException;
-
-    //TODO MULE-2494
-    void registerEndpoint(UMOImmutableEndpoint endpoint) throws UMOException;
+    void unregisterConnector(String connectorName) throws AbstractMuleException;
 
     //TODO MULE-2494
-    void unregisterEndpoint(String endpointName) throws UMOException;
+    void registerEndpoint(ImmutableEndpoint endpoint) throws AbstractMuleException;
 
-    public void registerEndpointBuilder(String name, UMOEndpointBuilder builder) throws UMOException;
+    //TODO MULE-2494
+    void unregisterEndpoint(String endpointName) throws AbstractMuleException;
+
+    public void registerEndpointBuilder(String name, EndpointBuilder builder) throws AbstractMuleException;
     
-    void registerTransformer(UMOTransformer transformer) throws UMOException;
+    void registerTransformer(Transformer transformer) throws AbstractMuleException;
 
-    void unregisterTransformer(String transformerName) throws UMOException;
+    void unregisterTransformer(String transformerName) throws AbstractMuleException;
 
-    void registerComponent(UMOComponent component) throws UMOException;
+    void registerComponent(Component component) throws AbstractMuleException;
 
-    void unregisterComponent(String componentName) throws UMOException;
+    void unregisterComponent(String componentName) throws AbstractMuleException;
 
-    void registerModel(UMOModel model) throws UMOException;
+    void registerModel(Model model) throws AbstractMuleException;
 
-    void unregisterModel(String modelName) throws UMOException;
+    void unregisterModel(String modelName) throws AbstractMuleException;
 
-    void registerAgent(UMOAgent agent) throws UMOException;
+    void registerAgent(Agent agent) throws AbstractMuleException;
 
-    void unregisterAgent(String agentName) throws UMOException;
+    void unregisterAgent(String agentName) throws AbstractMuleException;
 
     // TODO MULE-2162 MuleConfiguration belongs in the MuleContext rather than the Registry
     void setConfiguration(MuleConfiguration config);

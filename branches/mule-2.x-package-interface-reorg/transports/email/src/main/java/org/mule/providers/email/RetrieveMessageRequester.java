@@ -10,11 +10,11 @@
 
 package org.mule.providers.email;
 
-import org.mule.api.UMOEvent;
-import org.mule.api.UMOMessage;
-import org.mule.api.endpoint.UMOEndpointURI;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
-import org.mule.impl.MuleMessage;
+import org.mule.api.Event;
+import org.mule.api.MuleMessage;
+import org.mule.api.endpoint.EndpointURI;
+import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.transport.AbstractMessageRequester;
 
 import javax.mail.Flags;
@@ -34,7 +34,7 @@ public class RetrieveMessageRequester extends AbstractMessageRequester
 {
     private Folder folder;
 
-    public RetrieveMessageRequester(UMOImmutableEndpoint endpoint)
+    public RetrieveMessageRequester(ImmutableEndpoint endpoint)
     {
         super(endpoint);
     }
@@ -51,7 +51,7 @@ public class RetrieveMessageRequester extends AbstractMessageRequester
 
             Store store = castConnector().getSessionDetails(endpoint).newStore();
 
-            UMOEndpointURI uri = endpoint.getEndpointURI();
+            EndpointURI uri = endpoint.getEndpointURI();
             store.connect(uri.getHost(), uri.getPort(), uri.getUser(), uri.getPassword());
 
             folder = store.getFolder(castConnector().getMailboxFolder());
@@ -107,7 +107,7 @@ public class RetrieveMessageRequester extends AbstractMessageRequester
      * @param event
      * @throws UnsupportedOperationException
      */
-    protected void doDispatch(UMOEvent event) throws Exception
+    protected void doDispatch(Event event) throws Exception
     {
         throw new UnsupportedOperationException("Cannot dispatch from a Pop3 connection");
     }
@@ -117,7 +117,7 @@ public class RetrieveMessageRequester extends AbstractMessageRequester
      * @return
      * @throws UnsupportedOperationException
      */
-    protected UMOMessage doSend(UMOEvent event) throws Exception
+    protected MuleMessage doSend(Event event) throws Exception
     {
         throw new UnsupportedOperationException("Cannot send from a Pop3 connection");
     }
@@ -130,11 +130,11 @@ public class RetrieveMessageRequester extends AbstractMessageRequester
      *            The call should return immediately if there is data available. If
      *            no data becomes available before the timeout elapses, null will be
      *            returned
-     * @return the result of the request wrapped in a UMOMessage object. Null will be
+     * @return the result of the request wrapped in a MuleMessage object. Null will be
      *         returned if no data was avaialable
      * @throws Exception if the call to the underlying protocal causes an exception
      */
-    protected UMOMessage doRequest(long timeout) throws Exception
+    protected MuleMessage doRequest(long timeout) throws Exception
     {
         long t0 = System.currentTimeMillis();
         if (timeout < 0)
@@ -153,7 +153,7 @@ public class RetrieveMessageRequester extends AbstractMessageRequester
                     // so we don't get the same message again
                     flagMessage(folder, message);
 
-                    return new MuleMessage(castConnector().getMessageAdapter(message));
+                    return new DefaultMuleMessage(castConnector().getMessageAdapter(message));
                 }
                 else if (count == -1)
                 {

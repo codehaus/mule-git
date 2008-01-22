@@ -10,10 +10,10 @@
 
 package org.mule.impl.internal.notifications;
 
-import org.mule.api.UMOTransaction;
-import org.mule.api.context.UMOServerNotification;
+import org.mule.api.Transaction;
+import org.mule.api.context.ServerNotification;
 
-public class TransactionNotification extends UMOServerNotification implements BlockingServerEvent
+public class TransactionNotification extends ServerNotification implements BlockingServerEvent
 {
     /**
      * Serial version
@@ -36,7 +36,7 @@ public class TransactionNotification extends UMOServerNotification implements Bl
      */
     private String transactionStringId;
 
-    public TransactionNotification(UMOTransaction transaction, int action)
+    public TransactionNotification(Transaction transaction, int action)
     {
         super(transaction, action);
         this.transactionStringId = transaction.toString();

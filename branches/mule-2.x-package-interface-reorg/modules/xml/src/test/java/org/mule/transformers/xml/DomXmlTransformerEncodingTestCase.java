@@ -10,9 +10,9 @@
 
 package org.mule.transformers.xml;
 
-import org.mule.api.endpoint.UMOEndpointBuilder;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
-import org.mule.api.transformer.UMOTransformer;
+import org.mule.api.endpoint.EndpointBuilder;
+import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.api.transformer.Transformer;
 import org.mule.impl.endpoint.EndpointURIEndpointBuilder;
 import org.mule.util.IOUtils;
 
@@ -36,21 +36,21 @@ public class DomXmlTransformerEncodingTestCase extends AbstractXmlTransformerTes
             "US-ASCII");
     }
 
-    public UMOTransformer getTransformer() throws Exception
+    public Transformer getTransformer() throws Exception
     {
-        UMOTransformer trans = new DomDocumentToXml();
+        Transformer trans = new DomDocumentToXml();
         trans.setReturnClass(String.class);
 
-        UMOEndpointBuilder builder = new EndpointURIEndpointBuilder("test://test", muleContext);
+        EndpointBuilder builder = new EndpointURIEndpointBuilder("test://test", muleContext);
         builder.setEncoding("US-ASCII");
-        UMOImmutableEndpoint endpoint = muleContext.getRegistry().lookupEndpointFactory().getInboundEndpoint(
+        ImmutableEndpoint endpoint = muleContext.getRegistry().lookupEndpointFactory().getInboundEndpoint(
             builder);
 
         trans.setEndpoint(endpoint);
         return trans;
     }
 
-    public UMOTransformer getRoundTripTransformer() throws Exception
+    public Transformer getRoundTripTransformer() throws Exception
     {
         XmlToDomDocument trans =  new XmlToDomDocument(); // encoding is not interesting
         trans.setReturnClass( org.w3c.dom.Document.class);

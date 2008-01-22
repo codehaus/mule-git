@@ -10,10 +10,10 @@
 
 package org.mule.impl.transformer.simple;
 
-import org.mule.api.UMOMessage;
-import org.mule.api.transformer.UMOTransformer;
+import org.mule.api.MuleMessage;
+import org.mule.api.transformer.Transformer;
 import org.mule.impl.MuleEvent;
-import org.mule.impl.MuleMessage;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.RequestContext;
 import org.mule.impl.transformer.simple.ByteArrayToUMOMessage;
 import org.mule.impl.transformer.simple.UMOMessageToByteArray;
@@ -31,7 +31,7 @@ import org.apache.commons.io.output.ByteArrayOutputStream;
 
 public class SerializedUMOMessageTransformersTestCase extends AbstractTransformerTestCase
 {
-    private UMOMessage testObject = null;
+    private MuleMessage testObject = null;
 
     // @Override
     protected void doSetUp() throws Exception
@@ -61,15 +61,15 @@ public class SerializedUMOMessageTransformersTestCase extends AbstractTransforme
         props.put("object", new Apple());
         props.put("number", new Integer(1));
         props.put("string", "hello");
-        testObject = new MuleMessage("test", props);
+        testObject = new DefaultMuleMessage("test", props);
     }
 
-    public UMOTransformer getTransformer() throws Exception
+    public Transformer getTransformer() throws Exception
     {
         return new UMOMessageToByteArray();
     }
 
-    public UMOTransformer getRoundTripTransformer() throws Exception
+    public Transformer getRoundTripTransformer() throws Exception
     {
         return new ByteArrayToUMOMessage();
     }
@@ -124,14 +124,14 @@ public class SerializedUMOMessageTransformersTestCase extends AbstractTransforme
         {
             return false;
         }
-        if (src instanceof UMOMessage && result instanceof UMOMessage)
+        if (src instanceof MuleMessage && result instanceof MuleMessage)
         {
-            return ((UMOMessage)src).getPayload().equals(((UMOMessage)result).getPayload())
-                            && ((UMOMessage)src).getProperty("object").equals(
-                                ((UMOMessage)result).getProperty("object"))
-                            && ((UMOMessage)src).getProperty("string").equals(
-                                ((UMOMessage)result).getProperty("string"))
-                            && ((UMOMessage)src).getIntProperty("number", -1) == ((UMOMessage)result)
+            return ((MuleMessage)src).getPayload().equals(((MuleMessage)result).getPayload())
+                            && ((MuleMessage)src).getProperty("object").equals(
+                                ((MuleMessage)result).getProperty("object"))
+                            && ((MuleMessage)src).getProperty("string").equals(
+                                ((MuleMessage)result).getProperty("string"))
+                            && ((MuleMessage)src).getIntProperty("number", -1) == ((MuleMessage)result)
                                 .getIntProperty("number", -2);
         }
         else

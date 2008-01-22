@@ -10,15 +10,15 @@
 
 package org.mule.providers.tcp;
 
-import org.mule.api.UMOException;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
-import org.mule.api.transport.UMOMessageRequester;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.api.transport.MessageRequester;
 import org.mule.impl.transport.AbstractMessageRequesterFactory;
 
 public class TcpMessageRequesterFactory extends AbstractMessageRequesterFactory
 {
 
-    public UMOMessageRequester create(UMOImmutableEndpoint endpoint) throws UMOException
+    public MessageRequester create(ImmutableEndpoint endpoint) throws AbstractMuleException
     {
         return new TcpMessageRequester(endpoint);
     }

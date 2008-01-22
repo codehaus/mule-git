@@ -10,7 +10,7 @@
 
 package org.mule.providers.email.connectors;
 
-import org.mule.api.transport.UMOConnector;
+import org.mule.api.transport.Connector;
 import org.mule.providers.email.Pop3sConnector;
 
 import com.icegreen.greenmail.util.ServerSetup;
@@ -26,7 +26,7 @@ public class Pop3sConnectorTestCase extends AbstractReceivingMailConnectorTestCa
         super(ServerSetup.PROTOCOL_POP3S, 50009);
     }
 
-    public UMOConnector createConnector() throws Exception
+    public Connector createConnector() throws Exception
     {
         Pop3sConnector connector = new Pop3sConnector();
         connector.setName("Pop3sConnector");

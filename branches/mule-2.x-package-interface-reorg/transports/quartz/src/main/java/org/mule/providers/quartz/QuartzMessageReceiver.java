@@ -10,14 +10,14 @@
 
 package org.mule.providers.quartz;
 
-import org.mule.api.UMOComponent;
-import org.mule.api.UMOException;
+import org.mule.api.Component;
+import org.mule.api.AbstractMuleException;
 import org.mule.api.endpoint.EndpointException;
-import org.mule.api.endpoint.UMOEndpoint;
+import org.mule.api.endpoint.Endpoint;
 import org.mule.api.lifecycle.CreateException;
-import org.mule.api.transport.UMOConnector;
+import org.mule.api.transport.Connector;
+import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.impl.transport.AbstractMessageReceiver;
-import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.providers.quartz.i18n.QuartzMessages;
 import org.mule.providers.quartz.jobs.MuleReceiverJob;
 
@@ -43,7 +43,7 @@ public class QuartzMessageReceiver extends AbstractMessageReceiver
 
     private final QuartzConnector connector;
 
-    public QuartzMessageReceiver(UMOConnector connector, UMOComponent component, UMOEndpoint endpoint)
+    public QuartzMessageReceiver(Connector connector, Component component, Endpoint endpoint)
             throws CreateException
     {
         super(connector, component, endpoint);
@@ -55,7 +55,7 @@ public class QuartzMessageReceiver extends AbstractMessageReceiver
         // template method
     }
 
-    protected void doStart() throws UMOException
+    protected void doStart() throws AbstractMuleException
     {
         try
         {
@@ -144,7 +144,7 @@ public class QuartzMessageReceiver extends AbstractMessageReceiver
         }
     }
 
-    protected void doStop() throws UMOException
+    protected void doStop() throws AbstractMuleException
     {
         // nothing to do
     }

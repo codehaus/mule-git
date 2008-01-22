@@ -11,7 +11,7 @@
 package org.mule.extras.wssecurity.filters;
 
 import org.mule.RegistryContext;
-import org.mule.api.UMOEvent;
+import org.mule.api.Event;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.security.CryptoFailureException;
 import org.mule.api.security.EncryptionStrategyNotFoundException;
@@ -19,12 +19,12 @@ import org.mule.api.security.SecurityException;
 import org.mule.api.security.SecurityProviderNotFoundException;
 import org.mule.api.security.UnknownAuthenticationTypeException;
 import org.mule.api.security.UnsupportedAuthenticationSchemeException;
-import org.mule.api.transport.UMOConnector;
+import org.mule.api.transport.Connector;
 import org.mule.extras.wssecurity.handlers.MuleWSSInHandler;
 import org.mule.extras.wssecurity.headers.WsSecurityHeadersSetter;
-import org.mule.impl.MuleMessage;
+import org.mule.impl.DefaultMuleMessage;
+import org.mule.impl.config.i18n.MessageFactory;
 import org.mule.impl.security.AbstractEndpointSecurityFilter;
-import org.mule.imple.config.i18n.MessageFactory;
 import org.mule.providers.soap.axis.AxisConnector;
 import org.mule.providers.soap.axis.extensions.MuleConfigProvider;
 import org.mule.providers.soap.xfire.XFireConnector;
@@ -84,7 +84,7 @@ public class WsSecurityFilter extends AbstractEndpointSecurityFilter
      * the service. Secondly, it checks the properties in the message and if there
      * are security properties among them, it sets them on the service.
      */
-    protected void authenticateInbound(UMOEvent event)
+    protected void authenticateInbound(Event event)
         throws SecurityException, CryptoFailureException, SecurityProviderNotFoundException,
         EncryptionStrategyNotFoundException, UnknownAuthenticationTypeException
     {
@@ -110,7 +110,7 @@ public class WsSecurityFilter extends AbstractEndpointSecurityFilter
 
             // remove security in handlers if present
             XFireConnector connector = null;
-            Collection objs = RegistryContext.getRegistry().lookupObjects(UMOConnector.class);
+            Collection objs = RegistryContext.getRegistry().lookupObjects(Connector.class);
             Iterator it = objs.iterator();
             while (it.hasNext())
             {
@@ -222,7 +222,7 @@ public class WsSecurityFilter extends AbstractEndpointSecurityFilter
             {
                 throw new UnsupportedAuthenticationSchemeException(
                     MessageFactory.createStaticMessage("A Configurtation Exception occured while configuring WS-Security on Axis "),
-                    new MuleMessage(e.getMessage()));
+                    new DefaultMuleMessage(e.getMessage()));
             }
         }
     }
@@ -231,7 +231,7 @@ public class WsSecurityFilter extends AbstractEndpointSecurityFilter
      * This method secures the outgouing message by setting the required security
      * handlers.
      */
-    protected void authenticateOutbound(UMOEvent event)
+    protected void authenticateOutbound(Event event)
         throws SecurityException, SecurityProviderNotFoundException, CryptoFailureException
     {
         if (event.getEndpoint().getConnector() instanceof XFireConnector)
@@ -312,7 +312,7 @@ public class WsSecurityFilter extends AbstractEndpointSecurityFilter
      * @param event
      * @return
      */
-    protected Properties getProperties(UMOEvent event)
+    protected Properties getProperties(Event event)
     {
         WsSecurityHeadersSetter secHeaders = new WsSecurityHeadersSetter();
 

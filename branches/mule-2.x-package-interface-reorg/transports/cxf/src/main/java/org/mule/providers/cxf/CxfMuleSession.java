@@ -10,22 +10,22 @@
 
 package org.mule.providers.cxf;
 
-import org.apache.cxf.transport.Session;
+import org.mule.api.Session;
 
-import org.mule.api.UMOSession;
+
 
 /**
  * Mules session wrapper for XFire
  */
-public class CxfMuleSession implements Session
+public class CxfMuleSession implements org.apache.cxf.transport.Session
 {
-    UMOSession session;
+    Session session;
 
-    public CxfMuleSession(UMOSession session)
+    public CxfMuleSession(Session session)
     {
         if (session == null)
         {
-            throw new IllegalArgumentException("UMOSession");
+            throw new IllegalArgumentException("Session");
         }
         this.session = session;
     }

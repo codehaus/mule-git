@@ -10,7 +10,7 @@
 
 package org.mule.providers.ejb;
 
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.providers.rmi.RmiConnector;
 import org.mule.util.ClassUtils;
 
@@ -37,7 +37,7 @@ public class EjbConnector extends RmiConnector
         return EJB;
     }
 
-    public Remote getRemoteObject(UMOImmutableEndpoint endpoint) throws RemoteException, UnknownHostException
+    public Remote getRemoteObject(ImmutableEndpoint endpoint) throws RemoteException, UnknownHostException
     {
         EJBObject remoteObj;
 

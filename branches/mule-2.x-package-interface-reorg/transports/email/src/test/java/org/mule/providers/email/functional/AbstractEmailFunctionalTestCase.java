@@ -10,7 +10,7 @@
 
 package org.mule.providers.email.functional;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.providers.email.GreenMailUtilities;
 import org.mule.providers.email.ImapConnector;
@@ -137,7 +137,7 @@ public abstract class AbstractEmailFunctionalTestCase extends FunctionalTestCase
         assertEquals(1, server.getReceivedMessages().length);
 
         MuleClient client = new MuleClient();
-        UMOMessage message = client.request("vm://receive", 5000);
+        MuleMessage message = client.request("vm://receive", 5000);
         
         assertNotNull(message);
         Object payload = message.getPayload();

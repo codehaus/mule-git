@@ -20,7 +20,7 @@ public interface SimpleServerSocketFactory
 
     /**
      * @param uri The address and port to connect to
-     * @param backlog The backlog (or {@link org.mule.api.transport.UMOConnector#INT_VALUE_NOT_SET})
+     * @param backlog The backlog (or {@link org.mule.api.transport.Connector#INT_VALUE_NOT_SET})
      * @param reuse Whether to reuse addresses (null for default)
      * @return A new, bound server socket
      * @throws IOException

@@ -10,7 +10,7 @@
 
 package org.mule.impl.transformer.simple;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.api.transformer.DiscoverableTransformer;
 import org.mule.api.transformer.TransformerException;
 import org.mule.impl.transformer.AbstractTransformer;
@@ -21,8 +21,8 @@ import org.apache.commons.lang.SerializationUtils;
 
 /**
  * <code>SerializableToByteArray</code> converts a serializable object or a String
- * to a byte array. If <code>UMOMessage</code> is configured as a source type on this
- * transformer by calling <code>setAcceptUMOMessage(true)</code> then the UMOMessage
+ * to a byte array. If <code>MuleMessage</code> is configured as a source type on this
+ * transformer by calling <code>setAcceptUMOMessage(true)</code> then the MuleMessage
  * will be serialised. This is useful for transports such as TCP where the message
  * headers would normally be lost.
  */
@@ -39,25 +39,25 @@ public class SerializableToByteArray extends AbstractTransformer implements Disc
 
     public boolean isAcceptUMOMessage()
     {
-        return this.isSourceTypeSupported(UMOMessage.class, true);
+        return this.isSourceTypeSupported(MuleMessage.class, true);
     }
 
     public void setAcceptUMOMessage(boolean value)
     {
         if (value)
         {
-            this.registerSourceType(UMOMessage.class);
+            this.registerSourceType(MuleMessage.class);
         }
         else
         {
-            this.unregisterSourceType(UMOMessage.class);
+            this.unregisterSourceType(MuleMessage.class);
         }
     }
 
     public Object doTransform(Object src, String encoding) throws TransformerException
     {
         /*
-         * If the UMOMessage source type has been registered then we can assume that
+         * If the MuleMessage source type has been registered then we can assume that
          * the whole message is to be serialised, not just the payload. This can be
          * useful for protocols such as tcp where the protocol does not support
          * headers and the whole message needs to be serialized.

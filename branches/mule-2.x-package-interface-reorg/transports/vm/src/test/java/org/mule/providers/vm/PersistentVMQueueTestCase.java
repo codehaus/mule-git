@@ -10,7 +10,7 @@
 
 package org.mule.providers.vm;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 
@@ -29,7 +29,7 @@ public class PersistentVMQueueTestCase extends FunctionalTestCase
         String[] output = {"Test", "message"};
         MuleClient client = new MuleClient();
         client.dispatch("vm://receiver", input, null);
-        UMOMessage result = client.request("vm://out", RECEIVE_TIMEOUT);
+        MuleMessage result = client.request("vm://out", RECEIVE_TIMEOUT);
         assertNotNull(result);
         assertNotNull(result.getPayload());
         assertNull(result.getExceptionPayload());

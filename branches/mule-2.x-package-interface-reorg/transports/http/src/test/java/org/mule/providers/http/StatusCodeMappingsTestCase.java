@@ -14,7 +14,7 @@ import org.mule.api.MuleException;
 import org.mule.api.routing.RoutingException;
 import org.mule.api.security.UnauthorisedException;
 import org.mule.impl.config.ExceptionHelper;
-import org.mule.imple.config.i18n.MessageFactory;
+import org.mule.impl.config.i18n.MessageFactory;
 import org.mule.tck.AbstractMuleTestCase;
 
 public class StatusCodeMappingsTestCase extends AbstractMuleTestCase

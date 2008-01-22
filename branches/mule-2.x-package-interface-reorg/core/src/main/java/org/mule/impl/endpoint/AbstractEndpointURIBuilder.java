@@ -10,9 +10,9 @@
 
 package org.mule.impl.endpoint;
 
+import org.mule.api.endpoint.EndpointURI;
 import org.mule.api.endpoint.EndpointURIBuilder;
 import org.mule.api.endpoint.MalformedEndpointException;
-import org.mule.api.endpoint.UMOEndpointURI;
 import org.mule.util.PropertiesUtils;
 
 import java.io.UnsupportedEncodingException;
@@ -34,7 +34,7 @@ public abstract class AbstractEndpointURIBuilder implements EndpointURIBuilder
     protected String responseTransformers;
     protected String userInfo;
 
-    public UMOEndpointURI build(URI uri) throws MalformedEndpointException
+    public EndpointURI build(URI uri) throws MalformedEndpointException
     {
         Properties props = getPropertiesForURI(uri);
         String replaceAddress = null;
@@ -52,7 +52,7 @@ public abstract class AbstractEndpointURIBuilder implements EndpointURIBuilder
             setEndpoint(uri, props);
         }
 
-        UMOEndpointURI ep = new MuleEndpointURI(address, endpointName, connectorName, transformers,
+        EndpointURI ep = new MuleEndpointURI(address, endpointName, connectorName, transformers,
             responseTransformers, props, uri, userInfo);
         address = null;
         endpointName = null;
@@ -68,31 +68,31 @@ public abstract class AbstractEndpointURIBuilder implements EndpointURIBuilder
     {
         Properties properties = PropertiesUtils.getPropertiesFromQueryString(uri.getQuery());
 
-        String tempEndpointName = (String) properties.get(UMOEndpointURI.PROPERTY_ENDPOINT_NAME);
+        String tempEndpointName = (String) properties.get(EndpointURI.PROPERTY_ENDPOINT_NAME);
         if (tempEndpointName != null)
         {
             this.endpointName = tempEndpointName;
         }
         // override the endpointUri if set
-        String endpoint = (String) properties.get(UMOEndpointURI.PROPERTY_ENDPOINT_URI);
+        String endpoint = (String) properties.get(EndpointURI.PROPERTY_ENDPOINT_URI);
         if (endpoint != null)
         {
             this.address = endpoint;
             address = decode(address, uri);
         }
 
-        String cnnName = (String) properties.get(UMOEndpointURI.PROPERTY_CONNECTOR_NAME);
+        String cnnName = (String) properties.get(EndpointURI.PROPERTY_CONNECTOR_NAME);
         if (cnnName != null)
         {
             this.connectorName = cnnName;
         }
 
-        transformers = (String) properties.get(UMOEndpointURI.PROPERTY_TRANSFORMERS);
+        transformers = (String) properties.get(EndpointURI.PROPERTY_TRANSFORMERS);
         if (transformers != null)
         {
             transformers = transformers.replaceAll(" ", ",");
         }
-        responseTransformers = (String) properties.get(UMOEndpointURI.PROPERTY_RESPONSE_TRANSFORMERS);
+        responseTransformers = (String) properties.get(EndpointURI.PROPERTY_RESPONSE_TRANSFORMERS);
         if (responseTransformers != null)
         {
             responseTransformers = responseTransformers.replaceAll(" ", ",");

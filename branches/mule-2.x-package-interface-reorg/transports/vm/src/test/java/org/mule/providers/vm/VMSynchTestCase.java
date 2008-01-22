@@ -10,7 +10,7 @@
 
 package org.mule.providers.vm;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 
@@ -28,7 +28,7 @@ public class VMSynchTestCase extends FunctionalTestCase
     public void testSingleMessage() throws Exception
     {
         MuleClient client = new MuleClient();
-        UMOMessage response =  client.send("vm://bridge", "Message", null);
+        MuleMessage response =  client.send("vm://bridge", "Message", null);
         assertNotNull("Response is null", response);
         assertEquals("Message Received", response.getPayload());
     }

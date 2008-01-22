@@ -10,7 +10,7 @@
 
 package org.mule.providers.vm;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.tck.functional.FunctionalTestComponent;
@@ -28,7 +28,7 @@ public class TransformerAttributeTestCase extends FunctionalTestCase
 
     public void testSimple() throws Exception
     {
-        UMOMessage message = new MuleClient().send("vm://simple", OUTBOUND_MESSAGE, null);
+        MuleMessage message = new MuleClient().send("vm://simple", OUTBOUND_MESSAGE, null);
         assertNotNull(message);
         assertEquals(
                 FunctionalTestComponent.received(
@@ -38,7 +38,7 @@ public class TransformerAttributeTestCase extends FunctionalTestCase
 
     public void testThrough() throws Exception
     {
-        UMOMessage message = new MuleClient().send("vm://chained", OUTBOUND_MESSAGE, null);
+        MuleMessage message = new MuleClient().send("vm://chained", OUTBOUND_MESSAGE, null);
         assertNotNull(message);
         assertEquals(
                 FunctionalTestComponent.received(

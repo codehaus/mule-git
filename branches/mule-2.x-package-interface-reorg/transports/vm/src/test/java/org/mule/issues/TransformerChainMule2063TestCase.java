@@ -11,7 +11,7 @@
 package org.mule.issues;
 
 import org.mule.tck.FunctionalTestCase;
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 
 public class TransformerChainMule2063TestCase extends FunctionalTestCase
@@ -32,7 +32,7 @@ public class TransformerChainMule2063TestCase extends FunctionalTestCase
     {
         MuleClient client = new MuleClient();
         client.send("vm://" + name + "-in", IN, null);
-        UMOMessage message = client.request("vm://" + name + "-out", WAIT_MS);
+        MuleMessage message = client.request("vm://" + name + "-out", WAIT_MS);
         
         assertNotNull(message);
         assertNotNull(message.getPayloadAsString());

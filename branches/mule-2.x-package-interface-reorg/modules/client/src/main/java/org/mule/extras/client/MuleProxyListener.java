@@ -11,9 +11,9 @@
 package org.mule.extras.client;
 
 import org.mule.api.MuleException;
-import org.mule.api.UMOException;
-import org.mule.api.UMOMessage;
-import org.mule.api.transformer.UMOTransformer;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleMessage;
+import org.mule.api.transformer.Transformer;
 import org.mule.extras.client.i18n.ClientMessages;
 
 import java.lang.reflect.InvocationHandler;
@@ -33,7 +33,7 @@ public class MuleProxyListener implements InvocationHandler
     private Object proxy;
     private MuleClient client;
 
-    public MuleProxyListener(Class listenerClass, String componentName) throws UMOException
+    public MuleProxyListener(Class listenerClass, String componentName) throws AbstractMuleException
     {
         setListenerClass(listenerClass);
         setEventTransformer(new EventObjectTransformer());
@@ -44,7 +44,7 @@ public class MuleProxyListener implements InvocationHandler
 
     public MuleProxyListener(Class listenerClass,
                              AbstractEventTransformer eventTransformer,
-                             String componentName) throws UMOException
+                             String componentName) throws AbstractMuleException
     {
         setListenerClass(listenerClass);
         setEventTransformer(eventTransformer);
@@ -80,7 +80,7 @@ public class MuleProxyListener implements InvocationHandler
         this.listenerClass = listenerClass;
     }
 
-    public UMOTransformer getEventTransformer()
+    public Transformer getEventTransformer()
     {
         return eventTransformer;
     }
@@ -116,11 +116,11 @@ public class MuleProxyListener implements InvocationHandler
         {
             throw new MuleException(ClientMessages.noArgsForProxy());
         }
-        UMOMessage message = eventTransformer.transform(args[0], method);
+        MuleMessage message = eventTransformer.transform(args[0], method);
         if (!"void".equals(method.getReturnType().getName()))
         {
-            UMOMessage result = client.sendDirect(componentName, null, message);
-            if (UMOMessage.class.equals(method.getReturnType()))
+            MuleMessage result = client.sendDirect(componentName, null, message);
+            if (MuleMessage.class.equals(method.getReturnType()))
             {
                 return result;
             }

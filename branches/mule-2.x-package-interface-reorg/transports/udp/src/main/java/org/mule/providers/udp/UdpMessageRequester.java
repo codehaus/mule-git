@@ -10,9 +10,9 @@
 
 package org.mule.providers.udp;
 
-import org.mule.api.UMOMessage;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
-import org.mule.impl.MuleMessage;
+import org.mule.api.MuleMessage;
+import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.transport.AbstractMessageRequester;
 
 import java.io.IOException;
@@ -29,7 +29,7 @@ public class UdpMessageRequester extends AbstractMessageRequester
     
     protected final UdpConnector connector;
 
-    public UdpMessageRequester(UMOImmutableEndpoint endpoint)
+    public UdpMessageRequester(ImmutableEndpoint endpoint)
     {
         super(endpoint);
         this.connector = (UdpConnector)endpoint.getConnector();
@@ -78,11 +78,11 @@ public class UdpMessageRequester extends AbstractMessageRequester
      *            The call should return immediately if there is data available. If
      *            no data becomes available before the timeout elapses, null will be
      *            returned
-     * @return the result of the request wrapped in a UMOMessage object. Null will be
+     * @return the result of the request wrapped in a MuleMessage object. Null will be
      *         returned if no data was avaialable
      * @throws Exception if the call to the underlying protocal cuases an exception
      */
-    protected UMOMessage doRequest(long timeout) throws Exception
+    protected MuleMessage doRequest(long timeout) throws Exception
     {
         DatagramSocket socket = connector.getSocket(endpoint);
         DatagramPacket result = request(socket, (int)timeout);
@@ -90,7 +90,7 @@ public class UdpMessageRequester extends AbstractMessageRequester
         {
             return null;
         }
-        return new MuleMessage(connector.getMessageAdapter(result), (Map)null);
+        return new DefaultMuleMessage(connector.getMessageAdapter(result), (Map)null);
     }
 
     protected void doDispose()

@@ -10,46 +10,46 @@
 
 package org.mule.impl.model;
 
+import org.mule.api.AbstractMuleException;
+import org.mule.api.Component;
+import org.mule.api.ComponentAware;
 import org.mule.api.ComponentException;
+import org.mule.api.Event;
 import org.mule.api.InitialisationCallback;
 import org.mule.api.MuleContext;
-import org.mule.api.UMOComponent;
-import org.mule.api.UMOComponentAware;
-import org.mule.api.UMOEvent;
-import org.mule.api.UMOException;
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.api.context.MuleContextAware;
-import org.mule.api.endpoint.UMOEndpoint;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.endpoint.Endpoint;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.Initialisable;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.lifecycle.LifecycleException;
+import org.mule.api.model.EntryPointResolver;
+import org.mule.api.model.EntryPointResolverSet;
+import org.mule.api.model.Model;
 import org.mule.api.model.ModelException;
 import org.mule.api.model.MuleProxy;
-import org.mule.api.model.UMOEntryPointResolver;
-import org.mule.api.model.UMOEntryPointResolverSet;
-import org.mule.api.model.UMOModel;
-import org.mule.api.routing.UMOInboundRouterCollection;
-import org.mule.api.routing.UMONestedRouterCollection;
-import org.mule.api.routing.UMOOutboundRouterCollection;
-import org.mule.api.routing.UMOResponseRouterCollection;
+import org.mule.api.routing.InboundRouterCollection;
+import org.mule.api.routing.NestedRouterCollection;
+import org.mule.api.routing.OutboundRouterCollection;
+import org.mule.api.routing.ResponseRouterCollection;
 import org.mule.api.transport.DispatchException;
-import org.mule.api.transport.UMOMessageReceiver;
+import org.mule.api.transport.MessageReceiver;
 import org.mule.impl.DefaultComponentExceptionStrategy;
 import org.mule.impl.OptimizedRequestContext;
 import org.mule.impl.component.simple.PassThroughComponent;
+import org.mule.impl.config.i18n.CoreMessages;
+import org.mule.impl.config.i18n.MessageFactory;
 import org.mule.impl.internal.notifications.ComponentNotification;
 import org.mule.impl.management.stats.ComponentStatistics;
 import org.mule.impl.model.resolvers.DefaultEntryPointResolverSet;
+import org.mule.impl.routing.inbound.DefaultInboundRouterCollection;
 import org.mule.impl.routing.inbound.InboundPassThroughRouter;
-import org.mule.impl.routing.inbound.InboundRouterCollection;
-import org.mule.impl.routing.nested.NestedRouterCollection;
+import org.mule.impl.routing.nested.DefaultNestedRouterCollection;
+import org.mule.impl.routing.outbound.DefaultOutboundRouterCollection;
 import org.mule.impl.routing.outbound.OutboundPassThroughRouter;
-import org.mule.impl.routing.outbound.OutboundRouterCollection;
-import org.mule.impl.routing.response.ResponseRouterCollection;
+import org.mule.impl.routing.response.DefaultResponseRouterCollection;
 import org.mule.impl.transport.AbstractConnector;
-import org.mule.imple.config.i18n.CoreMessages;
-import org.mule.imple.config.i18n.MessageFactory;
 import org.mule.util.concurrent.WaitableBoolean;
 import org.mule.util.object.ObjectFactory;
 import org.mule.util.object.SingletonObjectFactory;
@@ -70,7 +70,7 @@ import org.apache.commons.logging.LogFactory;
 /**
  * A base implementation for all UMOComponents in Mule
  */
-public abstract class AbstractComponent implements UMOComponent
+public abstract class AbstractComponent implements Component
 {
     
     /**
@@ -98,7 +98,7 @@ public abstract class AbstractComponent implements UMOComponent
     /**
      * The model in which this component is registered
      */
-    protected UMOModel model;
+    protected Model model;
 
     /**
      * Determines if the component has been paused
@@ -107,7 +107,7 @@ public abstract class AbstractComponent implements UMOComponent
 
     protected MuleContext muleContext;
 
-    protected UMOEntryPointResolverSet entryPointResolverSet;
+    protected EntryPointResolverSet entryPointResolverSet;
 
     /**
      * The initial states that the component can be started in
@@ -132,13 +132,13 @@ public abstract class AbstractComponent implements UMOComponent
      */
     protected String name;
 
-    protected UMOInboundRouterCollection inboundRouter = new InboundRouterCollection();
+    protected InboundRouterCollection inboundRouter = new DefaultInboundRouterCollection();
 
-    protected UMOOutboundRouterCollection outboundRouter = new OutboundRouterCollection();
+    protected OutboundRouterCollection outboundRouter = new DefaultOutboundRouterCollection();
 
-    protected UMONestedRouterCollection nestedRouter = new NestedRouterCollection();
+    protected NestedRouterCollection nestedRouter = new DefaultNestedRouterCollection();
 
-    protected UMOResponseRouterCollection responseRouter = new ResponseRouterCollection();
+    protected ResponseRouterCollection responseRouter = new DefaultResponseRouterCollection();
 
     /**
      * Determines the initial state of this component when the model starts. Can be
@@ -189,23 +189,23 @@ public abstract class AbstractComponent implements UMOComponent
         {
             // Create Default routes that route to the default inbound and
             // outbound endpoints
-            inboundRouter = new InboundRouterCollection();
+            inboundRouter = new DefaultInboundRouterCollection();
             // TODO MULE-2102 This should be configured in the default template.
             inboundRouter.addRouter(new InboundPassThroughRouter());
         }
         if (outboundRouter == null)
         {
-            outboundRouter = new OutboundRouterCollection();
+            outboundRouter = new DefaultOutboundRouterCollection();
             // TODO MULE-2102 This should be configured in the default template.
             outboundRouter.addRouter(new OutboundPassThroughRouter());
         }
         if (responseRouter == null)
         {
-            responseRouter = new ResponseRouterCollection();
+            responseRouter = new DefaultResponseRouterCollection();
         }
         if (nestedRouter == null)
         {
-            nestedRouter = new NestedRouterCollection();
+            nestedRouter = new DefaultNestedRouterCollection();
         }
 
         if (exceptionListener == null)
@@ -243,11 +243,11 @@ public abstract class AbstractComponent implements UMOComponent
         muleContext.fireNotification(new ComponentNotification(this, action));
     }
 
-    public void forceStop() throws UMOException
+    public void forceStop() throws AbstractMuleException
     {
         if (!stopped.get())
         {
-            logger.debug("Stopping UMOComponent");
+            logger.debug("Stopping Component");
             stopping.set(true);
             fireComponentNotification(ComponentNotification.COMPONENT_STOPPING);
             doForceStop();
@@ -257,11 +257,11 @@ public abstract class AbstractComponent implements UMOComponent
         }
     }
 
-    public void stop() throws UMOException
+    public void stop() throws AbstractMuleException
     {
         if (!stopped.get())
         {
-            logger.debug("Stopping UMOComponent");
+            logger.debug("Stopping Component");
             stopping.set(true);
             fireComponentNotification(ComponentNotification.COMPONENT_STOPPING);
 
@@ -276,7 +276,7 @@ public abstract class AbstractComponent implements UMOComponent
         }
     }
 
-    public void start() throws UMOException
+    public void start() throws AbstractMuleException
     {
         if (isStarted())
         {
@@ -308,7 +308,7 @@ public abstract class AbstractComponent implements UMOComponent
      * @param startPaused - Start component in a "paused" state (messages are
      *                    received but not processed).
      */
-    protected void start(boolean startPaused) throws UMOException
+    protected void start(boolean startPaused) throws AbstractMuleException
     {
         // Create the receivers for the component but do not start them yet.
         registerListeners();
@@ -346,7 +346,7 @@ public abstract class AbstractComponent implements UMOComponent
      * component will still consume messages from the underlying transport, but those
      * messages will be queued until the component is resumed.
      */
-    public final void pause() throws UMOException
+    public final void pause() throws AbstractMuleException
     {
         doPause();
         paused.set(true);
@@ -358,7 +358,7 @@ public abstract class AbstractComponent implements UMOComponent
      * Resumes a single Mule Component that has been paused. If the component is not
      * paused nothing is executed.
      */
-    public final void resume() throws UMOException
+    public final void resume() throws AbstractMuleException
     {
         doResume();
         paused.set(false);
@@ -381,9 +381,9 @@ public abstract class AbstractComponent implements UMOComponent
      * state here. If a developer overloads this method the doResume() method MUST
      * also be overloaded to avoid inconsistent state in the component
      *
-     * @throws UMOException
+     * @throws AbstractMuleException
      */
-    protected void doPause() throws UMOException
+    protected void doPause() throws AbstractMuleException
     {
         // template method
     }
@@ -393,9 +393,9 @@ public abstract class AbstractComponent implements UMOComponent
      * been paused If a developer overloads this method the doPause() method MUST
      * also be overloaded to avoid inconsistent state in the component
      *
-     * @throws UMOException
+     * @throws AbstractMuleException
      */
-    protected void doResume() throws UMOException
+    protected void doResume() throws AbstractMuleException
     {
         // template method
     }
@@ -409,7 +409,7 @@ public abstract class AbstractComponent implements UMOComponent
                 stop();
             }
         }
-        catch (UMOException e)
+        catch (AbstractMuleException e)
         {
             // TODO MULE-863: If this is an error, do something!
             logger.error("Failed to stop component: " + name, e);
@@ -424,7 +424,7 @@ public abstract class AbstractComponent implements UMOComponent
         return stats;
     }
 
-    public void dispatchEvent(UMOEvent event) throws UMOException
+    public void dispatchEvent(Event event) throws AbstractMuleException
     {
         if (stopping.get() || stopped.get())
         {
@@ -444,7 +444,7 @@ public abstract class AbstractComponent implements UMOComponent
 
         // Dispatching event to an inbound endpoint
         // in the MuleSession#dispatchEvent
-        UMOImmutableEndpoint endpoint = event.getEndpoint();
+        ImmutableEndpoint endpoint = event.getEndpoint();
 
         if (!endpoint.canRequest())
         {
@@ -475,7 +475,7 @@ public abstract class AbstractComponent implements UMOComponent
         doDispatch(event);
     }
 
-    public UMOMessage sendEvent(UMOEvent event) throws UMOException
+    public MuleMessage sendEvent(Event event) throws AbstractMuleException
     {
         if (stopping.get() || stopped.get())
         {
@@ -514,7 +514,7 @@ public abstract class AbstractComponent implements UMOComponent
      * @param event the current event being passed to the component
      * @throws InterruptedException if the thread is interrupted
      */
-    protected void waitIfPaused(UMOEvent event) throws InterruptedException
+    protected void waitIfPaused(Event event) throws InterruptedException
     {
         if (logger.isDebugEnabled() && paused.get())
         {
@@ -564,17 +564,17 @@ public abstract class AbstractComponent implements UMOComponent
         exceptionListener.exceptionThrown(e);
     }
 
-    protected void doForceStop() throws UMOException
+    protected void doForceStop() throws AbstractMuleException
     {
         // template method
     }
 
-    protected void doStop() throws UMOException
+    protected void doStop() throws AbstractMuleException
     {
         // template method
     }
 
-    protected void doStart() throws UMOException
+    protected void doStart() throws AbstractMuleException
     {
         // template method
     }
@@ -594,23 +594,23 @@ public abstract class AbstractComponent implements UMOComponent
         return !stopped.get();
     }
 
-    protected abstract UMOMessage doSend(UMOEvent event) throws UMOException;
+    protected abstract MuleMessage doSend(Event event) throws AbstractMuleException;
 
-    protected abstract void doDispatch(UMOEvent event) throws UMOException;
+    protected abstract void doDispatch(Event event) throws AbstractMuleException;
 
-    protected void registerListeners() throws UMOException
+    protected void registerListeners() throws AbstractMuleException
     {
-        UMOEndpoint endpoint;
+        Endpoint endpoint;
         List endpoints = getIncomingEndpoints();
 
         for (Iterator it = endpoints.iterator(); it.hasNext();)
         {
-            endpoint = (UMOEndpoint) it.next();
+            endpoint = (Endpoint) it.next();
             try
             {
                 endpoint.getConnector().registerListener(this, endpoint);
             }
-            catch (UMOException e)
+            catch (AbstractMuleException e)
             {
                 throw e;
             }
@@ -622,19 +622,19 @@ public abstract class AbstractComponent implements UMOComponent
         }
     }
 
-    protected void unregisterListeners() throws UMOException
+    protected void unregisterListeners() throws AbstractMuleException
     {
-        UMOEndpoint endpoint;
+        Endpoint endpoint;
         List endpoints = getIncomingEndpoints();
 
         for (Iterator it = endpoints.iterator(); it.hasNext();)
         {
-            endpoint = (UMOEndpoint) it.next();
+            endpoint = (Endpoint) it.next();
             try
             {
                 endpoint.getConnector().unregisterListener(this, endpoint);
             }
-            catch (UMOException e)
+            catch (AbstractMuleException e)
             {
                 throw e;
             }
@@ -646,33 +646,33 @@ public abstract class AbstractComponent implements UMOComponent
         }
     }
 
-    protected void startListeners() throws UMOException
+    protected void startListeners() throws AbstractMuleException
     {
-        UMOEndpoint endpoint;
+        Endpoint endpoint;
         List endpoints = getIncomingEndpoints();
 
         for (Iterator it = endpoints.iterator(); it.hasNext();)
         {
-            endpoint = (UMOEndpoint) it.next();
-            UMOMessageReceiver receiver = ((AbstractConnector) endpoint.getConnector()).getReceiver(this,
+            endpoint = (Endpoint) it.next();
+            MessageReceiver receiver = ((AbstractConnector) endpoint.getConnector()).getReceiver(this,
                     endpoint);
             if (receiver != null && endpoint.getConnector().isStarted()
-                    && endpoint.getInitialState().equals(UMOEndpoint.INITIAL_STATE_STARTED))
+                    && endpoint.getInitialState().equals(Endpoint.INITIAL_STATE_STARTED))
             {
                 receiver.start();
             }
         }
     }
 
-    protected void stopListeners() throws UMOException
+    protected void stopListeners() throws AbstractMuleException
     {
-        UMOEndpoint endpoint;
+        Endpoint endpoint;
         List endpoints = getIncomingEndpoints();
 
         for (Iterator it = endpoints.iterator(); it.hasNext();)
         {
-            endpoint = (UMOEndpoint) it.next();
-            UMOMessageReceiver receiver = ((AbstractConnector) endpoint.getConnector()).getReceiver(this,
+            endpoint = (Endpoint) it.next();
+            MessageReceiver receiver = ((AbstractConnector) endpoint.getConnector()).getReceiver(this,
                     endpoint);
             if (receiver != null)
             {
@@ -681,15 +681,15 @@ public abstract class AbstractComponent implements UMOComponent
         }
     }
 
-    protected void connectListeners() throws UMOException
+    protected void connectListeners() throws AbstractMuleException
     {
-        UMOEndpoint endpoint;
+        Endpoint endpoint;
         List endpoints = getIncomingEndpoints();
 
         for (Iterator it = endpoints.iterator(); it.hasNext();)
         {
-            endpoint = (UMOEndpoint) it.next();
-            UMOMessageReceiver receiver = ((AbstractConnector) endpoint.getConnector()).getReceiver(this,
+            endpoint = (Endpoint) it.next();
+            MessageReceiver receiver = ((AbstractConnector) endpoint.getConnector()).getReceiver(this,
                     endpoint);
             if (receiver != null)
             {
@@ -708,15 +708,15 @@ public abstract class AbstractComponent implements UMOComponent
         }
     }
 
-    protected void disconnectListeners() throws UMOException
+    protected void disconnectListeners() throws AbstractMuleException
     {
-        UMOEndpoint endpoint;
+        Endpoint endpoint;
         List endpoints = getIncomingEndpoints();
 
         for (Iterator it = endpoints.iterator(); it.hasNext();)
         {
-            endpoint = (UMOEndpoint) it.next();
-            UMOMessageReceiver receiver = ((AbstractConnector) endpoint.getConnector()).getReceiver(this,
+            endpoint = (Endpoint) it.next();
+            MessageReceiver receiver = ((AbstractConnector) endpoint.getConnector()).getReceiver(this,
                     endpoint);
             if (receiver != null)
             {
@@ -759,14 +759,14 @@ public abstract class AbstractComponent implements UMOComponent
         this.muleContext = context;
     }
 
-    protected MuleProxy createComponentProxy(Object pojoService) throws UMOException
+    protected MuleProxy createComponentProxy(Object pojoService) throws AbstractMuleException
     {
         MuleProxy proxy = new DefaultMuleProxy(pojoService, this, muleContext);
         proxy.setStatistics(getStatistics());
         return proxy;
     }
 
-    protected Object getOrCreateService() throws UMOException
+    protected Object getOrCreateService() throws AbstractMuleException
     {
         if (serviceFactory == null)
         {
@@ -777,9 +777,9 @@ public abstract class AbstractComponent implements UMOComponent
         try
         {
             component = serviceFactory.getOrCreate();
-            if (component instanceof UMOComponentAware)
+            if (component instanceof ComponentAware)
             {
-                ((UMOComponentAware) component).setComponent(this);
+                ((ComponentAware) component).setComponent(this);
             }
         }
         catch (Exception e)
@@ -812,12 +812,12 @@ public abstract class AbstractComponent implements UMOComponent
     // Getters and Setters
     ///////////////////////////////////////////////////////////////////////////////////////////
 
-    public UMOModel getModel()
+    public Model getModel()
     {
         return model;
     }
 
-    public void setModel(UMOModel model)
+    public void setModel(Model model)
     {
         this.model = model;
     }
@@ -842,42 +842,42 @@ public abstract class AbstractComponent implements UMOComponent
         this.exceptionListener = exceptionListener;
     }
 
-    public UMOInboundRouterCollection getInboundRouter()
+    public InboundRouterCollection getInboundRouter()
     {
         return inboundRouter;
     }
 
-    public void setInboundRouter(UMOInboundRouterCollection inboundRouter)
+    public void setInboundRouter(InboundRouterCollection inboundRouter)
     {
         this.inboundRouter = inboundRouter;
     }
 
-    public UMONestedRouterCollection getNestedRouter()
+    public NestedRouterCollection getNestedRouter()
     {
         return nestedRouter;
     }
 
-    public void setNestedRouter(UMONestedRouterCollection nestedRouter)
+    public void setNestedRouter(NestedRouterCollection nestedRouter)
     {
         this.nestedRouter = nestedRouter;
     }
 
-    public UMOOutboundRouterCollection getOutboundRouter()
+    public OutboundRouterCollection getOutboundRouter()
     {
         return outboundRouter;
     }
 
-    public void setOutboundRouter(UMOOutboundRouterCollection outboundRouter)
+    public void setOutboundRouter(OutboundRouterCollection outboundRouter)
     {
         this.outboundRouter = outboundRouter;
     }
 
-    public UMOResponseRouterCollection getResponseRouter()
+    public ResponseRouterCollection getResponseRouter()
     {
         return responseRouter;
     }
 
-    public void setResponseRouter(UMOResponseRouterCollection responseRouter)
+    public void setResponseRouter(ResponseRouterCollection responseRouter)
     {
         this.responseRouter = responseRouter;
     }
@@ -914,7 +914,7 @@ public abstract class AbstractComponent implements UMOComponent
      * @return Null is a resolver set has not been set otherwise the resolver to use
      *         on this component
      */
-    public UMOEntryPointResolverSet getEntryPointResolverSet()
+    public EntryPointResolverSet getEntryPointResolverSet()
     {
         return entryPointResolverSet;
     }
@@ -926,7 +926,7 @@ public abstract class AbstractComponent implements UMOComponent
      * @param resolverSet theresolver set to use when resolving entry points
      *                    on this component
      */
-    public void setEntryPointResolverSet(UMOEntryPointResolverSet resolverSet)
+    public void setEntryPointResolverSet(EntryPointResolverSet resolverSet)
     {
         this.entryPointResolverSet = resolverSet;
     }
@@ -944,7 +944,7 @@ public abstract class AbstractComponent implements UMOComponent
         }
         for (Iterator resolvers = entryPointResolvers.iterator(); resolvers.hasNext();)
         {
-            entryPointResolverSet.addEntryPointResolver((UMOEntryPointResolver) resolvers.next());
+            entryPointResolverSet.addEntryPointResolver((EntryPointResolver) resolvers.next());
         }
     }
 

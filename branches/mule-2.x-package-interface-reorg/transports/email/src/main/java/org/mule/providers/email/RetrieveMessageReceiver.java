@@ -11,17 +11,17 @@
 package org.mule.providers.email;
 
 import org.mule.RegistryContext;
-import org.mule.api.UMOComponent;
-import org.mule.api.UMOException;
-import org.mule.api.UMOMessage;
-import org.mule.api.endpoint.UMOEndpoint;
+import org.mule.api.Component;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleMessage;
+import org.mule.api.endpoint.Endpoint;
 import org.mule.api.lifecycle.CreateException;
 import org.mule.api.lifecycle.Startable;
 import org.mule.api.lifecycle.Stoppable;
 import org.mule.api.routing.RoutingException;
 import org.mule.api.transport.ReceiveException;
-import org.mule.api.transport.UMOConnector;
-import org.mule.impl.MuleMessage;
+import org.mule.api.transport.Connector;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.transport.AbstractPollingMessageReceiver;
 import org.mule.providers.email.i18n.EmailMessages;
 import org.mule.util.FileUtils;
@@ -56,9 +56,9 @@ public class RetrieveMessageReceiver extends AbstractPollingMessageReceiver
     private boolean backupEnabled;
     private String backupFolder = null;
 
-    public RetrieveMessageReceiver(UMOConnector connector,
-                                        UMOComponent component,
-                                        UMOEndpoint endpoint,
+    public RetrieveMessageReceiver(Connector connector,
+                                        Component component,
+                                        Endpoint endpoint,
                                         long checkFrequency,
                                         boolean backupEnabled,
                                         String backupFolder)
@@ -109,7 +109,7 @@ public class RetrieveMessageReceiver extends AbstractPollingMessageReceiver
         }
     }
 
-    protected void doStart() throws UMOException
+    protected void doStart() throws AbstractMuleException
     {
         super.doStart();
         folder.addMessageCountListener(this);
@@ -120,7 +120,7 @@ public class RetrieveMessageReceiver extends AbstractPollingMessageReceiver
         Message messages[] = event.getMessages();
         if (messages != null)
         {
-            UMOMessage message = null;
+            MuleMessage message = null;
             for (int i = 0; i < messages.length; i++)
             {
                 try
@@ -129,7 +129,7 @@ public class RetrieveMessageReceiver extends AbstractPollingMessageReceiver
                     {
                         MimeMessage mimeMessage = new MimeMessage((MimeMessage) messages[i]);
                         storeMessage(mimeMessage);
-                        message = new MuleMessage(castConnector().getMessageAdapter(mimeMessage));
+                        message = new DefaultMuleMessage(castConnector().getMessageAdapter(mimeMessage));
 
                         if (castConnector().isDeleteReadMessages())
                         {
@@ -143,7 +143,7 @@ public class RetrieveMessageReceiver extends AbstractPollingMessageReceiver
                         routeMessage(message, endpoint.isSynchronous());
                     }
                 }
-                catch (UMOException e)
+                catch (AbstractMuleException e)
                 {
                     handleException(e);
                 }
@@ -167,7 +167,7 @@ public class RetrieveMessageReceiver extends AbstractPollingMessageReceiver
     }
 
     // @Override
-    protected UMOMessage handleUnacceptedFilter(UMOMessage message)
+    protected MuleMessage handleUnacceptedFilter(MuleMessage message)
     {
         super.handleUnacceptedFilter(message);
         if (message.getPayload() instanceof Message)

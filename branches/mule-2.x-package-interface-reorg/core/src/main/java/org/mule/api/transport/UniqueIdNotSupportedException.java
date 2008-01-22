@@ -11,12 +11,12 @@
 package org.mule.api.transport;
 
 import org.mule.api.MuleRuntimeException;
-import org.mule.imple.config.i18n.CoreMessages;
-import org.mule.imple.config.i18n.Message;
+import org.mule.impl.config.i18n.CoreMessages;
+import org.mule.impl.config.i18n.Message;
 
 /**
  * <code>UniqueIdNotSupportedException</code> is thrown by
- * UMOMessageAdapter.getUniqueId() if the underlying message does not support or have
+ * MessageAdapter.getUniqueId() if the underlying message does not support or have
  * a unique identifier.
  */
 
@@ -27,18 +27,18 @@ public class UniqueIdNotSupportedException extends MuleRuntimeException
      */
     private static final long serialVersionUID = -6719055482076081111L;
 
-    public UniqueIdNotSupportedException(UMOMessageAdapter adapter)
+    public UniqueIdNotSupportedException(MessageAdapter adapter)
     {
         super(CoreMessages.uniqueIdNotSupportedByAdapter(adapter.getClass().getName()));
     }
 
-    public UniqueIdNotSupportedException(UMOMessageAdapter adapter, Message message)
+    public UniqueIdNotSupportedException(MessageAdapter adapter, Message message)
     {
         super(chainMessage(
             CoreMessages.uniqueIdNotSupportedByAdapter(adapter.getClass().getName()), message));
     }
 
-    public UniqueIdNotSupportedException(UMOMessageAdapter adapter, Throwable cause)
+    public UniqueIdNotSupportedException(MessageAdapter adapter, Throwable cause)
     {
         super(CoreMessages.uniqueIdNotSupportedByAdapter(adapter.getClass().getName()), cause);
     }

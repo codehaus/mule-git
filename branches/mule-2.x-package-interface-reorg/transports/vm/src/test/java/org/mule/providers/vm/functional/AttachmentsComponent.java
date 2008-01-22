@@ -9,10 +9,10 @@
  */
 package org.mule.providers.vm.functional;
 
-import org.mule.api.UMOEventContext;
-import org.mule.api.UMOMessage;
+import org.mule.api.EventContext;
+import org.mule.api.MuleMessage;
 import org.mule.api.lifecycle.Callable;
-import org.mule.impl.MuleMessage;
+import org.mule.impl.DefaultMuleMessage;
 
 import java.io.File;
 
@@ -25,9 +25,9 @@ import javax.activation.FileDataSource;
  */
 public class AttachmentsComponent implements Callable
 {
-        public Object onCall(UMOEventContext eventContext) throws Exception
+        public Object onCall(EventContext eventContext) throws Exception
         {
-            UMOMessage msg = eventContext.getMessage();
+            MuleMessage msg = eventContext.getMessage();
             if (msg.getAttachmentNames().size() == 2)
             {
                 throw new IllegalArgumentException("There shuold be 2 attachments");
@@ -49,7 +49,7 @@ public class AttachmentsComponent implements Callable
                 throw new IllegalArgumentException("payload is incorrect");
             }
             //Lets return an image
-            UMOMessage result = new MuleMessage("here is one for you!");
+            MuleMessage result = new DefaultMuleMessage("here is one for you!");
             FileDataSource ds = new FileDataSource(new File("transports/vm/src/test/resources/test.gif").getAbsoluteFile());
             result.addAttachment("mule", new DataHandler(ds));
             return result;

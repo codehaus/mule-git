@@ -10,9 +10,9 @@
 
 package org.mule.providers.tcp.integration;
 
-import org.mule.api.UMOEventContext;
+import org.mule.api.EventContext;
 import org.mule.extras.client.MuleClient;
-import org.mule.impl.MuleMessage;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.transport.DefaultMessageAdapter;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.tck.functional.EventCallback;
@@ -56,7 +56,7 @@ public abstract class AbstractStreamingCapacityTestCase extends FunctionalTestCa
 
         EventCallback callback = new EventCallback()
         {
-            public synchronized void eventReceived(UMOEventContext context, Object component)
+            public synchronized void eventReceived(EventContext context, Object component)
             {
                 try
                 {
@@ -88,7 +88,7 @@ public abstract class AbstractStreamingCapacityTestCase extends FunctionalTestCa
 
         BigInputStream stream = new BigInputStream(size, MESSAGES);
         DefaultMessageAdapter adapter = new DefaultMessageAdapter(stream);
-        client.dispatch(endpoint, new MuleMessage(adapter));
+        client.dispatch(endpoint, new DefaultMuleMessage(adapter));
 
         // if we assume 1MB/sec then we need at least...
         int pause = (int) Math.max(size / ONE_MB, 10) + 100000;

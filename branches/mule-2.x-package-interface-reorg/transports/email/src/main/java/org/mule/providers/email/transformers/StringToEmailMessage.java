@@ -11,7 +11,7 @@
 package org.mule.providers.email.transformers;
 
 import org.mule.RegistryContext;
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.api.transformer.TransformerException;
 import org.mule.impl.transformer.AbstractMessageAwareTransformer;
 import org.mule.providers.email.MailProperties;
@@ -53,7 +53,7 @@ public class StringToEmailMessage extends AbstractMessageAwareTransformer
     }
 
 
-    public Object transform(UMOMessage message, String outputEncoding) throws TransformerException
+    public Object transform(MuleMessage message, String outputEncoding) throws TransformerException
     {
         String endpointAddress = endpoint.getEndpointURI().getAddress();
         SmtpConnector connector = (SmtpConnector) endpoint.getConnector();
@@ -161,7 +161,7 @@ public class StringToEmailMessage extends AbstractMessageAwareTransformer
         }
     }
 
-    protected void setContent(Object payload, Message msg, String contentType, UMOMessage message)
+    protected void setContent(Object payload, Message msg, String contentType, MuleMessage message)
         throws Exception
     {
         msg.setContent(payload, contentType);

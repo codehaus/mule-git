@@ -10,9 +10,9 @@
 
 package org.mule.extras.spring.events;
 
-import org.mule.api.UMOEventContext;
-import org.mule.api.UMOException;
-import org.mule.api.UMOMessage;
+import org.mule.api.EventContext;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleMessage;
 import org.mule.api.transformer.TransformerException;
 import org.mule.extras.client.MuleClient;
 import org.mule.impl.transformer.AbstractMessageAwareTransformer;
@@ -118,7 +118,7 @@ public class SpringEventsTestCase extends AbstractMuleTestCase
         final Latch whenFinished = new Latch();
         EventCallback callback = new EventCallback()
         {
-            public void eventReceived(UMOEventContext context, Object o) throws Exception
+            public void eventReceived(EventContext context, Object o) throws Exception
             {
                 assertNull(context);
                 if (o instanceof TestApplicationEvent)
@@ -180,7 +180,7 @@ public class SpringEventsTestCase extends AbstractMuleTestCase
         final Latch whenFinished1 = new Latch();
         EventCallback callback = new EventCallback()
         {
-            public void eventReceived(UMOEventContext context, Object o) throws Exception
+            public void eventReceived(EventContext context, Object o) throws Exception
             {
                 MuleApplicationEvent returnEvent = new MuleApplicationEvent("Event from a spring bean",
                     "vm://testBean2");
@@ -289,7 +289,7 @@ public class SpringEventsTestCase extends AbstractMuleTestCase
                         client.send(url, payload, null);
                     }
                 }
-                catch (UMOException ex)
+                catch (AbstractMuleException ex)
                 {
                     fail(ExceptionUtils.getStackTrace(ex));
                 }
@@ -301,7 +301,7 @@ public class SpringEventsTestCase extends AbstractMuleTestCase
     }
 
     /*
-     * This callback counts how many times an UMOEvent was received. If a maximum
+     * This callback counts how many times an Event was received. If a maximum
      * number has been reached, the given CountDownLatch is counted down. When
      * passing in a Latch (CountDownLatch(1)) this acts just like a sempahore for the
      * caller.
@@ -320,7 +320,7 @@ public class SpringEventsTestCase extends AbstractMuleTestCase
             this.finished = whenFinished;
         }
 
-        public void eventReceived(UMOEventContext context, Object o) throws Exception
+        public void eventReceived(EventContext context, Object o) throws Exception
         {
             // apparently beans get an extra ContextRefreshedEvent during startup;
             // this messes up our event counts.
@@ -335,7 +335,7 @@ public class SpringEventsTestCase extends AbstractMuleTestCase
     }
 
     /*
-     * A simple UMOTransformer that counts down a Latch to indicate that it has been
+     * A simple Transformer that counts down a Latch to indicate that it has been
      * called.
      */
     public static class TestEventAwareTransformer extends AbstractMessageAwareTransformer
@@ -367,7 +367,7 @@ public class SpringEventsTestCase extends AbstractMuleTestCase
             this.latch = latch;
         }
 
-        public Object transform(UMOMessage message, String outputEncoding) throws TransformerException
+        public Object transform(MuleMessage message, String outputEncoding) throws TransformerException
         {
             assertNotNull(message);
 

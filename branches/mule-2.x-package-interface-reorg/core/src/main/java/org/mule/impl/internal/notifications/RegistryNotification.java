@@ -10,7 +10,7 @@
 
 package org.mule.impl.internal.notifications;
 
-import org.mule.api.context.UMOServerNotification;
+import org.mule.api.context.ServerNotification;
 import org.mule.api.registry.Registry;
 
 /**
@@ -21,7 +21,7 @@ import org.mule.api.registry.Registry;
  * @see org.mule.api.registry.Registry
  * @see org.mule.api.MuleContext
  */
-public class RegistryNotification extends UMOServerNotification
+public class RegistryNotification extends ServerNotification
 {
     /**
      * Serial version

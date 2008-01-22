@@ -9,17 +9,17 @@
  */
 package org.mule.impl.lifecycle.phases;
 
+import org.mule.api.Component;
 import org.mule.api.MuleContext;
-import org.mule.api.UMOComponent;
-import org.mule.api.context.UMOAgent;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.context.Agent;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.Disposable;
 import org.mule.api.lifecycle.Initialisable;
-import org.mule.api.model.UMOModel;
+import org.mule.api.model.Model;
 import org.mule.api.registry.Registry;
-import org.mule.api.transformer.UMOTransformer;
-import org.mule.api.transport.UMOConnector;
-import org.mule.impl.lifecycle.LifecyclePhase;
+import org.mule.api.transformer.Transformer;
+import org.mule.api.transport.Connector;
+import org.mule.impl.lifecycle.DefaultLifecyclePhase;
 import org.mule.impl.lifecycle.NotificationLifecycleObject;
 
 import java.util.LinkedHashSet;
@@ -27,15 +27,15 @@ import java.util.Set;
 
 /**
  * The Initialise phase for the TransientRegistry LifecycleManager. Calling {@link org.mule.impl.registry.TransientRegistry#initialise()}
- * with initiate this phase via the {@link org.mule.api.lifecycle.UMOLifecycleManager}.
+ * with initiate this phase via the {@link org.mule.api.lifecycle.LifecycleManager}.
  * This phase controls the order in which objects should be initialised.
  *
  * @see org.mule.api.MuleContext
- * @see org.mule.api.lifecycle.UMOLifecycleManager
+ * @see org.mule.api.lifecycle.LifecycleManager
  * @see org.mule.impl.registry.TransientRegistry
  * @see org.mule.api.lifecycle.Initialisable
  */
-public class TransientRegistryInitialisePhase extends LifecyclePhase
+public class TransientRegistryInitialisePhase extends DefaultLifecyclePhase
 {
     public TransientRegistryInitialisePhase()
     {
@@ -49,12 +49,12 @@ public class TransientRegistryInitialisePhase extends LifecyclePhase
         setIgnorredObjectTypes(ignorredObjects);
         Set initOrderedObjects = new LinkedHashSet();
         initOrderedObjects.add(new NotificationLifecycleObject(MuleContext.class));
-        initOrderedObjects.add(new NotificationLifecycleObject(UMOConnector.class));
-        initOrderedObjects.add(new NotificationLifecycleObject(UMOTransformer.class));
-        initOrderedObjects.add(new NotificationLifecycleObject(UMOImmutableEndpoint.class));
-        initOrderedObjects.add(new NotificationLifecycleObject(UMOAgent.class));
-        initOrderedObjects.add(new NotificationLifecycleObject(UMOComponent.class));
-        initOrderedObjects.add(new NotificationLifecycleObject(UMOModel.class));
+        initOrderedObjects.add(new NotificationLifecycleObject(Connector.class));
+        initOrderedObjects.add(new NotificationLifecycleObject(Transformer.class));
+        initOrderedObjects.add(new NotificationLifecycleObject(ImmutableEndpoint.class));
+        initOrderedObjects.add(new NotificationLifecycleObject(Agent.class));
+        initOrderedObjects.add(new NotificationLifecycleObject(Component.class));
+        initOrderedObjects.add(new NotificationLifecycleObject(Model.class));
 
         initOrderedObjects.add(new NotificationLifecycleObject(Initialisable.class));
 

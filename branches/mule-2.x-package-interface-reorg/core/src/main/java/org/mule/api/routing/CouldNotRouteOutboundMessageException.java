@@ -10,9 +10,9 @@
 
 package org.mule.api.routing;
 
-import org.mule.api.UMOMessage;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
-import org.mule.imple.config.i18n.Message;
+import org.mule.api.MuleMessage;
+import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.impl.config.i18n.Message;
 
 /**
  * <code>CouldNotRouteOutboundMessageException</code> thrown if Mule fails to route
@@ -26,24 +26,24 @@ public class CouldNotRouteOutboundMessageException extends RoutingException
      */
     private static final long serialVersionUID = 4609966704030524482L;
 
-    public CouldNotRouteOutboundMessageException(UMOMessage message, UMOImmutableEndpoint endpoint)
+    public CouldNotRouteOutboundMessageException(MuleMessage message, ImmutableEndpoint endpoint)
     {
         super(message, endpoint);
     }
 
-    public CouldNotRouteOutboundMessageException(UMOMessage umoMessage, UMOImmutableEndpoint endpoint, Throwable cause)
+    public CouldNotRouteOutboundMessageException(MuleMessage umoMessage, ImmutableEndpoint endpoint, Throwable cause)
     {
         super(umoMessage, endpoint, cause);
     }
 
-    public CouldNotRouteOutboundMessageException(Message message, UMOMessage umoMessage, UMOImmutableEndpoint endpoint)
+    public CouldNotRouteOutboundMessageException(Message message, MuleMessage umoMessage, ImmutableEndpoint endpoint)
     {
         super(message, umoMessage, endpoint);
     }
 
     public CouldNotRouteOutboundMessageException(Message message,
-                                                 UMOMessage umoMessage,
-                                                 UMOImmutableEndpoint endpoint,
+                                                 MuleMessage umoMessage,
+                                                 ImmutableEndpoint endpoint,
                                                  Throwable cause)
     {
         super(message, umoMessage, endpoint, cause);

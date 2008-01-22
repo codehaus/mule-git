@@ -10,9 +10,9 @@
 
 package org.mule.providers.jms;
 
-import org.mule.api.UMOMessage;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
-import org.mule.impl.MuleMessage;
+import org.mule.api.MuleMessage;
+import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.transport.AbstractMessageRequester;
 
 import javax.jms.Destination;
@@ -31,7 +31,7 @@ public class JmsMessageRequester extends AbstractMessageRequester
 
     private JmsConnector connector;
 
-    public JmsMessageRequester(UMOImmutableEndpoint endpoint)
+    public JmsMessageRequester(ImmutableEndpoint endpoint)
     {
         super(endpoint);
         this.connector = (JmsConnector)endpoint.getConnector();
@@ -54,11 +54,11 @@ public class JmsMessageRequester extends AbstractMessageRequester
      *            The call should return immediately if there is data available. If
      *            no data becomes available before the timeout elapses, null will be
      *            returned
-     * @return the result of the request wrapped in a UMOMessage object. Null will be
+     * @return the result of the request wrapped in a MuleMessage object. Null will be
      *         returned if no data was avaialable
      * @throws Exception if the call to the underlying protocal cuases an exception
      */
-    protected UMOMessage doRequest(long timeout) throws Exception
+    protected MuleMessage doRequest(long timeout) throws Exception
     {
         Session session = null;
         MessageConsumer consumer = null;
@@ -97,7 +97,7 @@ public class JmsMessageRequester extends AbstractMessageRequester
 
                 message = connector.preProcessMessage(message, session);
 
-                return new MuleMessage(connector.getMessageAdapter(message));
+                return new DefaultMuleMessage(connector.getMessageAdapter(message));
             }
             catch (Exception e)
             {

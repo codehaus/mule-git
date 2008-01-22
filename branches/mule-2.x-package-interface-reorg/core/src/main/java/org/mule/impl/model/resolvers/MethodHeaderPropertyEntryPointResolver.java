@@ -9,11 +9,11 @@
  */
 package org.mule.impl.model.resolvers;
 
-import org.mule.api.UMOEventContext;
+import org.mule.api.EventContext;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.lifecycle.Callable;
 import org.mule.api.model.InvocationResult;
-import org.mule.imple.config.i18n.CoreMessages;
+import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.util.ClassUtils;
 
 import java.lang.reflect.Method;
@@ -39,7 +39,7 @@ public class MethodHeaderPropertyEntryPointResolver extends AbstractEntryPointRe
         this.methodProperty = methodProperty;
     }
 
-    public InvocationResult invoke(Object component, UMOEventContext context) throws Exception
+    public InvocationResult invoke(Object component, EventContext context) throws Exception
     {
         //TODO: RM* This is a hack that can be fixed by introducing property scoping on the message
         // Transports such as SOAP need to ignore the method property

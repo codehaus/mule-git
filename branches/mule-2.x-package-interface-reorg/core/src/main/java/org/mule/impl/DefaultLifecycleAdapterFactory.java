@@ -10,23 +10,23 @@
 
 package org.mule.impl;
 
-import org.mule.api.UMOComponent;
-import org.mule.api.UMOException;
-import org.mule.api.lifecycle.UMOLifecycleAdapter;
-import org.mule.api.lifecycle.UMOLifecycleAdapterFactory;
-import org.mule.api.model.UMOEntryPointResolverSet;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.Component;
+import org.mule.api.lifecycle.LifecycleAdapter;
+import org.mule.api.lifecycle.LifecycleAdapterFactory;
+import org.mule.api.model.EntryPointResolverSet;
 
 /**
  * <code>DefaultLifecycleAdapterFactory</code> creates a DefaultLifeCycleAdapter.  Users can
  * implement their own LifeCycleAdapter factories to control lifecycle events on their services such
  * as introduce other lifecycle events that are controlled by external changes.
  *
- * @see org.mule.api.lifecycle.UMOLifecycleAdapter
- * @see org.mule.api.lifecycle.UMOLifecycleAdapterFactory
+ * @see org.mule.api.lifecycle.LifecycleAdapter
+ * @see org.mule.api.lifecycle.LifecycleAdapterFactory
  * @see org.mule.impl.DefaultLifecycleAdapter
  * @see org.mule.impl.DefaultLifecycleAdapterFactory
  */
-public class DefaultLifecycleAdapterFactory implements UMOLifecycleAdapterFactory
+public class DefaultLifecycleAdapterFactory implements LifecycleAdapterFactory
 {
     public DefaultLifecycleAdapterFactory()
     {
@@ -36,12 +36,12 @@ public class DefaultLifecycleAdapterFactory implements UMOLifecycleAdapterFactor
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.api.lifecycle.UMOLifecycleAdapterFactory#create(java.lang.Object,
+     * @see org.mule.api.lifecycle.LifecycleAdapterFactory#create(java.lang.Object,
      *      org.mule.api.UMODescriptor)
      */
-    public UMOLifecycleAdapter create(Object pojoService,
-                                      UMOComponent component,
-                                      UMOEntryPointResolverSet resolver) throws UMOException
+    public LifecycleAdapter create(Object pojoService,
+                                      Component component,
+                                      EntryPointResolverSet resolver) throws AbstractMuleException
     {
         return new DefaultLifecycleAdapter(pojoService, component, resolver);
     }

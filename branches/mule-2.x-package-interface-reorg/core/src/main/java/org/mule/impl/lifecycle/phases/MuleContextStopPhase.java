@@ -9,17 +9,17 @@
  */
 package org.mule.impl.lifecycle.phases;
 
+import org.mule.api.Component;
 import org.mule.api.MuleContext;
-import org.mule.api.UMOComponent;
-import org.mule.api.context.UMOAgent;
+import org.mule.api.context.Agent;
 import org.mule.api.lifecycle.Initialisable;
 import org.mule.api.lifecycle.Startable;
 import org.mule.api.lifecycle.Stoppable;
-import org.mule.api.model.UMOModel;
+import org.mule.api.model.Model;
 import org.mule.api.registry.Registry;
-import org.mule.api.transport.UMOConnector;
+import org.mule.api.transport.Connector;
 import org.mule.impl.internal.notifications.ManagerNotification;
-import org.mule.impl.lifecycle.LifecyclePhase;
+import org.mule.impl.lifecycle.DefaultLifecyclePhase;
 import org.mule.impl.lifecycle.NotificationLifecycleObject;
 
 import java.util.LinkedHashSet;
@@ -27,14 +27,14 @@ import java.util.Set;
 
 /**
  * The Stop phase for the Management context LifecycleManager. Calling {@link org.mule.api.UMOManagementContext#stop()}
- * with initiate this phase via the {@link org.mule.api.lifecycle.UMOLifecycleManager}.
+ * with initiate this phase via the {@link org.mule.api.lifecycle.LifecycleManager}.
  * This phase controls the order in which objects should be stopped.
  *
  * @see org.mule.api.UMOManagementContext
- * @see org.mule.api.lifecycle.UMOLifecycleManager
+ * @see org.mule.api.lifecycle.LifecycleManager
  * @see org.mule.api.lifecycle.Stoppable
  */
-public class MuleContextStopPhase extends LifecyclePhase
+public class MuleContextStopPhase extends DefaultLifecyclePhase
 {
     public MuleContextStopPhase()
     {
@@ -46,11 +46,11 @@ public class MuleContextStopPhase extends LifecyclePhase
         super(Stoppable.PHASE_NAME, Stoppable.class, Startable.PHASE_NAME);
 
         Set stopOrderedObjects = new LinkedHashSet();
-        stopOrderedObjects.add(new NotificationLifecycleObject(UMOConnector.class));
-        stopOrderedObjects.add(new NotificationLifecycleObject(UMOAgent.class));
-        stopOrderedObjects.add(new NotificationLifecycleObject(UMOModel.class, ManagerNotification.class,
+        stopOrderedObjects.add(new NotificationLifecycleObject(Connector.class));
+        stopOrderedObjects.add(new NotificationLifecycleObject(Agent.class));
+        stopOrderedObjects.add(new NotificationLifecycleObject(Model.class, ManagerNotification.class,
                 ManagerNotification.MANAGER_STOPPING_MODELS,ManagerNotification.MANAGER_STOPPED_MODELS));
-        stopOrderedObjects.add(new NotificationLifecycleObject(UMOComponent.class));
+        stopOrderedObjects.add(new NotificationLifecycleObject(Component.class));
         stopOrderedObjects.add(new NotificationLifecycleObject(Stoppable.class));
 
         setIgnorredObjectTypes(ignorredObjects);

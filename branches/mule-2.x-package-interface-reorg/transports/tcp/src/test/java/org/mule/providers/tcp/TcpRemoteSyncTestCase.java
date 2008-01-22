@@ -9,10 +9,10 @@
  */
 package org.mule.providers.tcp;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.api.config.MuleProperties;
 import org.mule.extras.client.MuleClient;
-import org.mule.impl.MuleMessage;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.tck.FunctionalTestCase;
 
 import java.util.HashMap;
@@ -35,7 +35,7 @@ public class TcpRemoteSyncTestCase extends FunctionalTestCase
        
        //must notify the client to wait for a response from the server
        props.put(MuleProperties.MULE_REMOTE_SYNC_PROPERTY, Boolean.TRUE);
-       UMOMessage reply = client.send("tcp://localhost:6161", new MuleMessage(message), props);
+       MuleMessage reply = client.send("tcp://localhost:6161", new DefaultMuleMessage(message), props);
 
        assertNotNull(reply);
        assertNotNull(reply.getPayload());
@@ -51,7 +51,7 @@ public class TcpRemoteSyncTestCase extends FunctionalTestCase
         //must notify the client to wait for a response from the server
         props.put(MuleProperties.MULE_REMOTE_SYNC_PROPERTY, Boolean.TRUE);
         
-        UMOMessage reply = client.send("tcp://localhost:6163", new MuleMessage(message), props);
+        MuleMessage reply = client.send("tcp://localhost:6163", new DefaultMuleMessage(message), props);
 
         assertNotNull(reply);
         assertNotNull(reply.getPayload());

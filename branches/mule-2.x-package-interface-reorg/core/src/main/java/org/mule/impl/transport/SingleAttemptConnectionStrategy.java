@@ -10,15 +10,15 @@
 
 package org.mule.impl.transport;
 
-import org.mule.api.transport.UMOConnectable;
-import org.mule.imple.config.i18n.CoreMessages;
+import org.mule.api.transport.Connectable;
+import org.mule.impl.config.i18n.CoreMessages;
 
 /**
  * Attempts to make a connection once and fails if there is an exception
  */
 public class SingleAttemptConnectionStrategy extends AbstractConnectionStrategy
 {
-    public void doConnect(UMOConnectable connectable) throws FatalConnectException
+    public void doConnect(Connectable connectable) throws FatalConnectException
     {
         try
         {

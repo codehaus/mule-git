@@ -10,9 +10,9 @@
 
 package org.mule.providers.soap.axis;
 
-import org.mule.api.UMOEvent;
-import org.mule.api.UMOMessage;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.Event;
+import org.mule.api.MuleMessage;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.tck.AbstractMuleTestCase;
 
 import java.util.List;
@@ -25,17 +25,17 @@ public class AxisMessageDispatcherTestCase extends AbstractMuleTestCase
 {
     public void testNullParametersInCallAllowed() throws Exception
     {
-        UMOImmutableEndpoint ep = muleContext.getRegistry().lookupEndpointFactory().getOutboundEndpoint(
+        ImmutableEndpoint ep = muleContext.getRegistry().lookupEndpointFactory().getOutboundEndpoint(
             "axis:http://www.muleumo.org/services/myService?method=myTestMethod");
         AxisMessageDispatcher dispatcher = new AxisMessageDispatcher(ep);
         dispatcher.service = new Service();
-        UMOEvent event = getTestEvent("testPayload", ep);
+        Event event = getTestEvent("testPayload", ep);
         // there should be no NullPointerException
         Call call = dispatcher.getCall(event, new Object[]{null});
 
         assertNotNull(call);
 
-        UMOMessage msg = event.getMessage();
+        MuleMessage msg = event.getMessage();
         assertNotNull(msg);
         final Map soapMethods = (Map)msg.getProperty(AxisConnector.SOAP_METHODS);
         assertEquals(1, soapMethods.size());

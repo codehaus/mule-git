@@ -9,7 +9,7 @@
  */
 package org.mule.test.integration.components;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 
@@ -45,7 +45,7 @@ public class NoArgsCallComponentTestCase extends FunctionalTestCase
     {
         MuleClient client = new MuleClient();
         client.dispatch(INPUT_DC_QUEUE_NAME, "test", null);
-        UMOMessage message = client.request(OUTPUT_DC_QUEUE_NAME, TIMEOUT);
+        MuleMessage message = client.request(OUTPUT_DC_QUEUE_NAME, TIMEOUT);
         assertNotNull(message);
         assertEquals(message.getPayload(), DEFUALT_OUTPUT_MESSAGE);
         client.dispose();
@@ -56,7 +56,7 @@ public class NoArgsCallComponentTestCase extends FunctionalTestCase
     {
         MuleClient client = new MuleClient();
         client.dispatch(INPUT_DI_QUEUE_NAME, DEFAULT_INPUT_MESSAGE, null);
-        UMOMessage reply = client.request(OUTPUT_DI_QUEUE_NAME, TIMEOUT);
+        MuleMessage reply = client.request(OUTPUT_DI_QUEUE_NAME, TIMEOUT);
         assertNotNull(reply);
         assertNull(reply.getExceptionPayload());
         // same as original input

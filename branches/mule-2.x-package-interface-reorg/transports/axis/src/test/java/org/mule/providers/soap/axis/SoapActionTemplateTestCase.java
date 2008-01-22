@@ -10,8 +10,8 @@
 
 package org.mule.providers.soap.axis;
 
-import org.mule.api.UMOEvent;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.Event;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.tck.AbstractMuleTestCase;
 
 import javax.xml.namespace.QName;
@@ -23,11 +23,11 @@ public class SoapActionTemplateTestCase extends AbstractMuleTestCase
 {
     public void testHostInfoReplace() throws Exception
     {
-        UMOImmutableEndpoint ep = muleContext.getRegistry().lookupEndpointFactory().getOutboundEndpoint(
+        ImmutableEndpoint ep = muleContext.getRegistry().lookupEndpointFactory().getOutboundEndpoint(
             "axis:http://mycompany.com:8080/services/myService?method=foo");
         
         AxisMessageDispatcher dispatcher = new AxisMessageDispatcher(ep);
-        UMOEvent event = getTestEvent("test,", ep);
+        Event event = getTestEvent("test,", ep);
         String result = dispatcher.parseSoapAction("[hostInfo]/[method]", new QName("foo"), event);
 
         assertEquals("http://mycompany.com:8080/foo", result);
@@ -35,10 +35,10 @@ public class SoapActionTemplateTestCase extends AbstractMuleTestCase
 
     public void testHostReplace() throws Exception
     {
-        UMOImmutableEndpoint ep = muleContext.getRegistry().lookupEndpointFactory().getOutboundEndpoint(
+        ImmutableEndpoint ep = muleContext.getRegistry().lookupEndpointFactory().getOutboundEndpoint(
             "axis:http://mycompany.com:8080/services/myService?method=foo");
         AxisMessageDispatcher dispatcher = new AxisMessageDispatcher(ep);
-        UMOEvent event = getTestEvent("test,", ep);
+        Event event = getTestEvent("test,", ep);
         event.getComponent().setName("myService");
         String result = dispatcher.parseSoapAction("[scheme]://[host]:[port]/[serviceName]/[method]",
             new QName("foo"), event);

@@ -10,14 +10,14 @@
 
 package org.mule.providers.jdbc;
 
-import org.mule.api.UMOComponent;
-import org.mule.api.UMOMessage;
-import org.mule.api.UMOTransaction;
-import org.mule.api.endpoint.UMOEndpoint;
+import org.mule.api.Component;
+import org.mule.api.MuleMessage;
+import org.mule.api.Transaction;
+import org.mule.api.endpoint.Endpoint;
 import org.mule.api.lifecycle.CreateException;
-import org.mule.api.transport.UMOConnector;
-import org.mule.api.transport.UMOMessageAdapter;
-import org.mule.impl.MuleMessage;
+import org.mule.api.transport.Connector;
+import org.mule.api.transport.MessageAdapter;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.transaction.TransactionCoordination;
 import org.mule.impl.transport.ConnectException;
 import org.mule.impl.transport.TransactedPollingMessageReceiver;
@@ -38,9 +38,9 @@ public class JdbcMessageReceiver extends TransactedPollingMessageReceiver
     protected List readParams;
     protected List ackParams;
 
-    public JdbcMessageReceiver(UMOConnector connector,
-                               UMOComponent component,
-                               UMOEndpoint endpoint,
+    public JdbcMessageReceiver(Connector connector,
+                               Component component,
+                               Endpoint endpoint,
                                String readStmt,
                                String ackStmt) throws CreateException
     {
@@ -85,12 +85,12 @@ public class JdbcMessageReceiver extends TransactedPollingMessageReceiver
     public void processMessage(Object message) throws Exception
     {
         Connection con = null;
-        UMOTransaction tx = TransactionCoordination.getInstance().getTransaction();
+        Transaction tx = TransactionCoordination.getInstance().getTransaction();
         try
         {
             con = this.connector.getConnection();
-            UMOMessageAdapter msgAdapter = this.connector.getMessageAdapter(message);
-            UMOMessage umoMessage = new MuleMessage(msgAdapter);
+            MessageAdapter msgAdapter = this.connector.getMessageAdapter(message);
+            MuleMessage umoMessage = new DefaultMuleMessage(msgAdapter);
             if (this.ackStmt != null)
             {
                 Object[] ackParams = connector.getParams(endpoint, this.ackParams, umoMessage, this.endpoint.getEndpointURI().getAddress());

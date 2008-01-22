@@ -10,9 +10,9 @@
 
 package org.mule.impl.routing.inbound;
 
-import org.mule.api.UMOEvent;
+import org.mule.api.Event;
 import org.mule.impl.MuleEvent;
-import org.mule.impl.MuleMessage;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.routing.inbound.EventGroup;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.util.UUID;
@@ -154,7 +154,7 @@ public class EventGroupTestCase extends AbstractMuleTestCase
         eg.addEvent(getTestEvent("foo2"));
 
         Object[] array1 = IteratorUtils.toArray(eg.iterator());
-        UMOEvent[] array2 = eg.toArray();
+        Event[] array2 = eg.toArray();
         assertTrue(Arrays.equals(array1, array2));
     }
 
@@ -164,13 +164,13 @@ public class EventGroupTestCase extends AbstractMuleTestCase
         String es = eg.toString();
         assertTrue(es.endsWith("events=0}"));
 
-        UMOEvent e = getTestEvent("foo");
+        Event e = getTestEvent("foo");
         eg.addEvent(e);
         es = eg.toString();
         assertTrue(es.indexOf("events=1") != -1);
         assertTrue(es.endsWith("[" + e.getMessage().getUniqueId() + "]}"));
 
-        UMOEvent e2 = new MuleEvent(new MuleMessage("foo2"), e);
+        Event e2 = new MuleEvent(new DefaultMuleMessage("foo2"), e);
         eg.addEvent(e2);
         es = eg.toString();
         assertTrue(es.indexOf("events=2") != -1);

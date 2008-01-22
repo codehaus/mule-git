@@ -12,20 +12,20 @@ package org.mule.providers.http;
 
 import org.mule.RegistryContext;
 import org.mule.api.MessagingException;
-import org.mule.api.UMOComponent;
-import org.mule.api.UMOEvent;
-import org.mule.api.UMOException;
-import org.mule.api.UMOMessage;
+import org.mule.api.Component;
+import org.mule.api.Event;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleMessage;
 import org.mule.api.config.MuleProperties;
-import org.mule.api.endpoint.UMOEndpointURI;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.endpoint.EndpointURI;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.CreateException;
 import org.mule.api.transformer.TransformerException;
-import org.mule.api.transport.UMOConnector;
-import org.mule.api.transport.UMOMessageAdapter;
-import org.mule.api.transport.UMOMessageReceiver;
+import org.mule.api.transport.Connector;
+import org.mule.api.transport.MessageAdapter;
+import org.mule.api.transport.MessageReceiver;
 import org.mule.impl.MuleEvent;
-import org.mule.impl.MuleMessage;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.MuleSession;
 import org.mule.impl.NullSessionHandler;
 import org.mule.impl.OptimizedRequestContext;
@@ -60,7 +60,7 @@ public class HttpMessageReceiver extends TcpMessageReceiver
 {
     protected final Log logger = LogFactory.getLog(getClass());
 
-    public HttpMessageReceiver(UMOConnector connector, UMOComponent component, UMOImmutableEndpoint endpoint)
+    public HttpMessageReceiver(Connector connector, Component component, ImmutableEndpoint endpoint)
             throws CreateException
     {
         super(connector, component, endpoint);
@@ -91,7 +91,7 @@ public class HttpMessageReceiver extends TcpMessageReceiver
         requestUri.append(':').append(endpoint.getEndpointURI().getPort());
         requestUri.append('*');
 
-        UMOMessageReceiver[] receivers = connector.getReceivers(requestUri.toString());
+        MessageReceiver[] receivers = connector.getReceivers(requestUri.toString());
         for (int i = 0; i < receivers.length; i++)
         {
             if (receivers[i].isConnected())
@@ -105,7 +105,7 @@ public class HttpMessageReceiver extends TcpMessageReceiver
 
 
     // @Override
-    protected UMOMessage handleUnacceptedFilter(UMOMessage message)
+    protected MuleMessage handleUnacceptedFilter(MuleMessage message)
     {
         if (logger.isDebugEnabled())
         {
@@ -176,7 +176,7 @@ public class HttpMessageReceiver extends TcpMessageReceiver
             }
         }
 
-        protected HttpResponse processRequest(HttpRequest request) throws UMOException, IOException
+        protected HttpResponse processRequest(HttpRequest request) throws AbstractMuleException, IOException
         {
             RequestLine requestLine = request.getRequestLine();
             String method = requestLine.getMethod();
@@ -201,10 +201,10 @@ public class HttpMessageReceiver extends TcpMessageReceiver
             }
         }
 
-        protected HttpResponse doHead(RequestLine requestLine) throws UMOException
+        protected HttpResponse doHead(RequestLine requestLine) throws AbstractMuleException
         {
-            UMOMessage message = new MuleMessage(NullPayload.getInstance());
-            UMOEvent event = new MuleEvent(message, endpoint, new MuleSession(message, new NullSessionHandler()), true);
+            MuleMessage message = new DefaultMuleMessage(NullPayload.getInstance());
+            Event event = new MuleEvent(message, endpoint, new MuleSession(message, new NullSessionHandler()), true);
             OptimizedRequestContext.unsafeSetEvent(event);
             HttpResponse response = new HttpResponse();
             response.setStatusLine(requestLine.getHttpVersion(), HttpConstants.SC_OK);
@@ -212,14 +212,14 @@ public class HttpMessageReceiver extends TcpMessageReceiver
         }
 
         protected HttpResponse doRequest(HttpRequest request,
-                                         RequestLine requestLine) throws IOException, UMOException
+                                         RequestLine requestLine) throws IOException, AbstractMuleException
         {
             Map headers = parseHeaders(request);
 
             // TODO Mule 2.0 generic way to set stream message adapter
-            UMOMessageAdapter adapter = buildStandardAdapter(request, headers);
+            MessageAdapter adapter = buildStandardAdapter(request, headers);
 
-            UMOMessage message = new MuleMessage(adapter);
+            MuleMessage message = new DefaultMuleMessage(adapter);
 
             if (logger.isDebugEnabled())
             {
@@ -227,7 +227,7 @@ public class HttpMessageReceiver extends TcpMessageReceiver
             }
 
             // determine if the request path on this request denotes a different receiver
-            UMOMessageReceiver receiver = getTargetReceiver(message, endpoint);
+            MessageReceiver receiver = getTargetReceiver(message, endpoint);
 
             HttpResponse response;
             // the response only needs to be transformed explicitly if
@@ -235,7 +235,7 @@ public class HttpMessageReceiver extends TcpMessageReceiver
             if (receiver != null)
             {
                 preRouteMessage(message);
-                UMOMessage returnMessage = receiver.routeMessage(message, endpoint.isSynchronous(), null);
+                MuleMessage returnMessage = receiver.routeMessage(message, endpoint.isSynchronous(), null);
 
                 Object tempResponse;
                 if (returnMessage != null)
@@ -265,10 +265,10 @@ public class HttpMessageReceiver extends TcpMessageReceiver
             return response;
         }
 
-        protected HttpResponse doOtherValid(RequestLine requestLine, String method) throws UMOException
+        protected HttpResponse doOtherValid(RequestLine requestLine, String method) throws AbstractMuleException
         {
-            UMOMessage message = new MuleMessage(NullPayload.getInstance());
-            UMOEvent event = new MuleEvent(message, endpoint, new MuleSession(message, new NullSessionHandler()), true);
+            MuleMessage message = new DefaultMuleMessage(NullPayload.getInstance());
+            Event event = new MuleEvent(message, endpoint, new MuleSession(message, new NullSessionHandler()), true);
             OptimizedRequestContext.unsafeSetEvent(event);
             HttpResponse response = new HttpResponse();
             response.setStatusLine(requestLine.getHttpVersion(), HttpConstants.SC_METHOD_NOT_ALLOWED);
@@ -276,10 +276,10 @@ public class HttpMessageReceiver extends TcpMessageReceiver
             return transformResponse(response);
         }
 
-        protected HttpResponse doBad(RequestLine requestLine) throws UMOException
+        protected HttpResponse doBad(RequestLine requestLine) throws AbstractMuleException
         {
-            UMOMessage message = new MuleMessage(NullPayload.getInstance());
-            UMOEvent event = new MuleEvent(message, endpoint, new MuleSession(message, new NullSessionHandler()), true);
+            MuleMessage message = new DefaultMuleMessage(NullPayload.getInstance());
+            Event event = new MuleEvent(message, endpoint, new MuleSession(message, new NullSessionHandler()), true);
             OptimizedRequestContext.unsafeSetEvent(event);
             HttpResponse response = new HttpResponse();
             response.setStatusLine(requestLine.getHttpVersion(), HttpConstants.SC_BAD_REQUEST);
@@ -287,7 +287,7 @@ public class HttpMessageReceiver extends TcpMessageReceiver
             return transformResponse(response);
         }
 
-        protected UMOMessageAdapter buildStandardAdapter(final HttpRequest request,
+        protected MessageAdapter buildStandardAdapter(final HttpRequest request,
                                                          final Map headers) throws MessagingException, TransformerException, IOException
         {
             final RequestLine requestLine = request.getRequestLine();
@@ -320,7 +320,7 @@ public class HttpMessageReceiver extends TcpMessageReceiver
                 {
                     HttpResponse expected = new HttpResponse();
                     expected.setStatusLine(requestLine.getHttpVersion(), HttpConstants.SC_CONTINUE);
-                    final MuleEvent event = new MuleEvent(new MuleMessage(expected), endpoint,
+                    final MuleEvent event = new MuleEvent(new DefaultMuleMessage(expected), endpoint,
                             new MuleSession(component), true);
                     RequestContext.setEvent(event);
                     conn.writeResponse(transformResponse(expected));
@@ -328,9 +328,9 @@ public class HttpMessageReceiver extends TcpMessageReceiver
             }
         }
 
-        protected HttpResponse buildFailureResponse(RequestLine requestLine, UMOMessage message) throws TransformerException
+        protected HttpResponse buildFailureResponse(RequestLine requestLine, MuleMessage message) throws TransformerException
         {
-            UMOEndpointURI uri = endpoint.getEndpointURI();
+            EndpointURI uri = endpoint.getEndpointURI();
             String failedPath = uri.getScheme() + "://" + uri.getHost() + ":" + uri.getPort()
                     + getRequestPath(message);
 
@@ -342,7 +342,7 @@ public class HttpMessageReceiver extends TcpMessageReceiver
             HttpResponse response = new HttpResponse();
             response.setStatusLine(requestLine.getHttpVersion(), HttpConstants.SC_NOT_FOUND);
             response.setBodyString(HttpMessages.cannotBindToAddress(failedPath).toString());
-            RequestContext.setEvent(new MuleEvent(new MuleMessage(response), endpoint,
+            RequestContext.setEvent(new MuleEvent(new DefaultMuleMessage(response), endpoint,
                     new MuleSession(component), true));
             // The DefaultResponseTransformer will set the necessary headers
             return transformResponse(response);
@@ -399,7 +399,7 @@ public class HttpMessageReceiver extends TcpMessageReceiver
             return headers;
         }
 
-        protected void preRouteMessage(UMOMessage message)
+        protected void preRouteMessage(MuleMessage message)
         {
             message.setProperty(MuleProperties.MULE_REMOTE_CLIENT_ADDRESS, remoteClientAddress);
         }
@@ -411,7 +411,7 @@ public class HttpMessageReceiver extends TcpMessageReceiver
         }
     }
 
-    protected String getRequestPath(UMOMessage message)
+    protected String getRequestPath(MuleMessage message)
     {
         String path = (String) message.getProperty(HttpConnector.HTTP_REQUEST_PROPERTY);
         int i = path.indexOf('?');
@@ -422,7 +422,7 @@ public class HttpMessageReceiver extends TcpMessageReceiver
         return path;
     }
 
-    protected UMOMessageReceiver getTargetReceiver(UMOMessage message, UMOImmutableEndpoint endpoint)
+    protected MessageReceiver getTargetReceiver(MuleMessage message, ImmutableEndpoint endpoint)
             throws ConnectException
     {
         String path = (String) message.getProperty(HttpConnector.HTTP_REQUEST_PROPERTY);
@@ -446,7 +446,7 @@ public class HttpMessageReceiver extends TcpMessageReceiver
                     + requestUri.toString());
         }
 
-        UMOMessageReceiver receiver = connector.lookupReceiver(requestUri.toString());
+        MessageReceiver receiver = connector.lookupReceiver(requestUri.toString());
 
         // If no receiver on the root and there is a request path, look up the
         // received based on the root plus request path
@@ -492,30 +492,30 @@ public class HttpMessageReceiver extends TcpMessageReceiver
 
     protected HttpResponse transformResponse(Object response) throws TransformerException
     {
-        UMOMessage message;
-        if(response instanceof UMOMessage)
+        MuleMessage message;
+        if(response instanceof MuleMessage)
         {
-            message = (UMOMessage)response;
+            message = (MuleMessage)response;
         }
         else
         {
-            message = new MuleMessage(response);
+            message = new DefaultMuleMessage(response);
         }
-        //TODO RM*: Maybe we can have a generic Transformer wrapper rather that using MuleMessage (or another static utility
+        //TODO RM*: Maybe we can have a generic Transformer wrapper rather that using DefaultMuleMessage (or another static utility
         //class
         message.applyTransformers(connector.getDefaultResponseTransformers(), HttpResponse.class);
         return (HttpResponse) message.getPayload();
     }
 
-    public static UMOMessageReceiver findReceiverByStem(Map receivers, String uriStr)
+    public static MessageReceiver findReceiverByStem(Map receivers, String uriStr)
     {
         int match = 0;
-        UMOMessageReceiver receiver = null;
+        MessageReceiver receiver = null;
         for (Iterator itr = receivers.entrySet().iterator(); itr.hasNext();)
         {
             Map.Entry e = (Map.Entry)itr.next();
             String key = (String)e.getKey();
-            UMOMessageReceiver candidate = (UMOMessageReceiver)e.getValue();
+            MessageReceiver candidate = (MessageReceiver)e.getValue();
             if (uriStr.startsWith(key) && match < key.length())
             {
                 match = key.length();

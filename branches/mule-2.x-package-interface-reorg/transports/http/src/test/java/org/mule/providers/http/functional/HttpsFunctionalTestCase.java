@@ -10,8 +10,8 @@
 
 package org.mule.providers.http.functional;
 
-import org.mule.api.UMOEventContext;
-import org.mule.api.UMOMessage;
+import org.mule.api.EventContext;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.providers.http.HttpConstants;
 import org.mule.providers.http.HttpsConnector;
@@ -40,9 +40,9 @@ public class HttpsFunctionalTestCase extends HttpFunctionalTestCase
         final AtomicBoolean callbackMade = new AtomicBoolean(false);
         EventCallback callback = new EventCallback()
         {
-            public void eventReceived(final UMOEventContext context, final Object component) throws Exception
+            public void eventReceived(final EventContext context, final Object component) throws Exception
             {
-                UMOMessage msg = context.getMessage();
+                MuleMessage msg = context.getMessage();
                 assertTrue(callbackMade.compareAndSet(false, true));
                 assertNotNull(msg.getProperty(HttpsConnector.LOCAL_CERTIFICATES));
             }
@@ -53,7 +53,7 @@ public class HttpsFunctionalTestCase extends HttpFunctionalTestCase
         MuleClient client = new MuleClient();
         Map props = new HashMap();
         props.put(HttpConstants.HEADER_CONTENT_TYPE, "text/plain;charset=UTF-8");
-        UMOMessage result = client.send("clientEndpoint", TEST_MESSAGE, props);
+        MuleMessage result = client.send("clientEndpoint", TEST_MESSAGE, props);
         assertNotNull(result);
         assertEquals(TEST_MESSAGE + " Received", result.getPayloadAsString());
         assertTrue("Callback never fired", callbackMade.get());

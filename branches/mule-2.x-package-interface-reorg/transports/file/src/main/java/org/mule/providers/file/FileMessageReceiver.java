@@ -11,14 +11,14 @@
 package org.mule.providers.file;
 
 import org.mule.api.MuleException;
-import org.mule.api.UMOComponent;
-import org.mule.api.UMOException;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.Component;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.CreateException;
 import org.mule.api.routing.RoutingException;
-import org.mule.api.transport.UMOConnector;
-import org.mule.api.transport.UMOMessageAdapter;
-import org.mule.impl.MuleMessage;
+import org.mule.api.transport.Connector;
+import org.mule.api.transport.MessageAdapter;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.transport.AbstractPollingMessageReceiver;
 import org.mule.impl.transport.ConnectException;
 import org.mule.providers.file.i18n.FileMessages;
@@ -58,9 +58,9 @@ public class FileMessageReceiver extends AbstractPollingMessageReceiver
     private FilenameFilter filenameFilter = null;
     private FileFilter fileFilter = null;
 
-    public FileMessageReceiver(UMOConnector connector,
-                               UMOComponent component,
-                               UMOImmutableEndpoint endpoint,
+    public FileMessageReceiver(Connector connector,
+                               Component component,
+                               ImmutableEndpoint endpoint,
                                String readDir,
                                String moveDir,
                                String moveToPattern,
@@ -154,7 +154,7 @@ public class FileMessageReceiver extends AbstractPollingMessageReceiver
         }
     }
 
-    public synchronized void processFile(final File sourceFile) throws UMOException
+    public synchronized void processFile(final File sourceFile) throws AbstractMuleException
     {
         //TODO RM*: This can be put in a Filter. Also we can add an AndFileFilter/OrFileFilter to allow users to
         //combine file filters (since we can only pass a single filter to File.listFiles, we would need to wrap
@@ -185,7 +185,7 @@ public class FileMessageReceiver extends AbstractPollingMessageReceiver
         File destinationFile = null;
         String sourceFileOriginalName = sourceFile.getName();
         //Create a message adapter here to pass to the fileName parser
-        UMOMessageAdapter msgAdapter = null;
+        MessageAdapter msgAdapter = null;
         FileInputStream fileIn = null;
         try 
         {
@@ -210,14 +210,14 @@ public class FileMessageReceiver extends AbstractPollingMessageReceiver
         else 
         {
             // finally deliver the file message
-            this.routeMessage(new MuleMessage(msgAdapter), endpoint.isSynchronous());
+            this.routeMessage(new DefaultMuleMessage(msgAdapter), endpoint.isSynchronous());
         }
     }
 
     private void moveAndDelete(final File sourceFile,
                                File destinationFile,
                                String sourceFileOriginalName,
-                               UMOMessageAdapter msgAdapter,
+                               MessageAdapter msgAdapter,
                                FileInputStream fileIn)
     {
         // set up destination file
@@ -274,7 +274,7 @@ public class FileMessageReceiver extends AbstractPollingMessageReceiver
             }
 
             // finally deliver the file message
-            this.routeMessage(new MuleMessage(msgAdapter), endpoint.isSynchronous());
+            this.routeMessage(new DefaultMuleMessage(msgAdapter), endpoint.isSynchronous());
 
             // Delete the file if we didn't stream it
             if (!((FileConnector) connector).isStreaming())
@@ -297,7 +297,7 @@ public class FileMessageReceiver extends AbstractPollingMessageReceiver
             // wrap exception & handle it
             Exception ex = new RoutingException(
                     FileMessages.exceptionWhileProcessing(sourceFile.getName(),
-                            (fileWasRolledBack ? "successful" : "unsuccessful")), new MuleMessage(msgAdapter), endpoint,
+                            (fileWasRolledBack ? "successful" : "unsuccessful")), new DefaultMuleMessage(msgAdapter), endpoint,
                     e);
             this.handleException(ex);
         }

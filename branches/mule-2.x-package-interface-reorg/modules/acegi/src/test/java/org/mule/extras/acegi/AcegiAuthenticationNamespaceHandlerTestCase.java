@@ -10,7 +10,7 @@
 
 package org.mule.extras.acegi;
 
-import org.mule.api.endpoint.UMOEndpoint;
+import org.mule.api.endpoint.Endpoint;
 import org.mule.tck.FunctionalTestCase;
 
 import java.util.Collection;
@@ -30,7 +30,7 @@ public class AcegiAuthenticationNamespaceHandlerTestCase extends FunctionalTestC
         Iterator it = endpoints.iterator();
         while (it.hasNext())
         {
-            UMOEndpoint endpoint = (UMOEndpoint) it.next();
+            Endpoint endpoint = (Endpoint) it.next();
             logger.debug(endpoint.getName() + " : " + endpoint);
         }
     }

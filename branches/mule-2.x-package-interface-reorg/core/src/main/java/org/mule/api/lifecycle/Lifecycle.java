@@ -11,7 +11,7 @@
 package org.mule.api.lifecycle;
 
 /**
- * <code>LifecyclePhase</code> adds lifecycle methods <code>start</code>,
+ * <code>DefaultLifecyclePhase</code> adds lifecycle methods <code>start</code>,
  * <code>stop</code> and <code>dispose</code>.
  * TODO MULE-2113
  */

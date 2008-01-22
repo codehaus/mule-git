@@ -23,7 +23,7 @@ public class FilenameRegexFilter extends FilenameWildcardFilter
     protected volatile Pattern[] compiledPatterns = null;
 
     /**
-     * UMOFilter condition decider method.
+     * Filter condition decider method.
      * <p>
      * Returns <code>boolean</code> <code>TRUE</code> if the file conforms to the
      * regular expression pattern or <code>FALSE</code> otherwise.

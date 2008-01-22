@@ -10,10 +10,10 @@
 
 package org.mule.impl.endpoint;
 
-import org.mule.api.UMOException;
-import org.mule.api.endpoint.UMOEndpointBuilder;
-import org.mule.api.endpoint.UMOEndpointFactory;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.endpoint.EndpointBuilder;
+import org.mule.api.endpoint.EndpointFactory;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.registry.Registry;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.tck.testmodels.mule.TestConnector;
@@ -21,17 +21,17 @@ import org.mule.tck.testmodels.mule.TestConnector;
 public class EndpointFactoryTestCase extends AbstractMuleTestCase
 {
 
-    public void testCreateInboundEndpoint() throws UMOException
+    public void testCreateInboundEndpoint() throws AbstractMuleException
     {
         String uri = "test://address";
-        UMOEndpointFactory endpointFactory = new EndpointFactory();
+        EndpointFactory endpointFactory = new DefaultEndpointFactory();
         endpointFactory.setMuleContext(muleContext);
         try
         {
-            UMOImmutableEndpoint ep = endpointFactory.getInboundEndpoint(uri);
+            ImmutableEndpoint ep = endpointFactory.getInboundEndpoint(uri);
             assertEquals(InboundEndpoint.class, ep.getClass());
             assertEquals(ep.getEndpointURI().getUri().toString(), "test://address");
-            assertEquals(UMOImmutableEndpoint.ENDPOINT_TYPE_RECEIVER, ep.getType());
+            assertEquals(ImmutableEndpoint.ENDPOINT_TYPE_RECEIVER, ep.getType());
         }
         catch (Exception e)
         {
@@ -39,19 +39,19 @@ public class EndpointFactoryTestCase extends AbstractMuleTestCase
         }
     }
 
-    public void testCreateInboundEndpointFromGlobalEndpoint() throws UMOException
+    public void testCreateInboundEndpointFromGlobalEndpoint() throws AbstractMuleException
     {
         muleContext.getRegistry().registerEndpointBuilder("myGlobalEndpoint",
             new EndpointURIEndpointBuilder("test://address", muleContext));
         String uri = "myGlobalEndpoint";
-        UMOEndpointFactory endpointFactory = new EndpointFactory();
+        EndpointFactory endpointFactory = new DefaultEndpointFactory();
         endpointFactory.setMuleContext(muleContext);
         try
         {
-            UMOImmutableEndpoint ep = endpointFactory.getInboundEndpoint(uri);
+            ImmutableEndpoint ep = endpointFactory.getInboundEndpoint(uri);
             assertEquals(InboundEndpoint.class, ep.getClass());
             assertEquals(ep.getEndpointURI().getUri().toString(), "test://address");
-            assertEquals(UMOImmutableEndpoint.ENDPOINT_TYPE_RECEIVER, ep.getType());
+            assertEquals(ImmutableEndpoint.ENDPOINT_TYPE_RECEIVER, ep.getType());
         }
         catch (Exception e)
         {
@@ -59,19 +59,19 @@ public class EndpointFactoryTestCase extends AbstractMuleTestCase
         }
     }
 
-    public void testCreateInboundEndpointFromNamedConcreteEndpoint() throws UMOException
+    public void testCreateInboundEndpointFromNamedConcreteEndpoint() throws AbstractMuleException
     {
         muleContext.getRegistry().registerEndpointBuilder("&myNamedConcreateEndpoint",
             new EndpointURIEndpointBuilder("test://address", muleContext));
         String uri = "&myNamedConcreateEndpoint";
-        UMOEndpointFactory endpointFactory = new EndpointFactory();
+        EndpointFactory endpointFactory = new DefaultEndpointFactory();
         endpointFactory.setMuleContext(muleContext);
         try
         {
-            UMOImmutableEndpoint ep = endpointFactory.getInboundEndpoint(uri);
+            ImmutableEndpoint ep = endpointFactory.getInboundEndpoint(uri);
             assertEquals(InboundEndpoint.class, ep.getClass());
             assertEquals(ep.getEndpointURI().getUri().toString(), "test://address");
-            assertEquals(UMOImmutableEndpoint.ENDPOINT_TYPE_RECEIVER, ep.getType());
+            assertEquals(ImmutableEndpoint.ENDPOINT_TYPE_RECEIVER, ep.getType());
         }
         catch (Exception e)
         {
@@ -79,17 +79,17 @@ public class EndpointFactoryTestCase extends AbstractMuleTestCase
         }
     }
 
-    public void testCreateOutboundEndpoint() throws UMOException
+    public void testCreateOutboundEndpoint() throws AbstractMuleException
     {
         String uri = "test://address";
-        UMOEndpointFactory endpointFactory = new EndpointFactory();
+        EndpointFactory endpointFactory = new DefaultEndpointFactory();
         endpointFactory.setMuleContext(muleContext);
         try
         {
-            UMOImmutableEndpoint ep = endpointFactory.getOutboundEndpoint(uri);
+            ImmutableEndpoint ep = endpointFactory.getOutboundEndpoint(uri);
             assertEquals(OutboundEndpoint.class, ep.getClass());
             assertEquals(ep.getEndpointURI().getUri().toString(), "test://address");
-            assertEquals(UMOImmutableEndpoint.ENDPOINT_TYPE_SENDER, ep.getType());
+            assertEquals(ImmutableEndpoint.ENDPOINT_TYPE_SENDER, ep.getType());
         }
         catch (Exception e)
         {
@@ -97,19 +97,19 @@ public class EndpointFactoryTestCase extends AbstractMuleTestCase
         }
     }
 
-    public void testCreateoutboundEndpointFromGlobalEndpoint() throws UMOException
+    public void testCreateoutboundEndpointFromGlobalEndpoint() throws AbstractMuleException
     {
         muleContext.getRegistry().registerEndpointBuilder("myGlobalEndpoint",
             new EndpointURIEndpointBuilder("test://address", muleContext));
         String uri = "myGlobalEndpoint";
-        UMOEndpointFactory endpointFactory = new EndpointFactory();
+        EndpointFactory endpointFactory = new DefaultEndpointFactory();
         endpointFactory.setMuleContext(muleContext);
         try
         {
-            UMOImmutableEndpoint ep = endpointFactory.getOutboundEndpoint(uri);
+            ImmutableEndpoint ep = endpointFactory.getOutboundEndpoint(uri);
             assertEquals(OutboundEndpoint.class, ep.getClass());
             assertEquals(ep.getEndpointURI().getUri().toString(), "test://address");
-            assertEquals(UMOImmutableEndpoint.ENDPOINT_TYPE_SENDER, ep.getType());
+            assertEquals(ImmutableEndpoint.ENDPOINT_TYPE_SENDER, ep.getType());
         }
         catch (Exception e)
         {
@@ -117,19 +117,19 @@ public class EndpointFactoryTestCase extends AbstractMuleTestCase
         }
     }
 
-    public void testCreateoutboundEndpointFromNamedConcreteEndpoint() throws UMOException
+    public void testCreateoutboundEndpointFromNamedConcreteEndpoint() throws AbstractMuleException
     {
         muleContext.getRegistry().registerEndpointBuilder("&myNamedConcreateEndpoint",
             new EndpointURIEndpointBuilder("test://address", muleContext));
         String uri = "&myNamedConcreateEndpoint";
-        UMOEndpointFactory endpointFactory = new EndpointFactory();
+        EndpointFactory endpointFactory = new DefaultEndpointFactory();
         endpointFactory.setMuleContext(muleContext);
         try
         {
-            UMOImmutableEndpoint ep = endpointFactory.getOutboundEndpoint(uri);
+            ImmutableEndpoint ep = endpointFactory.getOutboundEndpoint(uri);
             assertEquals(OutboundEndpoint.class, ep.getClass());
             assertEquals(ep.getEndpointURI().getUri().toString(), "test://address");
-            assertEquals(UMOImmutableEndpoint.ENDPOINT_TYPE_SENDER, ep.getType());
+            assertEquals(ImmutableEndpoint.ENDPOINT_TYPE_SENDER, ep.getType());
         }
         catch (Exception e)
         {
@@ -137,17 +137,17 @@ public class EndpointFactoryTestCase extends AbstractMuleTestCase
         }
     }
 
-    public void testCreateInboundEndpointWithBuilder() throws UMOException
+    public void testCreateInboundEndpointWithBuilder() throws AbstractMuleException
     {
-        UMOEndpointBuilder builder = new EndpointURIEndpointBuilder("test://address", muleContext);
-        UMOEndpointFactory endpointFactory = new EndpointFactory();
+        EndpointBuilder builder = new EndpointURIEndpointBuilder("test://address", muleContext);
+        EndpointFactory endpointFactory = new DefaultEndpointFactory();
         endpointFactory.setMuleContext(muleContext);
         try
         {
-            UMOImmutableEndpoint ep = endpointFactory.getInboundEndpoint(builder);
+            ImmutableEndpoint ep = endpointFactory.getInboundEndpoint(builder);
             assertEquals(InboundEndpoint.class, ep.getClass());
             assertEquals(ep.getEndpointURI().getUri().toString(), "test://address");
-            assertEquals(UMOImmutableEndpoint.ENDPOINT_TYPE_RECEIVER, ep.getType());
+            assertEquals(ImmutableEndpoint.ENDPOINT_TYPE_RECEIVER, ep.getType());
         }
         catch (Exception e)
         {
@@ -155,17 +155,17 @@ public class EndpointFactoryTestCase extends AbstractMuleTestCase
         }
     }
 
-    public void testCreateOutboundEndpointWithBuilder() throws UMOException
+    public void testCreateOutboundEndpointWithBuilder() throws AbstractMuleException
     {
-        UMOEndpointBuilder builder = new EndpointURIEndpointBuilder("test://address", muleContext);
-        UMOEndpointFactory endpointFactory = new EndpointFactory();
+        EndpointBuilder builder = new EndpointURIEndpointBuilder("test://address", muleContext);
+        EndpointFactory endpointFactory = new DefaultEndpointFactory();
         endpointFactory.setMuleContext(muleContext);
         try
         {
-            UMOImmutableEndpoint ep = endpointFactory.getOutboundEndpoint(builder);
+            ImmutableEndpoint ep = endpointFactory.getOutboundEndpoint(builder);
             assertEquals(OutboundEndpoint.class, ep.getClass());
             assertEquals(ep.getEndpointURI().getUri().toString(), "test://address");
-            assertEquals(UMOImmutableEndpoint.ENDPOINT_TYPE_SENDER, ep.getType());
+            assertEquals(ImmutableEndpoint.ENDPOINT_TYPE_SENDER, ep.getType());
         }
         catch (Exception e)
         {
@@ -173,14 +173,14 @@ public class EndpointFactoryTestCase extends AbstractMuleTestCase
         }
     }
 
-    public void testCreateEndpoint() throws UMOException
+    public void testCreateEndpoint() throws AbstractMuleException
     {
         String uri = "test://address";
-        UMOEndpointFactory endpointFactory = new EndpointFactory();
+        EndpointFactory endpointFactory = new DefaultEndpointFactory();
         endpointFactory.setMuleContext(muleContext);
         try
         {
-            UMOImmutableEndpoint ep = endpointFactory.getInboundEndpoint(uri);
+            ImmutableEndpoint ep = endpointFactory.getInboundEndpoint(uri);
             assertEquals(ep.getEndpointURI().getUri().toString(), "test://address");
         }
         catch (Exception e)
@@ -189,17 +189,17 @@ public class EndpointFactoryTestCase extends AbstractMuleTestCase
         }
     }
 
-    public void testCreateEndpointFromGlobalEndpoint() throws UMOException
+    public void testCreateEndpointFromGlobalEndpoint() throws AbstractMuleException
     {
         Registry r = muleContext.getRegistry();        
         r.registerObject("myGlobalEndpoint", new EndpointURIEndpointBuilder("test://address", muleContext),
             muleContext);
         String uri = "myGlobalEndpoint";
-        UMOEndpointFactory endpointFactory = new EndpointFactory();
+        EndpointFactory endpointFactory = new DefaultEndpointFactory();
         endpointFactory.setMuleContext(muleContext);
         try
         {
-            UMOImmutableEndpoint ep = endpointFactory.getInboundEndpoint(uri);
+            ImmutableEndpoint ep = endpointFactory.getInboundEndpoint(uri);
             assertEquals(ep.getEndpointURI().getUri().toString(), "test://address");
         }
         catch (Exception e)
@@ -208,16 +208,16 @@ public class EndpointFactoryTestCase extends AbstractMuleTestCase
         }
     }
 
-    public void testCreateEndpointFromNamedConcreteEndpoint() throws UMOException
+    public void testCreateEndpointFromNamedConcreteEndpoint() throws AbstractMuleException
     {
         Registry r = muleContext.getRegistry();
         r.registerObject("&myNamedConcreateEndpoint", new EndpointURIEndpointBuilder("test://address", muleContext));
         String uri = "&myNamedConcreateEndpoint";
-        UMOEndpointFactory endpointFactory = new EndpointFactory();
+        EndpointFactory endpointFactory = new DefaultEndpointFactory();
         endpointFactory.setMuleContext(muleContext);
         try
         {
-            UMOImmutableEndpoint ep = endpointFactory.getInboundEndpoint(uri);
+            ImmutableEndpoint ep = endpointFactory.getInboundEndpoint(uri);
             assertEquals(ep.getEndpointURI().getUri().toString(), "test://address");
         }
         catch (Exception e)
@@ -226,7 +226,7 @@ public class EndpointFactoryTestCase extends AbstractMuleTestCase
         }
     }
     
-    public void testCreateEndpointByCustomizingEndpointBuilder() throws UMOException
+    public void testCreateEndpointByCustomizingEndpointBuilder() throws AbstractMuleException
     {
         Registry r = muleContext.getRegistry();
         
@@ -241,22 +241,22 @@ public class EndpointFactoryTestCase extends AbstractMuleTestCase
         String globalEndpointName = "concreteEndpoint";
         
         // Create and register a endpoint builder (global endpoint) with connector1
-        UMOEndpointBuilder endpointBuilder = new EndpointURIEndpointBuilder("test://address", muleContext);
+        EndpointBuilder endpointBuilder = new EndpointURIEndpointBuilder("test://address", muleContext);
         endpointBuilder.setConnector(testConnector1);
         r.registerObject(globalEndpointName, endpointBuilder);
-        UMOEndpointFactory endpointFactory = new EndpointFactory();
+        EndpointFactory endpointFactory = new DefaultEndpointFactory();
         endpointFactory.setMuleContext(muleContext);
         try
         {
-            // Test that EndpointFactory.getEndpointBuilder() returns a new EndpointBuilder instance equal to
+            // Test that DefaultEndpointFactory.getEndpointBuilder() returns a new EndpointBuilder instance equal to
             // the one we registered earlier
-            UMOEndpointBuilder endpointBuilder1 = endpointFactory.getEndpointBuilder(globalEndpointName);
+            EndpointBuilder endpointBuilder1 = endpointFactory.getEndpointBuilder(globalEndpointName);
             assertNotSame(endpointBuilder1, endpointBuilder);
             assertTrue(endpointBuilder1.equals(endpointBuilder));
 
-            // Test that EndpointFactory.getEndpointBuilder() returns a new EndpointBuilder instance equal to
+            // Test that DefaultEndpointFactory.getEndpointBuilder() returns a new EndpointBuilder instance equal to
             // the one we registered earlier
-            UMOEndpointBuilder endpointBuilder2 = endpointFactory.getEndpointBuilder(globalEndpointName);
+            EndpointBuilder endpointBuilder2 = endpointFactory.getEndpointBuilder(globalEndpointName);
             assertNotSame(endpointBuilder2, endpointBuilder);
             assertTrue(endpointBuilder2.equals(endpointBuilder));
 
@@ -268,7 +268,7 @@ public class EndpointFactoryTestCase extends AbstractMuleTestCase
             // Test creating an endpoint from endpointBuilder1
             endpointBuilder1.setSynchronous(true);
             endpointBuilder1.setRemoteSyncTimeout(99);
-            UMOImmutableEndpoint ep = endpointFactory.getInboundEndpoint(endpointBuilder1);
+            ImmutableEndpoint ep = endpointFactory.getInboundEndpoint(endpointBuilder1);
             assertEquals(ep.getEndpointURI().getUri().toString(), "test://address");
             assertTrue(ep.isSynchronous());
             assertEquals(99, ep.getRemoteSyncTimeout());
@@ -279,7 +279,7 @@ public class EndpointFactoryTestCase extends AbstractMuleTestCase
             endpointBuilder2.setSynchronous(false);
             endpointBuilder2.setRemoteSyncTimeout(0);
             endpointBuilder2.setConnector(testConnector2);
-            UMOImmutableEndpoint ep2 = endpointFactory.getInboundEndpoint(endpointBuilder2);
+            ImmutableEndpoint ep2 = endpointFactory.getInboundEndpoint(endpointBuilder2);
             assertEquals(ep2.getEndpointURI().getUri().toString(), "test://address");
             assertFalse(ep2.isSynchronous());
             assertEquals(0, ep2.getRemoteSyncTimeout());
@@ -287,7 +287,7 @@ public class EndpointFactoryTestCase extends AbstractMuleTestCase
             assertEquals(testConnector2, ep2.getConnector());
 
             // Test creating a new endpoint from endpointBuilder1
-            UMOImmutableEndpoint ep3 = endpointFactory.getInboundEndpoint(endpointBuilder1);
+            ImmutableEndpoint ep3 = endpointFactory.getInboundEndpoint(endpointBuilder1);
             assertEquals(ep3.getEndpointURI().getUri().toString(), "test://address");
             assertTrue(ep3.getRemoteSyncTimeout() != 0);
             assertTrue(ep3.isSynchronous());

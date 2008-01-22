@@ -10,8 +10,8 @@
 
 package org.mule.providers.tcp.protocols;
 
-import org.mule.api.UMOException;
-import org.mule.api.UMOMessage;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 
@@ -25,19 +25,19 @@ public class SafeProtocolTestCase extends FunctionalTestCase
         return "safe-protocol-test.xml";
     }
 
-    public void testSafeToSafe() throws UMOException
+    public void testSafeToSafe() throws AbstractMuleException
     {
         MuleClient client = new MuleClient();
         assertResponseOk(client.send("tcp://localhost:65432?connector=safe", TEST_MESSAGE, null));
     }
 
-    public void testUnsafeToSafe() throws UMOException
+    public void testUnsafeToSafe() throws AbstractMuleException
     {
         MuleClient client = new MuleClient();
         assertResponseBad(client.send("tcp://localhost:65432?connector=unsafe", TEST_MESSAGE, null));
     }
 
-    private void assertResponseOk(UMOMessage message)
+    private void assertResponseOk(MuleMessage message)
     {
         assertNotNull("Null message", message);
         Object payload = message.getPayload();
@@ -46,7 +46,7 @@ public class SafeProtocolTestCase extends FunctionalTestCase
         assertEquals(TEST_MESSAGE + " Received", new String((byte[]) payload));
     }
 
-    protected void assertResponseBad(UMOMessage message)
+    protected void assertResponseBad(MuleMessage message)
     {
         try
         {

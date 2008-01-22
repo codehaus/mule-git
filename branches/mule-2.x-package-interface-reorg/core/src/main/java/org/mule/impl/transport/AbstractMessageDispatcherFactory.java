@@ -10,20 +10,20 @@
 
 package org.mule.impl.transport;
 
-import org.mule.api.UMOException;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
-import org.mule.api.transport.UMOMessageDispatcher;
-import org.mule.api.transport.UMOMessageDispatcherFactory;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.api.transport.MessageDispatcher;
+import org.mule.api.transport.MessageDispatcherFactory;
 import org.mule.util.ClassUtils;
 
 /**
  * <code>AbstractMessageDispatcherFactory</code> is a base implementation of the
- * <code>UMOMessageDispatcherFactory</code> interface for managing the lifecycle of
+ * <code>MessageDispatcherFactory</code> interface for managing the lifecycle of
  * message dispatchers.
  * 
- * @see UMOMessageDispatcherFactory
+ * @see MessageDispatcherFactory
  */
-public abstract class AbstractMessageDispatcherFactory implements UMOMessageDispatcherFactory
+public abstract class AbstractMessageDispatcherFactory implements MessageDispatcherFactory
 {
 
     public AbstractMessageDispatcherFactory()
@@ -33,9 +33,9 @@ public abstract class AbstractMessageDispatcherFactory implements UMOMessageDisp
 
     /**
      * This default implementation of
-     * {@link UMOMessageDispatcherFactory#isCreateDispatcherPerRequest()} returns
+     * {@link MessageDispatcherFactory#isCreateDispatcherPerRequest()} returns
      * <code>false</code>, which means that dispatchers are pooled according to
-     * their lifecycle as described in {@link UMOMessageDispatcher}.
+     * their lifecycle as described in {@link MessageDispatcher}.
      * 
      * @return <code>false</code> by default, unless overwritten by a subclass.
      */
@@ -44,24 +44,24 @@ public abstract class AbstractMessageDispatcherFactory implements UMOMessageDisp
         return false;
     }
 
-    public abstract UMOMessageDispatcher create(UMOImmutableEndpoint endpoint) throws UMOException;
+    public abstract MessageDispatcher create(ImmutableEndpoint endpoint) throws AbstractMuleException;
 
-    public void activate(UMOImmutableEndpoint endpoint, UMOMessageDispatcher dispatcher) throws UMOException
+    public void activate(ImmutableEndpoint endpoint, MessageDispatcher dispatcher) throws AbstractMuleException
     {
         dispatcher.activate();
     }
 
-    public void destroy(UMOImmutableEndpoint endpoint, UMOMessageDispatcher dispatcher)
+    public void destroy(ImmutableEndpoint endpoint, MessageDispatcher dispatcher)
     {
         dispatcher.dispose();
     }
 
-    public void passivate(UMOImmutableEndpoint endpoint, UMOMessageDispatcher dispatcher)
+    public void passivate(ImmutableEndpoint endpoint, MessageDispatcher dispatcher)
     {
         dispatcher.passivate();
     }
 
-    public boolean validate(UMOImmutableEndpoint endpoint, UMOMessageDispatcher dispatcher)
+    public boolean validate(ImmutableEndpoint endpoint, MessageDispatcher dispatcher)
     {
         // Unless dispatchers are to be disposed of after every request, we check if
         // the dispatcher is still valid or has e.g. disposed itself after an

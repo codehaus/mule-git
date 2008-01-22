@@ -10,19 +10,19 @@
 
 package org.mule.impl;
 
+import org.mule.api.Event;
+import org.mule.api.Filter;
 import org.mule.api.MuleContext;
-import org.mule.api.UMOEvent;
-import org.mule.api.UMOFilter;
-import org.mule.api.UMOMessage;
-import org.mule.api.UMOTransactionConfig;
-import org.mule.api.endpoint.UMOEndpointURI;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.MuleMessage;
+import org.mule.api.TransactionConfig;
+import org.mule.api.endpoint.EndpointURI;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.InitialisationException;
-import org.mule.api.security.UMOEndpointSecurityFilter;
-import org.mule.api.transformer.UMOTransformer;
+import org.mule.api.security.EndpointSecurityFilter;
+import org.mule.api.transformer.Transformer;
 import org.mule.api.transport.ConnectionStrategy;
+import org.mule.api.transport.Connector;
 import org.mule.api.transport.DispatchException;
-import org.mule.api.transport.UMOConnector;
 import org.mule.impl.config.MuleManifest;
 import org.mule.impl.transformer.TransformerUtils;
 import org.mule.util.ClassUtils;
@@ -45,7 +45,7 @@ import org.apache.commons.logging.LogFactory;
  * <code>ImmutableMuleEndpoint</code> describes a Provider in the Mule Server. A endpoint is a grouping of
  * an endpoint, an endpointUri and a transformer.
  */
-public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
+public class ImmutableMuleEndpoint implements ImmutableEndpoint
 {
     
     private static final long serialVersionUID = -1650380871293160973L;
@@ -58,12 +58,12 @@ public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
     /**
      * The endpoint used to communicate with the external system
      */
-    protected UMOConnector connector = null;
+    protected Connector connector = null;
 
     /**
      * The endpointUri on which to send or receive information
      */
-    protected UMOEndpointURI endpointUri = null;
+    protected EndpointURI endpointUri = null;
 
     /**
      * The transformers used to transform the incoming or outgoing data
@@ -93,12 +93,12 @@ public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
     /**
      * The transaction configuration for this endpoint
      */
-    protected UMOTransactionConfig transactionConfig = null;
+    protected TransactionConfig transactionConfig = null;
 
     /**
      * event filter for this endpoint
      */
-    protected UMOFilter filter = null;
+    protected Filter filter = null;
 
     /**
      * determines whether unaccepted filtered events should be removed from the source. If they are not
@@ -114,7 +114,7 @@ public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
     /**
      * The security filter to apply to this endpoint
      */
-    protected UMOEndpointSecurityFilter securityFilter = null;
+    protected EndpointSecurityFilter securityFilter = null;
 
     /**
      * whether events received by this endpoint should execute in a single thread
@@ -157,7 +157,7 @@ public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
         super();
     }
 
-    public UMOEndpointURI getEndpointURI()
+    public EndpointURI getEndpointURI()
     {
         return endpointUri;
     }
@@ -172,7 +172,7 @@ public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
         return type;
     }
 
-    public UMOConnector getConnector()
+    public Connector getConnector()
     {
         return connector;
     }
@@ -258,7 +258,7 @@ public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
         return getType().equals(ENDPOINT_TYPE_SENDER);
     }
 
-    public UMOTransactionConfig getTransactionConfig()
+    public TransactionConfig getTransactionConfig()
     {
         return transactionConfig;
     }
@@ -312,7 +312,7 @@ public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
         return 29 * hash + delta;
     }
 
-    public UMOFilter getFilter()
+    public Filter getFilter()
     {
         return filter;
     }
@@ -339,19 +339,19 @@ public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
             Iterator transformer = transformers.iterator();
             while (transformer.hasNext())
             {
-                ((UMOTransformer) transformer.next()).setEndpoint(this);
+                ((Transformer) transformer.next()).setEndpoint(this);
             }
         }
     }
 
     /**
-     * Returns an UMOEndpointSecurityFilter for this endpoint. If one is not set, there will be no
+     * Returns an EndpointSecurityFilter for this endpoint. If one is not set, there will be no
      * authentication on events sent via this endpoint
      * 
-     * @return UMOEndpointSecurityFilter responsible for authenticating message flow via this endpoint.
-     * @see org.mule.api.security.UMOEndpointSecurityFilter
+     * @return EndpointSecurityFilter responsible for authenticating message flow via this endpoint.
+     * @see org.mule.api.security.EndpointSecurityFilter
      */
-    public UMOEndpointSecurityFilter getSecurityFilter()
+    public EndpointSecurityFilter getSecurityFilter()
     {
         return securityFilter;
     }
@@ -422,7 +422,7 @@ public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
 
     // TODO the following methods should most likely be lifecycle-enabled
 
-    public void dispatch(UMOEvent event) throws DispatchException
+    public void dispatch(Event event) throws DispatchException
     {
         if (connector != null)
         {
@@ -436,7 +436,7 @@ public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
         }
     }
 
-    public UMOMessage request(long timeout) throws Exception
+    public MuleMessage request(long timeout) throws Exception
     {
         if (connector != null)
         {
@@ -450,7 +450,7 @@ public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
         }
     }
 
-    public UMOMessage send(UMOEvent event) throws DispatchException
+    public MuleMessage send(Event event) throws DispatchException
     {
         if (connector != null)
         {

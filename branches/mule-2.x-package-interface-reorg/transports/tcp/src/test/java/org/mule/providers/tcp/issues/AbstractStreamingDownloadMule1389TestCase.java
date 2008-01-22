@@ -10,7 +10,7 @@
 
 package org.mule.providers.tcp.issues;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.providers.tcp.integration.AbstractStreamingCapacityTestCase;
 import org.mule.tck.FunctionalTestCase;
@@ -29,7 +29,7 @@ public abstract class AbstractStreamingDownloadMule1389TestCase extends Function
     {
         MuleClient client = new MuleClient();
         long now = System.currentTimeMillis();
-        UMOMessage result = client.send(endpoint, "request", null);
+        MuleMessage result = client.send(endpoint, "request", null);
         assertNotNull(result);
         assertNotNull(result.getPayload());
         assertEquals(InputStreamSource.SIZE, result.getPayloadAsBytes().length);

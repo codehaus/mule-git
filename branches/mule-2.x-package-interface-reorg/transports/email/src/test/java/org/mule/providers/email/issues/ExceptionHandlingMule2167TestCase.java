@@ -10,7 +10,7 @@
 
 package org.mule.providers.email.issues;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 
@@ -29,7 +29,7 @@ public class ExceptionHandlingMule2167TestCase extends FunctionalTestCase
     {
         MuleClient client = new MuleClient();
         client.dispatch("vm://in-default?connector=defaultVm", MESSAGE, null);
-        UMOMessage message = client.request("vm://out-default?connector=queue", WAIT_MS);
+        MuleMessage message = client.request("vm://out-default?connector=queue", WAIT_MS);
         assertNotNull("null message", message);
         assertNotNull("null payload", message.getPayload());
         assertEquals(MESSAGE, message.getPayloadAsString());

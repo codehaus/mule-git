@@ -10,8 +10,8 @@
 
 package org.mule.impl.internal.notifications;
 
-import org.mule.api.UMOComponent;
-import org.mule.api.context.UMOServerNotification;
+import org.mule.api.Component;
+import org.mule.api.context.ServerNotification;
 
 /**
  * <code>ComponentNotification</code> is fired when an event such as the component
@@ -21,7 +21,7 @@ import org.mule.api.context.UMOServerNotification;
  * @see org.mule.impl.MuleDescriptor
  * @see org.mule.api.UMODescriptor
  */
-public class ComponentNotification extends UMOServerNotification
+public class ComponentNotification extends ServerNotification
 {
     /**
      * Serial version
@@ -45,7 +45,7 @@ public class ComponentNotification extends UMOServerNotification
         registerAction("disposed", COMPONENT_DISPOSED);
     }
 
-    public ComponentNotification(UMOComponent message, int action)
+    public ComponentNotification(Component message, int action)
     {
         super(message, action);
         resourceIdentifier = message.getName();
@@ -53,6 +53,6 @@ public class ComponentNotification extends UMOServerNotification
 
     protected String getPayloadToString()
     {
-        return ((UMOComponent) source).getName();
+        return ((Component) source).getName();
     }
 }

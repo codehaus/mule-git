@@ -9,16 +9,16 @@
  */
 package org.mule.impl.config.bootstrap;
 
+import org.mule.api.AbstractMuleException;
 import org.mule.api.MuleContext;
-import org.mule.api.UMOException;
 import org.mule.api.context.MuleContextAware;
 import org.mule.api.lifecycle.Initialisable;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.registry.Registry;
 import org.mule.api.transformer.DiscoverableTransformer;
+import org.mule.api.transformer.Transformer;
 import org.mule.api.transformer.TransformerException;
-import org.mule.api.transformer.UMOTransformer;
-import org.mule.imple.config.i18n.CoreMessages;
+import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.util.ClassUtils;
 import org.mule.util.PropertiesUtils;
 
@@ -109,7 +109,7 @@ public class SimpleRegistryBootstrap implements Initialisable, MuleContextAware
         }
     }
 
-    protected void process(Properties props) throws NoSuchMethodException, IllegalAccessException, UMOException, InvocationTargetException, ClassNotFoundException, InstantiationException
+    protected void process(Properties props) throws NoSuchMethodException, IllegalAccessException, AbstractMuleException, InvocationTargetException, ClassNotFoundException, InstantiationException
     {
         registerTransformers(props, context.getRegistry());
         registerUnnamedObjects(props, context.getRegistry());
@@ -118,7 +118,7 @@ public class SimpleRegistryBootstrap implements Initialisable, MuleContextAware
 
     }
 
-    private void registerTransformers(Properties props, Registry registry) throws UMOException, IllegalAccessException, NoSuchMethodException, InvocationTargetException, InstantiationException, ClassNotFoundException
+    private void registerTransformers(Properties props, Registry registry) throws AbstractMuleException, IllegalAccessException, NoSuchMethodException, InvocationTargetException, InstantiationException, ClassNotFoundException
     {
         int i = 1;
         String transString = props.getProperty(TRANSFORMER_PREFIX + i);
@@ -148,7 +148,7 @@ public class SimpleRegistryBootstrap implements Initialisable, MuleContextAware
                 }
             }
             String transClass = (x == -1 ? transString : transString.substring(0, x));
-            UMOTransformer trans = (UMOTransformer) ClassUtils.instanciateClass(transClass, ClassUtils.NO_ARGS);
+            Transformer trans = (Transformer) ClassUtils.instanciateClass(transClass, ClassUtils.NO_ARGS);
             if (!(trans instanceof DiscoverableTransformer))
             {
                 throw new TransformerException(CoreMessages.transformerNotImplementDiscoverable(trans));
@@ -177,7 +177,7 @@ public class SimpleRegistryBootstrap implements Initialisable, MuleContextAware
         }
     }
 
-    private void registerObjects(Properties props, Registry registry) throws UMOException, IllegalAccessException, NoSuchMethodException, InvocationTargetException, InstantiationException, ClassNotFoundException
+    private void registerObjects(Properties props, Registry registry) throws AbstractMuleException, IllegalAccessException, NoSuchMethodException, InvocationTargetException, InstantiationException, ClassNotFoundException
     {
         //Note that caling the other register methods first will have removed any processed entries
         for (Iterator iterator = props.entrySet().iterator(); iterator.hasNext();)
@@ -190,7 +190,7 @@ public class SimpleRegistryBootstrap implements Initialisable, MuleContextAware
         props.clear();
     }
 
-    private void registerUnnamedObjects(Properties props, Registry registry) throws UMOException, IllegalAccessException, NoSuchMethodException, InvocationTargetException, InstantiationException, ClassNotFoundException
+    private void registerUnnamedObjects(Properties props, Registry registry) throws AbstractMuleException, IllegalAccessException, NoSuchMethodException, InvocationTargetException, InstantiationException, ClassNotFoundException
     {
         int i = 1;
         String objectString = props.getProperty(OBJECT_PREFIX + i);

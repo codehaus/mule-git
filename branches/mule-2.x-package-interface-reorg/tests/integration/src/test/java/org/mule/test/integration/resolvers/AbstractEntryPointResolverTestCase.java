@@ -11,7 +11,7 @@
 package org.mule.test.integration.resolvers;
 
 import org.mule.tck.FunctionalTestCase;
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 
 import java.util.Map;
@@ -28,7 +28,7 @@ public abstract class AbstractEntryPointResolverTestCase extends FunctionalTestC
     protected void doTest(String path, Object payload, String result, Map properties) throws Exception
     {
         MuleClient client = new MuleClient();
-        UMOMessage response = client.send("vm://" + path, payload, properties);
+        MuleMessage response = client.send("vm://" + path, payload, properties);
         assertEquals(result, response.getPayloadAsString());
     }
 

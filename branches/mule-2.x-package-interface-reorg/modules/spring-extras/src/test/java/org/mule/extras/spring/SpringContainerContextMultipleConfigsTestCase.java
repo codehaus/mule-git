@@ -11,7 +11,7 @@
 package org.mule.extras.spring;
 
 import org.mule.api.config.ConfigurationException;
-import org.mule.api.context.UMOContainerContext;
+import org.mule.api.context.ContainerContext;
 import org.mule.impl.container.MuleContainerContext;
 import org.mule.tck.model.AbstractContainerContextTestCase;
 
@@ -28,7 +28,7 @@ public class SpringContainerContextMultipleConfigsTestCase extends AbstractConta
 
     public void testSecondConfig() throws Exception
     {
-        UMOContainerContext container = getContainerContext();
+        ContainerContext container = getContainerContext();
         container.initialise();
         assertNotNull(container);
 
@@ -36,7 +36,7 @@ public class SpringContainerContextMultipleConfigsTestCase extends AbstractConta
         assertNotNull("Component should exist in container", result);
     }
 
-    public UMOContainerContext getContainerContext() throws ConfigurationException
+    public ContainerContext getContainerContext() throws ConfigurationException
     {
         return new MuleContainerContext();
     }

@@ -10,7 +10,7 @@
 
 package org.mule.providers.cxf;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.providers.soap.AbstractSoapUrlEndpointFunctionalTestCase;
 
@@ -47,7 +47,7 @@ public class CxfConnectorHttpFunctionalTestCase extends AbstractSoapUrlEndpointF
         MuleClient client = new MuleClient();
         Map<String, Object> props = new HashMap<String, Object>();
         props.put("http.method", "GET");
-        UMOMessage reply = client.send(fullPath + "?wsdl", folder + componentName + "?wsdl", props);
+        MuleMessage reply = client.send(fullPath + "?wsdl", folder + componentName + "?wsdl", props);
 
         assertNotNull(reply);
         assertNotNull(reply.getPayload());

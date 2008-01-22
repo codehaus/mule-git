@@ -9,8 +9,8 @@
  */
 package org.mule.util.properties;
 
-import org.mule.api.UMOMessage;
-import org.mule.impl.MuleMessage;
+import org.mule.api.MuleMessage;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.tck.AbstractMuleTestCase;
 
 import java.net.InetAddress;
@@ -21,7 +21,7 @@ public class FunctionPropertyExtractorTestCase extends AbstractMuleTestCase
 {
     public void testFunctions() throws Exception
     {
-        UMOMessage message = new MuleMessage("test");
+        MuleMessage message = new DefaultMuleMessage("test");
         FunctionPropertyExtractor extractor = new FunctionPropertyExtractor();
         Object o = extractor.getProperty("uuid", message);
         assertNotNull(o);
@@ -56,7 +56,7 @@ public class FunctionPropertyExtractorTestCase extends AbstractMuleTestCase
     {
         PropertyExtractorManager.setDefaultExtractor(FunctionPropertyExtractor.NAME);
         
-        UMOMessage message = new MuleMessage("test");
+        MuleMessage message = new DefaultMuleMessage("test");
         Object o = PropertyExtractorManager.processExpression("uuid", message);
         assertNotNull(o);
         o = PropertyExtractorManager.processExpression("now", message);

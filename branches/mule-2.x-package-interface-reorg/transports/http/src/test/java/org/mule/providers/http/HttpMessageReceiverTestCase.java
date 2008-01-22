@@ -10,10 +10,10 @@
 
 package org.mule.providers.http;
 
-import org.mule.api.UMOComponent;
-import org.mule.api.endpoint.UMOEndpoint;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
-import org.mule.api.transport.UMOMessageReceiver;
+import org.mule.api.Component;
+import org.mule.api.endpoint.Endpoint;
+import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.api.transport.MessageReceiver;
 import org.mule.providers.http.transformers.UMOMessageToHttpResponse;
 import org.mule.tck.providers.AbstractMessageReceiverTestCase;
 import org.mule.util.CollectionUtils;
@@ -22,21 +22,21 @@ import com.mockobjects.dynamic.Mock;
 
 public class HttpMessageReceiverTestCase extends AbstractMessageReceiverTestCase
 {
-    public UMOMessageReceiver getMessageReceiver() throws Exception
+    public MessageReceiver getMessageReceiver() throws Exception
     {
-        Mock mockComponent = new Mock(UMOComponent.class);
+        Mock mockComponent = new Mock(Component.class);
         mockComponent.expectAndReturn("getResponseTransformer", null);
         mockComponent.expectAndReturn("getResponseRouter", null);
 
         return new HttpMessageReceiver(endpoint.getConnector(),
-            (UMOComponent)mockComponent.proxy(), endpoint);
+            (Component)mockComponent.proxy(), endpoint);
     }
 
-    public UMOImmutableEndpoint getEndpoint() throws Exception
+    public ImmutableEndpoint getEndpoint() throws Exception
     {
         endpoint = muleContext.getRegistry().lookupEndpointFactory().getInboundEndpoint(
             "http://localhost:6789");
-        ((UMOEndpoint) endpoint).setResponseTransformers(CollectionUtils.singletonList(new UMOMessageToHttpResponse()));
+        ((Endpoint) endpoint).setResponseTransformers(CollectionUtils.singletonList(new UMOMessageToHttpResponse()));
         return endpoint;
     }
 }

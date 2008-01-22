@@ -10,12 +10,12 @@
 
 package org.mule.impl.transformer.encryption;
 
-import org.mule.api.UMOEncryptionStrategy;
+import org.mule.api.EncryptionStrategy;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.security.CryptoFailureException;
 import org.mule.api.transformer.TransformerException;
+import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.impl.transformer.AbstractTransformer;
-import org.mule.imple.config.i18n.CoreMessages;
 
 import java.io.UnsupportedEncodingException;
 
@@ -26,7 +26,7 @@ import java.io.UnsupportedEncodingException;
  */
 public abstract class AbstractEncryptionTransformer extends AbstractTransformer
 {
-    private UMOEncryptionStrategy strategy = null;
+    private EncryptionStrategy strategy = null;
     private String strategyName = null;
 
     public AbstractEncryptionTransformer()
@@ -123,12 +123,12 @@ public abstract class AbstractEncryptionTransformer extends AbstractTransformer
         }
     }
 
-    public UMOEncryptionStrategy getStrategy()
+    public EncryptionStrategy getStrategy()
     {
         return strategy;
     }
 
-    public void setStrategy(UMOEncryptionStrategy strategy)
+    public void setStrategy(EncryptionStrategy strategy)
     {
         this.strategy = strategy;
     }

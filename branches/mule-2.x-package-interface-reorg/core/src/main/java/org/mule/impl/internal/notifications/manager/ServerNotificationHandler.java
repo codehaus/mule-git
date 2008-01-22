@@ -10,12 +10,12 @@
 
 package org.mule.impl.internal.notifications.manager;
 
-import org.mule.api.context.UMOServerNotification;
+import org.mule.api.context.ServerNotification;
 
 public interface ServerNotificationHandler
 {
 
-    public void fireNotification(UMOServerNotification notification);
+    public void fireNotification(ServerNotification notification);
 
     public boolean isNotificationDynamic();
 

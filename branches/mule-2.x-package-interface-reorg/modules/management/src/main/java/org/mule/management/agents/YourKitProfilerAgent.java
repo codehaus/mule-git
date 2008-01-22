@@ -13,10 +13,10 @@ package org.mule.management.agents;
 import org.mule.MuleServer;
 import org.mule.RegistryContext;
 import org.mule.api.MuleContext;
-import org.mule.api.UMOException;
-import org.mule.api.context.UMOAgent;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.context.Agent;
 import org.mule.api.lifecycle.InitialisationException;
-import org.mule.imple.config.i18n.CoreMessages;
+import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.management.i18n.ManagementMessages;
 import org.mule.management.mbeans.YourKitProfilerService;
 import org.mule.management.support.AutoDiscoveryJmxSupportFactory;
@@ -36,7 +36,7 @@ import javax.management.ObjectName;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-public class YourKitProfilerAgent implements UMOAgent
+public class YourKitProfilerAgent implements Agent
 {
     /**
      * MBean name to register under.
@@ -58,7 +58,7 @@ public class YourKitProfilerAgent implements UMOAgent
     /*
     * (non-Javadoc)
     *
-    * @see org.mule.api.context.UMOAgent#getName()
+    * @see org.mule.api.context.Agent#getName()
     */
     public String getName()
     {
@@ -68,7 +68,7 @@ public class YourKitProfilerAgent implements UMOAgent
     /*
      * (non-Javadoc)
      *
-     * @see org.mule.api.context.UMOAgent#setName(java.lang.String)
+     * @see org.mule.api.context.Agent#setName(java.lang.String)
      */
     public void setName(String name)
     {
@@ -78,7 +78,7 @@ public class YourKitProfilerAgent implements UMOAgent
     /*
      * (non-Javadoc)
      *
-     * @see org.mule.api.context.UMOAgent#getDescription()
+     * @see org.mule.api.context.Agent#getDescription()
      */
     public String getDescription()
     {
@@ -148,7 +148,7 @@ public class YourKitProfilerAgent implements UMOAgent
             // remove the agent from the list, it's not functional
             RegistryContext.getRegistry().unregisterAgent(this.getName());
         }
-        catch (UMOException e)
+        catch (AbstractMuleException e)
         {
             // not interested, really
         }
@@ -171,7 +171,7 @@ public class YourKitProfilerAgent implements UMOAgent
      *
      * @see org.mule.api.lifecycle.Startable#start()
      */
-    public void start() throws UMOException
+    public void start() throws AbstractMuleException
     {
         // nothing to do
     }
@@ -181,7 +181,7 @@ public class YourKitProfilerAgent implements UMOAgent
      *
      * @see org.mule.api.lifecycle.Stoppable#stop()
      */
-    public void stop() throws UMOException
+    public void stop() throws AbstractMuleException
     {
         // nothing to do
     }
@@ -207,7 +207,7 @@ public class YourKitProfilerAgent implements UMOAgent
     /*
      * (non-Javadoc)
      *
-     * @see org.mule.api.context.UMOAgent#registered()
+     * @see org.mule.api.context.Agent#registered()
      */
     public void registered()
     {
@@ -217,7 +217,7 @@ public class YourKitProfilerAgent implements UMOAgent
     /*
      * (non-Javadoc)
      *
-     * @see org.mule.api.context.UMOAgent#unregistered()
+     * @see org.mule.api.context.Agent#unregistered()
      */
     public void unregistered()
     {

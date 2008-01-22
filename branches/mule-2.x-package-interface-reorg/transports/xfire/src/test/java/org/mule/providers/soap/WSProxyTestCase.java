@@ -9,9 +9,9 @@
  */
 package org.mule.providers.soap;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
-import org.mule.impl.MuleMessage;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.tck.FunctionalTestCase;
 
 import java.util.HashMap;
@@ -29,7 +29,7 @@ public class WSProxyTestCase extends FunctionalTestCase
     public void testDirectRequest() throws Exception
     {
         MuleClient client = new MuleClient();
-        UMOMessage result = client.send("wsdl-xfire:http://localhost:6065/WebService?wsdl&method=echo", new MuleMessage("mule"));
+        MuleMessage result = client.send("wsdl-xfire:http://localhost:6065/WebService?wsdl&method=echo", new DefaultMuleMessage("mule"));
         assertEquals ("mule", result.getPayloadAsString());
     }
     
@@ -38,7 +38,7 @@ public class WSProxyTestCase extends FunctionalTestCase
         MuleClient client = new MuleClient();
         Map props = new HashMap();
         props.put("http.method", "GET");
-        UMOMessage replyMessage = client.send("http://localhost:6070/webServiceProxy?wsdl", "/services/webServiceProxy?WSDL", props);
+        MuleMessage replyMessage = client.send("http://localhost:6070/webServiceProxy?wsdl", "/services/webServiceProxy?WSDL", props);
         assertNotNull(replyMessage);
         
         String wsdl = replyMessage.getPayloadAsString();
@@ -51,7 +51,7 @@ public class WSProxyTestCase extends FunctionalTestCase
     public void testProxyRequest() throws Exception
     {
         MuleClient client = new MuleClient();
-        UMOMessage result = client.send("wsdl-xfire:http://localhost:6070/webServiceProxy?wsdl&method=echo", new MuleMessage("mule"));
+        MuleMessage result = client.send("wsdl-xfire:http://localhost:6070/webServiceProxy?wsdl&method=echo", new DefaultMuleMessage("mule"));
         assertEquals ("mule", result.getPayloadAsString());
     }
     
@@ -60,7 +60,7 @@ public class WSProxyTestCase extends FunctionalTestCase
         MuleClient client = new MuleClient();
         Map props = new HashMap();
         props.put("http.method", "GET");
-        UMOMessage replyMessage = client.send("http://localhost:6075/webServiceProxy?wsdl", "/services/webServiceProxy?WSDL", props);
+        MuleMessage replyMessage = client.send("http://localhost:6075/webServiceProxy?wsdl", "/services/webServiceProxy?WSDL", props);
         assertNotNull(replyMessage);
         
         String wsdl = replyMessage.getPayloadAsString();
@@ -73,7 +73,7 @@ public class WSProxyTestCase extends FunctionalTestCase
     public void testWsdlFileProxyRequest() throws Exception
     {
         MuleClient client = new MuleClient();
-        UMOMessage result = client.send("wsdl-xfire:http://localhost:6075/webServiceProxy?wsdl&method=echo", new MuleMessage("mule"));
+        MuleMessage result = client.send("wsdl-xfire:http://localhost:6075/webServiceProxy?wsdl&method=echo", new DefaultMuleMessage("mule"));
         assertEquals ("mule", result.getPayloadAsString());
     }
 

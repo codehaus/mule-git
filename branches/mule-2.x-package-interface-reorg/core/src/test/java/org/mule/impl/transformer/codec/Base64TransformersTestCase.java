@@ -10,7 +10,7 @@
 
 package org.mule.impl.transformer.codec;
 
-import org.mule.api.transformer.UMOTransformer;
+import org.mule.api.transformer.Transformer;
 import org.mule.impl.transformer.codec.Base64Decoder;
 import org.mule.impl.transformer.codec.Base64Encoder;
 import org.mule.tck.AbstractTransformerTestCase;
@@ -36,14 +36,14 @@ public class Base64TransformersTestCase extends AbstractTransformerTestCase
         return "the quick brown fox jumped over the lazy dog";
     }
 
-    public UMOTransformer getTransformer()
+    public Transformer getTransformer()
     {
         return new Base64Encoder();
     }
 
-    public UMOTransformer getRoundTripTransformer()
+    public Transformer getRoundTripTransformer()
     {
-        UMOTransformer t = new Base64Decoder();
+        Transformer t = new Base64Decoder();
         // our input is a String so we expect a String as output
         t.setReturnClass(this.getTestData().getClass());
         return t;

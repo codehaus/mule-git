@@ -10,8 +10,8 @@
 
 package org.mule.tck;
 
-import org.mule.api.UMOTransactionConfig;
-import org.mule.api.context.UMOTransactionManagerFactory;
+import org.mule.api.TransactionConfig;
+import org.mule.api.context.TransactionManagerFactory;
 import org.mule.api.transaction.TransactionCallback;
 import org.mule.impl.DefaultExceptionStrategy;
 import org.mule.impl.MuleTransactionConfig;
@@ -36,7 +36,7 @@ public abstract class AbstractTxThreadAssociationTestCase extends AbstractMuleTe
     protected void doSetUp() throws Exception
     {
         super.doSetUp();
-        UMOTransactionManagerFactory factory = getTransactionManagerFactory();
+        TransactionManagerFactory factory = getTransactionManagerFactory();
         tm = factory.create();
         assertNotNull("Transaction Manager should be available.", tm);
         assertNull("There sould be no current transaction associated.", tm.getTransaction());
@@ -146,15 +146,15 @@ public abstract class AbstractTxThreadAssociationTestCase extends AbstractMuleTe
         tm.setTransactionTimeout(TRANSACTION_TIMEOUT_SECONDS);
 
         // this is one component with a TX always begin
-        UMOTransactionConfig config = new MuleTransactionConfig();
+        TransactionConfig config = new MuleTransactionConfig();
         config.setFactory(new XaTransactionFactory());
-        config.setAction(UMOTransactionConfig.ACTION_ALWAYS_BEGIN);
+        config.setAction(TransactionConfig.ACTION_ALWAYS_BEGIN);
         TransactionTemplate template = new TransactionTemplate(config, new DefaultExceptionStrategy(), muleContext);
 
         // and the callee component which should join the current XA transaction, not begin a nested one
-        final UMOTransactionConfig nestedConfig = new MuleTransactionConfig();
+        final TransactionConfig nestedConfig = new MuleTransactionConfig();
         nestedConfig.setFactory(new XaTransactionFactory());
-        nestedConfig.setAction(UMOTransactionConfig.ACTION_BEGIN_OR_JOIN);
+        nestedConfig.setAction(TransactionConfig.ACTION_BEGIN_OR_JOIN);
 
         // start the call chain
         template.execute(new TransactionCallback()
@@ -183,6 +183,6 @@ public abstract class AbstractTxThreadAssociationTestCase extends AbstractMuleTe
         return tm;
     }
 
-    protected abstract UMOTransactionManagerFactory getTransactionManagerFactory();
+    protected abstract TransactionManagerFactory getTransactionManagerFactory();
 
 }

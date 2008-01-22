@@ -9,17 +9,17 @@
  */
 package org.mule.impl.lifecycle.phases;
 
+import org.mule.api.Component;
 import org.mule.api.MuleContext;
-import org.mule.api.UMOComponent;
-import org.mule.api.context.UMOAgent;
+import org.mule.api.context.Agent;
 import org.mule.api.lifecycle.Initialisable;
 import org.mule.api.lifecycle.Startable;
 import org.mule.api.lifecycle.Stoppable;
-import org.mule.api.model.UMOModel;
+import org.mule.api.model.Model;
 import org.mule.api.registry.Registry;
-import org.mule.api.transport.UMOConnector;
+import org.mule.api.transport.Connector;
 import org.mule.impl.internal.notifications.ManagerNotification;
-import org.mule.impl.lifecycle.LifecyclePhase;
+import org.mule.impl.lifecycle.DefaultLifecyclePhase;
 import org.mule.impl.lifecycle.NotificationLifecycleObject;
 
 import java.util.LinkedHashSet;
@@ -27,14 +27,14 @@ import java.util.Set;
 
 /**
  * The Start phase for the Management context LifecycleManager. Calling {@link org.mule.api.UMOManagementContext#start()}
- * with initiate this phase via the {@link org.mule.api.lifecycle.UMOLifecycleManager}.
+ * with initiate this phase via the {@link org.mule.api.lifecycle.LifecycleManager}.
  * This phase controls the order in which objects should be started.
  *
  * @see org.mule.api.UMOManagementContext
- * @see org.mule.api.lifecycle.UMOLifecycleManager
+ * @see org.mule.api.lifecycle.LifecycleManager
  * @see org.mule.api.lifecycle.Startable
  */
-public class MuleContextStartPhase extends LifecyclePhase
+public class MuleContextStartPhase extends DefaultLifecyclePhase
 {
     public MuleContextStartPhase()
     {
@@ -46,11 +46,11 @@ public class MuleContextStartPhase extends LifecyclePhase
         super(Startable.PHASE_NAME, Startable.class, Stoppable.PHASE_NAME);
 
         Set startOrderedObjects = new LinkedHashSet();
-        startOrderedObjects.add(new NotificationLifecycleObject(UMOConnector.class));
-        startOrderedObjects.add(new NotificationLifecycleObject(UMOAgent.class));
-        startOrderedObjects.add(new NotificationLifecycleObject(UMOModel.class, ManagerNotification.class,
+        startOrderedObjects.add(new NotificationLifecycleObject(Connector.class));
+        startOrderedObjects.add(new NotificationLifecycleObject(Agent.class));
+        startOrderedObjects.add(new NotificationLifecycleObject(Model.class, ManagerNotification.class,
                 ManagerNotification.MANAGER_STARTING_MODELS,ManagerNotification.MANAGER_STARTED_MODELS));
-        startOrderedObjects.add(new NotificationLifecycleObject(UMOComponent.class));
+        startOrderedObjects.add(new NotificationLifecycleObject(Component.class));
         startOrderedObjects.add(new NotificationLifecycleObject(Startable.class));
 
 

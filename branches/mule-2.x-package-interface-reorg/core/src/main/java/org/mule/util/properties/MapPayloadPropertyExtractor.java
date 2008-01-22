@@ -10,7 +10,7 @@
 
 package org.mule.util.properties;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 
 import java.util.Map;
 
@@ -25,9 +25,9 @@ public class MapPayloadPropertyExtractor implements PropertyExtractor
     public Object getProperty(String name, Object message)
     {
         Object payload = message;
-        if (message instanceof UMOMessage)
+        if (message instanceof MuleMessage)
         {
-            payload = ((UMOMessage) message).getPayload();
+            payload = ((MuleMessage) message).getPayload();
         }
         if (payload instanceof Map)
         {

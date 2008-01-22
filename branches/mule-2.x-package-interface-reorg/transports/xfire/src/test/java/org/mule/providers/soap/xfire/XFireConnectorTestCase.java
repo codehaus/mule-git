@@ -10,7 +10,7 @@
 
 package org.mule.providers.soap.xfire;
 
-import org.mule.api.transport.UMOConnector;
+import org.mule.api.transport.Connector;
 import org.mule.tck.providers.AbstractConnectorTestCase;
 
 public class XFireConnectorTestCase extends AbstractConnectorTestCase
@@ -22,7 +22,7 @@ public class XFireConnectorTestCase extends AbstractConnectorTestCase
     }
 
     // @Override
-    public UMOConnector createConnector() throws Exception
+    public Connector createConnector() throws Exception
     {
         XFireConnector c = new XFireConnector();
         c.setName("xfireConnector");

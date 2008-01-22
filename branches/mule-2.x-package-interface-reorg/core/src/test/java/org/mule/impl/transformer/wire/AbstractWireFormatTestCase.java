@@ -10,10 +10,10 @@
 
 package org.mule.impl.transformer.wire;
 
-import org.mule.api.UMOException;
-import org.mule.api.UMOMessage;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleMessage;
 import org.mule.api.transformer.wire.WireFormat;
-import org.mule.impl.MuleMessage;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.transformer.simple.ObjectToString;
 import org.mule.impl.transformer.wire.SerializationWireFormat;
 import org.mule.impl.transformer.wire.TransformerPairWireFormat;
@@ -27,7 +27,7 @@ import java.util.Properties;
 public abstract class AbstractWireFormatTestCase extends AbstractMuleTestCase
 {
 
-    public void testWriteReadPayload() throws UMOException
+    public void testWriteReadPayload() throws AbstractMuleException
     {
         // Create orange to send over the wire
         Properties messageProerties = new Properties();
@@ -44,22 +44,22 @@ public abstract class AbstractWireFormatTestCase extends AbstractMuleTestCase
         assertEquals("val1", ((Orange) outObject).getMapProperties().get("key1"));
     }
 
-    public void testWriteReadMessage() throws UMOException
+    public void testWriteReadMessage() throws AbstractMuleException
     {
         // Create message to send over wire
         Properties messageProerties = new Properties();
         messageProerties.put("key1", "val1");
-        UMOMessage inMessage = new MuleMessage("testMessage", messageProerties);
+        MuleMessage inMessage = new DefaultMuleMessage("testMessage", messageProerties);
 
         Object outMessage = readWrite(inMessage);
 
         // Test deserialized message
-        assertTrue(outMessage instanceof UMOMessage);
-        assertEquals("testMessage", ((UMOMessage) outMessage).getPayload());
-        assertEquals("val1", ((UMOMessage) outMessage).getProperty("key1"));
+        assertTrue(outMessage instanceof MuleMessage);
+        assertEquals("testMessage", ((MuleMessage) outMessage).getPayload());
+        assertEquals("val1", ((MuleMessage) outMessage).getProperty("key1"));
     }
 
-    private Object readWrite(Object inObject) throws UMOException
+    private Object readWrite(Object inObject) throws AbstractMuleException
     {
         // Serialize
         WireFormat wireFormat = new SerializationWireFormat();

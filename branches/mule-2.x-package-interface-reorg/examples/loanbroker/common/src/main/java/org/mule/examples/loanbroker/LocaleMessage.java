@@ -11,7 +11,7 @@
 package org.mule.examples.loanbroker;
 
 import org.mule.examples.loanbroker.messages.LoanQuote;
-import org.mule.imple.config.i18n.MessageFactory;
+import org.mule.impl.config.i18n.MessageFactory;
 import org.mule.util.StringMessageUtils;
 
 public class LocaleMessage extends MessageFactory

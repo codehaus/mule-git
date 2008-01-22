@@ -10,7 +10,7 @@
 
 package org.mule.examples.loanbroker.transformers;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.api.transformer.TransformerException;
 import org.mule.examples.loanbroker.messages.Customer;
 import org.mule.examples.loanbroker.messages.CustomerQuoteRequest;
@@ -27,7 +27,7 @@ public class RestRequestToCustomerRequest extends AbstractMessageAwareTransforme
         setReturnClass(CustomerQuoteRequest.class);
     }
 
-    public Object transform(UMOMessage message, String outputEncoding) throws TransformerException
+    public Object transform(MuleMessage message, String outputEncoding) throws TransformerException
     {
         String name;
         int ssn;
@@ -51,7 +51,7 @@ public class RestRequestToCustomerRequest extends AbstractMessageAwareTransforme
         return request;
     }
 
-    protected String getParam(UMOMessage message, String name) throws NullPointerException
+    protected String getParam(MuleMessage message, String name) throws NullPointerException
     {
         String value = message.getStringProperty(name, null);
         if (value == null)

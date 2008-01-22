@@ -10,8 +10,8 @@
 
 package org.mule.config.spring.parsers.specific;
 
-import org.mule.api.context.UMOServerNotification;
-import org.mule.api.context.UMOServerNotificationListener;
+import org.mule.api.context.ServerNotification;
+import org.mule.api.context.ServerNotificationListener;
 import org.mule.impl.internal.notifications.AdminNotification;
 import org.mule.impl.internal.notifications.AdminNotificationListener;
 import org.mule.impl.internal.notifications.manager.ServerNotificationManager;
@@ -79,12 +79,12 @@ public class ServerNotificationManagerTestCase extends FunctionalTestCase
         assertFalse(adminListener.isCalled());
     }
 
-    protected static interface TestInterface extends UMOServerNotificationListener
+    protected static interface TestInterface extends ServerNotificationListener
     {
         // empty
     }
 
-    protected static interface TestInterface2 extends UMOServerNotificationListener
+    protected static interface TestInterface2 extends ServerNotificationListener
     {
         // empty
     }
@@ -99,7 +99,7 @@ public class ServerNotificationManagerTestCase extends FunctionalTestCase
             return called;
         }
 
-        public void onNotification(UMOServerNotification notification)
+        public void onNotification(ServerNotification notification)
         {
             called = true;
         }
@@ -116,7 +116,7 @@ public class ServerNotificationManagerTestCase extends FunctionalTestCase
             return called;
         }
 
-        public void onNotification(UMOServerNotification notification)
+        public void onNotification(ServerNotification notification)
         {
             called = true;
         }
@@ -133,14 +133,14 @@ public class ServerNotificationManagerTestCase extends FunctionalTestCase
             return called;
         }
 
-        public void onNotification(UMOServerNotification notification)
+        public void onNotification(ServerNotification notification)
         {
             called = true;
         }
 
     }
 
-    protected static class TestEvent extends UMOServerNotification
+    protected static class TestEvent extends ServerNotification
     {
 
         public TestEvent()

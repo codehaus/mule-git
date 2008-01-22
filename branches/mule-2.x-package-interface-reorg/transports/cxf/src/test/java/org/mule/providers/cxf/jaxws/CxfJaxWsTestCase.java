@@ -10,7 +10,7 @@
 
 package org.mule.providers.cxf.jaxws;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 
@@ -19,7 +19,7 @@ public class CxfJaxWsTestCase extends FunctionalTestCase
     public void testEchoService() throws Exception
     {
         MuleClient client = new MuleClient();
-        UMOMessage result = client.send("cxf:http://localhost:63081/services/Echo?method=echo", "Hello!",
+        MuleMessage result = client.send("cxf:http://localhost:63081/services/Echo?method=echo", "Hello!",
             null);
         assertEquals("Hello!", result.getPayload());
     }

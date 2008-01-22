@@ -10,8 +10,8 @@
 
 package org.mule.providers.jms.issues;
 
-import org.mule.api.UMOException;
-import org.mule.api.UMOMessage;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 
@@ -23,10 +23,10 @@ public class JmsRemoteSyncMule2868TestCase extends FunctionalTestCase
         return "jms-remote-sync-mule2868.xml";
     }
 
-    public void testMule2868() throws UMOException
+    public void testMule2868() throws AbstractMuleException
     {
         MuleClient muleClient = new MuleClient();
-        UMOMessage response = muleClient.send("vm://in", "test", null);
+        MuleMessage response = muleClient.send("vm://in", "test", null);
         assertEquals("test", response.getPayload());
     }
 

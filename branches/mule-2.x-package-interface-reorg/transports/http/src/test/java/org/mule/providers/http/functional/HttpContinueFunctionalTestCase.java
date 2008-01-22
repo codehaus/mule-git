@@ -10,7 +10,7 @@
 
 package org.mule.providers.http.functional;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.providers.http.HttpConnector;
 import org.mule.tck.FunctionalTestCase;
@@ -50,7 +50,7 @@ public class HttpContinueFunctionalTestCase extends FunctionalTestCase
         props.put(HttpConnector.HTTP_PARAMS_PROPERTY, params);
         stopWatch = new StopWatch();
         stopWatch.start();
-        UMOMessage result = client.send("clientEndpoint", TEST_MESSAGE, props);
+        MuleMessage result = client.send("clientEndpoint", TEST_MESSAGE, props);
         stopWatch.stop();
 
         assertNotNull(result);

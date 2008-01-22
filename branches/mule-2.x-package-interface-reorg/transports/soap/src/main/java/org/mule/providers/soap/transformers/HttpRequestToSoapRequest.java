@@ -10,11 +10,11 @@
 
 package org.mule.providers.soap.transformers;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.transformer.TransformerException;
+import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.impl.transformer.AbstractMessageAwareTransformer;
-import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.util.IOUtils;
 import org.mule.util.PropertiesUtils;
 import org.mule.util.StringMessageUtils;
@@ -46,7 +46,7 @@ public class HttpRequestToSoapRequest extends AbstractMessageAwareTransformer
         setReturnClass(String.class);
     }
 
-    public Object transform(UMOMessage message, String outputEncoding) throws TransformerException
+    public Object transform(MuleMessage message, String outputEncoding) throws TransformerException
     {
         Object src = message.getPayload();
 

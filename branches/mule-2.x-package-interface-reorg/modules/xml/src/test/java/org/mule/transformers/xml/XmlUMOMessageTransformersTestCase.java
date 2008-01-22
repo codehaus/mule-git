@@ -10,10 +10,10 @@
 
 package org.mule.transformers.xml;
 
-import org.mule.api.UMOMessage;
-import org.mule.api.transformer.UMOTransformer;
+import org.mule.api.MuleMessage;
+import org.mule.api.transformer.Transformer;
 import org.mule.impl.MuleEvent;
-import org.mule.impl.MuleMessage;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.impl.RequestContext;
 import org.mule.tck.MuleTestUtils;
 import org.mule.tck.testmodels.fruit.Apple;
@@ -25,7 +25,7 @@ import org.custommonkey.xmlunit.XMLAssert;
 
 public class XmlUMOMessageTransformersTestCase extends AbstractXmlTransformerTestCase
 {
-    private UMOMessage testObject = null;
+    private MuleMessage testObject = null;
 
     // @Override
     protected void doSetUp() throws Exception
@@ -46,17 +46,17 @@ public class XmlUMOMessageTransformersTestCase extends AbstractXmlTransformerTes
         props.put("object", new Apple());
         props.put("number", new Integer(1));
         props.put("string", "hello");
-        testObject = new MuleMessage("test", props);
+        testObject = new DefaultMuleMessage("test", props);
     }
 
-    public UMOTransformer getTransformer() throws Exception
+    public Transformer getTransformer() throws Exception
     {
         ObjectToXml t = new ObjectToXml();
         t.setAcceptUMOMessage(true);
         return t;
     }
 
-    public UMOTransformer getRoundTripTransformer() throws Exception
+    public Transformer getRoundTripTransformer() throws Exception
     {
         return new XmlToObject();
     }
@@ -68,7 +68,7 @@ public class XmlUMOMessageTransformersTestCase extends AbstractXmlTransformerTes
 
     public Object getResultData()
     {
-        return "<org.mule.impl.MuleMessage>\n"
+        return "<org.mule.impl.DefaultMuleMessage>\n"
                + " <adapter class=\"org.mule.impl.transport.DefaultMessageAdapter\">\n"
                + " <message class=\"string\">test</message>\n"
                + "   <properties>\n"
@@ -130,7 +130,7 @@ public class XmlUMOMessageTransformersTestCase extends AbstractXmlTransformerTes
                + "     <fallbackToRegistry>false</fallbackToRegistry>\n" + "   </properties>\n"
                + "   <attachments class=\"edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap\"/>\n"
                + "   <encoding>UTF-8</encoding>\n" + "   <id>3be5fe5a-87f8-11dc-a153-0b6db396665f</id>\n"
-               + " </adapter>\n" + " </org.mule.impl.MuleMessage>\n";
+               + " </adapter>\n" + " </org.mule.impl.DefaultMuleMessage>\n";
     }
 
     /**
@@ -174,14 +174,14 @@ public class XmlUMOMessageTransformersTestCase extends AbstractXmlTransformerTes
             return false;
         }
 
-        if (expected instanceof UMOMessage && result instanceof UMOMessage)
+        if (expected instanceof MuleMessage && result instanceof MuleMessage)
         {
-            return ((UMOMessage)expected).getPayload().equals(((UMOMessage)result).getPayload())
-                            && ((UMOMessage)expected).getProperty("object").equals(
-                                ((UMOMessage)result).getProperty("object"))
-                            && ((UMOMessage)expected).getProperty("string").equals(
-                                ((UMOMessage)result).getProperty("string"))
-                            && ((UMOMessage)expected).getIntProperty("number", -1) == ((UMOMessage)result)
+            return ((MuleMessage)expected).getPayload().equals(((MuleMessage)result).getPayload())
+                            && ((MuleMessage)expected).getProperty("object").equals(
+                                ((MuleMessage)result).getProperty("object"))
+                            && ((MuleMessage)expected).getProperty("string").equals(
+                                ((MuleMessage)result).getProperty("string"))
+                            && ((MuleMessage)expected).getIntProperty("number", -1) == ((MuleMessage)result)
                                 .getIntProperty("number", -2);
         }
         else

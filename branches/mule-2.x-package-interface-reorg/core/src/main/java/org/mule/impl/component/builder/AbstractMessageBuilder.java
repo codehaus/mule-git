@@ -10,16 +10,16 @@
 
 package org.mule.impl.component.builder;
 
-import org.mule.api.UMOComponent;
-import org.mule.api.UMOComponentAware;
-import org.mule.api.UMOEventContext;
-import org.mule.api.UMOMessage;
+import org.mule.api.Component;
+import org.mule.api.ComponentAware;
+import org.mule.api.EventContext;
+import org.mule.api.MuleMessage;
 import org.mule.api.config.ConfigurationException;
 import org.mule.api.config.MuleProperties;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.Callable;
-import org.mule.api.routing.UMOOutboundRouter;
-import org.mule.impl.MuleMessage;
+import org.mule.api.routing.OutboundRouter;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.util.StringMessageUtils;
 
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ import org.apache.commons.logging.LogFactory;
  * A component that will invoke all outbound endpoints configured on the component
  * allow the result of each endpoint invocation to be aggregated to a single message.
  */
-public abstract class AbstractMessageBuilder implements UMOComponentAware, Callable, MessageBuilder
+public abstract class AbstractMessageBuilder implements ComponentAware, Callable, MessageBuilder
 {
 
     /**
@@ -41,20 +41,20 @@ public abstract class AbstractMessageBuilder implements UMOComponentAware, Calla
      */
     protected transient Log logger = LogFactory.getLog(getClass());
 
-    protected UMOComponent component;
+    protected Component component;
 
-    public void setComponent(UMOComponent component) throws ConfigurationException
+    public void setComponent(Component component) throws ConfigurationException
     {
         this.component = component;
     }
 
-    public Object onCall(UMOEventContext eventContext) throws Exception
+    public Object onCall(EventContext eventContext) throws Exception
     {
 
-        UMOMessage requestMessage = new MuleMessage(eventContext.transformMessage(),
+        MuleMessage requestMessage = new DefaultMuleMessage(eventContext.transformMessage(),
             eventContext.getMessage());
 
-        UMOMessage responseMessage = null;
+        MuleMessage responseMessage = null;
         Object builtMessage;
 
         if (component.getOutboundRouter().hasEndpoints())
@@ -62,13 +62,13 @@ public abstract class AbstractMessageBuilder implements UMOComponentAware, Calla
             List endpoints = new ArrayList();
             for (Iterator iterator = component.getOutboundRouter().getRouters().iterator(); iterator.hasNext();)
             {
-                UMOOutboundRouter router = (UMOOutboundRouter) iterator.next();
+                OutboundRouter router = (OutboundRouter) iterator.next();
                 endpoints.addAll(router.getEndpoints());
             }
 
             for (Iterator iterator = endpoints.iterator(); iterator.hasNext();)
             {
-                UMOImmutableEndpoint endpoint = (UMOImmutableEndpoint) iterator.next();
+                ImmutableEndpoint endpoint = (ImmutableEndpoint) iterator.next();
                 Object request = requestMessage.getPayload();
 
                 boolean rsync = eventContext.getMessage().getBooleanProperty(
@@ -109,9 +109,9 @@ public abstract class AbstractMessageBuilder implements UMOComponentAware, Calla
                             // ignore
                         }
                     }
-                    builtMessage = buildMessage(new MuleMessage(request, requestMessage), responseMessage);
-                    responseMessage = new MuleMessage(builtMessage, responseMessage);
-                    requestMessage = new MuleMessage(responseMessage.getPayload(), responseMessage);
+                    builtMessage = buildMessage(new DefaultMuleMessage(request, requestMessage), responseMessage);
+                    responseMessage = new DefaultMuleMessage(builtMessage, responseMessage);
+                    requestMessage = new DefaultMuleMessage(responseMessage.getPayload(), responseMessage);
                 }
             }
         }

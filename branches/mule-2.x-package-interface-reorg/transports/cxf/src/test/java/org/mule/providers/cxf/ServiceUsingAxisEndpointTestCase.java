@@ -10,9 +10,9 @@
 
 package org.mule.providers.cxf;
 
-import org.mule.api.UMOMessage;
+import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
-import org.mule.impl.MuleMessage;
+import org.mule.impl.DefaultMuleMessage;
 import org.mule.tck.FunctionalTestCase;
 
 import java.util.HashMap;
@@ -29,7 +29,7 @@ public class ServiceUsingAxisEndpointTestCase extends FunctionalTestCase
     public void testXFire() throws Exception
     {
         MuleClient client = new MuleClient();
-        UMOMessage reply = client.send("vm://xfire.in", new MuleMessage("Testing String"));
+        MuleMessage reply = client.send("vm://xfire.in", new DefaultMuleMessage("Testing String"));
 
         assertNotNull(reply);
         assertNotNull(reply.getPayload());
@@ -41,7 +41,7 @@ public class ServiceUsingAxisEndpointTestCase extends FunctionalTestCase
         MuleClient client = new MuleClient();
         Map<String, String> props = new HashMap<String, String>();
         props.put("http.method", "GET");
-        UMOMessage reply = client.send("http://localhost:33382/services/XfireService?wsdl",
+        MuleMessage reply = client.send("http://localhost:33382/services/XfireService?wsdl",
             "/services/Hello_Xfire?wsdl", props);
 
         assertNotNull(reply);

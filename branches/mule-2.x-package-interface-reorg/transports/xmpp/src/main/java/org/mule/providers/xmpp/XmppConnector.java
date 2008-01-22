@@ -10,8 +10,8 @@
 
 package org.mule.providers.xmpp;
 
-import org.mule.api.UMOException;
-import org.mule.api.endpoint.UMOEndpointURI;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.endpoint.EndpointURI;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.impl.transport.AbstractConnector;
 
@@ -56,12 +56,12 @@ public class XmppConnector extends AbstractConnector
         // template method
     }
 
-    protected void doStart() throws UMOException
+    protected void doStart() throws AbstractMuleException
     {
         // template method
     }
 
-    protected void doStop() throws UMOException
+    protected void doStop() throws AbstractMuleException
     {
         // template method
     }
@@ -71,7 +71,7 @@ public class XmppConnector extends AbstractConnector
         return XMPP;
     }
 
-    public XMPPConnection createXmppConnection(UMOEndpointURI endpointURI) throws XMPPException
+    public XMPPConnection createXmppConnection(EndpointURI endpointURI) throws XMPPException
     {
         logger.info("Trying to find XMPP connection for uri: " + endpointURI);
 
@@ -133,7 +133,7 @@ public class XmppConnector extends AbstractConnector
      * @return
      * @throws XMPPException
      */
-    protected XMPPConnection doCreateXmppConnection(UMOEndpointURI endpointURI) throws XMPPException
+    protected XMPPConnection doCreateXmppConnection(EndpointURI endpointURI) throws XMPPException
     {
         XMPPConnection xmppConnection = null;
         

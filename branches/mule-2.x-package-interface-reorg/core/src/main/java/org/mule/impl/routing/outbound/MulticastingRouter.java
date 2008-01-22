@@ -10,14 +10,14 @@
 
 package org.mule.impl.routing.outbound;
 
-import org.mule.api.UMOException;
-import org.mule.api.UMOMessage;
-import org.mule.api.UMOSession;
-import org.mule.api.endpoint.UMOImmutableEndpoint;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleMessage;
+import org.mule.api.Session;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.routing.CouldNotRouteOutboundMessageException;
 import org.mule.api.routing.RoutePathNotFoundException;
 import org.mule.api.routing.RoutingException;
-import org.mule.imple.config.i18n.CoreMessages;
+import org.mule.impl.config.i18n.CoreMessages;
 
 /**
  * <code>MulticastingRouter</code> will broadcast the current message to every endpoint
@@ -27,10 +27,10 @@ import org.mule.imple.config.i18n.CoreMessages;
 public class MulticastingRouter extends FilteringOutboundRouter
 {
 
-    public UMOMessage route(UMOMessage message, UMOSession session, boolean synchronous)
+    public MuleMessage route(MuleMessage message, Session session, boolean synchronous)
         throws RoutingException
     {
-        UMOMessage result = null;
+        MuleMessage result = null;
         if (endpoints == null || endpoints.size() == 0)
         {
             throw new RoutePathNotFoundException(CoreMessages.noEndpointsForRouter(), message, null);
@@ -51,12 +51,12 @@ public class MulticastingRouter extends FilteringOutboundRouter
 
         try
         {
-            UMOImmutableEndpoint endpoint;
+            ImmutableEndpoint endpoint;
             synchronized (endpoints)
             {
                 for (int i = 0; i < endpoints.size(); i++)
                 {
-                    endpoint = (UMOImmutableEndpoint) endpoints.get(i);
+                    endpoint = (ImmutableEndpoint) endpoints.get(i);
                     if (synchronous)
                     {
                         // Were we have multiple outbound endpoints
@@ -84,9 +84,9 @@ public class MulticastingRouter extends FilteringOutboundRouter
                 }
             }
         }
-        catch (UMOException e)
+        catch (AbstractMuleException e)
         {
-            throw new CouldNotRouteOutboundMessageException(message, (UMOImmutableEndpoint) endpoints.get(0), e);
+            throw new CouldNotRouteOutboundMessageException(message, (ImmutableEndpoint) endpoints.get(0), e);
         }
         return result;
     }

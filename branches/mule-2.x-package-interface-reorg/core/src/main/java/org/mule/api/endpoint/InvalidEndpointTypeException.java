@@ -11,7 +11,7 @@
 package org.mule.api.endpoint;
 
 import org.mule.api.MuleRuntimeException;
-import org.mule.imple.config.i18n.Message;
+import org.mule.impl.config.i18n.Message;
 
 public class InvalidEndpointTypeException extends MuleRuntimeException
 {

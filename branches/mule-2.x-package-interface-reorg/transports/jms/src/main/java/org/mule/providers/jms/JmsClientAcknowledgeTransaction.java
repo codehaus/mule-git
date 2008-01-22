@@ -11,9 +11,9 @@
 package org.mule.providers.jms;
 
 import org.mule.api.TransactionException;
+import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.impl.transaction.AbstractSingleResourceTransaction;
 import org.mule.impl.transaction.IllegalTransactionStateException;
-import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.providers.jms.i18n.JmsMessages;
 
 import javax.jms.Connection;
@@ -85,7 +85,7 @@ public class JmsClientAcknowledgeTransaction extends AbstractSingleResourceTrans
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.api.UMOTransaction#bindResource(java.lang.Object,
+     * @see org.mule.api.Transaction#bindResource(java.lang.Object,
      *      java.lang.Object)
      */
     public void bindResource(Object key, Object resource) throws TransactionException

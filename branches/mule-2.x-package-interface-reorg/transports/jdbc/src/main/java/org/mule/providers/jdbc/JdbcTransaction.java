@@ -11,10 +11,10 @@
 package org.mule.providers.jdbc;
 
 import org.mule.api.TransactionException;
+import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.impl.transaction.AbstractSingleResourceTransaction;
 import org.mule.impl.transaction.IllegalTransactionStateException;
 import org.mule.impl.transaction.TransactionRollbackException;
-import org.mule.imple.config.i18n.CoreMessages;
 import org.mule.providers.jdbc.i18n.JdbcMessages;
 
 import java.sql.Connection;

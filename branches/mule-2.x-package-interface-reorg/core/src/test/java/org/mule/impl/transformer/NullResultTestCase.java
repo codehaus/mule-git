@@ -11,7 +11,7 @@
 package org.mule.impl.transformer;
 
 import org.mule.api.transformer.TransformerException;
-import org.mule.api.transformer.UMOTransformer;
+import org.mule.api.transformer.Transformer;
 import org.mule.impl.transformer.AbstractTransformer;
 import org.mule.impl.transport.NullPayload;
 import org.mule.tck.AbstractTransformerTestCase;
@@ -31,12 +31,12 @@ public class NullResultTestCase extends AbstractTransformerTestCase
         return NullPayload.getInstance();
     }
 
-    public UMOTransformer getTransformer() throws Exception
+    public Transformer getTransformer() throws Exception
     {
         return transformer;
     }
 
-    public UMOTransformer getRoundTripTransformer() throws Exception
+    public Transformer getRoundTripTransformer() throws Exception
     {
         return null;
     }

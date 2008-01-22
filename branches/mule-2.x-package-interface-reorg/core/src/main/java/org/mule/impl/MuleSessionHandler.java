@@ -10,15 +10,15 @@
 
 package org.mule.impl;
 
-import org.mule.api.UMOException;
-import org.mule.api.UMOMessage;
-import org.mule.api.UMOSession;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleMessage;
+import org.mule.api.Session;
 import org.mule.api.config.MuleProperties;
-import org.mule.api.transformer.UMOTransformer;
-import org.mule.api.transport.UMOSessionHandler;
+import org.mule.api.transformer.Transformer;
+import org.mule.api.transport.SessionHandler;
+import org.mule.impl.config.i18n.CoreMessages;
 import org.mule.impl.transformer.codec.Base64Decoder;
 import org.mule.impl.transformer.codec.Base64Encoder;
-import org.mule.imple.config.i18n.CoreMessages;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Iterator;
@@ -30,12 +30,12 @@ import org.apache.commons.logging.LogFactory;
 /**
  * A default session handler used to store and retrieve session information on an
  * event. The MuleSession information is stored as a header on the message (does not
- * support Tcp, Udp, etc. unless the UMOMessage object is serialised across the
+ * support Tcp, Udp, etc. unless the MuleMessage object is serialised across the
  * wire). The session is stored in the "MULE_SESSION" property as String key/value
  * pairs that are Base64 encoded, for example:
  * ID=dfokokdf-3ek3oke-dkfokd;MySessionProp1=Value1;MySessionProp2=Value2
  */
-public class MuleSessionHandler implements UMOSessionHandler
+public class MuleSessionHandler implements SessionHandler
 {
 
     /**
@@ -43,10 +43,10 @@ public class MuleSessionHandler implements UMOSessionHandler
      */
     protected transient Log logger = LogFactory.getLog(getClass());
 
-    private static UMOTransformer encoder = new Base64Encoder();
-    private static UMOTransformer decoder = new Base64Decoder();
+    private static Transformer encoder = new Base64Encoder();
+    private static Transformer decoder = new Base64Decoder();
 
-    public void retrieveSessionInfoFromMessage(UMOMessage message, UMOSession session) throws UMOException
+    public void retrieveSessionInfoFromMessage(MuleMessage message, Session session) throws AbstractMuleException
     {
         String sessionId = (String) message.removeProperty(MuleProperties.MULE_SESSION_ID_PROPERTY);
         Object sessionHeader = message.removeProperty(MuleProperties.MULE_SESSION_PROPERTY);
@@ -97,7 +97,7 @@ public class MuleSessionHandler implements UMOSessionHandler
         }
     }
 
-    public void storeSessionInfoToMessage(UMOSession session, UMOMessage message) throws UMOException
+    public void storeSessionInfoToMessage(Session session, MuleMessage message) throws AbstractMuleException
     {
         StringBuffer buf = new StringBuffer();
         buf.append(getSessionIDKey()).append("=").append(session.getId());
