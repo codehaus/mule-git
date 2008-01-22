@@ -10,40 +10,13 @@
 
 package org.mule.providers.oracle.jms;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-
-import javax.jms.JMSException;
-import javax.sql.DataSource;
 
 /**
  * JMS Connector for Oracle AQ that uses a user provided data source for database connectivity
+ * 
+ * @deprecated This functionality is now provided by the standard OracleJmsConnector
  */
-public class OracleInContainerJmsConnector extends AbstractOracleJmsConnector
+public class OracleInContainerJmsConnector extends OracleJmsConnector
 {
-
-    private DataSource dataSource;
-
-    public DataSource getDataSource()
-    {
-        return dataSource;
-    }
-
-    public void setDataSource(DataSource dataSource)
-    {
-        this.dataSource = dataSource;
-    }
-
-    public Connection getJdbcConnection() throws JMSException
-    {
-        try
-        {
-            return dataSource.getConnection();
-        }
-        catch (SQLException e)
-        {
-            throw new JMSException("Unable to open JDBC connection: " + e.getMessage());
-        }
-    }
-
+    // empty
 }
