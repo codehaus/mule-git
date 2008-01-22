@@ -120,7 +120,7 @@ public class SessionInvocationHandler implements InvocationHandler
         {
             return SESSION_CLOSE_METHOD.invoke(underlyingObject.get(), args);
         }
-        //close will be directly call on session object
+        //close will be directly called on session object
 
         Object result = method.invoke(underlyingObject.get(), args);
 
