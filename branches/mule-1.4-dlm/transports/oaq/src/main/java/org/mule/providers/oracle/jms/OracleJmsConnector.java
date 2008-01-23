@@ -17,6 +17,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 import javax.jms.JMSException;
+import javax.sql.DataSource;
 
 import oracle.jdbc.driver.OracleDriver;
 import oracle.jdbc.pool.OracleDataSource;
@@ -31,7 +32,6 @@ import oracle.jdbc.pool.OracleDataSource;
  */
 public class OracleJmsConnector extends AbstractOracleJmsConnector
 {
-
     /**
      * The JDBC URL for the Oracle database. For example,
      * {@code jdbc:oracle:oci:@myhost}
@@ -39,15 +39,13 @@ public class OracleJmsConnector extends AbstractOracleJmsConnector
     private String url;
 
     /**
-     * Since many connections are opened and closed, we use a connection pool to
-     * obtain the JDBC connection.
+     * DataSource used to obtain JDBC connections to the Oracle database.
      */
-    private OracleDataSource jdbcConnectionPool = null;
+    private DataSource dataSource;
 
     public OracleJmsConnector()
     {
         super();
-
     }
 
     protected void doInitialise() throws InitialisationException
@@ -60,12 +58,16 @@ public class OracleJmsConnector extends AbstractOracleJmsConnector
             DriverManager.deregisterDriver(oracleDriver);
             DriverManager.registerDriver(oracleDriver);
 
-            jdbcConnectionPool = new OracleDataSource();
-            jdbcConnectionPool.setDataSourceName("Mule Oracle AQ Provider");
-            jdbcConnectionPool.setUser(username);
-            jdbcConnectionPool.setPassword(password);
-            jdbcConnectionPool.setURL(url);
-
+            if (dataSource == null)
+            {
+                // Since many connections are opened and closed, we use a connection pool to
+                // obtain the JDBC connection.
+                dataSource = new OracleDataSource();
+                ((OracleDataSource) dataSource).setDataSourceName("Mule Oracle AQ Provider");
+                ((OracleDataSource) dataSource).setUser(username);
+                ((OracleDataSource) dataSource).setPassword(password);
+                ((OracleDataSource) dataSource).setURL(url);
+            }
         }
         catch (SQLException e)
         {
@@ -78,9 +80,8 @@ public class OracleJmsConnector extends AbstractOracleJmsConnector
     {
         try
         {
-            logger.debug("Getting queue/topic connection from pool, URL = "
-                         + getJdbcConnectionPool().getURL() + ", user = " + getJdbcConnectionPool().getUser());
-            return getJdbcConnectionPool().getConnection();
+            logger.debug("Getting queue/topic connection");
+            return dataSource.getConnection();
         }
         catch (SQLException e)
         {
@@ -88,6 +89,10 @@ public class OracleJmsConnector extends AbstractOracleJmsConnector
         }
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////
+    // Getters and Setters
+    ////////////////////////////////////////////////////////////////////////////////////
+    
     public String getUrl()
     {
         return url;
@@ -98,9 +103,13 @@ public class OracleJmsConnector extends AbstractOracleJmsConnector
         this.url = url;
     }
 
-    public OracleDataSource getJdbcConnectionPool()
+    public DataSource getDataSource()
     {
-        return jdbcConnectionPool;
+        return dataSource;
     }
 
+    public void setDataSource(DataSource dataSource)
+    {
+        this.dataSource = dataSource;
+    }
 }

@@ -36,12 +36,13 @@ import org.apache.commons.logging.LogFactory;
 /**
  * Using for unification XAConnection and Connection
  */
-public class ConnectionWrapper implements Connection
+public class ConnectionWrapper implements Connection, XaTransaction.MuleXaObject
 {
     private final XAConnection xaConnection;
     private Connection connection;
     private volatile boolean enlisted = false;
-    protected final transient Log logger = LogFactory.getLog(getClass());
+    protected static final transient Log logger = LogFactory.getLog(ConnectionWrapper.class);
+    private volatile boolean reuseObject = false;
 
     public ConnectionWrapper(XAConnection xaCon) throws SQLException
     {
@@ -472,10 +473,44 @@ public class ConnectionWrapper implements Connection
             {
                 logger.debug("Enlisting resource " + xaResource + " in xa transaction " + transaction);
             }
-            
+
             enlisted = ((XaTransaction) transaction).enlistResource(xaResource);
         }
     }
+
+    public boolean delist() throws Exception
+    {
+        if (!isEnlisted())
+        {
+            return false;
+        }
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("Delistment request: " + this);
+        }
+
+        UMOTransaction transaction = TransactionCoordination.getInstance().getTransaction();
+        if (transaction == null)
+        {
+            throw new IllegalTransactionStateException(CoreMessages.noMuleTransactionAvailable());
+        }
+        if (!(transaction instanceof XaTransaction))
+        {
+            throw new IllegalTransactionStateException(CoreMessages.notMuleXaTransaction(transaction));
+        }
+        if (isEnlisted())
+        {
+            final XAResource xaResource = xaConnection.getXAResource();
+            if (logger.isDebugEnabled())
+            {
+                logger.debug("Delisting resource " + xaResource + " in xa transaction " + transaction);
+            }
+
+            enlisted = !((XaTransaction) transaction).delistResource(xaResource, XAResource.TMSUCCESS);
+        }
+        return !isEnlisted();
+    }
+
 
     public boolean isEnlisted()
     {
@@ -485,5 +520,20 @@ public class ConnectionWrapper implements Connection
     public void setEnlisted(boolean enlisted)
     {
         this.enlisted = enlisted;
+    }
+
+    public boolean isReuseObject()
+    {
+        return reuseObject;
+    }
+
+    public void setReuseObject(boolean reuseObject)
+    {
+        this.reuseObject = reuseObject;
+    }
+
+    public Object getTargetObject()
+    {
+        return xaConnection;
     }
 }
