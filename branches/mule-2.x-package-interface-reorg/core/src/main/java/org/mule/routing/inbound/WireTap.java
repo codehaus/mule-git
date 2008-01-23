@@ -10,14 +10,14 @@
 
 package org.mule.routing.inbound;
 
-import org.mule.MuleEvent;
-import org.mule.MuleSession;
+import org.mule.DefaultMuleEvent;
+import org.mule.DefaultMuleSession;
 import org.mule.NullSessionHandler;
 import org.mule.RequestContext;
 import org.mule.api.AbstractMuleException;
-import org.mule.api.Event;
 import org.mule.api.MessagingException;
-import org.mule.api.Session;
+import org.mule.api.MuleEvent;
+import org.mule.api.MuleSession;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.transport.DispatchException;
 
@@ -31,7 +31,7 @@ public class WireTap extends SelectiveConsumer
 {
     private volatile ImmutableEndpoint tap;
 
-    public boolean isMatch(Event event) throws MessagingException
+    public boolean isMatch(MuleEvent event) throws MessagingException
     {
         if (tap != null)
         {
@@ -44,15 +44,15 @@ public class WireTap extends SelectiveConsumer
         }
     }
 
-    public Event[] process(Event event) throws MessagingException
+    public MuleEvent[] process(MuleEvent event) throws MessagingException
     {
         RequestContext.setEvent(null);
         try
         {
             //We have to create a new session for this dispatch, since the session may get altered
             //using this call, changing the behaviour of the request
-            Session session = new MuleSession(event.getMessage(), new NullSessionHandler());
-            tap.dispatch(new MuleEvent(event.getMessage(), tap, session, false));
+            MuleSession session = new DefaultMuleSession(event.getMessage(), new NullSessionHandler());
+            tap.dispatch(new DefaultMuleEvent(event.getMessage(), tap, session, false));
         }
         catch (MessagingException e)
         {

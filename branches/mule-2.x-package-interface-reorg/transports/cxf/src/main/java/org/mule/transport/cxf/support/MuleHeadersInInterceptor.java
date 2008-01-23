@@ -10,19 +10,19 @@
 
 package org.mule.transport.cxf.support;
 
+import java.util.Set;
+
+import javax.xml.namespace.QName;
+
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.headers.Header;
 import org.apache.cxf.interceptor.Fault;
 import org.apache.cxf.message.Message;
 import org.apache.cxf.phase.Phase;
-
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
-
-import javax.xml.namespace.QName;
-import java.util.Set;
 
 /**
  * Reads the Mule Soap Header and sets the various header properties on the message.

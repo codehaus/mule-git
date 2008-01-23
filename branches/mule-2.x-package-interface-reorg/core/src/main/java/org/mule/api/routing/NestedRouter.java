@@ -12,14 +12,14 @@ package org.mule.api.routing;
 
 import org.mule.api.MessagingException;
 import org.mule.api.MuleMessage;
-import org.mule.api.Session;
+import org.mule.api.MuleSession;
 import org.mule.api.endpoint.ImmutableEndpoint;
 
 public interface NestedRouter extends Router
 {
 
     /**
-     * This method is responsible for routing the Message via the Session. The logic
+     * This method is responsible for routing the Message via the MuleSession. The logic
      * for this method will change for each type of router depending on expected
      * behaviour. For example, a MulticastingRouter might just iterate through the
      * list of assoaciated endpoints sending the message. Another type of router such
@@ -38,7 +38,7 @@ public interface NestedRouter extends Router
      * @see org.mule.routing.outbound.ExceptionBasedRouter
      * @see org.mule.routing.outbound.MulticastingRouter
      */
-    MuleMessage route(MuleMessage message, Session session, boolean synchronous) throws MessagingException;
+    MuleMessage route(MuleMessage message, MuleSession session, boolean synchronous) throws MessagingException;
 
     void setEndpoint(ImmutableEndpoint endpoint);
     

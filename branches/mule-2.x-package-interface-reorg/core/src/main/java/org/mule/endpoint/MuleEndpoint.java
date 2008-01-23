@@ -10,7 +10,6 @@
 
 package org.mule.endpoint;
 
-import org.mule.ImmutableMuleEndpoint;
 import org.mule.api.MuleContext;
 import org.mule.api.context.MuleContextAware;
 import org.mule.api.endpoint.Endpoint;

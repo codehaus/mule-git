@@ -10,12 +10,12 @@
 
 package org.mule.test.usecases.routing;
 
+import org.mule.DefaultMuleEvent;
 import org.mule.DefaultMuleMessage;
-import org.mule.MuleEvent;
 import org.mule.RequestContext;
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
-import org.mule.api.Session;
+import org.mule.api.MuleSession;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.routing.ComponentRoutingException;
 import org.mule.api.routing.RoutingException;
@@ -24,7 +24,7 @@ import org.mule.routing.AbstractCatchAllStrategy;
 
 public class InboundTransformingForwardingCatchAllStrategy extends AbstractCatchAllStrategy
 {
-    public MuleMessage catchMessage(MuleMessage message, Session session, boolean synchronous)
+    public MuleMessage catchMessage(MuleMessage message, MuleSession session, boolean synchronous)
         throws RoutingException
     {
         ImmutableEndpoint endpoint = this.getEndpoint();
@@ -37,7 +37,7 @@ public class InboundTransformingForwardingCatchAllStrategy extends AbstractCatch
         try
         {
             message = new DefaultMuleMessage(RequestContext.getEventContext().transformMessage(), message);
-            Event newEvent = new MuleEvent(message, endpoint, session, synchronous);
+            MuleEvent newEvent = new DefaultMuleEvent(message, endpoint, session, synchronous);
 
             if (synchronous)
             {

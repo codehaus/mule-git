@@ -13,7 +13,6 @@ package org.mule.transport.vm;
 import org.mule.DefaultMuleMessage;
 import org.mule.api.transport.Connector;
 import org.mule.tck.providers.AbstractConnectorTestCase;
-import org.mule.transport.vm.VMConnector;
 
 public class VMConnectorTestCase extends AbstractConnectorTestCase
 {

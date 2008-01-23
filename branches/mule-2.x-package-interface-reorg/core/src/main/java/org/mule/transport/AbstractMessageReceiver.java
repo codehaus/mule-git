@@ -10,16 +10,16 @@
 
 package org.mule.transport;
 
-import org.mule.MuleEvent;
-import org.mule.MuleSession;
+import org.mule.DefaultMuleEvent;
+import org.mule.DefaultMuleSession;
 import org.mule.NullSessionHandler;
 import org.mule.OptimizedRequestContext;
 import org.mule.RequestContext;
 import org.mule.ResponseOutputStream;
 import org.mule.api.AbstractMuleException;
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
-import org.mule.api.Session;
+import org.mule.api.MuleSession;
 import org.mule.api.component.Component;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.context.WorkManager;
@@ -35,9 +35,9 @@ import org.mule.api.transport.InternalMessageListener;
 import org.mule.api.transport.MessageReceiver;
 import org.mule.config.ExceptionHelper;
 import org.mule.config.i18n.CoreMessages;
-import org.mule.internal.notifications.ConnectionNotification;
-import org.mule.internal.notifications.MessageNotification;
-import org.mule.internal.notifications.SecurityNotification;
+import org.mule.context.notification.ConnectionNotification;
+import org.mule.context.notification.MessageNotification;
+import org.mule.context.notification.SecurityNotification;
 import org.mule.transaction.TransactionCoordination;
 import org.mule.util.ClassUtils;
 import org.mule.util.StringMessageUtils;
@@ -338,8 +338,8 @@ public abstract class AbstractMessageReceiver implements MessageReceiver
                 //to response messages where the filter denied the message
                 //Maybe the filter should be checked in the MessageListener...
                 message = handleUnacceptedFilter(message);
-                RequestContext.setEvent(new MuleEvent(message, endpoint,
-                        new MuleSession(message, new NullSessionHandler()), synchronous));
+                RequestContext.setEvent(new DefaultMuleEvent(message, endpoint,
+                        new DefaultMuleSession(message, new NullSessionHandler()), synchronous));
                 return message;
             }
         }
@@ -377,7 +377,7 @@ public abstract class AbstractMessageReceiver implements MessageReceiver
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.api.transport.MessageReceiver#setSession(org.mule.api.Session)
+     * @see org.mule.api.transport.MessageReceiver#setSession(org.mule.api.MuleSession)
      */
     public void setComponent(Component component)
     {
@@ -561,8 +561,8 @@ public abstract class AbstractMessageReceiver implements MessageReceiver
                     ros = new ResponseOutputStream(outputStream);
                 }
             }
-            Session session = new MuleSession(message, connector.getSessionHandler(), component);
-            Event muleEvent = new MuleEvent(message, endpoint, session, synchronous, ros);
+            MuleSession session = new DefaultMuleSession(message, connector.getSessionHandler(), component);
+            MuleEvent muleEvent = new DefaultMuleEvent(message, endpoint, session, synchronous, ros);
             muleEvent = OptimizedRequestContext.unsafeSetEvent(muleEvent);
             message = muleEvent.getMessage();
 

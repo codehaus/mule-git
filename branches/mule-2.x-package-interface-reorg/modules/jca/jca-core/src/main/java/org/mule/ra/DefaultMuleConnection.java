@@ -11,13 +11,13 @@
 package org.mule.ra;
 
 import org.mule.DefaultMuleMessage;
-import org.mule.MuleEvent;
-import org.mule.MuleSession;
+import org.mule.DefaultMuleEvent;
+import org.mule.DefaultMuleSession;
 import org.mule.api.MuleContext;
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.api.AbstractMuleException;
 import org.mule.api.MuleMessage;
-import org.mule.api.Session;
+import org.mule.api.MuleSession;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.transport.DispatchException;
@@ -65,7 +65,7 @@ public class DefaultMuleConnection implements MuleConnection
     public void dispatch(String url, Object payload, Map messageProperties) throws AbstractMuleException
     {
         MuleMessage message = new DefaultMuleMessage(payload, messageProperties);
-        Event event = getEvent(message, url, false);
+        MuleEvent event = getEvent(message, url, false);
         try
         {
             event.getSession().dispatchEvent(event);
@@ -98,7 +98,7 @@ public class DefaultMuleConnection implements MuleConnection
     public MuleMessage send(String url, Object payload, Map messageProperties) throws AbstractMuleException
     {
         MuleMessage message = new DefaultMuleMessage(payload, messageProperties);
-        Event event = getEvent(message, url, true);
+        MuleEvent event = getEvent(message, url, true);
 
         MuleMessage response;
         try
@@ -149,10 +149,10 @@ public class DefaultMuleConnection implements MuleConnection
      * @param message the event payload
      * @param uri the destination endpointUri
      * @param synchronous whether the event will be synchronously processed
-     * @return the Event
+     * @return the MuleEvent
      * @throws AbstractMuleException in case of Mule error
      */
-    protected Event getEvent(MuleMessage message, String uri, boolean synchronous)
+    protected MuleEvent getEvent(MuleMessage message, String uri, boolean synchronous)
         throws AbstractMuleException
     {
         ImmutableEndpoint endpoint = manager.getRegistry().lookupEndpointFactory().getOutboundEndpoint(uri);
@@ -165,7 +165,7 @@ public class DefaultMuleConnection implements MuleConnection
 
         try
         {
-            Session session = new MuleSession(message,
+            MuleSession session = new DefaultMuleSession(message,
                 ((AbstractConnector)endpoint.getConnector()).getSessionHandler());
 
             if (credentials != null)
@@ -173,7 +173,7 @@ public class DefaultMuleConnection implements MuleConnection
                 message.setProperty(MuleProperties.MULE_USER_PROPERTY, "Plain " + credentials.getToken());
             }
 
-            return new MuleEvent(message, endpoint, session, synchronous);
+            return new DefaultMuleEvent(message, endpoint, session, synchronous);
         }
         catch (Exception e)
         {

@@ -10,33 +10,29 @@
 
 package org.mule.transport.soap.axis.config;
 
-import org.mule.config.spring.parsers.collection.ChildListEntryDefinitionParser;
-import org.mule.config.spring.parsers.generic.MuleOrphanDefinitionParser;
+import org.mule.config.spring.handlers.AbstractMuleNamespaceHandler;
+import org.mule.config.spring.parsers.PreProcessor;
 import org.mule.config.spring.parsers.assembly.MapEntryCombiner;
 import org.mule.config.spring.parsers.assembly.configuration.PropertyConfiguration;
-import org.mule.config.spring.parsers.processors.AttributeConcatenation;
+import org.mule.config.spring.parsers.collection.ChildListEntryDefinitionParser;
 import org.mule.config.spring.parsers.delegate.ParentContextDefinitionParser;
-import org.mule.config.spring.parsers.PreProcessor;
-import org.mule.config.spring.parsers.specific.endpoint.TransportGlobalEndpointDefinitionParser;
-import org.mule.config.spring.parsers.specific.endpoint.TransportEndpointDefinitionParser;
-import org.mule.config.spring.parsers.specific.properties.NestedMapWithAttributesDefinitionParser;
-import org.mule.config.spring.parsers.specific.properties.SimplePropertyDefinitionParser;
-import org.mule.config.spring.parsers.specific.properties.NestedListDefinitionParser;
+import org.mule.config.spring.parsers.generic.MuleOrphanDefinitionParser;
+import org.mule.config.spring.parsers.processors.AttributeConcatenation;
 import org.mule.config.spring.parsers.specific.properties.ElementInNestedMapDefinitionParser;
 import org.mule.config.spring.parsers.specific.properties.ListPropertyDefinitionParser;
-import org.mule.config.spring.handlers.AbstractMuleNamespaceHandler;
-import org.mule.config.spring.factories.InboundEndpointFactoryBean;
-import org.mule.config.spring.factories.OutboundEndpointFactoryBean;
+import org.mule.config.spring.parsers.specific.properties.NestedListDefinitionParser;
+import org.mule.config.spring.parsers.specific.properties.NestedMapWithAttributesDefinitionParser;
+import org.mule.config.spring.parsers.specific.properties.SimplePropertyDefinitionParser;
 import org.mule.transport.soap.SoapConstants;
 import org.mule.transport.soap.axis.AxisConnector;
 import org.mule.transport.soap.axis.AxisMessageReceiver;
 
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
-import org.w3c.dom.Element;
 import org.apache.axis.constants.Style;
 import org.apache.axis.constants.Use;
+import org.w3c.dom.Element;
 
 /**
  * Registers a Bean Definition Parser for handling <code>&lt;axis:connector&gt;</code> elements.

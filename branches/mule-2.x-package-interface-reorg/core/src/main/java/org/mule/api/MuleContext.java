@@ -10,9 +10,9 @@
 package org.mule.api;
 
 import org.mule.Directories;
-import org.mule.api.context.ServerNotification;
-import org.mule.api.context.ServerNotificationListener;
 import org.mule.api.context.WorkManager;
+import org.mule.api.context.notification.ServerNotification;
+import org.mule.api.context.notification.ServerNotificationListener;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.lifecycle.Lifecycle;
 import org.mule.api.lifecycle.LifecycleManager;
@@ -21,8 +21,8 @@ import org.mule.api.registry.Registry;
 import org.mule.api.security.SecurityManager;
 import org.mule.api.store.Store;
 import org.mule.config.MuleConfiguration;
-import org.mule.internal.notifications.NotificationException;
-import org.mule.internal.notifications.manager.ServerNotificationManager;
+import org.mule.context.notification.NotificationException;
+import org.mule.context.notification.ServerNotificationManager;
 import org.mule.management.stats.AllStatistics;
 import org.mule.util.queue.QueueManager;
 
@@ -98,9 +98,9 @@ public interface MuleContext extends Lifecycle
     /**
      * Registers an intenal server event listener. The listener will be notified
      * when a particular event happens within the server. Typically this is not
-     * an event in the same sense as an Event (although there is nothing
+     * an event in the same sense as an MuleEvent (although there is nothing
      * stopping the implementation of this class triggering listeners when a
-     * Event is received).
+     * MuleEvent is received).
      * <p/>
      * The types of notifications fired is entirely defined by the implementation of
      * this class
@@ -112,9 +112,9 @@ public interface MuleContext extends Lifecycle
     /**
      * Registers an intenal server event listener. The listener will be notified
      * when a particular event happens within the server. Typically this is not
-     * an event in the same sense as an Event (although there is nothing
+     * an event in the same sense as an MuleEvent (although there is nothing
      * stopping the implementation of this class triggering listeners when a
-     * Event is received).
+     * MuleEvent is received).
      * <p/>
      * The types of notifications fired is entirely defined by the implementation of
      * this class

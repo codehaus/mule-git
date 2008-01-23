@@ -11,7 +11,7 @@
 package org.mule.transformers.xml;
 
 import org.mule.RequestContext;
-import org.mule.api.EventContext;
+import org.mule.api.MuleEventContext;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.transformer.Transformer;
 import org.mule.api.transformer.TransformerException;
@@ -390,7 +390,7 @@ public class XsltTransformer extends AbstractXmlTransformer
      * Returns the value to be set for the parameter. This method is called for each
      * parameter before it is set on the transformer. The purpose of this method is to
      * allow dynamic parameters related to the event (usually message properties) to be
-     * used. Any attribute of the current EventContext can be accessed using JXPath.
+     * used. Any attribute of the current MuleEventContext can be accessed using JXPath.
      * </p>
      * <p>
      * For example: If the current event's message has a property named "myproperty", to
@@ -447,7 +447,7 @@ public class XsltTransformer extends AbstractXmlTransformer
             else
             {
 
-                EventContext context = RequestContext.getEventContext();
+                MuleEventContext context = RequestContext.getEventContext();
 
                 if (context == null)
                 {

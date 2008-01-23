@@ -11,7 +11,7 @@
 package org.mule.transport.http.components;
 
 import org.mule.DefaultMuleMessage;
-import org.mule.api.EventContext;
+import org.mule.api.MuleEventContext;
 import org.mule.api.MuleMessage;
 import org.mule.api.lifecycle.Callable;
 import org.mule.api.lifecycle.Initialisable;
@@ -177,7 +177,7 @@ public class RestServiceWrapper implements Callable, Initialisable
         }
     }
 
-    public Object onCall(EventContext eventContext) throws Exception
+    public Object onCall(MuleEventContext eventContext) throws Exception
     {
         String tempUrl;
         Object request = eventContext.transformMessage();

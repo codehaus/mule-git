@@ -12,7 +12,7 @@ package org.mule.routing.outbound;
 
 import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleMessage;
-import org.mule.api.Session;
+import org.mule.api.MuleSession;
 import org.mule.api.endpoint.Endpoint;
 import org.mule.api.routing.RoutingException;
 import org.mule.tck.AbstractMuleTestCase;
@@ -55,7 +55,7 @@ public class StaticRecipientListRouterTestCase extends AbstractMuleTestCase
         // check for equality on the arguments passed to the dispatch / send methods
         session.expect("dispatchEvent", C.args(C.isA(MuleMessage.class), C.isA(Endpoint.class)));
         session.expect("dispatchEvent", C.args(C.isA(MuleMessage.class), C.isA(Endpoint.class)));
-        router.route(message, (Session)session.proxy(), false);
+        router.route(message, (MuleSession)session.proxy(), false);
         session.verify();
 
         message = new DefaultMuleMessage("test event");
@@ -66,7 +66,7 @@ public class StaticRecipientListRouterTestCase extends AbstractMuleTestCase
             message);
         session.expectAndReturn("sendEvent", C.args(C.isA(MuleMessage.class), C.isA(Endpoint.class)),
             message);
-        MuleMessage result = router.route(message, (Session)session.proxy(), true);
+        MuleMessage result = router.route(message, (MuleSession)session.proxy(), true);
         assertNotNull(result);
         assertTrue(result.getPayload() instanceof List);
         assertEquals(3, ((List)result.getPayload()).size());
@@ -96,7 +96,7 @@ public class StaticRecipientListRouterTestCase extends AbstractMuleTestCase
         assertTrue(router.isMatch(message));
         try
         {
-            router.route(message, (Session)session.proxy(), false);
+            router.route(message, (MuleSession)session.proxy(), false);
             fail("Should not allow malformed endpointUri");
         }
         catch (RoutingException e)

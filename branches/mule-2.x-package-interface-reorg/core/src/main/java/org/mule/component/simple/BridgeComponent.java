@@ -10,7 +10,7 @@
 
 package org.mule.component.simple;
 
-import org.mule.api.EventContext;
+import org.mule.api.MuleEventContext;
 import org.mule.api.component.Component;
 import org.mule.api.component.ComponentAware;
 import org.mule.api.config.ConfigurationException;
@@ -36,7 +36,7 @@ import java.util.Iterator;
 public class BridgeComponent implements ComponentAware, Callable
 {
 
-    public Object onCall(EventContext context) throws Exception
+    public Object onCall(MuleEventContext context) throws Exception
     {
         throw new UnsupportedOperationException(
             "A bridge should not ever receive an event, instead the event should be directly dispatched from the inbound endpoint to the outbound router. Component is: "

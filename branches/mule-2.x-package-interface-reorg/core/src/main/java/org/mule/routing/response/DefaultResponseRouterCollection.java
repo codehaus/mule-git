@@ -10,7 +10,7 @@
 
 package org.mule.routing.response;
 
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.endpoint.InvalidEndpointTypeException;
@@ -56,7 +56,7 @@ public class DefaultResponseRouterCollection extends AbstractRouterCollection im
         }
     }
 
-    public void route(Event event) throws RoutingException
+    public void route(MuleEvent event) throws RoutingException
     {
         ResponseRouter router;
         for (Iterator iterator = getRouters().iterator(); iterator.hasNext();)

@@ -10,7 +10,7 @@
 
 package org.mule.extras.acegi;
 
-import org.mule.api.security.MuleAuthentication;
+import org.mule.api.security.Authentication;
 import org.mule.api.security.SecurityContext;
 import org.mule.api.security.SecurityContextFactory;
 
@@ -23,7 +23,7 @@ import org.acegisecurity.context.SecurityContextImpl;
  */
 public class AcegiSecurityContextFactory implements SecurityContextFactory
 {
-    public SecurityContext create(MuleAuthentication authentication)
+    public SecurityContext create(Authentication authentication)
     {
         org.acegisecurity.context.SecurityContext context = new SecurityContextImpl();
         context.setAuthentication(((AcegiAuthenticationAdapter)authentication).getDelegate());

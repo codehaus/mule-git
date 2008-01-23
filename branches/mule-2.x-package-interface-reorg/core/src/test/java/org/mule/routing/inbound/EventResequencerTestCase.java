@@ -10,12 +10,12 @@
 
 package org.mule.routing.inbound;
 
+import org.mule.DefaultMuleEvent;
 import org.mule.DefaultMuleMessage;
-import org.mule.MuleEvent;
 import org.mule.api.AbstractMuleException;
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
-import org.mule.api.Session;
+import org.mule.api.MuleSession;
 import org.mule.api.component.Component;
 import org.mule.api.endpoint.Endpoint;
 import org.mule.api.routing.InboundRouterCollection;
@@ -47,9 +47,9 @@ public class EventResequencerTestCase extends AbstractMuleTestCase
         MuleMessage message3 = new DefaultMuleMessage("test event C");
 
         Endpoint endpoint = getTestEndpoint("Test1Provider", Endpoint.ENDPOINT_TYPE_SENDER);
-        Event event1 = new MuleEvent(message1, endpoint, (Session)session.proxy(), false);
-        Event event2 = new MuleEvent(message2, endpoint, (Session)session.proxy(), false);
-        Event event3 = new MuleEvent(message3, endpoint, (Session)session.proxy(), false);
+        MuleEvent event1 = new DefaultMuleEvent(message1, endpoint, (MuleSession)session.proxy(), false);
+        MuleEvent event2 = new DefaultMuleEvent(message2, endpoint, (MuleSession)session.proxy(), false);
+        MuleEvent event3 = new DefaultMuleEvent(message3, endpoint, (MuleSession)session.proxy(), false);
         assertTrue(router.isMatch(event1));
         assertTrue(router.isMatch(event2));
         assertTrue(router.isMatch(event3));
@@ -57,7 +57,7 @@ public class EventResequencerTestCase extends AbstractMuleTestCase
         assertNull(router.process(event2));
         assertNull(router.process(event3));
 
-        Event[] results = router.process(event1);
+        MuleEvent[] results = router.process(event1);
         assertNotNull(results);
         assertEquals(3, results.length);
 
@@ -108,7 +108,7 @@ public class EventResequencerTestCase extends AbstractMuleTestCase
         {
             try
             {
-                return ((Event)o1).getMessageAsString().compareTo(((Event)o2).getMessageAsString());
+                return ((MuleEvent)o1).getMessageAsString().compareTo(((MuleEvent)o2).getMessageAsString());
             }
             catch (AbstractMuleException e)
             {

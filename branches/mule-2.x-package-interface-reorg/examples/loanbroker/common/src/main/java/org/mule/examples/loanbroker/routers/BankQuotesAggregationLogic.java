@@ -11,7 +11,7 @@
 package org.mule.examples.loanbroker.routers;
 
 import org.mule.DefaultMuleMessage;
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.examples.loanbroker.LocaleMessage;
 import org.mule.examples.loanbroker.messages.LoanQuote;
@@ -33,11 +33,11 @@ public class BankQuotesAggregationLogic
     {
         LoanQuote lowestQuote = null;
         LoanQuote quote = null;
-        Event event = null;
+        MuleEvent event = null;
 
         for (Iterator iterator = events.iterator(); iterator.hasNext();)
         {
-            event = (Event)iterator.next();
+            event = (MuleEvent)iterator.next();
             Object o = event.transformMessage();
             if(o instanceof LoanQuote)
             {

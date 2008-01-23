@@ -10,7 +10,7 @@
 
 package org.mule.transport;
 
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.ImmutableEndpoint;
 
@@ -22,12 +22,12 @@ public final class UnsupportedMessageDispatcher extends AbstractMessageDispatche
         super(endpoint);
     }
 
-    protected void doDispatch(Event event) throws Exception
+    protected void doDispatch(MuleEvent event) throws Exception
     {
         throw new UnsupportedOperationException("Dispatch not supported for this transport.");
     }
 
-    protected MuleMessage doSend(Event event) throws Exception
+    protected MuleMessage doSend(MuleEvent event) throws Exception
     {
         throw new UnsupportedOperationException("Send not supported for this transport.");
     }

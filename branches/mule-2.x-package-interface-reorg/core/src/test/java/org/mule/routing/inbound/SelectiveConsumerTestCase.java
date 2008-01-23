@@ -10,11 +10,11 @@
 
 package org.mule.routing.inbound;
 
+import org.mule.DefaultMuleEvent;
 import org.mule.DefaultMuleMessage;
-import org.mule.MuleEvent;
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
-import org.mule.api.Session;
+import org.mule.api.MuleSession;
 import org.mule.api.component.Component;
 import org.mule.api.endpoint.Endpoint;
 import org.mule.api.routing.InboundRouterCollection;
@@ -49,7 +49,7 @@ public class SelectiveConsumerTestCase extends AbstractMuleTestCase
         MuleMessage message = new DefaultMuleMessage("test event");
 
         Endpoint endpoint = getTestEndpoint("Test1Provider", Endpoint.ENDPOINT_TYPE_SENDER);
-        Event event = new MuleEvent(message, endpoint, (Session) session.proxy(), false);
+        MuleEvent event = new DefaultMuleEvent(message, endpoint, (MuleSession) session.proxy(), false);
         assertTrue(router.isMatch(event));
 
         session.expect("dispatchEvent", C.eq(event));
@@ -57,7 +57,7 @@ public class SelectiveConsumerTestCase extends AbstractMuleTestCase
         messageRouter.route(event);
         session.verify();
 
-        event = new MuleEvent(message, endpoint, (Session) session.proxy(), true);
+        event = new DefaultMuleEvent(message, endpoint, (MuleSession) session.proxy(), true);
 
         session.expectAndReturn("sendEvent", C.eq(event), message);
         session.expectAndReturn("getComponent", testComponent);
@@ -70,7 +70,7 @@ public class SelectiveConsumerTestCase extends AbstractMuleTestCase
         session.expectAndReturn("toString", "");
         message = new DefaultMuleMessage(new Exception());
 
-        event = new MuleEvent(message, endpoint, (Session) session.proxy(), false);
+        event = new DefaultMuleEvent(message, endpoint, (MuleSession) session.proxy(), false);
         assertTrue(!router.isMatch(event));
 
         messageRouter.route(event);
@@ -95,7 +95,7 @@ public class SelectiveConsumerTestCase extends AbstractMuleTestCase
 
         Endpoint endpoint = getTestEndpoint("Test1Provider", Endpoint.ENDPOINT_TYPE_SENDER);
         endpoint.setTransformers(CollectionUtils.singletonList(new ObjectToByteArray()));
-        Event event = new MuleEvent(message, endpoint, (Session) session.proxy(), false);
+        MuleEvent event = new DefaultMuleEvent(message, endpoint, (MuleSession) session.proxy(), false);
         assertTrue(router.isMatch(event));
 
         session.expect("dispatchEvent", C.eq(event));
@@ -103,7 +103,7 @@ public class SelectiveConsumerTestCase extends AbstractMuleTestCase
         messageRouter.route(event);
         session.verify();
 
-        event = new MuleEvent(message, endpoint, (Session) session.proxy(), true);
+        event = new DefaultMuleEvent(message, endpoint, (MuleSession) session.proxy(), true);
 
         session.expectAndReturn("sendEvent", C.eq(event), message);
         session.expectAndReturn("getComponent", testComponent);
@@ -116,7 +116,7 @@ public class SelectiveConsumerTestCase extends AbstractMuleTestCase
         session.expectAndReturn("toString", "");
         message = new DefaultMuleMessage("Hello String");
 
-        event = new MuleEvent(message, endpoint, (Session) session.proxy(), false);
+        event = new DefaultMuleEvent(message, endpoint, (MuleSession) session.proxy(), false);
         router.setTransformFirst(false);
         assertTrue(!router.isMatch(event));
 

@@ -10,16 +10,16 @@
 
 package org.mule.transport.soap.axis.extensions;
 
+import org.mule.DefaultMuleEvent;
 import org.mule.DefaultMuleMessage;
-import org.mule.MuleEvent;
 import org.mule.MuleServer;
 import org.mule.RegistryContext;
 import org.mule.RequestContext;
-import org.mule.api.MuleContext;
-import org.mule.api.Event;
 import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleContext;
+import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
-import org.mule.api.Session;
+import org.mule.api.MuleSession;
 import org.mule.api.component.Component;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.endpoint.Endpoint;
@@ -83,8 +83,8 @@ public class UniversalSender extends BasicHandler
         }
         // Get the event stored in call
         // If a receive call is made there will be no event
-        // Event event =
-        // (Event)call.getProperty(MuleProperties.MULE_EVENT_PROPERTY);
+        // MuleEvent event =
+        // (MuleEvent)call.getProperty(MuleProperties.MULE_EVENT_PROPERTY);
         // Get the dispatch endpoint
         String uri = msgContext.getStrProp(MessageContext.TRANS_URL);
         ImmutableEndpoint requestEndpoint = (ImmutableEndpoint)call
@@ -204,7 +204,7 @@ public class UniversalSender extends BasicHandler
                 props.put(HttpConstants.HEADER_CONTENT_TYPE, contentType);
             }
             MuleMessage message = new DefaultMuleMessage(payload, props);
-            Session session = RequestContext.getEventContext().getSession();
+            MuleSession session = RequestContext.getEventContext().getSession();
 
             logger.info("Making Axis soap request on: " + uri);
             if (logger.isDebugEnabled())
@@ -220,7 +220,7 @@ public class UniversalSender extends BasicHandler
                 ImmutableEndpoint syncEndpoint = muleContext.getRegistry()
                     .lookupEndpointFactory()
                     .getOutboundEndpoint(builder);
-                Event dispatchEvent = new MuleEvent(message, syncEndpoint, session, sync);
+                MuleEvent dispatchEvent = new DefaultMuleEvent(message, syncEndpoint, session, sync);
                 MuleMessage result = endpoint.send(dispatchEvent);
 
                 if (result != null)
@@ -243,7 +243,7 @@ public class UniversalSender extends BasicHandler
             }
             else
             {
-                Event dispatchEvent = new MuleEvent(message, endpoint, session, sync);
+                MuleEvent dispatchEvent = new DefaultMuleEvent(message, endpoint, session, sync);
                 endpoint.dispatch(dispatchEvent);
             }
         }

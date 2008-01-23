@@ -12,7 +12,7 @@ package org.mule.api.transport;
 
 import org.mule.api.AbstractMuleException;
 import org.mule.api.MuleMessage;
-import org.mule.api.Session;
+import org.mule.api.MuleSession;
 
 /**
  * An interface used for reading and writing session information to and from the
@@ -21,9 +21,9 @@ import org.mule.api.Session;
 public interface SessionHandler
 {
 
-    void storeSessionInfoToMessage(Session session, MuleMessage message) throws AbstractMuleException;
+    void storeSessionInfoToMessage(MuleSession session, MuleMessage message) throws AbstractMuleException;
 
-    void retrieveSessionInfoFromMessage(MuleMessage message, Session session) throws AbstractMuleException;
+    void retrieveSessionInfoFromMessage(MuleMessage message, MuleSession session) throws AbstractMuleException;
 
     /**
      * The property name of the session id to use when creating the Mule session. by

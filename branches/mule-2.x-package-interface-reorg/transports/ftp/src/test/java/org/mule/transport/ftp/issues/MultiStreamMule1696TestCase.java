@@ -10,7 +10,7 @@
 
 package org.mule.transport.ftp.issues;
 
-import org.mule.api.EventContext;
+import org.mule.api.MuleEventContext;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.functional.EventCallback;
 import org.mule.tck.functional.FunctionalStreamingTestComponent;
@@ -43,7 +43,7 @@ public class MultiStreamMule1696TestCase extends AbstractFtpServerTestCase
     {
         return new EventCallback()
         {
-            public synchronized void eventReceived(EventContext context, Object component)
+            public synchronized void eventReceived(MuleEventContext context, Object component)
             {
                 try
                 {

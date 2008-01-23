@@ -16,7 +16,7 @@ import org.mule.transformer.AbstractTransformer;
 
 /**
  * Extracts the customer information from the request into an array of arguments used
- * to invoke the Credit Agency Session bean
+ * to invoke the Credit Agency MuleSession bean
  */
 public class LoanQuoteRequestToCreditProfileArgs extends AbstractTransformer
 {

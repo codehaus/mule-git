@@ -11,7 +11,7 @@
 package org.mule.transport.email;
 
 import org.mule.DefaultMuleMessage;
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.EndpointURI;
 import org.mule.api.endpoint.ImmutableEndpoint;
@@ -107,7 +107,7 @@ public class RetrieveMessageRequester extends AbstractMessageRequester
      * @param event
      * @throws UnsupportedOperationException
      */
-    protected void doDispatch(Event event) throws Exception
+    protected void doDispatch(MuleEvent event) throws Exception
     {
         throw new UnsupportedOperationException("Cannot dispatch from a Pop3 connection");
     }
@@ -117,7 +117,7 @@ public class RetrieveMessageRequester extends AbstractMessageRequester
      * @return
      * @throws UnsupportedOperationException
      */
-    protected MuleMessage doSend(Event event) throws Exception
+    protected MuleMessage doSend(MuleEvent event) throws Exception
     {
         throw new UnsupportedOperationException("Cannot send from a Pop3 connection");
     }

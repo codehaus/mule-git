@@ -11,7 +11,7 @@
 package org.mule.extras.jaas;
 
 import org.mule.api.lifecycle.InitialisationException;
-import org.mule.api.security.MuleAuthentication;
+import org.mule.api.security.Authentication;
 import org.mule.api.security.SecurityContext;
 import org.mule.api.security.SecurityContextFactory;
 import org.mule.api.security.SecurityProvider;
@@ -186,7 +186,7 @@ public class JaasSimpleAuthenticationProvider implements SecurityProvider
      * @throws org.mule.api.security.SecurityException
      *
      */
-    public final MuleAuthentication authenticate(MuleAuthentication authentication)
+    public final Authentication authenticate(Authentication authentication)
             throws org.mule.api.security.SecurityException
     {
         LoginContext loginContext;
@@ -239,7 +239,7 @@ public class JaasSimpleAuthenticationProvider implements SecurityProvider
      */
     public final boolean supports(Class aClass)
     {
-        return MuleAuthentication.class.isAssignableFrom(aClass);
+        return Authentication.class.isAssignableFrom(aClass);
     }
 
     /**
@@ -248,7 +248,7 @@ public class JaasSimpleAuthenticationProvider implements SecurityProvider
      *          This occurs when the Security
      *          Factory cannot be created
      */
-    public final SecurityContext createSecurityContext(MuleAuthentication auth)
+    public final SecurityContext createSecurityContext(Authentication auth)
             throws UnknownAuthenticationTypeException
     {
         return factory.create(auth);

@@ -10,7 +10,7 @@
 
 package org.mule.test.integration.message;
 
-import org.mule.api.EventContext;
+import org.mule.api.MuleEventContext;
 import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.AbstractMuleTestCase;
@@ -54,7 +54,7 @@ public class AttachmentsPropagationTestCase extends AbstractMuleTestCase impleme
 //            .getEndpointURI());
     }
 
-    public void eventReceived(EventContext context, Object component) throws Exception
+    public void eventReceived(MuleEventContext context, Object component) throws Exception
     {
         MuleMessage message = context.getMessage();
         // add an attachment, named after the componentname...

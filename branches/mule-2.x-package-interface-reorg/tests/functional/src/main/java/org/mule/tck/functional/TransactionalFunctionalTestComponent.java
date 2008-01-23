@@ -10,7 +10,7 @@
 
 package org.mule.tck.functional;
 
-import org.mule.api.EventContext;
+import org.mule.api.MuleEventContext;
 import org.mule.api.transaction.Transaction;
 import org.mule.api.transaction.TransactionException;
 import org.mule.config.i18n.MessageFactory;
@@ -25,7 +25,7 @@ public class TransactionalFunctionalTestComponent extends FunctionalTestComponen
     private boolean rollback = true;
 
     /** {@inheritDoc} */
-    public Object onCall(EventContext context) throws Exception
+    public Object onCall(MuleEventContext context) throws Exception
     {
         Object replyMessage = super.onCall(context);
 

@@ -13,7 +13,7 @@ package org.mule.transport.soap;
 import org.mule.DefaultMuleMessage;
 import org.mule.MuleServer;
 import org.mule.api.MuleContext;
-import org.mule.api.EventContext;
+import org.mule.api.MuleEventContext;
 import org.mule.api.MuleMessage;
 import org.mule.api.component.Component;
 import org.mule.api.component.ComponentAware;
@@ -106,7 +106,7 @@ public class WSProxyService implements Callable, ComponentAware, Initialisable
         this.wsdlFile = wsdlFile;
     }
 
-    public Object onCall(EventContext eventContext) throws Exception
+    public Object onCall(MuleEventContext eventContext) throws Exception
     {
         if (wsdlEndpoint == null && lazyInit)
         {

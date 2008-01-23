@@ -11,7 +11,7 @@
 package org.mule.api.transport;
 
 import org.mule.api.AbstractMuleException;
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 
 import java.util.List;
@@ -24,7 +24,7 @@ import java.util.List;
 public interface ReplyToHandler
 {
 
-    void processReplyTo(Event event, MuleMessage returnMessage, Object replyTo) throws AbstractMuleException;
+    void processReplyTo(MuleEvent event, MuleMessage returnMessage, Object replyTo) throws AbstractMuleException;
 
     void setTransformers(List transformers);
 

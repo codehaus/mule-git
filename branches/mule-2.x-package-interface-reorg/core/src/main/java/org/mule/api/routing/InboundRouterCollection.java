@@ -10,8 +10,8 @@
 
 package org.mule.api.routing;
 
-import org.mule.api.Event;
 import org.mule.api.MessagingException;
+import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.ImmutableEndpoint;
 
@@ -23,7 +23,7 @@ import java.util.List;
 
 public interface InboundRouterCollection extends RouterCollection
 {
-    MuleMessage route(Event event) throws MessagingException;
+    MuleMessage route(MuleEvent event) throws MessagingException;
 
     void addRouter(InboundRouter router);
 

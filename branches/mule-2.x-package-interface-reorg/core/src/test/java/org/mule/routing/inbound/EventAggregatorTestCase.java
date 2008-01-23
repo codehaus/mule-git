@@ -10,12 +10,12 @@
 
 package org.mule.routing.inbound;
 
+import org.mule.DefaultMuleEvent;
 import org.mule.DefaultMuleMessage;
-import org.mule.MuleEvent;
 import org.mule.api.AbstractMuleException;
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
-import org.mule.api.Session;
+import org.mule.api.MuleSession;
 import org.mule.api.component.Component;
 import org.mule.api.endpoint.Endpoint;
 import org.mule.api.routing.InboundRouterCollection;
@@ -33,7 +33,7 @@ public class EventAggregatorTestCase extends AbstractMuleTestCase
     public void testMessageAggregator() throws Exception
     {
         Component testComponent = getTestComponent("test", Apple.class);
-        Session session = getTestSession(testComponent);
+        MuleSession session = getTestSession(testComponent);
 
         InboundRouterCollection messageRouter = new DefaultInboundRouterCollection();
         SimpleEventAggregator router = new SimpleEventAggregator(3);
@@ -45,9 +45,9 @@ public class EventAggregatorTestCase extends AbstractMuleTestCase
         MuleMessage message3 = new DefaultMuleMessage("test event C");
 
         Endpoint endpoint = getTestEndpoint("Test1Provider", Endpoint.ENDPOINT_TYPE_SENDER);
-        Event event1 = new MuleEvent(message1, endpoint, session, false);
-        Event event2 = new MuleEvent(message2, endpoint, session, false);
-        Event event3 = new MuleEvent(message3, endpoint, session, false);
+        MuleEvent event1 = new DefaultMuleEvent(message1, endpoint, session, false);
+        MuleEvent event2 = new DefaultMuleEvent(message2, endpoint, session, false);
+        MuleEvent event3 = new DefaultMuleEvent(message3, endpoint, session, false);
         assertTrue(router.isMatch(event1));
         assertTrue(router.isMatch(event2));
         assertTrue(router.isMatch(event3));
@@ -55,7 +55,7 @@ public class EventAggregatorTestCase extends AbstractMuleTestCase
         assertNull(router.process(event1));
         assertNull(router.process(event2));
 
-        Event[] results = router.process(event3);
+        MuleEvent[] results = router.process(event3);
         assertNotNull(results);
         assertEquals(1, results.length);
         assertEquals("test event A test event B test event C ", results[0].getMessageAsString());
@@ -93,7 +93,7 @@ public class EventAggregatorTestCase extends AbstractMuleTestCase
 
             for (Iterator iterator = events.iterator(); iterator.hasNext();)
             {
-                Event event = (Event)iterator.next();
+                MuleEvent event = (MuleEvent)iterator.next();
                 try
                 {
                     newPayload.append(event.getMessageAsString()).append(" ");

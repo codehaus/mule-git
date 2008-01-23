@@ -13,7 +13,7 @@ package org.mule.api.model;
 import org.mule.config.i18n.Message;
 
 /**
- * <code>SessionException</code> is thrown when errors occur in the MuleSession or
+ * <code>SessionException</code> is thrown when errors occur in the DefaultMuleSession or
  * Seession Manager
  */
 public class SessionException extends ModelException

@@ -11,9 +11,9 @@ package org.mule.lifecycle;
 
 import org.mule.api.MuleContext;
 import org.mule.api.MuleRuntimeException;
-import org.mule.api.context.ServerNotification;
+import org.mule.api.context.notification.ServerNotification;
 import org.mule.config.i18n.CoreMessages;
-import org.mule.internal.notifications.ManagerNotification;
+import org.mule.context.notification.ManagerNotification;
 import org.mule.util.ClassUtils;
 
 import java.lang.reflect.Constructor;

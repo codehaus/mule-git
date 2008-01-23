@@ -12,7 +12,7 @@ package org.mule.routing.outbound;
 
 import org.mule.api.AbstractMuleException;
 import org.mule.api.MuleMessage;
-import org.mule.api.Session;
+import org.mule.api.MuleSession;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.routing.CouldNotRouteOutboundMessageException;
@@ -37,7 +37,7 @@ public abstract class AbstractMessageSplitter extends FilteringOutboundRouter
     // synchronous on the endpoint
     protected boolean honorSynchronicity = false;
 
-    public MuleMessage route(MuleMessage message, Session session, boolean synchronous)
+    public MuleMessage route(MuleMessage message, MuleSession session, boolean synchronous)
         throws RoutingException
     {
         String correlationId = (String) propertyExtractor.getProperty(

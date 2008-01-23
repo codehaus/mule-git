@@ -9,9 +9,9 @@
  */
 package org.mule.config.spring.handlers;
 
-import org.mule.DefaultComponentExceptionStrategy;
 import org.mule.DefaultExceptionStrategy;
 import org.mule.api.config.MuleProperties;
+import org.mule.component.DefaultComponentExceptionStrategy;
 import org.mule.component.simple.EchoComponent;
 import org.mule.component.simple.LogComponent;
 import org.mule.component.simple.NullComponent;
@@ -38,6 +38,7 @@ import org.mule.config.spring.parsers.specific.DefaultThreadingProfileDefinition
 import org.mule.config.spring.parsers.specific.EnvironmentPropertyDefinitionParser;
 import org.mule.config.spring.parsers.specific.FilterDefinitionParser;
 import org.mule.config.spring.parsers.specific.ForwardingRouterDefinitionParser;
+import org.mule.config.spring.parsers.specific.IgnoreObjectMethodsDefinitionParser;
 import org.mule.config.spring.parsers.specific.MuleAdminAgentDefinitionParser;
 import org.mule.config.spring.parsers.specific.NotificationDefinitionParser;
 import org.mule.config.spring.parsers.specific.NotificationDisableDefinitionParser;
@@ -49,18 +50,17 @@ import org.mule.config.spring.parsers.specific.ServiceOverridesDefinitionParser;
 import org.mule.config.spring.parsers.specific.SimplePojoServiceDefinitionParser;
 import org.mule.config.spring.parsers.specific.SpringFactoryBeanDefinitionParser;
 import org.mule.config.spring.parsers.specific.ThreadingProfileDefinitionParser;
+import org.mule.config.spring.parsers.specific.TransactionDefinitionParser;
 import org.mule.config.spring.parsers.specific.TransactionManagerDefinitionParser;
 import org.mule.config.spring.parsers.specific.TransformerDefinitionParser;
 import org.mule.config.spring.parsers.specific.TransformerRefDefinitionParser;
-import org.mule.config.spring.parsers.specific.IgnoreObjectMethodsDefinitionParser;
-import org.mule.config.spring.parsers.specific.TransactionDefinitionParser;
 import org.mule.config.spring.parsers.specific.endpoint.GenericEndpointDefinitionParser;
 import org.mule.config.spring.parsers.specific.endpoint.support.OrphanEndpointDefinitionParser;
 import org.mule.container.JndiContainerContext;
 import org.mule.container.PropertiesContainerContext;
 import org.mule.container.RmiContainerContext;
+import org.mule.context.notification.ListenerSubscriptionPair;
 import org.mule.endpoint.EndpointURIEndpointBuilder;
-import org.mule.internal.notifications.manager.ListenerSubscriptionPair;
 import org.mule.model.resolvers.ArrayEntryPointResolver;
 import org.mule.model.resolvers.CallableEntryPointResolver;
 import org.mule.model.resolvers.DefaultEntryPointResolverSet;

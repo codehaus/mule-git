@@ -11,10 +11,10 @@
 package org.mule;
 
 import org.mule.api.AbstractMuleException;
-import org.mule.api.Event;
-import org.mule.api.EventContext;
 import org.mule.api.MessagingException;
 import org.mule.api.MuleContext;
+import org.mule.api.MuleEvent;
+import org.mule.api.MuleEventContext;
 import org.mule.api.MuleMessage;
 import org.mule.api.context.MuleContextAware;
 import org.mule.api.endpoint.EndpointURI;
@@ -29,7 +29,7 @@ import org.mule.api.transaction.Transaction;
 import org.mule.api.transaction.TransactionException;
 import org.mule.config.ExceptionHelper;
 import org.mule.config.i18n.CoreMessages;
-import org.mule.internal.notifications.ExceptionNotification;
+import org.mule.context.notification.ExceptionNotification;
 import org.mule.message.ExceptionMessage;
 import org.mule.transaction.TransactionCoordination;
 import org.mule.transport.NullPayload;
@@ -223,7 +223,7 @@ public abstract class AbstractExceptionListener implements ExceptionListener, In
             try
             {
                 logger.error("Message being processed is: " + (message == null ? "null" : message.toString()));
-                EventContext ctx = RequestContext.getEventContext();
+                MuleEventContext ctx = RequestContext.getEventContext();
                 String component = "Unknown";
                 EndpointURI endpointUri = null;
                 if (ctx != null)
@@ -250,7 +250,7 @@ public abstract class AbstractExceptionListener implements ExceptionListener, In
                 {
                     exceptionMessage = new DefaultMuleMessage(msg, ctx.getMessage());
                 }
-                Event exceptionEvent = new MuleEvent(exceptionMessage, endpoint, new MuleSession(
+                MuleEvent exceptionEvent = new DefaultMuleEvent(exceptionMessage, endpoint, new DefaultMuleSession(
                     exceptionMessage, new MuleSessionHandler()), true);
                 exceptionEvent = RequestContext.setEvent(exceptionEvent);
                 endpoint.send(exceptionEvent);
@@ -354,7 +354,7 @@ public abstract class AbstractExceptionListener implements ExceptionListener, In
 
     /**
      * Fires a server notification to all registered
-     * {@link org.mule.api.context.notification.ExceptionNotificationListener}
+     * {@link org.mule.api.context.notification.listener.ExceptionNotificationListener}
      * eventManager.
      *
      * @param notification the notification to fire.

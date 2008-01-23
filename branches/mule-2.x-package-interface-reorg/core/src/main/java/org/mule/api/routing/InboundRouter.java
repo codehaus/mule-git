@@ -10,8 +10,8 @@
 
 package org.mule.api.routing;
 
-import org.mule.api.Event;
 import org.mule.api.MessagingException;
+import org.mule.api.MuleEvent;
 
 /**
  * <code>InboundRouter</code> defines an interface for an inbound Message
@@ -25,7 +25,7 @@ import org.mule.api.MessagingException;
 public interface InboundRouter extends Router
 {
     /**
-     * A received Event is passed to this method for processing. The router can
+     * A received MuleEvent is passed to this method for processing. The router can
      * control processing by either 1. passing back a null to indicate that the
      * router has either discarded the event of the event has been stored for further
      * processing. A reaosn for storing the event might be that other events in it's
@@ -41,7 +41,7 @@ public interface InboundRouter extends Router
      *         events to be processed by the component
      * @throws MessagingException if an error occurs during processing of the event
      */
-    Event[] process(Event event) throws MessagingException;
+    MuleEvent[] process(MuleEvent event) throws MessagingException;
 
     /**
      * Determines if the event should be processed by this router. Routers can be
@@ -54,5 +54,5 @@ public interface InboundRouter extends Router
      * @throws MessagingException if the event cannot be evaluated
      * @see org.mule.routing.inbound.SelectiveConsumer
      */
-    boolean isMatch(Event event) throws MessagingException;
+    boolean isMatch(MuleEvent event) throws MessagingException;
 }

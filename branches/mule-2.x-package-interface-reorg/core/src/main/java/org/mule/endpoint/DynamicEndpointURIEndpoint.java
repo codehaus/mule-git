@@ -10,8 +10,8 @@
 
 package org.mule.endpoint;
 
-import org.mule.api.Event;
 import org.mule.api.MuleContext;
+import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.EndpointURI;
 import org.mule.api.endpoint.ImmutableEndpoint;
@@ -75,7 +75,7 @@ public class DynamicEndpointURIEndpoint implements ImmutableEndpoint
         return endpoint.canSend();
     }
 
-    public void dispatch(Event event) throws DispatchException
+    public void dispatch(MuleEvent event) throws DispatchException
     {
         endpoint.dispatch(event);
     }
@@ -190,7 +190,7 @@ public class DynamicEndpointURIEndpoint implements ImmutableEndpoint
         return endpoint.request(timeout);
     }
 
-    public MuleMessage send(Event event) throws DispatchException
+    public MuleMessage send(MuleEvent event) throws DispatchException
     {
         return endpoint.send(event);
     }

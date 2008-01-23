@@ -12,8 +12,8 @@ package org.mule.tck;
 
 import org.mule.DefaultExceptionStrategy;
 import org.mule.RegistryContext;
-import org.mule.api.MuleException;
 import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.component.Component;
 import org.mule.api.config.ThreadingProfile;
 import org.mule.api.context.ObjectNotFoundException;

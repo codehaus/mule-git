@@ -11,8 +11,8 @@
 package org.mule.routing.inbound;
 
 import org.mule.DefaultMuleMessage;
-import org.mule.api.Event;
 import org.mule.api.MessagingException;
+import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.routing.InboundRouter;
 import org.mule.api.routing.RoutingException;
@@ -41,7 +41,7 @@ public class SelectiveConsumer extends AbstractRouter implements InboundRouter
     private volatile Filter filter;
     private volatile boolean transformFirst = true;
 
-    public boolean isMatch(Event event) throws MessagingException
+    public boolean isMatch(MuleEvent event) throws MessagingException
     {
         if (logger.isDebugEnabled())
         {
@@ -74,18 +74,18 @@ public class SelectiveConsumer extends AbstractRouter implements InboundRouter
 
         if (logger.isDebugEnabled())
         {
-            logger.debug("Event " + event.getId() + (result ? " passed filter " : " did not pass filter ")
+            logger.debug("MuleEvent " + event.getId() + (result ? " passed filter " : " did not pass filter ")
                             + filter.getClass().getName());
         }
 
         return result;
     }
 
-    public Event[] process(Event event) throws MessagingException
+    public MuleEvent[] process(MuleEvent event) throws MessagingException
     {
         if (this.isMatch(event))
         {
-            return new Event[]{event};
+            return new MuleEvent[]{event};
         }
         else
         {

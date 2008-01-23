@@ -10,7 +10,7 @@
 
 package org.mule.extras.pgp;
 
-import org.mule.api.security.MuleAuthentication;
+import org.mule.api.security.Authentication;
 import org.mule.tck.AbstractMuleTestCase;
 
 import java.io.FileInputStream;
@@ -69,7 +69,7 @@ public class PGPSecurityProviderTestCase extends AbstractMuleTestCase
     {
         try
         {
-            MuleAuthentication auth = new PGPAuthentication("Mule client <mule_client@mule.com>", message);
+            Authentication auth = new PGPAuthentication("Mule client <mule_client@mule.com>", message);
 
             auth = securityProvider.authenticate(auth);
 

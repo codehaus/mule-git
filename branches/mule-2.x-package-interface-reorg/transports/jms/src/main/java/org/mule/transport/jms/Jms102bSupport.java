@@ -139,7 +139,7 @@ public class Jms102bSupport extends Jms11Support
         }
         else
         {
-            throw new IllegalArgumentException("Session and domain type do not match");
+            throw new IllegalArgumentException("MuleSession and domain type do not match");
         }
     }
 
@@ -155,7 +155,7 @@ public class Jms102bSupport extends Jms11Support
         }
         else
         {
-            throw new IllegalArgumentException("Session and domain type do not match");
+            throw new IllegalArgumentException("MuleSession and domain type do not match");
         }
     }
 
@@ -163,7 +163,7 @@ public class Jms102bSupport extends Jms11Support
     {
         if (session == null)
         {
-            throw new IllegalArgumentException("Session cannot be null when creating a destination");
+            throw new IllegalArgumentException("MuleSession cannot be null when creating a destination");
         }
         if (name == null)
         {
@@ -186,7 +186,7 @@ public class Jms102bSupport extends Jms11Support
     {
         if (session == null)
         {
-            throw new IllegalArgumentException("Session cannot be null when creating a destination");
+            throw new IllegalArgumentException("MuleSession cannot be null when creating a destination");
         }
 
         if (topic)

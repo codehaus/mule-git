@@ -10,7 +10,7 @@
 
 package org.mule.transport.soap.xfire;
 
-import org.mule.DefaultComponentExceptionStrategy;
+import org.mule.component.DefaultComponentExceptionStrategy;
 
 import org.codehaus.xfire.fault.FaultInfoException;
 

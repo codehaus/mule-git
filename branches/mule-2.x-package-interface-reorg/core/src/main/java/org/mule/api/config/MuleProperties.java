@@ -59,7 +59,7 @@ public interface MuleProperties
     // End System properties
 
     /********************************************************************************
-     * Event Level properties
+     * MuleEvent Level properties
      *******************************************************************************/
     String MULE_EVENT_PROPERTY = PROPERTY_PREFIX + "EVENT";
     String MULE_EVENT_TIMEOUT_PROPERTY = PROPERTY_PREFIX + "EVENT_TIMEOUT";
@@ -86,7 +86,7 @@ public interface MuleProperties
     String MULE_SOAP_METHOD = PROPERTY_PREFIX + "SOAP_METHOD";
     String MULE_JMS_SESSION = PROPERTY_PREFIX + "JMS_SESSION";
     String MULE_MANAGEMENT_CONTEXT_PROPERTY = PROPERTY_PREFIX + "MANAGEMENT_CONTEXT";
-    // End Event Level properties
+    // End MuleEvent Level properties
 
     /********************************************************************************
      * Generic Service descriptor properties

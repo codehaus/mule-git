@@ -10,7 +10,7 @@
 
 package org.mule.ra;
 
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.api.AbstractMuleException;
 import org.mule.api.component.Component;
 import org.mule.api.endpoint.Endpoint;
@@ -58,7 +58,7 @@ public class JcaComponentTestCase extends AbstractMuleTestCase // AbstractCompon
     {
         component.start();
         Endpoint endpoint = getTestEndpoint("jcaInFlowEndpoint", ImmutableEndpoint.ENDPOINT_TYPE_RECEIVER);
-        Event event = getTestEvent("Message", endpoint);
+        MuleEvent event = getTestEvent("Message", endpoint);
 
         try
         {
@@ -74,7 +74,7 @@ public class JcaComponentTestCase extends AbstractMuleTestCase // AbstractCompon
     {
         component.start();
         Endpoint endpoint = getTestEndpoint("jcaInFlowEndpoint", ImmutableEndpoint.ENDPOINT_TYPE_RECEIVER);
-        Event event = getTestEvent("Message", endpoint);
+        MuleEvent event = getTestEvent("Message", endpoint);
 
         component.dispatchEvent(event);
         assertEquals(1, workManager.getScheduledWorkList().size());

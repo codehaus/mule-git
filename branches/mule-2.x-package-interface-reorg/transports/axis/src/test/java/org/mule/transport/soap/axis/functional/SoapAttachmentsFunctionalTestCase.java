@@ -11,8 +11,8 @@
 package org.mule.transport.soap.axis.functional;
 
 import org.mule.DefaultMuleMessage;
-import org.mule.MuleEvent;
-import org.mule.MuleSession;
+import org.mule.DefaultMuleEvent;
+import org.mule.DefaultMuleSession;
 import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.tck.FunctionalTestCase;
@@ -53,8 +53,8 @@ public class SoapAttachmentsFunctionalTestCase extends FunctionalTestCase
             File tempFile = File.createTempFile("test", ".att");
             tempFile.deleteOnExit();
             msg.addAttachment("testAttachment", new DataHandler(new FileDataSource(tempFile)));
-            MuleSession session = new MuleSession(msg, ((AbstractConnector) ep.getConnector()).getSessionHandler());
-            MuleEvent event = new MuleEvent(msg, ep, session, true);
+            DefaultMuleSession session = new DefaultMuleSession(msg, ((AbstractConnector) ep.getConnector()).getSessionHandler());
+            DefaultMuleEvent event = new DefaultMuleEvent(msg, ep, session, true);
             MuleMessage result = client.send(event);
             assertNotNull(result);
             assertNotNull(result.getPayload());

@@ -18,7 +18,6 @@ import org.mule.endpoint.MuleEndpointURI;
 import org.mule.transport.AbstractMessageRequester;
 
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Properties;
 
 import javax.xml.soap.SOAPEnvelope;

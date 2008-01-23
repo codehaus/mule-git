@@ -11,17 +11,17 @@
 package org.mule.transport.soap.xfire.transport;
 
 
+import org.mule.DefaultMuleEvent;
 import org.mule.DefaultMuleMessage;
-import org.mule.MuleEvent;
 import org.mule.RegistryContext;
 import org.mule.RequestContext;
-import org.mule.api.Event;
 import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.endpoint.ImmutableEndpoint;
-import org.mule.api.transport.OutputHandler;
 import org.mule.api.transport.MessageAdapter;
+import org.mule.api.transport.OutputHandler;
 import org.mule.transport.DefaultMessageAdapter;
 import org.mule.transport.http.HttpConnector;
 import org.mule.transport.http.HttpConstants;
@@ -201,7 +201,7 @@ public class MuleUniversalChannel extends AbstractChannel
     {
         OutputHandler handler = new OutputHandler()
         {
-            public void write(Event event, OutputStream out) throws IOException
+            public void write(MuleEvent event, OutputStream out) throws IOException
             {
                 try
                 {
@@ -338,7 +338,7 @@ public class MuleUniversalChannel extends AbstractChannel
     {
         ImmutableEndpoint ep = RegistryContext.getRegistry().lookupEndpointFactory().getOutboundEndpoint(uri);
         MuleMessage message = new DefaultMuleMessage(adapter);
-        Event event = new MuleEvent(message, ep, RequestContext.getEventContext().getSession(), true);
+        MuleEvent event = new DefaultMuleEvent(message, ep, RequestContext.getEventContext().getSession(), true);
         return ep.send(event);
     }
 

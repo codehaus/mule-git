@@ -10,10 +10,10 @@
 
 package org.mule.component.builder;
 
-import org.mule.NoSatisfiableMethodsException;
-import org.mule.TooManySatisfiableMethodsException;
 import org.mule.api.MuleMessage;
 import org.mule.config.i18n.CoreMessages;
+import org.mule.model.resolvers.NoSatisfiableMethodsException;
+import org.mule.model.resolvers.TooManySatisfiableMethodsException;
 import org.mule.util.ClassUtils;
 
 import java.lang.reflect.Method;

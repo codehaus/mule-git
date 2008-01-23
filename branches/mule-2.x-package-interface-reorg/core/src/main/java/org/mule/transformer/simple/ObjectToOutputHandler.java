@@ -10,7 +10,7 @@
 
 package org.mule.transformer.simple;
 
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.api.transformer.DiscoverableTransformer;
 import org.mule.api.transformer.TransformerException;
 import org.mule.api.transport.OutputHandler;
@@ -45,7 +45,7 @@ public class ObjectToOutputHandler extends AbstractTransformer implements Discov
         {
             return new OutputHandler()
             {
-                public void write(Event event, OutputStream out) throws IOException
+                public void write(MuleEvent event, OutputStream out) throws IOException
                 {
                     out.write(((String) src).getBytes(encoding));
                 }
@@ -55,7 +55,7 @@ public class ObjectToOutputHandler extends AbstractTransformer implements Discov
         {
             return new OutputHandler()
             {
-                public void write(Event event, OutputStream out) throws IOException
+                public void write(MuleEvent event, OutputStream out) throws IOException
                 {
                     out.write((byte[]) src);
                 }
@@ -65,7 +65,7 @@ public class ObjectToOutputHandler extends AbstractTransformer implements Discov
         {
             return new OutputHandler()
             {
-                public void write(Event event, OutputStream out) throws IOException
+                public void write(MuleEvent event, OutputStream out) throws IOException
                 {
                     SerializationUtils.serialize((Serializable) src, out);
                 }

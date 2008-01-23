@@ -10,7 +10,7 @@
 
 package org.mule.transport.cxf;
 
-import org.mule.api.Session;
+import org.mule.api.MuleSession;
 
 
 
@@ -19,13 +19,13 @@ import org.mule.api.Session;
  */
 public class CxfMuleSession implements org.apache.cxf.transport.Session
 {
-    Session session;
+    MuleSession session;
 
-    public CxfMuleSession(Session session)
+    public CxfMuleSession(MuleSession session)
     {
         if (session == null)
         {
-            throw new IllegalArgumentException("Session");
+            throw new IllegalArgumentException("MuleSession");
         }
         this.session = session;
     }

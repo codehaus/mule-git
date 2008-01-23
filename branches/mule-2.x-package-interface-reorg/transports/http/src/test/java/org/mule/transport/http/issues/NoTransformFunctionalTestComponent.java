@@ -12,7 +12,7 @@ package org.mule.transport.http.issues;
 
 import org.mule.RequestContext;
 import org.mule.api.MuleException;
-import org.mule.api.EventContext;
+import org.mule.api.MuleEventContext;
 import org.mule.api.lifecycle.Callable;
 import org.mule.config.i18n.MessageFactory;
 import org.mule.tck.functional.EventCallback;
@@ -50,7 +50,7 @@ public class NoTransformFunctionalTestComponent implements Callable
     /**
      * {@inheritDoc}
      */
-    public Object onCall(EventContext context) throws Exception
+    public Object onCall(MuleEventContext context) throws Exception
     {
         String contents = context.getMessageAsString();
         String msg = StringMessageUtils.getBoilerPlate("Message Received in component: "
@@ -106,7 +106,7 @@ public class NoTransformFunctionalTestComponent implements Callable
      */
     public Object onReceive(Object data) throws Exception
     {
-        EventContext context = RequestContext.getEventContext();
+        MuleEventContext context = RequestContext.getEventContext();
 
         String contents = data.toString();
         String msg = StringMessageUtils.getBoilerPlate("Message Received in component: "
@@ -150,10 +150,10 @@ public class NoTransformFunctionalTestComponent implements Callable
 
     /**
      * An event callback is called when a message is received by the component.
-     * An Event callback isn't strictly required but it is usfal for performing assertions
+     * An MuleEvent callback isn't strictly required but it is usfal for performing assertions
      * on the current message being received.
      * Note that the FunctionalTestComponent should be made a singleton
-     * {@link org.mule.api.UMODescriptor#setSingleton} when using Event callbacks
+     * {@link org.mule.api.UMODescriptor#setSingleton} when using MuleEvent callbacks
      * <p/>
      * Another option is to register a {@link org.mule.tck.functional.FunctionalTestNotificationListener} with Mule and this
      * will deleiver a {@link org.mule.tck.functional.FunctionalTestNotification} for every message received by this component
@@ -170,10 +170,10 @@ public class NoTransformFunctionalTestComponent implements Callable
 
     /**
      * An event callback is called when a message is received by the component.
-     * An Event callback isn't strictly required but it is usfal for performing assertions
+     * An MuleEvent callback isn't strictly required but it is usfal for performing assertions
      * on the current message being received.
      * Note that the FunctionalTestComponent should be made a singleton
-     * {@link org.mule.api.UMODescriptor#setSingleton} when using Event callbacks
+     * {@link org.mule.api.UMODescriptor#setSingleton} when using MuleEvent callbacks
      * <p/>
      * Another option is to register a {@link org.mule.tck.functional.FunctionalTestNotificationListener} with Mule and this
      * will deleiver a {@link org.mule.tck.functional.FunctionalTestNotification} for every message received by this component

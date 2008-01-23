@@ -14,10 +14,10 @@ import org.mule.DefaultMuleMessage;
 import org.mule.OptimizedRequestContext;
 import org.mule.RequestContext;
 import org.mule.api.AbstractMuleException;
-import org.mule.api.Event;
 import org.mule.api.MuleContext;
+import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
-import org.mule.api.Session;
+import org.mule.api.MuleSession;
 import org.mule.api.ThreadSafeAccess;
 import org.mule.api.component.Component;
 import org.mule.api.endpoint.ImmutableEndpoint;
@@ -38,7 +38,7 @@ public class RequestContextTestCase extends AbstractMuleTestCase
     public void testSetExceptionPayloadAcrossThreads() throws InterruptedException
     {
         threadSafeEvent = true;
-        Event event = new DummyEvent();
+        MuleEvent event = new DummyEvent();
         runThread(event, false);
         runThread(event, true);
     }
@@ -46,12 +46,12 @@ public class RequestContextTestCase extends AbstractMuleTestCase
     public void testFailureWithoutThreadSafeEvent() throws InterruptedException
     {
         threadSafeEvent = false;
-        Event event = new DummyEvent();
+        MuleEvent event = new DummyEvent();
         runThread(event, false);
         runThread(event, true);
     }
 
-    protected void runThread(Event event, boolean doTest) throws InterruptedException
+    protected void runThread(MuleEvent event, boolean doTest) throws InterruptedException
     {
         AtomicBoolean success = new AtomicBoolean(false);
         Thread thread = new Thread(new SetExceptionPayload(event, success));
@@ -66,10 +66,10 @@ public class RequestContextTestCase extends AbstractMuleTestCase
     private class SetExceptionPayload implements Runnable
     {
 
-        private Event event;
+        private MuleEvent event;
         private AtomicBoolean success;
 
-        public SetExceptionPayload(Event event, AtomicBoolean success)
+        public SetExceptionPayload(MuleEvent event, AtomicBoolean success)
         {
             this.event = event;
             this.success = success;
@@ -91,7 +91,7 @@ public class RequestContextTestCase extends AbstractMuleTestCase
 
     }
 
-    private class DummyEvent implements Event, ThreadSafeAccess
+    private class DummyEvent implements MuleEvent, ThreadSafeAccess
     {
 
         private MuleMessage message = new DefaultMuleMessage(null);
@@ -166,7 +166,7 @@ public class RequestContextTestCase extends AbstractMuleTestCase
             return null;  //To change body of implemented methods use File | Settings | File Templates.
         }
 
-        public Session getSession()
+        public MuleSession getSession()
         {
             return null;  //To change body of implemented methods use File | Settings | File Templates.
         }

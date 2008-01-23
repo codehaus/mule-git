@@ -13,7 +13,7 @@ package org.mule.transport;
 import org.mule.OptimizedRequestContext;
 import org.mule.RequestContext;
 import org.mule.api.AbstractMuleException;
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.endpoint.ImmutableEndpoint;
@@ -22,8 +22,8 @@ import org.mule.api.transaction.Transaction;
 import org.mule.api.transaction.TransactionException;
 import org.mule.api.transport.DispatchException;
 import org.mule.api.transport.MessageDispatcher;
-import org.mule.internal.notifications.MessageNotification;
-import org.mule.internal.notifications.SecurityNotification;
+import org.mule.context.notification.MessageNotification;
+import org.mule.context.notification.SecurityNotification;
 import org.mule.transaction.TransactionCoordination;
 
 import javax.resource.spi.work.Work;
@@ -43,9 +43,9 @@ public abstract class AbstractMessageDispatcher extends AbstractConnectable impl
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.api.transport.MessageDispatcher#dispatch(org.mule.api.Event)
+     * @see org.mule.api.transport.MessageDispatcher#dispatch(org.mule.api.MuleEvent)
      */
-    public final void dispatch(Event event) throws DispatchException
+    public final void dispatch(MuleEvent event) throws DispatchException
     {
         event.setSynchronous(false);
         event.getMessage().setProperty(MuleProperties.MULE_ENDPOINT_PROPERTY,
@@ -112,7 +112,7 @@ public abstract class AbstractMessageDispatcher extends AbstractConnectable impl
         }
     }
 
-    public final MuleMessage send(Event event) throws DispatchException
+    public final MuleMessage send(MuleEvent event) throws DispatchException
     {
         // No point continuing if the component has rolledback the transaction
         if (isTransactionRollback())
@@ -204,7 +204,7 @@ public abstract class AbstractMessageDispatcher extends AbstractConnectable impl
      * @return true if a response channel should be used to get a resposne from the
      *         event dispatch.
      */
-    protected boolean useRemoteSync(Event event)
+    protected boolean useRemoteSync(MuleEvent event)
     {
         boolean remoteSync = false;
         if (event.getEndpoint().getConnector().isRemoteSyncEnabled())
@@ -238,9 +238,9 @@ public abstract class AbstractMessageDispatcher extends AbstractConnectable impl
 
     private class Worker implements Work
     {
-        private Event event;
+        private MuleEvent event;
 
-        public Worker(Event event)
+        public Worker(MuleEvent event)
         {
             this.event = event;
         }
@@ -306,8 +306,8 @@ public abstract class AbstractMessageDispatcher extends AbstractConnectable impl
         return false;
     }
 
-    protected abstract void doDispatch(Event event) throws Exception;
+    protected abstract void doDispatch(MuleEvent event) throws Exception;
 
-    protected abstract MuleMessage doSend(Event event) throws Exception;
+    protected abstract MuleMessage doSend(MuleEvent event) throws Exception;
                                              
 }

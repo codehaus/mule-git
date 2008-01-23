@@ -10,7 +10,7 @@
 
 package org.mule.api.routing;
 
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 
 /**
@@ -33,7 +33,7 @@ public interface ResponseRouter extends Router
      * @param event
      * @throws RoutingException
      */
-    void process(Event event) throws RoutingException;
+    void process(MuleEvent event) throws RoutingException;
 
     /**
      * Called by the Mule framework once the outbound router has been processed on a

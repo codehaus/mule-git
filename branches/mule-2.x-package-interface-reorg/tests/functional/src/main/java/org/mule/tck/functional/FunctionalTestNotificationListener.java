@@ -18,7 +18,7 @@ import org.mule.api.context.notification.CustomNotificationListener;
  * You can receive {@link org.mule.tck.functional.FunctionalTestNotification}s from the
  * {@link org.mule.tck.functional.FunctionalTestComponent}.
  *
- * This Notification contains the current EventContext and reply message. The resource Identifier for this event
+ * This Notification contains the current MuleEventContext and reply message. The resource Identifier for this event
  * is the component name that received the message.  This means you can register to listen to Notifications from a
  * selected {@link org.mule.tck.functional.FunctionalTestComponent}. i.e.
  * <code>

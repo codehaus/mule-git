@@ -11,7 +11,7 @@
 package org.mule.transport.ftp;
 
 import org.mule.DefaultMuleMessage;
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.EndpointURI;
 import org.mule.api.endpoint.ImmutableEndpoint;
@@ -45,7 +45,7 @@ public class FtpMessageDispatcher extends AbstractMessageDispatcher
         // no op
     }
 
-    protected void doDispatch(Event event) throws Exception
+    protected void doDispatch(MuleEvent event) throws Exception
     {
         Object data = event.transformMessage();
         OutputStream out = connector.getOutputStream(event.getEndpoint(), event.getMessage());
@@ -78,7 +78,7 @@ public class FtpMessageDispatcher extends AbstractMessageDispatcher
         }
     }
 
-    protected MuleMessage doSend(Event event) throws Exception
+    protected MuleMessage doSend(MuleEvent event) throws Exception
     {
         doDispatch(event);
         return event.getMessage();

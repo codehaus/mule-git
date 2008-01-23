@@ -13,7 +13,7 @@ package org.mule.routing.outbound;
 import org.mule.DefaultMuleMessage;
 import org.mule.api.AbstractMuleException;
 import org.mule.api.MuleMessage;
-import org.mule.api.Session;
+import org.mule.api.MuleSession;
 import org.mule.api.endpoint.Endpoint;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.routing.CouldNotRouteOutboundMessageException;
@@ -35,7 +35,7 @@ public class ExceptionBasedRouterTestCase extends AbstractMuleTestCase
 {
 
     /**
-     * Multiple endpoints, no failures. Event dispatched asynchronously, but forced
+     * Multiple endpoints, no failures. MuleEvent dispatched asynchronously, but forced
      * into sync mode. Test case ends here.
      */
     public void testSuccessfulExceptionRouter() throws Exception
@@ -72,7 +72,7 @@ public class ExceptionBasedRouterTestCase extends AbstractMuleTestCase
         assertTrue(router.isMatch(message));
 
         session.expect("sendEvent", C.eq(message, endpoint1));
-        MuleMessage result = router.route(message, (Session)session.proxy(), false);
+        MuleMessage result = router.route(message, (MuleSession)session.proxy(), false);
         assertNull("Async call should've returned null.", result);
         session.verify();
 
@@ -81,7 +81,7 @@ public class ExceptionBasedRouterTestCase extends AbstractMuleTestCase
         // only one send should be called and succeed, the others should not be
         // called
         session.expectAndReturn("sendEvent", C.eq(message, endpoint1), message);
-        result = router.route(message, (Session)session.proxy(), true);
+        result = router.route(message, (MuleSession)session.proxy(), true);
         assertNotNull(result);
         assertEquals(message, result);
         session.verify();
@@ -123,7 +123,7 @@ public class ExceptionBasedRouterTestCase extends AbstractMuleTestCase
         AbstractMuleException rex = new RoutingException(message, endpoint1);
         mockSession.expectAndThrow("sendEvent", C.args(C.eq(message), C.eq(endpoint1)), rex);
         mockSession.expectAndThrow("dispatchEvent", C.args(C.eq(message), C.eq(endpoint2)), rex);
-        Session session = (Session)mockSession.proxy();
+        MuleSession session = (MuleSession)mockSession.proxy();
         MuleMessage result = null;
         try
         {
@@ -163,7 +163,7 @@ public class ExceptionBasedRouterTestCase extends AbstractMuleTestCase
 
         assertTrue(router.isMatch(message));
 
-        final Session session = (Session)mockSession.proxy();
+        final MuleSession session = (MuleSession)mockSession.proxy();
         // exception to throw
         AbstractMuleException rex = new RoutingException(message, endpoint1);
         // 1st failure
@@ -199,7 +199,7 @@ public class ExceptionBasedRouterTestCase extends AbstractMuleTestCase
 
         assertTrue(router.isMatch(message));
 
-        final Session session = (Session)mockSession.proxy();
+        final MuleSession session = (MuleSession)mockSession.proxy();
         // exception to throw
         AbstractMuleException rex = new RoutingException(message, endpoint1);
         // 1st failure
@@ -239,7 +239,7 @@ public class ExceptionBasedRouterTestCase extends AbstractMuleTestCase
         MuleMessage exPayloadMessage = new DefaultMuleMessage("there was a failure");
         exPayloadMessage.setExceptionPayload(new DefaultExceptionPayload(new RuntimeException()));
 
-        final Session session = (Session)mockSession.proxy();
+        final MuleSession session = (MuleSession)mockSession.proxy();
         // 1st failure
         mockSession.expectAndReturn("sendEvent", C.args(C.eq(message), C.eq(endpoint1)), exPayloadMessage);
         // next endpoint

@@ -12,14 +12,14 @@ package org.mule.api.security;
 
 /**
  * <code>SecurityContext</code> holds security information and is associated
- * with the Session.
+ * with the MuleSession.
  * 
- * @see org.mule.api.Session
+ * @see org.mule.api.MuleSession
  */
 
 public interface SecurityContext
 {
-    void setAuthentication(MuleAuthentication authentication);
+    void setAuthentication(Authentication authentication);
 
-    MuleAuthentication getAuthentication();
+    Authentication getAuthentication();
 }

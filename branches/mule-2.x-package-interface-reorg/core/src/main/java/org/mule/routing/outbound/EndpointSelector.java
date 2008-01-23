@@ -12,7 +12,7 @@ package org.mule.routing.outbound;
 
 import org.mule.api.AbstractMuleException;
 import org.mule.api.MuleMessage;
-import org.mule.api.Session;
+import org.mule.api.MuleSession;
 import org.mule.api.context.MuleContextAware;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.routing.CouldNotRouteOutboundMessageException;
@@ -52,7 +52,7 @@ public class EndpointSelector extends FilteringOutboundRouter implements MuleCon
 
 
 
-    public MuleMessage route(MuleMessage message, Session session, boolean synchronous)
+    public MuleMessage route(MuleMessage message, MuleSession session, boolean synchronous)
         throws RoutingException
     {
         List endpoints;

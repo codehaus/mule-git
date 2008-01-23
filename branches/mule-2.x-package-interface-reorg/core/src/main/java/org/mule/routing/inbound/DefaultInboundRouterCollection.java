@@ -11,8 +11,8 @@
 package org.mule.routing.inbound;
 
 import org.mule.api.AbstractMuleException;
-import org.mule.api.Event;
 import org.mule.api.MessagingException;
+import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.endpoint.ImmutableEndpoint;
@@ -59,7 +59,7 @@ public class DefaultInboundRouterCollection extends AbstractRouterCollection imp
         }
     }
 
-    public MuleMessage route(Event event) throws MessagingException
+    public MuleMessage route(MuleEvent event) throws MessagingException
     {
         // If the endpoint has a logical name, use it, otherwise use the URI.
         String inboundEndpoint = 
@@ -85,7 +85,7 @@ public class DefaultInboundRouterCollection extends AbstractRouterCollection imp
 
         String componentName = event.getSession().getComponent().getName();
 
-        Event[] eventsToRoute = null;
+        MuleEvent[] eventsToRoute = null;
         boolean noRoute = true;
         boolean match = false;
         InboundRouter umoInboundRouter = null;
@@ -200,12 +200,12 @@ public class DefaultInboundRouterCollection extends AbstractRouterCollection imp
 
     }
 
-    public void dispatch(Event event) throws AbstractMuleException
+    public void dispatch(MuleEvent event) throws AbstractMuleException
     {
         event.getSession().dispatchEvent(event);
     }
 
-    public MuleMessage send(Event event) throws AbstractMuleException
+    public MuleMessage send(MuleEvent event) throws AbstractMuleException
     {
         return event.getSession().sendEvent(event);
     }

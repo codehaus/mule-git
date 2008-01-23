@@ -10,9 +10,9 @@
 package org.mule.config.support;
 
 import org.mule.api.AbstractMuleException;
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
-import org.mule.model.AbstractComponent;
+import org.mule.component.AbstractComponent;
 import org.mule.model.AbstractModel;
 
 /**
@@ -49,12 +49,12 @@ public class InheritedModel extends AbstractModel
             super();
         }
 
-        protected MuleMessage doSend(Event event) throws AbstractMuleException
+        protected MuleMessage doSend(MuleEvent event) throws AbstractMuleException
         {
             throw new UnsupportedOperationException("doSend()");
         }
 
-        protected void doDispatch(Event event) throws AbstractMuleException
+        protected void doDispatch(MuleEvent event) throws AbstractMuleException
         {
             throw new UnsupportedOperationException("doDispatch()");
         }

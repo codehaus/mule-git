@@ -10,10 +10,10 @@
 
 package org.mule.transport;
 
-import org.mule.MuleEvent;
+import org.mule.DefaultMuleEvent;
 import org.mule.RegistryContext;
 import org.mule.api.AbstractMuleException;
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.endpoint.EndpointBuilder;
@@ -21,8 +21,8 @@ import org.mule.api.endpoint.EndpointFactory;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.transport.DispatchException;
 import org.mule.api.transport.ReplyToHandler;
+import org.mule.component.AbstractComponent;
 import org.mule.config.i18n.CoreMessages;
-import org.mule.model.AbstractComponent;
 
 import java.util.HashMap;
 import java.util.List;
@@ -51,7 +51,7 @@ public class DefaultReplyToHandler implements ReplyToHandler
         this.transformers = transformers;
     }
 
-    public void processReplyTo(Event event, MuleMessage returnMessage, Object replyTo) throws AbstractMuleException
+    public void processReplyTo(MuleEvent event, MuleMessage returnMessage, Object replyTo) throws AbstractMuleException
     {
         if (logger.isDebugEnabled())
         {
@@ -68,7 +68,7 @@ public class DefaultReplyToHandler implements ReplyToHandler
         returnMessage.removeProperty(MuleProperties.MULE_REPLY_TO_PROPERTY);
 
         // Create the replyTo event asynchronous
-        Event replyToEvent = new MuleEvent(returnMessage, endpoint, event.getSession(), false);
+        MuleEvent replyToEvent = new DefaultMuleEvent(returnMessage, endpoint, event.getSession(), false);
 
         // dispatch the event
         try
@@ -89,7 +89,7 @@ public class DefaultReplyToHandler implements ReplyToHandler
 
     }
 
-    protected synchronized ImmutableEndpoint getEndpoint(Event event, String endpointUri) throws AbstractMuleException
+    protected synchronized ImmutableEndpoint getEndpoint(MuleEvent event, String endpointUri) throws AbstractMuleException
     {
         ImmutableEndpoint endpoint = (ImmutableEndpoint) endpointCache.get(endpointUri);
         if (endpoint == null)

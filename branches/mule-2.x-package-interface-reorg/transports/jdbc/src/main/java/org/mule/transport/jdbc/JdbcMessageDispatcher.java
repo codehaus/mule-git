@@ -11,7 +11,7 @@
 package org.mule.transport.jdbc;
 
 import org.mule.DefaultMuleMessage;
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.transaction.Transaction;
@@ -57,7 +57,7 @@ public class JdbcMessageDispatcher extends AbstractMessageDispatcher
         // template method
     }
     
-    protected void executeWriteStatement(Event event, String writeStmt) throws Exception
+    protected void executeWriteStatement(MuleEvent event, String writeStmt) throws Exception
     {
         List paramNames = new ArrayList();
         writeStmt = connector.parseStatement(writeStmt, paramNames);
@@ -89,7 +89,7 @@ public class JdbcMessageDispatcher extends AbstractMessageDispatcher
             {
                 JdbcUtils.commitAndClose(con);
             }
-            logger.debug("Event dispatched succesfuly");
+            logger.debug("MuleEvent dispatched succesfuly");
         }
         catch (Exception e)
         {
@@ -136,9 +136,9 @@ public class JdbcMessageDispatcher extends AbstractMessageDispatcher
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.transport.AbstractMessageDispatcher#doDispatch(org.mule.api.Event)
+     * @see org.mule.transport.AbstractMessageDispatcher#doDispatch(org.mule.api.MuleEvent)
      */
-    protected void doDispatch(Event event) throws Exception
+    protected void doDispatch(MuleEvent event) throws Exception
     {
         if (logger.isDebugEnabled())
         {
@@ -160,9 +160,9 @@ public class JdbcMessageDispatcher extends AbstractMessageDispatcher
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.transport.AbstractMessageDispatcher#doSend(org.mule.api.Event)
+     * @see org.mule.transport.AbstractMessageDispatcher#doSend(org.mule.api.MuleEvent)
      */
-    protected MuleMessage doSend(Event event) throws Exception
+    protected MuleMessage doSend(MuleEvent event) throws Exception
     {
         String statement = getStatement(event.getEndpoint());
         
@@ -186,7 +186,7 @@ public class JdbcMessageDispatcher extends AbstractMessageDispatcher
      * @return
      * @throws Exception
      */
-    protected static MuleMessage executeRequest(long timeout, Event event,
+    protected static MuleMessage executeRequest(long timeout, MuleEvent event,
                                                JdbcConnector connector, ImmutableEndpoint endpoint) throws Exception
     {
         if (staticLogger.isDebugEnabled())

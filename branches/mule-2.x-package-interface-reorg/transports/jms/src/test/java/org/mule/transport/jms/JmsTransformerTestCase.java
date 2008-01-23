@@ -11,7 +11,7 @@
 package org.mule.transport.jms;
 
 import org.mule.DefaultMuleMessage;
-import org.mule.MuleEvent;
+import org.mule.DefaultMuleEvent;
 import org.mule.RequestContext;
 import org.mule.api.MuleMessage;
 import org.mule.tck.AbstractMuleTestCase;
@@ -78,7 +78,7 @@ public class JmsTransformerTestCase extends AbstractMuleTestCase
         // underlying message when a "current event" is available, so we need to set
         // one.
         assertNotNull("The test hasn't been configured properly, no muleContext available", muleContext);
-        RequestContext.setEvent(new MuleEvent(msg, MuleTestUtils.getTestEvent("previous", muleContext)));
+        RequestContext.setEvent(new DefaultMuleEvent(msg, MuleTestUtils.getTestEvent("previous", muleContext)));
 
         // The transformer we are going to use is ObjectToJMSMessage, which will
         // return the same (but mockingly modified!) JMS message that is used as

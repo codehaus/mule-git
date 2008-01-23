@@ -19,7 +19,7 @@ import java.net.URLDecoder;
 import org.mule.DefaultMuleMessage;
 import org.mule.RegistryContext;
 import org.mule.api.MuleException;
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.api.AbstractMuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.ImmutableEndpoint;
@@ -46,9 +46,9 @@ public class FileMessageDispatcher extends AbstractMessageDispatcher
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.api.transport.UMOConnectorSession#dispatch(org.mule.api.Event)
+     * @see org.mule.api.transport.UMOConnectorSession#dispatch(org.mule.api.MuleEvent)
      */
-    protected void doDispatch(Event event) throws Exception
+    protected void doDispatch(MuleEvent event) throws Exception
     {
         Object data = event.transformMessage();
         // Wrap the transformed message before passing it to the filename parser
@@ -139,9 +139,9 @@ public class FileMessageDispatcher extends AbstractMessageDispatcher
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.api.transport.UMOConnectorSession#send(org.mule.api.Event)
+     * @see org.mule.api.transport.UMOConnectorSession#send(org.mule.api.MuleEvent)
      */
-    protected MuleMessage doSend(Event event) throws Exception
+    protected MuleMessage doSend(MuleEvent event) throws Exception
     {
         doDispatch(event);
         return event.getMessage();

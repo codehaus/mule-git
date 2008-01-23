@@ -11,7 +11,7 @@
 package org.mule.transport.http;
 
 import org.mule.DefaultMuleMessage;
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.transformer.TransformerException;
@@ -82,7 +82,7 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
         client = null;
     }
 
-    protected void doDispatch(Event event) throws Exception
+    protected void doDispatch(MuleEvent event) throws Exception
     {
         HttpMethod httpMethod = getMethod(event);
         try
@@ -103,7 +103,7 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
         }
     }
 
-    protected HttpMethod execute(Event event, HttpMethod httpMethod)
+    protected HttpMethod execute(MuleEvent event, HttpMethod httpMethod)
         throws Exception
     {
         // TODO set connection timeout buffer etc
@@ -130,7 +130,7 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
         
     }
 
-    protected void processCookies(Event event)
+    protected void processCookies(MuleEvent event)
     {
         MuleMessage msg = event.getMessage();
         Cookie[] cookies = (Cookie[]) msg.removeProperty(HttpConnector.HTTP_COOKIES_PROPERTY);
@@ -142,7 +142,7 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
         }
     }
 
-    protected HttpMethod getMethod(Event event) throws TransformerException
+    protected HttpMethod getMethod(MuleEvent event) throws TransformerException
     {
         MuleMessage msg = event.getMessage();
         setPropertyFromEndpoint(event, msg, HttpConnector.HTTP_CUSTOM_HEADERS_MAP_PROPERTY);
@@ -163,7 +163,7 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
         return httpMethod;
     }
 
-    protected void setPropertyFromEndpoint(Event event, MuleMessage msg, String prop)
+    protected void setPropertyFromEndpoint(MuleEvent event, MuleMessage msg, String prop)
     {
         Object o = msg.getProperty(prop, null);
         if (o == null) {
@@ -175,7 +175,7 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
         }
     }
 
-    protected HttpMethod createEntityMethod(Event event, Object body, EntityEnclosingMethod postMethod)
+    protected HttpMethod createEntityMethod(MuleEvent event, Object body, EntityEnclosingMethod postMethod)
         throws TransformerException
     {
         HttpMethod httpMethod;
@@ -209,9 +209,9 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.api.transport.Connector#send(org.mule.api.Event)
+     * @see org.mule.api.transport.Connector#send(org.mule.api.MuleEvent)
      */
-    protected MuleMessage doSend(Event event) throws Exception
+    protected MuleMessage doSend(MuleEvent event) throws Exception
     {        
         HttpMethod httpMethod = getMethod(event);
         connector.setupClientAuthorization(event, httpMethod, client, endpoint);

@@ -10,7 +10,6 @@
 
 package org.mule.endpoint;
 
-import org.mule.MuleTransactionConfig;
 import org.mule.RegistryContext;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleException;
@@ -29,6 +28,7 @@ import org.mule.api.transport.ConnectionStrategy;
 import org.mule.api.transport.Connector;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.config.i18n.Message;
+import org.mule.transaction.MuleTransactionConfig;
 import org.mule.transformer.TransformerUtils;
 import org.mule.transport.AbstractConnector;
 import org.mule.transport.SingleAttemptConnectionStrategy;

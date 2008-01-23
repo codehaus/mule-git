@@ -11,7 +11,7 @@
 package org.mule.transport.soap.xfire;
 
 import org.mule.DefaultMuleMessage;
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.endpoint.EndpointURI;
@@ -76,7 +76,7 @@ public class XFireMessageDispatcher extends AbstractMessageDispatcher
         // nothing to do
     }
 
-    protected String getMethod(Event event) throws DispatchException
+    protected String getMethod(MuleEvent event) throws DispatchException
     {
         String method = (String)event.getMessage().getProperty(MuleProperties.MULE_METHOD_PROPERTY);
 
@@ -100,7 +100,7 @@ public class XFireMessageDispatcher extends AbstractMessageDispatcher
         return method;
     }
 
-    protected Object[] getArgs(Event event) throws TransformerException
+    protected Object[] getArgs(MuleEvent event) throws TransformerException
     {
         Object payload = event.transformMessage();
         Object[] args;
@@ -131,7 +131,7 @@ public class XFireMessageDispatcher extends AbstractMessageDispatcher
         return args;
     }
 
-    protected MuleMessage doSend(Event event) throws Exception
+    protected MuleMessage doSend(MuleEvent event) throws Exception
     {
         if (event.getEndpoint().getProperty("complexTypes") != null)
         {
@@ -179,7 +179,7 @@ public class XFireMessageDispatcher extends AbstractMessageDispatcher
         return result;
     }
 
-    protected void doDispatch(Event event) throws Exception
+    protected void doDispatch(MuleEvent event) throws Exception
     {
         this.client.setTimeout(event.getTimeout());
         this.client.setProperty(MuleProperties.MULE_EVENT_PROPERTY, event);
@@ -214,7 +214,7 @@ public class XFireMessageDispatcher extends AbstractMessageDispatcher
         return serviceName;
     }
 
-    public String parseSoapAction(String soapAction, QName method, Event event)
+    public String parseSoapAction(String soapAction, QName method, MuleEvent event)
     {
 
         EndpointURI endpointURI = event.getEndpoint().getEndpointURI();
@@ -252,7 +252,7 @@ public class XFireMessageDispatcher extends AbstractMessageDispatcher
         return soapAction;
     }
 
-    protected void configureClientForComplexTypes(Client client, Event event) throws ClassNotFoundException
+    protected void configureClientForComplexTypes(Client client, MuleEvent event) throws ClassNotFoundException
     {
         Map complexTypes = (Map) event.getEndpoint().getProperty("complexTypes");
         Object[] beans = complexTypes.keySet().toArray();

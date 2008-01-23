@@ -10,7 +10,7 @@
 
 package org.mule.transaction.constraints;
 
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 
 /**
  * <code>ManualConstraint</code> always returns false, meaning that the transaction
@@ -20,7 +20,7 @@ import org.mule.api.Event;
 public class ManualConstraint extends ConstraintFilter
 {
 
-    public boolean accept(Event event)
+    public boolean accept(MuleEvent event)
     {
         return false;
     }

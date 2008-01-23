@@ -11,7 +11,7 @@
 package org.mule.component.builder;
 
 import org.mule.DefaultMuleMessage;
-import org.mule.api.EventContext;
+import org.mule.api.MuleEventContext;
 import org.mule.api.MuleMessage;
 import org.mule.api.component.Component;
 import org.mule.api.component.ComponentAware;
@@ -49,7 +49,7 @@ public abstract class AbstractMessageBuilder implements ComponentAware, Callable
         this.component = component;
     }
 
-    public Object onCall(EventContext eventContext) throws Exception
+    public Object onCall(MuleEventContext eventContext) throws Exception
     {
 
         MuleMessage requestMessage = new DefaultMuleMessage(eventContext.transformMessage(),

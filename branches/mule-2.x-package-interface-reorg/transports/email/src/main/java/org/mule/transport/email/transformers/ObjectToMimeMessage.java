@@ -10,7 +10,7 @@
 
 package org.mule.transport.email.transformers;
 
-import org.mule.api.EventContext;
+import org.mule.api.MuleEventContext;
 import org.mule.api.MuleMessage;
 import org.mule.api.transformer.TransformerException;
 import org.mule.transformer.simple.SerializableToByteArray;

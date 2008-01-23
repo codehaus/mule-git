@@ -10,14 +10,14 @@
 
 package org.mule.extras.pgp;
 
-import org.mule.api.security.MuleAuthentication;
+import org.mule.api.security.Authentication;
 
 import java.util.Map;
 
 import cryptix.message.Message;
 import cryptix.pki.KeyBundle;
 
-public class PGPAuthentication implements MuleAuthentication
+public class PGPAuthentication implements Authentication
 {
     boolean authenticated = false;
     private String userName;

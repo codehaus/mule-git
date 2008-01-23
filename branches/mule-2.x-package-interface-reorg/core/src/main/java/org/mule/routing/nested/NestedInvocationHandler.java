@@ -12,7 +12,7 @@ package org.mule.routing.nested;
 
 import org.mule.DefaultMuleMessage;
 import org.mule.RequestContext;
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.routing.NestedRouter;
 import org.mule.config.i18n.CoreMessages;
@@ -80,7 +80,7 @@ public class NestedInvocationHandler implements InvocationHandler
         }
 
         MuleMessage reply;
-        Event currentEvent = RequestContext.getEvent();
+        MuleEvent currentEvent = RequestContext.getEvent();
         reply = router.route(message, currentEvent.getSession(), router.getEndpoint().isSynchronous());
 
         if (reply != null)

@@ -13,9 +13,9 @@ package org.mule.model.seda.optimised;
 import org.mule.DefaultMuleMessage;
 import org.mule.RequestContext;
 import org.mule.api.AbstractMuleException;
-import org.mule.api.Event;
-import org.mule.api.EventContext;
 import org.mule.api.MessagingException;
+import org.mule.api.MuleEvent;
+import org.mule.api.MuleEventContext;
 import org.mule.api.MuleMessage;
 import org.mule.api.component.Component;
 import org.mule.api.lifecycle.Callable;
@@ -46,7 +46,7 @@ public class OptimisedMuleProxy implements MuleProxy
     /**
      * Holds the current event being processed
      */
-    private Event event;
+    private MuleEvent event;
 
     /**
      * holds the UMO descriptor
@@ -145,7 +145,7 @@ public class OptimisedMuleProxy implements MuleProxy
      * 
      * @param event the event being processed
      */
-    public void onEvent(QueueSession session, Event event)
+    public void onEvent(QueueSession session, MuleEvent event)
     {
         this.event = event;
     }
@@ -167,7 +167,7 @@ public class OptimisedMuleProxy implements MuleProxy
      * @return the return event from the UMO
      * @throws org.mule.api.AbstractMuleException if the call fails
      */
-    public Object onCall(Event event) throws AbstractMuleException
+    public Object onCall(MuleEvent event) throws AbstractMuleException
     {
         if (logger.isTraceEnabled())
         {
@@ -203,7 +203,7 @@ public class OptimisedMuleProxy implements MuleProxy
                 event = RequestContext.getEvent();
                 if (event.isStopFurtherProcessing())
                 {
-                    logger.debug("Event stop further processing has been set, no outbound routing will be performed.");
+                    logger.debug("MuleEvent stop further processing has been set, no outbound routing will be performed.");
                 }
                 if (returnMessage != null && !event.isStopFurtherProcessing())
                 {
@@ -276,7 +276,7 @@ public class OptimisedMuleProxy implements MuleProxy
         return returnMessage;
     }
 
-    protected MuleMessage invokeUmo(EventContext context) throws Exception
+    protected MuleMessage invokeUmo(MuleEventContext context) throws Exception
     {
         Object result = pojoService.onCall(RequestContext.getEventContext());
         if (result != null)
@@ -347,7 +347,7 @@ public class OptimisedMuleProxy implements MuleProxy
     // Endpoint.ENDPOINT_TYPE_SENDER);
     //
     // // Create the replyTo event asynchronous
-    // Event replyToEvent = new MuleEvent(returnMessage, endpoint,
+    // MuleEvent replyToEvent = new DefaultMuleEvent(returnMessage, endpoint,
     // event.getSession(), false);
     // // make sure remove the replyTo property as not cause a a forever
     // // replyto loop

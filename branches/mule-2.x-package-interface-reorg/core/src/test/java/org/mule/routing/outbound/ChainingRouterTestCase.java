@@ -12,7 +12,7 @@ package org.mule.routing.outbound;
 
 import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleMessage;
-import org.mule.api.Session;
+import org.mule.api.MuleSession;
 import org.mule.api.endpoint.Endpoint;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.endpoint.DynamicEndpointURIEndpoint;
@@ -70,7 +70,7 @@ public class ChainingRouterTestCase extends AbstractMuleTestCase
 
         session.expectAndReturn("sendEvent", C.eq(message, endpoints.get(0)), message);
         session.expectAndReturn("sendEvent", C.eq(message, endpoints.get(1)), message);
-        final MuleMessage result = router.route(message, (Session)session.proxy(), true);
+        final MuleMessage result = router.route(message, (MuleSession)session.proxy(), true);
         assertNotNull("This is a sync call, we need a result returned.", result);
         assertEquals(message, result);
         session.verify();
@@ -97,7 +97,7 @@ public class ChainingRouterTestCase extends AbstractMuleTestCase
             (ImmutableEndpoint) router.getEndpoints().get(1), new MuleEndpointURI("test://test"))), message);
         session.expectAndReturn("sendEvent", C.eq(message, new DynamicEndpointURIEndpoint(
             (ImmutableEndpoint) router.getEndpoints().get(2), new MuleEndpointURI("test://foo?bar"))), message);
-        final MuleMessage result = router.route(message, (Session)session.proxy(), true);
+        final MuleMessage result = router.route(message, (MuleSession)session.proxy(), true);
         assertNotNull("This is a sync call, we need a result returned.", result);
         assertEquals(message, result);
         session.verify();
@@ -112,7 +112,7 @@ public class ChainingRouterTestCase extends AbstractMuleTestCase
 
         session.expectAndReturn("sendEvent", C.eq(message, endpoints.get(0)), message);
         session.expectAndReturn("dispatchEvent", C.eq(message, endpoints.get(1)), message);
-        final MuleMessage result = router.route(message, (Session)session.proxy(), false);
+        final MuleMessage result = router.route(message, (MuleSession)session.proxy(), false);
         assertNull("Async call shouldn't return any result.", result);
         session.verify();
     }
@@ -125,7 +125,7 @@ public class ChainingRouterTestCase extends AbstractMuleTestCase
         final MuleMessage message = new DefaultMuleMessage("test event");
         final Endpoint endpoint1 = (Endpoint)endpoints.get(0);
         session.expect("sendEvent", C.eq(message, endpoint1));
-        MuleMessage result = router.route(message, (Session)session.proxy(), false);
+        MuleMessage result = router.route(message, (MuleSession)session.proxy(), false);
         session.verify();
         assertNull(result);
     }

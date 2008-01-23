@@ -10,8 +10,8 @@
 
 package org.mule.transport.soap.axis;
 
-import org.mule.DefaultComponentExceptionStrategy;
 import org.mule.api.MuleMessage;
+import org.mule.component.DefaultComponentExceptionStrategy;
 
 import java.util.ArrayList;
 import java.util.List;

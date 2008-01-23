@@ -11,7 +11,7 @@
 package org.mule.transport.xmpp;
 
 import org.mule.DefaultMuleMessage;
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.EndpointURI;
 import org.mule.api.endpoint.ImmutableEndpoint;
@@ -72,12 +72,12 @@ public class XmppMessageDispatcher extends AbstractMessageDispatcher
         // template method
     }
 
-    protected void doDispatch(Event event) throws Exception
+    protected void doDispatch(MuleEvent event) throws Exception
     {
         sendMessage(event);
     }
 
-    protected MuleMessage doSend(Event event) throws Exception
+    protected MuleMessage doSend(MuleEvent event) throws Exception
     {
         sendMessage(event);
 
@@ -106,7 +106,7 @@ public class XmppMessageDispatcher extends AbstractMessageDispatcher
         return null;
     }
 
-    protected void sendMessage(Event event) throws Exception
+    protected void sendMessage(MuleEvent event) throws Exception
     {
         if (chat == null && groupChat == null)
         {

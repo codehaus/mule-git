@@ -10,7 +10,6 @@
 
 package org.mule.impl.config.builders;
 
-import org.mule.DefaultMuleContextFactory;
 import org.mule.api.MuleContext;
 import org.mule.api.config.ConfigurationBuilder;
 import org.mule.api.config.ConfigurationException;
@@ -18,6 +17,7 @@ import org.mule.api.context.MuleContextFactory;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.config.builders.AutoConfigurationBuilder;
 import org.mule.config.builders.SimpleConfigurationBuilder;
+import org.mule.context.DefaultMuleContextFactory;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.tck.testmodels.mule.TestConnector;
 import org.mule.tck.testmodels.mule.TestExceptionStrategy;

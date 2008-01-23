@@ -10,7 +10,7 @@
 
 package org.mule.extras.acegi;
 
-import org.mule.api.security.MuleAuthentication;
+import org.mule.api.security.Authentication;
 import org.mule.api.security.SecurityContext;
 
 import org.acegisecurity.context.SecurityContextHolder;
@@ -31,14 +31,14 @@ public class AcegiSecurityContext implements SecurityContext
         SecurityContextHolder.setContext(this.delegate);
     }
 
-    public void setAuthentication(MuleAuthentication authentication)
+    public void setAuthentication(Authentication authentication)
     {
         this.authentication = ((AcegiAuthenticationAdapter)authentication);
         delegate.setAuthentication(this.authentication.getDelegate());
         SecurityContextHolder.setContext(delegate);
     }
 
-    public MuleAuthentication getAuthentication()
+    public Authentication getAuthentication()
     {
         return this.authentication;
     }

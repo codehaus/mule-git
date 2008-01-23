@@ -10,13 +10,13 @@
 package org.mule;
 
 import org.mule.api.AbstractMuleException;
-import org.mule.api.Agent;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleRuntimeException;
+import org.mule.api.agent.Agent;
 import org.mule.api.config.MuleProperties;
-import org.mule.api.context.ServerNotification;
-import org.mule.api.context.ServerNotificationListener;
 import org.mule.api.context.WorkManager;
+import org.mule.api.context.notification.ServerNotification;
+import org.mule.api.context.notification.ServerNotificationListener;
 import org.mule.api.lifecycle.Disposable;
 import org.mule.api.lifecycle.FatalException;
 import org.mule.api.lifecycle.Initialisable;
@@ -32,9 +32,9 @@ import org.mule.api.transaction.TransactionManagerFactory;
 import org.mule.config.MuleConfiguration;
 import org.mule.config.MuleManifest;
 import org.mule.config.i18n.CoreMessages;
-import org.mule.internal.notifications.ManagerNotification;
-import org.mule.internal.notifications.NotificationException;
-import org.mule.internal.notifications.manager.ServerNotificationManager;
+import org.mule.context.notification.ManagerNotification;
+import org.mule.context.notification.NotificationException;
+import org.mule.context.notification.ServerNotificationManager;
 import org.mule.management.stats.AllStatistics;
 import org.mule.util.FileUtils;
 import org.mule.util.StringMessageUtils;
@@ -472,13 +472,13 @@ public class DefaultMuleContext implements MuleContext
 
     /**
      * Fires a server notification to all registered
-     * {@link org.mule.api.context.notification.CustomNotificationListener} notificationManager.
+     * {@link org.mule.api.context.notification.listener.CustomNotificationListener} notificationManager.
      *
      * @param notification the notification to fire. This must be of type
-     *                     {@link org.mule.internal.notifications.CustomNotification} otherwise an
+     *                     {@link org.mule.context.notification.CustomNotification} otherwise an
      *                     exception will be thrown.
      * @throws UnsupportedOperationException if the notification fired is not a
-     *                                       {@link org.mule.internal.notifications.CustomNotification}
+     *                                       {@link org.mule.context.notification.CustomNotification}
      */
     public void fireNotification(ServerNotification notification)
     {
@@ -489,7 +489,7 @@ public class DefaultMuleContext implements MuleContext
         }
         else if (logger.isDebugEnabled())
         {
-            logger.debug("Event Manager is not enabled, ignoring notification: " + notification);
+            logger.debug("MuleEvent Manager is not enabled, ignoring notification: " + notification);
         }
     }
 

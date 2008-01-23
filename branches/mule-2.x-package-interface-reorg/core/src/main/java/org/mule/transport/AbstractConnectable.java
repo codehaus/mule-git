@@ -18,7 +18,7 @@ import org.mule.api.transport.Connectable;
 import org.mule.api.transport.ConnectionStrategy;
 import org.mule.api.transport.Connector;
 import org.mule.config.i18n.CoreMessages;
-import org.mule.internal.notifications.ConnectionNotification;
+import org.mule.context.notification.ConnectionNotification;
 import org.mule.util.ClassUtils;
 
 import java.beans.ExceptionListener;

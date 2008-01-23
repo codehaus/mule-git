@@ -11,7 +11,7 @@
 package org.mule.transformer;
 
 import org.mule.RequestContext;
-import org.mule.api.EventContext;
+import org.mule.api.MuleEventContext;
 import org.mule.api.transformer.TransformerException;
 import org.mule.config.i18n.CoreMessages;
 
@@ -35,7 +35,7 @@ public abstract class AbstractEventAwareTransformer extends AbstractTransformer
 {
     public final Object doTransform(Object src, String encoding) throws TransformerException
     {
-        EventContext event = RequestContext.getEventContext();
+        MuleEventContext event = RequestContext.getEventContext();
         if (event == null && requiresCurrentEvent())
         {
             throw new TransformerException(CoreMessages.noCurrentEventForTransformer(), this);
@@ -43,7 +43,7 @@ public abstract class AbstractEventAwareTransformer extends AbstractTransformer
         return transform(src, encoding, event);
     }
 
-    public abstract Object transform(Object src, String encoding, EventContext context)
+    public abstract Object transform(Object src, String encoding, MuleEventContext context)
         throws TransformerException;
 
     protected boolean requiresCurrentEvent()

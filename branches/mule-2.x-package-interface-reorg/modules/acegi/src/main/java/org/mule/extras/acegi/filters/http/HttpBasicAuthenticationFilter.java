@@ -10,11 +10,11 @@
 
 package org.mule.extras.acegi.filters.http;
 
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.lifecycle.InitialisationException;
-import org.mule.api.security.MuleAuthentication;
+import org.mule.api.security.Authentication;
 import org.mule.api.security.SecurityException;
 import org.mule.api.security.SecurityProviderNotFoundException;
 import org.mule.api.security.SecurityContext;
@@ -100,7 +100,7 @@ public class HttpBasicAuthenticationFilter extends AbstractEndpointSecurityFilte
      * @param event the current message recieved
      * @throws org.mule.api.security.SecurityException if authentication fails
      */
-    public void authenticateInbound(Event event)
+    public void authenticateInbound(MuleEvent event)
         throws SecurityException, SecurityProviderNotFoundException, UnknownAuthenticationTypeException
     {
         String header = event.getMessage().getStringProperty(HttpConstants.HEADER_AUTHORIZATION, null);
@@ -129,9 +129,9 @@ public class HttpBasicAuthenticationFilter extends AbstractEndpointSecurityFilte
                 username, password);
             authRequest.setDetails(event.getMessage().getProperty(MuleProperties.MULE_ENDPOINT_PROPERTY));
 
-            MuleAuthentication authResult;
+            Authentication authResult;
 
-            MuleAuthentication umoAuthentication = new AcegiAuthenticationAdapter(authRequest);
+            Authentication umoAuthentication = new AcegiAuthenticationAdapter(authRequest);
 
             try
             {
@@ -173,7 +173,7 @@ public class HttpBasicAuthenticationFilter extends AbstractEndpointSecurityFilte
         }
     }
 
-    protected void setUnauthenticated(Event event)
+    protected void setUnauthenticated(MuleEvent event)
     {
         String realmHeader = "Basic realm=";
         if (realm != null)
@@ -192,7 +192,7 @@ public class HttpBasicAuthenticationFilter extends AbstractEndpointSecurityFilte
      * @param event the current event being dispatched
      * @throws org.mule.api.security.SecurityException if authentication fails
      */
-    public void authenticateOutbound(Event event)
+    public void authenticateOutbound(MuleEvent event)
         throws SecurityException, SecurityProviderNotFoundException
     {
         if (event.getSession().getSecurityContext() == null)
@@ -208,7 +208,7 @@ public class HttpBasicAuthenticationFilter extends AbstractEndpointSecurityFilte
             }
         }
 
-        MuleAuthentication auth = event.getSession().getSecurityContext().getAuthentication();
+        Authentication auth = event.getSession().getSecurityContext().getAuthentication();
         if (isAuthenticate())
         {
             auth = getSecurityManager().authenticate(auth);

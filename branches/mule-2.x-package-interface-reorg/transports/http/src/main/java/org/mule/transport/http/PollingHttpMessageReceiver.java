@@ -11,11 +11,11 @@
 package org.mule.transport.http;
 
 import org.mule.DefaultMuleMessage;
-import org.mule.MuleEvent;
-import org.mule.MuleSession;
-import org.mule.api.Event;
+import org.mule.DefaultMuleEvent;
+import org.mule.DefaultMuleSession;
+import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
-import org.mule.api.Session;
+import org.mule.api.MuleSession;
 import org.mule.api.component.Component;
 import org.mule.api.endpoint.Endpoint;
 import org.mule.api.lifecycle.CreateException;
@@ -74,8 +74,8 @@ public class PollingHttpMessageReceiver extends AbstractPollingMessageReceiver
         }
         req.setProperty(HttpConnector.HTTP_METHOD_PROPERTY, "GET");
         
-        Session session = new MuleSession(component);
-        Event event = new MuleEvent(req, endpoint, session, true);
+        MuleSession session = new DefaultMuleSession(component);
+        MuleEvent event = new DefaultMuleEvent(req, endpoint, session, true);
         
         MuleMessage message = connector.send(endpoint, event);
         

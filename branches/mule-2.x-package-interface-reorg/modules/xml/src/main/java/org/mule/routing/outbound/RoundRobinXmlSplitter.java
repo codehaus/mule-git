@@ -13,7 +13,7 @@ package org.mule.routing.outbound;
 import org.mule.DefaultMuleMessage;
 import org.mule.api.AbstractMuleException;
 import org.mule.api.MuleMessage;
-import org.mule.api.Session;
+import org.mule.api.MuleSession;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.endpoint.Endpoint;
 import org.mule.api.routing.CouldNotRouteOutboundMessageException;
@@ -40,7 +40,7 @@ public class RoundRobinXmlSplitter extends FilteringXmlMessageSplitter
     private boolean deterministic = true;
     private static final AtomicInteger globalCounter = new AtomicInteger(0);
 
-    public MuleMessage route(MuleMessage message, Session session, boolean synchronous)
+    public MuleMessage route(MuleMessage message, MuleSession session, boolean synchronous)
         throws RoutingException
     {
         try

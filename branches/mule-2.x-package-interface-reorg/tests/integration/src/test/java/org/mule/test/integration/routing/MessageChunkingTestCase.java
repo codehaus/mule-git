@@ -11,10 +11,10 @@
 package org.mule.test.integration.routing;
 
 
-import org.mule.api.context.ServerNotification;
 import org.mule.api.context.notification.MessageNotificationListener;
+import org.mule.api.context.notification.ServerNotification;
+import org.mule.context.notification.MessageNotification;
 import org.mule.extras.client.MuleClient;
-import org.mule.internal.notifications.MessageNotification;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.tck.functional.FunctionalTestNotification;
 import org.mule.tck.functional.FunctionalTestNotificationListener;
@@ -22,6 +22,7 @@ import org.mule.util.concurrent.Latch;
 
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicInteger;
+
 import org.apache.commons.lang.SerializationUtils;
 
 public class MessageChunkingTestCase extends FunctionalTestCase

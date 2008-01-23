@@ -10,8 +10,8 @@
 
 package org.mule.security;
 
-import org.mule.api.Event;
 import org.mule.api.MuleContext;
+import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.context.MuleContextAware;
 import org.mule.api.endpoint.ImmutableEndpoint;
@@ -172,7 +172,7 @@ public abstract class AbstractEndpointSecurityFilter implements EndpointSecurity
         isInitialised = false;
     }
 
-    public void authenticate(Event event)
+    public void authenticate(MuleEvent event)
             throws SecurityException, UnknownAuthenticationTypeException, CryptoFailureException,
             SecurityProviderNotFoundException, EncryptionStrategyNotFoundException,
             InitialisationException
@@ -211,11 +211,11 @@ public abstract class AbstractEndpointSecurityFilter implements EndpointSecurity
         message.applyTransformers(Arrays.asList(new Object[]{trans}));
     }
 
-    protected abstract void authenticateInbound(Event event)
+    protected abstract void authenticateInbound(MuleEvent event)
             throws SecurityException, CryptoFailureException, SecurityProviderNotFoundException,
             EncryptionStrategyNotFoundException, UnknownAuthenticationTypeException;
 
-    protected abstract void authenticateOutbound(Event event)
+    protected abstract void authenticateOutbound(MuleEvent event)
             throws SecurityException, SecurityProviderNotFoundException, CryptoFailureException;
 
     protected abstract void doInitialise() throws InitialisationException;

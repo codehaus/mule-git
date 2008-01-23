@@ -30,10 +30,10 @@ import org.mule.util.ClassUtils;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.Map;
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 /**
  * <code>ServiceProxy</code> is a proxy that wraps a soap endpointUri to look like

@@ -11,7 +11,7 @@
 package org.mule.transport.xmpp;
 
 import org.mule.DefaultMuleMessage;
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.MalformedEndpointException;
 import org.mule.api.endpoint.EndpointURI;
@@ -88,11 +88,11 @@ public class XmppMessageRequester extends AbstractMessageRequester
         }
         Chat chat = xmppConnection.createChat(to);
         Message message = null;
-        if (timeout == Event.TIMEOUT_WAIT_FOREVER)
+        if (timeout == MuleEvent.TIMEOUT_WAIT_FOREVER)
         {
             message = chat.nextMessage();
         }
-        else if (timeout == Event.TIMEOUT_DO_NOT_WAIT)
+        else if (timeout == MuleEvent.TIMEOUT_DO_NOT_WAIT)
         {
             message = chat.nextMessage(1);
         }

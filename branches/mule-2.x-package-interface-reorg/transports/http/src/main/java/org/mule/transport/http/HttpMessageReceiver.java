@@ -11,14 +11,14 @@
 package org.mule.transport.http;
 
 import org.mule.DefaultMuleMessage;
-import org.mule.MuleEvent;
-import org.mule.MuleSession;
+import org.mule.DefaultMuleEvent;
+import org.mule.DefaultMuleSession;
 import org.mule.NullSessionHandler;
 import org.mule.OptimizedRequestContext;
 import org.mule.RegistryContext;
 import org.mule.RequestContext;
 import org.mule.api.MessagingException;
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.api.AbstractMuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.component.Component;
@@ -204,7 +204,7 @@ public class HttpMessageReceiver extends TcpMessageReceiver
         protected HttpResponse doHead(RequestLine requestLine) throws AbstractMuleException
         {
             MuleMessage message = new DefaultMuleMessage(NullPayload.getInstance());
-            Event event = new MuleEvent(message, endpoint, new MuleSession(message, new NullSessionHandler()), true);
+            MuleEvent event = new DefaultMuleEvent(message, endpoint, new DefaultMuleSession(message, new NullSessionHandler()), true);
             OptimizedRequestContext.unsafeSetEvent(event);
             HttpResponse response = new HttpResponse();
             response.setStatusLine(requestLine.getHttpVersion(), HttpConstants.SC_OK);
@@ -268,7 +268,7 @@ public class HttpMessageReceiver extends TcpMessageReceiver
         protected HttpResponse doOtherValid(RequestLine requestLine, String method) throws AbstractMuleException
         {
             MuleMessage message = new DefaultMuleMessage(NullPayload.getInstance());
-            Event event = new MuleEvent(message, endpoint, new MuleSession(message, new NullSessionHandler()), true);
+            MuleEvent event = new DefaultMuleEvent(message, endpoint, new DefaultMuleSession(message, new NullSessionHandler()), true);
             OptimizedRequestContext.unsafeSetEvent(event);
             HttpResponse response = new HttpResponse();
             response.setStatusLine(requestLine.getHttpVersion(), HttpConstants.SC_METHOD_NOT_ALLOWED);
@@ -279,7 +279,7 @@ public class HttpMessageReceiver extends TcpMessageReceiver
         protected HttpResponse doBad(RequestLine requestLine) throws AbstractMuleException
         {
             MuleMessage message = new DefaultMuleMessage(NullPayload.getInstance());
-            Event event = new MuleEvent(message, endpoint, new MuleSession(message, new NullSessionHandler()), true);
+            MuleEvent event = new DefaultMuleEvent(message, endpoint, new DefaultMuleSession(message, new NullSessionHandler()), true);
             OptimizedRequestContext.unsafeSetEvent(event);
             HttpResponse response = new HttpResponse();
             response.setStatusLine(requestLine.getHttpVersion(), HttpConstants.SC_BAD_REQUEST);
@@ -320,8 +320,8 @@ public class HttpMessageReceiver extends TcpMessageReceiver
                 {
                     HttpResponse expected = new HttpResponse();
                     expected.setStatusLine(requestLine.getHttpVersion(), HttpConstants.SC_CONTINUE);
-                    final MuleEvent event = new MuleEvent(new DefaultMuleMessage(expected), endpoint,
-                            new MuleSession(component), true);
+                    final DefaultMuleEvent event = new DefaultMuleEvent(new DefaultMuleMessage(expected), endpoint,
+                            new DefaultMuleSession(component), true);
                     RequestContext.setEvent(event);
                     conn.writeResponse(transformResponse(expected));
                 }
@@ -342,8 +342,8 @@ public class HttpMessageReceiver extends TcpMessageReceiver
             HttpResponse response = new HttpResponse();
             response.setStatusLine(requestLine.getHttpVersion(), HttpConstants.SC_NOT_FOUND);
             response.setBodyString(HttpMessages.cannotBindToAddress(failedPath).toString());
-            RequestContext.setEvent(new MuleEvent(new DefaultMuleMessage(response), endpoint,
-                    new MuleSession(component), true));
+            RequestContext.setEvent(new DefaultMuleEvent(new DefaultMuleMessage(response), endpoint,
+                    new DefaultMuleSession(component), true));
             // The DefaultResponseTransformer will set the necessary headers
             return transformResponse(response);
         }

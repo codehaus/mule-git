@@ -39,7 +39,7 @@ public abstract class StdioConnector extends AbstractConnector
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.api.transport.Connector#registerListener(org.mule.api.Session,
+     * @see org.mule.api.transport.Connector#registerListener(org.mule.api.MuleSession,
      *      org.mule.api.endpoint.Endpoint)
      */
     public MessageReceiver createReceiver(Component component, ImmutableEndpoint endpoint) throws Exception

@@ -10,8 +10,8 @@
 
 package org.mule.routing.inbound;
 
-import org.mule.api.Event;
 import org.mule.api.MessagingException;
+import org.mule.api.MuleEvent;
 import org.mule.api.routing.IdempotentMessageIdStore;
 import org.mule.api.routing.RoutingException;
 import org.mule.config.i18n.CoreMessages;
@@ -82,7 +82,7 @@ public class IdempotentReceiver extends SelectiveConsumer
         this.expirationInterval = expirationInterval;
     }
 
-    protected void initialize(Event event) throws RoutingException
+    protected void initialize(MuleEvent event) throws RoutingException
     {
         if (assignedComponentName == null && idStore == null)
         {
@@ -98,7 +98,7 @@ public class IdempotentReceiver extends SelectiveConsumer
     }
 
     // @Override
-    public boolean isMatch(Event event) throws MessagingException
+    public boolean isMatch(MuleEvent event) throws MessagingException
     {
         if (idStore == null)
         {
@@ -120,7 +120,7 @@ public class IdempotentReceiver extends SelectiveConsumer
     }
 
     // @Override
-    public Event[] process(Event event) throws MessagingException
+    public MuleEvent[] process(MuleEvent event) throws MessagingException
     {
         String eventComponentName = event.getComponent().getName();
         if (!assignedComponentName.equals(eventComponentName))
@@ -139,7 +139,7 @@ public class IdempotentReceiver extends SelectiveConsumer
         {
             if (idStore.storeId(id))
             {
-                return new Event[]{event};
+                return new MuleEvent[]{event};
             }
             else
             {
@@ -153,7 +153,7 @@ public class IdempotentReceiver extends SelectiveConsumer
         }
     }
 
-    protected Object getIdForEvent(Event event) throws MessagingException
+    protected Object getIdForEvent(MuleEvent event) throws MessagingException
     {
         return event.getMessage().getUniqueId();
     }

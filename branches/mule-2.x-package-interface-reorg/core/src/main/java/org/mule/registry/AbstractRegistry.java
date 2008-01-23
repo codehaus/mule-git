@@ -13,7 +13,7 @@ package org.mule.registry;
 import org.mule.MuleServer;
 import org.mule.RegistryContext;
 import org.mule.api.AbstractMuleException;
-import org.mule.api.Agent;
+import org.mule.api.agent.Agent;
 import org.mule.api.component.Component;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.context.MuleContextAware;

@@ -12,7 +12,7 @@ package org.mule.routing.outbound;
 
 import org.mule.api.AbstractMuleException;
 import org.mule.api.MuleMessage;
-import org.mule.api.Session;
+import org.mule.api.MuleSession;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.endpoint.InvalidEndpointTypeException;
@@ -59,7 +59,7 @@ public abstract class AbstractOutboundRouter extends AbstractRouter implements O
 
     protected TransactionConfig transactionConfig;
 
-    public void dispatch(Session session, MuleMessage message, ImmutableEndpoint endpoint) throws AbstractMuleException
+    public void dispatch(MuleSession session, MuleMessage message, ImmutableEndpoint endpoint) throws AbstractMuleException
     {
         setMessageProperties(session, message, endpoint);
 
@@ -89,7 +89,7 @@ public abstract class AbstractOutboundRouter extends AbstractRouter implements O
         }
     }
 
-    public MuleMessage send(Session session, MuleMessage message, ImmutableEndpoint endpoint) throws AbstractMuleException
+    public MuleMessage send(MuleSession session, MuleMessage message, ImmutableEndpoint endpoint) throws AbstractMuleException
     {
         if (replyTo != null)
         {
@@ -149,7 +149,7 @@ public abstract class AbstractOutboundRouter extends AbstractRouter implements O
         return result;
     }
 
-    protected void setMessageProperties(Session session, MuleMessage message, ImmutableEndpoint endpoint)
+    protected void setMessageProperties(MuleSession session, MuleMessage message, ImmutableEndpoint endpoint)
     {
         if (replyTo != null)
         {

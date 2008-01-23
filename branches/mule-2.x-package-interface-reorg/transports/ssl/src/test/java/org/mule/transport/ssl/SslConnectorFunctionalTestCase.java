@@ -11,7 +11,7 @@
 package org.mule.transport.ssl;
 
 import org.mule.ResponseOutputStream;
-import org.mule.api.EventContext;
+import org.mule.api.MuleEventContext;
 import org.mule.api.AbstractMuleException;
 import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
@@ -100,7 +100,7 @@ public class SslConnectorFunctionalTestCase extends FunctionalTestCase
         assertTrue("FunctionalTestComponent expected", ftc instanceof FunctionalTestComponent);
         ((FunctionalTestComponent) ftc).setEventCallback(new EventCallback()
         {
-            public void eventReceived(EventContext context, Object component)
+            public void eventReceived(MuleEventContext context, Object component)
             {
                 callbackCount.countDown();
                 assertNull(context.getCurrentTransaction());
@@ -128,7 +128,7 @@ public class SslConnectorFunctionalTestCase extends FunctionalTestCase
         assertTrue("FunctionalTestComponent expected", ftc instanceof FunctionalTestComponent);
         ((FunctionalTestComponent) ftc).setEventCallback(new EventCallback()
         {
-            public void eventReceived(EventContext context, Object component) throws Exception
+            public void eventReceived(MuleEventContext context, Object component) throws Exception
             {
                 try
                 {

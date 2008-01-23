@@ -229,7 +229,7 @@ public class TransactedSingleResourceJmsMessageReceiver extends AbstractMessageR
 
                         public Object doInTransaction() throws Exception
                         {
-                            // Get Transaction & Bind Session
+                            // Get Transaction & Bind MuleSession
                             Transaction tx = TransactionCoordination.getInstance().getTransaction();
                             if (tx != null)
                             {

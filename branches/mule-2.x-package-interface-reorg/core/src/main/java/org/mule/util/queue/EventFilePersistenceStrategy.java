@@ -10,7 +10,7 @@
 
 package org.mule.util.queue;
 
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 
 public class EventFilePersistenceStrategy extends FilePersistenceStrategy
 {
@@ -22,7 +22,7 @@ public class EventFilePersistenceStrategy extends FilePersistenceStrategy
 
     protected String getId(Object obj)
     {
-        Event event = (Event) obj;
+        MuleEvent event = (MuleEvent) obj;
         return event.getId();
     }
 

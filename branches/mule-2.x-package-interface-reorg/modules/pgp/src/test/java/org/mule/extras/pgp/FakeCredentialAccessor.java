@@ -10,7 +10,7 @@
 
 package org.mule.extras.pgp;
 
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.api.security.CredentialsAccessor;
 
 public class FakeCredentialAccessor implements CredentialsAccessor
@@ -19,9 +19,9 @@ public class FakeCredentialAccessor implements CredentialsAccessor
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.api.security.CredentialsAccessor#getCredentials(org.mule.api.Event)
+     * @see org.mule.api.security.CredentialsAccessor#getCredentials(org.mule.api.MuleEvent)
      */
-    public Object getCredentials(Event event)
+    public Object getCredentials(MuleEvent event)
     {
         return "Mule client <mule_client@mule.com>";
     }
@@ -29,10 +29,10 @@ public class FakeCredentialAccessor implements CredentialsAccessor
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.api.security.CredentialsAccessor#setCredentials(org.mule.api.Event,
+     * @see org.mule.api.security.CredentialsAccessor#setCredentials(org.mule.api.MuleEvent,
      *      java.lang.Object)
      */
-    public void setCredentials(Event event, Object credentials)
+    public void setCredentials(MuleEvent event, Object credentials)
     {
         // dummy
     }

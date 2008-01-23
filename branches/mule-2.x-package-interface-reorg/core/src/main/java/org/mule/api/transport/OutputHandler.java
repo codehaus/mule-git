@@ -10,7 +10,7 @@
 
 package org.mule.api.transport;
 
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -33,6 +33,6 @@ public interface OutputHandler
      * @param out the output stream to write to
      * @throws IOException
      */
-    void write(Event event, OutputStream out) throws IOException;
+    void write(MuleEvent event, OutputStream out) throws IOException;
 
 }

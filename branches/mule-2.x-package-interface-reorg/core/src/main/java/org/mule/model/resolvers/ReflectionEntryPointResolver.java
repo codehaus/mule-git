@@ -9,7 +9,7 @@
  */
 package org.mule.model.resolvers;
 
-import org.mule.api.EventContext;
+import org.mule.api.MuleEventContext;
 import org.mule.api.model.InvocationResult;
 import org.mule.routing.filters.WildcardFilter;
 import org.mule.util.ClassUtils;
@@ -113,7 +113,7 @@ public class ReflectionEntryPointResolver extends AbstractEntryPointResolver
      * @return
      * @throws Exception
      */
-    public InvocationResult invoke(Object component, EventContext context) throws Exception
+    public InvocationResult invoke(Object component, MuleEventContext context) throws Exception
     {
         Object[] payload = getPayloadFromMessage(context);
 

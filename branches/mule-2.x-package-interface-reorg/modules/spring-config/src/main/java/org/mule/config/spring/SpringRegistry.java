@@ -11,7 +11,7 @@
 package org.mule.config.spring;
 
 import org.mule.api.AbstractMuleException;
-import org.mule.api.Agent;
+import org.mule.api.agent.Agent;
 import org.mule.api.component.Component;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.endpoint.EndpointBuilder;

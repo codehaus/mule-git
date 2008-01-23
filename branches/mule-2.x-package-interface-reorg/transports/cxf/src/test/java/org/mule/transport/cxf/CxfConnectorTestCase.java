@@ -12,7 +12,6 @@ package org.mule.transport.cxf;
 
 import org.mule.api.transport.Connector;
 import org.mule.tck.providers.AbstractConnectorTestCase;
-import org.mule.transport.cxf.CxfConnector;
 
 import org.apache.cxf.message.MessageImpl;
 

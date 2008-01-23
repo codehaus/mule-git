@@ -10,7 +10,7 @@
 
 package org.mule.routing.inbound;
 
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.api.routing.RoutingException;
 
 /**
@@ -21,15 +21,15 @@ import org.mule.api.routing.RoutingException;
 
 public class InboundPassThroughRouter extends SelectiveConsumer
 {
-    public Event[] process(Event event) throws RoutingException
+    public MuleEvent[] process(MuleEvent event) throws RoutingException
     {
         synchronized (event)
         {
-            return new Event[]{event};
+            return new MuleEvent[]{event};
         }
     }
 
-    public boolean isMatch(Event event) throws RoutingException
+    public boolean isMatch(MuleEvent event) throws RoutingException
     {
         return true;
     }

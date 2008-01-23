@@ -13,7 +13,7 @@ package org.mule.routing.outbound;
 import org.mule.DefaultMuleMessage;
 import org.mule.api.MessagingException;
 import org.mule.api.MuleMessage;
-import org.mule.api.Session;
+import org.mule.api.MuleSession;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.routing.RoutingException;
 import org.mule.api.transformer.Transformer;
@@ -28,7 +28,7 @@ public class TransformerRouter extends AbstractOutboundRouter
 {
     private Transformer transformer;
 
-    public MuleMessage route(MuleMessage message, Session session, boolean synchronous) throws MessagingException
+    public MuleMessage route(MuleMessage message, MuleSession session, boolean synchronous) throws MessagingException
     {
         if (transformer != null)
         {

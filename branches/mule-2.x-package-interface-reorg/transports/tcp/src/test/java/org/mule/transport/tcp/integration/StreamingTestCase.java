@@ -10,7 +10,7 @@
 
 package org.mule.transport.tcp.integration;
 
-import org.mule.api.EventContext;
+import org.mule.api.MuleEventContext;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.tck.functional.EventCallback;
@@ -52,7 +52,7 @@ public class StreamingTestCase extends FunctionalTestCase
 
         EventCallback callback = new EventCallback()
         {
-            public synchronized void eventReceived(EventContext context, Object component)
+            public synchronized void eventReceived(MuleEventContext context, Object component)
             {
                 try
                 {

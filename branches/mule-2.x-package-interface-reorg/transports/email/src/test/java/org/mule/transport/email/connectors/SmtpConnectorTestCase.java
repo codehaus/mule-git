@@ -11,10 +11,10 @@
 package org.mule.transport.email.connectors;
 
 import org.mule.DefaultMuleMessage;
-import org.mule.MuleEvent;
+import org.mule.DefaultMuleEvent;
 import org.mule.ResponseOutputStream;
 import org.mule.api.MuleMessage;
-import org.mule.api.Session;
+import org.mule.api.MuleSession;
 import org.mule.api.component.Component;
 import org.mule.api.endpoint.EndpointBuilder;
 import org.mule.api.endpoint.ImmutableEndpoint;
@@ -95,8 +95,8 @@ public class SmtpConnectorTestCase extends AbstractMailConnectorFunctionalTestCa
 
         MuleMessage message = new DefaultMuleMessage(MESSAGE);
         message.setStringProperty(MailProperties.TO_ADDRESSES_PROPERTY, EMAIL);
-        Session session = getTestSession(getTestComponent("apple", Apple.class));
-        MuleEvent event = new MuleEvent(message, endpoint, session, true, new ResponseOutputStream(System.out));
+        MuleSession session = getTestSession(getTestComponent("apple", Apple.class));
+        DefaultMuleEvent event = new DefaultMuleEvent(message, endpoint, session, true, new ResponseOutputStream(System.out));
         endpoint.dispatch(event);
 
         getServers().waitForIncomingEmail(DELIVERY_DELAY_MS, 1);

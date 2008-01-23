@@ -11,7 +11,7 @@
 package org.mule.transport.http.transformers;
 
 import org.mule.RequestContext;
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.transformer.TransformerException;
@@ -304,7 +304,7 @@ public class ObjectToHttpClientMethodRequest extends AbstractMessageAwareTransfo
             }
             else if (src instanceof OutputHandler)
             {
-                Event event = RequestContext.getEvent();
+                MuleEvent event = RequestContext.getEvent();
                 postMethod.setRequestEntity(new StreamPayloadRequestEntity((OutputHandler) src, event));
             }
             else

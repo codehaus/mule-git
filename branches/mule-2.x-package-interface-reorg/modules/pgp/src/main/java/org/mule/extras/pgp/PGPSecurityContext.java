@@ -10,7 +10,7 @@
 
 package org.mule.extras.pgp;
 
-import org.mule.api.security.MuleAuthentication;
+import org.mule.api.security.Authentication;
 import org.mule.api.security.SecurityContext;
 
 public class PGPSecurityContext implements SecurityContext
@@ -27,7 +27,7 @@ public class PGPSecurityContext implements SecurityContext
      * 
      * @see org.mule.api.security.SecurityContext#setAuthentication(org.mule.api.security.Authentication)
      */
-    public void setAuthentication(MuleAuthentication authentication)
+    public void setAuthentication(Authentication authentication)
     {
         this.authentication = (PGPAuthentication)authentication;
     }
@@ -37,7 +37,7 @@ public class PGPSecurityContext implements SecurityContext
      * 
      * @see org.mule.api.security.SecurityContext#getAuthentication()
      */
-    public MuleAuthentication getAuthentication()
+    public Authentication getAuthentication()
     {
         return authentication;
     }

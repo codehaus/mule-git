@@ -10,7 +10,7 @@
 
 package org.mule.components.script.jsr223;
 
-import org.mule.api.EventContext;
+import org.mule.api.MuleEventContext;
 import org.mule.api.lifecycle.Callable;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.util.MuleLogger;
@@ -31,7 +31,7 @@ public class ScriptComponent extends Scriptable implements Callable
         bindings = getScriptEngine().createBindings();
     }
 
-    public Object onCall(EventContext eventContext) throws Exception
+    public Object onCall(MuleEventContext eventContext) throws Exception
     {
         populateBindings(bindings, eventContext);
         Object result = runScript(bindings);
@@ -42,7 +42,7 @@ public class ScriptComponent extends Scriptable implements Callable
         return result;
     }
 
-    protected void populateBindings(Bindings namespace, EventContext context)
+    protected void populateBindings(Bindings namespace, MuleEventContext context)
     {
         namespace.put("eventContext", context);
         namespace.put("muleContext", context.getMuleContext());

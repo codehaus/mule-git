@@ -11,7 +11,7 @@
 package org.mule.routing.inbound;
 
 import org.mule.DefaultMuleMessage;
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.routing.AggregationException;
 
@@ -49,8 +49,8 @@ public class MessageChunkingAggregator extends CorrelationAggregator
      */
     protected MuleMessage aggregateEvents(EventGroup events) throws AggregationException
     {
-        Event[] collectedEvents = events.toArray();
-        Event firstEvent = collectedEvents[0];
+        MuleEvent[] collectedEvents = events.toArray();
+        MuleEvent firstEvent = collectedEvents[0];
         Arrays.sort(collectedEvents, eventComparator);
         ByteArrayOutputStream baos = new ByteArrayOutputStream(DEFAULT_BUFFER_SIZE);
 
@@ -58,7 +58,7 @@ public class MessageChunkingAggregator extends CorrelationAggregator
         {
             for (Iterator iterator = IteratorUtils.arrayIterator(collectedEvents); iterator.hasNext();)
             {
-                Event event = (Event) iterator.next();
+                MuleEvent event = (MuleEvent) iterator.next();
                 baos.write(event.getMessageAsBytes());
             }
 

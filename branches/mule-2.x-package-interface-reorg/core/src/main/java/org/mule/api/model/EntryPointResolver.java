@@ -10,7 +10,7 @@
 
 package org.mule.api.model;
 
-import org.mule.api.EventContext;
+import org.mule.api.MuleEventContext;
 
 /**
  * <code>EntryPointResolver</code> resolves a method to call on the given
@@ -18,5 +18,5 @@ import org.mule.api.EventContext;
  */
 public interface EntryPointResolver
 {
-    InvocationResult invoke(Object component, EventContext context) throws Exception;
+    InvocationResult invoke(Object component, MuleEventContext context) throws Exception;
 }

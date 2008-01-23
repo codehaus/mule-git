@@ -12,7 +12,7 @@ package org.mule.routing.nested;
 
 import org.mule.api.MessagingException;
 import org.mule.api.MuleMessage;
-import org.mule.api.Session;
+import org.mule.api.MuleSession;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.routing.NestedRouter;
 import org.mule.api.routing.OutboundRouter;
@@ -42,7 +42,7 @@ public class DefaultNestedRouter extends AbstractRouter implements NestedRouter
         setRouterStatistics(new RouterStatistics(RouterStatistics.TYPE_NESTED));
     }
 
-    public MuleMessage route(MuleMessage message, Session session, boolean synchronous) throws MessagingException
+    public MuleMessage route(MuleMessage message, MuleSession session, boolean synchronous) throws MessagingException
     {
         return outboundRouter.route(message, session, synchronous);
     }

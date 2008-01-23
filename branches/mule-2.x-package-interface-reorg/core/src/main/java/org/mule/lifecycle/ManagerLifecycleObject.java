@@ -10,8 +10,8 @@
 package org.mule.lifecycle;
 
 import org.mule.api.MuleContext;
-import org.mule.api.context.ServerNotification;
-import org.mule.internal.notifications.ManagerNotification;
+import org.mule.api.context.notification.ServerNotification;
+import org.mule.context.notification.ManagerNotification;
 
 /**
  * TODO

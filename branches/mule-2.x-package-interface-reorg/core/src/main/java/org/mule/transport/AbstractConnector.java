@@ -10,20 +10,19 @@
 
 package org.mule.transport;
 
-import org.mule.AlreadyInitialisedException;
 import org.mule.DefaultExceptionStrategy;
 import org.mule.MuleSessionHandler;
 import org.mule.RegistryContext;
 import org.mule.api.AbstractMuleException;
-import org.mule.api.Event;
 import org.mule.api.MessagingException;
 import org.mule.api.MuleContext;
+import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.MuleRuntimeException;
 import org.mule.api.component.Component;
 import org.mule.api.config.ThreadingProfile;
-import org.mule.api.context.ServerNotification;
 import org.mule.api.context.WorkManager;
+import org.mule.api.context.notification.ServerNotification;
 import org.mule.api.context.notification.ServerNotificationHandler;
 import org.mule.api.endpoint.EndpointURI;
 import org.mule.api.endpoint.ImmutableEndpoint;
@@ -45,9 +44,10 @@ import org.mule.api.transport.MessageRequesterFactory;
 import org.mule.api.transport.ReplyToHandler;
 import org.mule.api.transport.SessionHandler;
 import org.mule.config.i18n.CoreMessages;
-import org.mule.internal.notifications.ConnectionNotification;
-import org.mule.internal.notifications.MessageNotification;
-import org.mule.internal.notifications.manager.OptimisedNotificationHandler;
+import org.mule.context.notification.ConnectionNotification;
+import org.mule.context.notification.MessageNotification;
+import org.mule.context.notification.OptimisedNotificationHandler;
+import org.mule.lifecycle.AlreadyInitialisedException;
 import org.mule.model.streaming.DelegatingInputStream;
 import org.mule.routing.filters.WildcardFilter;
 import org.mule.transformer.TransformerUtils;
@@ -1804,7 +1804,7 @@ public abstract class AbstractConnector
     // TODO the following methods should probably be lifecycle-enabled;
     // for now they are only stubs to get the refactoring going.
 
-    public void dispatch(ImmutableEndpoint endpoint, Event event) throws DispatchException
+    public void dispatch(ImmutableEndpoint endpoint, MuleEvent event) throws DispatchException
     {
         MessageDispatcher dispatcher = null;
 
@@ -1926,7 +1926,7 @@ public abstract class AbstractConnector
         }
     }
 
-    public MuleMessage send(ImmutableEndpoint endpoint, Event event) throws DispatchException
+    public MuleMessage send(ImmutableEndpoint endpoint, MuleEvent event) throws DispatchException
     {
         MessageDispatcher dispatcher = null;
 

@@ -10,7 +10,7 @@
 
 package org.mule.transport.rmi;
 
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.api.AbstractMuleException;
 import org.mule.api.component.Component;
 import org.mule.api.config.MuleProperties;
@@ -219,7 +219,7 @@ public class RmiConnector extends AbstractJndiConnector
      * @throws NoSuchMethodException
      * @throws ClassNotFoundException
      */
-    public Method getMethodObject(Remote remoteObject, Event event)
+    public Method getMethodObject(Remote remoteObject, MuleEvent event)
         throws AbstractMuleException, NoSuchMethodException, ClassNotFoundException
     {
         EndpointURI endpointUri = event.getEndpoint().getEndpointURI();

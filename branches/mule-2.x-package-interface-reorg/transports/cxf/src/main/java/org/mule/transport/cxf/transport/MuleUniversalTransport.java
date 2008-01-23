@@ -1,6 +1,8 @@
 
 package org.mule.transport.cxf.transport;
 
+import org.mule.transport.cxf.CxfConnector;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,9 +30,6 @@ import org.apache.cxf.transport.DestinationFactory;
 import org.apache.cxf.ws.addressing.AttributedURIType;
 import org.apache.cxf.ws.addressing.EndpointReferenceType;
 import org.apache.cxf.wsdl11.WSDLEndpointFactory;
-
-import org.mule.transport.cxf.CxfConnector;
-
 import org.xmlsoap.schemas.wsdl.http.AddressType;
 
 public class MuleUniversalTransport extends AbstractTransportFactory

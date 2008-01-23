@@ -12,7 +12,7 @@ package org.mule.transformer;
 
 import org.mule.DefaultMuleMessage;
 import org.mule.RequestContext;
-import org.mule.api.EventContext;
+import org.mule.api.MuleEventContext;
 import org.mule.api.MuleMessage;
 import org.mule.api.transformer.TransformerException;
 import org.mule.config.i18n.CoreMessages;
@@ -54,7 +54,7 @@ public abstract class AbstractMessageAwareTransformer extends AbstractTransforme
         }
         else
         {
-            EventContext event = RequestContext.getEventContext();
+            MuleEventContext event = RequestContext.getEventContext();
             if (event == null)
             {
                 throw new TransformerException(CoreMessages.noCurrentEventForTransformer(), this);
@@ -62,7 +62,7 @@ public abstract class AbstractMessageAwareTransformer extends AbstractTransforme
             message = event.getMessage();
             if(!message.getPayload().equals(src))
             {
-                throw new IllegalStateException("Transform payload does not match current EventContext payload");
+                throw new IllegalStateException("Transform payload does not match current MuleEventContext payload");
             }
         }
         return transform(message, encoding);

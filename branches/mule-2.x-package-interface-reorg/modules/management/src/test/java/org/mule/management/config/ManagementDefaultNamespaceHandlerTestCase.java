@@ -10,7 +10,7 @@
 
 package org.mule.management.config;
 
-import org.mule.api.Agent;
+import org.mule.api.agent.Agent;
 import org.mule.management.agents.JmxAgent;
 import org.mule.management.agents.JmxServerNotificationAgent;
 import org.mule.management.agents.Log4jAgent;

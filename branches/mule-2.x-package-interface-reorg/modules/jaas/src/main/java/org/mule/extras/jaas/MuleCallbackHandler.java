@@ -10,7 +10,7 @@
 
 package org.mule.extras.jaas;
 
-import org.mule.api.security.MuleAuthentication;
+import org.mule.api.security.Authentication;
 
 import java.io.IOException;
 
@@ -22,14 +22,14 @@ import javax.security.auth.callback.UnsupportedCallbackException;
 
 public class MuleCallbackHandler implements CallbackHandler
 {
-    private MuleAuthentication authentication;
+    private Authentication authentication;
     private String username;
     private String password;
 
     /**
      * @param authentication
      */
-    public MuleCallbackHandler(MuleAuthentication authentication)
+    public MuleCallbackHandler(Authentication authentication)
     {
         this.authentication = authentication;
         this.username = (String) this.authentication.getPrincipal();

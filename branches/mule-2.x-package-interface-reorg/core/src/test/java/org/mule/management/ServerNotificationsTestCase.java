@@ -10,15 +10,15 @@
 
 package org.mule.management;
 
-import org.mule.api.context.ServerNotification;
 import org.mule.api.context.notification.ComponentNotificationListener;
 import org.mule.api.context.notification.CustomNotificationListener;
 import org.mule.api.context.notification.ManagerNotificationListener;
 import org.mule.api.context.notification.ModelNotificationListener;
-import org.mule.internal.notifications.ComponentNotification;
-import org.mule.internal.notifications.CustomNotification;
-import org.mule.internal.notifications.ManagerNotification;
-import org.mule.internal.notifications.ModelNotification;
+import org.mule.api.context.notification.ServerNotification;
+import org.mule.context.notification.ComponentNotification;
+import org.mule.context.notification.CustomNotification;
+import org.mule.context.notification.ManagerNotification;
+import org.mule.context.notification.ModelNotification;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.tck.testmodels.fruit.Apple;
 

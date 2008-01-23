@@ -10,14 +10,14 @@
 
 package org.mule.extras.jaas;
 
-import org.mule.api.security.MuleAuthentication;
+import org.mule.api.security.Authentication;
 import org.mule.api.security.Credentials;
 
 import java.util.Map;
 
 import javax.security.auth.Subject;
 
-public class JaasAuthentication implements MuleAuthentication
+public class JaasAuthentication implements Authentication
 {
     private boolean authenticated;
     private char[] credentials;

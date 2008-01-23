@@ -12,9 +12,9 @@ package org.mule.transport.soap.axis;
 
 import org.mule.DefaultMuleMessage;
 import org.mule.RequestContext;
-import org.mule.api.MessagingException;
-import org.mule.api.EventContext;
 import org.mule.api.AbstractMuleException;
+import org.mule.api.MessagingException;
+import org.mule.api.MuleEventContext;
 import org.mule.api.MuleMessage;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.endpoint.EndpointException;
@@ -72,7 +72,7 @@ import org.w3c.dom.Document;
  * <ol>
  * <li>Jws class services are not supported as they don't add any value to the Mule
  * model</li>
- * <li>Currently there is no HttpSession support. This will be fixed when Session
+ * <li>Currently there is no HttpSession support. This will be fixed when MuleSession
  * support is added to the Http Connector</li>
  * </ol>
  */
@@ -104,7 +104,7 @@ public class AxisServiceComponent implements Initialisable, Callable
      * @param context the context to process
      * @return Object this object can be anything. When the
      *         <code>LifecycleAdapter</code> for the component receives this
-     *         object it will first see if the Object is an <code>Event</code>
+     *         object it will first see if the Object is an <code>MuleEvent</code>
      *         if not and the Object is not null a new context will be created using
      *         the returned object as the payload. This new context will then get
      *         published to the configured outbound endpoint if-
@@ -117,7 +117,7 @@ public class AxisServiceComponent implements Initialisable, Callable
      *             aren't handled by the implementation they will be handled by the
      *             exceptionListener associated with the component
      */
-    public Object onCall(EventContext context) throws Exception
+    public Object onCall(MuleEventContext context) throws Exception
     {
         WriterMessageAdapter response = new WriterMessageAdapter(new StringWriter(4096));
         String method = context.getMessage().getStringProperty(HttpConnector.HTTP_METHOD_PROPERTY,
@@ -142,7 +142,7 @@ public class AxisServiceComponent implements Initialisable, Callable
         }        
     }
 
-    public void doGet(EventContext context, WriterMessageAdapter response)
+    public void doGet(MuleEventContext context, WriterMessageAdapter response)
         throws AbstractMuleException, IOException
     {
         try
@@ -267,7 +267,7 @@ public class AxisServiceComponent implements Initialisable, Callable
     }
 
     protected void processMethodRequest(MessageContext msgContext,
-                                        EventContext context,
+                                        MuleEventContext context,
                                         WriterMessageAdapter response,
                                         EndpointURI endpointUri) throws AxisFault
     {
@@ -427,7 +427,7 @@ public class AxisServiceComponent implements Initialisable, Callable
 
     }
 
-    protected void reportAvailableServices(EventContext context, WriterMessageAdapter response)
+    protected void reportAvailableServices(MuleEventContext context, WriterMessageAdapter response)
         throws ConfigurationException, AxisFault
     {
         AxisEngine engine = getAxis();
@@ -508,7 +508,7 @@ public class AxisServiceComponent implements Initialisable, Callable
         response.write("</ul>");
     }
 
-    protected void reportCantGetAxisService(EventContext context, WriterMessageAdapter response)
+    protected void reportCantGetAxisService(MuleEventContext context, WriterMessageAdapter response)
     {
         response.setProperty(HttpConnector.HTTP_STATUS_PROPERTY, "404");
         response.setProperty(HttpConstants.HEADER_CONTENT_TYPE, "text/html");
@@ -516,7 +516,7 @@ public class AxisServiceComponent implements Initialisable, Callable
         response.write("<p>" + Messages.getMessage("noService06") + "</p>");
     }
 
-    protected void doPost(EventContext context, WriterMessageAdapter response)
+    protected void doPost(MuleEventContext context, WriterMessageAdapter response)
         throws Exception
     {
         String soapAction;
@@ -600,7 +600,7 @@ public class AxisServiceComponent implements Initialisable, Callable
         catch (AxisFault fault)
         {
             logger.error(fault.toString() + " target service is: " + msgContext.getTargetService()
-                            + ". Event is: " + context.toString(), fault);
+                            + ". MuleEvent is: " + context.toString(), fault);
             processAxisFault(fault);
             configureResponseFromAxisFault(response, fault);
             responseMsg = msgContext.getResponseMessage();
@@ -626,7 +626,7 @@ public class AxisServiceComponent implements Initialisable, Callable
         }
     }
 
-    private EndpointURI getEndpoint(EventContext context) throws EndpointException
+    private EndpointURI getEndpoint(MuleEventContext context) throws EndpointException
     {
         String endpoint = context.getEndpointURI().getAddress();
         String request = context.getMessage().getStringProperty(HttpConnector.HTTP_REQUEST_PROPERTY, null);
@@ -696,7 +696,7 @@ public class AxisServiceComponent implements Initialisable, Callable
     }
 
     private void populateMessageContext(MessageContext msgContext,
-                                        EventContext context,
+                                        MuleEventContext context,
                                         EndpointURI endpointUri) throws AxisFault, ConfigurationException
     {
         MuleMessage msg = context.getMessage();
@@ -755,7 +755,7 @@ public class AxisServiceComponent implements Initialisable, Callable
         msgContext.setProperty("servletEndpointContext", sec);
     }
 
-    private String getSoapAction(EventContext context) throws AxisFault
+    private String getSoapAction(MuleEventContext context) throws AxisFault
     {
         String soapAction = context.getMessage().getStringProperty(SoapConstants.SOAP_ACTION_PROPERTY_CAPS, null);
         if (logger.isDebugEnabled())
@@ -770,7 +770,7 @@ public class AxisServiceComponent implements Initialisable, Callable
         return soapAction;
     }
 
-    protected String getServiceName(EventContext context, EndpointURI endpointUri) throws AxisFault
+    protected String getServiceName(MuleEventContext context, EndpointURI endpointUri) throws AxisFault
     {
         String serviceName = endpointUri.getPath();
         if (StringUtils.isEmpty(serviceName))

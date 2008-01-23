@@ -12,7 +12,7 @@ package org.mule.routing.outbound;
 
 import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleMessage;
-import org.mule.api.Session;
+import org.mule.api.MuleSession;
 import org.mule.api.endpoint.Endpoint;
 import org.mule.api.routing.RoutingException;
 import org.mule.routing.LoggingCatchAllStrategy;
@@ -70,14 +70,14 @@ public class OutboundMessageRouterTestCase extends AbstractMuleTestCase
         MuleMessage message = new DefaultMuleMessage("test event");
 
         session.expect("dispatchEvent", C.eq(message, endpoint1));
-        messageRouter.route(message, (Session)session.proxy(), false);
+        messageRouter.route(message, (MuleSession)session.proxy(), false);
         session.verify();
 
         message = new DefaultMuleMessage(new IllegalArgumentException());
 
         session.expectAndReturn("getComponent", getTestComponent());
         session.expect("dispatchEvent", C.eq(message, endpoint2));
-        messageRouter.route(message, (Session)session.proxy(), false);
+        messageRouter.route(message, (MuleSession)session.proxy(), false);
         session.verify();
 
         FilteringOutboundRouter router3 = new FilteringOutboundRouter();
@@ -95,7 +95,7 @@ public class OutboundMessageRouterTestCase extends AbstractMuleTestCase
         session.expect("dispatchEvent", C.eq(message, endpoint1));
         session.expect("dispatchEvent", C.eq(message, endpoint2));
         messageRouter.setMatchAll(true);
-        messageRouter.route(message, (Session)session.proxy(), false);
+        messageRouter.route(message, (MuleSession)session.proxy(), false);
         session.verify();
     }
 
@@ -109,7 +109,7 @@ public class OutboundMessageRouterTestCase extends AbstractMuleTestCase
 
         FilteringOutboundRouter filterRouter1 = new FilteringOutboundRouter()
         {
-            public MuleMessage route(MuleMessage message, Session session, boolean synchronous)
+            public MuleMessage route(MuleMessage message, MuleSession session, boolean synchronous)
                 throws RoutingException
             {
                 count1[0]++;
@@ -119,7 +119,7 @@ public class OutboundMessageRouterTestCase extends AbstractMuleTestCase
 
         FilteringOutboundRouter filterRouter2 = new FilteringOutboundRouter()
         {
-            public MuleMessage route(MuleMessage message, Session session, boolean synchronous)
+            public MuleMessage route(MuleMessage message, MuleSession session, boolean synchronous)
                 throws RoutingException
             {
                 count2[0]++;
@@ -134,7 +134,7 @@ public class OutboundMessageRouterTestCase extends AbstractMuleTestCase
 
         LoggingCatchAllStrategy strategy = new LoggingCatchAllStrategy()
         {
-            public MuleMessage catchMessage(MuleMessage message, Session session, boolean synchronous)
+            public MuleMessage catchMessage(MuleMessage message, MuleSession session, boolean synchronous)
                 throws RoutingException
             {
                 catchAllCount[0]++;
@@ -144,7 +144,7 @@ public class OutboundMessageRouterTestCase extends AbstractMuleTestCase
 
         messageRouter.setCatchAllStrategy(strategy);
 
-        Session session = getTestSession(getTestComponent());
+        MuleSession session = getTestSession(getTestComponent());
 
         messageRouter.route(new DefaultMuleMessage("hello"), session, true);
         assertEquals(1, catchAllCount[0]);
@@ -165,7 +165,7 @@ public class OutboundMessageRouterTestCase extends AbstractMuleTestCase
     public void testCorrelation() throws Exception
     {
         FilteringOutboundRouter filterRouter = new FilteringOutboundRouter();
-        Session session = getTestSession(getTestComponent());
+        MuleSession session = getTestSession(getTestComponent());
         MuleMessage message = new DefaultMuleMessage(new DefaultMessageAdapter(new StringBuffer()));
         Endpoint endpoint = getTestEndpoint("test", "sender");
         filterRouter.setMessageProperties(session, message, endpoint);

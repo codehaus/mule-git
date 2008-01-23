@@ -11,8 +11,8 @@
 package org.mule.transport.tcp;
 
 import org.mule.DefaultMuleMessage;
-import org.mule.MuleEvent;
-import org.mule.MuleSession;
+import org.mule.DefaultMuleEvent;
+import org.mule.DefaultMuleSession;
 import org.mule.NullSessionHandler;
 import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.ImmutableEndpoint;
@@ -36,8 +36,8 @@ public class TcpSyncTestCase extends FunctionalTestCase
         MuleMessage message = new DefaultMuleMessage(payload);
         ImmutableEndpoint endpoint = muleContext.getRegistry().lookupEndpointFactory().getOutboundEndpoint(
             endpointUri);
-        MuleSession session = new MuleSession(message, new NullSessionHandler());
-        MuleEvent event = new MuleEvent(message, endpoint, session, true);
+        DefaultMuleSession session = new DefaultMuleSession(message, new NullSessionHandler());
+        DefaultMuleEvent event = new DefaultMuleEvent(message, endpoint, session, true);
         event.setTimeout(60000);
         return event.getSession().sendEvent(event);
     }

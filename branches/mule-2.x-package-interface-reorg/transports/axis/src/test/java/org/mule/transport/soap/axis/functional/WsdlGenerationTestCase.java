@@ -79,13 +79,13 @@ public class WsdlGenerationTestCase extends FunctionalTestCase
         assertNotNull(result);
         String wsdl = result.getPayloadAsString();
         Document doc = DocumentHelper.parseText(wsdl);
-        assertEquals("http://component.api.mule.org", doc.valueOf("/wsdl:definitions/@targetNamespace"));
+        assertEquals("http://simple.component.api.mule.org", doc.valueOf("/wsdl:definitions/@targetNamespace"));
         assertEquals("mulePortType", doc.valueOf("/wsdl:definitions/wsdl:portType/@name"));
         assertEquals(
-            "http://component.api.mule.org",
+            "http://simple.component.api.mule.org",
             doc.valueOf("/wsdl:definitions/wsdl:binding/wsdl:operation[@name='echo']/wsdl:input[@name='echoRequest']/wsdlsoap:body/@namespace"));
         assertEquals(
-            "http://component.api.mule.org",
+            "http://simple.component.api.mule.org",
             doc.valueOf("/wsdl:definitions/wsdl:binding/wsdl:operation[@name='echo']/wsdl:output[@name='echoResponse']/wsdlsoap:body/@namespace"));
         assertEquals("muleService", doc.valueOf("/wsdl:definitions/wsdl:service/@name"));
         assertEquals("muleServicePort", doc.valueOf("/wsdl:definitions/wsdl:service/wsdl:port/@name"));

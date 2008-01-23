@@ -11,7 +11,7 @@
 package org.mule.test.usecases.properties;
 
 import org.mule.DefaultMuleMessage;
-import org.mule.api.EventContext;
+import org.mule.api.MuleEventContext;
 import org.mule.api.MuleMessage;
 import org.mule.api.lifecycle.Callable;
 import org.mule.tck.testmodels.fruit.Apple;
@@ -28,7 +28,7 @@ public class PropsComponent implements Callable
 
     protected static Apple testObjectProperty = new Apple();
 
-    public Object onCall(EventContext context) throws Exception
+    public Object onCall(MuleEventContext context) throws Exception
     {
         logger.debug("org.mule.test.usecases.props.PropsComponent");
 

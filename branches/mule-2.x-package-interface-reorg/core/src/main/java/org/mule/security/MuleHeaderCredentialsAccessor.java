@@ -10,7 +10,7 @@
 
 package org.mule.security;
 
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.security.CredentialsAccessor;
 
@@ -20,12 +20,12 @@ import org.mule.api.security.CredentialsAccessor;
  */
 public class MuleHeaderCredentialsAccessor implements CredentialsAccessor
 {
-    public Object getCredentials(Event event)
+    public Object getCredentials(MuleEvent event)
     {
         return event.getMessage().getProperty(MuleProperties.MULE_USER_PROPERTY);
     }
 
-    public void setCredentials(Event event, Object credentials)
+    public void setCredentials(MuleEvent event, Object credentials)
     {
         event.getMessage().setProperty(MuleProperties.MULE_USER_PROPERTY, credentials);
     }

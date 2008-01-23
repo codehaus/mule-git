@@ -10,7 +10,7 @@
 
 package org.mule.component.simple;
 
-import org.mule.api.EventContext;
+import org.mule.api.MuleEventContext;
 import org.mule.api.lifecycle.Callable;
 import org.mule.api.lifecycle.Initialisable;
 import org.mule.api.lifecycle.InitialisationException;
@@ -86,7 +86,7 @@ public class StaticComponent implements Callable, Initialisable
         this.postfix = postfix;
     }
 
-    public Object onCall(EventContext eventContext) throws Exception
+    public Object onCall(MuleEventContext eventContext) throws Exception
     {
         if (data != null)
         {

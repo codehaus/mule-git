@@ -10,6 +10,7 @@
 
 package org.mule.internal.admin;
 
+import org.mule.agent.MuleAdminAgent;
 import org.mule.tck.AbstractMuleTestCase;
 
 public class MuleAdminAgentTestCase extends AbstractMuleTestCase

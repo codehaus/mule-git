@@ -12,7 +12,7 @@ package org.mule.routing.outbound;
 
 import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleMessage;
-import org.mule.api.Session;
+import org.mule.api.MuleSession;
 import org.mule.api.endpoint.Endpoint;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.endpoint.MuleEndpointURI;
@@ -90,7 +90,7 @@ public class MessageSplitterRouterTestCase extends AbstractMuleTestCase
         session.expect("dispatchEvent", C.args(C.isA(MuleMessage.class), C.eq(endpoint1)));
         session.expect("dispatchEvent", C.args(C.isA(MuleMessage.class), C.eq(endpoint2)));
         session.expect("dispatchEvent", C.args(C.isA(MuleMessage.class), C.eq(endpoint3)));
-        router.route(message, (Session)session.proxy(), false);
+        router.route(message, (MuleSession)session.proxy(), false);
         session.verify();
 
         message = new DefaultMuleMessage("test,mule,message");
@@ -98,7 +98,7 @@ public class MessageSplitterRouterTestCase extends AbstractMuleTestCase
         session.expectAndReturn("sendEvent", C.args(C.isA(MuleMessage.class), C.eq(endpoint1)), message);
         session.expectAndReturn("sendEvent", C.args(C.isA(MuleMessage.class), C.eq(endpoint2)), message);
         session.expectAndReturn("sendEvent", C.args(C.isA(MuleMessage.class), C.eq(endpoint3)), message);
-        MuleMessage result = router.route(message, (Session)session.proxy(), true);
+        MuleMessage result = router.route(message, (MuleSession)session.proxy(), true);
         assertNotNull(result);
         assertEquals(message, result);
         session.verify();

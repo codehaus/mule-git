@@ -11,14 +11,14 @@
 package org.mule.tck;
 
 import org.mule.DefaultMuleContext;
+import org.mule.DefaultMuleEvent;
 import org.mule.DefaultMuleMessage;
-import org.mule.MuleEvent;
-import org.mule.MuleSession;
+import org.mule.DefaultMuleSession;
 import org.mule.RequestContext;
-import org.mule.api.Event;
-import org.mule.api.EventContext;
 import org.mule.api.MuleContext;
-import org.mule.api.Session;
+import org.mule.api.MuleEvent;
+import org.mule.api.MuleEventContext;
+import org.mule.api.MuleSession;
 import org.mule.api.component.Component;
 import org.mule.api.endpoint.Endpoint;
 import org.mule.api.endpoint.EndpointBuilder;
@@ -121,34 +121,34 @@ public final class MuleTestUtils
     }
 
     /** Supply no component, no endpoint */
-    public static Event getTestEvent(Object data, MuleContext context) throws Exception
+    public static MuleEvent getTestEvent(Object data, MuleContext context) throws Exception
     {
         return getTestEvent(data, getTestComponent(context), context);
     }
 
     /** Supply component but no endpoint */
-    public static Event getTestEvent(Object data, Component component, MuleContext context) throws Exception
+    public static MuleEvent getTestEvent(Object data, Component component, MuleContext context) throws Exception
     {
         return getTestEvent(data, component, getTestEndpoint("test1", Endpoint.ENDPOINT_TYPE_SENDER, context), context);
     }
 
     /** Supply endpoint but no component */
-    public static Event getTestEvent(Object data, ImmutableEndpoint endpoint, MuleContext context) throws Exception
+    public static MuleEvent getTestEvent(Object data, ImmutableEndpoint endpoint, MuleContext context) throws Exception
     {
         return getTestEvent(data, getTestComponent(context), endpoint, context);
     }
 
-    public static Event getTestEvent(Object data, Component component, ImmutableEndpoint endpoint, MuleContext context) throws Exception
+    public static MuleEvent getTestEvent(Object data, Component component, ImmutableEndpoint endpoint, MuleContext context) throws Exception
     {
-        Session session = getTestSession(component);
-        return new MuleEvent(new DefaultMuleMessage(data, new HashMap()), endpoint, session, true);
+        MuleSession session = getTestSession(component);
+        return new DefaultMuleEvent(new DefaultMuleMessage(data, new HashMap()), endpoint, session, true);
     }
 
-    public static EventContext getTestEventContext(Object data, MuleContext context) throws Exception
+    public static MuleEventContext getTestEventContext(Object data, MuleContext context) throws Exception
     {
         try
         {
-            Event event = getTestEvent(data, context);
+            MuleEvent event = getTestEvent(data, context);
             RequestContext.setEvent(event);
             return RequestContext.getEventContext();
         }
@@ -165,12 +165,12 @@ public final class MuleTestUtils
         return t;
     }
 
-    public static Session getTestSession(Component component)
+    public static MuleSession getTestSession(Component component)
     {
-        return new MuleSession(component);
+        return new DefaultMuleSession(component);
     }
 
-    public static Session getTestSession()
+    public static MuleSession getTestSession()
     {
         return getTestSession(null);
     }
@@ -231,7 +231,7 @@ public final class MuleTestUtils
 
     public static Mock getMockSession()
     {
-        return new Mock(Session.class, "umoSession");
+        return new Mock(MuleSession.class, "umoSession");
     }
 
     public static Mock getMockMessageDispatcher()
@@ -251,7 +251,7 @@ public final class MuleTestUtils
 
     public static Mock getMockEvent()
     {
-        return new Mock(Event.class, "umoEvent");
+        return new Mock(MuleEvent.class, "umoEvent");
     }
 
     public static Mock getMockMuleContext()

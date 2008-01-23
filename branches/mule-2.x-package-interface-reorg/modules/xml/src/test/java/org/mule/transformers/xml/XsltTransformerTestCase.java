@@ -11,7 +11,7 @@
 package org.mule.transformers.xml;
 
 import org.mule.RequestContext;
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.transformer.TransformerException;
 import org.mule.api.transformer.Transformer;
@@ -185,8 +185,8 @@ public class XsltTransformerTestCase extends AbstractXmlTransformerTestCase
         // init transformer
         transformer.initialise();
 
-        // set up EventContext
-        Event event = MuleTestUtils.getTestEvent("test message data", muleContext);
+        // set up MuleEventContext
+        MuleEvent event = MuleTestUtils.getTestEvent("test message data", muleContext);
         event.getMessage().setProperty("myproperty", param);
         RequestContext.setEvent(event);
 

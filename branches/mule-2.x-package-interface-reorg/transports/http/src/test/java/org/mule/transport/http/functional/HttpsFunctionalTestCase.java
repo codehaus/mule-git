@@ -10,7 +10,7 @@
 
 package org.mule.transport.http.functional;
 
-import org.mule.api.EventContext;
+import org.mule.api.MuleEventContext;
 import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.functional.EventCallback;
@@ -40,7 +40,7 @@ public class HttpsFunctionalTestCase extends HttpFunctionalTestCase
         final AtomicBoolean callbackMade = new AtomicBoolean(false);
         EventCallback callback = new EventCallback()
         {
-            public void eventReceived(final EventContext context, final Object component) throws Exception
+            public void eventReceived(final MuleEventContext context, final Object component) throws Exception
             {
                 MuleMessage msg = context.getMessage();
                 assertTrue(callbackMade.compareAndSet(false, true));

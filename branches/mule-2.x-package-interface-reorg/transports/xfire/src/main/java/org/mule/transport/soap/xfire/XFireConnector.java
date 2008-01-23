@@ -10,21 +10,21 @@
 
 package org.mule.transport.soap.xfire;
 
-import org.mule.api.MuleRuntimeException;
 import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleRuntimeException;
 import org.mule.api.component.Component;
-import org.mule.api.context.ServerNotification;
 import org.mule.api.context.WorkManager;
 import org.mule.api.context.notification.ManagerNotificationListener;
+import org.mule.api.context.notification.ServerNotification;
 import org.mule.api.endpoint.EndpointBuilder;
 import org.mule.api.endpoint.EndpointURI;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.transport.MessageReceiver;
 import org.mule.config.i18n.CoreMessages;
+import org.mule.context.notification.ManagerNotification;
+import org.mule.context.notification.NotificationException;
 import org.mule.endpoint.EndpointURIEndpointBuilder;
-import org.mule.internal.notifications.ManagerNotification;
-import org.mule.internal.notifications.NotificationException;
 import org.mule.model.seda.SedaComponent;
 import org.mule.routing.inbound.DefaultInboundRouterCollection;
 import org.mule.transformer.TransformerUtils;

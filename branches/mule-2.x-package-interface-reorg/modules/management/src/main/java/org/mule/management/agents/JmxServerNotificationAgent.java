@@ -9,10 +9,10 @@
  */
 package org.mule.management.agents;
 
-import org.mule.api.context.ServerNotification;
+import org.mule.agent.AbstractNotificationLoggerAgent;
+import org.mule.api.context.notification.ServerNotification;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.config.i18n.CoreMessages;
-import org.mule.internal.admin.AbstractNotificationLoggerAgent;
 import org.mule.management.support.AutoDiscoveryJmxSupportFactory;
 import org.mule.management.support.JmxSupport;
 import org.mule.management.support.JmxSupportFactory;

@@ -3,21 +3,21 @@ package org.mule.transport.cxf.transport;
 
 import static org.apache.cxf.message.Message.DECOUPLED_CHANNEL_MESSAGE;
 
+import org.mule.DefaultMuleEvent;
 import org.mule.DefaultMuleMessage;
-import org.mule.MuleEvent;
-import org.mule.MuleSession;
+import org.mule.DefaultMuleSession;
 import org.mule.RegistryContext;
 import org.mule.RequestContext;
-import org.mule.api.Event;
-import org.mule.api.EventContext;
 import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleEvent;
+import org.mule.api.MuleEventContext;
 import org.mule.api.MuleMessage;
-import org.mule.api.Session;
+import org.mule.api.MuleSession;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.endpoint.Endpoint;
 import org.mule.api.endpoint.ImmutableEndpoint;
-import org.mule.api.transport.OutputHandler;
 import org.mule.api.transport.MessageAdapter;
+import org.mule.api.transport.OutputHandler;
 import org.mule.transport.DefaultMessageAdapter;
 import org.mule.transport.cxf.CxfConnector;
 import org.mule.transport.http.HttpConnector;
@@ -177,13 +177,13 @@ public class MuleUniversalConduit extends AbstractConduit
 
         OutputHandler handler = new OutputHandler()
         {
-            public void write(Event event, OutputStream out) throws IOException
+            public void write(MuleEvent event, OutputStream out) throws IOException
             {
                 IOUtils.copy(cached.getInputStream(), out);
             }
 
             @SuppressWarnings("unchecked")
-            public Map getHeaders(Event event)
+            public Map getHeaders(MuleEvent event)
             {
                 Map<String, Object> headers = new HashMap<String, Object>();
                 headers.put(HttpConstants.HEADER_CONTENT_TYPE, m.get(Message.CONTENT_TYPE));
@@ -221,7 +221,7 @@ public class MuleUniversalConduit extends AbstractConduit
         sp.setProperty(HttpConnector.HTTP_METHOD_PROPERTY, method);
 
         // set all properties on the message adapter
-        Event event = RequestContext.getEvent();
+        MuleEvent event = RequestContext.getEvent();
         if (event != null)
         {
             MuleMessage msg = event.getMessage();
@@ -273,8 +273,8 @@ public class MuleUniversalConduit extends AbstractConduit
 
     protected MuleMessage sendStream(MessageAdapter sa, ImmutableEndpoint ep) throws AbstractMuleException
     {
-        EventContext eventContext = RequestContext.getEventContext();
-        Session session = null;
+        MuleEventContext eventContext = RequestContext.getEventContext();
+        MuleSession session = null;
         if (eventContext != null)
         {
             session = eventContext.getSession();
@@ -283,11 +283,11 @@ public class MuleUniversalConduit extends AbstractConduit
         MuleMessage message = new DefaultMuleMessage(sa);
         if (session == null)
         {
-            session = new MuleSession(message, connector.getSessionHandler());
+            session = new DefaultMuleSession(message, connector.getSessionHandler());
         }
 
-        Event event = new MuleEvent(message, ep, session, true);
-        event.setTimeout(Event.TIMEOUT_NOT_SET_VALUE);
+        MuleEvent event = new DefaultMuleEvent(message, ep, session, true);
+        event.setTimeout(MuleEvent.TIMEOUT_NOT_SET_VALUE);
         RequestContext.setEvent(event);
 
         return ep.send(event);

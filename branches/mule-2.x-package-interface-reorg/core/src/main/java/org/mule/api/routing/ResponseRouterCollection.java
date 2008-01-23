@@ -11,7 +11,7 @@
 package org.mule.api.routing;
 
 import org.mule.api.AbstractMuleException;
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.ImmutableEndpoint;
 
@@ -25,7 +25,7 @@ import java.util.List;
 
 public interface ResponseRouterCollection extends RouterCollection
 {
-    void route(Event event) throws RoutingException;
+    void route(MuleEvent event) throws RoutingException;
 
     MuleMessage getResponse(MuleMessage message) throws AbstractMuleException;
 

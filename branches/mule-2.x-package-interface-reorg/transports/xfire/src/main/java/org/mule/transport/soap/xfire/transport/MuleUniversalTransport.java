@@ -11,7 +11,7 @@
 package org.mule.transport.soap.xfire.transport;
 
 import org.mule.RequestContext;
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.transport.soap.xfire.MuleInvoker;
 
 import org.apache.commons.logging.Log;
@@ -94,7 +94,7 @@ public class MuleUniversalTransport extends AbstractTransport
 
     public String getName()
     {
-        Event event = RequestContext.getEvent();
+        MuleEvent event = RequestContext.getEvent();
         if (event != null && event.getEndpoint() != null)
         {
             String scheme = event.getEndpoint().getEndpointURI().getScheme();

@@ -19,6 +19,8 @@ import org.mule.api.model.Model;
 import org.mule.api.transport.Connector;
 import org.mule.config.MuleConfiguration;
 import org.mule.config.builders.AbstractConfigurationBuilder;
+import org.mule.context.DefaultMuleContextBuilder;
+import org.mule.context.DefaultMuleContextFactory;
 import org.mule.model.seda.SedaModel;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.tck.testmodels.mule.TestConnector;

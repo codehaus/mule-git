@@ -10,7 +10,7 @@
 
 package org.mule.transport.email.connectors;
 
-import org.mule.api.EventContext;
+import org.mule.api.MuleEventContext;
 import org.mule.api.component.Component;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.endpoint.ImmutableEndpoint;
@@ -49,7 +49,7 @@ public abstract class AbstractReceivingMailConnectorTestCase extends AbstractMai
         HashMap props = new HashMap();
         props.put("eventCallback", new EventCallback()
         {
-            public synchronized void eventReceived(EventContext context, Object component)
+            public synchronized void eventReceived(MuleEventContext context, Object component)
             {
                 try 
                 {

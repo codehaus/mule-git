@@ -10,7 +10,7 @@
 
 package org.mule.component.simple;
 
-import org.mule.api.EventContext;
+import org.mule.api.MuleEventContext;
 import org.mule.api.lifecycle.Callable;
 
 /**
@@ -20,7 +20,7 @@ import org.mule.api.lifecycle.Callable;
 public class NullComponent implements Callable
 {
 
-    public Object onCall(EventContext context) throws Exception
+    public Object onCall(MuleEventContext context) throws Exception
     {
         throw new UnsupportedOperationException("This component cannot receive messages. Component is: "
                                                 + context.getComponent().getName());

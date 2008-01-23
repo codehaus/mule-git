@@ -10,8 +10,8 @@
 
 package org.mule.test.integration.client;
 
-import org.mule.api.MuleException;
 import org.mule.api.ExceptionPayload;
+import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.MalformedEndpointException;
 import org.mule.api.transformer.TransformerException;

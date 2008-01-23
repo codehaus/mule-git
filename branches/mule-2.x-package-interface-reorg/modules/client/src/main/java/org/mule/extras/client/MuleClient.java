@@ -10,19 +10,18 @@
 
 package org.mule.extras.client;
 
-import org.mule.DefaultMuleContextFactory;
 import org.mule.DefaultMuleMessage;
-import org.mule.MuleEvent;
+import org.mule.DefaultMuleEvent;
 import org.mule.MuleServer;
-import org.mule.MuleSession;
+import org.mule.DefaultMuleSession;
 import org.mule.RegistryContext;
 import org.mule.api.FutureMessageResult;
 import org.mule.api.MessagingException;
 import org.mule.api.MuleContext;
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.api.AbstractMuleException;
 import org.mule.api.MuleMessage;
-import org.mule.api.Session;
+import org.mule.api.MuleSession;
 import org.mule.api.component.Component;
 import org.mule.api.config.ConfigurationBuilder;
 import org.mule.api.config.ConfigurationException;
@@ -39,6 +38,7 @@ import org.mule.api.transport.ReceiveException;
 import org.mule.config.MuleConfiguration;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.config.spring.SpringXmlConfigurationBuilder;
+import org.mule.context.DefaultMuleContextFactory;
 import org.mule.endpoint.EndpointURIEndpointBuilder;
 import org.mule.endpoint.MuleEndpointURI;
 import org.mule.extras.client.i18n.ClientMessages;
@@ -262,7 +262,7 @@ public class MuleClient implements Disposable
      */
     public void dispatch(String url, MuleMessage message) throws AbstractMuleException
     {
-        Event event = getEvent(message, url, false, false);
+        MuleEvent event = getEvent(message, url, false, false);
         try
         {
             event.getSession().dispatchEvent(event);
@@ -328,13 +328,13 @@ public class MuleClient implements Disposable
         {
             logger.warn("The mule muleContext is running synchronously, a null message payload will be returned");
         }
-        Session session = new MuleSession(component);
+        MuleSession session = new DefaultMuleSession(component);
         ImmutableEndpoint endpoint = getDefaultClientEndpoint(component, message.getPayload());
-        Event event = new MuleEvent(message, endpoint, session, true);
+        MuleEvent event = new DefaultMuleEvent(message, endpoint, session, true);
 
         if (logger.isDebugEnabled())
         {
-            logger.debug("MuleClient sending event direct to: " + componentName + ". Event is: " + event);
+            logger.debug("MuleClient sending event direct to: " + componentName + ". MuleEvent is: " + event);
         }
 
         MuleMessage result = event.getComponent().sendEvent(event);
@@ -383,13 +383,13 @@ public class MuleClient implements Disposable
             throw new MessagingException(CoreMessages.objectNotRegistered("Component", componentName),
                 message);
         }
-        Session session = new MuleSession(component);
+        MuleSession session = new DefaultMuleSession(component);
         ImmutableEndpoint endpoint = getDefaultClientEndpoint(component, message.getPayload());
-        Event event = new MuleEvent(message, endpoint, session, true);
+        MuleEvent event = new DefaultMuleEvent(message, endpoint, session, true);
 
         if (logger.isDebugEnabled())
         {
-            logger.debug("MuleClient dispatching event direct to: " + componentName + ". Event is: " + event);
+            logger.debug("MuleClient dispatching event direct to: " + componentName + ". MuleEvent is: " + event);
         }
 
         event.getComponent().dispatchEvent(event);
@@ -425,7 +425,7 @@ public class MuleClient implements Disposable
      */
     public FutureMessageResult sendAsync(final String url, final MuleMessage message) throws AbstractMuleException
     {
-        return sendAsync(url, message, Event.TIMEOUT_NOT_SET_VALUE);
+        return sendAsync(url, message, MuleEvent.TIMEOUT_NOT_SET_VALUE);
     }
 
     /**
@@ -568,7 +568,7 @@ public class MuleClient implements Disposable
      */
     public MuleMessage send(String url, Object payload, Map messageProperties) throws AbstractMuleException
     {
-        return send(url, payload, messageProperties, Event.TIMEOUT_NOT_SET_VALUE);
+        return send(url, payload, messageProperties, MuleEvent.TIMEOUT_NOT_SET_VALUE);
     }
 
     /**
@@ -584,7 +584,7 @@ public class MuleClient implements Disposable
      */
     public MuleMessage send(String url, MuleMessage message) throws AbstractMuleException
     {
-        return send(url, message, Event.TIMEOUT_NOT_SET_VALUE);
+        return send(url, message, MuleEvent.TIMEOUT_NOT_SET_VALUE);
     }
 
     /**
@@ -633,7 +633,7 @@ public class MuleClient implements Disposable
      */
     public MuleMessage send(String url, MuleMessage message, int timeout) throws AbstractMuleException
     {
-        Event event = getEvent(message, url, true, false);
+        MuleEvent event = getEvent(message, url, true, false);
         event.setTimeout(timeout);
 
         try
@@ -732,10 +732,10 @@ public class MuleClient implements Disposable
      * @param uri the destination endpointUri
      * @param synchronous whether the event will be synchronously processed
      * @param streaming
-     * @return the Event
+     * @return the MuleEvent
      * @throws AbstractMuleException
      */
-    protected Event getEvent(MuleMessage message, String uri, boolean synchronous, boolean streaming)
+    protected MuleEvent getEvent(MuleMessage message, String uri, boolean synchronous, boolean streaming)
         throws AbstractMuleException
     {
         ImmutableEndpoint endpoint = getOutboundEndpoint(uri);
@@ -745,7 +745,7 @@ public class MuleClient implements Disposable
         }
         try
         {
-            MuleSession session = new MuleSession(message,
+            DefaultMuleSession session = new DefaultMuleSession(message,
                 ((AbstractConnector) endpoint.getConnector()).getSessionHandler());
 
             if (user != null)
@@ -753,7 +753,7 @@ public class MuleClient implements Disposable
                 message.setProperty(MuleProperties.MULE_USER_PROPERTY, MuleCredentials.createHeader(
                     user.getUsername(), user.getPassword()));
             }
-            MuleEvent event = new MuleEvent(message, endpoint, session, synchronous);
+            DefaultMuleEvent event = new DefaultMuleEvent(message, endpoint, session, synchronous);
             return event;
         }
         catch (Exception e)
@@ -829,7 +829,7 @@ public class MuleClient implements Disposable
         }
         messageProperties.put(MuleProperties.MULE_REMOTE_SYNC_PROPERTY, "false");
         MuleMessage message = new DefaultMuleMessage(payload, messageProperties);
-        Event event = getEvent(message, url, true, false);
+        MuleEvent event = getEvent(message, url, true, false);
         try
         {
             event.getSession().sendEvent(event);

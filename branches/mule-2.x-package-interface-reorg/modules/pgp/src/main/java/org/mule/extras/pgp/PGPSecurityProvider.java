@@ -12,7 +12,7 @@ package org.mule.extras.pgp;
 
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.security.SecurityException;
-import org.mule.api.security.MuleAuthentication;
+import org.mule.api.security.Authentication;
 import org.mule.api.security.SecurityContext;
 import org.mule.api.security.SecurityContextFactory;
 import org.mule.api.security.SecurityProvider;
@@ -59,7 +59,7 @@ public class PGPSecurityProvider implements SecurityProvider
      * 
      * @see org.mule.api.security.SecurityProvider#authenticate(org.mule.api.security.Authentication)
      */
-    public MuleAuthentication authenticate(MuleAuthentication authentication) throws SecurityException
+    public Authentication authenticate(Authentication authentication) throws SecurityException
     {
         PGPAuthentication auth = (PGPAuthentication) authentication;
 
@@ -117,7 +117,7 @@ public class PGPSecurityProvider implements SecurityProvider
      * 
      * @see org.mule.api.security.SecurityProvider#createSecurityContext(org.mule.api.security.Authentication)
      */
-    public SecurityContext createSecurityContext(MuleAuthentication auth)
+    public SecurityContext createSecurityContext(Authentication auth)
             throws UnknownAuthenticationTypeException
     {
         return factory.create(auth);

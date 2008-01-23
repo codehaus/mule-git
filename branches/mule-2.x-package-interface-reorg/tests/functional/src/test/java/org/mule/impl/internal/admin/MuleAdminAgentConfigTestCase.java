@@ -9,7 +9,7 @@
  */
 package org.mule.impl.internal.admin;
 
-import org.mule.internal.admin.MuleAdminAgent;
+import org.mule.agent.MuleAdminAgent;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.transformer.wire.TransformerPairWireFormat;
 

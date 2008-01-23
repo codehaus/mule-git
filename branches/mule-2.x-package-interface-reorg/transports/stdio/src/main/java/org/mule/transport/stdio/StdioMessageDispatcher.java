@@ -10,7 +10,7 @@
 
 package org.mule.transport.stdio;
 
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.transport.DispatchException;
@@ -50,7 +50,7 @@ public class StdioMessageDispatcher extends AbstractMessageDispatcher
         }
     }
 
-    protected synchronized void doDispatch(Event event) throws Exception
+    protected synchronized void doDispatch(MuleEvent event) throws Exception
     {
         OutputStream out = connector.getOutputStream();
 
@@ -87,9 +87,9 @@ public class StdioMessageDispatcher extends AbstractMessageDispatcher
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.api.transport.Connector#send(org.mule.api.Event)
+     * @see org.mule.api.transport.Connector#send(org.mule.api.MuleEvent)
      */
-    protected MuleMessage doSend(Event event) throws Exception
+    protected MuleMessage doSend(MuleEvent event) throws Exception
     {
         doDispatch(event);
         return event.getMessage();

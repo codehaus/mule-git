@@ -10,14 +10,14 @@
 
 package org.mule.util.queue;
 
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 
 public class EventMemoryPersistenceStrategy extends MemoryPersistenceStrategy
 {
 
     protected Object getId(Object obj)
     {
-        return ((Event) obj).getId();
+        return ((MuleEvent) obj).getId();
     }
 
 }

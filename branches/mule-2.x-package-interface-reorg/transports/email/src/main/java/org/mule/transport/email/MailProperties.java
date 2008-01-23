@@ -17,7 +17,7 @@ package org.mule.transport.email;
 public interface MailProperties
 {
     /**
-     * Event properties
+     * MuleEvent properties
      */
     public static final String CONTENT_TYPE_PROPERTY = "contentType";
     public static final String TO_ADDRESSES_PROPERTY = "toAddresses";

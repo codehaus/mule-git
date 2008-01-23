@@ -11,7 +11,7 @@
 package org.mule.transport.udp;
 
 import org.mule.DefaultMuleMessage;
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.transport.AbstractMessageDispatcher;
@@ -50,7 +50,7 @@ public class UdpMessageDispatcher extends AbstractMessageDispatcher
     }
 
 
-    protected synchronized void doDispatch(Event event) throws Exception
+    protected synchronized void doDispatch(MuleEvent event) throws Exception
     {
         ImmutableEndpoint ep = event.getEndpoint();
 
@@ -90,7 +90,7 @@ public class UdpMessageDispatcher extends AbstractMessageDispatcher
         socket.send(packet);
     }
 
-    protected synchronized MuleMessage doSend(Event event) throws Exception
+    protected synchronized MuleMessage doSend(MuleEvent event) throws Exception
     {
         doDispatch(event);
         // If we're doing sync receive try and read return info from socket

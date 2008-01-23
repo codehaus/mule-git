@@ -10,9 +10,9 @@
 
 package org.mule.tck.functional;
 
-import org.mule.api.EventContext;
+import org.mule.api.MuleEventContext;
 import org.mule.api.transformer.TransformerException;
-import org.mule.internal.notifications.CustomNotification;
+import org.mule.context.notification.CustomNotification;
 
 /**
  * A <code>FunctionlTestNotification</code> is fired by the {@link org.mule.tck.functional.FunctionalTestComponent}
@@ -20,7 +20,7 @@ import org.mule.internal.notifications.CustomNotification;
  * with Mule to receive these notifications and make assertions about the number of messages received or the content
  * of the message.
  * <p/>
- * This Notification contains the current EventContext and reply message. The resource Identifier for this event
+ * This Notification contains the current MuleEventContext and reply message. The resource Identifier for this event
  * is the component name that received the message.  This means you can register to listen to Notifications from a
  * selected {@link org.mule.tck.functional.FunctionalTestComponent}. i.e.
  * <code>
@@ -47,9 +47,9 @@ public class FunctionalTestNotification extends CustomNotification
     }
 
     private final Object replyMessage;
-    private final EventContext eventContext;
+    private final MuleEventContext eventContext;
 
-    public FunctionalTestNotification(EventContext context, Object replyMessage, int action)
+    public FunctionalTestNotification(MuleEventContext context, Object replyMessage, int action)
             throws TransformerException
     {
         super(context.transformMessage(), action);
@@ -63,7 +63,7 @@ public class FunctionalTestNotification extends CustomNotification
         return replyMessage;
     }
 
-    public EventContext getEventContext()
+    public MuleEventContext getEventContext()
     {
         return eventContext;
     }

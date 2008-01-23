@@ -11,7 +11,7 @@
 package org.mule.components.script.refreshable;
 
 import org.mule.api.MuleException;
-import org.mule.api.EventContext;
+import org.mule.api.MuleEventContext;
 import org.mule.api.lifecycle.Callable;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.util.StringUtils;
@@ -24,14 +24,14 @@ public class GroovyRefreshableBeanBuilder implements Callable
     private volatile Object refreshableBean;
     private String methodName;
     private static final String ON_CALL = "onCall";
-    private static final Class[] UMOEVENTCONTEXT = new Class[]{EventContext.class};
+    private static final Class[] UMOEVENTCONTEXT = new Class[]{MuleEventContext.class};
     
     public GroovyRefreshableBeanBuilder()
     {
         super();
     }
 
-    public Object onCall(EventContext eventContext) throws Exception
+    public Object onCall(MuleEventContext eventContext) throws Exception
     {
         if (refreshableBean instanceof GroovyObject)
         {

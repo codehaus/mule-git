@@ -12,7 +12,7 @@ package org.mule.routing.outbound;
 
 import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleMessage;
-import org.mule.api.Session;
+import org.mule.api.MuleSession;
 import org.mule.api.endpoint.Endpoint;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.transformer.TransformerException;
@@ -58,13 +58,13 @@ public class FilteringOutboundRouterTestCase extends AbstractMuleTestCase
         assertTrue(router.isMatch(message));
 
         session.expect("dispatchEvent", C.eq(message, endpoint1));
-        router.route(message, (Session)session.proxy(), false);
+        router.route(message, (MuleSession)session.proxy(), false);
         session.verify();
 
         message = new DefaultMuleMessage("test event");
 
         session.expectAndReturn("sendEvent", C.eq(message, endpoint1), message);
-        MuleMessage result = router.route(message, (Session)session.proxy(), true);
+        MuleMessage result = router.route(message, (MuleSession)session.proxy(), true);
         assertNotNull(result);
         assertEquals(message, result);
         session.verify();

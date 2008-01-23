@@ -13,8 +13,8 @@ package org.mule.tck.functional;
 import org.mule.MuleServer;
 import org.mule.RequestContext;
 import org.mule.api.MuleContext;
+import org.mule.api.MuleEventContext;
 import org.mule.api.MuleException;
-import org.mule.api.EventContext;
 import org.mule.api.lifecycle.Callable;
 import org.mule.api.lifecycle.Disposable;
 import org.mule.api.lifecycle.Initialisable;
@@ -79,7 +79,7 @@ public class FunctionalTestComponent implements Callable, Initialisable, Disposa
     }
 
     /** {@inheritDoc} */
-    public Object onCall(EventContext context) throws Exception
+    public Object onCall(MuleEventContext context) throws Exception
     {
         if (enableMessageHistory)
         {
@@ -119,7 +119,7 @@ public class FunctionalTestComponent implements Callable, Initialisable, Disposa
         MuleContext muleContext = context.getMuleContext();
         if (muleContext == null)
         {
-            logger.warn("No MuleContext available from EventContext");
+            logger.warn("No MuleContext available from MuleEventContext");
             muleContext = MuleServer.getMuleContext();
         }
         muleContext.fireNotification(
@@ -147,7 +147,7 @@ public class FunctionalTestComponent implements Callable, Initialisable, Disposa
 
     /**
      * This method duplicates much of the functionality for the {@link #onCall} method above. This method is currently
-     * used by some WebServices tests where you don' want to be introducing the {@link org.mule.api.EventContext} as
+     * used by some WebServices tests where you don' want to be introducing the {@link org.mule.api.MuleEventContext} as
      * a complex type.
      * TODO: It would be nice to remove this method or at least refactor the methods so there is little or no duplication
      *
@@ -157,7 +157,7 @@ public class FunctionalTestComponent implements Callable, Initialisable, Disposa
      */
     public Object onReceive(Object data) throws Exception
     {
-        EventContext context = RequestContext.getEventContext();
+        MuleEventContext context = RequestContext.getEventContext();
         String contents = data.toString();
         String msg = StringMessageUtils.getBoilerPlate("Message Received in component: "
                 + context.getComponent().getName() + ". Content is: "
@@ -200,10 +200,10 @@ public class FunctionalTestComponent implements Callable, Initialisable, Disposa
 
     /**
      * An event callback is called when a message is received by the component.
-     * An Event callback isn't strictly required but it is usfal for performing assertions
+     * An MuleEvent callback isn't strictly required but it is usfal for performing assertions
      * on the current message being received.
      * Note that the FunctionalTestComponent should be made a singleton
-     * {@link org.mule.api.UMODescriptor#setSingleton} when using Event callbacks
+     * {@link org.mule.api.UMODescriptor#setSingleton} when using MuleEvent callbacks
      * <p/>
      * Another option is to register a {@link FunctionalTestNotificationListener} with Mule and this
      * will deleiver a {@link FunctionalTestNotification} for every message received by this component
@@ -220,10 +220,10 @@ public class FunctionalTestComponent implements Callable, Initialisable, Disposa
 
     /**
      * An event callback is called when a message is received by the component.
-     * An Event callback isn't strictly required but it is usfal for performing assertions
+     * An MuleEvent callback isn't strictly required but it is usfal for performing assertions
      * on the current message being received.
      * Note that the FunctionalTestComponent should be made a singleton
-     * {@link org.mule.api.UMODescriptor#setSingleton} when using Event callbacks
+     * {@link org.mule.api.UMODescriptor#setSingleton} when using MuleEvent callbacks
      * <p/>
      * Another option is to register a {@link FunctionalTestNotificationListener} with Mule and this
      * will deleiver a {@link FunctionalTestNotification} for every message received by this component

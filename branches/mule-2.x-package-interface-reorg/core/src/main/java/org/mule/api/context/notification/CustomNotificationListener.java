@@ -10,7 +10,6 @@
 
 package org.mule.api.context.notification;
 
-import org.mule.api.context.ServerNotificationListener;
 
 /**
  * <code>CustomNotificationListener</code> is an observer interface that can be

@@ -12,7 +12,7 @@ package org.mule.ra;
 
 import org.mule.OptimizedRequestContext;
 import org.mule.RequestContext;
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.api.MessagingException;
 import org.mule.api.MuleException;
 import org.mule.api.AbstractMuleException;
@@ -21,8 +21,8 @@ import org.mule.api.component.ComponentException;
 import org.mule.api.context.ObjectNotFoundException;
 import org.mule.api.context.WorkManager;
 import org.mule.api.lifecycle.InitialisationException;
+import org.mule.component.AbstractComponent;
 import org.mule.config.i18n.CoreMessages;
-import org.mule.model.AbstractComponent;
 import org.mule.ra.i18n.JcaMessages;
 
 import javax.resource.spi.UnavailableException;
@@ -58,7 +58,7 @@ public class JcaComponent extends AbstractComponent implements WorkListener
      * @return
      * @throws AbstractMuleException
      */
-    public MuleMessage sendEvent(Event event) throws AbstractMuleException
+    public MuleMessage sendEvent(MuleEvent event) throws AbstractMuleException
     {
         throw new UnsupportedOperationException("sendEvent()");
     }
@@ -70,7 +70,7 @@ public class JcaComponent extends AbstractComponent implements WorkListener
         return false;
     }
 
-    protected void waitIfPaused(Event event) throws InterruptedException
+    protected void waitIfPaused(MuleEvent event) throws InterruptedException
     {
         // JcaComponent is a wrapper for a hosted component implementation and
         // therefore cannot be paused by mule
@@ -94,7 +94,7 @@ public class JcaComponent extends AbstractComponent implements WorkListener
         }
     }
 
-    protected void doDispatch(Event event) throws AbstractMuleException
+    protected void doDispatch(MuleEvent event) throws AbstractMuleException
     {
         try
         {
@@ -109,7 +109,7 @@ public class JcaComponent extends AbstractComponent implements WorkListener
     /**
      * Implementation of template method which is never call because send() is overwritten
      */
-    protected MuleMessage doSend(Event event) throws AbstractMuleException
+    protected MuleMessage doSend(MuleEvent event) throws AbstractMuleException
     {
         return null;
     }
@@ -141,9 +141,9 @@ public class JcaComponent extends AbstractComponent implements WorkListener
     public class MuleJcaWorker implements Work
     {
 
-        private Event event;
+        private MuleEvent event;
 
-        MuleJcaWorker(Event event)
+        MuleJcaWorker(MuleEvent event)
         {
             this.event = event;
         }
@@ -158,7 +158,7 @@ public class JcaComponent extends AbstractComponent implements WorkListener
 
             if (logger.isTraceEnabled())
             {
-                logger.trace("MuleJcaWorker: async Event for Mule  JCA EndPoint " + getName());
+                logger.trace("MuleJcaWorker: async MuleEvent for Mule  JCA EndPoint " + getName());
             }
             try
             {

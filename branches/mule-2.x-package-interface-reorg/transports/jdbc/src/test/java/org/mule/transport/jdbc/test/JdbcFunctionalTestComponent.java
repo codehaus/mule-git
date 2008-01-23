@@ -10,14 +10,14 @@
 
 package org.mule.transport.jdbc.test;
 
-import org.mule.api.EventContext;
+import org.mule.api.MuleEventContext;
 import org.mule.tck.functional.FunctionalTestComponent;
 
 import java.util.Map;
 
 public class JdbcFunctionalTestComponent extends FunctionalTestComponent
 {
-    public Object onCall(EventContext context) throws Exception
+    public Object onCall(MuleEventContext context) throws Exception
     {
         super.onCall(context);
 

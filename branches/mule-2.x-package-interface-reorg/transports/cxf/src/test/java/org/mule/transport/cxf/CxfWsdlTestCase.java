@@ -10,11 +10,11 @@
 
 package org.mule.transport.cxf;
 
+import org.mule.DefaultMuleEvent;
 import org.mule.DefaultMuleMessage;
-import org.mule.MuleEvent;
-import org.mule.MuleSession;
+import org.mule.DefaultMuleSession;
 import org.mule.api.MuleMessage;
-import org.mule.api.Session;
+import org.mule.api.MuleSession;
 import org.mule.api.endpoint.Endpoint;
 import org.mule.api.registry.Registry;
 import org.mule.extras.client.MuleClient;
@@ -59,9 +59,9 @@ public class CxfWsdlTestCase extends AbstractMuleTestCase
         endpoint.setProperty("wsdlUrl", TEST_URL_WSDL);
 
         MuleMessage message = new DefaultMuleMessage("test1");
-        Session session = new MuleSession(message,
+        MuleSession session = new DefaultMuleSession(message,
             ((AbstractConnector) endpoint.getConnector()).getSessionHandler());
-        MuleEvent event = new MuleEvent(message, endpoint, session, true);
+        DefaultMuleEvent event = new DefaultMuleEvent(message, endpoint, session, true);
         MuleMessage reply = session.sendEvent(event);
 
         assertNotNull(reply);

@@ -10,10 +10,10 @@
 
 package org.mule.transformer;
 
-import org.mule.VoidTransformer;
 import org.mule.api.AbstractMuleException;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.transformer.Transformer;
+import org.mule.transformer.simple.VoidTransformer;
 import org.mule.transport.service.TransportFactoryException;
 import org.mule.transport.service.TransportServiceDescriptor;
 import org.mule.util.CollectionUtils;

@@ -199,7 +199,7 @@ public class JmsTransformersTestCase extends AbstractJmsFunctionalTestCase
     }
 
     /*
-     * This class overrides getSession() to return the specified test Session;
+     * This class overrides getSession() to return the specified test MuleSession;
      * otherwise we would need a full-fledged JMS connector with dispatchers etc.
      * TODO check if we really need this stateful transformer now
      */

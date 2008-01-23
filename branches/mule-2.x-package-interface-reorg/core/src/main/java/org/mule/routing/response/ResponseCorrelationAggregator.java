@@ -10,7 +10,7 @@
 
 package org.mule.routing.response;
 
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.routing.inbound.EventGroup;
 
 /**
@@ -58,7 +58,7 @@ public abstract class ResponseCorrelationAggregator extends AbstractResponseAggr
      * @return a new event group of a fixed size
      */
     // //@Override
-    protected EventGroup createEventGroup(Event event, Object id)
+    protected EventGroup createEventGroup(MuleEvent event, Object id)
     {
         return new EventGroup(id, event.getMessage().getCorrelationGroupSize());
     }

@@ -11,7 +11,6 @@
 package org.mule.transport;
 
 import org.mule.tck.AbstractMuleTestCase;
-import org.mule.transport.NullPayload;
 
 import org.apache.commons.lang.SerializationUtils;
 

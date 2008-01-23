@@ -9,7 +9,7 @@
  */
 package org.mule.model.resolvers;
 
-import org.mule.api.EventContext;
+import org.mule.api.MuleEventContext;
 import org.mule.api.model.EntryPointResolver;
 import org.mule.api.model.EntryPointResolverSet;
 import org.mule.api.model.InvocationResult;
@@ -40,7 +40,7 @@ public class DefaultEntryPointResolverSet implements EntryPointResolverSet
     private final Set entryPointResolvers = new LinkedHashSet(4);
     private List exceptions = new CopyOnWriteArrayList();
 
-    public Object invoke(Object component, EventContext context) throws Exception
+    public Object invoke(Object component, MuleEventContext context) throws Exception
     {
         try
         {

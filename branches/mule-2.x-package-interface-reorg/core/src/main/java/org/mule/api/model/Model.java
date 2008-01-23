@@ -103,10 +103,10 @@ public interface Model extends Lifecycle, MuleContextAware, NamedObject
 //     * Returns the Component for the given Mule name.
 //     *
 //     * @param muleName the Name of the Mule Component to obtain a session for
-//     * @return a Session for the given name or null if the component is not
+//     * @return a MuleSession for the given name or null if the component is not
 //     *         registered
 //     */
-//    Session getComponentSession(String muleName);
+//    MuleSession getComponentSession(String muleName);
 //
 //    /**
 //     * A convenience method to set a list of components on the model. This method

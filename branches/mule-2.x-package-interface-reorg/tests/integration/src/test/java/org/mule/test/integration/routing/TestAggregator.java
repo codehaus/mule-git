@@ -11,7 +11,7 @@
 package org.mule.test.integration.routing;
 
 import org.mule.DefaultMuleMessage;
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.routing.RoutingException;
 import org.mule.api.transformer.TransformerException;
@@ -40,7 +40,7 @@ public class TestAggregator extends ResponseCorrelationAggregator
 
         for (Iterator iterator = events.iterator(); iterator.hasNext();)
         {
-            Event event = (Event)iterator.next();
+            MuleEvent event = (MuleEvent)iterator.next();
             try
             {
                 buffer.append(event.transformMessageToString());

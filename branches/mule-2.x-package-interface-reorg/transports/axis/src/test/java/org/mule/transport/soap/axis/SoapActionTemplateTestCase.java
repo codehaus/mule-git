@@ -10,7 +10,7 @@
 
 package org.mule.transport.soap.axis;
 
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.transport.soap.axis.AxisMessageDispatcher;
@@ -28,7 +28,7 @@ public class SoapActionTemplateTestCase extends AbstractMuleTestCase
             "axis:http://mycompany.com:8080/services/myService?method=foo");
         
         AxisMessageDispatcher dispatcher = new AxisMessageDispatcher(ep);
-        Event event = getTestEvent("test,", ep);
+        MuleEvent event = getTestEvent("test,", ep);
         String result = dispatcher.parseSoapAction("[hostInfo]/[method]", new QName("foo"), event);
 
         assertEquals("http://mycompany.com:8080/foo", result);
@@ -39,7 +39,7 @@ public class SoapActionTemplateTestCase extends AbstractMuleTestCase
         ImmutableEndpoint ep = muleContext.getRegistry().lookupEndpointFactory().getOutboundEndpoint(
             "axis:http://mycompany.com:8080/services/myService?method=foo");
         AxisMessageDispatcher dispatcher = new AxisMessageDispatcher(ep);
-        Event event = getTestEvent("test,", ep);
+        MuleEvent event = getTestEvent("test,", ep);
         event.getComponent().setName("myService");
         String result = dispatcher.parseSoapAction("[scheme]://[host]:[port]/[serviceName]/[method]",
             new QName("foo"), event);

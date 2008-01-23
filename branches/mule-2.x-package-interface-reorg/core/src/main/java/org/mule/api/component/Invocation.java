@@ -12,7 +12,7 @@ package org.mule.api.component;
 
 import org.mule.RequestContext;
 import org.mule.api.AbstractMuleException;
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 
 /**
@@ -70,7 +70,7 @@ public class Invocation
         return component;
     }
 
-    public Event getEvent()
+    public MuleEvent getEvent()
     {
         return RequestContext.getEvent();
     }

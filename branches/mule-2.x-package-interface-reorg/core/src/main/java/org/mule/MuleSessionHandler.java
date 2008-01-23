@@ -12,7 +12,7 @@ package org.mule;
 
 import org.mule.api.AbstractMuleException;
 import org.mule.api.MuleMessage;
-import org.mule.api.Session;
+import org.mule.api.MuleSession;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.transformer.Transformer;
 import org.mule.api.transport.SessionHandler;
@@ -29,7 +29,7 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * A default session handler used to store and retrieve session information on an
- * event. The MuleSession information is stored as a header on the message (does not
+ * event. The DefaultMuleSession information is stored as a header on the message (does not
  * support Tcp, Udp, etc. unless the MuleMessage object is serialised across the
  * wire). The session is stored in the "MULE_SESSION" property as String key/value
  * pairs that are Base64 encoded, for example:
@@ -46,7 +46,7 @@ public class MuleSessionHandler implements SessionHandler
     private static Transformer encoder = new Base64Encoder();
     private static Transformer decoder = new Base64Decoder();
 
-    public void retrieveSessionInfoFromMessage(MuleMessage message, Session session) throws AbstractMuleException
+    public void retrieveSessionInfoFromMessage(MuleMessage message, MuleSession session) throws AbstractMuleException
     {
         String sessionId = (String) message.removeProperty(MuleProperties.MULE_SESSION_ID_PROPERTY);
         Object sessionHeader = message.removeProperty(MuleProperties.MULE_SESSION_PROPERTY);
@@ -90,14 +90,14 @@ public class MuleSessionHandler implements SessionHandler
                 session.setProperty(name, value);
                 if (logger.isDebugEnabled())
                 {
-                    logger.debug("Added Session variable: " + pair);
+                    logger.debug("Added MuleSession variable: " + pair);
                 }
             }
 
         }
     }
 
-    public void storeSessionInfoToMessage(Session session, MuleMessage message) throws AbstractMuleException
+    public void storeSessionInfoToMessage(MuleSession session, MuleMessage message) throws AbstractMuleException
     {
         StringBuffer buf = new StringBuffer();
         buf.append(getSessionIDKey()).append("=").append(session.getId());

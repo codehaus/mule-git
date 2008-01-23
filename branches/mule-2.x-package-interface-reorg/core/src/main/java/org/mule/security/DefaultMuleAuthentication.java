@@ -10,12 +10,12 @@
 
 package org.mule.security;
 
+import org.mule.api.security.Authentication;
 import org.mule.api.security.Credentials;
-import org.mule.api.security.MuleAuthentication;
 
 import java.util.Map;
 
-public class DefaultMuleAuthentication implements MuleAuthentication
+public class DefaultMuleAuthentication implements Authentication
 {
     private boolean authenticated;
     private char[] credentials;

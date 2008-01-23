@@ -11,7 +11,7 @@
 package org.mule.test.integration.spring.events;
 
 import org.mule.RegistryContext;
-import org.mule.api.EventContext;
+import org.mule.api.MuleEventContext;
 import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
@@ -55,7 +55,7 @@ public class SpringEventsJmsExampleTestCase extends FunctionalTestCase
         // invoked
         EventCallback callback = new EventCallback()
         {
-            public void eventReceived(EventContext context, Object o) throws Exception
+            public void eventReceived(MuleEventContext context, Object o) throws Exception
             {
                 eventCount.incrementAndGet();
             }
@@ -82,7 +82,7 @@ public class SpringEventsJmsExampleTestCase extends FunctionalTestCase
         assertNotNull(orderManager);
         EventCallback callback = new EventCallback()
         {
-            public void eventReceived(EventContext context, Object o) throws Exception
+            public void eventReceived(MuleEventContext context, Object o) throws Exception
             {
                 eventCount.incrementAndGet();
             }

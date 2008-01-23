@@ -18,6 +18,9 @@ import static org.mule.api.config.MuleProperties.MULE_EVENT_PROPERTY;
 import static org.mule.api.config.MuleProperties.MULE_REPLY_TO_PROPERTY;
 import static org.mule.transport.soap.MuleSoapHeaders.MULE_HEADER;
 
+import org.mule.api.MuleEvent;
+import org.mule.transport.soap.MuleSoapHeaders;
+
 import javax.xml.namespace.QName;
 
 import org.apache.cxf.binding.soap.SoapHeader;
@@ -26,10 +29,6 @@ import org.apache.cxf.helpers.DOMUtils;
 import org.apache.cxf.interceptor.Fault;
 import org.apache.cxf.message.Message;
 import org.apache.cxf.phase.Phase;
-
-import org.mule.api.Event;
-import org.mule.transport.soap.MuleSoapHeaders;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Text;
@@ -53,7 +52,7 @@ public class MuleHeadersOutInterceptor extends BaseMuleHeaderInterceptor
         }
 
         SoapMessage message = (SoapMessage) m;
-        Event event = (Event) message.get(MULE_EVENT_PROPERTY);
+        MuleEvent event = (MuleEvent) message.get(MULE_EVENT_PROPERTY);
 
         if (event == null)
         {

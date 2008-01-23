@@ -10,7 +10,7 @@
 package org.mule.transport.vm.functional;
 
 import org.mule.DefaultMuleMessage;
-import org.mule.api.EventContext;
+import org.mule.api.MuleEventContext;
 import org.mule.api.MuleMessage;
 import org.mule.api.lifecycle.Callable;
 
@@ -25,7 +25,7 @@ import javax.activation.FileDataSource;
  */
 public class AttachmentsComponent implements Callable
 {
-        public Object onCall(EventContext eventContext) throws Exception
+        public Object onCall(MuleEventContext eventContext) throws Exception
         {
             MuleMessage msg = eventContext.getMessage();
             if (msg.getAttachmentNames().size() == 2)

@@ -10,7 +10,7 @@
 
 package org.mule.transport.email;
 
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.EndpointException;
 import org.mule.api.endpoint.EndpointURI;
@@ -79,7 +79,7 @@ public class SmtpMessageDispatcher extends AbstractMessageDispatcher
         }
     }
 
-    protected void doDispatch(Event event)
+    protected void doDispatch(MuleEvent event)
     {
         try
         {
@@ -103,7 +103,7 @@ public class SmtpMessageDispatcher extends AbstractMessageDispatcher
         }
     }
 
-    protected MuleMessage doSend(Event event) throws Exception
+    protected MuleMessage doSend(MuleEvent event) throws Exception
     {
         doDispatch(event);
         return null;

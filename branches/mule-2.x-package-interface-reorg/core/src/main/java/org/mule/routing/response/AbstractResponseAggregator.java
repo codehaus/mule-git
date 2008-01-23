@@ -10,7 +10,7 @@
 
 package org.mule.routing.response;
 
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.routing.ResponseTimeoutException;
 import org.mule.api.routing.RoutingException;
@@ -53,7 +53,7 @@ public abstract class AbstractResponseAggregator extends AbstractResponseRouter
      */
     protected final ConcurrentMap responseMessages = new ConcurrentHashMap();
 
-    public void process(Event event) throws RoutingException
+    public void process(MuleEvent event) throws RoutingException
     {
         // the correlationId of the event's message
         final Object groupId = this.getReplyAggregateIdentifier(event.getMessage());
@@ -163,9 +163,9 @@ public abstract class AbstractResponseAggregator extends AbstractResponseRouter
     }
 
     /**
-     * @see AbstractEventAggregator#createEventGroup(Event, Object)
+     * @see AbstractEventAggregator#createEventGroup(MuleEvent, Object)
      */
-    protected EventGroup createEventGroup(Event event, Object groupId)
+    protected EventGroup createEventGroup(MuleEvent event, Object groupId)
     {
         if (logger.isDebugEnabled())
         {

@@ -10,7 +10,7 @@
 
 package org.mule.transport.vm;
 
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.EndpointURI;
 import org.mule.api.endpoint.ImmutableEndpoint;
@@ -36,7 +36,7 @@ public class VMMessageDispatcher extends AbstractMessageDispatcher
         this.connector = (VMConnector) endpoint.getConnector();
     }
 
-    protected void doDispatch(Event event) throws Exception
+    protected void doDispatch(MuleEvent event) throws Exception
     {
         EndpointURI endpointUri = event.getEndpoint().getEndpointURI();
         //Apply any outbound transformers on this event before we dispatch
@@ -67,11 +67,11 @@ public class VMMessageDispatcher extends AbstractMessageDispatcher
         }
         if (logger.isDebugEnabled())
         {
-            logger.debug("dispatched Event on endpointUri: " + endpointUri);
+            logger.debug("dispatched MuleEvent on endpointUri: " + endpointUri);
         }
     }
 
-    protected MuleMessage doSend(Event event) throws Exception
+    protected MuleMessage doSend(MuleEvent event) throws Exception
     {
         MuleMessage retMessage;
         EndpointURI endpointUri = event.getEndpoint().getEndpointURI();

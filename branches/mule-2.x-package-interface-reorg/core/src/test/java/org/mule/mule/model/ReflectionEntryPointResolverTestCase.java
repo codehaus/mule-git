@@ -77,7 +77,7 @@ public class ReflectionEntryPointResolverTestCase extends AbstractMuleTestCase
 
     /**
      * Tests entrypoint discovery when there is more than one discoverable method
-     * with EventContext parameter.
+     * with MuleEventContext parameter.
      */
     public void testFailEntryPointMultiplePayloadMatches() throws Exception
     {

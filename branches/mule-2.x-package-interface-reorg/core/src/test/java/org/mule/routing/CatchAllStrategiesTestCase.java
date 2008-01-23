@@ -10,11 +10,11 @@
 
 package org.mule.routing;
 
+import org.mule.DefaultMuleEvent;
 import org.mule.DefaultMuleMessage;
-import org.mule.MuleEvent;
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
-import org.mule.api.Session;
+import org.mule.api.MuleSession;
 import org.mule.api.endpoint.Endpoint;
 import org.mule.api.transformer.TransformerException;
 import org.mule.api.transport.MessageDispatcher;
@@ -38,7 +38,7 @@ public class CatchAllStrategiesTestCase extends AbstractMuleTestCase
 
     public void testLoggingOnlyStrategy() throws Exception
     {
-        Event event = getTestEvent("UncaughtEvent");
+        MuleEvent event = getTestEvent("UncaughtEvent");
         LoggingCatchAllStrategy strategy = new LoggingCatchAllStrategy();
         try
         {
@@ -60,14 +60,14 @@ public class CatchAllStrategiesTestCase extends AbstractMuleTestCase
         Mock endpoint = MuleTestUtils.getMockEndpoint();
         Mock dispatcher = new Mock(MessageDispatcher.class);
         Mock connector = MuleTestUtils.getMockConnector();
-        Event event = getTestEvent("UncaughtEvent");
+        MuleEvent event = getTestEvent("UncaughtEvent");
         strategy.setEndpoint((Endpoint)endpoint.proxy());
 
         endpoint.expectAndReturn("getProperties", new HashMap());
         endpoint.expectAndReturn("getProperties", new HashMap());
         endpoint.expectAndReturn("getEndpointURI", new MuleEndpointURI("test://dummy"));
         endpoint.expectAndReturn("getEndpointURI", new MuleEndpointURI("test://dummy"));
-        endpoint.expect("dispatch", C.isA(MuleEvent.class));
+        endpoint.expect("dispatch", C.isA(DefaultMuleEvent.class));
 
         strategy.catchMessage(event.getMessage(), null, false);
 
@@ -98,7 +98,7 @@ public class CatchAllStrategiesTestCase extends AbstractMuleTestCase
         Mock endpoint = MuleTestUtils.getMockEndpoint();
         Mock dispatcher = new Mock(MessageDispatcher.class);
         Mock connector = MuleTestUtils.getMockConnector();
-        Event event = getTestEvent("UncaughtEvent");
+        MuleEvent event = getTestEvent("UncaughtEvent");
         strategy.setEndpoint((Endpoint)endpoint.proxy());
 
         endpoint.expectAndReturn("getTransformers", CollectionUtils.singletonList(new TestEventTransformer()));
@@ -111,9 +111,9 @@ public class CatchAllStrategiesTestCase extends AbstractMuleTestCase
         {
             public boolean eval(Object arg0)
             {
-                if (arg0 instanceof Event)
+                if (arg0 instanceof MuleEvent)
                 {
-                    return "Transformed Test Data".equals(((Event)arg0).getMessage().getPayload());
+                    return "Transformed Test Data".equals(((MuleEvent)arg0).getMessage().getPayload());
                 }
                 return false;
             }
@@ -138,7 +138,7 @@ public class CatchAllStrategiesTestCase extends AbstractMuleTestCase
 
         FilteringOutboundRouter filterRouter1 = new FilteringOutboundRouter()
         {
-            public MuleMessage route(MuleMessage message, Session session, boolean synchronous)
+            public MuleMessage route(MuleMessage message, MuleSession session, boolean synchronous)
             {
                 count1[0]++;
                 return message;
@@ -147,7 +147,7 @@ public class CatchAllStrategiesTestCase extends AbstractMuleTestCase
 
         FilteringOutboundRouter filterRouter2 = new FilteringOutboundRouter()
         {
-            public MuleMessage route(MuleMessage message, Session session, boolean synchronous)
+            public MuleMessage route(MuleMessage message, MuleSession session, boolean synchronous)
             {
                 count2[0]++;
                 return message;
@@ -161,7 +161,7 @@ public class CatchAllStrategiesTestCase extends AbstractMuleTestCase
 
         LoggingCatchAllStrategy strategy = new LoggingCatchAllStrategy()
         {
-            public MuleMessage catchMessage(MuleMessage message, Session session, boolean synchronous)
+            public MuleMessage catchMessage(MuleMessage message, MuleSession session, boolean synchronous)
             {
                 catchAllCount[0]++;
                 return null;
@@ -169,7 +169,7 @@ public class CatchAllStrategiesTestCase extends AbstractMuleTestCase
         };
         messageRouter.setCatchAllStrategy(strategy);
 
-        Session session = getTestSession(getTestComponent());
+        MuleSession session = getTestSession(getTestComponent());
 
         messageRouter.route(new DefaultMuleMessage("hello"), session, true);
         assertEquals(1, catchAllCount[0]);

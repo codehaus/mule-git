@@ -10,8 +10,8 @@
 
 package org.mule.management;
 
-import org.mule.api.context.ServerNotification;
-import org.mule.api.context.ServerNotificationListener;
+import org.mule.api.context.notification.ServerNotification;
+import org.mule.api.context.notification.ServerNotificationListener;
 
 public class DummyListener implements ServerNotificationListener
 {

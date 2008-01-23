@@ -10,7 +10,7 @@
 
 package org.mule.api.security;
 
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.Initialisable;
 import org.mule.api.lifecycle.InitialisationException;
@@ -40,7 +40,7 @@ public interface EndpointSecurityFilter extends Initialisable
 
     CredentialsAccessor getCredentialsAccessor();
 
-    void authenticate(Event event)
+    void authenticate(MuleEvent event)
             throws SecurityException, UnknownAuthenticationTypeException, CryptoFailureException,
             SecurityProviderNotFoundException, EncryptionStrategyNotFoundException, InitialisationException;
 }

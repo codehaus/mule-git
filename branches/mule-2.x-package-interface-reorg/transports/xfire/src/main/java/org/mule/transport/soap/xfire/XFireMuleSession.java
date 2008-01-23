@@ -10,7 +10,7 @@
 
 package org.mule.transport.soap.xfire;
 
-import org.mule.api.Session;
+import org.mule.api.MuleSession;
 
 
 
@@ -19,13 +19,13 @@ import org.mule.api.Session;
  */
 public class XFireMuleSession implements org.codehaus.xfire.transport.Session
 {
-    Session session;
+    MuleSession session;
 
-    public XFireMuleSession(Session session)
+    public XFireMuleSession(MuleSession session)
     {
         if (session == null)
         {
-            throw new IllegalArgumentException("Session");
+            throw new IllegalArgumentException("MuleSession");
         }
         this.session = session;
     }

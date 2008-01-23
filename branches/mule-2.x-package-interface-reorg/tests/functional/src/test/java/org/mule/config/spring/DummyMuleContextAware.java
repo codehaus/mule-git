@@ -14,8 +14,8 @@ import org.mule.api.MuleContext;
 import org.mule.api.context.MuleContextAware;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.InitialisationException;
-import org.mule.api.transformer.TransformerException;
 import org.mule.api.transformer.Transformer;
+import org.mule.api.transformer.TransformerException;
 
 import java.util.List;
 

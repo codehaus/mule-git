@@ -10,7 +10,7 @@
 
 package org.mule.component.simple;
 
-import org.mule.api.EventContext;
+import org.mule.api.MuleEventContext;
 import org.mule.api.lifecycle.Callable;
 
 /**
@@ -22,7 +22,7 @@ import org.mule.api.lifecycle.Callable;
 public class PassThroughComponent implements Callable
 {
 
-    public Object onCall(EventContext context) throws Exception
+    public Object onCall(MuleEventContext context) throws Exception
     {
         return context.transformMessage();
     }

@@ -12,7 +12,7 @@ package org.mule.api.routing;
 
 import org.mule.api.MessagingException;
 import org.mule.api.MuleMessage;
-import org.mule.api.Session;
+import org.mule.api.MuleSession;
 import org.mule.api.endpoint.ImmutableEndpoint;
 
 /**
@@ -29,7 +29,7 @@ public interface OutboundRouterCollection extends RouterCollection
      * @return a list containing 0 or events to be dispatched
      * @throws RoutingException If any of the events cannot be created.
      */
-    MuleMessage route(MuleMessage message, Session session, boolean synchronous) throws MessagingException;
+    MuleMessage route(MuleMessage message, MuleSession session, boolean synchronous) throws MessagingException;
 
     /**
      * A helper method for finding out which endpoints a message would be routed to

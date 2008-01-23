@@ -28,7 +28,7 @@ import javax.mail.URLName;
 
 /**
  * Abstract superclass for mail connectors. Provides Mule with an Authenticator
- * object and other shared functionality like e.g. Session creation.
+ * object and other shared functionality like e.g. MuleSession creation.
  */
 public abstract class AbstractMailConnector extends AbstractConnector
 {
@@ -180,7 +180,7 @@ public abstract class AbstractMailConnector extends AbstractConnector
         {
             local.setProperty("mail.debug", "true");
             
-            dumpProperties("Session local properties", local, true);
+            dumpProperties("MuleSession local properties", local, true);
             dumpProperties("System global properties", global, true);
             logger.debug("Creating mail session: host = " + url.getHost() + ", port = " + url.getPort()
                 + ", user = " + url.getUsername() + ", pass = " + url.getPassword());

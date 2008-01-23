@@ -10,7 +10,7 @@
 
 package org.mule.api.model;
 
-import org.mule.api.EventContext;
+import org.mule.api.MuleEventContext;
 
 /**
  * <code>EntryPoint</code> defines the current entry method on a component. If
@@ -19,5 +19,5 @@ import org.mule.api.EventContext;
  */
 public interface EntryPoint
 {
-    Object invoke(Object component, EventContext context) throws Exception;
+    Object invoke(Object component, MuleEventContext context) throws Exception;
 }

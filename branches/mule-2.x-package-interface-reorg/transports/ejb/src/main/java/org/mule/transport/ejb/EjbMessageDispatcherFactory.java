@@ -17,7 +17,7 @@ import org.mule.transport.AbstractMessageDispatcherFactory;
 
 /**
  * <code>EjbMessageDispatcherFactory</code> creates a dispatcher for marshalling
- * requests to an EJB Session bean
+ * requests to an EJB MuleSession bean
  */
 public class EjbMessageDispatcherFactory extends AbstractMessageDispatcherFactory
 {

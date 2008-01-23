@@ -11,10 +11,10 @@
 package org.mule.extras.pgp.filters;
 
 import org.mule.api.EncryptionStrategy;
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.lifecycle.InitialisationException;
-import org.mule.api.security.MuleAuthentication;
+import org.mule.api.security.Authentication;
 import org.mule.api.security.SecurityContext;
 import org.mule.api.security.UnauthorisedException;
 import org.mule.api.security.UnknownAuthenticationTypeException;
@@ -55,9 +55,9 @@ public class PGPSecurityFilter extends AbstractEndpointSecurityFilter
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.security.AbstractEndpointSecurityFilter#authenticateInbound(org.mule.api.Event)
+     * @see org.mule.security.AbstractEndpointSecurityFilter#authenticateInbound(org.mule.api.MuleEvent)
      */
-    protected void authenticateInbound(Event event)
+    protected void authenticateInbound(MuleEvent event)
         throws SecurityException, UnauthorisedException, UnknownAuthenticationTypeException
     {
         MuleMessage message = event.getMessage();
@@ -77,8 +77,8 @@ public class PGPSecurityFilter extends AbstractEndpointSecurityFilter
                 CoreMessages.failedToReadPayload(), event.getMessage(), e1);
         }
 
-        final MuleAuthentication authResult;
-        MuleAuthentication umoAuthentication;
+        final Authentication authResult;
+        Authentication umoAuthentication;
 
         try
         {
@@ -159,9 +159,9 @@ public class PGPSecurityFilter extends AbstractEndpointSecurityFilter
     /*
      * (non-Javadoc)
      * 
-     * @see org.mule.security.AbstractEndpointSecurityFilter#authenticateOutbound(org.mule.api.Event)
+     * @see org.mule.security.AbstractEndpointSecurityFilter#authenticateOutbound(org.mule.api.MuleEvent)
      */
-    protected void authenticateOutbound(Event event) throws SecurityException, UnauthorisedException
+    protected void authenticateOutbound(MuleEvent event) throws SecurityException, UnauthorisedException
     {
         logger.debug("authenticateOutbound:" + event.getId());
 

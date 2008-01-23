@@ -10,12 +10,12 @@
 
 package org.mule.routing.inbound;
 
-import org.mule.MuleEvent;
+import org.mule.DefaultMuleEvent;
 import org.mule.MuleServer;
 import org.mule.api.AbstractMuleException;
-import org.mule.api.Event;
 import org.mule.api.MessagingException;
 import org.mule.api.MuleContext;
+import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.EndpointBuilder;
 import org.mule.api.endpoint.ImmutableEndpoint;
@@ -39,9 +39,9 @@ public abstract class AbstractEventAggregator extends SelectiveConsumer
     private final ConcurrentMap eventGroups = new ConcurrentHashMap();
 
     // //@Override
-    public Event[] process(Event event) throws MessagingException
+    public MuleEvent[] process(MuleEvent event) throws MessagingException
     {
-        Event[] result = null;
+        MuleEvent[] result = null;
 
         if (this.isMatch(event))
         {
@@ -109,9 +109,9 @@ public abstract class AbstractEventAggregator extends SelectiveConsumer
                         {
                             throw new MessagingException(e.getI18nMessage(), returnMessage, e);
                         }
-                        Event returnEvent = new MuleEvent(returnMessage, endpoint, event.getComponent(),
+                        MuleEvent returnEvent = new DefaultMuleEvent(returnMessage, endpoint, event.getComponent(),
                             event);
-                        result = new Event[]{returnEvent};
+                        result = new MuleEvent[]{returnEvent};
                         this.removeEventGroup(group);
                     }
                     // result or not: exit spinloop
@@ -131,7 +131,7 @@ public abstract class AbstractEventAggregator extends SelectiveConsumer
      * @param groupId the id to use for the new EventGroup
      * @return a new EventGroup
      */
-    protected EventGroup createEventGroup(Event event, Object groupId)
+    protected EventGroup createEventGroup(MuleEvent event, Object groupId)
     {
         return new EventGroup(groupId);
     }
@@ -143,7 +143,7 @@ public abstract class AbstractEventAggregator extends SelectiveConsumer
      * @param event the event use for determining the correlation group id
      * @return the id used to correlate related events
      */
-    protected Object getEventGroupIdForEvent(Event event)
+    protected Object getEventGroupIdForEvent(MuleEvent event)
     {
         String groupId = event.getMessage().getCorrelationId();
 

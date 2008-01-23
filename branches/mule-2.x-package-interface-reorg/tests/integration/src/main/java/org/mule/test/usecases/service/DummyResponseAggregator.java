@@ -10,7 +10,7 @@
 
 package org.mule.test.usecases.service;
 
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.routing.RoutingException;
 import org.mule.routing.inbound.EventGroup;
@@ -23,6 +23,6 @@ public class DummyResponseAggregator extends ResponseCorrelationAggregator
     protected MuleMessage aggregateEvents(EventGroup events) throws RoutingException
     {
         logger.info(StringMessageUtils.getBoilerPlate("Response Agregator aggregating: " + events));
-        return ((Event)events.iterator().next()).getMessage();
+        return ((MuleEvent)events.iterator().next()).getMessage();
     }
 }

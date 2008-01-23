@@ -10,7 +10,6 @@
 
 package org.mule.endpoint;
 
-import org.mule.MuleTransactionConfig;
 import org.mule.api.AbstractMuleException;
 import org.mule.api.endpoint.EndpointBuilder;
 import org.mule.api.endpoint.EndpointException;
@@ -20,6 +19,7 @@ import org.mule.tck.testmodels.mule.TestConnector;
 import org.mule.tck.testmodels.mule.TestInboundTransformer;
 import org.mule.tck.testmodels.mule.TestOutboundTransformer;
 import org.mule.tck.testmodels.mule.TestResponseTransformer;
+import org.mule.transaction.MuleTransactionConfig;
 import org.mule.transformer.TransformerUtils;
 import org.mule.transport.SingleAttemptConnectionStrategy;
 import org.mule.util.ObjectNameHelper;

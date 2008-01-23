@@ -12,7 +12,7 @@ package org.mule.routing.outbound;
 
 import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleMessage;
-import org.mule.api.Session;
+import org.mule.api.MuleSession;
 import org.mule.api.endpoint.Endpoint;
 import org.mule.api.routing.RoutingException;
 import org.mule.tck.AbstractMuleTestCase;
@@ -80,7 +80,7 @@ public class EndpointSelectorTestCase extends AbstractMuleTestCase
 
         assertTrue(router.isMatch(message));
         session.expect("dispatchEvent", C.eq(message, dest3));
-        router.route(message, (Session) session.proxy(), false);
+        router.route(message, (MuleSession) session.proxy(), false);
         session.verify();
     }
 
@@ -98,7 +98,7 @@ public class EndpointSelectorTestCase extends AbstractMuleTestCase
 
         assertTrue(router.isMatch(message));
         session.expect("dispatchEvent", C.eq(message, dest2));
-        router.route(message, (Session) session.proxy(), false);
+        router.route(message, (MuleSession) session.proxy(), false);
         session.verify();
     }
 
@@ -112,7 +112,7 @@ public class EndpointSelectorTestCase extends AbstractMuleTestCase
             // this test used to fail at the router; it now fails earlier when the message is
             // constructed.  i don't think this is a problem.
             MuleMessage message = new DefaultMuleMessage("test event", props);
-            router.route(message, (Session) session.proxy(), false);
+            router.route(message, (MuleSession) session.proxy(), false);
             fail("Router should have thrown an exception if endpoint was not found.");
         }
         catch (Exception e)
@@ -127,7 +127,7 @@ public class EndpointSelectorTestCase extends AbstractMuleTestCase
 
         try
         {
-            router.route(message, (Session) session.proxy(), false);
+            router.route(message, (MuleSession) session.proxy(), false);
             fail("Router should have thrown an exception if no selector property was set on the message.");
         }
         catch (RoutingException e)

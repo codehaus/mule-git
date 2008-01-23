@@ -10,11 +10,11 @@
 
 package org.mule.mule;
 
+import org.mule.DefaultMuleEvent;
 import org.mule.DefaultMuleMessage;
-import org.mule.MuleEvent;
 import org.mule.RequestContext;
 import org.mule.ResponseOutputStream;
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.Endpoint;
 import org.mule.api.security.Credentials;
@@ -35,18 +35,18 @@ public class MuleEventTestCase extends AbstractMuleTestCase
     {
         String data = "Test Data";
 
-        MuleEvent event = (MuleEvent)getTestEvent(data, getTestComponent("orange", Orange.class));
+        DefaultMuleEvent event = (DefaultMuleEvent)getTestEvent(data, getTestComponent("orange", Orange.class));
         RequestContext.setEvent(event);
         
-        assertEquals("Event data should equal " + data, data, event.getMessage().getPayload());
-        assertEquals("Event data should equal " + data, data, event.getMessageAsString());
-        assertEquals("Event data should equal " + data, data, event.transformMessage());
-        assertEquals("Event data should be a byte array 9 bytes in length", 9, event
+        assertEquals("MuleEvent data should equal " + data, data, event.getMessage().getPayload());
+        assertEquals("MuleEvent data should equal " + data, data, event.getMessageAsString());
+        assertEquals("MuleEvent data should equal " + data, data, event.transformMessage());
+        assertEquals("MuleEvent data should be a byte array 9 bytes in length", 9, event
             .transformMessageToBytes().length);
 
-        assertEquals("Event data should be a byte array 9 bytes in length", 9,
+        assertEquals("MuleEvent data should be a byte array 9 bytes in length", 9,
             event.getMessageAsBytes().length);
-        assertEquals("Event data should equal " + data, data, event.getSource());
+        assertEquals("MuleEvent data should equal " + data, data, event.getSource());
 
         assertEquals("MuleBeanPropertiesRule", event.getMessage().getProperty("MuleBeanPropertiesRule",
             "MuleBeanPropertiesRule"));
@@ -64,14 +64,14 @@ public class MuleEventTestCase extends AbstractMuleTestCase
         String data = "Test Data";
         Endpoint endpoint = getTestEndpoint("Test", Endpoint.ENDPOINT_TYPE_SENDER);
         endpoint.setTransformers(CollectionUtils.singletonList(new TestEventTransformer()));
-        Event event = getTestEvent(data, endpoint);
+        MuleEvent event = getTestEvent(data, endpoint);
         RequestContext.setEvent(event);
         
-        assertEquals("Event data should equal " + data, data, event.getMessage().getPayload());
-        assertEquals("Event data should equal " + data, data, event.getMessageAsString());
-        assertEquals("Event data should equal 'Transformed Test Data'", "Transformed Test Data", event
+        assertEquals("MuleEvent data should equal " + data, data, event.getMessage().getPayload());
+        assertEquals("MuleEvent data should equal " + data, data, event.getMessageAsString());
+        assertEquals("MuleEvent data should equal 'Transformed Test Data'", "Transformed Test Data", event
             .transformMessage());
-        assertEquals("Event data should be a byte array 28 bytes in length", 21, event
+        assertEquals("MuleEvent data should be a byte array 28 bytes in length", 21, event
             .transformMessageToBytes().length);
     }
 
@@ -80,7 +80,7 @@ public class MuleEventTestCase extends AbstractMuleTestCase
         String data = "Test Data";
         Endpoint endpoint = getTestEndpoint("Test", Endpoint.ENDPOINT_TYPE_SENDER);
         endpoint.setTransformers(CollectionUtils.singletonList(new TestEventTransformer()));
-        MuleEvent event = new MuleEvent(new DefaultMuleMessage(data), endpoint,
+        DefaultMuleEvent event = new DefaultMuleEvent(new DefaultMuleMessage(data), endpoint,
             getTestSession(getTestComponent("apple", Apple.class)), true,
             new ResponseOutputStream(System.out));
 
@@ -91,7 +91,7 @@ public class MuleEventTestCase extends AbstractMuleTestCase
         assertNotNull(event.getMessage());
         assertEquals(data, event.getMessageAsString());
 
-        Event event2 = new MuleEvent(new DefaultMuleMessage("New Data"), event);
+        MuleEvent event2 = new DefaultMuleEvent(new DefaultMuleMessage("New Data"), event);
         assertNotNull(event2.getId());
         assertEquals(event.getId(), event2.getId());
         assertNotNull(event2.getSession());
@@ -104,11 +104,11 @@ public class MuleEventTestCase extends AbstractMuleTestCase
 
     public void testProperties() throws Exception
     {
-        Event prevEvent;
+        MuleEvent prevEvent;
         Properties props;
         MuleMessage msg;
         Endpoint endpoint;
-        Event event;
+        MuleEvent event;
 
         // nowhere
         prevEvent = getTestEvent("payload");
@@ -117,12 +117,12 @@ public class MuleEventTestCase extends AbstractMuleTestCase
         endpoint = getTestEndpoint("Test", Endpoint.ENDPOINT_TYPE_SENDER);
         props = new Properties();
         endpoint.setProperties(props);
-        event = new MuleEvent(msg, endpoint, prevEvent.getComponent(), prevEvent);
+        event = new DefaultMuleEvent(msg, endpoint, prevEvent.getComponent(), prevEvent);
         assertNull(event.getMessage().getProperty("prop"));
 
         // in previous event => previous event
         prevEvent.getMessage().setProperty("prop", "value0");
-        event = new MuleEvent(msg, endpoint, prevEvent.getComponent(), prevEvent);
+        event = new DefaultMuleEvent(msg, endpoint, prevEvent.getComponent(), prevEvent);
         assertEquals("value0", event.getMessage().getProperty("prop"));
 
         // TODO check if this fragment can be removed
@@ -132,7 +132,7 @@ public class MuleEventTestCase extends AbstractMuleTestCase
         // props = new Properties();
         // props.put("prop", "value2");
         // endpoint.setProperties(props);
-        // event = new MuleEvent(msg, endpoint, prevEvent.getComponent(), prevEvent);
+        // event = new DefaultMuleEvent(msg, endpoint, prevEvent.getComponent(), prevEvent);
         // assertEquals("value2", event.getProperty("prop"));
 
         // in previous event + message => message
@@ -140,7 +140,7 @@ public class MuleEventTestCase extends AbstractMuleTestCase
         props.put("prop", "value1");
         msg = new DefaultMuleMessage("payload", props);
         endpoint = getTestEndpoint("Test", Endpoint.ENDPOINT_TYPE_SENDER);
-        event = new MuleEvent(msg, endpoint, prevEvent.getComponent(), prevEvent);
+        event = new DefaultMuleEvent(msg, endpoint, prevEvent.getComponent(), prevEvent);
         assertEquals("value1", event.getMessage().getProperty("prop"));
 
         // in previous event + endpoint + message => message
@@ -151,7 +151,7 @@ public class MuleEventTestCase extends AbstractMuleTestCase
         Properties props2 = new Properties();
         props2.put("prop", "value2");
         endpoint.setProperties(props2);
-        event = new MuleEvent(msg, endpoint, prevEvent.getComponent(), prevEvent);
+        event = new DefaultMuleEvent(msg, endpoint, prevEvent.getComponent(), prevEvent);
         assertEquals("value1", event.getMessage().getProperty("prop"));
 
     }
@@ -166,7 +166,7 @@ public class MuleEventTestCase extends AbstractMuleTestCase
         // cannot set SMTP endpoint type, because the module doesn't have this
         // dependency
         endpoint.setEndpointURI(new MuleEndpointURI("test://john.doe@xyz.fr"));
-        Event event = getTestEvent(new Object(), endpoint);
+        MuleEvent event = getTestEvent(new Object(), endpoint);
         Credentials credentials = event.getCredentials();
         assertNull("Credentials must not be created for endpoints without a password.", credentials);
     }

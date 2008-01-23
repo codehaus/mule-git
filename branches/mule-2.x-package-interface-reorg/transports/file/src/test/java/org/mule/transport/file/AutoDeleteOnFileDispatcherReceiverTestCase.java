@@ -12,7 +12,7 @@ package org.mule.transport.file;
 
 import org.mule.RegistryContext;
 import org.mule.RequestContext;
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.transport.Connector;
 import org.mule.tck.AbstractMuleTestCase;
@@ -33,7 +33,7 @@ public class AutoDeleteOnFileDispatcherReceiverTestCase extends AbstractMuleTest
     {
         ((FileConnector)connector).setAutoDelete(false);
 
-        Event event = getTestEvent("TestData");
+        MuleEvent event = getTestEvent("TestData");
         event = RequestContext.setEvent(event);
 
         MuleMessage message = RequestContext.getEventContext().receiveEvent(getTestEndpointURI()+"/"+tempDirName+"?connector=FileConnector", 50000);
@@ -53,7 +53,7 @@ public class AutoDeleteOnFileDispatcherReceiverTestCase extends AbstractMuleTest
     {
         ((FileConnector)connector).setAutoDelete(true);
 
-        Event event = getTestEvent("TestData");
+        MuleEvent event = getTestEvent("TestData");
         event = RequestContext.setEvent(event);
 
         MuleMessage message = RequestContext.getEventContext().receiveEvent(getTestEndpointURI()+"/"+tempDirName, 50000);

@@ -20,12 +20,12 @@ import org.mule.config.spring.parsers.generic.AutoIdUtils;
 import org.mule.util.ClassUtils;
 import org.mule.util.XMLUtils;
 
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.HashSet;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

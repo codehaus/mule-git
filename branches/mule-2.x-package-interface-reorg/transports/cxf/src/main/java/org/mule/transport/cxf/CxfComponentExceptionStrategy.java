@@ -10,9 +10,9 @@
 
 package org.mule.transport.cxf;
 
-import org.apache.cxf.interceptor.Fault;
+import org.mule.component.DefaultComponentExceptionStrategy;
 
-import org.mule.DefaultComponentExceptionStrategy;
+import org.apache.cxf.interceptor.Fault;
 
 /**
  * This exception strategy forces the exception thrown from a web service invocation

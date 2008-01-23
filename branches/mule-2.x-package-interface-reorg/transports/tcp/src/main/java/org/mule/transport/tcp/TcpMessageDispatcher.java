@@ -11,7 +11,7 @@
 package org.mule.transport.tcp;
 
 import org.mule.DefaultMuleMessage;
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.transformer.TransformerException;
@@ -38,7 +38,7 @@ public class TcpMessageDispatcher extends AbstractMessageDispatcher
         this.connector = (TcpConnector) endpoint.getConnector();
     }
 
-    protected synchronized void doDispatch(Event event) throws Exception
+    protected synchronized void doDispatch(MuleEvent event) throws Exception
     {
         Socket socket = connector.getSocket(event.getEndpoint());
         try 
@@ -51,7 +51,7 @@ public class TcpMessageDispatcher extends AbstractMessageDispatcher
         }
     }
 
-    protected synchronized MuleMessage doSend(Event event) throws Exception
+    protected synchronized MuleMessage doSend(MuleEvent event) throws Exception
     {
         Socket socket = connector.getSocket(event.getEndpoint());
         dispatchToSocket(socket, event);
@@ -99,7 +99,7 @@ public class TcpMessageDispatcher extends AbstractMessageDispatcher
     }
 
     // Socket management (get and release) is handled outside this method
-    private void dispatchToSocket(Socket socket, Event event) throws Exception
+    private void dispatchToSocket(Socket socket, MuleEvent event) throws Exception
     {
         Object payload = event.transformMessage();
         write(socket, payload);

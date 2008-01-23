@@ -10,22 +10,22 @@
 
 package org.mule.transport.jms;
 
-import org.mule.api.MessagingException;
 import org.mule.api.AbstractMuleException;
+import org.mule.api.MessagingException;
 import org.mule.api.component.Component;
-import org.mule.api.context.ServerNotification;
 import org.mule.api.context.notification.ConnectionNotificationListener;
+import org.mule.api.context.notification.ServerNotification;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.lifecycle.StartException;
 import org.mule.api.transaction.Transaction;
 import org.mule.api.transaction.TransactionException;
-import org.mule.api.transport.ReplyToHandler;
 import org.mule.api.transport.MessageAdapter;
+import org.mule.api.transport.ReplyToHandler;
 import org.mule.config.ExceptionHelper;
 import org.mule.config.i18n.CoreMessages;
-import org.mule.internal.notifications.ConnectionNotification;
-import org.mule.internal.notifications.NotificationException;
+import org.mule.context.notification.ConnectionNotification;
+import org.mule.context.notification.NotificationException;
 import org.mule.transaction.TransactionCoordination;
 import org.mule.transport.AbstractConnector;
 import org.mule.transport.ConnectException;
@@ -523,7 +523,7 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
     }
 
     /**
-     * Closes the Session
+     * Closes the MuleSession
      *
      * @param session
      * @throws JMSException
@@ -537,7 +537,7 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
     }
 
     /**
-     * Closes the Session without throwing an exception (an error message is logged
+     * Closes the MuleSession without throwing an exception (an error message is logged
      * instead).
      *
      * @param session

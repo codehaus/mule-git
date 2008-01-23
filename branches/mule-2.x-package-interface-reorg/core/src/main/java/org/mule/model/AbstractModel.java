@@ -10,17 +10,17 @@
 
 package org.mule.model;
 
-import org.mule.DefaultComponentExceptionStrategy;
-import org.mule.DefaultLifecycleAdapterFactory;
 import org.mule.api.AbstractMuleException;
 import org.mule.api.MuleContext;
-import org.mule.api.context.ServerNotification;
+import org.mule.api.context.notification.ServerNotification;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.lifecycle.LifecycleAdapterFactory;
 import org.mule.api.model.EntryPointResolver;
 import org.mule.api.model.EntryPointResolverSet;
 import org.mule.api.model.Model;
-import org.mule.internal.notifications.ModelNotification;
+import org.mule.component.DefaultComponentExceptionStrategy;
+import org.mule.context.notification.ModelNotification;
+import org.mule.lifecycle.DefaultLifecycleAdapterFactory;
 import org.mule.model.resolvers.DefaultEntryPointResolverSet;
 import org.mule.model.resolvers.LegacyEntryPointResolverSet;
 

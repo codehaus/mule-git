@@ -10,7 +10,7 @@
 
 package org.mule.transport.soap.axis;
 
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.tck.AbstractMuleTestCase;
@@ -31,7 +31,7 @@ public class AxisMessageDispatcherTestCase extends AbstractMuleTestCase
             "axis:http://www.muleumo.org/services/myService?method=myTestMethod");
         AxisMessageDispatcher dispatcher = new AxisMessageDispatcher(ep);
         dispatcher.service = new Service();
-        Event event = getTestEvent("testPayload", ep);
+        MuleEvent event = getTestEvent("testPayload", ep);
         // there should be no NullPointerException
         Call call = dispatcher.getCall(event, new Object[]{null});
 

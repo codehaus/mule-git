@@ -11,11 +11,11 @@
 package org.mule.management.agents;
 
 import org.mule.AbstractAgent;
+import org.mule.RegistryContext;
 import org.mule.api.AbstractMuleException;
-import org.mule.api.Agent;
+import org.mule.api.agent.Agent;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.util.StringUtils;
-import org.mule.RegistryContext;
 
 import java.rmi.server.RMIClientSocketFactory;
 import java.text.MessageFormat;

@@ -11,7 +11,7 @@
 package org.mule.transport.bpm;
 
 import org.mule.DefaultMuleMessage;
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.endpoint.ImmutableEndpoint;
@@ -43,7 +43,7 @@ public class ProcessMessageDispatcher extends AbstractMessageDispatcher
      * 
      * @return an object representing the new state of the process
      */
-    public MuleMessage doSend(Event event) throws Exception
+    public MuleMessage doSend(MuleEvent event) throws Exception
     {
         Object process = processAction(event);
 
@@ -64,12 +64,12 @@ public class ProcessMessageDispatcher extends AbstractMessageDispatcher
     /**
      * Performs an asynchronous action on the BPMS.
      */
-    public void doDispatch(Event event) throws Exception
+    public void doDispatch(MuleEvent event) throws Exception
     {
         processAction(event);
     }
 
-    protected Object processAction(Event event) throws Exception
+    protected Object processAction(MuleEvent event) throws Exception
     {
         // An object representing the new state of the process
         Object process = null;

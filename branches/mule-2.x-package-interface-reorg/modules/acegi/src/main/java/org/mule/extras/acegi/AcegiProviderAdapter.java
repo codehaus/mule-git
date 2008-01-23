@@ -11,16 +11,15 @@
 package org.mule.extras.acegi;
 
 import org.mule.api.lifecycle.InitialisationException;
-import org.mule.api.security.MuleAuthentication;
-import org.mule.api.security.SecurityException;
+import org.mule.api.security.Authentication;
 import org.mule.api.security.SecurityContext;
 import org.mule.api.security.SecurityContextFactory;
+import org.mule.api.security.SecurityException;
 import org.mule.api.security.SecurityProvider;
 import org.mule.api.security.UnknownAuthenticationTypeException;
 
 import java.util.Map;
 
-import org.acegisecurity.Authentication;
 import org.acegisecurity.AuthenticationException;
 import org.acegisecurity.providers.AuthenticationProvider;
 import org.acegisecurity.providers.UsernamePasswordAuthenticationToken;
@@ -71,9 +70,9 @@ public class AcegiProviderAdapter implements SecurityProvider, AuthenticationPro
         return name;
     }
 
-    public MuleAuthentication authenticate(MuleAuthentication authentication) throws SecurityException
+    public Authentication authenticate(Authentication authentication) throws SecurityException
     {
-        Authentication auth = null;
+        org.acegisecurity.Authentication auth = null;
         if (authentication instanceof AcegiAuthenticationAdapter)
         {
             auth = ((AcegiAuthenticationAdapter)authentication).getDelegate();
@@ -88,14 +87,14 @@ public class AcegiProviderAdapter implements SecurityProvider, AuthenticationPro
         return new AcegiAuthenticationAdapter(auth, getSecurityProperties());
     }
 
-    public Authentication authenticate(Authentication authentication) throws AuthenticationException
+    public org.acegisecurity.Authentication authenticate(org.acegisecurity.Authentication authentication) throws AuthenticationException
     {
         return delegate.authenticate(authentication);
     }
 
     public boolean supports(Class aClass)
     {
-        return MuleAuthentication.class.isAssignableFrom(aClass);
+        return Authentication.class.isAssignableFrom(aClass);
     }
 
     public AuthenticationProvider getDelegate()
@@ -108,7 +107,7 @@ public class AcegiProviderAdapter implements SecurityProvider, AuthenticationPro
         this.delegate = delegate;
     }
 
-    public SecurityContext createSecurityContext(MuleAuthentication auth)
+    public SecurityContext createSecurityContext(Authentication auth)
         throws UnknownAuthenticationTypeException
     {
         /*

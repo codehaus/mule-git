@@ -10,12 +10,12 @@
 
 package org.mule.routing;
 
-import org.mule.MuleEvent;
+import org.mule.DefaultMuleEvent;
 import org.mule.RequestContext;
 import org.mule.api.AbstractMuleException;
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
-import org.mule.api.Session;
+import org.mule.api.MuleSession;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.routing.ComponentRoutingException;
 import org.mule.api.routing.RoutingException;
@@ -36,15 +36,15 @@ public class ComponentCatchAllStrategy extends AbstractCatchAllStrategy
         return null;
     }
 
-    public synchronized MuleMessage catchMessage(MuleMessage message, Session session, boolean synchronous)
+    public synchronized MuleMessage catchMessage(MuleMessage message, MuleSession session, boolean synchronous)
         throws RoutingException
     {
-        Event event = RequestContext.getEvent();
+        MuleEvent event = RequestContext.getEvent();
         logger.debug("Catch all strategy handling event: " + event);
         try
         {
-            logger.info("Event being routed from catch all strategy for endpoint: " + event.getEndpoint());
-            event = new MuleEvent(message, event.getEndpoint(), session.getComponent(), event);
+            logger.info("MuleEvent being routed from catch all strategy for endpoint: " + event.getEndpoint());
+            event = new DefaultMuleEvent(message, event.getEndpoint(), session.getComponent(), event);
             if (synchronous)
             {
                 statistics.incrementRoutedMessage(event.getEndpoint());

@@ -10,14 +10,14 @@
 
 package org.mule.test.integration;
 
+import org.mule.DefaultMuleEvent;
 import org.mule.DefaultMuleMessage;
-import org.mule.MuleEvent;
-import org.mule.MuleSession;
-import org.mule.api.Event;
-import org.mule.api.EventContext;
+import org.mule.DefaultMuleSession;
 import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleEvent;
+import org.mule.api.MuleEventContext;
 import org.mule.api.MuleMessage;
-import org.mule.api.Session;
+import org.mule.api.MuleSession;
 import org.mule.api.component.Component;
 import org.mule.api.endpoint.Endpoint;
 import org.mule.api.endpoint.ImmutableEndpoint;
@@ -57,14 +57,14 @@ public class EventMetaDataPropagationTestCase extends FunctionalTestCase impleme
         transformers.add(DummyTransformer.class);
         endpoint.setTransformers(transformers);
         
-        Session session = new MuleSession(component);
+        MuleSession session = new DefaultMuleSession(component);
 
-        Event event = new MuleEvent(new DefaultMuleMessage("Test Event"), (ImmutableEndpoint)component
+        MuleEvent event = new DefaultMuleEvent(new DefaultMuleMessage("Test MuleEvent"), (ImmutableEndpoint)component
                 .getInboundRouter().getEndpoints().get(0), session, true);
         session.sendEvent(event);
     }
 
-    public Object onCall(EventContext context) throws Exception
+    public Object onCall(MuleEventContext context) throws Exception
     {
         if ("component1".equals(context.getComponent().getName()))
         {
@@ -116,7 +116,7 @@ public class EventMetaDataPropagationTestCase extends FunctionalTestCase impleme
 
     private class DummyTransformer extends AbstractEventAwareTransformer
     {
-        public Object transform(Object src, String encoding, EventContext context)
+        public Object transform(Object src, String encoding, MuleEventContext context)
             throws TransformerException
         {
             MuleMessage msg = context.getMessage();

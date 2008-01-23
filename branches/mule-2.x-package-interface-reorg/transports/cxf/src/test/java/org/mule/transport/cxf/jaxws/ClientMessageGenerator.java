@@ -1,11 +1,11 @@
 package org.mule.transport.cxf.jaxws;
 
-import org.mule.api.EventContext;
+import org.mule.api.MuleEventContext;
 
 public class ClientMessageGenerator implements org.mule.api.lifecycle.Callable 
 {
     
-    public Object onCall(EventContext eventContext) throws Exception 
+    public Object onCall(MuleEventContext eventContext) throws Exception 
     {
         return generate();
     }

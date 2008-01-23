@@ -10,7 +10,7 @@
 
 package org.mule.transport.jdbc;
 
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.transport.AbstractMessageRequester;
@@ -62,7 +62,7 @@ public class JdbcMessageRequester extends AbstractMessageRequester
      *         returned if no data was available
      * @throws Exception if the call to the underlying protocol causes an exception
      */
-    protected MuleMessage doRequest(long timeout, Event event) throws Exception
+    protected MuleMessage doRequest(long timeout, MuleEvent event) throws Exception
     {
         return JdbcMessageDispatcher.executeRequest(timeout, event, connector, endpoint);
     }

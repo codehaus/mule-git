@@ -15,7 +15,7 @@ import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.transport.DispatchException;
 import org.mule.api.transport.MessageRequester;
 import org.mule.api.transport.ReceiveException;
-import org.mule.internal.notifications.MessageNotification;
+import org.mule.context.notification.MessageNotification;
 
 /**
  * Provide a default dispatch (client) support for handling threads lifecycle and validation.

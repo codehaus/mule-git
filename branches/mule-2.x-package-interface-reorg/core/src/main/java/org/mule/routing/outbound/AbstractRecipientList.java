@@ -14,7 +14,7 @@ import org.mule.DefaultMuleMessage;
 import org.mule.MuleServer;
 import org.mule.api.AbstractMuleException;
 import org.mule.api.MuleMessage;
-import org.mule.api.Session;
+import org.mule.api.MuleSession;
 import org.mule.api.endpoint.EndpointURI;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.registry.RegistrationException;
@@ -46,7 +46,7 @@ public abstract class AbstractRecipientList extends FilteringOutboundRouter
 
     private final ConcurrentMap recipientCache = new ConcurrentHashMap();
 
-    public MuleMessage route(MuleMessage message, Session session, boolean synchronous)
+    public MuleMessage route(MuleMessage message, MuleSession session, boolean synchronous)
         throws RoutingException
     {
         List recipients = this.getRecipients(message);

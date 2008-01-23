@@ -10,7 +10,7 @@
 
 package org.mule.api.transport;
 
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 
 /**
@@ -31,15 +31,15 @@ public interface MessageDispatching
      * @param event The event to dispatch
      * @throws DispatchException if the event fails to be dispatched
      */
-    void dispatch(Event event) throws DispatchException;
+    void dispatch(MuleEvent event) throws DispatchException;
 
     /**
      * Sends an event from the endpoint to the external system
      * 
      * @param event The event to send
-     * @return event the response form the external system wrapped in a Event
+     * @return event the response form the external system wrapped in a MuleEvent
      * @throws DispatchException if the event fails to be dispatched
      */
-    MuleMessage send(Event event) throws DispatchException;
+    MuleMessage send(MuleEvent event) throws DispatchException;
 
 }

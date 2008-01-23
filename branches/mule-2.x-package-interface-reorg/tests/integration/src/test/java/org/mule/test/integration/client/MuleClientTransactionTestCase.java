@@ -10,7 +10,6 @@
 
 package org.mule.test.integration.client;
 
-import org.mule.MuleTransactionConfig;
 import org.mule.api.MuleMessage;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.endpoint.EndpointBuilder;
@@ -21,6 +20,7 @@ import org.mule.api.transaction.TransactionConfig;
 import org.mule.endpoint.EndpointURIEndpointBuilder;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
+import org.mule.transaction.MuleTransactionConfig;
 import org.mule.transaction.TransactionCoordination;
 import org.mule.transaction.TransactionTemplate;
 import org.mule.transport.jms.JmsTransactionFactory;

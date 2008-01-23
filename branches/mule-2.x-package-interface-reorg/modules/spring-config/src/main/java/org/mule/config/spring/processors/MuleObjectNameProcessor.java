@@ -10,7 +10,7 @@
 
 package org.mule.config.spring.processors;
 
-import org.mule.api.Agent;
+import org.mule.api.agent.Agent;
 import org.mule.api.component.Component;
 import org.mule.api.context.ContainerContext;
 import org.mule.api.endpoint.Endpoint;

@@ -10,9 +10,9 @@
 
 package org.mule.transport.soap.xfire.transport;
 
-import org.mule.api.MuleException;
-import org.mule.api.EventContext;
 import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleEventContext;
+import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.context.WorkManager;
 import org.mule.message.DefaultExceptionPayload;
@@ -25,7 +25,6 @@ import java.io.OutputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.io.Reader;
-import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 
 import javax.resource.spi.work.Work;
@@ -312,7 +311,7 @@ public class MuleLocalChannel extends AbstractChannel
     /**
      * Get the service that is mapped to the specified request.
      */
-    protected String getService(EventContext context)
+    protected String getService(MuleEventContext context)
     {
         String pathInfo = context.getEndpointURI().getPath();
 
@@ -337,7 +336,7 @@ public class MuleLocalChannel extends AbstractChannel
         return serviceName;
     }
 
-    public Object onCall(EventContext ctx) throws AbstractMuleException
+    public Object onCall(MuleEventContext ctx) throws AbstractMuleException
     {
 
         try

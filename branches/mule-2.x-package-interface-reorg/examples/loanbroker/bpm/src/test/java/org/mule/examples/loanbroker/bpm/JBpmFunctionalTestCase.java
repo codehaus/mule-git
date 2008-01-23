@@ -59,7 +59,7 @@ public class JBpmFunctionalTestCase extends AbstractAsynchronousLoanBrokerTestCa
         }
         BPMS bpms = connector.getBpms();
         // TODO MULE-1558 The following assert is throwing a 
-        //   org.hibernate.LazyInitializationException: could not initialize proxy - the owning Session was closed
+        //   org.hibernate.LazyInitializationException: could not initialize proxy - the owning MuleSession was closed
         // See http://forum.springframework.org/archive/index.php/t-24800.html
         //assertEquals("loanApproved", bpms.getState(bpms.lookupProcess(new Long(PROCESS_ID))));
     }

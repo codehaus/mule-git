@@ -10,14 +10,12 @@
 
 package org.mule.tck;
 
-import org.mule.DefaultMuleContextBuilder;
-import org.mule.DefaultMuleContextFactory;
 import org.mule.MuleServer;
 import org.mule.RegistryContext;
-import org.mule.api.Event;
-import org.mule.api.EventContext;
 import org.mule.api.MuleContext;
-import org.mule.api.Session;
+import org.mule.api.MuleEvent;
+import org.mule.api.MuleEventContext;
+import org.mule.api.MuleSession;
 import org.mule.api.component.Component;
 import org.mule.api.config.ConfigurationBuilder;
 import org.mule.api.context.MuleContextFactory;
@@ -26,6 +24,8 @@ import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.transformer.Transformer;
 import org.mule.config.builders.DefaultsConfigurationBuilder;
 import org.mule.config.builders.SimpleConfigurationBuilder;
+import org.mule.context.DefaultMuleContextBuilder;
+import org.mule.context.DefaultMuleContextFactory;
 import org.mule.tck.testmodels.mule.TestConnector;
 import org.mule.util.FileUtils;
 import org.mule.util.MuleUrlStreamHandlerFactory;
@@ -463,17 +463,17 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
         return MuleTestUtils.getTestEndpoint(name, type, muleContext);
     }
 
-    public static Event getTestEvent(Object data, Component component) throws Exception
+    public static MuleEvent getTestEvent(Object data, Component component) throws Exception
     {
         return MuleTestUtils.getTestEvent(data, component, muleContext);
     }
 
-    public static Event getTestEvent(Object data) throws Exception
+    public static MuleEvent getTestEvent(Object data) throws Exception
     {
         return MuleTestUtils.getTestEvent(data, muleContext);
     }
 
-    public static EventContext getTestEventContext(Object data) throws Exception
+    public static MuleEventContext getTestEventContext(Object data) throws Exception
     {
         return MuleTestUtils.getTestEventContext(data, muleContext);
     }
@@ -483,18 +483,18 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
         return MuleTestUtils.getTestTransformer();
     }
 
-    public static Event getTestEvent(Object data, ImmutableEndpoint endpoint) throws Exception
+    public static MuleEvent getTestEvent(Object data, ImmutableEndpoint endpoint) throws Exception
     {
         return MuleTestUtils.getTestEvent(data, endpoint, muleContext);
     }
 
-    public static Event getTestEvent(Object data, Component component, ImmutableEndpoint endpoint)
+    public static MuleEvent getTestEvent(Object data, Component component, ImmutableEndpoint endpoint)
         throws Exception
     {
         return MuleTestUtils.getTestEvent(data, component, endpoint, muleContext);
     }
 
-    public static Session getTestSession(Component component)
+    public static MuleSession getTestSession(Component component)
     {
         return MuleTestUtils.getTestSession(component);
     }

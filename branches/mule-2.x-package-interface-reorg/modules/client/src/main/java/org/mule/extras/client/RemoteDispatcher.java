@@ -11,13 +11,13 @@
 package org.mule.extras.client;
 
 import org.mule.DefaultMuleMessage;
-import org.mule.MuleEvent;
-import org.mule.MuleSession;
+import org.mule.DefaultMuleEvent;
+import org.mule.DefaultMuleSession;
 import org.mule.MuleSessionHandler;
 import org.mule.RegistryContext;
 import org.mule.RequestContext;
 import org.mule.api.FutureMessageResult;
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.api.AbstractMuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.config.MuleProperties;
@@ -28,7 +28,7 @@ import org.mule.api.lifecycle.Disposable;
 import org.mule.api.security.Credentials;
 import org.mule.api.transformer.wire.WireFormat;
 import org.mule.api.transport.DispatchException;
-import org.mule.internal.notifications.AdminNotification;
+import org.mule.context.notification.AdminNotification;
 import org.mule.security.MuleCredentials;
 import org.mule.transformer.wire.SerializationWireFormat;
 import org.mule.transport.AbstractConnector;
@@ -316,15 +316,15 @@ public class RemoteDispatcher implements Disposable
         }
 
         message.addProperties(action.getProperties());
-        MuleSession session = new MuleSession(message,
+        DefaultMuleSession session = new DefaultMuleSession(message,
             ((AbstractConnector)serverEndpoint.getConnector()).getSessionHandler());
 
-        Event event = new MuleEvent(message, serverEndpoint, session, true);
+        MuleEvent event = new DefaultMuleEvent(message, serverEndpoint, session, true);
         event.setTimeout(timeout);
         if (logger.isDebugEnabled())
         {
             logger.debug("MuleClient sending remote call to: " + action.getResourceIdentifier() + ". At "
-                         + serverEndpoint.toString() + " . Event is: " + event);
+                         + serverEndpoint.toString() + " . MuleEvent is: " + event);
         }
 
         MuleMessage result;
@@ -406,7 +406,7 @@ public class RemoteDispatcher implements Disposable
         throws AbstractMuleException
     {
 
-        RequestContext.setEvent(new MuleEvent(message, endpoint, new MuleSession(message,
+        RequestContext.setEvent(new DefaultMuleEvent(message, endpoint, new DefaultMuleSession(message,
             new MuleSessionHandler()), synchronous));
     }
 }

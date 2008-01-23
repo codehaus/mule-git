@@ -13,8 +13,8 @@ package org.mule.management.mbeans;
 import org.mule.MuleServer;
 import org.mule.api.AbstractMuleException;
 import org.mule.api.component.Component;
+import org.mule.component.AbstractComponent;
 import org.mule.management.stats.ComponentStatistics;
-import org.mule.model.AbstractComponent;
 import org.mule.model.seda.SedaComponent;
 
 import javax.management.MBeanRegistration;

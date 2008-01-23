@@ -11,19 +11,19 @@ package org.mule.config.spring.handlers;
 
 import org.mule.config.spring.factories.InboundEndpointFactoryBean;
 import org.mule.config.spring.factories.OutboundEndpointFactoryBean;
+import org.mule.config.spring.parsers.MuleDefinitionParser;
+import org.mule.config.spring.parsers.MuleDefinitionParserConfiguration;
+import org.mule.config.spring.parsers.PostProcessor;
+import org.mule.config.spring.parsers.PreProcessor;
+import org.mule.config.spring.parsers.assembly.configuration.ValueMap;
 import org.mule.config.spring.parsers.specific.endpoint.TransportEndpointDefinitionParser;
 import org.mule.config.spring.parsers.specific.endpoint.TransportGlobalEndpointDefinitionParser;
 import org.mule.config.spring.parsers.specific.endpoint.support.AddressedEndpointDefinitionParser;
-import org.mule.config.spring.parsers.MuleDefinitionParser;
-import org.mule.config.spring.parsers.PreProcessor;
-import org.mule.config.spring.parsers.PostProcessor;
-import org.mule.config.spring.parsers.MuleDefinitionParserConfiguration;
-import org.mule.config.spring.parsers.assembly.configuration.ValueMap;
 
-import java.util.Set;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;

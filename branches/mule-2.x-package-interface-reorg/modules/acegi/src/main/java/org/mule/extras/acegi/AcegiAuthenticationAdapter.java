@@ -10,27 +10,26 @@
 
 package org.mule.extras.acegi;
 
-import org.mule.api.security.MuleAuthentication;
+import org.mule.api.security.Authentication;
 
 import java.util.Map;
 
-import org.acegisecurity.Authentication;
 import org.acegisecurity.GrantedAuthority;
 
 /**
  * <code>AcegiAuthenticationAdapter</code> TODO
  */
-public class AcegiAuthenticationAdapter implements MuleAuthentication
+public class AcegiAuthenticationAdapter implements Authentication
 {
-    private Authentication delegate;
+    private org.acegisecurity.Authentication delegate;
     private Map properties;
 
-    public AcegiAuthenticationAdapter(Authentication authentication)
+    public AcegiAuthenticationAdapter(org.acegisecurity.Authentication authentication)
     {
         this.delegate = authentication;
     }
 
-    public AcegiAuthenticationAdapter(Authentication authentication, Map properties)
+    public AcegiAuthenticationAdapter(org.acegisecurity.Authentication authentication, Map properties)
     {
         this.delegate = authentication;
         this.properties = properties;
@@ -81,7 +80,7 @@ public class AcegiAuthenticationAdapter implements MuleAuthentication
         return delegate.getName();
     }
 
-    public Authentication getDelegate()
+    public org.acegisecurity.Authentication getDelegate()
     {
         return delegate;
     }

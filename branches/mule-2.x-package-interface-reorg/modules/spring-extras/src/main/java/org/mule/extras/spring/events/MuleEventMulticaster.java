@@ -10,30 +10,30 @@
 
 package org.mule.extras.spring.events;
 
+import org.mule.DefaultMuleEvent;
 import org.mule.DefaultMuleMessage;
-import org.mule.MuleEvent;
-import org.mule.MuleSession;
+import org.mule.DefaultMuleSession;
 import org.mule.RegistryContext;
 import org.mule.RequestContext;
+import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleEventContext;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleException;
 import org.mule.api.MuleRuntimeException;
-import org.mule.api.EventContext;
-import org.mule.api.AbstractMuleException;
-import org.mule.api.Session;
+import org.mule.api.MuleSession;
 import org.mule.api.component.Component;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.config.ThreadingProfile;
 import org.mule.api.context.MuleContextAware;
-import org.mule.api.endpoint.MalformedEndpointException;
 import org.mule.api.endpoint.EndpointBuilder;
 import org.mule.api.endpoint.EndpointFactory;
 import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.api.endpoint.MalformedEndpointException;
 import org.mule.api.model.Model;
 import org.mule.api.routing.InboundRouterCollection;
 import org.mule.api.routing.filter.ObjectFilter;
-import org.mule.api.transformer.TransformerException;
 import org.mule.api.transformer.Transformer;
+import org.mule.api.transformer.TransformerException;
 import org.mule.api.transport.Connector;
 import org.mule.endpoint.MuleEndpointURI;
 import org.mule.extras.spring.i18n.SpringMessages;
@@ -88,7 +88,7 @@ import org.springframework.context.event.ContextRefreshedEvent;
  * possible to specify wildcard endpoints. This is still possible but you need to
  * tell the multicaster which specific endpoints to listen on and then your
  * subscription listeners can use wildcards. To register the specific endpoints on
- * the Event Multicaster you use the <i>subscriptions</i> property. <p/> <code>
+ * the MuleEvent Multicaster you use the <i>subscriptions</i> property. <p/> <code>
  * &lt;bean id="applicationEventMulticaster" class="org.mule.extras.spring.events.MuleEventMulticaster"&gt;
  * &lt;property name="subscriptions"&gt;
  * &lt;list&gt;
@@ -331,7 +331,7 @@ public class MuleEventMulticaster implements ApplicationEventMulticaster, Applic
                     {
                         asyncListener.onApplicationEvent(e);
                     }
-                    // Synchronous Event listener Checks
+                    // Synchronous MuleEvent listener Checks
                 }
                 else if (listener instanceof MuleSubscriptionEventListener)
                 {
@@ -453,7 +453,7 @@ public class MuleEventMulticaster implements ApplicationEventMulticaster, Applic
      * 
      * @param context the context received by Mule
      */
-    public void onMuleEvent(EventContext context) throws TransformerException, MalformedEndpointException
+    public void onMuleEvent(MuleEventContext context) throws TransformerException, MalformedEndpointException
     {
         multicastEvent(new MuleApplicationEvent(context.transformMessage(), context, applicationContext));
         context.setStopFurtherProcessing(true);
@@ -499,16 +499,16 @@ public class MuleEventMulticaster implements ApplicationEventMulticaster, Applic
                 }
                 else
                 {
-                    Session session = new MuleSession(message,
+                    MuleSession session = new DefaultMuleSession(message,
                         ((AbstractConnector)endpoint.getConnector()).getSessionHandler(), component);
-                    RequestContext.setEvent(new MuleEvent(message, endpoint, session, false));
+                    RequestContext.setEvent(new DefaultMuleEvent(message, endpoint, session, false));
                     // transform if necessary
                     if (endpoint.getTransformers() != null)
                     {
                         message = new DefaultMuleMessage(applicationEvent.getSource(), applicationEvent.getProperties());
                         message.applyTransformers(endpoint.getTransformers());
                     }
-                    endpoint.dispatch(new MuleEvent(message, endpoint, session, false));
+                    endpoint.dispatch(new DefaultMuleEvent(message, endpoint, session, false));
                 }
             }
             catch (Exception e1)

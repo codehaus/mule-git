@@ -11,7 +11,7 @@
 package org.mule.transport.http.functional;
 
 import org.mule.DefaultMuleMessage;
-import org.mule.api.EventContext;
+import org.mule.api.MuleEventContext;
 import org.mule.api.MuleMessage;
 import org.mule.transport.DefaultMessageAdapter;
 import org.mule.transport.http.HttpConnector;
@@ -21,7 +21,7 @@ public class ETagComponent implements org.mule.api.lifecycle.Callable
 {
     String ETAG_VALUE = "0123456789";
     
-    public Object onCall(EventContext eventContext) throws Exception
+    public Object onCall(MuleEventContext eventContext) throws Exception
     {
         MuleMessage msg = eventContext.getMessage();
         

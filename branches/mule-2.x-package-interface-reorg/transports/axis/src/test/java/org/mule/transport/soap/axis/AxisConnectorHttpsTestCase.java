@@ -12,7 +12,7 @@ package org.mule.transport.soap.axis;
 
 import org.mule.DefaultMuleMessage;
 import org.mule.RequestContext;
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
@@ -27,7 +27,7 @@ public class AxisConnectorHttpsTestCase extends FunctionalTestCase
         assertNotNull(m);
         
         // check that our https connector is being used
-        Event event = RequestContext.getEvent();
+        MuleEvent event = RequestContext.getEvent();
         assertTrue (event.getEndpoint().getConnector() instanceof HttpsConnector);
         assertTrue(event.getEndpoint().getConnector().getName().equals("myHttpsConnector"));
     }

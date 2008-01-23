@@ -11,7 +11,7 @@
 package org.mule.issues;
 
 import org.mule.DefaultMuleMessage;
-import org.mule.api.EventContext;
+import org.mule.api.MuleEventContext;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.tck.functional.EventCallback;
@@ -39,7 +39,7 @@ public class MulticastRouterMule2112TestCase  extends FunctionalTestCase
         final AtomicBoolean hop1made = new AtomicBoolean(false);
         EventCallback callback1 = new EventCallback()
         {
-            public void eventReceived(final EventContext context, final Object component) throws Exception
+            public void eventReceived(final MuleEventContext context, final Object component) throws Exception
             {
                 assertTrue(hop1made.compareAndSet(false, true));
             }
@@ -48,7 +48,7 @@ public class MulticastRouterMule2112TestCase  extends FunctionalTestCase
         final AtomicBoolean hop2made = new AtomicBoolean(false);
         EventCallback callback2 = new EventCallback()
         {
-            public void eventReceived(final EventContext context, final Object component) throws Exception
+            public void eventReceived(final MuleEventContext context, final Object component) throws Exception
             {
                 assertTrue(hop2made.compareAndSet(false, true));
             }

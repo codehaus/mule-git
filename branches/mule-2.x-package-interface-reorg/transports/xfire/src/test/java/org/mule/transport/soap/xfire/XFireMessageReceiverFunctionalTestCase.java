@@ -13,7 +13,6 @@ package org.mule.transport.soap.xfire;
 import org.mule.api.component.simple.EchoService;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.transport.AbstractConnector;
-import org.mule.transport.soap.xfire.XFireMessageReceiver;
 import org.mule.util.IOUtils;
 
 import java.lang.reflect.Field;

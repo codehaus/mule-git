@@ -10,6 +10,12 @@
 
 package org.mule.transport.cxf;
 
+import org.mule.api.MuleMessage;
+import org.mule.extras.client.MuleClient;
+import org.mule.tck.FunctionalTestCase;
+import org.mule.transport.http.HttpConnector;
+import org.mule.transport.http.HttpConstants;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,18 +23,10 @@ import java.util.Map;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
-import org.mortbay.http.HttpContext;
 import org.mortbay.http.SocketListener;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.servlet.ServletHandler;
 import org.mortbay.util.InetAddrPort;
-
-import org.mule.api.MuleMessage;
-import org.mule.extras.client.MuleClient;
-import org.mule.tck.FunctionalTestCase;
-import org.mule.transport.http.HttpConnector;
-import org.mule.transport.http.HttpConstants;
-import org.mule.transport.http.servlet.MuleReceiverServlet;
 
 public class WsdlCallTestCase extends FunctionalTestCase
 {

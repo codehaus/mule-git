@@ -10,8 +10,8 @@
 
 package org.mule.transformer.simple;
 
+import org.mule.DefaultMuleEvent;
 import org.mule.DefaultMuleMessage;
-import org.mule.MuleEvent;
 import org.mule.RequestContext;
 import org.mule.api.MuleMessage;
 import org.mule.api.transformer.Transformer;
@@ -34,7 +34,7 @@ public class SerializedUMOMessageTransformersTestCase extends AbstractTransforme
     // @Override
     protected void doSetUp() throws Exception
     {
-        RequestContext.setEvent(new MuleEvent(testObject, getTestEndpoint("test", "sender"), MuleTestUtils
+        RequestContext.setEvent(new DefaultMuleEvent(testObject, getTestEndpoint("test", "sender"), MuleTestUtils
             .getTestSession(), true));
     }
 

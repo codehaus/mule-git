@@ -11,10 +11,10 @@
 package org.mule.tck;
 
 import org.mule.DefaultExceptionStrategy;
-import org.mule.MuleTransactionConfig;
 import org.mule.api.transaction.TransactionCallback;
 import org.mule.api.transaction.TransactionConfig;
 import org.mule.api.transaction.TransactionManagerFactory;
+import org.mule.transaction.MuleTransactionConfig;
 import org.mule.transaction.TransactionTemplate;
 import org.mule.transaction.XaTransaction;
 import org.mule.transaction.XaTransactionFactory;

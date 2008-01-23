@@ -12,7 +12,6 @@ package org.mule.transport;
 
 import org.mule.api.MuleRuntimeException;
 import org.mule.tck.AbstractMuleTestCase;
-import org.mule.transport.AbstractConnector;
 
 import javax.resource.spi.work.Work;
 import javax.resource.spi.work.WorkEvent;

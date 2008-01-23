@@ -10,7 +10,7 @@
 
 package org.mule.extras.pgp;
 
-import org.mule.api.security.MuleAuthentication;
+import org.mule.api.security.Authentication;
 import org.mule.api.security.SecurityContext;
 import org.mule.api.security.SecurityContextFactory;
 
@@ -22,7 +22,7 @@ public class PGPSecurityContextFactory implements SecurityContextFactory
      * 
      * @see org.mule.api.security.SecurityContextFactory#create(org.mule.api.security.Authentication)
      */
-    public SecurityContext create(MuleAuthentication authentication)
+    public SecurityContext create(Authentication authentication)
     {
         return new PGPSecurityContext((PGPAuthentication)authentication);
     }

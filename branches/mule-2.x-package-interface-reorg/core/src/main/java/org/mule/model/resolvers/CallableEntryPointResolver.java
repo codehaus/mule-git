@@ -10,7 +10,7 @@
 
 package org.mule.model.resolvers;
 
-import org.mule.api.EventContext;
+import org.mule.api.MuleEventContext;
 import org.mule.api.MuleRuntimeException;
 import org.mule.api.lifecycle.Callable;
 import org.mule.api.model.EntryPointResolver;
@@ -35,17 +35,17 @@ public class CallableEntryPointResolver implements EntryPointResolver
     {
         try
         {
-            callableMethod = Callable.class.getMethod("onCall", new Class[] {EventContext.class});
+            callableMethod = Callable.class.getMethod("onCall", new Class[] {MuleEventContext.class});
         }
         catch (NoSuchMethodException e)
         {
             throw new MuleRuntimeException(
-                    MessageFactory.createStaticMessage("Panic! No onCall(EventContext) method found in the Callable interface."));
+                    MessageFactory.createStaticMessage("Panic! No onCall(MuleEventContext) method found in the Callable interface."));
         }
     }
 
 
-    public InvocationResult invoke(Object component, EventContext context) throws Exception
+    public InvocationResult invoke(Object component, MuleEventContext context) throws Exception
     {
         if (component instanceof Callable)
         {

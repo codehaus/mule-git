@@ -11,7 +11,7 @@
 package org.mule.routing.outbound;
 
 import org.mule.api.MuleMessage;
-import org.mule.api.Session;
+import org.mule.api.MuleSession;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.routing.RoutingException;
 import org.mule.api.routing.filter.Filter;
@@ -60,7 +60,7 @@ public class OutboundPassThroughRouter extends FilteringOutboundRouter
             "The Pass Through cannot use filters, use the FilteringOutboundRouter instead");
     }
 
-    public MuleMessage route(MuleMessage message, Session session, boolean synchronous)
+    public MuleMessage route(MuleMessage message, MuleSession session, boolean synchronous)
         throws RoutingException
     {
         if (endpoints == null || endpoints.size() == 0)

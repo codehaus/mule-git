@@ -14,7 +14,7 @@ import org.mule.MuleServer;
 import org.mule.api.transaction.Transaction;
 import org.mule.api.transaction.TransactionException;
 import org.mule.config.i18n.CoreMessages;
-import org.mule.internal.notifications.TransactionNotification;
+import org.mule.context.notification.TransactionNotification;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -149,7 +149,7 @@ public abstract class AbstractTransaction implements Transaction
 
     /**
      * Fires a server notification to all registered
-     * {@link org.mule.api.context.notification.TransactionNotificationListener}s.
+     * {@link org.mule.api.context.notification.listener.TransactionNotificationListener}s.
      *
      */
     protected void fireNotification(TransactionNotification notification)

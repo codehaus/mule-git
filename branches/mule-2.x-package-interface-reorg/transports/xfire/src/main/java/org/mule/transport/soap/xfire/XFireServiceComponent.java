@@ -11,8 +11,8 @@
 package org.mule.transport.soap.xfire;
 
 import org.mule.DefaultMuleMessage;
-import org.mule.api.EventContext;
 import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleEventContext;
 import org.mule.api.MuleMessage;
 import org.mule.api.lifecycle.Callable;
 import org.mule.api.lifecycle.InitialisationException;
@@ -64,7 +64,7 @@ public class XFireServiceComponent implements Callable, Lifecycle
         super();
     }
    
-    public Object onCall(EventContext eventContext) throws Exception
+    public Object onCall(MuleEventContext eventContext) throws Exception
     {
         if(logger.isDebugEnabled())
         {
@@ -167,7 +167,7 @@ public class XFireServiceComponent implements Callable, Lifecycle
      * @return The inputstream for the current message
      * @throws AbstractMuleException
      */
-    protected InputStream getMessageStream(EventContext context) throws AbstractMuleException
+    protected InputStream getMessageStream(MuleEventContext context) throws AbstractMuleException
     {
         return (InputStream) context.getMessage().getPayload(InputStream.class);
     }
@@ -178,7 +178,7 @@ public class XFireServiceComponent implements Callable, Lifecycle
      * @param context the context from which to find the service name
      * @return the service that is mapped to the specified request.
      */
-    protected String getServiceName(EventContext context)
+    protected String getServiceName(MuleEventContext context)
     {
         String pathInfo = context.getEndpointURI().getPath();
 

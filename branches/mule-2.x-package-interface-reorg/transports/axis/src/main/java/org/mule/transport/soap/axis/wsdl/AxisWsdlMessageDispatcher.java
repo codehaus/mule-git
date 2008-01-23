@@ -10,7 +10,7 @@
 
 package org.mule.transport.soap.axis.wsdl;
 
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.transport.soap.SoapConstants;
 import org.mule.transport.soap.axis.AxisMessageDispatcher;
@@ -40,7 +40,7 @@ public class AxisWsdlMessageDispatcher extends AxisMessageDispatcher
         super(endpoint);
     }
 
-    protected Service createService(Event event) throws Exception
+    protected Service createService(MuleEvent event) throws Exception
     {
         String wsdlUrl = event.getEndpoint().getEndpointURI().getAddress();
         // Parse the wsdl

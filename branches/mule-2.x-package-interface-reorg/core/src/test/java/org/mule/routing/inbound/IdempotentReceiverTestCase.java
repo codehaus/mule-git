@@ -10,11 +10,11 @@
 
 package org.mule.routing.inbound;
 
+import org.mule.DefaultMuleEvent;
 import org.mule.DefaultMuleMessage;
-import org.mule.MuleEvent;
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
-import org.mule.api.Session;
+import org.mule.api.MuleSession;
 import org.mule.api.component.Component;
 import org.mule.api.endpoint.Endpoint;
 import org.mule.api.routing.InboundRouterCollection;
@@ -44,7 +44,7 @@ public class IdempotentReceiverTestCase extends AbstractMuleTestCase
         MuleMessage message = new DefaultMuleMessage("test event");
 
         Endpoint endpoint = getTestEndpoint("Test1Provider", Endpoint.ENDPOINT_TYPE_SENDER);
-        Event event = new MuleEvent(message, endpoint, (Session) session.proxy(), false);
+        MuleEvent event = new DefaultMuleEvent(message, endpoint, (MuleSession) session.proxy(), false);
         // called by idempotent receiver as this is the fist event it will try
         // and initialize the id store
         session.expectAndReturn("getComponent", testComponent);
@@ -61,7 +61,7 @@ public class IdempotentReceiverTestCase extends AbstractMuleTestCase
 
         session.verify();
         message = new DefaultMuleMessage("test event");
-        event = new MuleEvent(message, endpoint, (Session) session.proxy(), true);
+        event = new DefaultMuleEvent(message, endpoint, (MuleSession) session.proxy(), true);
 
         session.expectAndReturn("sendEvent", C.eq(event), message);
         // called by idempotent receiver
@@ -77,7 +77,7 @@ public class IdempotentReceiverTestCase extends AbstractMuleTestCase
         // called by idempotent receiver
         session.expectAndReturn("getComponent", testComponent);
 
-        event = new MuleEvent(message, endpoint, (Session) session.proxy(), false);
+        event = new DefaultMuleEvent(message, endpoint, (MuleSession) session.proxy(), false);
         // we've already received this message
         assertTrue(!router.isMatch(event));
 

@@ -10,7 +10,7 @@
 package org.mule.model.resolvers;
 
 import org.mule.VoidResult;
-import org.mule.api.EventContext;
+import org.mule.api.MuleEventContext;
 import org.mule.api.model.EntryPointResolver;
 import org.mule.api.model.InvocationResult;
 import org.mule.api.transformer.TransformerException;
@@ -65,7 +65,7 @@ public abstract class AbstractEntryPointResolver implements EntryPointResolver
         this.acceptVoidMethods = acceptVoidMethods;
     }
 
-    protected Method getMethodByName(String methodName, EventContext context)
+    protected Method getMethodByName(String methodName, MuleEventContext context)
     {
         StringBuffer key = new StringBuffer(24).append(context.getComponent().getName())
                 .append(".").append(methodName);
@@ -73,7 +73,7 @@ public abstract class AbstractEntryPointResolver implements EntryPointResolver
         return method;
     }
 
-    protected Method addMethodByName(Method method, EventContext context)
+    protected Method addMethodByName(Method method, MuleEventContext context)
     {
         StringBuffer key = new StringBuffer(24).append(context.getComponent().getName())
                 .append(".").append(method.getName());
@@ -107,7 +107,7 @@ public abstract class AbstractEntryPointResolver implements EntryPointResolver
     }
 
 
-    protected Object[] getPayloadFromMessage(EventContext context) throws TransformerException
+    protected Object[] getPayloadFromMessage(MuleEventContext context) throws TransformerException
     {
         Object temp;
         if (isTransformFirst())

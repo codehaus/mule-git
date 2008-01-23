@@ -10,10 +10,10 @@
 
 package org.mule.tck.functional;
 
-import org.mule.api.EventContext;
+import org.mule.api.MuleEventContext;
 
 /**
- * The scope of the Event Callback is to be able to get a the message currently
+ * The scope of the MuleEvent Callback is to be able to get a the message currently
  * being processed by the {@link FunctionalTestComponent} and make assertions
  * on the message payload, headers or attachments or to make changes required
  * for the test.
@@ -23,5 +23,5 @@ import org.mule.api.EventContext;
 
 public interface EventCallback
 {
-    public void eventReceived(EventContext context, Object component) throws Exception;
+    public void eventReceived(MuleEventContext context, Object component) throws Exception;
 }

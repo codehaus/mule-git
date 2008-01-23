@@ -10,7 +10,7 @@
 
 package org.mule.transaction.constraints;
 
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 
 // @ThreadSafe
 public class ConstraintFilter implements Cloneable
@@ -20,7 +20,7 @@ public class ConstraintFilter implements Cloneable
         super();
     }
 
-    public boolean accept(Event event)
+    public boolean accept(MuleEvent event)
     {
         return true;
     }

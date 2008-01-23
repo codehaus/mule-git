@@ -10,7 +10,7 @@
 
 package org.mule.tck.testmodels.mule;
 
-import org.mule.api.EventContext;
+import org.mule.api.MuleEventContext;
 import org.mule.api.model.EntryPointResolver;
 import org.mule.api.model.EntryPointResolverSet;
 
@@ -32,7 +32,7 @@ public class TestEntryPointResolverSet implements EntryPointResolverSet
 
     }
 
-    public Object invoke(Object component, EventContext context) throws Exception
+    public Object invoke(Object component, MuleEventContext context) throws Exception
     {
         return null;
     }

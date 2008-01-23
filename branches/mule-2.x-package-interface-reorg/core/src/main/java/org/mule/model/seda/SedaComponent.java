@@ -10,11 +10,11 @@
 
 package org.mule.model.seda;
 
+import org.mule.DefaultMuleEvent;
 import org.mule.FailedToQueueEventException;
-import org.mule.MuleEvent;
 import org.mule.RegistryContext;
 import org.mule.api.AbstractMuleException;
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.MuleRuntimeException;
 import org.mule.api.component.ComponentException;
@@ -25,12 +25,12 @@ import org.mule.api.lifecycle.LifecycleException;
 import org.mule.api.lifecycle.Startable;
 import org.mule.api.lifecycle.Stoppable;
 import org.mule.api.model.MuleProxy;
+import org.mule.component.AbstractComponent;
 import org.mule.config.MuleConfiguration;
 import org.mule.config.QueueProfile;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.config.i18n.MessageFactory;
 import org.mule.management.stats.ComponentStatistics;
-import org.mule.model.AbstractComponent;
 import org.mule.util.queue.Queue;
 import org.mule.util.queue.QueueSession;
 
@@ -186,7 +186,7 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
         serviceFactory.dispose();
     }
 
-    protected void doDispatch(Event event) throws AbstractMuleException
+    protected void doDispatch(MuleEvent event) throws AbstractMuleException
     {
         // Dispatching event to the component
         if (stats.isEnabled())
@@ -219,11 +219,11 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
 
         if (logger.isTraceEnabled())
         {
-            logger.trace("Event added to queue for: " + name);
+            logger.trace("MuleEvent added to queue for: " + name);
         }
     }
 
-    public MuleMessage doSend(Event event) throws AbstractMuleException
+    public MuleMessage doSend(MuleEvent event) throws AbstractMuleException
     {
         MuleMessage result = null;
         Object pojoService = null;
@@ -281,7 +281,7 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
      */
     public void run()
     {
-        MuleEvent event = null;
+        DefaultMuleEvent event = null;
         Object pojoService = null;
         MuleProxy proxy = null;
         QueueSession queueSession = muleContext.getQueueManager().getQueueSession();
@@ -304,7 +304,7 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
                     }
                 }
 
-                event = (MuleEvent) dequeue();
+                event = (DefaultMuleEvent) dequeue();
                 if (event != null)
                 {
                     if (stats.isEnabled())
@@ -385,7 +385,7 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
         stopping.set(false);
     }
 
-    protected void enqueue(Event event) throws Exception
+    protected void enqueue(MuleEvent event) throws Exception
     {
         QueueSession session = muleContext.getQueueManager().getQueueSession();
         Queue queue = session.getQueue(name);
@@ -400,7 +400,7 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
         queue.put(event);
     }
 
-    protected Event dequeue() throws Exception
+    protected MuleEvent dequeue() throws Exception
     {
         QueueSession session = muleContext.getQueueManager().getQueueSession();
         Queue queue = session.getQueue(name);
@@ -418,7 +418,7 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
         }
         else
         {
-            return (Event) queue.poll(getQueueTimeout().intValue());
+            return (MuleEvent) queue.poll(getQueueTimeout().intValue());
         }
     }
 

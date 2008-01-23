@@ -11,7 +11,7 @@
 package org.mule.api.routing;
 
 import org.mule.api.MuleMessage;
-import org.mule.api.Session;
+import org.mule.api.MuleSession;
 import org.mule.api.endpoint.ImmutableEndpoint;
 
 /**
@@ -24,6 +24,6 @@ public interface RouterCatchAllStrategy
 
     ImmutableEndpoint getEndpoint();
 
-    MuleMessage catchMessage(MuleMessage message, Session session, boolean synchronous)
+    MuleMessage catchMessage(MuleMessage message, MuleSession session, boolean synchronous)
         throws RoutingException;
 }

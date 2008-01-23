@@ -12,7 +12,7 @@ package org.mule.routing.outbound;
 
 import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleMessage;
-import org.mule.api.Session;
+import org.mule.api.MuleSession;
 import org.mule.api.endpoint.Endpoint;
 import org.mule.endpoint.MuleEndpointURI;
 import org.mule.routing.filters.PayloadTypeFilter;
@@ -62,7 +62,7 @@ public class FilterListMessageSplitterRouterTestCase extends AbstractMuleTestCas
         session.expect("dispatchEvent", C.args(new PayloadConstraint(Apple.class), C.eq(endpoint1)));
         session.expect("dispatchEvent", C.args(new PayloadConstraint(Orange.class), C.eq(endpoint2)));
         session.expect("dispatchEvent", C.args(new PayloadConstraint(String.class), C.eq(endpoint3)));
-        router.route(message, (Session) session.proxy(), false);
+        router.route(message, (MuleSession) session.proxy(), false);
         session.verify();
 
         message = new DefaultMuleMessage(payload);
@@ -75,7 +75,7 @@ public class FilterListMessageSplitterRouterTestCase extends AbstractMuleTestCas
             message);
         session.expectAndReturn("sendEvent", C.args(new PayloadConstraint(String.class), C.eq(endpoint3)),
             message);
-        MuleMessage result = router.route(message, (Session) session.proxy(), true);
+        MuleMessage result = router.route(message, (MuleSession) session.proxy(), true);
         assertNotNull(result);
         assertEquals(message, result);
         session.verify();

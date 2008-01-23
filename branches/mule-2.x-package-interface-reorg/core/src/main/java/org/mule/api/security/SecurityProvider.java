@@ -24,10 +24,10 @@ public interface SecurityProvider extends Initialisable
 
     String getName();
 
-    MuleAuthentication authenticate(MuleAuthentication authentication) throws SecurityException;
+    Authentication authenticate(Authentication authentication) throws SecurityException;
 
     boolean supports(Class aClass);
 
-    SecurityContext createSecurityContext(MuleAuthentication auth)
+    SecurityContext createSecurityContext(Authentication auth)
         throws UnknownAuthenticationTypeException;
 }

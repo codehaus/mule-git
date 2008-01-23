@@ -10,10 +10,10 @@
 
 package org.mule.modules.xml.functional;
 
-import org.mule.tck.FunctionalTestCase;
-import org.mule.transport.NullPayload;
 import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
+import org.mule.tck.FunctionalTestCase;
+import org.mule.transport.NullPayload;
 
 public abstract class AbstractXmlPropertyExtractorTestCase extends FunctionalTestCase
 {

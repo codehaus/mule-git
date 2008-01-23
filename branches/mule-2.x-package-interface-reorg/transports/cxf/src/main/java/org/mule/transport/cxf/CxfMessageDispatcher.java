@@ -11,7 +11,7 @@
 package org.mule.transport.cxf;
 
 import org.mule.DefaultMuleMessage;
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.endpoint.EndpointURI;
@@ -280,7 +280,7 @@ public class CxfMessageDispatcher extends AbstractMessageDispatcher
         // nothing to do
     }
 
-    protected String getMethodName(Event event) throws DispatchException
+    protected String getMethodName(MuleEvent event) throws DispatchException
     {
         // @TODO: Which of these *really* matter?
         String method = (String)event.getMessage().getProperty(MuleProperties.MULE_METHOD_PROPERTY);     
@@ -304,7 +304,7 @@ public class CxfMessageDispatcher extends AbstractMessageDispatcher
         return method;
     }
 
-    protected Object[] getArgs(Event event) throws TransformerException
+    protected Object[] getArgs(MuleEvent event) throws TransformerException
     {
         Object payload = event.transformMessage();
         Object[] args;
@@ -335,7 +335,7 @@ public class CxfMessageDispatcher extends AbstractMessageDispatcher
         return args;
     }
 
-    protected MuleMessage doSend(Event event) throws Exception
+    protected MuleMessage doSend(MuleEvent event) throws Exception
     {
         ((ClientImpl)client).setSynchronousTimeout(event.getTimeout());
         if (proxy == null)
@@ -348,7 +348,7 @@ public class CxfMessageDispatcher extends AbstractMessageDispatcher
         }
     }
 
-    protected MuleMessage doSendWithProxy(Event event) throws Exception
+    protected MuleMessage doSendWithProxy(MuleEvent event) throws Exception
     {
         Method localMethod = method;
         if (localMethod == null) 
@@ -373,7 +373,7 @@ public class CxfMessageDispatcher extends AbstractMessageDispatcher
         return buildResponseMessage(event, new Object[] { response });
     }
 
-    protected MuleMessage doSendWithClient(Event event) throws Exception
+    protected MuleMessage doSendWithClient(MuleEvent event) throws Exception
     {
         String method = getMethodName(event);
 
@@ -408,7 +408,7 @@ public class CxfMessageDispatcher extends AbstractMessageDispatcher
         return buildResponseMessage(event, response);
     }
 
-    protected MuleMessage buildResponseMessage(Event event, Object[] response) 
+    protected MuleMessage buildResponseMessage(MuleEvent event, Object[] response) 
     {
         MuleMessage result = null;
         if (response != null && response.length <= 1)
@@ -445,7 +445,7 @@ public class CxfMessageDispatcher extends AbstractMessageDispatcher
         return bop;
     }
 
-    protected void doDispatch(Event event) throws Exception
+    protected void doDispatch(MuleEvent event) throws Exception
     {
         doSend(event);
     }

@@ -11,7 +11,7 @@
 package org.mule.message;
 
 import org.mule.RequestContext;
-import org.mule.api.EventContext;
+import org.mule.api.MuleEventContext;
 import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.EndpointURI;
 
@@ -45,7 +45,7 @@ public class ExceptionMessage extends BaseMessage
         this.componentName = componentName;
         this.endpointUri = endpointUri;
 
-        EventContext ctx = RequestContext.getEventContext();
+        MuleEventContext ctx = RequestContext.getEventContext();
         if (ctx != null)
         {
             MuleMessage msg = ctx.getMessage();

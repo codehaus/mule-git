@@ -10,11 +10,11 @@
 
 package org.mule.transport.soap.xfire;
 
+import org.mule.DefaultMuleEvent;
 import org.mule.DefaultMuleMessage;
-import org.mule.MuleEvent;
-import org.mule.MuleSession;
+import org.mule.DefaultMuleSession;
 import org.mule.api.MuleMessage;
-import org.mule.api.Session;
+import org.mule.api.MuleSession;
 import org.mule.api.endpoint.Endpoint;
 import org.mule.api.endpoint.EndpointBuilder;
 import org.mule.endpoint.EndpointURIEndpointBuilder;
@@ -63,9 +63,9 @@ public class XFireWsdlTestCase extends AbstractMuleTestCase
             .getOutboundEndpoint(endpointBuilder);
 
         MuleMessage message = new DefaultMuleMessage("test1");
-        Session session = new MuleSession(message, ((AbstractConnector) endpoint.getConnector())
+        MuleSession session = new DefaultMuleSession(message, ((AbstractConnector) endpoint.getConnector())
             .getSessionHandler());
-        MuleEvent event = new MuleEvent(message, endpoint, session, true);
+        DefaultMuleEvent event = new DefaultMuleEvent(message, endpoint, session, true);
         MuleMessage reply = session.sendEvent(event);
 
         assertNotNull(reply);

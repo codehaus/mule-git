@@ -11,7 +11,7 @@
 package org.mule.transport.quartz;
 
 import org.mule.RegistryContext;
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.transport.DispatchException;
@@ -49,7 +49,7 @@ public class QuartzMessageDispatcher extends AbstractMessageDispatcher
         // template method
     }
 
-    protected void doDispatch(Event event) throws Exception
+    protected void doDispatch(MuleEvent event) throws Exception
     {
         JobDetail jobDetail = new JobDetail();
         // make the job name unique per endpoint (MULE-753)
@@ -183,7 +183,7 @@ public class QuartzMessageDispatcher extends AbstractMessageDispatcher
         scheduler.scheduleJob(jobDetail, trigger);
     }
 
-    protected MuleMessage doSend(Event event) throws Exception
+    protected MuleMessage doSend(MuleEvent event) throws Exception
     {
         doDispatch(event);
         return null;

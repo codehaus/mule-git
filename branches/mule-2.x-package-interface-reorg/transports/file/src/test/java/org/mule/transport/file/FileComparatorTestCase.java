@@ -9,7 +9,7 @@
  */
 package org.mule.transport.file;
 
-import org.mule.api.EventContext;
+import org.mule.api.MuleEventContext;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.tck.functional.EventCallback;
 import org.mule.tck.functional.FunctionalTestComponent;
@@ -38,7 +38,7 @@ public class FileComparatorTestCase extends FunctionalTestCase
         final CountDownLatch countDown = new CountDownLatch(2);
         EventCallback callback = new EventCallback()
         {
-            public void eventReceived(EventContext context, Object component) throws Exception
+            public void eventReceived(MuleEventContext context, Object component) throws Exception
             {
                 int index = (int) countDown.getCount() - 1;
                 assertEquals(context.getMessage().getProperty(FileConnector.PROPERTY_ORIGINAL_FILENAME), FILE_NAMES[index]);

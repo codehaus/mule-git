@@ -11,7 +11,7 @@
 package org.mule.transport.soap.axis;
 
 import org.mule.DefaultMuleMessage;
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.endpoint.EndpointURI;
@@ -118,7 +118,7 @@ public class AxisMessageDispatcher extends AbstractMessageDispatcher
         return new Service(config);
     }
 
-    protected void doDispatch(Event event) throws Exception
+    protected void doDispatch(MuleEvent event) throws Exception
     {
         Object[] args = getArgs(event);
         Call call = getCall(event, args);
@@ -131,7 +131,7 @@ public class AxisMessageDispatcher extends AbstractMessageDispatcher
         call.invoke(args);
     }
 
-    protected MuleMessage doSend(Event event) throws Exception
+    protected MuleMessage doSend(MuleEvent event) throws Exception
     {
         Call call;
         Object result;
@@ -150,7 +150,7 @@ public class AxisMessageDispatcher extends AbstractMessageDispatcher
         }
     }
 
-    protected Call getCall(Event event, Object[] args) throws Exception
+    protected Call getCall(MuleEvent event, Object[] args) throws Exception
     {
         EndpointURI endpointUri = event.getEndpoint().getEndpointURI();
         Object method = getInitialMethod(event); // changes object state
@@ -185,7 +185,7 @@ public class AxisMessageDispatcher extends AbstractMessageDispatcher
         return call;
     }
 
-    protected void addAttachments(Event event, Call call)
+    protected void addAttachments(MuleEvent event, Call call)
     {
         // Add any attachments to the call
         for (Iterator iterator = event.getMessage().getAttachmentNames().iterator(); iterator.hasNext();)
@@ -197,7 +197,7 @@ public class AxisMessageDispatcher extends AbstractMessageDispatcher
         }
     }
     
-    protected void setSoapAction(Event event, EndpointURI endpointUri, Call call)
+    protected void setSoapAction(MuleEvent event, EndpointURI endpointUri, Call call)
     {
         // Set custom soap action if set on the event or endpoint
         String soapAction = (String)event.getMessage().getProperty(SoapConstants.SOAP_ACTION_PROPERTY);
@@ -213,7 +213,7 @@ public class AxisMessageDispatcher extends AbstractMessageDispatcher
         }
     }
 
-    protected void buildSoapMethods(Event event, Call call, Object method, String methodNamespace, Object[] args)
+    protected void buildSoapMethods(MuleEvent event, Call call, Object method, String methodNamespace, Object[] args)
     {
         List params = new ArrayList();
         for (int i = 0; i < args.length; i++)
@@ -283,7 +283,7 @@ public class AxisMessageDispatcher extends AbstractMessageDispatcher
         }
     }
 
-    protected void setCustomProperties(Event event, Call call)
+    protected void setCustomProperties(MuleEvent event, Call call)
     {
         for (Iterator iter = event.getMessage().getPropertyNames().iterator(); iter.hasNext();)
         {
@@ -299,7 +299,7 @@ public class AxisMessageDispatcher extends AbstractMessageDispatcher
         }
     }
 
-    protected Object refineMethod(Event event, Call call, Object method)
+    protected Object refineMethod(MuleEvent event, Call call, Object method)
     {
         if (method instanceof String)
         {
@@ -327,7 +327,7 @@ public class AxisMessageDispatcher extends AbstractMessageDispatcher
         return method;
     }
 
-    protected void parseUse(Event event, Call call)
+    protected void parseUse(MuleEvent event, Call call)
     {
         // Set use: Endcoded/Literal
         String use = event.getMessage().getStringProperty(AxisConnector.USE, null);
@@ -346,7 +346,7 @@ public class AxisMessageDispatcher extends AbstractMessageDispatcher
         }
     }
 
-    protected void parseStyle(Event event, Call call)
+    protected void parseStyle(MuleEvent event, Call call)
     {
         // Note that Axis has specific rules to how these two variables are
         // combined. This is handled for us
@@ -367,7 +367,7 @@ public class AxisMessageDispatcher extends AbstractMessageDispatcher
         }
     }
 
-    protected Object getInitialMethod(Event event) throws DispatchException
+    protected Object getInitialMethod(MuleEvent event) throws DispatchException
     {
         Object method = event.getMessage().getProperty(MuleProperties.MULE_METHOD_PROPERTY);
         if (method == null)
@@ -394,7 +394,7 @@ public class AxisMessageDispatcher extends AbstractMessageDispatcher
         return method;
     }
 
-    private Object[] getArgs(Event event) throws TransformerException
+    private Object[] getArgs(MuleEvent event) throws TransformerException
     {
         Object payload = event.transformMessage();
         Object[] args;
@@ -476,7 +476,7 @@ public class AxisMessageDispatcher extends AbstractMessageDispatcher
         return new DefaultMuleMessage(result, props);
     }
 
-    public String parseSoapAction(String soapAction, QName method, Event event)
+    public String parseSoapAction(String soapAction, QName method, MuleEvent event)
     {
         EndpointURI endpointURI = event.getEndpoint().getEndpointURI();
         Map properties = new HashMap();
@@ -513,7 +513,7 @@ public class AxisMessageDispatcher extends AbstractMessageDispatcher
         return soapAction;
     }
 
-    private void setCallParams(Call call, Event event, QName method) throws ClassNotFoundException
+    private void setCallParams(Call call, MuleEvent event, QName method) throws ClassNotFoundException
     {
         synchronized (this)
         {
@@ -551,7 +551,7 @@ public class AxisMessageDispatcher extends AbstractMessageDispatcher
         }
     }
 
-    private void loadCallParams(Event event, String namespace) throws ClassNotFoundException
+    private void loadCallParams(MuleEvent event, String namespace) throws ClassNotFoundException
     {
         Map methodCalls = (Map)event.getMessage().getProperty(AxisConnector.SOAP_METHODS);
         if (methodCalls == null)

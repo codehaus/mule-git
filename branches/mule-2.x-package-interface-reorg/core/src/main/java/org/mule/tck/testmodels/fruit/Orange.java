@@ -11,7 +11,7 @@
 package org.mule.tck.testmodels.fruit;
 
 import org.mule.api.AbstractMuleException;
-import org.mule.api.EventContext;
+import org.mule.api.MuleEventContext;
 import org.mule.api.lifecycle.Callable;
 
 import java.util.HashMap;
@@ -76,9 +76,9 @@ public class Orange implements Fruit, Callable
         return bitten;
     }
 
-    public Object onCall(EventContext context) throws AbstractMuleException
+    public Object onCall(MuleEventContext context) throws AbstractMuleException
     {
-        logger.debug("Orange received an event in UMOCallable.onEvent! Event says: "
+        logger.debug("Orange received an event in UMOCallable.onEvent! MuleEvent says: "
                      + context.getMessageAsString());
         bite();
         return null;

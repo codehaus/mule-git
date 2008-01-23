@@ -11,7 +11,7 @@
 package org.mule.tck.testmodels.mule;
 
 import org.mule.api.AbstractMuleException;
-import org.mule.api.Agent;
+import org.mule.api.agent.Agent;
 import org.mule.api.lifecycle.InitialisationException;
 
 /**

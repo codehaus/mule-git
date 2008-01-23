@@ -11,7 +11,6 @@
 package org.mule.transport.soap.xfire;
 
 import org.mule.tck.FunctionalTestCase;
-import org.mule.transport.soap.xfire.XFireConnector;
 import org.mule.transport.soap.xfire.testmodels.MockServiceFactory;
 import org.mule.transport.soap.xfire.testmodels.MockXFire;
 

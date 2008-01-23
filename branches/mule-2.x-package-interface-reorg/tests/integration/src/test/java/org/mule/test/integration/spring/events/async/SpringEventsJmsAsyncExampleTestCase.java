@@ -11,7 +11,7 @@
 package org.mule.test.integration.spring.events.async;
 
 import org.mule.RegistryContext;
-import org.mule.api.EventContext;
+import org.mule.api.MuleEventContext;
 import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.AbstractMuleTestCase;
@@ -53,7 +53,7 @@ public class SpringEventsJmsAsyncExampleTestCase extends AbstractMuleTestCase
         // invoked
         EventCallback callback = new EventCallback()
         {
-            public void eventReceived(EventContext context, Object o) throws Exception
+            public void eventReceived(MuleEventContext context, Object o) throws Exception
             {
                 eventCount++;
             }
@@ -80,7 +80,7 @@ public class SpringEventsJmsAsyncExampleTestCase extends AbstractMuleTestCase
         assertNotNull(orderManager);
         EventCallback callback = new EventCallback()
         {
-            public void eventReceived(EventContext context, Object o) throws Exception
+            public void eventReceived(MuleEventContext context, Object o) throws Exception
             {
                 eventCount++;
             }

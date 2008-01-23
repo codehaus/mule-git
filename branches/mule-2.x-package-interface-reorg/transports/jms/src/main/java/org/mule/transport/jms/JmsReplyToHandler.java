@@ -10,13 +10,12 @@
 
 package org.mule.transport.jms;
 
-import org.mule.api.Event;
 import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.transformer.Transformer;
 import org.mule.api.transport.DispatchException;
-import org.mule.model.AbstractComponent;
-import org.mule.transformer.TransformerUtils;
+import org.mule.component.AbstractComponent;
 import org.mule.transport.DefaultReplyToHandler;
 import org.mule.transport.jms.i18n.JmsMessages;
 import org.mule.util.StringMessageUtils;
@@ -46,7 +45,7 @@ public class JmsReplyToHandler extends DefaultReplyToHandler
         this.connector = connector;
     }
 
-    public void processReplyTo(Event event, MuleMessage returnMessage, Object replyTo) throws AbstractMuleException
+    public void processReplyTo(MuleEvent event, MuleMessage returnMessage, Object replyTo) throws AbstractMuleException
     {
         Destination replyToDestination = null;
         MessageProducer replyToProducer = null;

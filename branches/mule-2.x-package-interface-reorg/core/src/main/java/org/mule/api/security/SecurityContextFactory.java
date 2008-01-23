@@ -18,5 +18,5 @@ package org.mule.api.security;
 
 public interface SecurityContextFactory
 {
-    SecurityContext create(MuleAuthentication authentication);
+    SecurityContext create(Authentication authentication);
 }

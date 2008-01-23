@@ -10,7 +10,7 @@
 
 package org.mule.tck.testmodels.mule;
 
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.routing.RoutingException;
@@ -29,7 +29,7 @@ public class TestMessageDispatcher extends AbstractMessageDispatcher
         // template method
     }
 
-    protected void doDispatch(Event event) throws Exception
+    protected void doDispatch(MuleEvent event) throws Exception
     {
         if (event.getEndpoint().getEndpointURI().toString().equals("test://AlwaysFail"))
         {
@@ -37,7 +37,7 @@ public class TestMessageDispatcher extends AbstractMessageDispatcher
         }
     }
 
-    protected MuleMessage doSend(Event event) throws Exception
+    protected MuleMessage doSend(MuleEvent event) throws Exception
     {
         if (event.getEndpoint().getEndpointURI().toString().equals("test://AlwaysFail"))
         {

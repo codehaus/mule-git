@@ -13,7 +13,7 @@ package org.mule.model.pipeline;
 import org.mule.DefaultMuleMessage;
 import org.mule.RequestContext;
 import org.mule.api.AbstractMuleException;
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.lifecycle.Callable;
 import org.mule.api.lifecycle.Initialisable;
@@ -66,7 +66,7 @@ public class PipelineComponent extends DirectComponent
 
     }
 
-    protected MuleMessage doSend(Event event) throws AbstractMuleException
+    protected MuleMessage doSend(MuleEvent event) throws AbstractMuleException
     {
         try
         {
@@ -111,7 +111,7 @@ public class PipelineComponent extends DirectComponent
         }
     }
 
-    protected void doDispatch(Event event) throws AbstractMuleException
+    protected void doDispatch(MuleEvent event) throws AbstractMuleException
     {
         sendEvent(event);
     }

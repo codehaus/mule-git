@@ -10,7 +10,7 @@
 
 package org.mule.components.script.jsr223;
 
-import org.mule.api.EventContext;
+import org.mule.api.MuleEventContext;
 import org.mule.api.MuleMessage;
 import org.mule.api.lifecycle.Initialisable;
 import org.mule.api.lifecycle.InitialisationException;
@@ -115,7 +115,7 @@ public class ScriptMessageBuilder extends AbstractMessageBuilder implements Init
         scriptable.setScriptEngineName(scriptEngineName);
     }
 
-    protected void populateBindings(Bindings namespace, EventContext context)
+    protected void populateBindings(Bindings namespace, MuleEventContext context)
     {
         namespace.put("context", context);
         namespace.put("message", context.getMessage());

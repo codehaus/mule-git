@@ -10,7 +10,7 @@
 
 package org.mule.transport.quartz;
 
-import org.mule.api.EventContext;
+import org.mule.api.MuleEventContext;
 import org.mule.api.lifecycle.Callable;
 import org.mule.transport.NullPayload;
 
@@ -20,7 +20,7 @@ public class TestComponent1 implements Callable
 {
     protected static CountDownLatch QUARTZ_COUNTER = new CountDownLatch(4);
 
-    public Object onCall(EventContext eventContext) throws Exception
+    public Object onCall(MuleEventContext eventContext) throws Exception
     {
         if (eventContext.getMessageAsString().equals("quartz test") ||
             (eventContext.getMessage().getPayload() instanceof NullPayload )) 

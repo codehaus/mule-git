@@ -10,7 +10,7 @@
 
 package org.mule.transport.soap;
 
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.api.config.MuleProperties;
 
 import java.util.Iterator;
@@ -49,7 +49,7 @@ public class MuleSoapHeaders
      * 
      * @param event
      */
-    public MuleSoapHeaders(Event event)
+    public MuleSoapHeaders(MuleEvent event)
     {
         setCorrelationId(event.getMessage().getCorrelationId());
         setCorrelationGroup(String.valueOf(event.getMessage().getCorrelationGroupSize()));

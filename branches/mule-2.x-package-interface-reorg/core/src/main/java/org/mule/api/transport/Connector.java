@@ -11,9 +11,9 @@
 package org.mule.api.transport;
 
 import org.mule.api.AbstractMuleException;
-import org.mule.api.Event;
 import org.mule.api.MessagingException;
 import org.mule.api.MuleContext;
+import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.NamedObject;
 import org.mule.api.component.Component;
@@ -160,7 +160,7 @@ public interface Connector extends Lifecycle, MuleContextAware, NamedObject
      * @param event The event to dispatch
      * @throws DispatchException if the event fails to be dispatched
      */
-    void dispatch(ImmutableEndpoint endpoint, Event event) throws DispatchException;
+    void dispatch(ImmutableEndpoint endpoint, MuleEvent event) throws DispatchException;
 
     /**
      * Make a specific request to the underlying transport
@@ -195,10 +195,10 @@ public interface Connector extends Lifecycle, MuleContextAware, NamedObject
      * Sends an event from the endpoint to the external system
      * 
      * @param event The event to send
-     * @return event the response form the external system wrapped in a Event
+     * @return event the response form the external system wrapped in a MuleEvent
      * @throws DispatchException if the event fails to be dispatched
      */
-    MuleMessage send(ImmutableEndpoint endpoint, Event event) throws DispatchException;
+    MuleMessage send(ImmutableEndpoint endpoint, MuleEvent event) throws DispatchException;
 
 
     /**

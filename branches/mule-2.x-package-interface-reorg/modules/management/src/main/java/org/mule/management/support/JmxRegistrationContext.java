@@ -10,10 +10,10 @@
 package org.mule.management.support;
 
 import org.mule.api.MuleContext;
-import org.mule.api.context.ServerNotification;
 import org.mule.api.context.notification.ManagerNotificationListener;
-import org.mule.internal.notifications.ManagerNotification;
-import org.mule.internal.notifications.NotificationException;
+import org.mule.api.context.notification.ServerNotification;
+import org.mule.context.notification.ManagerNotification;
+import org.mule.context.notification.NotificationException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

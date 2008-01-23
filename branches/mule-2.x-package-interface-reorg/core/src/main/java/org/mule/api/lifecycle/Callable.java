@@ -10,7 +10,7 @@
 
 package org.mule.api.lifecycle;
 
-import org.mule.api.EventContext;
+import org.mule.api.MuleEventContext;
 
 /**
  * <code>Callable</code> is used to provide UMOs with an interface that supports
@@ -39,5 +39,5 @@ public interface Callable extends EventListener
      *             handled by the implementation they will be handled by the
      *             exceptionListener associated with the component
      */
-    Object onCall(EventContext eventContext) throws Exception;
+    Object onCall(MuleEventContext eventContext) throws Exception;
 }

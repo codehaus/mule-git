@@ -11,7 +11,6 @@
 package org.mule.transport.soap.xfire;
 
 import org.mule.tck.AbstractMuleTestCase;
-import org.mule.transport.soap.xfire.XFireConnector;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +24,7 @@ public class XFireAddClientServiceInterfaceTestCase extends AbstractMuleTestCase
         connector = new XFireConnector();
         connector.setMuleContext(muleContext);
         List clientServices = new ArrayList();
-        clientServices.add("org.mule.api.component.EchoService");
+        clientServices.add("org.mule.api.component.simple.EchoService");
         connector.setClientServices(clientServices);
         connector.initialise();
     }

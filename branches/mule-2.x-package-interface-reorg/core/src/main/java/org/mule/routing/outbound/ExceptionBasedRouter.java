@@ -13,7 +13,7 @@ package org.mule.routing.outbound;
 import org.mule.api.AbstractMuleException;
 import org.mule.api.ExceptionPayload;
 import org.mule.api.MuleMessage;
-import org.mule.api.Session;
+import org.mule.api.MuleSession;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.routing.CouldNotRouteOutboundMessageException;
 import org.mule.api.routing.RoutePathNotFoundException;
@@ -32,7 +32,7 @@ import org.mule.config.i18n.CoreMessages;
 public class ExceptionBasedRouter extends FilteringOutboundRouter
 {
 
-    public MuleMessage route(MuleMessage message, Session session, boolean synchronous)
+    public MuleMessage route(MuleMessage message, MuleSession session, boolean synchronous)
         throws RoutingException
     {
         if (endpoints == null || endpoints.size() == 0)

@@ -11,12 +11,12 @@
 package org.mule.transport.jms;
 
 import org.mule.DefaultMuleMessage;
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.EndpointURI;
 import org.mule.api.endpoint.ImmutableEndpoint;
-import org.mule.api.transport.DispatchException;
 import org.mule.api.transport.Connector;
+import org.mule.api.transport.DispatchException;
 import org.mule.api.transport.MessageAdapter;
 import org.mule.transaction.IllegalTransactionStateException;
 import org.mule.transport.AbstractMessageDispatcher;
@@ -38,6 +38,7 @@ import javax.jms.TemporaryQueue;
 import javax.jms.TemporaryTopic;
 
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
+
 import org.apache.commons.lang.BooleanUtils;
 
 /**
@@ -58,7 +59,7 @@ public class JmsMessageDispatcher extends AbstractMessageDispatcher
         this.connector = (JmsConnector)endpoint.getConnector();
     }
 
-    protected void doDispatch(Event event) throws Exception
+    protected void doDispatch(MuleEvent event) throws Exception
     {
         dispatchMessage(event);
     }
@@ -73,7 +74,7 @@ public class JmsMessageDispatcher extends AbstractMessageDispatcher
         // template method
     }
 
-    private MuleMessage dispatchMessage(Event event) throws Exception
+    private MuleMessage dispatchMessage(MuleEvent event) throws Exception
     {
         Session session = null;
         MessageProducer producer = null;
@@ -86,7 +87,7 @@ public class JmsMessageDispatcher extends AbstractMessageDispatcher
         if (logger.isDebugEnabled())
         {
             logger.debug("dispatching on endpoint: " + event.getEndpoint().getEndpointURI()
-                         + ". Event id is: " + event.getId()
+                         + ". MuleEvent id is: " + event.getId()
                          + ". Outbound transformers are: " + event.getEndpoint().getTransformers());
         }
 
@@ -325,7 +326,7 @@ public class JmsMessageDispatcher extends AbstractMessageDispatcher
         }
     }
 
-    protected MuleMessage doSend(Event event) throws Exception
+    protected MuleMessage doSend(MuleEvent event) throws Exception
     {
         MuleMessage message = dispatchMessage(event);
         return message;

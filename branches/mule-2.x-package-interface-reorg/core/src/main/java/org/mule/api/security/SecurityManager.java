@@ -23,7 +23,7 @@ import java.util.Collection;
 public interface SecurityManager extends Initialisable
 {
     
-    MuleAuthentication authenticate(MuleAuthentication authentication)
+    Authentication authenticate(Authentication authentication)
         throws SecurityException, SecurityProviderNotFoundException;
 
     void addProvider(SecurityProvider provider);
@@ -36,7 +36,7 @@ public interface SecurityManager extends Initialisable
 
     void setProviders(Collection providers);
 
-    SecurityContext createSecurityContext(MuleAuthentication authentication)
+    SecurityContext createSecurityContext(Authentication authentication)
         throws UnknownAuthenticationTypeException;
 
     EncryptionStrategy getEncryptionStrategy(String name);

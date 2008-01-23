@@ -10,7 +10,7 @@
 
 package org.mule.routing.inbound;
 
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.util.ClassUtils;
 
 import java.io.Serializable;
@@ -34,7 +34,7 @@ public class EventGroup implements Comparable, Serializable
      */
     private static final long serialVersionUID = 953739659615692697L;
 
-    public static final Event[] EMPTY_EVENTS_ARRAY = new Event[0];
+    public static final MuleEvent[] EMPTY_EVENTS_ARRAY = new MuleEvent[0];
 
     private final Object groupId;
     // @GuardedBy("this")
@@ -134,11 +134,11 @@ public class EventGroup implements Comparable, Serializable
     /**
      * Returns an iterator over a snapshot copy of this group's collected events. If
      * you need to iterate over the group and e.g. remove select events, do so via
-     * {@link #removeEvent(Event)}. If you need to do so atomically in order to
+     * {@link #removeEvent(MuleEvent)}. If you need to do so atomically in order to
      * prevent e.g. concurrent reception/aggregation of the group during iteration,
      * wrap the iteration in a synchronized block on the group instance.
      * 
-     * @return an iterator over collected {@link Event}s.
+     * @return an iterator over collected {@link MuleEvent}s.
      */
     public Iterator iterator()
     {
@@ -158,9 +158,9 @@ public class EventGroup implements Comparable, Serializable
     /**
      * Returns a snapshot of collected events in this group.
      * 
-     * @return an array of collected {@link Event}s.
+     * @return an array of collected {@link MuleEvent}s.
      */
-    public Event[] toArray()
+    public MuleEvent[] toArray()
     {
         synchronized (this)
         {
@@ -169,7 +169,7 @@ public class EventGroup implements Comparable, Serializable
                 return EMPTY_EVENTS_ARRAY;
             }
 
-            return (Event[]) events.toArray(EMPTY_EVENTS_ARRAY);
+            return (MuleEvent[]) events.toArray(EMPTY_EVENTS_ARRAY);
         }
     }
 
@@ -178,7 +178,7 @@ public class EventGroup implements Comparable, Serializable
      * 
      * @param event the event to add
      */
-    public void addEvent(Event event)
+    public void addEvent(MuleEvent event)
     {
         synchronized (this)
         {
@@ -191,7 +191,7 @@ public class EventGroup implements Comparable, Serializable
      * 
      * @param event the evnt to remove
      */
-    public void removeEvent(Event event)
+    public void removeEvent(MuleEvent event)
     {
         synchronized (this)
         {
@@ -265,7 +265,7 @@ public class EventGroup implements Comparable, Serializable
                 Iterator i = events.iterator();
                 while (i.hasNext())
                 {
-                    Event event = (Event) i.next();
+                    MuleEvent event = (MuleEvent) i.next();
                     buf.append(event.getMessage().getUniqueId());
                     if (i.hasNext())
                     {

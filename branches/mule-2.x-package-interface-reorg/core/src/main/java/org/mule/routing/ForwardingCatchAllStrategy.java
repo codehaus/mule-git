@@ -10,10 +10,10 @@
 
 package org.mule.routing;
 
-import org.mule.MuleEvent;
-import org.mule.api.Event;
+import org.mule.DefaultMuleEvent;
+import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
-import org.mule.api.Session;
+import org.mule.api.MuleSession;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.routing.ComponentRoutingException;
 import org.mule.api.routing.RoutingException;
@@ -30,7 +30,7 @@ public class ForwardingCatchAllStrategy extends AbstractCatchAllStrategy
 {
     private boolean sendTransformed = false;
 
-    public MuleMessage catchMessage(MuleMessage message, Session session, boolean synchronous)
+    public MuleMessage catchMessage(MuleMessage message, MuleSession session, boolean synchronous)
         throws RoutingException
     {
         if (getEndpoint() == null)
@@ -46,7 +46,7 @@ public class ForwardingCatchAllStrategy extends AbstractCatchAllStrategy
                 message.applyTransformers(endpoint.getTransformers());
             }
 
-            Event newEvent = new MuleEvent(message, endpoint, session, synchronous);
+            MuleEvent newEvent = new DefaultMuleEvent(message, endpoint, session, synchronous);
 
             if (synchronous)
             {

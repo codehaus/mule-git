@@ -11,12 +11,11 @@
 package org.mule.transport.cxf;
 
 import org.mule.DefaultMuleMessage;
-import org.mule.api.EventContext;
 import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleEventContext;
 import org.mule.api.MuleMessage;
 import org.mule.api.config.ConfigurationException;
 import org.mule.api.endpoint.EndpointNotFoundException;
-import org.mule.api.endpoint.EndpointURI;
 import org.mule.api.lifecycle.Callable;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.lifecycle.Lifecycle;
@@ -34,7 +33,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
-import java.util.Properties;
 
 import javax.xml.stream.XMLStreamReader;
 
@@ -90,7 +88,7 @@ public class CxfServiceComponent implements Callable, Lifecycle
     }
 
 
-    public Object onCall(EventContext eventContext) throws Exception
+    public Object onCall(MuleEventContext eventContext) throws Exception
     {
         if (logger.isDebugEnabled())
         {
@@ -113,7 +111,7 @@ public class CxfServiceComponent implements Callable, Lifecycle
         }
     }
 
-    protected Object generateWSDLOrXSD(EventContext eventContext, String req)
+    protected Object generateWSDLOrXSD(MuleEventContext eventContext, String req)
         throws EndpointNotFoundException, IOException
     {
         // TODO: Is there a way to make this not so ugly?
@@ -165,7 +163,7 @@ public class CxfServiceComponent implements Callable, Lifecycle
         return result;
     }
 
-    protected Object sendToDestination(EventContext ctx, String uri) throws AbstractMuleException, IOException
+    protected Object sendToDestination(MuleEventContext ctx, String uri) throws AbstractMuleException, IOException
     {
         try
         {
@@ -246,7 +244,7 @@ public class CxfServiceComponent implements Callable, Lifecycle
      * @throws AbstractMuleException
      */
 
-    protected InputStream getMessageStream(EventContext context) throws AbstractMuleException
+    protected InputStream getMessageStream(MuleEventContext context) throws AbstractMuleException
     {
         InputStream is;
         Object eventMsgPayload = context.transformMessage();

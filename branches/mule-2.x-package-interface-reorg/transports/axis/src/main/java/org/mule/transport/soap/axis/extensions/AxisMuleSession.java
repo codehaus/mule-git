@@ -9,22 +9,22 @@
  */
 package org.mule.transport.soap.axis.extensions;
 
-import org.mule.api.Session;
+import org.mule.api.MuleSession;
 
 import java.util.Enumeration;
 
 import org.apache.commons.collections.iterators.IteratorEnumeration;
 
 /**
- * Provides an adapter to a MuleSession so that Axis can write to the session
+ * Provides an adapter to a DefaultMuleSession so that Axis can write to the session
  */
 public class AxisMuleSession implements org.apache.axis.session.Session
 {
 
-    private Session session;
+    private MuleSession session;
     private Object lock=new Object();
 
-    public AxisMuleSession(Session session)
+    public AxisMuleSession(MuleSession session)
     {
         this.session = session;
     }

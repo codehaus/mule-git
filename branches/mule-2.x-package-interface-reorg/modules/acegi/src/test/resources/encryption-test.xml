@@ -21,7 +21,7 @@
         </spring:property>
     </spring:bean>
 
-    <spring:bean id="daoAuthenticationProvider" class="org.acegisecurity.transport.dao.DaoAuthenticationProvider">
+    <spring:bean id="daoAuthenticationProvider" class="org.acegisecurity.providers.dao.DaoAuthenticationProvider">
         <spring:property name="userDetailsService" ref="inMemoryDaoImpl"/>
     </spring:bean>
 

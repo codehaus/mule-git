@@ -10,7 +10,7 @@
 
 package org.mule.api.security;
 
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 
 /**
  * <code>CredentialsAccessor</code> is a template for obtaining user credentials
@@ -18,7 +18,7 @@ import org.mule.api.Event;
  */
 public interface CredentialsAccessor
 {
-    Object getCredentials(Event event);
+    Object getCredentials(MuleEvent event);
 
-    void setCredentials(Event event, Object credentials);
+    void setCredentials(MuleEvent event, Object credentials);
 }

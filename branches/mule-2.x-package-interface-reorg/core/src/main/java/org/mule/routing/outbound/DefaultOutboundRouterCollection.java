@@ -12,7 +12,7 @@ package org.mule.routing.outbound;
 
 import org.mule.api.MessagingException;
 import org.mule.api.MuleMessage;
-import org.mule.api.Session;
+import org.mule.api.MuleSession;
 import org.mule.api.component.Component;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.routing.OutboundRouter;
@@ -42,7 +42,7 @@ public class DefaultOutboundRouterCollection extends AbstractRouterCollection im
         super(RouterStatistics.TYPE_OUTBOUND);
     }
 
-    public MuleMessage route(final MuleMessage message, final Session session, final boolean synchronous)
+    public MuleMessage route(final MuleMessage message, final MuleSession session, final boolean synchronous)
             throws MessagingException
     {
 
@@ -131,7 +131,7 @@ public class DefaultOutboundRouterCollection extends AbstractRouterCollection im
         return (ImmutableEndpoint[]) endpoints.toArray(result);
     }
 
-    protected MuleMessage catchAll(MuleMessage message, Session session, boolean synchronous)
+    protected MuleMessage catchAll(MuleMessage message, MuleSession session, boolean synchronous)
             throws RoutingException
     {
         if (getStatistics().isEnabled())

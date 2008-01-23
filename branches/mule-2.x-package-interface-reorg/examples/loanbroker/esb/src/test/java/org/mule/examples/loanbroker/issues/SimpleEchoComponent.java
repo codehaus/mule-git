@@ -10,7 +10,7 @@
 
 package org.mule.examples.loanbroker.issues;
 
-import org.mule.api.EventContext;
+import org.mule.api.MuleEventContext;
 import org.mule.api.lifecycle.Callable;
 
 import org.apache.commons.logging.Log;
@@ -21,7 +21,7 @@ public class SimpleEchoComponent implements Callable
 
     private Log logger = LogFactory.getLog(getClass());
 
-    public Object onCall(EventContext context) throws Exception
+    public Object onCall(MuleEventContext context) throws Exception
     {
         Object message = context.transformMessage();
         logger.debug("received " + message);

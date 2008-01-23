@@ -12,11 +12,11 @@ package org.mule.model.direct;
 
 import org.mule.DefaultMuleMessage;
 import org.mule.api.AbstractMuleException;
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.model.MuleProxy;
-import org.mule.model.AbstractComponent;
+import org.mule.component.AbstractComponent;
 
 import java.util.List;
 
@@ -67,7 +67,7 @@ public class DirectComponent extends AbstractComponent
         //proxy.dispose();
     }
 
-    protected MuleMessage doSend(Event event) throws AbstractMuleException
+    protected MuleMessage doSend(MuleEvent event) throws AbstractMuleException
     {
 
         Object obj = proxy.onCall(event);
@@ -81,7 +81,7 @@ public class DirectComponent extends AbstractComponent
         }
     }
 
-    protected void doDispatch(Event event) throws AbstractMuleException
+    protected void doDispatch(MuleEvent event) throws AbstractMuleException
     {
         proxy.onCall(event);
     }

@@ -10,7 +10,7 @@
 
 package org.mule;
 
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 
 import org.apache.commons.logging.Log;
@@ -46,7 +46,7 @@ public final class OptimizedRequestContext
      * @param event - the event to set
      * @return The event set
      */
-    public static Event unsafeSetEvent(Event event)
+    public static MuleEvent unsafeSetEvent(MuleEvent event)
     {
         documentUnsafeCall("unsafeSetEvent");
         return RequestContext.internalSetEvent(event);
@@ -58,7 +58,7 @@ public final class OptimizedRequestContext
      * @param event - the event to set
      * @return A new mutable copy of the event set
      */
-    public static Event criticalSetEvent(Event event)
+    public static MuleEvent criticalSetEvent(MuleEvent event)
     {
         return RequestContext.internalSetEvent(RequestContext.newEvent(event, RequestContext.SAFE));
     }

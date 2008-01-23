@@ -23,7 +23,7 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 
 /**
- * <code>JmsMessageAdapter</code> allows a <code>MuleEvent</code> to access the
+ * <code>JmsMessageAdapter</code> allows a <code>DefaultMuleEvent</code> to access the
  * properties and payload of a JMS Message in a uniform way. The JmsMessageAdapter
  * expects a message of type <i>javax.jms.Message</i> and will throw an
  * IllegalArgumentException if the source message type is not compatible. The

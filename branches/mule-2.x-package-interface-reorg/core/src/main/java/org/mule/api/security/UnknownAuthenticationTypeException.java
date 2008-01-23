@@ -25,7 +25,7 @@ public class UnknownAuthenticationTypeException extends AbstractMuleException
      */
     private static final long serialVersionUID = 6275865761357999175L;
 
-    public UnknownAuthenticationTypeException(MuleAuthentication authentication)
+    public UnknownAuthenticationTypeException(Authentication authentication)
     {
         super(CoreMessages.authTypeNotRecognised((authentication == null
                         ? "null" : authentication.getClass().getName())));

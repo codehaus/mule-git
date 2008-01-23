@@ -11,6 +11,7 @@
 package org.mule;
 
 import org.mule.tck.AbstractMuleTestCase;
+import org.mule.transaction.MuleTransactionConfig;
 
 public class MuleTransactionConfigTestCase extends AbstractMuleTestCase
 {

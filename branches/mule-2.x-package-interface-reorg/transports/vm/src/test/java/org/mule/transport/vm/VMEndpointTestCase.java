@@ -13,7 +13,6 @@ package org.mule.transport.vm;
 import org.mule.api.endpoint.EndpointURI;
 import org.mule.endpoint.MuleEndpointURI;
 import org.mule.tck.AbstractMuleTestCase;
-import org.mule.transport.vm.VMConnector;
 
 public class VMEndpointTestCase extends AbstractMuleTestCase
 {

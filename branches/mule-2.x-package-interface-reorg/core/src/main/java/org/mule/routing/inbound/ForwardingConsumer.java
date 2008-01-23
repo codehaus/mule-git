@@ -10,11 +10,11 @@
 
 package org.mule.routing.inbound;
 
+import org.mule.DefaultMuleEvent;
 import org.mule.DefaultMuleMessage;
-import org.mule.MuleEvent;
 import org.mule.api.AbstractMuleException;
-import org.mule.api.Event;
 import org.mule.api.MessagingException;
+import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.routing.OutboundRouterCollection;
 import org.mule.api.routing.RoutingException;
@@ -27,7 +27,7 @@ import org.mule.api.routing.RoutingException;
 public class ForwardingConsumer extends SelectiveConsumer
 {
 
-    public Event[] process(Event event) throws MessagingException
+    public MuleEvent[] process(MuleEvent event) throws MessagingException
     {
         if (super.process(event) != null)
         {
@@ -40,7 +40,7 @@ public class ForwardingConsumer extends SelectiveConsumer
             if (router == null)
             {
                 logger.debug("Descriptor has no outbound router configured to forward to, continuing with normal processing");
-                return new Event[]{event};
+                return new MuleEvent[]{event};
             }
             else
             {
@@ -53,7 +53,7 @@ public class ForwardingConsumer extends SelectiveConsumer
                     // maybe let router.route() return a Future for the returned msg?
                     if (response != null)
                     {
-                        return new Event[]{new MuleEvent(response, event)};
+                        return new MuleEvent[]{new DefaultMuleEvent(response, event)};
                     }
                     else
                     {

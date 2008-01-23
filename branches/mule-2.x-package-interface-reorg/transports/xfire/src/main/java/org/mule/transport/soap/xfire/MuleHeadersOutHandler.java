@@ -10,7 +10,7 @@
 
 package org.mule.transport.soap.xfire;
 
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.api.config.MuleProperties;
 import org.mule.transport.soap.MuleSoapHeaders;
 
@@ -32,11 +32,11 @@ public class MuleHeadersOutHandler extends AbstractHandler
      */
     public void invoke(MessageContext context) throws Exception
     {
-        Event event = (Event) context.getProperty(MuleProperties.MULE_EVENT_PROPERTY);
+        MuleEvent event = (MuleEvent) context.getProperty(MuleProperties.MULE_EVENT_PROPERTY);
 
         if (event == null && context.getClient() != null)
         {
-            event = (Event) context.getClient().getProperty(MuleProperties.MULE_EVENT_PROPERTY);
+            event = (MuleEvent) context.getClient().getProperty(MuleProperties.MULE_EVENT_PROPERTY);
         }
 
         if (event != null)
@@ -51,7 +51,7 @@ public class MuleHeadersOutHandler extends AbstractHandler
             }
 
             // we can also add some extra properties like
-            // Enconding Property, Session Property
+            // Enconding Property, MuleSession Property
 
             Element muleHeader = null;
             Namespace ns = Namespace.getNamespace(MuleSoapHeaders.MULE_NAMESPACE,

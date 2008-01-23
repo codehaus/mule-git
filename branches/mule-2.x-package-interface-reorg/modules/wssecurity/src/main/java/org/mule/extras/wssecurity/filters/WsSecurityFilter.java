@@ -12,7 +12,7 @@ package org.mule.extras.wssecurity.filters;
 
 import org.mule.DefaultMuleMessage;
 import org.mule.RegistryContext;
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.security.CryptoFailureException;
 import org.mule.api.security.EncryptionStrategyNotFoundException;
@@ -84,7 +84,7 @@ public class WsSecurityFilter extends AbstractEndpointSecurityFilter
      * the service. Secondly, it checks the properties in the message and if there
      * are security properties among them, it sets them on the service.
      */
-    protected void authenticateInbound(Event event)
+    protected void authenticateInbound(MuleEvent event)
         throws SecurityException, CryptoFailureException, SecurityProviderNotFoundException,
         EncryptionStrategyNotFoundException, UnknownAuthenticationTypeException
     {
@@ -231,7 +231,7 @@ public class WsSecurityFilter extends AbstractEndpointSecurityFilter
      * This method secures the outgouing message by setting the required security
      * handlers.
      */
-    protected void authenticateOutbound(Event event)
+    protected void authenticateOutbound(MuleEvent event)
         throws SecurityException, SecurityProviderNotFoundException, CryptoFailureException
     {
         if (event.getEndpoint().getConnector() instanceof XFireConnector)
@@ -312,7 +312,7 @@ public class WsSecurityFilter extends AbstractEndpointSecurityFilter
      * @param event
      * @return
      */
-    protected Properties getProperties(Event event)
+    protected Properties getProperties(MuleEvent event)
     {
         WsSecurityHeadersSetter secHeaders = new WsSecurityHeadersSetter();
 

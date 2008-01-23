@@ -10,7 +10,7 @@
 
 package org.mule.component.simple;
 
-import org.mule.api.EventContext;
+import org.mule.api.MuleEventContext;
 import org.mule.api.component.simple.LogService;
 import org.mule.api.lifecycle.Callable;
 import org.mule.util.StringMessageUtils;
@@ -26,7 +26,7 @@ public class LogComponent implements Callable, LogService
 {
     private static Log logger = LogFactory.getLog(LogComponent.class);
 
-    public Object onCall(EventContext context) throws Exception
+    public Object onCall(MuleEventContext context) throws Exception
     {
         String contents = context.getMessageAsString();
         String msg = "Message received in component: " + context.getComponent().getName();

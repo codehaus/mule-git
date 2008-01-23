@@ -10,9 +10,9 @@
 
 package org.mule.routing;
 
-import org.mule.MuleEvent;
+import org.mule.DefaultMuleEvent;
 import org.mule.api.MuleMessage;
-import org.mule.api.Session;
+import org.mule.api.MuleSession;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.routing.RoutingException;
 
@@ -27,7 +27,7 @@ import org.apache.commons.logging.LogFactory;
 
 public class LoggingCatchAllStrategy extends AbstractCatchAllStrategy
 {
-    private static final Log logger = LogFactory.getLog(MuleEvent.class);
+    private static final Log logger = LogFactory.getLog(DefaultMuleEvent.class);
 
     public void setEndpoint(ImmutableEndpoint endpoint)
     {
@@ -44,7 +44,7 @@ public class LoggingCatchAllStrategy extends AbstractCatchAllStrategy
         return null;
     }
 
-    public MuleMessage catchMessage(MuleMessage message, Session session, boolean synchronous)
+    public MuleMessage catchMessage(MuleMessage message, MuleSession session, boolean synchronous)
         throws RoutingException
     {
         logger.warn("Message: " + message + " was not dispatched on session: " + session

@@ -11,13 +11,13 @@
 package org.mule.security.filters;
 
 import org.mule.api.EncryptionStrategy;
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.api.lifecycle.InitialisationException;
+import org.mule.api.security.Authentication;
 import org.mule.api.security.Credentials;
 import org.mule.api.security.CredentialsNotSetException;
 import org.mule.api.security.CryptoFailureException;
 import org.mule.api.security.EncryptionStrategyNotFoundException;
-import org.mule.api.security.MuleAuthentication;
 import org.mule.api.security.SecurityContext;
 import org.mule.api.security.SecurityException;
 import org.mule.api.security.SecurityProviderNotFoundException;
@@ -42,7 +42,7 @@ public class MuleEncryptionEndpointSecurityFilter extends AbstractEndpointSecuri
         setCredentialsAccessor(new MuleHeaderCredentialsAccessor());
     }
 
-    protected final void authenticateInbound(Event event)
+    protected final void authenticateInbound(MuleEvent event)
         throws SecurityException, CryptoFailureException, EncryptionStrategyNotFoundException,
         UnknownAuthenticationTypeException
     {
@@ -55,8 +55,8 @@ public class MuleEncryptionEndpointSecurityFilter extends AbstractEndpointSecuri
 
         Credentials user = new MuleCredentials(userHeader, getSecurityManager());
 
-        MuleAuthentication authResult;
-        MuleAuthentication umoAuthentication = new DefaultMuleAuthentication(user);
+        Authentication authResult;
+        Authentication umoAuthentication = new DefaultMuleAuthentication(user);
         try
         {
             authResult = getSecurityManager().authenticate(umoAuthentication);
@@ -84,7 +84,7 @@ public class MuleEncryptionEndpointSecurityFilter extends AbstractEndpointSecuri
         event.getSession().setSecurityContext(context);
     }
 
-    protected void authenticateOutbound(Event event)
+    protected void authenticateOutbound(MuleEvent event)
         throws SecurityException, SecurityProviderNotFoundException, CryptoFailureException
     {
         if (event.getSession().getSecurityContext() == null)
@@ -99,7 +99,7 @@ public class MuleEncryptionEndpointSecurityFilter extends AbstractEndpointSecuri
                 return;
             }
         }
-        MuleAuthentication auth = event.getSession().getSecurityContext().getAuthentication();
+        Authentication auth = event.getSession().getSecurityContext().getAuthentication();
         if (isAuthenticate())
         {
             auth = getSecurityManager().authenticate(auth);

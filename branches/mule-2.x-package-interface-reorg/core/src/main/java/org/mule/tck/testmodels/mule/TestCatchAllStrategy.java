@@ -11,7 +11,7 @@
 package org.mule.tck.testmodels.mule;
 
 import org.mule.api.MuleMessage;
-import org.mule.api.Session;
+import org.mule.api.MuleSession;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.routing.RouterCatchAllStrategy;
 import org.mule.api.routing.RoutingException;
@@ -31,7 +31,7 @@ public class TestCatchAllStrategy implements RouterCatchAllStrategy
         return endpoint;
     }
 
-    public MuleMessage catchMessage(MuleMessage message, Session session, boolean synchronous)
+    public MuleMessage catchMessage(MuleMessage message, MuleSession session, boolean synchronous)
         throws RoutingException
     {
         System.out.println(StringMessageUtils.getBoilerPlate("Caught an event in the router!", '*', 40));

@@ -10,7 +10,7 @@
 
 package org.mule.transport.http;
 
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.component.Component;
 import org.mule.api.endpoint.Endpoint;
@@ -61,7 +61,7 @@ public class HttpConnector extends TcpConnector
     public static final String HTTP_PREFIX = "http.";
     
     /**
-     * Event property to pass back the status for the response
+     * MuleEvent property to pass back the status for the response
      */
     public static final String HTTP_STATUS_PROPERTY = HTTP_PREFIX + "status";
     public static final String HTTP_VERSION_PROPERTY = HTTP_PREFIX + "version";
@@ -315,7 +315,7 @@ public class HttpConnector extends TcpConnector
         return client;
     }
 
-    protected void setupClientAuthorization(Event event, HttpMethod httpMethod,
+    protected void setupClientAuthorization(MuleEvent event, HttpMethod httpMethod,
                                             HttpClient client, ImmutableEndpoint endpoint)
             throws UnsupportedEncodingException
     {

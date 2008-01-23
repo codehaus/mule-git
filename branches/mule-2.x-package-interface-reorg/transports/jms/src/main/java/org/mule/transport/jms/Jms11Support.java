@@ -112,7 +112,7 @@ public class Jms11Support implements JmsSupport
     {
         if (session == null)
         {
-            throw new IllegalArgumentException("Session cannot be null when creating a destination");
+            throw new IllegalArgumentException("MuleSession cannot be null when creating a destination");
         }
         if (name == null)
         {
@@ -133,7 +133,7 @@ public class Jms11Support implements JmsSupport
     {
         if (session == null)
         {
-            throw new IllegalArgumentException("Session cannot be null when creating a destination");
+            throw new IllegalArgumentException("MuleSession cannot be null when creating a destination");
         }
 
         if (topic)

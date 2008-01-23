@@ -12,7 +12,6 @@ package org.mule.config.spring.parsers.specific.endpoint;
 
 import org.mule.config.spring.parsers.specific.endpoint.support.AddressedEndpointDefinitionParser;
 import org.mule.config.spring.parsers.specific.endpoint.support.OrphanEndpointDefinitionParser;
-import org.mule.config.spring.parsers.specific.endpoint.support.ChildEndpointDefinitionParser;
 import org.mule.endpoint.EndpointURIEndpointBuilder;
 
 /**

@@ -12,7 +12,7 @@ package org.mule.routing.outbound;
 
 import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleMessage;
-import org.mule.api.Session;
+import org.mule.api.MuleSession;
 import org.mule.api.endpoint.Endpoint;
 import org.mule.endpoint.MuleEndpointURI;
 import org.mule.tck.AbstractMuleTestCase;
@@ -95,7 +95,7 @@ public class RoundRobinXmlSplitterTestCase extends AbstractMuleTestCase
         session.expect("dispatchEvent", C.args(itemNodeConstraint, C.eq(endpoint2)));
         session.expect("dispatchEvent", C.args(itemNodeConstraint, C.eq(endpoint3)));
         session.expect("dispatchEvent", C.args(itemNodeConstraint, C.eq(endpoint1)));
-        xmlSplitter.route(message, (Session)session.proxy(), false);
+        xmlSplitter.route(message, (MuleSession)session.proxy(), false);
         session.verify();
 
         message = new DefaultMuleMessage(payload);
@@ -104,7 +104,7 @@ public class RoundRobinXmlSplitterTestCase extends AbstractMuleTestCase
         session.expectAndReturn("sendEvent", C.args(itemNodeConstraint, C.eq(endpoint2)), message);
         session.expectAndReturn("sendEvent", C.args(itemNodeConstraint, C.eq(endpoint3)), message);
         session.expectAndReturn("sendEvent", C.args(itemNodeConstraint, C.eq(endpoint1)), message);
-        MuleMessage result = xmlSplitter.route(message, (Session)session.proxy(), true);
+        MuleMessage result = xmlSplitter.route(message, (MuleSession)session.proxy(), true);
         assertNotNull(result);
         assertEquals(message, result);
         session.verify();
@@ -129,7 +129,7 @@ public class RoundRobinXmlSplitterTestCase extends AbstractMuleTestCase
         assertTrue(splitter.isMatch(message));
         try
         {
-            splitter.route(message, (Session)session.proxy(), false);
+            splitter.route(message, (MuleSession)session.proxy(), false);
             fail("Should have thrown an exception, because XSD is not found.");
         }
         catch (IllegalArgumentException iaex)
@@ -149,12 +149,12 @@ public class RoundRobinXmlSplitterTestCase extends AbstractMuleTestCase
         MuleMessage message = new DefaultMuleMessage(unsupportedPayload);
 
         assertTrue(xmlSplitter.isMatch(message));
-        xmlSplitter.route(message, (Session)session.proxy(), false);
+        xmlSplitter.route(message, (MuleSession)session.proxy(), false);
         session.verify();
 
         message = new DefaultMuleMessage(unsupportedPayload);
 
-        MuleMessage result = xmlSplitter.route(message, (Session)session.proxy(), true);
+        MuleMessage result = xmlSplitter.route(message, (MuleSession)session.proxy(), true);
         assertNull(result);
         session.verify();
     }
@@ -169,7 +169,7 @@ public class RoundRobinXmlSplitterTestCase extends AbstractMuleTestCase
 
         try
         {
-            splitter.route(message, (Session)session.proxy(), false);
+            splitter.route(message, (MuleSession)session.proxy(), false);
             fail("No exception thrown.");
         }
         catch (IllegalArgumentException iaex)

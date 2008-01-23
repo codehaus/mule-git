@@ -10,9 +10,9 @@
 
 package org.mule;
 
-import org.mule.api.Event;
-import org.mule.api.EventContext;
 import org.mule.api.ExceptionPayload;
+import org.mule.api.MuleEvent;
+import org.mule.api.MuleEventContext;
 import org.mule.api.MuleMessage;
 import org.mule.api.ThreadSafeAccess;
 
@@ -43,12 +43,12 @@ public final class RequestContext
         // no-op
     }
 
-    public static EventContext getEventContext()
+    public static MuleEventContext getEventContext()
     {
-        Event event = getEvent();
+        MuleEvent event = getEvent();
         if (event != null)
         {
-            return new MuleEventContext(event);
+            return new DefaultMuleEventContext(event);
         }
         else
         {
@@ -56,9 +56,9 @@ public final class RequestContext
         }
     }
 
-    public static Event getEvent()
+    public static MuleEvent getEvent()
     {
-        return (Event) currentEvent.get();
+        return (MuleEvent) currentEvent.get();
     }
 
     /**
@@ -67,12 +67,12 @@ public final class RequestContext
      * @param event - the event to set
      * @return A new mutable copy of the event set
      */
-    public static Event setEvent(Event event)
+    public static MuleEvent setEvent(MuleEvent event)
     {
         return internalSetEvent(newEvent(event, DEFAULT_ACTION));
     }
 
-    protected static Event internalSetEvent(Event event)
+    protected static MuleEvent internalSetEvent(MuleEvent event)
     {
         currentEvent.set(event);
         return event;
@@ -82,11 +82,11 @@ public final class RequestContext
     {
         if (message != null)
         {
-            Event event = getEvent();
+            MuleEvent event = getEvent();
             if (event != null)
             {
                 MuleMessage copy = newMessage(message, safe);
-                Event newEvent = new MuleEvent(copy, event);
+                MuleEvent newEvent = new DefaultMuleEvent(copy, event);
                 if (safe)
                 {
                     resetAccessControl(copy);
@@ -113,7 +113,7 @@ public final class RequestContext
      */
     public static void setExceptionPayload(ExceptionPayload exceptionPayload)
     {
-        Event newEvent = newEvent(getEvent(), SAFE);
+        MuleEvent newEvent = newEvent(getEvent(), SAFE);
         newEvent.getMessage().setExceptionPayload(exceptionPayload);
         internalSetEvent(newEvent);
     }
@@ -128,11 +128,11 @@ public final class RequestContext
         return newMessage(message, SAFE);
     }
 
-    protected static Event newEvent(Event event, boolean safe)
+    protected static MuleEvent newEvent(MuleEvent event, boolean safe)
     {
         if (safe && event instanceof ThreadSafeAccess)
         {
-            return (Event) ((ThreadSafeAccess)event).newThreadCopy();
+            return (MuleEvent) ((ThreadSafeAccess)event).newThreadCopy();
         }
         else
         {

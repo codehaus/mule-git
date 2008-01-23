@@ -12,7 +12,7 @@ package org.mule.security;
 
 import org.mule.api.EncryptionStrategy;
 import org.mule.api.lifecycle.InitialisationException;
-import org.mule.api.security.MuleAuthentication;
+import org.mule.api.security.Authentication;
 import org.mule.api.security.SecurityContext;
 import org.mule.api.security.SecurityException;
 import org.mule.api.security.SecurityManager;
@@ -67,7 +67,7 @@ public class MuleSecurityManager implements SecurityManager
         }
     }
 
-    public MuleAuthentication authenticate(MuleAuthentication authentication)
+    public Authentication authenticate(Authentication authentication)
         throws SecurityException, SecurityProviderNotFoundException
     {
         Iterator iter = providers.values().iterator();
@@ -85,7 +85,7 @@ public class MuleSecurityManager implements SecurityManager
                     logger.debug("Authentication attempt using " + provider.getClass().getName());
                 }
 
-                MuleAuthentication result = provider.authenticate(authentication);
+                Authentication result = provider.authenticate(authentication);
 
                 if (result != null)
                 {
@@ -134,7 +134,7 @@ public class MuleSecurityManager implements SecurityManager
         }
     }
 
-    public SecurityContext createSecurityContext(MuleAuthentication authentication)
+    public SecurityContext createSecurityContext(Authentication authentication)
         throws UnknownAuthenticationTypeException
     {
         Iterator iter = providers.values().iterator();

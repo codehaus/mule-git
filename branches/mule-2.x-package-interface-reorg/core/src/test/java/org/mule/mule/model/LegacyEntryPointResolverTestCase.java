@@ -112,7 +112,7 @@ public class LegacyEntryPointResolverTestCase extends AbstractMuleTestCase
 //    public ComponentMethodMapping[] getComponentMappings()
 //    {
 //        ComponentMethodMapping[] mappings = new ComponentMethodMapping[5];
-//        mappings[0] = new ComponentMethodMapping(WaterMelon.class, "myEventHandler", Event.class);
+//        mappings[0] = new ComponentMethodMapping(WaterMelon.class, "myEventHandler", MuleEvent.class);
 //        mappings[1] = new ComponentMethodMapping(FruitBowl.class, "consumeFruit", FruitLover.class);
 //        // see testArrayArgumentResolution
 //        mappings[2] = new ComponentMethodMapping(FruitBowl.class, "setFruit", Fruit[].class);
@@ -151,7 +151,7 @@ public class LegacyEntryPointResolverTestCase extends AbstractMuleTestCase
 
     /**
      * Tests entrypoint discovery when there is more than one discoverable method
-     * with EventContext parameter.
+     * with MuleEventContext parameter.
      */
     public void testFailEntryPointMultiplePayloadMatches() throws Exception
     {
@@ -221,7 +221,7 @@ public class LegacyEntryPointResolverTestCase extends AbstractMuleTestCase
 
     /**
      * If there was a method parameter specified to override the discovery mechanism
-     * and a target instance has a method accepting EventContext, proceed to call
+     * and a target instance has a method accepting MuleEventContext, proceed to call
      * this method, ignore the method override parameter.
      */
     public void testMethodOverrideIgnoredWithEventContext() throws Exception

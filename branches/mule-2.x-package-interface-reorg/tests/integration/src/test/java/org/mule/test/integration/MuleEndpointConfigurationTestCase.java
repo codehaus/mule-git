@@ -10,9 +10,9 @@
 
 package org.mule.test.integration;
 
+import org.mule.DefaultMuleEvent;
 import org.mule.DefaultMuleMessage;
-import org.mule.MuleEvent;
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.api.component.Component;
 import org.mule.api.endpoint.Endpoint;
 import org.mule.api.endpoint.ImmutableEndpoint;
@@ -149,14 +149,14 @@ public class MuleEndpointConfigurationTestCase extends FunctionalTestCase
         assertEquals(2002, ep.getRemoteSyncTimeout());
         assertEquals(Endpoint.ENDPOINT_TYPE_RECEIVER, ep.getType());
 
-        // Test Event timeout proporgation
-        Event event = new MuleEvent(new DefaultMuleMessage("hello"), ep, MuleTestUtils.getTestSession(), false);
+        // Test MuleEvent timeout proporgation
+        MuleEvent event = new DefaultMuleEvent(new DefaultMuleMessage("hello"), ep, MuleTestUtils.getTestSession(), false);
         assertEquals(2002, event.getTimeout());
 
         ImmutableEndpoint ep2 = muleContext.getRegistry().lookupEndpointFactory().getInboundEndpoint(
             "test://hello");
 
-        event = new MuleEvent(new DefaultMuleMessage("hello"), ep2, MuleTestUtils.getTestSession(), true);
+        event = new DefaultMuleEvent(new DefaultMuleMessage("hello"), ep2, MuleTestUtils.getTestSession(), true);
         // default event timeout set in the test config file
         assertEquals(1001, event.getTimeout());
     }

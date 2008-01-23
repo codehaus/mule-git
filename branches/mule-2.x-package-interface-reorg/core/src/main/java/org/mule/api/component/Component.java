@@ -11,7 +11,7 @@
 package org.mule.api.component;
 
 import org.mule.api.AbstractMuleException;
-import org.mule.api.Event;
+import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.NamedObject;
 import org.mule.api.context.MuleContextAware;
@@ -43,7 +43,7 @@ public interface Component extends Serializable, Lifecycle, MuleContextAware, Na
      * @param event the event to consume
      * @throws AbstractMuleException if the event fails to be processed
      */
-    void dispatchEvent(Event event) throws AbstractMuleException;
+    void dispatchEvent(MuleEvent event) throws AbstractMuleException;
 
     /**
      * Makes a synhronous event call to the component. This event will be consumed by
@@ -53,7 +53,7 @@ public interface Component extends Serializable, Lifecycle, MuleContextAware, Na
      * @return a MuleMessage containing the resulting message and properties
      * @throws AbstractMuleException if the event fails to be processed
      */
-    MuleMessage sendEvent(Event event) throws AbstractMuleException;
+    MuleMessage sendEvent(MuleEvent event) throws AbstractMuleException;
 
     /**
      * Determines whether this component has been started
