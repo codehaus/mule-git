@@ -11,6 +11,7 @@
 package org.mule.transport.${TransportNameLower};
 
 import org.mule.transport.AbstractConnector;
+import org.mule.api.MuleException;
 import org.mule.api.lifecycle.InitialisationException;
 
 /**
@@ -53,7 +54,7 @@ public class ${TransportName}Connector extends AbstractConnector
            method shouldn't do anything either. */
     }
 
-    public void doStart() throws org.mule.api.AbstractMuleException
+    public void doStart() throws MuleException
     {
         // Optional; does not need to be implemented. Delete if not required
 
@@ -63,7 +64,7 @@ public class ${TransportName}Connector extends AbstractConnector
            in a started state here. */
     }
 
-    public void doStop() throws org.mule.api.AbstractMuleException
+    public void doStop() throws MuleException
     {
         // Optional; does not need to be implemented. Delete if not required
 
