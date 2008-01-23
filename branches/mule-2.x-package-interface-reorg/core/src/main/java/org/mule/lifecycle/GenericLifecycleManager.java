@@ -9,7 +9,7 @@
  */
 package org.mule.lifecycle;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleContext;
 import org.mule.api.lifecycle.LifecycleManager;
 import org.mule.api.lifecycle.LifecyclePhase;
@@ -63,7 +63,7 @@ public class GenericLifecycleManager implements LifecycleManager
         lifecycles.add(lci);
     }
 
-    public void firePhase(MuleContext muleContext, String phase) throws AbstractMuleException
+    public void firePhase(MuleContext muleContext, String phase) throws MuleException
     {
         if (currentPhase.equalsIgnoreCase(phase))
         {
@@ -127,7 +127,7 @@ public class GenericLifecycleManager implements LifecycleManager
         return completedPhases.contains(phaseName);
     }
 
-    public void applyLifecycle(MuleContext muleContext, Object object) throws AbstractMuleException
+    public void applyLifecycle(MuleContext muleContext, Object object) throws MuleException
     {
         //String startingPhase = DefaultLifecyclePhase.PHASE_NAME;
         LifecyclePhase lcp;

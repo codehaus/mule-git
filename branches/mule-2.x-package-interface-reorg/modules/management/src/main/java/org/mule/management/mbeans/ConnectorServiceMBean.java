@@ -10,7 +10,7 @@
 
 package org.mule.management.mbeans;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.lifecycle.Initialisable;
 
 import java.beans.ExceptionListener;
@@ -30,9 +30,9 @@ public interface ConnectorServiceMBean extends Initialisable
 
     ExceptionListener getExceptionListener();
 
-    void startConnector() throws AbstractMuleException;
+    void startConnector() throws MuleException;
 
-    void stopConnector() throws AbstractMuleException;
+    void stopConnector() throws MuleException;
 
     void dispose();
 

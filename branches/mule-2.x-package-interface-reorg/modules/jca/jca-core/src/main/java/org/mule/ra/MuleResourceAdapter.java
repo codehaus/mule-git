@@ -12,7 +12,7 @@ package org.mule.ra;
 
 import org.mule.RegistryContext;
 import org.mule.api.MuleContext;
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.component.Component;
 import org.mule.api.config.ConfigurationBuilder;
 import org.mule.api.endpoint.EndpointBuilder;
@@ -103,7 +103,7 @@ public class MuleResourceAdapter implements ResourceAdapter, Serializable
                 logger.info("Initializing Mule...");
                 muleContext = new DefaultMuleContextFactory().createMuleContext(builder);
             }
-            catch (AbstractMuleException e)
+            catch (MuleException e)
             {
                 logger.error(e);
                 throw new ResourceAdapterInternalException(
@@ -114,7 +114,7 @@ public class MuleResourceAdapter implements ResourceAdapter, Serializable
                 logger.info("Starting Mule...");
                 muleContext.start();
             }
-            catch (AbstractMuleException e)
+            catch (MuleException e)
             {
                 logger.error(e);
                 throw new ResourceAdapterInternalException("Failed to start management context", e);
@@ -219,7 +219,7 @@ public class MuleResourceAdapter implements ResourceAdapter, Serializable
             {
                 muleContext.getRegistry().unregisterComponent(component.getName());
             }
-            catch (AbstractMuleException e)
+            catch (MuleException e)
             {
                 logger.error(e.getMessage(), e);
             }
@@ -244,7 +244,7 @@ public class MuleResourceAdapter implements ResourceAdapter, Serializable
         return modelName;
     }
 
-    protected JcaModel getJcaModel(String modelName) throws AbstractMuleException, ResourceException
+    protected JcaModel getJcaModel(String modelName) throws MuleException, ResourceException
     {
         Model model = muleContext.getRegistry().lookupModel(modelName);
         if (model != null)
@@ -269,7 +269,7 @@ public class MuleResourceAdapter implements ResourceAdapter, Serializable
 
     protected Component createJcaComponent(MessageEndpointFactory endpointFactory,
                                               JcaModel model,
-                                              ImmutableEndpoint endpoint) throws AbstractMuleException
+                                              ImmutableEndpoint endpoint) throws MuleException
     {
         String name = "JcaComponent#" + endpointFactory.hashCode();
         Component component = new JcaComponent(new DelegateWorkManager(bootstrapContext.getWorkManager()));
@@ -286,7 +286,7 @@ public class MuleResourceAdapter implements ResourceAdapter, Serializable
     }
 
     protected ImmutableEndpoint createMessageInflowEndpoint(MuleActivationSpec muleActivationSpec)
-        throws AbstractMuleException
+        throws MuleException
     {
         EndpointURI uri = new MuleEndpointURI(muleActivationSpec.getEndpoint());
         EndpointBuilder endpointBuilder = new EndpointURIEndpointBuilder(new URIBuilder(

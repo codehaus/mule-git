@@ -10,10 +10,10 @@
 
 package org.mule.api.model;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.config.i18n.Message;
 
-public class ModelException extends AbstractMuleException
+public class ModelException extends MuleException
 {
     /**
      * Serial version

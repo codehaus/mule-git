@@ -10,7 +10,7 @@
 
 package org.mule;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.MuleSession;
@@ -77,7 +77,7 @@ public final class DefaultMuleSession implements MuleSession
     }
 
     public DefaultMuleSession(MuleMessage message, SessionHandler requestSessionHandler, Component component)
-        throws AbstractMuleException
+        throws MuleException
     {
         this(message, requestSessionHandler);
         if (component == null)
@@ -88,7 +88,7 @@ public final class DefaultMuleSession implements MuleSession
         this.component = component;
     }
 
-    public DefaultMuleSession(MuleMessage message, SessionHandler requestSessionHandler) throws AbstractMuleException
+    public DefaultMuleSession(MuleMessage message, SessionHandler requestSessionHandler) throws MuleException
     {
 
         if (requestSessionHandler == null)
@@ -121,7 +121,7 @@ public final class DefaultMuleSession implements MuleSession
         }
     }
 
-    public void dispatchEvent(MuleMessage message) throws AbstractMuleException
+    public void dispatchEvent(MuleMessage message) throws MuleException
     {
         if (component == null)
         {
@@ -137,12 +137,12 @@ public final class DefaultMuleSession implements MuleSession
         router.route(message, this, false);
     }
 
-    public void dispatchEvent(MuleMessage message, String endpointName) throws AbstractMuleException
+    public void dispatchEvent(MuleMessage message, String endpointName) throws MuleException
     {
         dispatchEvent(message, RegistryContext.getRegistry().lookupEndpointFactory().getOutboundEndpoint(endpointName));
     }
  
-    public void dispatchEvent(MuleMessage message, ImmutableEndpoint endpoint) throws AbstractMuleException
+    public void dispatchEvent(MuleMessage message, ImmutableEndpoint endpoint) throws MuleException
     {
         if (endpoint == null)
         {
@@ -162,12 +162,12 @@ public final class DefaultMuleSession implements MuleSession
         processResponse(event.getMessage());
     }
 
-    public MuleMessage sendEvent(MuleMessage message, String endpointName) throws AbstractMuleException
+    public MuleMessage sendEvent(MuleMessage message, String endpointName) throws MuleException
     {
         return sendEvent(message, RegistryContext.getRegistry().lookupEndpointFactory().getOutboundEndpoint(endpointName));
     }
 
-    public MuleMessage sendEvent(MuleMessage message) throws AbstractMuleException
+    public MuleMessage sendEvent(MuleMessage message) throws MuleException
     {
         if (component == null)
         {
@@ -188,7 +188,7 @@ public final class DefaultMuleSession implements MuleSession
         return result;
     }
 
-    public MuleMessage sendEvent(MuleMessage message, ImmutableEndpoint endpoint) throws AbstractMuleException
+    public MuleMessage sendEvent(MuleMessage message, ImmutableEndpoint endpoint) throws MuleException
     {
         if (endpoint == null)
         {
@@ -224,7 +224,7 @@ public final class DefaultMuleSession implements MuleSession
      *
      * @see org.mule.api.MuleSession#dispatchEvent(org.mule.api.MuleEvent)
      */
-    public void dispatchEvent(MuleEvent event) throws AbstractMuleException
+    public void dispatchEvent(MuleEvent event) throws MuleException
     {
         if (event.getEndpoint().canSend())
         {
@@ -285,7 +285,7 @@ public final class DefaultMuleSession implements MuleSession
      */
     // TODO This method is practically the same as dispatchEvent(MuleEvent event),
     // so we could use some refactoring here.
-    public MuleMessage sendEvent(MuleEvent event) throws AbstractMuleException
+    public MuleMessage sendEvent(MuleEvent event) throws MuleException
     {
         int timeout = event.getMessage().getIntProperty(MuleProperties.MULE_EVENT_TIMEOUT_PROPERTY, -1);
         if (timeout >= 0)
@@ -322,7 +322,7 @@ public final class DefaultMuleSession implements MuleSession
                 processResponse(response);
                 return response;
             }
-            catch (AbstractMuleException e)
+            catch (MuleException e)
             {
                 throw e;
             }
@@ -389,7 +389,7 @@ public final class DefaultMuleSession implements MuleSession
      * @see org.mule.api.MuleSession#receiveEvent(org.mule.api.endpoint.Endpoint,
      *      long, org.mule.api.MuleEvent)
      */
-    public MuleMessage receiveEvent(String endpointName, long timeout) throws AbstractMuleException
+    public MuleMessage receiveEvent(String endpointName, long timeout) throws MuleException
     {
         ImmutableEndpoint endpoint = RegistryContext.getRegistry().lookupEndpointFactory().getOutboundEndpoint(endpointName);
         return receiveEvent(endpoint, timeout);
@@ -401,7 +401,7 @@ public final class DefaultMuleSession implements MuleSession
      * @see org.mule.api.MuleSession#receiveEvent(org.mule.api.endpoint.Endpoint,
      *      long, org.mule.api.MuleEvent)
      */
-    public MuleMessage receiveEvent(ImmutableEndpoint endpoint, long timeout) throws AbstractMuleException
+    public MuleMessage receiveEvent(ImmutableEndpoint endpoint, long timeout) throws MuleException
     {
         try
         {
@@ -415,7 +415,7 @@ public final class DefaultMuleSession implements MuleSession
 
     public MuleEvent createOutboundEvent(MuleMessage message,
                                         ImmutableEndpoint endpoint,
-                                        MuleEvent previousEvent) throws AbstractMuleException
+                                        MuleEvent previousEvent) throws MuleException
     {
         if (endpoint == null)
         {

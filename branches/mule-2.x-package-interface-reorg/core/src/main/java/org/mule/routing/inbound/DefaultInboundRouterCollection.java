@@ -10,7 +10,7 @@
 
 package org.mule.routing.inbound;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MessagingException;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
@@ -149,7 +149,7 @@ public class DefaultInboundRouterCollection extends AbstractRouterCollection imp
                                             + StringMessageUtils.truncate(event.getMessageAsString(), 100,
                                                 true));
                             }
-                            catch (AbstractMuleException e)
+                            catch (MuleException e)
                             {
                                 // ignore
                             }
@@ -189,7 +189,7 @@ public class DefaultInboundRouterCollection extends AbstractRouterCollection imp
                     }
                     return messageResult;
                 }
-                catch (AbstractMuleException e)
+                catch (MuleException e)
                 {
                     throw new RoutingException(event.getMessage(), event.getEndpoint(), e);
                 }
@@ -200,12 +200,12 @@ public class DefaultInboundRouterCollection extends AbstractRouterCollection imp
 
     }
 
-    public void dispatch(MuleEvent event) throws AbstractMuleException
+    public void dispatch(MuleEvent event) throws MuleException
     {
         event.getSession().dispatchEvent(event);
     }
 
-    public MuleMessage send(MuleEvent event) throws AbstractMuleException
+    public MuleMessage send(MuleEvent event) throws MuleException
     {
         return event.getSession().sendEvent(event);
     }

@@ -19,7 +19,7 @@ import org.mule.RegistryContext;
 import org.mule.RequestContext;
 import org.mule.api.MessagingException;
 import org.mule.api.MuleEvent;
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.component.Component;
 import org.mule.api.config.MuleProperties;
@@ -176,7 +176,7 @@ public class HttpMessageReceiver extends TcpMessageReceiver
             }
         }
 
-        protected HttpResponse processRequest(HttpRequest request) throws AbstractMuleException, IOException
+        protected HttpResponse processRequest(HttpRequest request) throws MuleException, IOException
         {
             RequestLine requestLine = request.getRequestLine();
             String method = requestLine.getMethod();
@@ -201,7 +201,7 @@ public class HttpMessageReceiver extends TcpMessageReceiver
             }
         }
 
-        protected HttpResponse doHead(RequestLine requestLine) throws AbstractMuleException
+        protected HttpResponse doHead(RequestLine requestLine) throws MuleException
         {
             MuleMessage message = new DefaultMuleMessage(NullPayload.getInstance());
             MuleEvent event = new DefaultMuleEvent(message, endpoint, new DefaultMuleSession(message, new NullSessionHandler()), true);
@@ -212,7 +212,7 @@ public class HttpMessageReceiver extends TcpMessageReceiver
         }
 
         protected HttpResponse doRequest(HttpRequest request,
-                                         RequestLine requestLine) throws IOException, AbstractMuleException
+                                         RequestLine requestLine) throws IOException, MuleException
         {
             Map headers = parseHeaders(request);
 
@@ -265,7 +265,7 @@ public class HttpMessageReceiver extends TcpMessageReceiver
             return response;
         }
 
-        protected HttpResponse doOtherValid(RequestLine requestLine, String method) throws AbstractMuleException
+        protected HttpResponse doOtherValid(RequestLine requestLine, String method) throws MuleException
         {
             MuleMessage message = new DefaultMuleMessage(NullPayload.getInstance());
             MuleEvent event = new DefaultMuleEvent(message, endpoint, new DefaultMuleSession(message, new NullSessionHandler()), true);
@@ -276,7 +276,7 @@ public class HttpMessageReceiver extends TcpMessageReceiver
             return transformResponse(response);
         }
 
-        protected HttpResponse doBad(RequestLine requestLine) throws AbstractMuleException
+        protected HttpResponse doBad(RequestLine requestLine) throws MuleException
         {
             MuleMessage message = new DefaultMuleMessage(NullPayload.getInstance());
             MuleEvent event = new DefaultMuleEvent(message, endpoint, new DefaultMuleSession(message, new NullSessionHandler()), true);

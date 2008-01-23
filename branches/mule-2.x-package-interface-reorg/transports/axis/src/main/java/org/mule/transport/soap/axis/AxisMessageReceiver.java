@@ -10,7 +10,7 @@
 
 package org.mule.transport.soap.axis;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.component.Component;
 import org.mule.api.endpoint.Endpoint;
 import org.mule.api.endpoint.EndpointURI;
@@ -350,7 +350,7 @@ public class AxisMessageReceiver extends AbstractMessageReceiver
         {
             doStop();
         }
-        catch (AbstractMuleException e)
+        catch (MuleException e)
         {
             logger.error(e.getMessage(), e);
         }
@@ -360,7 +360,7 @@ public class AxisMessageReceiver extends AbstractMessageReceiver
         connector.unregisterReceiverWithMuleService(this, endpoint.getEndpointURI());
     }
 
-    protected void doStart() throws AbstractMuleException
+    protected void doStart() throws MuleException
     {
         if (service != null)
         {
@@ -368,7 +368,7 @@ public class AxisMessageReceiver extends AbstractMessageReceiver
         }
     }
 
-    protected void doStop() throws AbstractMuleException
+    protected void doStop() throws MuleException
     {
         if (service != null)
         {

@@ -10,7 +10,7 @@
 
 package org.mule.transformer;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.transformer.Transformer;
 import org.mule.transformer.simple.VoidTransformer;
@@ -132,7 +132,7 @@ public class TransformerUtils
             TransformerUtils.initialiseAllTransformers(transformers);
             return transformers;
         }
-        catch (AbstractMuleException e)
+        catch (MuleException e)
         {
             logger.debug(e.getMessage(), e);
             return TransformerUtils.UNDEFINED;

@@ -10,7 +10,7 @@
 
 package org.mule.transport;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.component.Component;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.CreateException;
@@ -54,7 +54,7 @@ public abstract class AbstractPollingMessageReceiver extends AbstractMessageRece
         super(connector, component, endpoint);
     }
 
-    protected void doStart() throws AbstractMuleException
+    protected void doStart() throws MuleException
     {
         try
         {
@@ -67,7 +67,7 @@ public abstract class AbstractPollingMessageReceiver extends AbstractMessageRece
         }
     }
 
-    protected void doStop() throws AbstractMuleException
+    protected void doStop() throws MuleException
     {
         this.unschedule();
     }

@@ -11,7 +11,7 @@
 package org.mule.transport.http.components;
 
 import org.mule.DefaultMuleMessage;
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
@@ -24,7 +24,7 @@ public class RESTTestCase extends FunctionalTestCase
         return "rest-functional-test.xml";
     }
     
-    public RESTTestCase() throws AbstractMuleException
+    public RESTTestCase() throws MuleException
     {
         super();
         this.setDisposeManagerPerSuite(true);

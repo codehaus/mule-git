@@ -10,7 +10,7 @@
 package org.mule.test.integration.config;
 
 import org.mule.DefaultMuleMessage;
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
@@ -21,7 +21,7 @@ import org.mule.tck.FunctionalTestCase;
 public class GlobalEndpointAndTransformerTestCase extends FunctionalTestCase
 {
     
-    public void testNormal() throws AbstractMuleException
+    public void testNormal() throws MuleException
     {
         MuleClient client=new MuleClient();
         MuleMessage msg=client.send("vm://in",new DefaultMuleMessage("HELLO!"));

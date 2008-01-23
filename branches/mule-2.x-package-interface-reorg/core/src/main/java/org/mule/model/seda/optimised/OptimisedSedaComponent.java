@@ -10,7 +10,7 @@
 
 package org.mule.model.seda.optimised;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.lifecycle.Callable;
 import org.mule.api.model.MuleProxy;
 import org.mule.model.seda.SedaComponent;
@@ -35,7 +35,7 @@ public class OptimisedSedaComponent extends SedaComponent
     }
 
     //@Override
-    protected MuleProxy createComponentProxy(Object pojoService) throws AbstractMuleException
+    protected MuleProxy createComponentProxy(Object pojoService) throws MuleException
     {
         if (!(pojoService instanceof Callable))
         {

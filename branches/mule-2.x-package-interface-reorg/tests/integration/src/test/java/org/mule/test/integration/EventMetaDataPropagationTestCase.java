@@ -13,7 +13,7 @@ package org.mule.test.integration;
 import org.mule.DefaultMuleEvent;
 import org.mule.DefaultMuleMessage;
 import org.mule.DefaultMuleSession;
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleEventContext;
 import org.mule.api.MuleMessage;
@@ -48,7 +48,7 @@ public class EventMetaDataPropagationTestCase extends FunctionalTestCase impleme
         return "org/mule/test/integration/event-metadata-propagation-config.xml";
     }
 
-    public void testEventMetaDataPropagation() throws AbstractMuleException
+    public void testEventMetaDataPropagation() throws MuleException
     {
         Component component = muleContext.getRegistry().lookupComponent("component1");
         OutboundRouter outboundRouter = (OutboundRouter) component.getOutboundRouter().getRouters().get(0);

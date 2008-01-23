@@ -11,7 +11,7 @@
 package org.mule.transport.cxf;
 
 import org.mule.DefaultMuleMessage;
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.component.ComponentException;
 import org.mule.api.config.MuleProperties;
@@ -62,7 +62,7 @@ public class MuleInvoker implements Invoker
 
             message = receiver.routeMessage(new DefaultMuleMessage(messageAdapter), synchronous);
         }
-        catch (AbstractMuleException e)
+        catch (MuleException e)
         {
             throw new Fault(e);
         }

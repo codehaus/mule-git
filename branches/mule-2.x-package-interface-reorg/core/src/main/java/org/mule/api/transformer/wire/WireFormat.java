@@ -10,7 +10,7 @@
 
 package org.mule.api.transformer.wire;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -21,7 +21,7 @@ import java.io.OutputStream;
 
 public interface WireFormat
 {
-    Object read(InputStream is) throws AbstractMuleException;
+    Object read(InputStream is) throws MuleException;
 
-    void write(OutputStream out, Object o, String encoding) throws AbstractMuleException;
+    void write(OutputStream out, Object o, String encoding) throws MuleException;
 }

@@ -10,7 +10,7 @@
 
 package org.mule.tck.testmodels.mule;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.agent.Agent;
 import org.mule.api.lifecycle.InitialisationException;
 
@@ -39,12 +39,12 @@ public class TestAgent implements Agent
         // nothing to do
     }
 
-    public void start() throws AbstractMuleException
+    public void start() throws MuleException
     {
         // nothing to do
     }
 
-    public void stop() throws AbstractMuleException
+    public void stop() throws MuleException
     {
         // nothing to do
     }

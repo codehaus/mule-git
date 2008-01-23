@@ -10,7 +10,7 @@
 
 package org.mule.tck.testmodels.mule;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.component.Component;
 import org.mule.api.lifecycle.LifecycleAdapter;
 import org.mule.api.lifecycle.LifecycleAdapterFactory;
@@ -32,7 +32,7 @@ public class TestDefaultLifecycleAdapterFactory implements LifecycleAdapterFacto
      */
     public LifecycleAdapter create(Object pojoService,
                                       Component component,
-                                      EntryPointResolverSet resolver) throws AbstractMuleException
+                                      EntryPointResolverSet resolver) throws MuleException
     {
         return new TestDefaultLifecycleAdapter(pojoService, component, resolver);
     }

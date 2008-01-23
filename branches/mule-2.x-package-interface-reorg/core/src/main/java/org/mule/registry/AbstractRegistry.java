@@ -12,7 +12,7 @@ package org.mule.registry;
 
 import org.mule.MuleServer;
 import org.mule.RegistryContext;
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.agent.Agent;
 import org.mule.api.component.Component;
 import org.mule.api.config.MuleProperties;
@@ -121,7 +121,7 @@ public abstract class AbstractRegistry implements Registry
                 PropertyExtractorManager.clear();
             }
         }
-        catch (AbstractMuleException e)
+        catch (MuleException e)
         {
             // TODO
             logger.error("Failed to cleanly dispose: " + e.getMessage(), e);
@@ -645,7 +645,7 @@ public abstract class AbstractRegistry implements Registry
                                             Object value,
                                             Object metadata) throws RegistrationException;
     
-    public final void registerTransformer(Transformer transformer) throws AbstractMuleException
+    public final void registerTransformer(Transformer transformer) throws MuleException
     {
         if (transformer instanceof DiscoverableTransformer)
         {
@@ -656,7 +656,7 @@ public abstract class AbstractRegistry implements Registry
 
     }
 
-    protected abstract void doRegisterTransformer(Transformer transformer) throws AbstractMuleException;
+    protected abstract void doRegisterTransformer(Transformer transformer) throws MuleException;
 
     public final MuleConfiguration getConfiguration()
     {

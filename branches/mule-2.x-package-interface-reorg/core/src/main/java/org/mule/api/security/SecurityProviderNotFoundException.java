@@ -10,7 +10,7 @@
 
 package org.mule.api.security;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.config.i18n.CoreMessages;
 
 /**
@@ -18,7 +18,7 @@ import org.mule.config.i18n.CoreMessages;
  * SecurityManager when an authentication request is made but no suitable security
  * provider can be found to process the authentication
  */
-public class SecurityProviderNotFoundException extends AbstractMuleException
+public class SecurityProviderNotFoundException extends MuleException
 {
     /**
      * Serial version

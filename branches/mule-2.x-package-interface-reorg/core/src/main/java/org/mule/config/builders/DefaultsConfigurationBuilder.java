@@ -1,7 +1,7 @@
 
 package org.mule.config.builders;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleContext;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.config.ThreadingProfile;
@@ -44,7 +44,7 @@ public class DefaultsConfigurationBuilder extends AbstractConfigurationBuilder
         configureDefaults(muleContext.getRegistry());
     }
 
-    protected void configureDefaults(Registry registry) throws RegistrationException, AbstractMuleException
+    protected void configureDefaults(Registry registry) throws RegistrationException, MuleException
     {
         registry.registerObject(MuleProperties.OBJECT_MULE_SIMPLE_REGISTRY_BOOTSTRAP,
             new SimpleRegistryBootstrap());

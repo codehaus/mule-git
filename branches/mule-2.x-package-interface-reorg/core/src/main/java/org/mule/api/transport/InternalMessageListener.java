@@ -10,7 +10,7 @@
 
 package org.mule.api.transport;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.transaction.Transaction;
 
@@ -25,6 +25,6 @@ public interface InternalMessageListener
     MuleMessage onMessage(MuleMessage message,
                          Transaction trans,
                          boolean synchronous,
-                         OutputStream outputStream) throws AbstractMuleException;
+                         OutputStream outputStream) throws MuleException;
 
 }

@@ -12,7 +12,7 @@ package org.mule.routing.outbound;
 
 import org.mule.DefaultMuleMessage;
 import org.mule.MuleServer;
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.MuleSession;
 import org.mule.api.endpoint.EndpointURI;
@@ -102,7 +102,7 @@ public abstract class AbstractRecipientList extends FilteringOutboundRouter
                     this.dispatch(session, request, endpoint);
                 }
             }
-            catch (AbstractMuleException e)
+            catch (MuleException e)
             {
                 throw new CouldNotRouteOutboundMessageException(request, endpoint, e);
             }
@@ -146,7 +146,7 @@ public abstract class AbstractRecipientList extends FilteringOutboundRouter
                 endpoint = existingEndpoint;
             }
         }
-        catch (AbstractMuleException e)
+        catch (MuleException e)
         {
             throw new RoutingException(message, endpoint, e);
         }
@@ -154,7 +154,7 @@ public abstract class AbstractRecipientList extends FilteringOutboundRouter
     }
 
     protected ImmutableEndpoint getRecipientEndpointFromUri(EndpointURI uri)
-            throws AbstractMuleException
+            throws MuleException
     {
         ImmutableEndpoint endpoint = null;
         if (null != getMuleContext() && null != getMuleContext().getRegistry())
@@ -170,7 +170,7 @@ public abstract class AbstractRecipientList extends FilteringOutboundRouter
     }
 
     protected ImmutableEndpoint getRecipientEndpointFromString(MuleMessage message, String recipient)
-            throws AbstractMuleException
+            throws MuleException
     {
         ImmutableEndpoint endpoint = (ImmutableEndpoint) recipientCache.get(recipient);
         if (null == endpoint && null != getMuleContext() && null != getMuleContext().getRegistry())

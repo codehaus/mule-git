@@ -10,7 +10,7 @@
 
 package org.mule.test.integration.transport.jms;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
@@ -22,7 +22,7 @@ public class NestedRouterTestCase extends FunctionalTestCase
         return "org/mule/test/integration/providers/jms/nestedrouter-test.xml";
     }
 
-    public void testNestedRouter() throws AbstractMuleException
+    public void testNestedRouter() throws MuleException
     {
         MuleClient client = new MuleClient();
         String message = "Mule";

@@ -10,7 +10,7 @@
 
 package org.mule.issues;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
@@ -53,14 +53,14 @@ public class ResponseTransformerMule2165TestCase extends FunctionalTestCase
         return "issues/response-transformer-mule-2165-test.xml";
     }
 
-    protected MuleClient send(String endpoint) throws AbstractMuleException
+    protected MuleClient send(String endpoint) throws MuleException
     {
         MuleClient client = new MuleClient();
         client.send(endpoint, MESSAGE, null);
         return client;
     }
 
-    protected MuleClient dispatch(String endpoint) throws AbstractMuleException
+    protected MuleClient dispatch(String endpoint) throws MuleException
     {
         MuleClient client = new MuleClient();
         client.dispatch(endpoint, MESSAGE, null);

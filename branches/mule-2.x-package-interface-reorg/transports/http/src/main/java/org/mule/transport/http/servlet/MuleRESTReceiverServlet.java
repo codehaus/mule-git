@@ -13,7 +13,7 @@ package org.mule.transport.http.servlet;
 import org.mule.DefaultMuleMessage;
 import org.mule.MuleServer;
 import org.mule.RegistryContext;
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.EndpointException;
 import org.mule.api.endpoint.EndpointNotFoundException;
@@ -172,7 +172,7 @@ public class MuleRESTReceiverServlet extends MuleReceiverServlet
     }
 
     protected ImmutableEndpoint getEndpointForURI(HttpServletRequest httpServletRequest)
-        throws AbstractMuleException
+        throws MuleException
     {
         String endpointName = httpServletRequest.getParameter("endpoint");
         if (endpointName == null)

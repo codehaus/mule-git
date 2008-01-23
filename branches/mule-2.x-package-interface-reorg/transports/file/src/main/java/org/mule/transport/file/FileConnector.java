@@ -10,7 +10,7 @@
 
 package org.mule.transport.file;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.component.Component;
 import org.mule.api.config.MuleProperties;
@@ -248,7 +248,7 @@ public class FileConnector extends AbstractConnector
         {
             doStop();
         }
-        catch (AbstractMuleException e)
+        catch (MuleException e)
         {
             logger.error(e.getMessage(), e);
         }
@@ -270,12 +270,12 @@ public class FileConnector extends AbstractConnector
         // template method, nothing to do
     }
 
-    protected void doStart() throws AbstractMuleException
+    protected void doStart() throws MuleException
     {
         // template method, nothing to do
     }
 
-    protected void doStop() throws AbstractMuleException
+    protected void doStop() throws MuleException
     {
         if (outputStream != null)
         {
@@ -505,10 +505,10 @@ public class FileConnector extends AbstractConnector
      * @param message the current message being processed
      * @return the output stream to use for this request or null if the transport
      *         does not support streaming
-     * @throws org.mule.api.AbstractMuleException
+     * @throws org.mule.api.MuleException
      */
     public OutputStream getOutputStream(ImmutableEndpoint endpoint, MuleMessage message)
-        throws AbstractMuleException
+        throws MuleException
     {
         String address = endpoint.getEndpointURI().getAddress();
         String writeToDirectory = message.getStringProperty(FileConnector.PROPERTY_WRITE_TO_DIRECTORY, null);

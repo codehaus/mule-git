@@ -12,7 +12,7 @@ package org.mule.endpoint;
 
 import org.mule.RegistryContext;
 import org.mule.api.MuleContext;
-import org.mule.api.MuleException;
+import org.mule.api.DefaultMuleException;
 import org.mule.api.endpoint.EndpointBuilder;
 import org.mule.api.endpoint.EndpointException;
 import org.mule.api.endpoint.EndpointURI;
@@ -422,7 +422,7 @@ public abstract class AbstractEndpointBuilder implements EndpointBuilder
         {
             return MuleObjectHelper.getTransformers(transformers, ",");
         }
-        catch (MuleException e)
+        catch (DefaultMuleException e)
         {
             throw new TransportFactoryException(e);
         }

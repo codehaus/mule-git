@@ -9,7 +9,7 @@
  */
 package org.mule.api.lifecycle;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleContext;
 
 import java.util.Set;
@@ -27,7 +27,7 @@ public interface LifecycleManager
 
     void registerLifecycle(LifecyclePhase lci);
 
-    void firePhase(MuleContext muleContext, String phase) throws AbstractMuleException;
+    void firePhase(MuleContext muleContext, String phase) throws MuleException;
 
     String getCurrentPhase();
 
@@ -37,7 +37,7 @@ public interface LifecycleManager
 
     boolean isPhaseComplete(String phaseName);
 
-    void applyLifecycle(MuleContext muleContext, Object object) throws AbstractMuleException;
+    void applyLifecycle(MuleContext muleContext, Object object) throws MuleException;
 
     void checkPhase(String name) throws IllegalStateException;
 }

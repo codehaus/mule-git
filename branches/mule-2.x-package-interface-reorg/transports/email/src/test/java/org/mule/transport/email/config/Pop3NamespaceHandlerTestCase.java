@@ -9,7 +9,7 @@
  */
 package org.mule.transport.email.config;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.transport.email.Pop3Connector;
 import org.mule.transport.email.Pop3sConnector;
 
@@ -65,7 +65,7 @@ public class Pop3NamespaceHandlerTestCase extends AbstractEmailNamespaceHandlerT
         assertTrue(c.isStarted());
     }
 
-    public void testEndpoint() throws AbstractMuleException
+    public void testEndpoint() throws MuleException
     {
         testEndpoint("global1", Pop3Connector.POP3);
         testEndpoint("global2", Pop3Connector.POP3);

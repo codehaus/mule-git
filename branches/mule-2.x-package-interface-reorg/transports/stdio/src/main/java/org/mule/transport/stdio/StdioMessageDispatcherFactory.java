@@ -10,7 +10,7 @@
 
 package org.mule.transport.stdio;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.transport.MessageDispatcher;
 import org.mule.transport.AbstractMessageDispatcherFactory;
@@ -26,7 +26,7 @@ public class StdioMessageDispatcherFactory extends AbstractMessageDispatcherFact
      * 
      * @see org.mule.api.transport.MessageDispatcherFactory#create(org.mule.api.transport.Connector)
      */
-    public MessageDispatcher create(ImmutableEndpoint endpoint) throws AbstractMuleException
+    public MessageDispatcher create(ImmutableEndpoint endpoint) throws MuleException
     {
         return new StdioMessageDispatcher(endpoint);
     }

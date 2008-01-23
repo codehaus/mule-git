@@ -11,7 +11,7 @@
 package org.mule.transport.cxf;
 
 import org.mule.DefaultMuleMessage;
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleEventContext;
 import org.mule.api.MuleMessage;
 import org.mule.api.config.ConfigurationException;
@@ -163,7 +163,7 @@ public class CxfServiceComponent implements Callable, Lifecycle
         return result;
     }
 
-    protected Object sendToDestination(MuleEventContext ctx, String uri) throws AbstractMuleException, IOException
+    protected Object sendToDestination(MuleEventContext ctx, String uri) throws MuleException, IOException
     {
         try
         {
@@ -226,7 +226,7 @@ public class CxfServiceComponent implements Callable, Lifecycle
 
             return result;
         }
-        catch (AbstractMuleException e)
+        catch (MuleException e)
         {
             logger.warn("Could not dispatch message to XFire!", e);
             throw e;
@@ -241,10 +241,10 @@ public class CxfServiceComponent implements Callable, Lifecycle
      * 
      * @param context the event context
      * @return The inputstream for the current message
-     * @throws AbstractMuleException
+     * @throws MuleException
      */
 
-    protected InputStream getMessageStream(MuleEventContext context) throws AbstractMuleException
+    protected InputStream getMessageStream(MuleEventContext context) throws MuleException
     {
         InputStream is;
         Object eventMsgPayload = context.transformMessage();
@@ -310,12 +310,12 @@ public class CxfServiceComponent implements Callable, Lifecycle
         }        
     }
 
-    public void start() throws AbstractMuleException
+    public void start() throws MuleException
     {
         // template method
     }
     
-    public void stop() throws AbstractMuleException
+    public void stop() throws MuleException
     {
         // template method
     }

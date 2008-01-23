@@ -11,7 +11,7 @@
 package org.mule.ra;
 
 import org.mule.api.MuleEvent;
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.component.Component;
 import org.mule.api.endpoint.Endpoint;
 import org.mule.api.endpoint.ImmutableEndpoint;
@@ -89,7 +89,7 @@ public class JcaComponentTestCase extends AbstractMuleTestCase // AbstractCompon
             component.pause();
             fail("Exception expected, JcaComponent does not support pause()");
         }
-        catch (AbstractMuleException e)
+        catch (MuleException e)
         {
 
         }
@@ -102,7 +102,7 @@ public class JcaComponentTestCase extends AbstractMuleTestCase // AbstractCompon
             component.resume();
             fail("Exception expected, JcaComponent does not support resume()");
         }
-        catch (AbstractMuleException e)
+        catch (MuleException e)
         {
         }
     }

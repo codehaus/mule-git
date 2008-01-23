@@ -11,7 +11,7 @@
 package org.mule.transformer.wire;
 
 import org.mule.DefaultMuleMessage;
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.transformer.wire.WireFormat;
 import org.mule.tck.AbstractMuleTestCase;
@@ -25,7 +25,7 @@ import java.util.Properties;
 public abstract class AbstractWireFormatTestCase extends AbstractMuleTestCase
 {
 
-    public void testWriteReadPayload() throws AbstractMuleException
+    public void testWriteReadPayload() throws MuleException
     {
         // Create orange to send over the wire
         Properties messageProerties = new Properties();
@@ -42,7 +42,7 @@ public abstract class AbstractWireFormatTestCase extends AbstractMuleTestCase
         assertEquals("val1", ((Orange) outObject).getMapProperties().get("key1"));
     }
 
-    public void testWriteReadMessage() throws AbstractMuleException
+    public void testWriteReadMessage() throws MuleException
     {
         // Create message to send over wire
         Properties messageProerties = new Properties();
@@ -57,7 +57,7 @@ public abstract class AbstractWireFormatTestCase extends AbstractMuleTestCase
         assertEquals("val1", ((MuleMessage) outMessage).getProperty("key1"));
     }
 
-    private Object readWrite(Object inObject) throws AbstractMuleException
+    private Object readWrite(Object inObject) throws MuleException
     {
         // Serialize
         WireFormat wireFormat = new SerializationWireFormat();

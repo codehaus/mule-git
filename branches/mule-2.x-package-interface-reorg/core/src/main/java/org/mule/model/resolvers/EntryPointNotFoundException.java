@@ -9,14 +9,14 @@
  */
 package org.mule.model.resolvers;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.config.i18n.MessageFactory;
 
 /**
  * Tis exception gets thrown by the {@link org.mule.model.resolvers.DefaultEntryPointResolverSet} if after trying
  * all entrypointResolvers it cannot fin the entrypoint on the service component
  */
-public class EntryPointNotFoundException extends AbstractMuleException
+public class EntryPointNotFoundException extends MuleException
 {
     /** @param message the exception message */
     public EntryPointNotFoundException(String message)

@@ -10,7 +10,7 @@
 
 package org.mule.endpoint;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.endpoint.EndpointBuilder;
 import org.mule.api.endpoint.EndpointFactory;
 import org.mule.api.endpoint.ImmutableEndpoint;
@@ -21,7 +21,7 @@ import org.mule.tck.testmodels.mule.TestConnector;
 public class EndpointFactoryTestCase extends AbstractMuleTestCase
 {
 
-    public void testCreateInboundEndpoint() throws AbstractMuleException
+    public void testCreateInboundEndpoint() throws MuleException
     {
         String uri = "test://address";
         EndpointFactory endpointFactory = new DefaultEndpointFactory();
@@ -39,7 +39,7 @@ public class EndpointFactoryTestCase extends AbstractMuleTestCase
         }
     }
 
-    public void testCreateInboundEndpointFromGlobalEndpoint() throws AbstractMuleException
+    public void testCreateInboundEndpointFromGlobalEndpoint() throws MuleException
     {
         muleContext.getRegistry().registerEndpointBuilder("myGlobalEndpoint",
             new EndpointURIEndpointBuilder("test://address", muleContext));
@@ -59,7 +59,7 @@ public class EndpointFactoryTestCase extends AbstractMuleTestCase
         }
     }
 
-    public void testCreateInboundEndpointFromNamedConcreteEndpoint() throws AbstractMuleException
+    public void testCreateInboundEndpointFromNamedConcreteEndpoint() throws MuleException
     {
         muleContext.getRegistry().registerEndpointBuilder("&myNamedConcreateEndpoint",
             new EndpointURIEndpointBuilder("test://address", muleContext));
@@ -79,7 +79,7 @@ public class EndpointFactoryTestCase extends AbstractMuleTestCase
         }
     }
 
-    public void testCreateOutboundEndpoint() throws AbstractMuleException
+    public void testCreateOutboundEndpoint() throws MuleException
     {
         String uri = "test://address";
         EndpointFactory endpointFactory = new DefaultEndpointFactory();
@@ -97,7 +97,7 @@ public class EndpointFactoryTestCase extends AbstractMuleTestCase
         }
     }
 
-    public void testCreateoutboundEndpointFromGlobalEndpoint() throws AbstractMuleException
+    public void testCreateoutboundEndpointFromGlobalEndpoint() throws MuleException
     {
         muleContext.getRegistry().registerEndpointBuilder("myGlobalEndpoint",
             new EndpointURIEndpointBuilder("test://address", muleContext));
@@ -117,7 +117,7 @@ public class EndpointFactoryTestCase extends AbstractMuleTestCase
         }
     }
 
-    public void testCreateoutboundEndpointFromNamedConcreteEndpoint() throws AbstractMuleException
+    public void testCreateoutboundEndpointFromNamedConcreteEndpoint() throws MuleException
     {
         muleContext.getRegistry().registerEndpointBuilder("&myNamedConcreateEndpoint",
             new EndpointURIEndpointBuilder("test://address", muleContext));
@@ -137,7 +137,7 @@ public class EndpointFactoryTestCase extends AbstractMuleTestCase
         }
     }
 
-    public void testCreateInboundEndpointWithBuilder() throws AbstractMuleException
+    public void testCreateInboundEndpointWithBuilder() throws MuleException
     {
         EndpointBuilder builder = new EndpointURIEndpointBuilder("test://address", muleContext);
         EndpointFactory endpointFactory = new DefaultEndpointFactory();
@@ -155,7 +155,7 @@ public class EndpointFactoryTestCase extends AbstractMuleTestCase
         }
     }
 
-    public void testCreateOutboundEndpointWithBuilder() throws AbstractMuleException
+    public void testCreateOutboundEndpointWithBuilder() throws MuleException
     {
         EndpointBuilder builder = new EndpointURIEndpointBuilder("test://address", muleContext);
         EndpointFactory endpointFactory = new DefaultEndpointFactory();
@@ -173,7 +173,7 @@ public class EndpointFactoryTestCase extends AbstractMuleTestCase
         }
     }
 
-    public void testCreateEndpoint() throws AbstractMuleException
+    public void testCreateEndpoint() throws MuleException
     {
         String uri = "test://address";
         EndpointFactory endpointFactory = new DefaultEndpointFactory();
@@ -189,7 +189,7 @@ public class EndpointFactoryTestCase extends AbstractMuleTestCase
         }
     }
 
-    public void testCreateEndpointFromGlobalEndpoint() throws AbstractMuleException
+    public void testCreateEndpointFromGlobalEndpoint() throws MuleException
     {
         Registry r = muleContext.getRegistry();        
         r.registerObject("myGlobalEndpoint", new EndpointURIEndpointBuilder("test://address", muleContext),
@@ -208,7 +208,7 @@ public class EndpointFactoryTestCase extends AbstractMuleTestCase
         }
     }
 
-    public void testCreateEndpointFromNamedConcreteEndpoint() throws AbstractMuleException
+    public void testCreateEndpointFromNamedConcreteEndpoint() throws MuleException
     {
         Registry r = muleContext.getRegistry();
         r.registerObject("&myNamedConcreateEndpoint", new EndpointURIEndpointBuilder("test://address", muleContext));
@@ -226,7 +226,7 @@ public class EndpointFactoryTestCase extends AbstractMuleTestCase
         }
     }
     
-    public void testCreateEndpointByCustomizingEndpointBuilder() throws AbstractMuleException
+    public void testCreateEndpointByCustomizingEndpointBuilder() throws MuleException
     {
         Registry r = muleContext.getRegistry();
         

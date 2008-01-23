@@ -10,7 +10,7 @@
 
 package org.mule;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MessagingException;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleEvent;
@@ -261,7 +261,7 @@ public abstract class AbstractExceptionListener implements ExceptionListener, In
                 }
 
             }
-            catch (AbstractMuleException e)
+            catch (MuleException e)
             {
                 logFatal(message, e);
             }
@@ -315,7 +315,7 @@ public abstract class AbstractExceptionListener implements ExceptionListener, In
      */
     protected void logException(Throwable t)
     {
-        AbstractMuleException umoe = ExceptionHelper.getRootMuleException(t);
+        MuleException umoe = ExceptionHelper.getRootMuleException(t);
         if (umoe != null)
         {
             logger.error(umoe.getDetailedMessage());

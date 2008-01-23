@@ -10,7 +10,7 @@
 
 package org.mule.tck.testmodels.fruit;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleEventContext;
 import org.mule.api.lifecycle.Callable;
 
@@ -63,7 +63,7 @@ public class Apple implements Fruit, Callable
         return bitten;
     }
 
-    public Object onCall(MuleEventContext context) throws AbstractMuleException
+    public Object onCall(MuleEventContext context) throws MuleException
     {
         logger.debug("Apple received an event in UMOCallable.onEvent! MuleEvent says: "
                         + context.getMessageAsString());

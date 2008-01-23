@@ -11,7 +11,7 @@
 package org.mule.management.mbeans;
 
 import org.mule.MuleServer;
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.component.Component;
 import org.mule.component.AbstractComponent;
 import org.mule.management.stats.ComponentStatistics;
@@ -74,10 +74,10 @@ public class ComponentService implements ComponentServiceMBean, MBeanRegistratio
      * Muleconfiguration to true. this causes all internal queues to store their
      * state.
      * 
-     * @throws org.mule.api.AbstractMuleException if the component failed to pause.
+     * @throws org.mule.api.MuleException if the component failed to pause.
      * @see org.mule.config.MuleConfiguration
      */
-    public void pause() throws AbstractMuleException
+    public void pause() throws MuleException
     {
         getComponent().pause();
     }
@@ -86,9 +86,9 @@ public class ComponentService implements ComponentServiceMBean, MBeanRegistratio
      * Resumes the Component that has been paused. If the component is not paused
      * nothing is executed.
      * 
-     * @throws org.mule.api.AbstractMuleException if the component failed to resume
+     * @throws org.mule.api.MuleException if the component failed to resume
      */
-    public void resume() throws AbstractMuleException
+    public void resume() throws MuleException
     {
         getComponent().resume();
     }
@@ -103,12 +103,12 @@ public class ComponentService implements ComponentServiceMBean, MBeanRegistratio
         return getComponent().isStopped();
     }
 
-    public void stop() throws AbstractMuleException
+    public void stop() throws MuleException
     {
         getComponent().stop();
     }
 
-    public void forceStop() throws AbstractMuleException
+    public void forceStop() throws MuleException
     {
         getComponent().forceStop();
     }
@@ -118,12 +118,12 @@ public class ComponentService implements ComponentServiceMBean, MBeanRegistratio
         return getComponent().isStopping();
     }
 
-    public void dispose() throws AbstractMuleException
+    public void dispose() throws MuleException
     {
         getComponent().dispose();
     }
 
-    public void start() throws AbstractMuleException
+    public void start() throws MuleException
     {
         getComponent().start();
     }

@@ -10,7 +10,7 @@
 
 package org.mule.tck.providers;
 
-import org.mule.api.MuleException;
+import org.mule.api.DefaultMuleException;
 import org.mule.api.component.Component;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.transport.Connector;
@@ -86,13 +86,13 @@ public abstract class AbstractConnectorTestCase extends AbstractMuleTestCase
 
         assertNotNull(connector.getExceptionListener());
         connector.setExceptionListener((ExceptionListener) ehandlerMock.proxy());
-        connector.handleException(new MuleException(MessageFactory.createStaticMessage("Dummy")));
+        connector.handleException(new DefaultMuleException(MessageFactory.createStaticMessage("Dummy")));
 
         if (connector instanceof AbstractConnector)
         {
             ehandlerMock.expect("exceptionThrown", C.isA(Exception.class));
             ((AbstractConnector) connector).exceptionThrown(
-                    new MuleException(MessageFactory.createStaticMessage("Dummy")));
+                    new DefaultMuleException(MessageFactory.createStaticMessage("Dummy")));
         }
 
         ehandlerMock.verify();
@@ -100,7 +100,7 @@ public abstract class AbstractConnectorTestCase extends AbstractMuleTestCase
         connector.setExceptionListener(null);
         try
         {
-            connector.handleException(new MuleException(MessageFactory.createStaticMessage("Dummy")));
+            connector.handleException(new DefaultMuleException(MessageFactory.createStaticMessage("Dummy")));
             fail("Should have thrown exception as no strategy is set");
         }
         catch (RuntimeException e)

@@ -10,7 +10,7 @@
 
 package org.mule.transport.http;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.transport.MessageRequester;
 import org.mule.transport.AbstractMessageRequesterFactory;
@@ -21,7 +21,7 @@ import org.mule.transport.AbstractMessageRequesterFactory;
 public class HttpClientMessageRequesterFactory extends AbstractMessageRequesterFactory
 {
     /** {@inheritDoc} */
-    public MessageRequester create(ImmutableEndpoint endpoint) throws AbstractMuleException
+    public MessageRequester create(ImmutableEndpoint endpoint) throws MuleException
     {
         return new HttpClientMessageRequester(endpoint);
     }

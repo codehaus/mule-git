@@ -13,7 +13,7 @@ package org.mule.transport;
 import org.mule.DefaultExceptionStrategy;
 import org.mule.MuleSessionHandler;
 import org.mule.RegistryContext;
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MessagingException;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleEvent;
@@ -362,7 +362,7 @@ public abstract class AbstractConnector
         {
             initWorkManagers();
         }
-        catch (AbstractMuleException e)
+        catch (MuleException e)
         {
             throw new InitialisationException(e, this);
         }
@@ -376,7 +376,7 @@ public abstract class AbstractConnector
      *
      * @see org.mule.api.transport.Connector#start()
      */
-    public final synchronized void start() throws AbstractMuleException
+    public final synchronized void start() throws MuleException
     {
         this.checkDisposed();
 
@@ -452,7 +452,7 @@ public abstract class AbstractConnector
      *
      * @see org.mule.api.transport.Connector#stop()
      */
-    public final synchronized void stop() throws AbstractMuleException
+    public final synchronized void stop() throws MuleException
     {
         if (this.isDisposed())
         {
@@ -533,7 +533,7 @@ public abstract class AbstractConnector
         {
             this.stop();
         }
-        catch (AbstractMuleException e)
+        catch (MuleException e)
         {
             // TODO MULE-863: What should we really do?
             logger.warn("Failed to stop during shutdown: " + e.getMessage(), e);
@@ -554,7 +554,7 @@ public abstract class AbstractConnector
         }
     }
 
-    protected void initWorkManagers() throws AbstractMuleException
+    protected void initWorkManagers() throws MuleException
     {
         if (receiverWorkManager.get() == null)
         {
@@ -828,7 +828,7 @@ public abstract class AbstractConnector
         this.dispatchers.setMaxIdle(maxActive);
     }
 
-    private MessageDispatcher getDispatcher(ImmutableEndpoint endpoint) throws AbstractMuleException
+    private MessageDispatcher getDispatcher(ImmutableEndpoint endpoint) throws MuleException
     {
         this.checkDisposed();
 
@@ -942,7 +942,7 @@ public abstract class AbstractConnector
         this.requesters.setMaxIdle(maxActive);
     }
 
-    private MessageRequester getRequester(ImmutableEndpoint endpoint) throws AbstractMuleException
+    private MessageRequester getRequester(ImmutableEndpoint endpoint) throws MuleException
     {
         this.checkDisposed();
 
@@ -1210,16 +1210,16 @@ public abstract class AbstractConnector
     /**
      * Template method to perform any work when starting the connectoe
      *
-     * @throws AbstractMuleException if the method fails
+     * @throws MuleException if the method fails
      */
-    protected abstract void doStart() throws AbstractMuleException;
+    protected abstract void doStart() throws MuleException;
 
     /**
      * Template method to perform any work when stopping the connectoe
      *
-     * @throws AbstractMuleException if the method fails
+     * @throws MuleException if the method fails
      */
-    protected abstract void doStop() throws AbstractMuleException;
+    protected abstract void doStop() throws MuleException;
 
     public List getDefaultInboundTransformers()
     {
@@ -1678,7 +1678,7 @@ public abstract class AbstractConnector
     /**
      * Returns a work manager for message receivers.
      */
-    protected WorkManager getReceiverWorkManager(String receiverName) throws AbstractMuleException
+    protected WorkManager getReceiverWorkManager(String receiverName) throws MuleException
     {
         return (WorkManager) receiverWorkManager.get();
     }
@@ -1686,9 +1686,9 @@ public abstract class AbstractConnector
     /**
      * Returns a work manager for message dispatchers.
      *
-     * @throws AbstractMuleException in case of error
+     * @throws MuleException in case of error
      */
-    protected WorkManager getDispatcherWorkManager() throws AbstractMuleException
+    protected WorkManager getDispatcherWorkManager() throws MuleException
     {
         return (WorkManager) dispatcherWorkManager.get();
     }
@@ -1696,9 +1696,9 @@ public abstract class AbstractConnector
     /**
      * Returns a work manager for message requesters.
      *
-     * @throws AbstractMuleException in case of error
+     * @throws MuleException in case of error
      */
-    protected WorkManager getRequesterWorkManager() throws AbstractMuleException
+    protected WorkManager getRequesterWorkManager() throws MuleException
     {
         return (WorkManager) requesterWorkManager.get();
     }
@@ -1817,7 +1817,7 @@ public abstract class AbstractConnector
         {
             throw dex;
         }
-        catch (AbstractMuleException ex)
+        catch (MuleException ex)
         {
             throw new DispatchException(event.getMessage(), endpoint, ex);
         }
@@ -1939,7 +1939,7 @@ public abstract class AbstractConnector
         {
             throw dex;
         }
-        catch (AbstractMuleException ex)
+        catch (MuleException ex)
         {
             throw new DispatchException(event.getMessage(), endpoint, ex);
         }
@@ -2164,10 +2164,10 @@ public abstract class AbstractConnector
      * @param endpoint the endpoint that releates to this Dispatcher
      * @param message the current message being processed
      * @return the output stream to use for this request
-     * @throws AbstractMuleException in case of any error
+     * @throws MuleException in case of any error
      */
     public OutputStream getOutputStream(ImmutableEndpoint endpoint, MuleMessage message)
-        throws AbstractMuleException
+        throws MuleException
     {
         throw new UnsupportedOperationException(
             CoreMessages.streamingNotSupported(this.getProtocol()).toString());

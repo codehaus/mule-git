@@ -9,7 +9,7 @@
  */
 package org.mule.api.lifecycle;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleContext;
 import org.mule.lifecycle.LifecycleObject;
 
@@ -27,7 +27,7 @@ public interface LifecyclePhase
 {
     String ALL_PHASES = "all";
 
-    void fireLifecycle(MuleContext muleContext, String currentPhase) throws AbstractMuleException;
+    void fireLifecycle(MuleContext muleContext, String currentPhase) throws MuleException;
 
     void addOrderedLifecycleObject(LifecycleObject lco);
 

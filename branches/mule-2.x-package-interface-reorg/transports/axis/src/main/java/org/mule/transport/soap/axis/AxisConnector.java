@@ -10,7 +10,7 @@
 
 package org.mule.transport.soap.axis;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.component.Component;
 import org.mule.api.context.notification.ManagerNotificationListener;
 import org.mule.api.context.notification.ServerNotification;
@@ -313,7 +313,7 @@ public class AxisConnector extends AbstractConnector implements ManagerNotificat
     }
 
     protected void unregisterReceiverWithMuleService(MessageReceiver receiver, EndpointURI ep)
-            throws AbstractMuleException
+            throws MuleException
     {
         String endpointKey = getCounterEndpointKey(receiver.getEndpointURI());
 
@@ -340,7 +340,7 @@ public class AxisConnector extends AbstractConnector implements ManagerNotificat
     }
 
     protected void registerReceiverWithMuleService(MessageReceiver receiver, EndpointURI ep)
-            throws AbstractMuleException
+            throws MuleException
     {
         // If this is the first receiver we need to create the Axis service
         // component this will be registered with Mule when the Connector starts
@@ -443,7 +443,7 @@ public class AxisConnector extends AbstractConnector implements ManagerNotificat
     // Another option would be to put it in the default-axis-config.xml (MULE-2102) with lazy-init="true" 
     // but that makes us depend on Spring.
     // Another consideration is how/when this implicit component gets disposed.
-    protected Component getOrCreateAxisComponent() throws AbstractMuleException
+    protected Component getOrCreateAxisComponent() throws MuleException
     {
         Component c = muleContext.getRegistry().lookupComponent(AXIS_SERVICE_PROPERTY + getName());
 
@@ -469,9 +469,9 @@ public class AxisConnector extends AbstractConnector implements ManagerNotificat
     /**
      * Template method to perform any work when starting the connectoe
      *
-     * @throws org.mule.api.AbstractMuleException if the method fails
+     * @throws org.mule.api.MuleException if the method fails
      */
-    protected void doStart() throws AbstractMuleException
+    protected void doStart() throws MuleException
     {
         axis.start();
     }
@@ -479,9 +479,9 @@ public class AxisConnector extends AbstractConnector implements ManagerNotificat
     /**
      * Template method to perform any work when stopping the connectoe
      *
-     * @throws org.mule.api.AbstractMuleException if the method fails
+     * @throws org.mule.api.MuleException if the method fails
      */
-    protected void doStop() throws AbstractMuleException
+    protected void doStop() throws MuleException
     {
         axis.stop();
         // Model model = muleContext.getRegistry().lookupModel();
@@ -667,7 +667,7 @@ public class AxisConnector extends AbstractConnector implements ManagerNotificat
                     }
                     servletServices.clear();
                 }
-                catch (AbstractMuleException e)
+                catch (MuleException e)
                 {
                     handleException(e);
                 }

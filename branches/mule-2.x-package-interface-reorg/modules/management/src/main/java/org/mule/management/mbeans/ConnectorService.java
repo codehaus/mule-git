@@ -10,7 +10,7 @@
 
 package org.mule.management.mbeans;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.transport.Connector;
 import org.mule.util.ObjectNameHelper;
@@ -58,12 +58,12 @@ public class ConnectorService implements ConnectorServiceMBean
         return connector.getExceptionListener();
     }
 
-    public void startConnector() throws AbstractMuleException
+    public void startConnector() throws MuleException
     {
         connector.start();
     }
 
-    public void stopConnector() throws AbstractMuleException
+    public void stopConnector() throws MuleException
     {
         connector.stop();
     }

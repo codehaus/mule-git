@@ -26,7 +26,7 @@ public interface Interceptor
      * @param invocation the invocation containing info about the current message and
      *            component
      * @return A result message that may have been altered by this invocation
-     * @throws AbstractMuleException if the invocation fails
+     * @throws MuleException if the invocation fails
      */
-    MuleMessage intercept(Invocation invocation) throws AbstractMuleException;
+    MuleMessage intercept(Invocation invocation) throws MuleException;
 }

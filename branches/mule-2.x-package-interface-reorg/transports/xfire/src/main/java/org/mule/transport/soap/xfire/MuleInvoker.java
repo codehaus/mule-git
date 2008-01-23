@@ -11,7 +11,7 @@
 package org.mule.transport.soap.xfire;
 
 import org.mule.DefaultMuleMessage;
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.endpoint.ImmutableEndpoint;
@@ -52,7 +52,7 @@ public class MuleInvoker implements Invoker
 
             message = receiver.routeMessage(new DefaultMuleMessage(messageAdapter), synchronous);
         }
-        catch (AbstractMuleException e)
+        catch (MuleException e)
         {
             throw new XFireFault(e);
         }

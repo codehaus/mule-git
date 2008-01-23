@@ -11,7 +11,7 @@
 package org.mule.transport.bpm;
 
 import org.mule.DefaultMuleMessage;
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.component.Component;
 import org.mule.api.endpoint.Endpoint;
@@ -37,7 +37,7 @@ public class ProcessMessageReceiver extends AbstractMessageReceiver
         this.connector = (ProcessConnector) connector;
     }
 
-    public MuleMessage generateSynchronousEvent(String endpoint, Object payload, Map messageProperties) throws AbstractMuleException
+    public MuleMessage generateSynchronousEvent(String endpoint, Object payload, Map messageProperties) throws MuleException
     {
         logger.debug("Executing process is sending an event (synchronously) to Mule endpoint = " + endpoint);
         MuleMessage response = generateEvent(endpoint, payload, messageProperties, true);
@@ -48,7 +48,7 @@ public class ProcessMessageReceiver extends AbstractMessageReceiver
         return response;
     }
 
-    public void generateAsynchronousEvent(String endpoint, Object payload, Map messageProperties) throws AbstractMuleException
+    public void generateAsynchronousEvent(String endpoint, Object payload, Map messageProperties) throws MuleException
     {
         logger.debug("Executing process is dispatching an event (asynchronously) to Mule endpoint = " + endpoint);
         try
@@ -61,7 +61,7 @@ public class ProcessMessageReceiver extends AbstractMessageReceiver
         }
     }
 
-    protected MuleMessage generateEvent(String endpoint, Object payload, Map messageProperties, boolean synchronous) throws AbstractMuleException
+    protected MuleMessage generateEvent(String endpoint, Object payload, Map messageProperties, boolean synchronous) throws MuleException
     {
         MuleMessage message;
         if (payload instanceof MuleMessage)
@@ -138,12 +138,12 @@ public class ProcessMessageReceiver extends AbstractMessageReceiver
         // nothing to do
     }
 
-    protected void doStart() throws AbstractMuleException
+    protected void doStart() throws MuleException
     {
         // nothing to do
     }
 
-    protected void doStop() throws AbstractMuleException
+    protected void doStop() throws MuleException
     {
         // nothing to do
     }

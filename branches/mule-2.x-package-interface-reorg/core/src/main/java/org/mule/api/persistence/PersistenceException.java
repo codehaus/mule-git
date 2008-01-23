@@ -10,13 +10,13 @@
 
 package org.mule.api.persistence;
 
-import org.mule.api.MuleException;
+import org.mule.api.DefaultMuleException;
 
 /**
  * <code>PersistenceException</code> is the exception thrown by
  * the PersistenceStore and/or Manager.
  */
-public class PersistenceException extends MuleException
+public class PersistenceException extends DefaultMuleException
 {
     public PersistenceException()
     {

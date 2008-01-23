@@ -11,7 +11,7 @@
 package org.mule.transport.http.issues;
 
 import org.mule.RequestContext;
-import org.mule.api.MuleException;
+import org.mule.api.DefaultMuleException;
 import org.mule.api.MuleEventContext;
 import org.mule.api.lifecycle.Callable;
 import org.mule.config.i18n.MessageFactory;
@@ -79,7 +79,7 @@ public class NoTransformFunctionalTestComponent implements Callable
 
         if (throwException)
         {
-            throw new MuleException(MessageFactory.createStaticMessage("Functional Test Component Exception"));
+            throw new DefaultMuleException(MessageFactory.createStaticMessage("Functional Test Component Exception"));
         }
 
         return replyMessage;
@@ -141,7 +141,7 @@ public class NoTransformFunctionalTestComponent implements Callable
             }
             else
             {
-                throw new MuleException(MessageFactory.createStaticMessage("Functional Test Component Exception"));
+                throw new DefaultMuleException(MessageFactory.createStaticMessage("Functional Test Component Exception"));
             }
         }
 

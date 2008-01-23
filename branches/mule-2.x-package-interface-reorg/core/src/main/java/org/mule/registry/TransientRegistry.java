@@ -11,7 +11,7 @@ package org.mule.registry;
 
 import org.mule.MuleServer;
 import org.mule.RegistryContext;
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleContext;
 import org.mule.api.agent.Agent;
 import org.mule.api.component.Component;
@@ -337,7 +337,7 @@ public class TransientRegistry extends AbstractRegistry
                             + "\") because MuleContext has not yet been created.");
                 }
             }
-            catch (AbstractMuleException e)
+            catch (MuleException e)
             {
                 throw new RegistrationException(e);
             }
@@ -349,36 +349,36 @@ public class TransientRegistry extends AbstractRegistry
     }
 
     //@java.lang.Override
-    public void registerAgent(Agent agent) throws AbstractMuleException
+    public void registerAgent(Agent agent) throws MuleException
     {
         registerObject(agent.getName(), agent, Agent.class);
     }
 
     //@java.lang.Override
-    public void registerConnector(Connector connector) throws AbstractMuleException
+    public void registerConnector(Connector connector) throws MuleException
     {
         registerObject(connector.getName(), connector, Connector.class);
     }
 
     //@java.lang.Override
-    public void registerEndpoint(ImmutableEndpoint endpoint) throws AbstractMuleException
+    public void registerEndpoint(ImmutableEndpoint endpoint) throws MuleException
     {
         registerObject(endpoint.getName(), endpoint, ImmutableEndpoint.class);
     }
 
-    public void registerEndpointBuilder(String name, EndpointBuilder builder) throws AbstractMuleException
+    public void registerEndpointBuilder(String name, EndpointBuilder builder) throws MuleException
     {
         registerObject(name, builder, EndpointBuilder.class);
     }
 
     //@java.lang.Override
-    public void registerModel(Model model) throws AbstractMuleException
+    public void registerModel(Model model) throws MuleException
     {
         registerObject(model.getName(), model, Model.class);
     }
 
     //@java.lang.Override
-    protected void doRegisterTransformer(Transformer transformer) throws AbstractMuleException
+    protected void doRegisterTransformer(Transformer transformer) throws MuleException
     {
         //TODO should we always throw an exception if an object already exists
         if (lookupTransformer(transformer.getName()) != null)
@@ -390,12 +390,12 @@ public class TransientRegistry extends AbstractRegistry
     }
 
     //@java.lang.Override
-    public void registerComponent(Component component) throws AbstractMuleException
+    public void registerComponent(Component component) throws MuleException
     {
         registerObject(component.getName(), component, Component.class);
     }
 
-    protected void unregisterObject(String key, Object metadata) throws AbstractMuleException
+    protected void unregisterObject(String key, Object metadata) throws MuleException
     {
         Object obj = getObjectTypeMap(metadata).remove(key);
         if (obj instanceof Stoppable)
@@ -404,44 +404,44 @@ public class TransientRegistry extends AbstractRegistry
         }
     }
 
-    public void unregisterObject(String key) throws AbstractMuleException
+    public void unregisterObject(String key) throws MuleException
     {
         unregisterObject(key, Object.class);
     }
 
     //@java.lang.Override
-    public void unregisterComponent(String componentName) throws AbstractMuleException
+    public void unregisterComponent(String componentName) throws MuleException
     {
         unregisterObject(componentName, Component.class);
     }
 
 
     //@java.lang.Override
-    public void unregisterAgent(String agentName) throws AbstractMuleException
+    public void unregisterAgent(String agentName) throws MuleException
     {
         unregisterObject(agentName, Agent.class);
     }
 
     //@java.lang.Override
-    public void unregisterConnector(String connectorName) throws AbstractMuleException
+    public void unregisterConnector(String connectorName) throws MuleException
     {
         unregisterObject(connectorName, Connector.class);
     }
 
     //@java.lang.Override
-    public void unregisterEndpoint(String endpointName) throws AbstractMuleException
+    public void unregisterEndpoint(String endpointName) throws MuleException
     {
         unregisterObject(endpointName, ImmutableEndpoint.class);
     }
 
     //@java.lang.Override
-    public void unregisterModel(String modelName) throws AbstractMuleException
+    public void unregisterModel(String modelName) throws MuleException
     {
         unregisterObject(modelName, Model.class);
     }
 
     //@java.lang.Override
-    public void unregisterTransformer(String transformerName) throws AbstractMuleException
+    public void unregisterTransformer(String transformerName) throws MuleException
     {
         Transformer transformer = lookupTransformer(transformerName);
         if (transformer instanceof DiscoverableTransformer)

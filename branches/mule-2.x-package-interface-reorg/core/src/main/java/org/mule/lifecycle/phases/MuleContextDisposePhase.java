@@ -9,7 +9,7 @@
  */
 package org.mule.lifecycle.phases;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleContext;
 import org.mule.api.lifecycle.Disposable;
 import org.mule.api.lifecycle.Initialisable;
@@ -28,7 +28,7 @@ public class MuleContextDisposePhase extends DefaultLifecyclePhase
         super(Disposable.PHASE_NAME, Disposable.class, Initialisable.PHASE_NAME);
     }
 
-    public void fireLifecycle(MuleContext muleContext, String currentPhase) throws AbstractMuleException
+    public void fireLifecycle(MuleContext muleContext, String currentPhase) throws MuleException
     {
         //Delegate this to the Registry
         if (muleContext.getRegistry() != null)

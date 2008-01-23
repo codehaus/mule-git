@@ -10,7 +10,7 @@
 
 package org.mule.api.transport;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.config.i18n.Message;
@@ -20,7 +20,7 @@ import org.mule.util.ObjectUtils;
  * <code>ReceiveException</code> is specifically thrown by the Provider receive
  * method if something fails in the underlying transport
  */
-public class ReceiveException extends AbstractMuleException
+public class ReceiveException extends MuleException
 {
     /**
      * Serial version

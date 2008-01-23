@@ -10,7 +10,7 @@
 
 package org.mule.components.script.refreshable;
 
-import org.mule.api.MuleException;
+import org.mule.api.DefaultMuleException;
 import org.mule.api.MuleEventContext;
 import org.mule.api.lifecycle.Callable;
 import org.mule.config.i18n.CoreMessages;
@@ -46,7 +46,7 @@ public class GroovyRefreshableBeanBuilder implements Callable
             {
                 if (StringUtils.isEmpty(methodName))
                 {
-                    throw new MuleException(CoreMessages.propertiesNotSet("methodName"));
+                    throw new DefaultMuleException(CoreMessages.propertiesNotSet("methodName"));
                 }
                 
                 return script.invokeMethod(methodName, eventContext.transformMessage());
@@ -54,7 +54,7 @@ public class GroovyRefreshableBeanBuilder implements Callable
             
         }
         
-        throw new Exception(new MuleException("script engine not supported"));
+        throw new Exception(new DefaultMuleException("script engine not supported"));
     }
 
     public Object getRefreshableBean()

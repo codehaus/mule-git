@@ -10,7 +10,7 @@
 
 package org.mule.api.registry;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.agent.Agent;
 import org.mule.api.component.Component;
 import org.mule.api.endpoint.EndpointBuilder;
@@ -146,38 +146,38 @@ public interface Registry extends Initialisable, Disposable
 
     void registerObjects(Map objects) throws RegistrationException;
 
-    void unregisterObject(String key) throws AbstractMuleException;
+    void unregisterObject(String key) throws MuleException;
 
     // TODO MULE-2139 The following methods are Mule-specific and should be split out into a separate class;
     // leave this one as a "pure" registry interface.
 
-    void registerConnector(Connector connector) throws AbstractMuleException;
+    void registerConnector(Connector connector) throws MuleException;
 
-    void unregisterConnector(String connectorName) throws AbstractMuleException;
-
-    //TODO MULE-2494
-    void registerEndpoint(ImmutableEndpoint endpoint) throws AbstractMuleException;
+    void unregisterConnector(String connectorName) throws MuleException;
 
     //TODO MULE-2494
-    void unregisterEndpoint(String endpointName) throws AbstractMuleException;
+    void registerEndpoint(ImmutableEndpoint endpoint) throws MuleException;
 
-    public void registerEndpointBuilder(String name, EndpointBuilder builder) throws AbstractMuleException;
+    //TODO MULE-2494
+    void unregisterEndpoint(String endpointName) throws MuleException;
+
+    public void registerEndpointBuilder(String name, EndpointBuilder builder) throws MuleException;
     
-    void registerTransformer(Transformer transformer) throws AbstractMuleException;
+    void registerTransformer(Transformer transformer) throws MuleException;
 
-    void unregisterTransformer(String transformerName) throws AbstractMuleException;
+    void unregisterTransformer(String transformerName) throws MuleException;
 
-    void registerComponent(Component component) throws AbstractMuleException;
+    void registerComponent(Component component) throws MuleException;
 
-    void unregisterComponent(String componentName) throws AbstractMuleException;
+    void unregisterComponent(String componentName) throws MuleException;
 
-    void registerModel(Model model) throws AbstractMuleException;
+    void registerModel(Model model) throws MuleException;
 
-    void unregisterModel(String modelName) throws AbstractMuleException;
+    void unregisterModel(String modelName) throws MuleException;
 
-    void registerAgent(Agent agent) throws AbstractMuleException;
+    void registerAgent(Agent agent) throws MuleException;
 
-    void unregisterAgent(String agentName) throws AbstractMuleException;
+    void unregisterAgent(String agentName) throws MuleException;
 
     // TODO MULE-2162 MuleConfiguration belongs in the MuleContext rather than the Registry
     void setConfiguration(MuleConfiguration config);

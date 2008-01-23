@@ -9,7 +9,7 @@
  */
 package org.mule.lifecycle;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleContext;
 
 /**
@@ -24,7 +24,7 @@ public class ContainerManagedLifecyclePhase extends DefaultLifecyclePhase
     }
 
     //@java.lang.Override
-    public void fireLifecycle(MuleContext muleContext, String currentPhase) throws AbstractMuleException
+    public void fireLifecycle(MuleContext muleContext, String currentPhase) throws MuleException
     {
         //The container manages this lifecycle
         return;

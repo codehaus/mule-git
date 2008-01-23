@@ -10,7 +10,7 @@
 
 package org.mule.transport.file;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.endpoint.EndpointBuilder;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.endpoint.EndpointURIEndpointBuilder;
@@ -57,7 +57,7 @@ public class ConnectorServiceOverridesTestCase extends FunctionalTestCase
         assertNull(c.getServiceOverrides());
     }
 
-    public void testServiceOverrides3() throws InterruptedException, AbstractMuleException
+    public void testServiceOverrides3() throws InterruptedException, MuleException
     {
         // EndpointURI uri = new MuleEndpointURI("file:///temp?connector=fileConnector1");
         ImmutableEndpoint endpoint = muleContext.getRegistry().lookupEndpointFactory().getInboundEndpoint(

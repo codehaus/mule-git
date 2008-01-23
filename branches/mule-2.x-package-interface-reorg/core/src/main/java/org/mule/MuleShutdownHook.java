@@ -9,7 +9,7 @@
  */
 package org.mule;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleContext;
 import org.mule.config.ExceptionHelper;
 import org.mule.config.i18n.CoreMessages;
@@ -62,7 +62,7 @@ public class MuleShutdownHook extends Thread
     protected void shutdown(Throwable t)
     {
         Message msg = CoreMessages.fatalErrorWhileRunning();
-        AbstractMuleException muleException = ExceptionHelper.getRootMuleException(t);
+        MuleException muleException = ExceptionHelper.getRootMuleException(t);
         if (muleException != null)
         {
             logger.fatal(muleException.getDetailedMessage());

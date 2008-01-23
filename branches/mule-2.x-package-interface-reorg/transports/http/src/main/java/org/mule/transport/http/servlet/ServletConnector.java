@@ -10,7 +10,7 @@
 
 package org.mule.transport.http.servlet;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.transport.AbstractConnector;
 import org.mule.transport.http.HttpConnector;
@@ -63,12 +63,12 @@ public class ServletConnector extends AbstractConnector
         // template method
     }
 
-    protected void doStart() throws AbstractMuleException
+    protected void doStart() throws MuleException
     {
         // template method
     }
 
-    protected void doStop() throws AbstractMuleException
+    protected void doStop() throws MuleException
     {
         // template method
     }

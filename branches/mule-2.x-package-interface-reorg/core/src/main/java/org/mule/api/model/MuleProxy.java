@@ -10,7 +10,7 @@
 
 package org.mule.api.model;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleEvent;
 import org.mule.api.lifecycle.Disposable;
 import org.mule.api.lifecycle.Startable;
@@ -44,9 +44,9 @@ public interface MuleProxy extends Work, Startable, Stoppable, Disposable
      * 
      * @param event the event to pass to the UMO
      * @return the return event from the UMO
-     * @throws AbstractMuleException if the call fails
+     * @throws MuleException if the call fails
      */
-    Object onCall(MuleEvent event) throws AbstractMuleException;
+    Object onCall(MuleEvent event) throws MuleException;
 
     /**
      * When an exception occurs this method can be called to invoke the configured

@@ -12,9 +12,9 @@ package org.mule.lifecycle;
 
 import org.mule.RequestContext;
 import org.mule.VoidResult;
-import org.mule.api.AbstractMuleException;
-import org.mule.api.MuleEvent;
 import org.mule.api.MuleException;
+import org.mule.api.MuleEvent;
+import org.mule.api.DefaultMuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.component.Component;
 import org.mule.api.component.ComponentAware;
@@ -68,20 +68,20 @@ public class DefaultLifecycleAdapter implements LifecycleAdapter
 
     private EntryPointResolverSet entryPointResolver;
 
-    public DefaultLifecycleAdapter(Object pojoService, Component component) throws AbstractMuleException
+    public DefaultLifecycleAdapter(Object pojoService, Component component) throws MuleException
     {
         this(pojoService, component, new LegacyEntryPointResolverSet());
     }
 
     public DefaultLifecycleAdapter(Object pojoService,
                                    Component component,
-                                   EntryPointResolverSet epResolver) throws AbstractMuleException
+                                   EntryPointResolverSet epResolver) throws MuleException
     {
         initialise(pojoService, component, epResolver);
     }
 
     protected void initialise(Object pojoService, Component component, EntryPointResolverSet entryPointResolver)
-            throws AbstractMuleException
+            throws MuleException
     {
         if (pojoService == null)
         {
@@ -106,7 +106,7 @@ public class DefaultLifecycleAdapter implements LifecycleAdapter
         configureNestedRouter();
     }
 
-    public void start() throws AbstractMuleException
+    public void start() throws MuleException
     {
         if (isStartable)
         {
@@ -116,14 +116,14 @@ public class DefaultLifecycleAdapter implements LifecycleAdapter
             }
             catch (Exception e)
             {
-                throw new MuleException(
+                throw new DefaultMuleException(
                     CoreMessages.failedToStart("UMO Component: " + component.getName()), e);
             }
         }
         started = true;
     }
 
-    public void stop() throws AbstractMuleException
+    public void stop() throws MuleException
     {
         if (isStoppable)
         {
@@ -133,7 +133,7 @@ public class DefaultLifecycleAdapter implements LifecycleAdapter
             }
             catch (Exception e)
             {
-                throw new MuleException(
+                throw new DefaultMuleException(
                     CoreMessages.failedToStop("UMO Component: " + component.getName()), e);
             }
         }
@@ -175,7 +175,7 @@ public class DefaultLifecycleAdapter implements LifecycleAdapter
     }
 
     // Note: Invocation argument is not even used!
-    public MuleMessage intercept(Invocation invocation) throws AbstractMuleException
+    public MuleMessage intercept(Invocation invocation) throws MuleException
     {
         // Invoke method
         Object result;
@@ -234,7 +234,7 @@ public class DefaultLifecycleAdapter implements LifecycleAdapter
         }
     }
 
-    protected void configureNestedRouter() throws AbstractMuleException
+    protected void configureNestedRouter() throws MuleException
     {
         // Initialise the nested router and bind the endpoints to the methods using a Proxy
         if (component.getNestedRouter() != null)

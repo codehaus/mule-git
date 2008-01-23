@@ -11,7 +11,7 @@
 package org.mule.transport.vm;
 
 import org.mule.DefaultMuleMessage;
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.transport.MessageAdapter;
 import org.mule.api.transport.MessageTypeNotSupportedException;
@@ -46,7 +46,7 @@ public class VMMessageAdapterTestCase extends AbstractMessageAdapterTestCase
      * 
      * @see org.mule.tck.providers.AbstractMessageAdapterTestCase#getValidMessage()
      */
-    public Object getValidMessage() throws AbstractMuleException
+    public Object getValidMessage() throws MuleException
     {
         return new DefaultMuleMessage("Valid Message");
     }

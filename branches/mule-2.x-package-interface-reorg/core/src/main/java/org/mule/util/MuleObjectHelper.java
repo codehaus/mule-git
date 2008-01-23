@@ -12,9 +12,9 @@ package org.mule.util;
 
 import org.mule.MuleServer;
 import org.mule.RegistryContext;
-import org.mule.api.AbstractMuleException;
-import org.mule.api.MuleContext;
 import org.mule.api.MuleException;
+import org.mule.api.MuleContext;
+import org.mule.api.DefaultMuleException;
 import org.mule.api.endpoint.EndpointBuilder;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.routing.filter.ObjectFilter;
@@ -53,9 +53,9 @@ public final class MuleObjectHelper
      * @param delim - the character used to delimit the transformers in the list
      * @return a list (possibly empty) of transformers or
      * {@link org.mule.transformer.TransformerUtils#UNDEFINED} if the names list is null
-     * @throws MuleException
+     * @throws DefaultMuleException
      */
-    public static List getTransformers(String names, String delim) throws MuleException
+    public static List getTransformers(String names, String delim) throws DefaultMuleException
     {
         if (null != names)
         {
@@ -68,7 +68,7 @@ public final class MuleObjectHelper
 
                 if (transformer == null)
                 {
-                    throw new MuleException(CoreMessages.objectNotRegistered("Transformer", key));
+                    throw new DefaultMuleException(CoreMessages.objectNotRegistered("Transformer", key));
                 }
                 transformers.add(transformer);
             }
@@ -80,7 +80,7 @@ public final class MuleObjectHelper
         }
     }
 
-    public static ImmutableEndpoint getEndpointByProtocol(String protocol) throws AbstractMuleException
+    public static ImmutableEndpoint getEndpointByProtocol(String protocol) throws MuleException
     {
         ImmutableEndpoint iprovider;
         Collection endpoints = RegistryContext.getRegistry().getEndpoints();
@@ -97,7 +97,7 @@ public final class MuleObjectHelper
         return null;
     }
 
-    public static ImmutableEndpoint getEndpointByEndpointUri(String endpointUri, boolean wildcardMatch) throws AbstractMuleException
+    public static ImmutableEndpoint getEndpointByEndpointUri(String endpointUri, boolean wildcardMatch) throws MuleException
     {
         ObjectFilter filter;
 

@@ -12,7 +12,7 @@ package org.mule.agent;
 
 import org.mule.AbstractAgent;
 import org.mule.RegistryContext;
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.component.Component;
 import org.mule.api.endpoint.EndpointBuilder;
 import org.mule.api.endpoint.EndpointURI;
@@ -64,12 +64,12 @@ public class MuleAdminAgent extends AbstractAgent
         return getName() + ": accepting connections on " + serverUri;
     }
 
-    public void start() throws AbstractMuleException
+    public void start() throws MuleException
     {
         // nothing to do (yet?)
     }
 
-    public void stop() throws AbstractMuleException
+    public void stop() throws MuleException
     {
         // nothing to do (yet?)
     }
@@ -150,7 +150,7 @@ public class MuleAdminAgent extends AbstractAgent
                 muleContext.getRegistry().registerComponent(component);
             }
         }
-        catch (AbstractMuleException e)
+        catch (MuleException e)
         {
             throw new InitialisationException(e, this);
         }

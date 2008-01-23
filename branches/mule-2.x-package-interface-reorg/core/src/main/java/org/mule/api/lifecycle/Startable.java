@@ -10,7 +10,7 @@
 
 package org.mule.api.lifecycle;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 
 /**
  * <code>Startable</code> provides an object with a {@link #start()} method
@@ -23,5 +23,5 @@ public interface Startable
 {
     static final String PHASE_NAME = "start";
 
-    void start() throws AbstractMuleException;
+    void start() throws MuleException;
 }

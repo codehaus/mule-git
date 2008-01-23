@@ -12,7 +12,7 @@ package org.mule.transport;
 
 import org.mule.DefaultMuleEvent;
 import org.mule.RegistryContext;
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.config.MuleProperties;
@@ -51,7 +51,7 @@ public class DefaultReplyToHandler implements ReplyToHandler
         this.transformers = transformers;
     }
 
-    public void processReplyTo(MuleEvent event, MuleMessage returnMessage, Object replyTo) throws AbstractMuleException
+    public void processReplyTo(MuleEvent event, MuleMessage returnMessage, Object replyTo) throws MuleException
     {
         if (logger.isDebugEnabled())
         {
@@ -89,7 +89,7 @@ public class DefaultReplyToHandler implements ReplyToHandler
 
     }
 
-    protected synchronized ImmutableEndpoint getEndpoint(MuleEvent event, String endpointUri) throws AbstractMuleException
+    protected synchronized ImmutableEndpoint getEndpoint(MuleEvent event, String endpointUri) throws MuleException
     {
         ImmutableEndpoint endpoint = (ImmutableEndpoint) endpointCache.get(endpointUri);
         if (endpoint == null)

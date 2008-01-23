@@ -11,7 +11,7 @@
 package org.mule.mule.model;
 
 import org.mule.RequestContext;
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.model.EntryPointResolverSet;
 import org.mule.model.resolvers.ArrayEntryPointResolver;
@@ -45,7 +45,7 @@ public class LegacyEntryPointResolverTestCase extends AbstractMuleTestCase
             LegacyEntryPointResolverSet resolver = new LegacyEntryPointResolverSet();
             resolver.invoke(new WaterMelon(), getTestEventContext("blah"));
         }
-        catch (AbstractMuleException e)
+        catch (MuleException e)
         {
             fail("Test should have passed: " + e);
         }
@@ -58,7 +58,7 @@ public class LegacyEntryPointResolverTestCase extends AbstractMuleTestCase
             LegacyEntryPointResolverSet resolver = new LegacyEntryPointResolverSet();
             resolver.invoke(new FruitBowl(), getTestEventContext(new FruitLover("Mmmm")));
         }
-        catch (AbstractMuleException e)
+        catch (MuleException e)
         {
             fail("Test should have passed: " + e);
         }
@@ -74,7 +74,7 @@ public class LegacyEntryPointResolverTestCase extends AbstractMuleTestCase
             fail("Test should have failed because the arguments were not wrapped properly: ");
 
         }
-        catch (AbstractMuleException e)
+        catch (MuleException e)
         {
             //expected
         }
@@ -87,7 +87,7 @@ public class LegacyEntryPointResolverTestCase extends AbstractMuleTestCase
             LegacyEntryPointResolverSet resolver = new LegacyEntryPointResolverSet();
             resolver.invoke(new FruitBowl(), getTestEventContext(new Object[]{new Fruit[]{new Apple(), new Orange()}}));
         }
-        catch (AbstractMuleException e)
+        catch (MuleException e)
         {
             fail("Test should have passed: " + e);
         }
@@ -103,7 +103,7 @@ public class LegacyEntryPointResolverTestCase extends AbstractMuleTestCase
             resolver.addEntryPointResolver(new ArrayEntryPointResolver());
             resolver.invoke(new FruitBowl(), getTestEventContext(new Fruit[]{new Apple(), new Orange()}));
         }
-        catch (AbstractMuleException e)
+        catch (MuleException e)
         {
             fail("Test should have passed: " + e);
         }

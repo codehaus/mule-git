@@ -18,9 +18,9 @@ import java.net.URLDecoder;
 
 import org.mule.DefaultMuleMessage;
 import org.mule.RegistryContext;
-import org.mule.api.MuleException;
+import org.mule.api.DefaultMuleException;
 import org.mule.api.MuleEvent;
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.transport.OutputHandler;
@@ -92,14 +92,14 @@ public class FileMessageDispatcher extends AbstractMessageDispatcher
     /**
      * There is no associated session for a file connector
      * 
-     * @throws AbstractMuleException
+     * @throws MuleException
      */
-    public Object getDelegateSession() throws AbstractMuleException
+    public Object getDelegateSession() throws MuleException
     {
         return null;
     }
 
-    protected static File getNextFile(String dir, FilenameFilter filter) throws AbstractMuleException
+    protected static File getNextFile(String dir, FilenameFilter filter) throws MuleException
     {
         File[] files;
         File file = FileUtils.newFile(dir);
@@ -132,7 +132,7 @@ public class FileMessageDispatcher extends AbstractMessageDispatcher
         }
         catch (Exception e)
         {
-            throw new MuleException(FileMessages.errorWhileListingFiles(), e);
+            throw new DefaultMuleException(FileMessages.errorWhileListingFiles(), e);
         }
     }
 

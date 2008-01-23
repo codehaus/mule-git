@@ -12,7 +12,7 @@ package org.mule.transport.soap.axis;
 
 import org.mule.DefaultMuleMessage;
 import org.mule.RequestContext;
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.ExceptionPayload;
 import org.mule.api.MuleMessage;
 import org.mule.api.component.Component;
@@ -88,7 +88,7 @@ public class AxisServiceProxy
 
                 if (wsException != null)
                 {
-                    AbstractMuleException umoException = ExceptionHelper.getRootMuleException(wsException.getException());
+                    MuleException umoException = ExceptionHelper.getRootMuleException(wsException.getException());
                     // if the exception has a cause, then throw only the cause
                     if (umoException.getCause() != null)
                     {
@@ -132,7 +132,7 @@ public class AxisServiceProxy
     }
 
     public static Class[] getInterfacesForComponent(Component component)
-        throws AbstractMuleException, ClassNotFoundException
+        throws MuleException, ClassNotFoundException
     {
         Class[] interfaces;
 //        List ifaces = (List)component.getProperties().get(SERVICE_INTERFACES);

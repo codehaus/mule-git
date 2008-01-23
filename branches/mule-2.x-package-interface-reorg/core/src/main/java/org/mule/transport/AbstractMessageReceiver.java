@@ -16,7 +16,7 @@ import org.mule.NullSessionHandler;
 import org.mule.OptimizedRequestContext;
 import org.mule.RequestContext;
 import org.mule.ResponseOutputStream;
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.MuleSession;
@@ -150,7 +150,7 @@ public abstract class AbstractMessageReceiver implements MessageReceiver
         {
             workManager = this.connector.getReceiverWorkManager("receiver");
         }
-        catch (AbstractMuleException e)
+        catch (MuleException e)
         {
             throw new InitialisationException(e, this);
         }
@@ -196,7 +196,7 @@ public abstract class AbstractMessageReceiver implements MessageReceiver
                 logger.warn("Reconnecting after exception: " + exception.getMessage(), exception);
                 connectionStrategy.connect(this);
             }
-            catch (AbstractMuleException e)
+            catch (MuleException e)
             {
                 connector.getExceptionListener().exceptionThrown(e);
             }
@@ -257,31 +257,31 @@ public abstract class AbstractMessageReceiver implements MessageReceiver
         return component;
     }
 
-    public final MuleMessage routeMessage(MuleMessage message) throws AbstractMuleException
+    public final MuleMessage routeMessage(MuleMessage message) throws MuleException
     {
         return routeMessage(message, (endpoint.isSynchronous() || TransactionCoordination.getInstance()
                 .getTransaction() != null));
     }
 
-    public final MuleMessage routeMessage(MuleMessage message, boolean synchronous) throws AbstractMuleException
+    public final MuleMessage routeMessage(MuleMessage message, boolean synchronous) throws MuleException
     {
         Transaction tx = TransactionCoordination.getInstance().getTransaction();
         return routeMessage(message, tx, tx != null || synchronous, null);
     }
 
     public final MuleMessage routeMessage(MuleMessage message, Transaction trans, boolean synchronous)
-            throws AbstractMuleException
+            throws MuleException
     {
         return routeMessage(message, trans, synchronous, null);
     }
 
-    public final MuleMessage routeMessage(MuleMessage message, OutputStream outputStream) throws AbstractMuleException
+    public final MuleMessage routeMessage(MuleMessage message, OutputStream outputStream) throws MuleException
     {
         return routeMessage(message, endpoint.isSynchronous(), outputStream);
     }
 
     public final MuleMessage routeMessage(MuleMessage message, boolean synchronous, OutputStream outputStream)
-            throws AbstractMuleException
+            throws MuleException
     {
         Transaction tx = TransactionCoordination.getInstance().getTransaction();
         return routeMessage(message, tx, tx != null || synchronous, outputStream);
@@ -290,7 +290,7 @@ public abstract class AbstractMessageReceiver implements MessageReceiver
     public final MuleMessage routeMessage(MuleMessage message,
                                          Transaction trans,
                                          boolean synchronous,
-                                         OutputStream outputStream) throws AbstractMuleException
+                                         OutputStream outputStream) throws MuleException
     {
 
         if (connector.isEnableMessageEvents())
@@ -482,7 +482,7 @@ public abstract class AbstractMessageReceiver implements MessageReceiver
         return endpoint.getEndpointURI().toString();
     }
 
-    public final void start() throws AbstractMuleException
+    public final void start() throws MuleException
     {
         if (stopped.compareAndSet(true, false))
         {
@@ -515,7 +515,7 @@ public abstract class AbstractMessageReceiver implements MessageReceiver
             {
                 doStop();
             }
-            catch (AbstractMuleException e)
+            catch (MuleException e)
             {
                 // TODO MULE-863: What should we really do?
                 logger.error(e.getMessage(), e);
@@ -545,7 +545,7 @@ public abstract class AbstractMessageReceiver implements MessageReceiver
         public MuleMessage onMessage(MuleMessage message,
                                     Transaction trans,
                                     boolean synchronous,
-                                    OutputStream outputStream) throws AbstractMuleException
+                                    OutputStream outputStream) throws MuleException
         {
 
             MuleMessage resultMessage = null;
@@ -648,9 +648,9 @@ public abstract class AbstractMessageReceiver implements MessageReceiver
         //call this method when the receiver is created. see MULE-2113 for more information about lifecycle clean up
     }
 
-    protected abstract void doStart() throws AbstractMuleException;
+    protected abstract void doStart() throws MuleException;
 
-    protected abstract void doStop() throws AbstractMuleException;
+    protected abstract void doStop() throws MuleException;
 
     protected abstract void doConnect() throws Exception;
 

@@ -10,7 +10,7 @@
 
 package org.mule.api.transport;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.component.Component;
 import org.mule.api.endpoint.EndpointURI;
@@ -77,21 +77,21 @@ public interface MessageReceiver extends Lifecycle, Connectable
 
     void setReceiverKey(String key);
 
-    MuleMessage routeMessage(MuleMessage message) throws AbstractMuleException;
+    MuleMessage routeMessage(MuleMessage message) throws MuleException;
 
-    MuleMessage routeMessage(MuleMessage message, boolean synchronous) throws AbstractMuleException;
+    MuleMessage routeMessage(MuleMessage message, boolean synchronous) throws MuleException;
 
     MuleMessage routeMessage(MuleMessage message, Transaction trans, boolean synchronous)
-            throws AbstractMuleException;
+            throws MuleException;
 
-    MuleMessage routeMessage(MuleMessage message, OutputStream outputStream) throws AbstractMuleException;
+    MuleMessage routeMessage(MuleMessage message, OutputStream outputStream) throws MuleException;
 
     MuleMessage routeMessage(MuleMessage message, boolean synchronous, OutputStream outputStream)
-        throws AbstractMuleException;
+        throws MuleException;
 
     MuleMessage routeMessage(MuleMessage message,
                             Transaction trans,
                             boolean synchronous,
-                            OutputStream outputStream) throws AbstractMuleException;
+                            OutputStream outputStream) throws MuleException;
 
 }

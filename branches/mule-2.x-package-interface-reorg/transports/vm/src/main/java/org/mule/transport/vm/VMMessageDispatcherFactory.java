@@ -10,7 +10,7 @@
 
 package org.mule.transport.vm;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.transport.MessageDispatcher;
 import org.mule.transport.AbstractMessageDispatcherFactory;
@@ -25,7 +25,7 @@ public class VMMessageDispatcherFactory extends AbstractMessageDispatcherFactory
      * 
      * @see org.mule.api.transport.MessageDispatcherFactory#create(org.mule.api.transport.Connector)
      */
-    public MessageDispatcher create(ImmutableEndpoint endpoint) throws AbstractMuleException
+    public MessageDispatcher create(ImmutableEndpoint endpoint) throws MuleException
     {
         return new VMMessageDispatcher(endpoint);
     }

@@ -10,7 +10,7 @@
 
 package org.mule.test.usecases.dlq;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.message.ExceptionMessage;
@@ -37,7 +37,7 @@ public class DLQExceptionHandlerTestCase extends FunctionalTestCase
         {
             message = client.request("jms://DLQ", 20000);
         }
-        catch (AbstractMuleException e)
+        catch (MuleException e)
         {
             e.printStackTrace(System.err);
         }

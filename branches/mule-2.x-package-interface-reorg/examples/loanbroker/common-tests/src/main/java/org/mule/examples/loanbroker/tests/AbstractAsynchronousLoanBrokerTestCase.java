@@ -10,7 +10,7 @@
 
 package org.mule.examples.loanbroker.tests;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.examples.loanbroker.messages.Customer;
 import org.mule.examples.loanbroker.messages.CustomerQuoteRequest;
@@ -150,7 +150,7 @@ public abstract class AbstractAsynchronousLoanBrokerTestCase extends AbstractLoa
                     {
                         result = client.request("CustomerResponses", 2000);
                     }
-                    catch (AbstractMuleException e)
+                    catch (MuleException e)
                     {
                         exListener.exceptionThrown(e);
                         break;

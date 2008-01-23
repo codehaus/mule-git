@@ -19,7 +19,7 @@ import org.mule.api.FutureMessageResult;
 import org.mule.api.MessagingException;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleEvent;
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.MuleSession;
 import org.mule.api.component.Component;
@@ -111,19 +111,19 @@ public class MuleClient implements Disposable
      * Creates a default Mule client that will use the default serverEndpoint to
      * connect to a remote server instance.
      * 
-     * @throws AbstractMuleException
+     * @throws MuleException
      */
-    public MuleClient() throws AbstractMuleException
+    public MuleClient() throws MuleException
     {
         this(true);
     }
 
-    public MuleClient(boolean startContext) throws AbstractMuleException
+    public MuleClient(boolean startContext) throws MuleException
     {
         init(startContext);
     }
 
-    public MuleClient(MuleContext context) throws AbstractMuleException
+    public MuleClient(MuleContext context) throws MuleException
     {
         this.muleContext = context;
         init(false);
@@ -139,7 +139,7 @@ public class MuleClient implements Disposable
      *             running in this JVM or if the builder fails to configure the
      *             Manager
      */
-    public MuleClient(String configResources) throws AbstractMuleException
+    public MuleClient(String configResources) throws MuleException
     {
         this(configResources, new SpringXmlConfigurationBuilder(configResources));
     }
@@ -150,9 +150,9 @@ public class MuleClient implements Disposable
      * 
      * @param user the username to use when connecting to a remote server instance
      * @param password the password for the user
-     * @throws AbstractMuleException
+     * @throws MuleException
      */
-    public MuleClient(String user, String password) throws AbstractMuleException
+    public MuleClient(String user, String password) throws MuleException
     {
         init(/* startManager */true);
         this.user = new MuleCredentials(user, password.toCharArray());
@@ -206,9 +206,9 @@ public class MuleClient implements Disposable
      * Initialises a default MuleManager for use by the client.
      * 
      * @param startManager start the Mule Manager if it has not yet been initialised
-     * @throws AbstractMuleException
+     * @throws MuleException
      */
-    private void init(boolean startManager) throws AbstractMuleException
+    private void init(boolean startManager) throws MuleException
     {
         // if we are creating a server for this client then set client mode
         // this will disable Admin connections by default;
@@ -244,9 +244,9 @@ public class MuleClient implements Disposable
      * @param messageProperties any properties to be associated with the payload. In
      *            the case of Jms you could set the JMSReplyTo property in these
      *            properties.
-     * @throws org.mule.api.AbstractMuleException
+     * @throws org.mule.api.MuleException
      */
-    public void dispatch(String url, Object payload, Map messageProperties) throws AbstractMuleException
+    public void dispatch(String url, Object payload, Map messageProperties) throws MuleException
     {
         dispatch(url, new DefaultMuleMessage(payload, messageProperties));
     }
@@ -258,16 +258,16 @@ public class MuleClient implements Disposable
      * @param url the Mule url used to determine the destination and transport of the
      *            message
      * @param message the message to send
-     * @throws org.mule.api.AbstractMuleException
+     * @throws org.mule.api.MuleException
      */
-    public void dispatch(String url, MuleMessage message) throws AbstractMuleException
+    public void dispatch(String url, MuleMessage message) throws MuleException
     {
         MuleEvent event = getEvent(message, url, false, false);
         try
         {
             event.getSession().dispatchEvent(event);
         }
-        catch (AbstractMuleException e)
+        catch (MuleException e)
         {
             throw e;
         }
@@ -288,11 +288,11 @@ public class MuleClient implements Disposable
      * @param messageProperties any properties to be associated with the payload. as
      *            null
      * @return the result message if any of the invocation
-     * @throws org.mule.api.AbstractMuleException if the dispatch fails or the components or
+     * @throws org.mule.api.MuleException if the dispatch fails or the components or
      *             transfromers cannot be found
      */
     public MuleMessage sendDirect(String component, String transformers, Object payload, Map messageProperties)
-        throws AbstractMuleException
+        throws MuleException
     {
         MuleMessage message = new DefaultMuleMessage(payload, messageProperties);
         return sendDirect(component, transformers, message);
@@ -306,11 +306,11 @@ public class MuleClient implements Disposable
      *            result message
      * @param message the message to send
      * @return the result message if any of the invocation
-     * @throws org.mule.api.AbstractMuleException if the dispatch fails or the components or
+     * @throws org.mule.api.MuleException if the dispatch fails or the components or
      *             transfromers cannot be found
      */
     public MuleMessage sendDirect(String componentName, String transformers, MuleMessage message)
-        throws AbstractMuleException
+        throws MuleException
     {
         Component component = muleContext.getRegistry().lookupComponent(componentName);
         if (component == null)
@@ -359,10 +359,10 @@ public class MuleClient implements Disposable
      * @param payload the object that is the payload of the event
      * @param messageProperties any properties to be associated with the payload. as
      *            null
-     * @throws org.mule.api.AbstractMuleException if the dispatch fails or the components or
+     * @throws org.mule.api.MuleException if the dispatch fails or the components or
      *             transfromers cannot be found
      */
-    public void dispatchDirect(String component, Object payload, Map messageProperties) throws AbstractMuleException
+    public void dispatchDirect(String component, Object payload, Map messageProperties) throws MuleException
     {
         dispatchDirect(component, new DefaultMuleMessage(payload, messageProperties));
     }
@@ -372,10 +372,10 @@ public class MuleClient implements Disposable
      * 
      * @param componentName the name of the Mule components to dispatch to
      * @param message the message to send
-     * @throws org.mule.api.AbstractMuleException if the dispatch fails or the components or
+     * @throws org.mule.api.MuleException if the dispatch fails or the components or
      *             transfromers cannot be found
      */
-    public void dispatchDirect(String componentName, MuleMessage message) throws AbstractMuleException
+    public void dispatchDirect(String componentName, MuleMessage message) throws MuleException
     {
         Component component = muleContext.getRegistry().lookupComponent(componentName);
         if (component == null)
@@ -404,11 +404,11 @@ public class MuleClient implements Disposable
      * @param messageProperties any properties to be associated with the payload. as
      *            null
      * @return the result message if any of the invocation
-     * @throws org.mule.api.AbstractMuleException if the dispatch fails or the components or
+     * @throws org.mule.api.MuleException if the dispatch fails or the components or
      *             transfromers cannot be found
      */
     public FutureMessageResult sendAsync(final String url, final Object payload, final Map messageProperties)
-        throws AbstractMuleException
+        throws MuleException
     {
         return sendAsync(url, payload, messageProperties, 0);
     }
@@ -420,10 +420,10 @@ public class MuleClient implements Disposable
      * @param url the url to make a request on
      * @param message the message to send
      * @return the result message if any of the invocation
-     * @throws org.mule.api.AbstractMuleException if the dispatch fails or the components or
+     * @throws org.mule.api.MuleException if the dispatch fails or the components or
      *             transfromers cannot be found
      */
-    public FutureMessageResult sendAsync(final String url, final MuleMessage message) throws AbstractMuleException
+    public FutureMessageResult sendAsync(final String url, final MuleMessage message) throws MuleException
     {
         return sendAsync(url, message, MuleEvent.TIMEOUT_NOT_SET_VALUE);
     }
@@ -438,13 +438,13 @@ public class MuleClient implements Disposable
      *            null
      * @param timeout how long to block in milliseconds waiting for a result
      * @return the result message if any of the invocation
-     * @throws org.mule.api.AbstractMuleException if the dispatch fails or the components or
+     * @throws org.mule.api.MuleException if the dispatch fails or the components or
      *             transfromers cannot be found
      */
     public FutureMessageResult sendAsync(final String url,
                                          final Object payload,
                                          final Map messageProperties,
-                                         final int timeout) throws AbstractMuleException
+                                         final int timeout) throws MuleException
     {
         return sendAsync(url, new DefaultMuleMessage(payload, messageProperties), timeout);
     }
@@ -457,11 +457,11 @@ public class MuleClient implements Disposable
      * @param message the message to send
      * @param timeout how long to block in milliseconds waiting for a result
      * @return the result message if any of the invocation
-     * @throws org.mule.api.AbstractMuleException if the dispatch fails or the components or
+     * @throws org.mule.api.MuleException if the dispatch fails or the components or
      *             transfromers cannot be found
      */
     public FutureMessageResult sendAsync(final String url, final MuleMessage message, final int timeout)
-        throws AbstractMuleException
+        throws MuleException
     {
         Callable call = new Callable()
         {
@@ -497,13 +497,13 @@ public class MuleClient implements Disposable
      * @param messageProperties any properties to be associated with the payload. as
      *            null
      * @return the result message if any of the invocation
-     * @throws org.mule.api.AbstractMuleException if the dispatch fails or the components or
+     * @throws org.mule.api.MuleException if the dispatch fails or the components or
      *             transfromers cannot be found
      */
     public FutureMessageResult sendDirectAsync(final String component,
                                                String transformers,
                                                final Object payload,
-                                               final Map messageProperties) throws AbstractMuleException
+                                               final Map messageProperties) throws MuleException
     {
         return sendDirectAsync(component, transformers, new DefaultMuleMessage(payload, messageProperties));
     }
@@ -521,12 +521,12 @@ public class MuleClient implements Disposable
      *            result message
      * @param message the message to send
      * @return the result message if any of the invocation
-     * @throws org.mule.api.AbstractMuleException if the dispatch fails or the components or
+     * @throws org.mule.api.MuleException if the dispatch fails or the components or
      *             transfromers cannot be found
      */
     public FutureMessageResult sendDirectAsync(final String component,
                                                String transformers,
-                                               final MuleMessage message) throws AbstractMuleException
+                                               final MuleMessage message) throws MuleException
     {
         Callable call = new Callable()
         {
@@ -564,9 +564,9 @@ public class MuleClient implements Disposable
      *            properties.
      * @return A return message, this could be null if the the components invoked
      *         explicitly sets a return as null
-     * @throws org.mule.api.AbstractMuleException
+     * @throws org.mule.api.MuleException
      */
-    public MuleMessage send(String url, Object payload, Map messageProperties) throws AbstractMuleException
+    public MuleMessage send(String url, Object payload, Map messageProperties) throws MuleException
     {
         return send(url, payload, messageProperties, MuleEvent.TIMEOUT_NOT_SET_VALUE);
     }
@@ -580,9 +580,9 @@ public class MuleClient implements Disposable
      * @param message the Message for the event
      * @return A return message, this could be null if the the components invoked
      *         explicitly sets a return as null
-     * @throws org.mule.api.AbstractMuleException
+     * @throws org.mule.api.MuleException
      */
-    public MuleMessage send(String url, MuleMessage message) throws AbstractMuleException
+    public MuleMessage send(String url, MuleMessage message) throws MuleException
     {
         return send(url, message, MuleEvent.TIMEOUT_NOT_SET_VALUE);
     }
@@ -601,10 +601,10 @@ public class MuleClient implements Disposable
      *            a response
      * @return A return message, this could be null if the the components invoked
      *         explicitly sets a return as null
-     * @throws org.mule.api.AbstractMuleException
+     * @throws org.mule.api.MuleException
      */
     public MuleMessage send(String url, Object payload, Map messageProperties, int timeout)
-        throws AbstractMuleException
+        throws MuleException
     {
         if (messageProperties == null)
         {
@@ -629,9 +629,9 @@ public class MuleClient implements Disposable
      *            a response
      * @return A return message, this could be null if the the components invoked
      *         explicitly sets a return as null
-     * @throws org.mule.api.AbstractMuleException
+     * @throws org.mule.api.MuleException
      */
-    public MuleMessage send(String url, MuleMessage message, int timeout) throws AbstractMuleException
+    public MuleMessage send(String url, MuleMessage message, int timeout) throws MuleException
     {
         MuleEvent event = getEvent(message, url, true, false);
         event.setTimeout(timeout);
@@ -645,7 +645,7 @@ public class MuleClient implements Disposable
             }
             return msg;
         }
-        catch (AbstractMuleException e)
+        catch (MuleException e)
         {
             throw e;
         }
@@ -665,9 +665,9 @@ public class MuleClient implements Disposable
      *            receive will not wait at all and if set to -1 the receive will wait
      *            forever
      * @return the message received or null if no message was received
-     * @throws org.mule.api.AbstractMuleException
+     * @throws org.mule.api.MuleException
      */
-    public MuleMessage request(String url, long timeout) throws AbstractMuleException
+    public MuleMessage request(String url, long timeout) throws MuleException
     {
         ImmutableEndpoint endpoint = getInboundEndpoint(url);
         try
@@ -696,9 +696,9 @@ public class MuleClient implements Disposable
      *            receive will not wait at all and if set to -1 the receive will wait
      *            forever
      * @return the message received or null if no message was received
-     * @throws org.mule.api.AbstractMuleException
+     * @throws org.mule.api.MuleException
      */
-    public MuleMessage request(String url, String transformers, long timeout) throws AbstractMuleException
+    public MuleMessage request(String url, String transformers, long timeout) throws MuleException
     {
         return request(url, MuleObjectHelper.getTransformers(transformers, ","), timeout);
     }
@@ -713,9 +713,9 @@ public class MuleClient implements Disposable
      *            receive will not wait at all and if set to -1 the receive will wait
      *            forever
      * @return the message received or null if no message was received
-     * @throws org.mule.api.AbstractMuleException
+     * @throws org.mule.api.MuleException
      */
-    public MuleMessage request(String url, List transformers, long timeout) throws AbstractMuleException
+    public MuleMessage request(String url, List transformers, long timeout) throws MuleException
     {
         MuleMessage message = request(url, timeout);
         if (message != null && transformers != null)
@@ -733,10 +733,10 @@ public class MuleClient implements Disposable
      * @param synchronous whether the event will be synchronously processed
      * @param streaming
      * @return the MuleEvent
-     * @throws AbstractMuleException
+     * @throws MuleException
      */
     protected MuleEvent getEvent(MuleMessage message, String uri, boolean synchronous, boolean streaming)
-        throws AbstractMuleException
+        throws MuleException
     {
         ImmutableEndpoint endpoint = getOutboundEndpoint(uri);
         if (!endpoint.getConnector().isStarted() && muleContext.isStarted())
@@ -762,18 +762,18 @@ public class MuleClient implements Disposable
         }
     }
 
-    protected ImmutableEndpoint getInboundEndpoint(String uri) throws AbstractMuleException
+    protected ImmutableEndpoint getInboundEndpoint(String uri) throws MuleException
     {
         return muleContext.getRegistry().lookupEndpointFactory().getInboundEndpoint(uri);
     }
 
-    protected ImmutableEndpoint getOutboundEndpoint(String uri) throws AbstractMuleException
+    protected ImmutableEndpoint getOutboundEndpoint(String uri) throws MuleException
     {
         return muleContext.getRegistry().lookupEndpointFactory().getOutboundEndpoint(uri);
     }
 
     protected ImmutableEndpoint getDefaultClientEndpoint(Component component, Object payload)
-        throws AbstractMuleException
+        throws MuleException
     {
         // as we are bypassing the message transport layer we need to check that
         ImmutableEndpoint endpoint = (Endpoint) component.getInboundRouter().getEndpoints().get(0);
@@ -819,9 +819,9 @@ public class MuleClient implements Disposable
      * @param messageProperties any properties to be associated with the payload. In
      *            the case of Jms you could set the JMSReplyTo property in these
      *            properties.
-     * @throws org.mule.api.AbstractMuleException
+     * @throws org.mule.api.MuleException
      */
-    public void sendNoReceive(String url, Object payload, Map messageProperties) throws AbstractMuleException
+    public void sendNoReceive(String url, Object payload, Map messageProperties) throws MuleException
     {
         if (messageProperties == null)
         {
@@ -834,7 +834,7 @@ public class MuleClient implements Disposable
         {
             event.getSession().sendEvent(event);
         }
-        catch (AbstractMuleException e)
+        catch (MuleException e)
         {
             throw e;
         }
@@ -865,12 +865,12 @@ public class MuleClient implements Disposable
      * @param name The identifying name of the components. This can be used to later
      *            unregister it
      * @param listenerEndpoint The url endpointUri to listen to
-     * @throws AbstractMuleException
+     * @throws MuleException
      * @deprecated Use the RegistryContext to get the registry and register the
      *             component there
      */
     public void registerComponent(Object component, String name, EndpointURI listenerEndpoint)
-        throws AbstractMuleException
+        throws MuleException
     {
         throw new UnsupportedOperationException("registerComponent");
         // builder.registerComponentInstance(component, name, listenerEndpoint,
@@ -888,14 +888,14 @@ public class MuleClient implements Disposable
      *            unregister it
      * @param listenerEndpoint The url endpointUri to listen to
      * @param sendEndpoint The url endpointUri to dispatch to
-     * @throws AbstractMuleException
+     * @throws MuleException
      * @deprecated Use the RegistryContext to get the registry and register the
      *             component there
      */
     public void registerComponent(Object component,
                                   String name,
                                   MuleEndpointURI listenerEndpoint,
-                                  MuleEndpointURI sendEndpoint) throws AbstractMuleException
+                                  MuleEndpointURI sendEndpoint) throws MuleException
     {
         throw new UnsupportedOperationException("registerComponent");
         // builder.registerComponentInstance(component, name, listenerEndpoint,
@@ -913,13 +913,13 @@ public class MuleClient implements Disposable
      * Calling this method is equivilent to calling Model.registerComponent(..)
      * 
      * @param descriptor the componet descriptor to register
-     * @throws AbstractMuleException the descriptor is invalid or cannot be initialised or
+     * @throws MuleException the descriptor is invalid or cannot be initialised or
      *             started
      * @see org.mule.api.model.Model
      * @deprecated Use the RegistryContext to get the registry and register the
      *             component there
      */
-    // public void registerComponent(UMODescriptor descriptor) throws AbstractMuleException
+    // public void registerComponent(UMODescriptor descriptor) throws MuleException
     // {
     // throw new UnsupportedOperationException("registerComponent");
     // //builder.registerComponent(descriptor);
@@ -930,7 +930,7 @@ public class MuleClient implements Disposable
      * Model.unregisterComponent(..)
      * 
      * @param name the name of the componet to unregister
-     * @throws AbstractMuleException if unregistering the components fails, i.e. The
+     * @throws MuleException if unregistering the components fails, i.e. The
      *             underlying transport fails to unregister a listener. If the
      *             components does not exist, this method should not throw an
      *             exception.
@@ -938,14 +938,14 @@ public class MuleClient implements Disposable
      * @deprecated Use the RegistryContext to get the registry and register the
      *             component there
      */
-    public void unregisterComponent(String name) throws AbstractMuleException
+    public void unregisterComponent(String name) throws MuleException
     {
         throw new UnsupportedOperationException("registerComponent");
 
         // builder.unregisterComponent(name);
     }
 
-    public RemoteDispatcher getRemoteDispatcher(String serverEndpoint) throws AbstractMuleException
+    public RemoteDispatcher getRemoteDispatcher(String serverEndpoint) throws MuleException
     {
         RemoteDispatcher rd = new RemoteDispatcher(serverEndpoint);
         rd.setExecutor(muleContext.getWorkManager());
@@ -954,7 +954,7 @@ public class MuleClient implements Disposable
     }
 
     public RemoteDispatcher getRemoteDispatcher(String serverEndpoint, String user, String password)
-        throws AbstractMuleException
+        throws MuleException
     {
         RemoteDispatcher rd = new RemoteDispatcher(serverEndpoint, new MuleCredentials(user,
             password.toCharArray()));

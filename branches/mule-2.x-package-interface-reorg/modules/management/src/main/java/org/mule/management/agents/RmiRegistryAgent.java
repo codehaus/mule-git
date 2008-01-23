@@ -11,7 +11,7 @@
 package org.mule.management.agents;
 
 import org.mule.AbstractAgent;
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.config.i18n.MessageFactory;
 import org.mule.util.StringUtils;
@@ -68,7 +68,7 @@ public class RmiRegistryAgent extends AbstractAgent
         // nothing to do
     }
 
-    public void start() throws AbstractMuleException
+    public void start() throws MuleException
     {
         if (serverUri == null)
         {
@@ -114,7 +114,7 @@ public class RmiRegistryAgent extends AbstractAgent
         }
     }
 
-    public void stop() throws AbstractMuleException
+    public void stop() throws MuleException
     {
         // TODO how do you unbind a registry??
         rmiRegistry = null;

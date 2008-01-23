@@ -10,13 +10,13 @@
 
 package org.mule.api.registry;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.config.i18n.Message;
 
 /**
  * Any service-related exception: service not found, service lookup error, etc.
  */
-public class ServiceException extends AbstractMuleException
+public class ServiceException extends MuleException
 {
     public ServiceException(Message message)
     {

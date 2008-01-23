@@ -10,7 +10,7 @@
 
 package org.mule.transport.tcp;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.transport.tcp.TcpSocketKey;
@@ -18,7 +18,7 @@ import org.mule.transport.tcp.TcpSocketKey;
 public class TcpSocketKeyTestCase extends FunctionalTestCase
 {
 
-    public void testHashAndEquals() throws AbstractMuleException
+    public void testHashAndEquals() throws MuleException
     {
         ImmutableEndpoint endpoint1in =
                 muleContext.getRegistry().lookupEndpointFactory().getInboundEndpoint("globalEndpoint1");

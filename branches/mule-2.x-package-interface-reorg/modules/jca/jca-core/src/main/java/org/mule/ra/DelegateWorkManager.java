@@ -10,7 +10,7 @@
 
 package org.mule.ra;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 
 import javax.resource.spi.work.ExecutionContext;
 import javax.resource.spi.work.Work;
@@ -79,12 +79,12 @@ public class DelegateWorkManager implements org.mule.api.context.WorkManager
         }
     }
 
-    public void start() throws AbstractMuleException
+    public void start() throws MuleException
     {
         // nothing to do
     }
 
-    public void stop() throws AbstractMuleException
+    public void stop() throws MuleException
     {
         // nothing to do
     }

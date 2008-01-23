@@ -18,7 +18,7 @@ import org.mule.RegistryContext;
 import org.mule.RequestContext;
 import org.mule.api.FutureMessageResult;
 import org.mule.api.MuleEvent;
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.endpoint.EndpointBuilder;
@@ -76,13 +76,13 @@ public class RemoteDispatcher implements Disposable
      */
     private WireFormat wireFormat;
 
-    protected RemoteDispatcher(String endpoint, Credentials credentials) throws AbstractMuleException
+    protected RemoteDispatcher(String endpoint, Credentials credentials) throws MuleException
     {
         this(endpoint);
         this.credentials = credentials;
     }
 
-    protected RemoteDispatcher(String endpoint) throws AbstractMuleException
+    protected RemoteDispatcher(String endpoint) throws MuleException
     {
         EndpointFactory endpointFactory = RegistryContext.getRegistry().lookupEndpointFactory();
         asyncServerEndpoint = endpointFactory.getOutboundEndpoint(endpoint);
@@ -109,11 +109,11 @@ public class RemoteDispatcher implements Disposable
      * @param payload the object that is the payload of the event
      * @param messageProperties any properties to be associated with the payload. as
      *            null
-     * @throws org.mule.api.AbstractMuleException if the dispatch fails or the components or
+     * @throws org.mule.api.MuleException if the dispatch fails or the components or
      *             transfromers cannot be found
      */
     public void dispatchToRemoteComponent(String component, Object payload, Map messageProperties)
-        throws AbstractMuleException
+        throws MuleException
     {
         doToRemoteComponent(component, payload, messageProperties, false);
     }
@@ -128,11 +128,11 @@ public class RemoteDispatcher implements Disposable
      * @param messageProperties any properties to be associated with the payload. as
      *            null
      * @return the result message if any of the invocation
-     * @throws org.mule.api.AbstractMuleException if the dispatch fails or the components or
+     * @throws org.mule.api.MuleException if the dispatch fails or the components or
      *             transfromers cannot be found
      */
     public MuleMessage sendToRemoteComponent(String component, Object payload, Map messageProperties)
-        throws AbstractMuleException
+        throws MuleException
     {
         return doToRemoteComponent(component, payload, messageProperties, true);
     }
@@ -151,13 +151,13 @@ public class RemoteDispatcher implements Disposable
      * @param messageProperties any properties to be associated with the payload. as
      *            null
      * @return the result message if any of the invocation
-     * @throws org.mule.api.AbstractMuleException if the dispatch fails or the components or
+     * @throws org.mule.api.MuleException if the dispatch fails or the components or
      *             transfromers cannot be found
      */
     public FutureMessageResult sendAsyncToRemoteComponent(final String component,
                                                           String transformers,
                                                           final Object payload,
-                                                          final Map messageProperties) throws AbstractMuleException
+                                                          final Map messageProperties) throws MuleException
     {
         Callable callable = new Callable()
         {
@@ -184,25 +184,25 @@ public class RemoteDispatcher implements Disposable
     }
 
     public MuleMessage sendRemote(String endpoint, Object payload, Map messageProperties, int timeout)
-        throws AbstractMuleException
+        throws MuleException
     {
         return doToRemote(endpoint, payload, messageProperties, true, timeout);
     }
 
-    public MuleMessage sendRemote(String endpoint, Object payload, Map messageProperties) throws AbstractMuleException
+    public MuleMessage sendRemote(String endpoint, Object payload, Map messageProperties) throws MuleException
     {
         return doToRemote(endpoint, payload, messageProperties, true, RegistryContext.getConfiguration()
             .getDefaultSynchronousEventTimeout());
     }
 
-    public void dispatchRemote(String endpoint, Object payload, Map messageProperties) throws AbstractMuleException
+    public void dispatchRemote(String endpoint, Object payload, Map messageProperties) throws MuleException
     {
         doToRemote(endpoint, payload, messageProperties, false, -1);
     }
 
     public FutureMessageResult sendAsyncRemote(final String endpoint,
                                                final Object payload,
-                                               final Map messageProperties) throws AbstractMuleException
+                                               final Map messageProperties) throws MuleException
     {
         Callable callable = new Callable()
         {
@@ -223,7 +223,7 @@ public class RemoteDispatcher implements Disposable
         return result;
     }
 
-    public MuleMessage receiveRemote(String endpoint, int timeout) throws AbstractMuleException
+    public MuleMessage receiveRemote(String endpoint, int timeout) throws MuleException
     {
         AdminNotification action = new AdminNotification(null, AdminNotification.ACTION_RECEIVE, endpoint);
         action.setProperty(MuleProperties.MULE_REMOTE_SYNC_PROPERTY, "true");
@@ -233,7 +233,7 @@ public class RemoteDispatcher implements Disposable
     }
 
     public FutureMessageResult asyncReceiveRemote(final String endpoint, final int timeout)
-        throws AbstractMuleException
+        throws MuleException
     {
         Callable callable = new Callable()
         {
@@ -257,7 +257,7 @@ public class RemoteDispatcher implements Disposable
     protected MuleMessage doToRemoteComponent(String component,
                                              Object payload,
                                              Map messageProperties,
-                                             boolean synchronous) throws AbstractMuleException
+                                             boolean synchronous) throws MuleException
     {
         MuleMessage message = new DefaultMuleMessage(payload, messageProperties);
         message.setBooleanProperty(MuleProperties.MULE_REMOTE_SYNC_PROPERTY, synchronous);
@@ -273,7 +273,7 @@ public class RemoteDispatcher implements Disposable
                                     Object payload,
                                     Map messageProperties,
                                     boolean synchronous,
-                                    int timeout) throws AbstractMuleException
+                                    int timeout) throws MuleException
     {
         MuleMessage message = new DefaultMuleMessage(payload, messageProperties);
         message.setProperty(MuleProperties.MULE_REMOTE_SYNC_PROPERTY, String.valueOf(synchronous));
@@ -286,7 +286,7 @@ public class RemoteDispatcher implements Disposable
     }
 
     protected MuleMessage dispatchAction(AdminNotification action, boolean synchronous, int timeout)
-        throws AbstractMuleException
+        throws MuleException
     {
         ImmutableEndpoint serverEndpoint = null;
         if (synchronous)
@@ -403,7 +403,7 @@ public class RemoteDispatcher implements Disposable
     }
 
     protected void updateContext(MuleMessage message, ImmutableEndpoint endpoint, boolean synchronous)
-        throws AbstractMuleException
+        throws MuleException
     {
 
         RequestContext.setEvent(new DefaultMuleEvent(message, endpoint, new DefaultMuleSession(message,

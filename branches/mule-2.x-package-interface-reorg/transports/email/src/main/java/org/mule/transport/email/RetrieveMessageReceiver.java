@@ -12,7 +12,7 @@ package org.mule.transport.email;
 
 import org.mule.DefaultMuleMessage;
 import org.mule.RegistryContext;
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.component.Component;
 import org.mule.api.endpoint.Endpoint;
@@ -109,7 +109,7 @@ public class RetrieveMessageReceiver extends AbstractPollingMessageReceiver
         }
     }
 
-    protected void doStart() throws AbstractMuleException
+    protected void doStart() throws MuleException
     {
         super.doStart();
         folder.addMessageCountListener(this);
@@ -143,7 +143,7 @@ public class RetrieveMessageReceiver extends AbstractPollingMessageReceiver
                         routeMessage(message, endpoint.isSynchronous());
                     }
                 }
-                catch (AbstractMuleException e)
+                catch (MuleException e)
                 {
                     handleException(e);
                 }

@@ -10,7 +10,7 @@
 
 package org.mule.api.endpoint;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.context.MuleContextAware;
 import org.mule.api.registry.Registry;
 import org.mule.endpoint.EndpointURIEndpointBuilder;
@@ -36,9 +36,9 @@ public interface EndpointFactory extends MuleContextAware
      * @param uri endpoint identifier or uri
      * @param muleContext
      * @return
-     * @throws AbstractMuleException
+     * @throws MuleException
      */
-    ImmutableEndpoint getInboundEndpoint(String uri) throws AbstractMuleException;
+    ImmutableEndpoint getInboundEndpoint(String uri) throws MuleException;
 
     /**
      * Creates an endpoint with the "OUTBOUND" role. <br/><br/> The uri parameter can either be a uri, or a
@@ -49,9 +49,9 @@ public interface EndpointFactory extends MuleContextAware
      * @param uri endpoint identifier or uri
      * @param muleContext
      * @return
-     * @throws AbstractMuleException
+     * @throws MuleException
      */
-    ImmutableEndpoint getOutboundEndpoint(String uri) throws AbstractMuleException;
+    ImmutableEndpoint getOutboundEndpoint(String uri) throws MuleException;
 
     /**
      * Creates an endpoint with the "INBOUND" role using the builder provided.
@@ -59,9 +59,9 @@ public interface EndpointFactory extends MuleContextAware
      * @param builder
      * @param muleContext
      * @return
-     * @throws AbstractMuleException
+     * @throws MuleException
      */
-    ImmutableEndpoint getInboundEndpoint(EndpointBuilder builder) throws AbstractMuleException;
+    ImmutableEndpoint getInboundEndpoint(EndpointBuilder builder) throws MuleException;
 
     /**
      * Creates an endpoint with the "OUTBOUND" role using the builder provided.
@@ -69,20 +69,20 @@ public interface EndpointFactory extends MuleContextAware
      * @param builder
      * @param muleContext
      * @return
-     * @throws AbstractMuleException
+     * @throws MuleException
      */
-    ImmutableEndpoint getOutboundEndpoint(EndpointBuilder builder) throws AbstractMuleException;
+    ImmutableEndpoint getOutboundEndpoint(EndpointBuilder builder) throws MuleException;
 
     /**
      * @param endpointUri
      * @param endpointType
      * @param muleContext
      * @return
-     * @throws AbstractMuleException
+     * @throws MuleException
      * @deprecated
      */
     ImmutableEndpoint getEndpoint(EndpointURI endpointUri,
-                                        String endpointType) throws AbstractMuleException;
+                                        String endpointType) throws MuleException;
 
     /**
      * Used to retrieve the an EndpointBuilder equal to the one would be used to create an endpoint.<br/><br/>
@@ -100,10 +100,10 @@ public interface EndpointFactory extends MuleContextAware
      * @param uri endpoint identifier or uri
      * @param muleContext
      * @return
-     * @throws AbstractMuleException
+     * @throws MuleException
      * @see EndpointBuilder
      * @see EndpointURIEndpointBuilder
      */
-    EndpointBuilder getEndpointBuilder(String uri) throws AbstractMuleException;
+    EndpointBuilder getEndpointBuilder(String uri) throws MuleException;
 
 }

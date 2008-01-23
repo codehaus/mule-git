@@ -11,7 +11,7 @@
 package org.mule.transport.vm;
 
 import org.mule.DefaultMuleMessage;
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.component.Component;
 import org.mule.api.endpoint.ImmutableEndpoint;
@@ -83,7 +83,7 @@ public class VMMessageReceiver extends TransactedPollingMessageReceiver
         // template method
     }
 
-    public void onMessage(MuleMessage message) throws AbstractMuleException
+    public void onMessage(MuleMessage message) throws MuleException
     {
         // Rewrite the message to treat it as a new message
         MuleMessage newMessage = new DefaultMuleMessage(message.getPayload(), message);
@@ -98,7 +98,7 @@ public class VMMessageReceiver extends TransactedPollingMessageReceiver
         }
     }
 
-    public Object onCall(MuleMessage message, boolean synchronous) throws AbstractMuleException
+    public Object onCall(MuleMessage message, boolean synchronous) throws MuleException
     {
         // Rewrite the message to treat it as a new message
         MuleMessage newMessage = new DefaultMuleMessage(message.getPayload(), message);

@@ -10,7 +10,7 @@
 
 package org.mule.modules.xml.functional;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 
@@ -37,14 +37,14 @@ public abstract class AbstractXmlOutboundFunctionalTestCase extends AbstractXmlF
         return "xml/xml-outbound-functional-test.xml";
     }
 
-    protected void doSend(String endpoint) throws IOException, AbstractMuleException
+    protected void doSend(String endpoint) throws IOException, MuleException
     {
         String xml = getConfigAsString();
         MuleClient client = new MuleClient();
         client.dispatch(endpoint, xml, null);
     }
 
-    protected void assertService(String prefix, int index, String service) throws AbstractMuleException, IOException
+    protected void assertService(String prefix, int index, String service) throws MuleException, IOException
     {
         MuleClient client = new MuleClient();
         MuleMessage response = client.request(prefix + index, TIMEOUT);
@@ -57,7 +57,7 @@ public abstract class AbstractXmlOutboundFunctionalTestCase extends AbstractXmlF
         assertEquals(service, element.attributeValue(NAME));
     }
 
-    protected void assertServices(String prefix, int index, String[] services) throws AbstractMuleException, IOException
+    protected void assertServices(String prefix, int index, String[] services) throws MuleException, IOException
     {
         List remaining = new LinkedList(Arrays.asList(services)); // asList is immutable
         while (remaining.size() > 0)

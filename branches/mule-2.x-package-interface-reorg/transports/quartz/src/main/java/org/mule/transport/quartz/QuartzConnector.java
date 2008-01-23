@@ -10,7 +10,7 @@
 
 package org.mule.transport.quartz;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.transport.ConnectorException;
 import org.mule.config.i18n.CoreMessages;
@@ -100,7 +100,7 @@ public class QuartzConnector extends AbstractConnector
         // template method
     }
 
-    protected void doStart() throws AbstractMuleException
+    protected void doStart() throws MuleException
     {
         try
         {
@@ -112,7 +112,7 @@ public class QuartzConnector extends AbstractConnector
         }
     }
 
-    protected void doStop() throws AbstractMuleException
+    protected void doStop() throws MuleException
     {
         try
         {

@@ -33,9 +33,9 @@ public interface MuleContext extends Lifecycle
 
     String getSystemName();
 
-    Store getStore(String name) throws AbstractMuleException;
+    Store getStore(String name) throws MuleException;
 
-    Store createStore(String name) throws AbstractMuleException;
+    Store createStore(String name) throws MuleException;
 
     void removeStore(Store store);
 
@@ -240,7 +240,7 @@ public interface MuleContext extends Lifecycle
     
     Registry getRegistry();
     
-    void applyLifecycle(Object object) throws AbstractMuleException;
+    void applyLifecycle(Object object) throws MuleException;
     
     void setConfiguration(MuleConfiguration config);
     

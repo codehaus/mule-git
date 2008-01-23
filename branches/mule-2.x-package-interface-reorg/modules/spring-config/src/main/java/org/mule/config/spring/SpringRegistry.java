@@ -10,7 +10,7 @@
 
 package org.mule.config.spring;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.agent.Agent;
 import org.mule.api.component.Component;
 import org.mule.api.config.MuleProperties;
@@ -195,18 +195,18 @@ public class SpringRegistry extends AbstractRegistry
     }
 
     public void registerConnector(Connector connector)
-            throws AbstractMuleException
+            throws MuleException
     {
         unsupportedOperation("registerConnector", connector);
     }
 
-    public void unregisterConnector(String connectorName) throws AbstractMuleException
+    public void unregisterConnector(String connectorName) throws MuleException
     {
         unsupportedOperation("unregisterConnector", connectorName);
     }
 
     public void registerEndpoint(ImmutableEndpoint endpoint)
-            throws AbstractMuleException
+            throws MuleException
     {
         unsupportedOperation("registerEndpoint", endpoint);
     }
@@ -216,7 +216,7 @@ public class SpringRegistry extends AbstractRegistry
         unsupportedOperation("unregisterEndpoint", endpointName);
     }
 
-    protected void doRegisterTransformer(Transformer transformer) throws AbstractMuleException
+    protected void doRegisterTransformer(Transformer transformer) throws MuleException
     {
         unsupportedOperation("registerTransformer", transformer);
     }
@@ -228,7 +228,7 @@ public class SpringRegistry extends AbstractRegistry
 
     /** {@inheritDoc} */
     public void registerComponent(Component component)
-            throws AbstractMuleException
+            throws MuleException
     {
         unsupportedOperation("registerComponent", component);
     }
@@ -238,7 +238,7 @@ public class SpringRegistry extends AbstractRegistry
         unsupportedOperation("unregisterComponent", componentName);
     }
 
-    public void registerModel(Model model) throws AbstractMuleException
+    public void registerModel(Model model) throws MuleException
     {
         unsupportedOperation("registerModel", model);
     }
@@ -248,12 +248,12 @@ public class SpringRegistry extends AbstractRegistry
         unsupportedOperation("unregisterModel", modelName);
     }
 
-    public void registerAgent(Agent agent) throws AbstractMuleException
+    public void registerAgent(Agent agent) throws MuleException
     {
         unsupportedOperation("registerAgent", agent);
     }
 
-    public void unregisterAgent(String agentName) throws AbstractMuleException
+    public void unregisterAgent(String agentName) throws MuleException
     {
         unsupportedOperation("unregisterAgent", agentName);
     }
@@ -281,7 +281,7 @@ public class SpringRegistry extends AbstractRegistry
     }
 
     public void registerEndpointBuilder(String name,
-                                        EndpointBuilder builder) throws AbstractMuleException
+                                        EndpointBuilder builder) throws MuleException
     {
         unsupportedOperation("registerEndpointBuilder", builder);
     }

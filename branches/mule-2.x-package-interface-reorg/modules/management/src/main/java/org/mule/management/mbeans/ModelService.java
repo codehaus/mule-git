@@ -10,7 +10,7 @@
 
 package org.mule.management.mbeans;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.model.Model;
 
 /**
@@ -27,37 +27,37 @@ public class ModelService implements ModelServiceMBean
 
     }
 
-    public void start() throws AbstractMuleException
+    public void start() throws MuleException
     {
         model.start();
     }
 
-    public void stop() throws AbstractMuleException
+    public void stop() throws MuleException
     {
         model.stop();
     }
 
-//    public void startComponent(String name) throws AbstractMuleException
+//    public void startComponent(String name) throws MuleException
 //    {
 //        model.startComponent(name);
 //    }
 //
-//    public void stopComponent(String name) throws AbstractMuleException
+//    public void stopComponent(String name) throws MuleException
 //    {
 //        model.stopComponent(name);
 //    }
 //
-//    public void pauseComponent(String name) throws AbstractMuleException
+//    public void pauseComponent(String name) throws MuleException
 //    {
 //        model.pauseComponent(name);
 //    }
 //
-//    public void resumeComponent(String name) throws AbstractMuleException
+//    public void resumeComponent(String name) throws MuleException
 //    {
 //        model.resumeComponent(name);
 //    }
 //
-//    public void unregisterComponent(String name) throws AbstractMuleException
+//    public void unregisterComponent(String name) throws MuleException
 //    {
 //        RegistryContext.getRegistry().unregisterService(name);
 //        //model.unregisterComponent(model.getDescriptor(name));

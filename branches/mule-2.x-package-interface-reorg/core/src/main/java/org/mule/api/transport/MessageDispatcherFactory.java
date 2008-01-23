@@ -10,7 +10,7 @@
 
 package org.mule.api.transport;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.endpoint.ImmutableEndpoint;
 
 /**
@@ -42,9 +42,9 @@ public interface MessageDispatcherFactory
      * @param endpoint the endoint for which this dispatcher should be created
      * @return a properly created <code>MessageDispatcher</code> for this
      *         transport
-     * @throws AbstractMuleException if the dispatcher cannot be created
+     * @throws MuleException if the dispatcher cannot be created
      */
-    MessageDispatcher create(ImmutableEndpoint endpoint) throws AbstractMuleException;
+    MessageDispatcher create(ImmutableEndpoint endpoint) throws MuleException;
 
     /**
      * Invoked <strong>before</strong> the given dispatcher is handed out to a
@@ -52,9 +52,9 @@ public interface MessageDispatcherFactory
      * 
      * @param endpoint the endpoint of the dispatcher
      * @param dispatcher the dispatcher to be activated
-     * @throws AbstractMuleException if the dispatcher cannot be activated
+     * @throws MuleException if the dispatcher cannot be activated
      */
-    void activate(ImmutableEndpoint endpoint, MessageDispatcher dispatcher) throws AbstractMuleException;
+    void activate(ImmutableEndpoint endpoint, MessageDispatcher dispatcher) throws MuleException;
 
     /**
      * Invoked <strong>after</strong> the dispatcher is returned from a client but

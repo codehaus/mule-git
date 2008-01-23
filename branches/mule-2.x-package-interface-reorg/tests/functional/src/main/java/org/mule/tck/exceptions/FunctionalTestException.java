@@ -10,9 +10,9 @@
 
 package org.mule.tck.exceptions;
 
-import org.mule.api.MuleException;
+import org.mule.api.DefaultMuleException;
 
-public class FunctionalTestException extends MuleException
+public class FunctionalTestException extends DefaultMuleException
 {
     public FunctionalTestException()
     {

@@ -9,13 +9,13 @@
  */
 package org.mule.api.store;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.config.i18n.Message;
 
 /**
  * The base exception thrown where there is a problem reading or writing to a store
  */
-public class StoreException extends AbstractMuleException
+public class StoreException extends MuleException
 {
 
     public StoreException(Message message)

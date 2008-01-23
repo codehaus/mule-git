@@ -10,9 +10,9 @@
 
 package org.mule.transport.soap.xfire.transport;
 
-import org.mule.api.AbstractMuleException;
-import org.mule.api.MuleEventContext;
 import org.mule.api.MuleException;
+import org.mule.api.MuleEventContext;
+import org.mule.api.DefaultMuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.context.WorkManager;
 import org.mule.message.DefaultExceptionPayload;
@@ -336,7 +336,7 @@ public class MuleLocalChannel extends AbstractChannel
         return serviceName;
     }
 
-    public Object onCall(MuleEventContext ctx) throws AbstractMuleException
+    public Object onCall(MuleEventContext ctx) throws MuleException
     {
 
         try
@@ -405,7 +405,7 @@ public class MuleLocalChannel extends AbstractChannel
             }
             catch (UnsupportedEncodingException e1)
             {
-                throw new MuleException(e1);
+                throw new DefaultMuleException(e1);
             }
             finally
             {
@@ -423,7 +423,7 @@ public class MuleLocalChannel extends AbstractChannel
             }
 
         }
-        catch (AbstractMuleException e)
+        catch (MuleException e)
         {
             logger.warn("Could not dispatch message to XFire!", e);
             throw e;

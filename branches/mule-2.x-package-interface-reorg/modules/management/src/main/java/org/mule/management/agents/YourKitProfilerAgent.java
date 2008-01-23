@@ -12,7 +12,7 @@ package org.mule.management.agents;
 
 import org.mule.MuleServer;
 import org.mule.RegistryContext;
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleContext;
 import org.mule.api.agent.Agent;
 import org.mule.api.lifecycle.InitialisationException;
@@ -148,7 +148,7 @@ public class YourKitProfilerAgent implements Agent
             // remove the agent from the list, it's not functional
             RegistryContext.getRegistry().unregisterAgent(this.getName());
         }
-        catch (AbstractMuleException e)
+        catch (MuleException e)
         {
             // not interested, really
         }
@@ -171,7 +171,7 @@ public class YourKitProfilerAgent implements Agent
      *
      * @see org.mule.api.lifecycle.Startable#start()
      */
-    public void start() throws AbstractMuleException
+    public void start() throws MuleException
     {
         // nothing to do
     }
@@ -181,7 +181,7 @@ public class YourKitProfilerAgent implements Agent
      *
      * @see org.mule.api.lifecycle.Stoppable#stop()
      */
-    public void stop() throws AbstractMuleException
+    public void stop() throws MuleException
     {
         // nothing to do
     }

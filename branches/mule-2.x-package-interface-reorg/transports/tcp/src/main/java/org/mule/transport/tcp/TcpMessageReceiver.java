@@ -11,7 +11,7 @@ package org.mule.transport.tcp;
 
 import org.mule.DefaultMuleMessage;
 import org.mule.ResponseOutputStream;
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.component.Component;
 import org.mule.api.config.MuleProperties;
@@ -110,12 +110,12 @@ public class TcpMessageReceiver extends AbstractMessageReceiver implements Work
         }
     }
 
-    protected void doStart() throws AbstractMuleException
+    protected void doStart() throws MuleException
     {
         // nothing to do
     }
 
-    protected void doStop() throws AbstractMuleException
+    protected void doStop() throws MuleException
     {
         // nothing to do
     }

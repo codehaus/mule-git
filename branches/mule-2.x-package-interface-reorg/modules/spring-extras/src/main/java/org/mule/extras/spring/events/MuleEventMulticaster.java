@@ -15,10 +15,10 @@ import org.mule.DefaultMuleMessage;
 import org.mule.DefaultMuleSession;
 import org.mule.RegistryContext;
 import org.mule.RequestContext;
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleEventContext;
 import org.mule.api.MuleContext;
-import org.mule.api.MuleException;
+import org.mule.api.DefaultMuleException;
 import org.mule.api.MuleRuntimeException;
 import org.mule.api.MuleSession;
 import org.mule.api.component.Component;
@@ -270,7 +270,7 @@ public class MuleEventMulticaster implements ApplicationEventMulticaster, Applic
                 {
                     registerMulticasterComponent();
                 }
-                catch (AbstractMuleException ex)
+                catch (MuleException ex)
                 {
                     throw new MuleRuntimeException(SpringMessages.failedToReinitMule(), ex);
                 }
@@ -474,7 +474,7 @@ public class MuleEventMulticaster implements ApplicationEventMulticaster, Applic
             endpoint = muleContext.getRegistry().lookupEndpointFactory().getOutboundEndpoint(
                 applicationEvent.getEndpoint());
         }
-        catch (AbstractMuleException e)
+        catch (MuleException e)
         {
             throw new ApplicationEventException("Failed to get endpoint for endpointUri: "
                                                 + applicationEvent.getEndpoint(), e);
@@ -581,13 +581,13 @@ public class MuleEventMulticaster implements ApplicationEventMulticaster, Applic
                muleContext.start();
             }
         }
-        catch (AbstractMuleException e)
+        catch (MuleException e)
         {
             throw new MuleRuntimeException(SpringMessages.failedToReinitMule(), e);
         }
     }
 
-    protected void registerMulticasterComponent() throws AbstractMuleException
+    protected void registerMulticasterComponent() throws MuleException
     {
         // A discriptor hasn't been explicitly configured, so create a default
         if (component == null)
@@ -600,7 +600,7 @@ public class MuleEventMulticaster implements ApplicationEventMulticaster, Applic
         }
     }
 
-    protected void setSubscriptionsOnComponent(Component component) throws AbstractMuleException
+    protected void setSubscriptionsOnComponent(Component component) throws MuleException
     {
         String[] subscriptions;
         List endpoints = new ArrayList();
@@ -647,9 +647,9 @@ public class MuleEventMulticaster implements ApplicationEventMulticaster, Applic
         }
     }
 
-    private boolean registerAsSoap(String endpoint, Object listener) throws AbstractMuleException
+    private boolean registerAsSoap(String endpoint, Object listener) throws MuleException
     {
-        throw new MuleException("Need to reimplement this method without using the QuickConfigurationBuilder.");
+        throw new DefaultMuleException("Need to reimplement this method without using the QuickConfigurationBuilder.");
 //        if (endpoint.startsWith("glue") || endpoint.startsWith("soap") || endpoint.startsWith("axis") || endpoint.startsWith("xfire"))
 //        {
 //            EndpointURI ep = new MuleEndpointURI(endpoint);
@@ -688,7 +688,7 @@ public class MuleEventMulticaster implements ApplicationEventMulticaster, Applic
     }
 
 // TODO MULE-2494
-//    protected void registerEndpointMappings() throws AbstractMuleException
+//    protected void registerEndpointMappings() throws MuleException
 //    {
 //        // register any endpointUri mappings
 //        if (endpointMappings != null)
@@ -705,7 +705,7 @@ public class MuleEventMulticaster implements ApplicationEventMulticaster, Applic
 //        }
 //    }
 
-    protected void registerConnectors() throws AbstractMuleException
+    protected void registerConnectors() throws MuleException
     {
         if (!muleContext.isInitialised())
         {
@@ -730,7 +730,7 @@ public class MuleEventMulticaster implements ApplicationEventMulticaster, Applic
     }
 
 // TODO MULE-2494
-//    protected void registerGlobalEndpoints() throws AbstractMuleException
+//    protected void registerGlobalEndpoints() throws MuleException
 //    {
 //        if (!muleContext.isInitialised())
 //        {
@@ -754,7 +754,7 @@ public class MuleEventMulticaster implements ApplicationEventMulticaster, Applic
 //        }
 //    }
 
-    protected void registerTransformers() throws AbstractMuleException
+    protected void registerTransformers() throws MuleException
     {
         if (!muleContext.isInitialised())
         {
@@ -778,7 +778,7 @@ public class MuleEventMulticaster implements ApplicationEventMulticaster, Applic
         }
     }
 
-    protected Component getDefaultComponent() throws AbstractMuleException
+    protected Component getDefaultComponent() throws MuleException
     {
         // When the the beanFactory is refreshed all the beans get
         // reloaded so we need to unregister the component from Mule

@@ -10,7 +10,7 @@
 
 package org.mule.model.resolvers;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.config.i18n.CoreMessages;
 
 /**
@@ -20,7 +20,7 @@ import org.mule.config.i18n.CoreMessages;
  *
  * @see org.mule.api.model.EntryPointResolver
  */
-public class TooManySatisfiableMethodsException extends AbstractMuleException
+public class TooManySatisfiableMethodsException extends MuleException
 {
     /** Serial version */
     private static final long serialVersionUID = 7856775581858822364L;

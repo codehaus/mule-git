@@ -10,7 +10,7 @@
 
 package org.mule.transport.quartz.jobs;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.extras.client.MuleClient;
 import org.mule.transport.NullPayload;
 import org.mule.transport.quartz.QuartzConnector;
@@ -56,7 +56,7 @@ public class MuleClientDispatchJob implements Job
             logger.debug("Dispatching payload on: " + dispatchEndpoint);
             client.dispatch(dispatchEndpoint, payload, jobDataMap);
         }
-        catch (AbstractMuleException e)
+        catch (MuleException e)
         {
             throw new JobExecutionException(e);
         }

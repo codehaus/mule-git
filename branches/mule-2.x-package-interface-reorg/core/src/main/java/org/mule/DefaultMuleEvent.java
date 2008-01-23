@@ -10,10 +10,10 @@
 
 package org.mule;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleEvent;
-import org.mule.api.MuleException;
+import org.mule.api.DefaultMuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.MuleSession;
 import org.mule.api.ThreadSafeAccess;
@@ -290,7 +290,7 @@ public class DefaultMuleEvent extends EventObject implements MuleEvent, ThreadSa
         return message;
     }
 
-    public byte[] getMessageAsBytes() throws MuleException
+    public byte[] getMessageAsBytes() throws DefaultMuleException
     {
         try
         {
@@ -298,7 +298,7 @@ public class DefaultMuleEvent extends EventObject implements MuleEvent, ThreadSa
         }
         catch (Exception e)
         {
-            throw new MuleException(
+            throw new DefaultMuleException(
                 CoreMessages.cannotReadPayloadAsBytes(message.getPayload().getClass().getName()), e);
         }
     }
@@ -375,7 +375,7 @@ public class DefaultMuleEvent extends EventObject implements MuleEvent, ThreadSa
         */
     }
 
-    public String getMessageAsString() throws AbstractMuleException
+    public String getMessageAsString() throws MuleException
     {
         return getMessageAsString(getEncoding());
     }
@@ -385,10 +385,10 @@ public class DefaultMuleEvent extends EventObject implements MuleEvent, ThreadSa
      *
      * @param encoding the encoding to use when converting the message to string
      * @return the message contents as a string
-     * @throws org.mule.api.AbstractMuleException if the message cannot be converted into a
+     * @throws org.mule.api.MuleException if the message cannot be converted into a
      *             string
      */
-    public String getMessageAsString(String encoding) throws AbstractMuleException
+    public String getMessageAsString(String encoding) throws MuleException
     {
         try
         {
@@ -396,7 +396,7 @@ public class DefaultMuleEvent extends EventObject implements MuleEvent, ThreadSa
         }
         catch (Exception e)
         {
-            throw new MuleException(
+            throw new DefaultMuleException(
                 CoreMessages.cannotReadPayloadAsString(message.getClass().getName()), e);
         }
     }
@@ -651,7 +651,7 @@ public class DefaultMuleEvent extends EventObject implements MuleEvent, ThreadSa
             //    ((Endpoint) endpoint).setTransformers(transformers);
             //}
         }
-        catch (AbstractMuleException e)
+        catch (MuleException e)
         {
             throw (IOException) new IOException(e.getMessage()).initCause(e);
         }

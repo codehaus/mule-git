@@ -10,7 +10,7 @@
 
 package org.mule.transport.http.functional;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
@@ -56,7 +56,7 @@ public class TwoEndpointsSinglePortTestCase extends FunctionalTestCase
     }
 
     protected void sendWithResponse(String endpoint, String message, String response, int noOfMessages)
-        throws AbstractMuleException
+        throws MuleException
     {
         MuleClient client = new MuleClient();
 

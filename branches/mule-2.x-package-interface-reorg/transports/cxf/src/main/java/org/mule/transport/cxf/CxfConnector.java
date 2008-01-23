@@ -10,7 +10,7 @@
 
 package org.mule.transport.cxf;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.component.Component;
 import org.mule.api.context.notification.ManagerNotificationListener;
 import org.mule.api.context.notification.ServerNotification;
@@ -124,12 +124,12 @@ public class CxfConnector extends AbstractConnector implements ManagerNotificati
         // template method
     }
 
-    protected void doStart() throws AbstractMuleException
+    protected void doStart() throws MuleException
     {
 
     }
 
-    protected void doStop() throws AbstractMuleException
+    protected void doStop() throws MuleException
     {
         bus.shutdown(true);
     }
@@ -166,7 +166,7 @@ public class CxfConnector extends AbstractConnector implements ManagerNotificati
 
     @SuppressWarnings("unchecked")
     protected void registerReceiverWithMuleService(MessageReceiver receiver, EndpointURI ep)
-        throws AbstractMuleException
+        throws MuleException
     {
         CxfMessageReceiver cxfReceiver = (CxfMessageReceiver) receiver;
         Server server = cxfReceiver.getServer();
@@ -283,7 +283,7 @@ public class CxfConnector extends AbstractConnector implements ManagerNotificati
                 {
                     muleContext.getRegistry().registerComponent(c);
                 }
-                catch (AbstractMuleException e)
+                catch (MuleException e)
                 {
                     handleException(e);
                 }

@@ -10,7 +10,7 @@
 
 package org.mule.transport.cxf;
 
-import org.mule.api.MuleException;
+import org.mule.api.DefaultMuleException;
 import org.mule.transport.AbstractMessageAdapter;
 import org.mule.transport.cxf.i18n.CxfMessages;
 
@@ -38,11 +38,11 @@ public class CxfMessageAdapter extends AbstractMessageAdapter
 
     private final Message payload;
     
-    public CxfMessageAdapter(Message message) throws MuleException
+    public CxfMessageAdapter(Message message) throws DefaultMuleException
     {
         if (message == null)
         {
-            throw new MuleException(CxfMessages.unableToConstructAdapterForNullMessage());
+            throw new DefaultMuleException(CxfMessages.unableToConstructAdapterForNullMessage());
         }
         this.payload = message;
     }
@@ -96,7 +96,7 @@ public class CxfMessageAdapter extends AbstractMessageAdapter
         payload.setAttachments(newAttachments);
     }
 
-    protected Collection<Attachment> getAttachments() throws MuleException
+    protected Collection<Attachment> getAttachments() throws DefaultMuleException
     {
         if (payload instanceof AbstractWrappedMessage)
         {
@@ -107,7 +107,7 @@ public class CxfMessageAdapter extends AbstractMessageAdapter
         {
             // @TODO: Maybe pass the connector down and use connector exception
             // instead?
-            throw new MuleException(CxfMessages.inappropriateMessageTypeForAttachments(payload.getClass()
+            throw new DefaultMuleException(CxfMessages.inappropriateMessageTypeForAttachments(payload.getClass()
                 .getName()));
         }
     }

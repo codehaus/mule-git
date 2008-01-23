@@ -10,7 +10,7 @@
 
 package org.mule.transport.service;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.component.Component;
 import org.mule.api.endpoint.EndpointURIBuilder;
 import org.mule.api.endpoint.ImmutableEndpoint;
@@ -42,12 +42,12 @@ public interface TransportServiceDescriptor extends ServiceDescriptor
 
     public MessageReceiver createMessageReceiver(Connector connector,
                                                              Component component,
-                                                             ImmutableEndpoint endpoint) throws AbstractMuleException;
+                                                             ImmutableEndpoint endpoint) throws MuleException;
 
     public MessageReceiver createMessageReceiver(Connector connector,
                                                              Component component,
                                                              ImmutableEndpoint endpoint,
-                                                             Object[] args) throws AbstractMuleException;
+                                                             Object[] args) throws MuleException;
 
     public MessageDispatcherFactory createDispatcherFactory() throws TransportServiceException;
 

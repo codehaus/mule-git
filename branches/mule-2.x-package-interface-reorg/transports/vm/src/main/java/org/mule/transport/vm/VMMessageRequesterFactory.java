@@ -10,7 +10,7 @@
 
 package org.mule.transport.vm;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.transport.MessageRequester;
 import org.mule.transport.AbstractMessageRequesterFactory;
@@ -25,7 +25,7 @@ public class VMMessageRequesterFactory extends AbstractMessageRequesterFactory
      *
      * @see org.mule.api.transport.MessageDispatcherFactory#create(org.mule.api.transport.Connector)
      */
-    public MessageRequester create(ImmutableEndpoint endpoint) throws AbstractMuleException
+    public MessageRequester create(ImmutableEndpoint endpoint) throws MuleException
     {
         return new VMMessageRequester(endpoint);
     }

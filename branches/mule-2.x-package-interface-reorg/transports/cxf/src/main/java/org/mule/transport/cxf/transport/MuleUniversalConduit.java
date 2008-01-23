@@ -8,7 +8,7 @@ import org.mule.DefaultMuleMessage;
 import org.mule.DefaultMuleSession;
 import org.mule.RegistryContext;
 import org.mule.RequestContext;
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleEventContext;
 import org.mule.api.MuleMessage;
@@ -271,7 +271,7 @@ public class MuleUniversalConduit extends AbstractConduit
         }
     }
 
-    protected MuleMessage sendStream(MessageAdapter sa, ImmutableEndpoint ep) throws AbstractMuleException
+    protected MuleMessage sendStream(MessageAdapter sa, ImmutableEndpoint ep) throws MuleException
     {
         MuleEventContext eventContext = RequestContext.getEventContext();
         MuleSession session = null;

@@ -10,7 +10,7 @@
 
 package org.mule.tck.testmodels.mule;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MessagingException;
 import org.mule.api.ThreadSafeAccess;
 import org.mule.api.component.Component;
@@ -37,7 +37,7 @@ public class TestConnector extends AbstractConnector
         super();
         setDispatcherFactory(new AbstractMessageDispatcherFactory()
         {
-            public MessageDispatcher create(ImmutableEndpoint endpoint) throws AbstractMuleException
+            public MessageDispatcher create(ImmutableEndpoint endpoint) throws MuleException
             {
                 return new TestMessageDispatcher(endpoint);
             }
@@ -64,12 +64,12 @@ public class TestConnector extends AbstractConnector
         // template method
     }
 
-    protected void doStart() throws AbstractMuleException
+    protected void doStart() throws MuleException
     {
         // template method
     }
 
-    protected void doStop() throws AbstractMuleException
+    protected void doStop() throws MuleException
     {
         // template method
     }
@@ -114,12 +114,12 @@ public class TestConnector extends AbstractConnector
                 // nothing to do
             }
 
-            protected void doStart() throws AbstractMuleException
+            protected void doStart() throws MuleException
             {
                 // nothing to do
             }
 
-            protected void doStop() throws AbstractMuleException
+            protected void doStop() throws MuleException
             {
                 // nothing to do
             }

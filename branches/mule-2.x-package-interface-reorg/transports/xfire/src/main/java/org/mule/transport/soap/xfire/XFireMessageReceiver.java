@@ -10,7 +10,7 @@
 
 package org.mule.transport.soap.xfire;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.component.Component;
 import org.mule.api.endpoint.Endpoint;
 import org.mule.api.lifecycle.CreateException;
@@ -187,12 +187,12 @@ public class XFireMessageReceiver extends AbstractMessageReceiver
         connector.getXfire().getServiceRegistry().unregister(service);
     }
 
-    public void doStart() throws AbstractMuleException
+    public void doStart() throws MuleException
     {
         // nothing to do
     }
 
-    public void doStop() throws AbstractMuleException
+    public void doStop() throws MuleException
     {
         // nothing to do
     }

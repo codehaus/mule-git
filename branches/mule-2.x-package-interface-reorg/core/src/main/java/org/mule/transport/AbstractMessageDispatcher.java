@@ -12,7 +12,7 @@ package org.mule.transport;
 
 import org.mule.OptimizedRequestContext;
 import org.mule.RequestContext;
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.config.MuleProperties;
@@ -69,7 +69,7 @@ public abstract class AbstractMessageDispatcher extends AbstractConnectable impl
                 connector.handleException(e);
                 return;
             }
-            catch (AbstractMuleException e)
+            catch (MuleException e)
             {
                 disposeAndLogException();
                 throw new DispatchException(event.getMessage(), event.getEndpoint(), e);
@@ -141,7 +141,7 @@ public abstract class AbstractMessageDispatcher extends AbstractConnectable impl
                 connector.handleException(e);
                 return event.getMessage();
             }
-            catch (AbstractMuleException e)
+            catch (MuleException e)
             {
                 disposeAndLogException();
                 throw new DispatchException(event.getMessage(), event.getEndpoint(), e);

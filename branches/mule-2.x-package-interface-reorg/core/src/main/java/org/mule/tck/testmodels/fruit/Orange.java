@@ -10,7 +10,7 @@
 
 package org.mule.tck.testmodels.fruit;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleEventContext;
 import org.mule.api.lifecycle.Callable;
 
@@ -59,7 +59,7 @@ public class Orange implements Fruit, Callable
         this.brand = brand;
     }
 
-    public Orange(HashMap props) throws AbstractMuleException
+    public Orange(HashMap props) throws MuleException
     {
         setBrand((String) props.get("brand"));
         setRadius((Double) props.get("radius"));
@@ -76,7 +76,7 @@ public class Orange implements Fruit, Callable
         return bitten;
     }
 
-    public Object onCall(MuleEventContext context) throws AbstractMuleException
+    public Object onCall(MuleEventContext context) throws MuleException
     {
         logger.debug("Orange received an event in UMOCallable.onEvent! MuleEvent says: "
                      + context.getMessageAsString());

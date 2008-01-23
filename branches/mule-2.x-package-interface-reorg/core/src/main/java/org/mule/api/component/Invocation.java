@@ -11,7 +11,7 @@
 package org.mule.api.component;
 
 import org.mule.RequestContext;
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 
@@ -53,9 +53,9 @@ public class Invocation
      * Excutes this invocation
      * 
      * @return the current message that may have been altered by the invocation
-     * @throws AbstractMuleException if something goes wrong
+     * @throws MuleException if something goes wrong
      */
-    public MuleMessage execute() throws AbstractMuleException
+    public MuleMessage execute() throws MuleException
     {
         return invocation.execute();
     }

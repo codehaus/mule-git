@@ -10,7 +10,7 @@
 
 package org.mule.transport.http.servlet;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.component.Component;
 import org.mule.api.endpoint.Endpoint;
 import org.mule.api.lifecycle.CreateException;
@@ -48,12 +48,12 @@ public class ServletMessageReceiver extends AbstractMessageReceiver
         // nothing to do
     }
 
-    protected void doStart() throws AbstractMuleException
+    protected void doStart() throws MuleException
     {
         // nothing to do
     }
 
-    protected void doStop() throws AbstractMuleException
+    protected void doStop() throws MuleException
     {
         // nothing to do
     }

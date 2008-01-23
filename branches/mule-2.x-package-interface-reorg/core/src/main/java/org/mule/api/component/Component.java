@@ -10,7 +10,7 @@
 
 package org.mule.api.component;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.NamedObject;
@@ -41,9 +41,9 @@ public interface Component extends Serializable, Lifecycle, MuleContextAware, Na
      * Makes an asynhronous event call to the component.
      * 
      * @param event the event to consume
-     * @throws AbstractMuleException if the event fails to be processed
+     * @throws MuleException if the event fails to be processed
      */
-    void dispatchEvent(MuleEvent event) throws AbstractMuleException;
+    void dispatchEvent(MuleEvent event) throws MuleException;
 
     /**
      * Makes a synhronous event call to the component. This event will be consumed by
@@ -51,9 +51,9 @@ public interface Component extends Serializable, Lifecycle, MuleContextAware, Na
      * 
      * @param event the event to consume
      * @return a MuleMessage containing the resulting message and properties
-     * @throws AbstractMuleException if the event fails to be processed
+     * @throws MuleException if the event fails to be processed
      */
-    MuleMessage sendEvent(MuleEvent event) throws AbstractMuleException;
+    MuleMessage sendEvent(MuleEvent event) throws MuleException;
 
     /**
      * Determines whether this component has been started
@@ -67,13 +67,13 @@ public interface Component extends Serializable, Lifecycle, MuleContextAware, Na
      * component will still consume messages from the underlying transport, but those
      * messages will be queued until the component is resumed.
      */
-    void pause() throws AbstractMuleException;
+    void pause() throws MuleException;
 
     /**
      * Resumes a single Mule Component that has been paused. If the component is not
      * paused nothing is executed.
      */
-    void resume() throws AbstractMuleException;
+    void resume() throws MuleException;
 
     /**
      * True if the component is in a paused state, false otherwise

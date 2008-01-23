@@ -13,7 +13,7 @@ package org.mule.model.seda;
 import org.mule.DefaultMuleEvent;
 import org.mule.FailedToQueueEventException;
 import org.mule.RegistryContext;
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.MuleRuntimeException;
@@ -130,12 +130,12 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
         }
     }
 
-    public void doForceStop() throws AbstractMuleException
+    public void doForceStop() throws MuleException
     {
         doStop();
     }
 
-    public void doStop() throws AbstractMuleException
+    public void doStop() throws MuleException
     {
         if (muleContext.getQueueManager().getQueueSession().getQueue(name).size() > 0)
         {
@@ -156,7 +156,7 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
         }
     }
 
-    public void doStart() throws AbstractMuleException
+    public void doStart() throws MuleException
     {
         try
         {
@@ -186,7 +186,7 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
         serviceFactory.dispose();
     }
 
-    protected void doDispatch(MuleEvent event) throws AbstractMuleException
+    protected void doDispatch(MuleEvent event) throws MuleException
     {
         // Dispatching event to the component
         if (stats.isEnabled())
@@ -223,7 +223,7 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
         }
     }
 
-    public MuleMessage doSend(MuleEvent event) throws AbstractMuleException
+    public MuleMessage doSend(MuleEvent event) throws MuleException
     {
         MuleMessage result = null;
         Object pojoService = null;
@@ -240,7 +240,7 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
             }
             result = (MuleMessage) proxy.onCall(event);
         }
-        catch (AbstractMuleException e)
+        catch (MuleException e)
         {
             throw e;
         }
@@ -354,7 +354,7 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
                     handleException(new ComponentException(CoreMessages.proxyPoolTimedOut(),
                         (event == null ? null : event.getMessage()), this, e));
                 }
-                else if (e instanceof AbstractMuleException)
+                else if (e instanceof MuleException)
                 {
                     handleException(e);
                 }
@@ -479,7 +479,7 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
         return new ComponentStatistics(getName(), threadingProfile.getMaxThreadsActive());
     }
 
-    public Object getInstance() throws AbstractMuleException
+    public Object getInstance() throws MuleException
     {
         throw new UnsupportedOperationException("Direct access to underlying service object is not allowed in the SedaModel.  If this is for a unit test, make sure you are using the TestSedaModel ('seda-test')");
     }

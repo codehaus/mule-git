@@ -10,7 +10,7 @@
 
 package org.mule.api.endpoint;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.config.i18n.Message;
 
 /**
@@ -18,7 +18,7 @@ import org.mule.config.i18n.Message;
  * specific exceptions.
  */
 
-public class EndpointException extends AbstractMuleException
+public class EndpointException extends MuleException
 {
     /**
      * Serial version

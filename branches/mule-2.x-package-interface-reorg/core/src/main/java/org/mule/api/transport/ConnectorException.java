@@ -10,7 +10,7 @@
 
 package org.mule.api.transport;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.config.i18n.Message;
 
@@ -21,7 +21,7 @@ import org.mule.config.i18n.Message;
  * 
  * @see Connector
  */
-public class ConnectorException extends AbstractMuleException
+public class ConnectorException extends MuleException
 {
     /**
      * Serial version

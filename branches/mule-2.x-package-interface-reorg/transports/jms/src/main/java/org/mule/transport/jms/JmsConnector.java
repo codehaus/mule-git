@@ -10,7 +10,7 @@
 
 package org.mule.transport.jms;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MessagingException;
 import org.mule.api.component.Component;
 import org.mule.api.context.notification.ConnectionNotificationListener;
@@ -231,7 +231,7 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
                         jmsConnector.stop();
                         jmsConnector.initialised.set(false);
                     }
-                    catch (AbstractMuleException e)
+                    catch (MuleException e)
                     {
                         logger.warn(e.getMessage(), e);
                     }
@@ -246,7 +246,7 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
                     {
                         logger.fatal("Failed to reconnect to JMS server. I'm giving up.");
                     }
-                    catch (AbstractMuleException umoex)
+                    catch (MuleException umoex)
                     {
                         throw new UnhandledException("Failed to recover a connector.", umoex);
                     }
@@ -396,7 +396,7 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
         return session;
     }
 
-    protected void doStart() throws AbstractMuleException
+    protected void doStart() throws MuleException
     {
         if (connection != null)
         {
@@ -411,7 +411,7 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
         }
     }
 
-    protected void doStop() throws AbstractMuleException
+    protected void doStop() throws MuleException
     {
         // template method
     }

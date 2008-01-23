@@ -12,7 +12,7 @@ package org.mule.transport.ssl;
 
 import org.mule.ResponseOutputStream;
 import org.mule.api.MuleEventContext;
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
@@ -48,7 +48,7 @@ public class SslConnectorFunctionalTestCase extends FunctionalTestCase
         return "ssl-connector-functional-test.xml";
     }
 
-    protected URI getUri() throws AbstractMuleException
+    protected URI getUri() throws MuleException
     {
         return muleContext.getRegistry()
             .lookupEndpointFactory()

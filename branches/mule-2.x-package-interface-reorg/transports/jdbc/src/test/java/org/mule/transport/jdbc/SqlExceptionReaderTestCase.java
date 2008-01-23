@@ -10,7 +10,7 @@
 
 package org.mule.transport.jdbc;
 
-import org.mule.api.MuleException;
+import org.mule.api.DefaultMuleException;
 import org.mule.config.ExceptionHelper;
 import org.mule.config.i18n.MessageFactory;
 import org.mule.tck.AbstractMuleTestCase;
@@ -61,7 +61,7 @@ public class SqlExceptionReaderTestCase extends AbstractMuleTestCase
         SQLException e = new SQLException("SQL error", "bad SQL state", 1234);
         e.setNextException(new SQLException("blah"));
 
-        return new MuleException(MessageFactory.createStaticMessage("foo"), new MuleException(
+        return new DefaultMuleException(MessageFactory.createStaticMessage("foo"), new DefaultMuleException(
             MessageFactory.createStaticMessage("bar"), e));
     }
 }

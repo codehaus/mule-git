@@ -10,7 +10,7 @@
 
 package org.mule.test.spring;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.tck.FunctionalTestCase;
 
@@ -22,7 +22,7 @@ public class MuleRootTestCase extends FunctionalTestCase
         return "org/mule/test/spring/mule-root-test.xml";
     }
 
-    public void testModel() throws AbstractMuleException
+    public void testModel() throws MuleException
     {
         assertNotNull("No model", muleContext.getRegistry().lookupModel("model"));
         ImmutableEndpoint endpoint = muleContext.getRegistry().lookupEndpointFactory().getInboundEndpoint("endpoint");

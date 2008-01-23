@@ -11,7 +11,7 @@ package org.mule.management.agents;
 
 import org.mule.AbstractAgent;
 import org.mule.RegistryContext;
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleRuntimeException;
 import org.mule.api.component.Component;
 import org.mule.api.context.notification.ManagerNotificationListener;
@@ -264,7 +264,7 @@ public class JmxAgent extends AbstractAgent
      *
      * @see org.mule.api.lifecycle.Startable#start()
      */
-    public void start() throws AbstractMuleException
+    public void start() throws MuleException
     {
         if (connectorServer != null)
         {
@@ -285,7 +285,7 @@ public class JmxAgent extends AbstractAgent
      *
      * @see org.mule.api.lifecycle.Stoppable#stop()
      */
-    public void stop() throws AbstractMuleException
+    public void stop() throws MuleException
     {
         if (connectorServer != null)
         {
@@ -353,9 +353,9 @@ public class JmxAgent extends AbstractAgent
 
     /**
      * Register a Java Service Wrapper agent.
-     * @throws AbstractMuleException if registration failed
+     * @throws MuleException if registration failed
      */
-    protected void registerWrapperService() throws AbstractMuleException
+    protected void registerWrapperService() throws MuleException
     {
         // WrapperManager to support restarts
         final WrapperManagerAgent wmAgent = new WrapperManagerAgent();

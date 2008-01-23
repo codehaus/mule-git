@@ -12,7 +12,7 @@ package org.mule.management.agents;
 
 import org.mule.AbstractAgent;
 import org.mule.RegistryContext;
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.agent.Agent;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.util.StringUtils;
@@ -73,13 +73,13 @@ public class DefaultJmxSupportAgent extends AbstractAgent
     }
 
     /** {@inheritDoc} */
-    public void start() throws AbstractMuleException
+    public void start() throws MuleException
     {
         // nothing to do
     }
 
     /** {@inheritDoc} */
-    public void stop() throws AbstractMuleException
+    public void stop() throws MuleException
     {
         // nothing to do
     }
@@ -162,7 +162,7 @@ public class DefaultJmxSupportAgent extends AbstractAgent
             //TODO RM* this currently does nothing!!!
             muleContext.getRegistry().unregisterAgent(name);
         }
-        catch (AbstractMuleException e)
+        catch (MuleException e)
         {
             throw new InitialisationException(e, this);
         }

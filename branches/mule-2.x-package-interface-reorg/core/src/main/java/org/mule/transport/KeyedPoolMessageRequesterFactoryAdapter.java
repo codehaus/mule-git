@@ -10,7 +10,7 @@
 
 package org.mule.transport;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.transport.MessageRequester;
 import org.mule.api.transport.MessageRequesterFactory;
@@ -73,12 +73,12 @@ public class KeyedPoolMessageRequesterFactoryAdapter
         return factory.isCreateRequesterPerRequest();
     }
 
-    public MessageRequester create(ImmutableEndpoint endpoint) throws AbstractMuleException
+    public MessageRequester create(ImmutableEndpoint endpoint) throws MuleException
     {
         return factory.create(endpoint);
     }
 
-    public void activate(ImmutableEndpoint endpoint, MessageRequester requester) throws AbstractMuleException
+    public void activate(ImmutableEndpoint endpoint, MessageRequester requester) throws MuleException
     {
         factory.activate(endpoint, requester);
     }

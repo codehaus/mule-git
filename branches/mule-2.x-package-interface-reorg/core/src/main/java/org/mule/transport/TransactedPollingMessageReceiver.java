@@ -10,7 +10,7 @@
 
 package org.mule.transport;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.component.Component;
 import org.mule.api.config.ThreadingProfile;
 import org.mule.api.endpoint.ImmutableEndpoint;
@@ -83,7 +83,7 @@ public abstract class TransactedPollingMessageReceiver extends AbstractPollingMe
     }
 
     // @Override
-    public void doStart() throws AbstractMuleException
+    public void doStart() throws MuleException
     {
         // Connector property overrides any implied value
         this.setUseMultipleTransactedReceivers(connector.isCreateMultipleTransactedReceivers());

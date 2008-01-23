@@ -10,7 +10,7 @@
 
 package org.mule.transport.http;
 
-import org.mule.api.MuleException;
+import org.mule.api.DefaultMuleException;
 import org.mule.api.routing.RoutingException;
 import org.mule.api.security.UnauthorisedException;
 import org.mule.config.ExceptionHelper;
@@ -30,9 +30,9 @@ public class StatusCodeMappingsTestCase extends AbstractMuleTestCase
         code = ExceptionHelper.getErrorMapping("http", UnauthorisedException.class);
         assertEquals("401", code);
 
-        code = ExceptionHelper.getErrorMapping("blah", MuleException.class);
+        code = ExceptionHelper.getErrorMapping("blah", DefaultMuleException.class);
         assertEquals(
-            String.valueOf(new MuleException(MessageFactory.createStaticMessage("test")).getExceptionCode()), code);
+            String.valueOf(new DefaultMuleException(MessageFactory.createStaticMessage("test")).getExceptionCode()), code);
 
     }
 

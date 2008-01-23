@@ -10,7 +10,7 @@
 
 package org.mule;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.MuleSession;
 import org.mule.api.config.MuleProperties;
@@ -46,7 +46,7 @@ public class MuleSessionHandler implements SessionHandler
     private static Transformer encoder = new Base64Encoder();
     private static Transformer decoder = new Base64Decoder();
 
-    public void retrieveSessionInfoFromMessage(MuleMessage message, MuleSession session) throws AbstractMuleException
+    public void retrieveSessionInfoFromMessage(MuleMessage message, MuleSession session) throws MuleException
     {
         String sessionId = (String) message.removeProperty(MuleProperties.MULE_SESSION_ID_PROPERTY);
         Object sessionHeader = message.removeProperty(MuleProperties.MULE_SESSION_PROPERTY);
@@ -97,7 +97,7 @@ public class MuleSessionHandler implements SessionHandler
         }
     }
 
-    public void storeSessionInfoToMessage(MuleSession session, MuleMessage message) throws AbstractMuleException
+    public void storeSessionInfoToMessage(MuleSession session, MuleMessage message) throws MuleException
     {
         StringBuffer buf = new StringBuffer();
         buf.append(getSessionIDKey()).append("=").append(session.getId());

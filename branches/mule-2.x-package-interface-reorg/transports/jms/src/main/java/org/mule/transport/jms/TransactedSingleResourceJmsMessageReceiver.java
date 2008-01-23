@@ -11,7 +11,7 @@
 package org.mule.transport.jms;
 
 import org.mule.DefaultMuleMessage;
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.component.Component;
 import org.mule.api.endpoint.Endpoint;
 import org.mule.api.lifecycle.CreateException;
@@ -142,7 +142,7 @@ public class TransactedSingleResourceJmsMessageReceiver extends AbstractMessageR
         }
     }
 
-    protected void doStart() throws AbstractMuleException
+    protected void doStart() throws MuleException
     {
         try
         {
@@ -166,7 +166,7 @@ public class TransactedSingleResourceJmsMessageReceiver extends AbstractMessageR
         }
     }
 
-    protected void doStop() throws AbstractMuleException
+    protected void doStop() throws MuleException
     {
         try
         {

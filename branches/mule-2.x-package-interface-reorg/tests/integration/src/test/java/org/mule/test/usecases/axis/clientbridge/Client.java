@@ -10,7 +10,7 @@
 
 package org.mule.test.usecases.axis.clientbridge;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleMessage;
 import org.mule.api.context.MuleContextFactory;
@@ -47,7 +47,7 @@ public class Client
 
     private MuleClient client;
 
-    private void execute() throws AbstractMuleException
+    private void execute() throws MuleException
     {
         client = new MuleClient();
 
@@ -65,7 +65,7 @@ public class Client
         }
     }
 
-    private void executeComplexity() throws AbstractMuleException
+    private void executeComplexity() throws MuleException
     {
         System.err.println("\nexecuteComplexity");
         Object result = client.send(AXIS_ENDPOINT + "?method=executeComplexity", new ComplexData("Foo",
@@ -76,7 +76,7 @@ public class Client
         System.err.println(data);
     }
 
-    private void complexRequest() throws AbstractMuleException
+    private void complexRequest() throws MuleException
     {
         System.err.println("\ncomplexRequest");
         Object result = client.send(LOCAL_ENDPOINT, new ComplexData("Foo", new Integer(84)), null);

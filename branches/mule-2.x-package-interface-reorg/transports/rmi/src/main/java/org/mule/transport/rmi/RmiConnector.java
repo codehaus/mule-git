@@ -11,7 +11,7 @@
 package org.mule.transport.rmi;
 
 import org.mule.api.MuleEvent;
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.component.Component;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.endpoint.EndpointURI;
@@ -111,12 +111,12 @@ public class RmiConnector extends AbstractJndiConnector
         // template method
     }
 
-    protected void doStart() throws AbstractMuleException
+    protected void doStart() throws MuleException
     {
         // template method
     }
 
-    protected void doStop() throws AbstractMuleException
+    protected void doStop() throws MuleException
     {
         // template method
     }
@@ -215,12 +215,12 @@ public class RmiConnector extends AbstractJndiConnector
      * @param remoteObject The remote object on which to invoke the method
      * @param event The current event being processed
      * @return
-     * @throws org.mule.api.AbstractMuleException
+     * @throws org.mule.api.MuleException
      * @throws NoSuchMethodException
      * @throws ClassNotFoundException
      */
     public Method getMethodObject(Remote remoteObject, MuleEvent event)
-        throws AbstractMuleException, NoSuchMethodException, ClassNotFoundException
+        throws MuleException, NoSuchMethodException, ClassNotFoundException
     {
         EndpointURI endpointUri = event.getEndpoint().getEndpointURI();
 

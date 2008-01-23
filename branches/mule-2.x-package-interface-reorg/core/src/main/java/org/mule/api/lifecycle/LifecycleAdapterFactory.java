@@ -10,7 +10,7 @@
 
 package org.mule.api.lifecycle;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.component.Component;
 import org.mule.api.model.EntryPointResolverSet;
 
@@ -18,5 +18,5 @@ import org.mule.api.model.EntryPointResolverSet;
 public interface LifecycleAdapterFactory
 {
     LifecycleAdapter create(Object pojoService, Component component, EntryPointResolverSet resolver)
-        throws AbstractMuleException;
+        throws MuleException;
 }

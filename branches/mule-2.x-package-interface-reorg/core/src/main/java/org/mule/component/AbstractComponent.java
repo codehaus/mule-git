@@ -11,7 +11,7 @@
 package org.mule.component;
 
 import org.mule.OptimizedRequestContext;
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
@@ -242,7 +242,7 @@ public abstract class AbstractComponent implements Component
         muleContext.fireNotification(new ComponentNotification(this, action));
     }
 
-    public void forceStop() throws AbstractMuleException
+    public void forceStop() throws MuleException
     {
         if (!stopped.get())
         {
@@ -256,7 +256,7 @@ public abstract class AbstractComponent implements Component
         }
     }
 
-    public void stop() throws AbstractMuleException
+    public void stop() throws MuleException
     {
         if (!stopped.get())
         {
@@ -275,7 +275,7 @@ public abstract class AbstractComponent implements Component
         }
     }
 
-    public void start() throws AbstractMuleException
+    public void start() throws MuleException
     {
         if (isStarted())
         {
@@ -307,7 +307,7 @@ public abstract class AbstractComponent implements Component
      * @param startPaused - Start component in a "paused" state (messages are
      *                    received but not processed).
      */
-    protected void start(boolean startPaused) throws AbstractMuleException
+    protected void start(boolean startPaused) throws MuleException
     {
         // Create the receivers for the component but do not start them yet.
         registerListeners();
@@ -345,7 +345,7 @@ public abstract class AbstractComponent implements Component
      * component will still consume messages from the underlying transport, but those
      * messages will be queued until the component is resumed.
      */
-    public final void pause() throws AbstractMuleException
+    public final void pause() throws MuleException
     {
         doPause();
         paused.set(true);
@@ -357,7 +357,7 @@ public abstract class AbstractComponent implements Component
      * Resumes a single Mule Component that has been paused. If the component is not
      * paused nothing is executed.
      */
-    public final void resume() throws AbstractMuleException
+    public final void resume() throws MuleException
     {
         doResume();
         paused.set(false);
@@ -380,9 +380,9 @@ public abstract class AbstractComponent implements Component
      * state here. If a developer overloads this method the doResume() method MUST
      * also be overloaded to avoid inconsistent state in the component
      *
-     * @throws AbstractMuleException
+     * @throws MuleException
      */
-    protected void doPause() throws AbstractMuleException
+    protected void doPause() throws MuleException
     {
         // template method
     }
@@ -392,9 +392,9 @@ public abstract class AbstractComponent implements Component
      * been paused If a developer overloads this method the doPause() method MUST
      * also be overloaded to avoid inconsistent state in the component
      *
-     * @throws AbstractMuleException
+     * @throws MuleException
      */
-    protected void doResume() throws AbstractMuleException
+    protected void doResume() throws MuleException
     {
         // template method
     }
@@ -408,7 +408,7 @@ public abstract class AbstractComponent implements Component
                 stop();
             }
         }
-        catch (AbstractMuleException e)
+        catch (MuleException e)
         {
             // TODO MULE-863: If this is an error, do something!
             logger.error("Failed to stop component: " + name, e);
@@ -423,7 +423,7 @@ public abstract class AbstractComponent implements Component
         return stats;
     }
 
-    public void dispatchEvent(MuleEvent event) throws AbstractMuleException
+    public void dispatchEvent(MuleEvent event) throws MuleException
     {
         if (stopping.get() || stopped.get())
         {
@@ -474,7 +474,7 @@ public abstract class AbstractComponent implements Component
         doDispatch(event);
     }
 
-    public MuleMessage sendEvent(MuleEvent event) throws AbstractMuleException
+    public MuleMessage sendEvent(MuleEvent event) throws MuleException
     {
         if (stopping.get() || stopped.get())
         {
@@ -563,17 +563,17 @@ public abstract class AbstractComponent implements Component
         exceptionListener.exceptionThrown(e);
     }
 
-    protected void doForceStop() throws AbstractMuleException
+    protected void doForceStop() throws MuleException
     {
         // template method
     }
 
-    protected void doStop() throws AbstractMuleException
+    protected void doStop() throws MuleException
     {
         // template method
     }
 
-    protected void doStart() throws AbstractMuleException
+    protected void doStart() throws MuleException
     {
         // template method
     }
@@ -593,11 +593,11 @@ public abstract class AbstractComponent implements Component
         return !stopped.get();
     }
 
-    protected abstract MuleMessage doSend(MuleEvent event) throws AbstractMuleException;
+    protected abstract MuleMessage doSend(MuleEvent event) throws MuleException;
 
-    protected abstract void doDispatch(MuleEvent event) throws AbstractMuleException;
+    protected abstract void doDispatch(MuleEvent event) throws MuleException;
 
-    protected void registerListeners() throws AbstractMuleException
+    protected void registerListeners() throws MuleException
     {
         Endpoint endpoint;
         List endpoints = getIncomingEndpoints();
@@ -609,7 +609,7 @@ public abstract class AbstractComponent implements Component
             {
                 endpoint.getConnector().registerListener(this, endpoint);
             }
-            catch (AbstractMuleException e)
+            catch (MuleException e)
             {
                 throw e;
             }
@@ -621,7 +621,7 @@ public abstract class AbstractComponent implements Component
         }
     }
 
-    protected void unregisterListeners() throws AbstractMuleException
+    protected void unregisterListeners() throws MuleException
     {
         Endpoint endpoint;
         List endpoints = getIncomingEndpoints();
@@ -633,7 +633,7 @@ public abstract class AbstractComponent implements Component
             {
                 endpoint.getConnector().unregisterListener(this, endpoint);
             }
-            catch (AbstractMuleException e)
+            catch (MuleException e)
             {
                 throw e;
             }
@@ -645,7 +645,7 @@ public abstract class AbstractComponent implements Component
         }
     }
 
-    protected void startListeners() throws AbstractMuleException
+    protected void startListeners() throws MuleException
     {
         Endpoint endpoint;
         List endpoints = getIncomingEndpoints();
@@ -663,7 +663,7 @@ public abstract class AbstractComponent implements Component
         }
     }
 
-    protected void stopListeners() throws AbstractMuleException
+    protected void stopListeners() throws MuleException
     {
         Endpoint endpoint;
         List endpoints = getIncomingEndpoints();
@@ -680,7 +680,7 @@ public abstract class AbstractComponent implements Component
         }
     }
 
-    protected void connectListeners() throws AbstractMuleException
+    protected void connectListeners() throws MuleException
     {
         Endpoint endpoint;
         List endpoints = getIncomingEndpoints();
@@ -707,7 +707,7 @@ public abstract class AbstractComponent implements Component
         }
     }
 
-    protected void disconnectListeners() throws AbstractMuleException
+    protected void disconnectListeners() throws MuleException
     {
         Endpoint endpoint;
         List endpoints = getIncomingEndpoints();
@@ -758,14 +758,14 @@ public abstract class AbstractComponent implements Component
         this.muleContext = context;
     }
 
-    protected MuleProxy createComponentProxy(Object pojoService) throws AbstractMuleException
+    protected MuleProxy createComponentProxy(Object pojoService) throws MuleException
     {
         MuleProxy proxy = new DefaultMuleProxy(pojoService, this, muleContext);
         proxy.setStatistics(getStatistics());
         return proxy;
     }
 
-    protected Object getOrCreateService() throws AbstractMuleException
+    protected Object getOrCreateService() throws MuleException
     {
         if (serviceFactory == null)
         {

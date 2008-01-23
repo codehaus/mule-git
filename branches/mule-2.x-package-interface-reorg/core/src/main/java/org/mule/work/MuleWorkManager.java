@@ -27,7 +27,7 @@
 
 package org.mule.work;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.config.ThreadingProfile;
 import org.mule.api.context.WorkManager;
 import org.mule.api.work.WorkExecutor;
@@ -98,7 +98,7 @@ public class MuleWorkManager implements WorkManager
         this.name = name;
     }
 
-    public synchronized void start() throws AbstractMuleException
+    public synchronized void start() throws MuleException
     {
         if (workExecutorService == null)
         {

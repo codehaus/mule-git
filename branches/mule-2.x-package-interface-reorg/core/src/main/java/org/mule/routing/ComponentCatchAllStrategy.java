@@ -12,7 +12,7 @@ package org.mule.routing;
 
 import org.mule.DefaultMuleEvent;
 import org.mule.RequestContext;
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.MuleSession;
@@ -57,7 +57,7 @@ public class ComponentCatchAllStrategy extends AbstractCatchAllStrategy
                 return null;
             }
         }
-        catch (AbstractMuleException e)
+        catch (MuleException e)
         {
             throw new ComponentRoutingException(event.getMessage(), event.getEndpoint(),
                 session.getComponent(), e);

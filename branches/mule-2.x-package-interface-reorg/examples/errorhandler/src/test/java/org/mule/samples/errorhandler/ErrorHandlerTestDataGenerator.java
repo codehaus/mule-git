@@ -10,7 +10,7 @@
 
 package org.mule.samples.errorhandler;
 
-import org.mule.api.MuleException;
+import org.mule.api.DefaultMuleException;
 import org.mule.api.lifecycle.FatalException;
 import org.mule.api.transformer.TransformerException;
 import org.mule.config.i18n.MessageFactory;
@@ -31,14 +31,14 @@ public class ErrorHandlerTestDataGenerator
         }
 
         ObjectToXml trans = new ObjectToXml();
-        MuleException exception = new MuleException(MessageFactory.createStaticMessage("Some default exception"));
+        DefaultMuleException exception = new DefaultMuleException(MessageFactory.createStaticMessage("Some default exception"));
         FatalException fatal = new FatalException(MessageFactory.createStaticMessage("Some fatal exception"),
             new IOException("Some IO exception"));
         BusinessException business = new BusinessException("Some business exception");
 
         ExceptionBean bean = new ExceptionBean(exception);
         String xml = (String)trans.transform(bean);
-        FileUtils.stringToFile(targetDir + "MuleException.xml", xml);
+        FileUtils.stringToFile(targetDir + "DefaultMuleException.xml", xml);
 
         bean = new ExceptionBean(fatal);
         xml = (String)trans.transform(bean);

@@ -10,8 +10,8 @@
 
 package org.mule.transformer.wire;
 
-import org.mule.api.AbstractMuleException;
 import org.mule.api.MuleException;
+import org.mule.api.DefaultMuleException;
 import org.mule.api.transformer.Transformer;
 import org.mule.api.transformer.TransformerException;
 import org.mule.api.transformer.wire.WireFormat;
@@ -40,7 +40,7 @@ public class TransformerPairWireFormat implements WireFormat
     protected Transformer inboundTransformer;
     protected Transformer outboundTransformer;
 
-    public Object read(InputStream in) throws AbstractMuleException
+    public Object read(InputStream in) throws MuleException
     {
         if (inboundTransformer == null)
         {
@@ -60,12 +60,12 @@ public class TransformerPairWireFormat implements WireFormat
             }
             catch (IOException e)
             {
-                throw new MuleException(CoreMessages.failedToReadPayload(), e);
+                throw new DefaultMuleException(CoreMessages.failedToReadPayload(), e);
             }
         }
     }
 
-    public void write(OutputStream out, Object o, String encoding) throws AbstractMuleException
+    public void write(OutputStream out, Object o, String encoding) throws MuleException
     {
         if (outboundTransformer == null)
         {

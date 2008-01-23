@@ -10,7 +10,7 @@
 
 package org.mule.transport.jms;
 
-import org.mule.api.MuleException;
+import org.mule.api.DefaultMuleException;
 import org.mule.config.ExceptionHelper;
 import org.mule.config.i18n.MessageFactory;
 import org.mule.tck.AbstractMuleTestCase;
@@ -59,7 +59,7 @@ public class JmsExceptionReaderTestCase extends AbstractMuleTestCase
         JMSException e = new JMSException("Jms error", "1234");
         e.setLinkedException(new IOException("blah"));
 
-        return new MuleException(MessageFactory.createStaticMessage("foo"), new MuleException(
+        return new DefaultMuleException(MessageFactory.createStaticMessage("foo"), new DefaultMuleException(
             MessageFactory.createStaticMessage("bar"), e));
     }
 

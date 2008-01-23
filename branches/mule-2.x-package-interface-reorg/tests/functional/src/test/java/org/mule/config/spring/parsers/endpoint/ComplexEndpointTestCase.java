@@ -10,7 +10,7 @@
 
 package org.mule.config.spring.parsers.endpoint;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.endpoint.ImmutableEndpoint;
 
 public class ComplexEndpointTestCase extends AbstractEndpointTestCase
@@ -21,7 +21,7 @@ public class ComplexEndpointTestCase extends AbstractEndpointTestCase
         return "org/mule/config/spring/parsers/endpoint/complex-endpoint-test.xml";
     }
 
-    public void testComplex() throws AbstractMuleException
+    public void testComplex() throws MuleException
     {
         ImmutableEndpoint endpoint = doTest("complex");
         assertNotNull(endpoint.getProperty("foo"));

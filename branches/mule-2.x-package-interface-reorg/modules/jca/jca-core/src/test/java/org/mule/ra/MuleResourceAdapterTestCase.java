@@ -11,7 +11,7 @@
 
 package org.mule.ra;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.component.Component;
 import org.mule.api.endpoint.Endpoint;
 import org.mule.api.endpoint.ImmutableEndpoint;
@@ -89,13 +89,13 @@ public class MuleResourceAdapterTestCase extends AbstractMuleTestCase
         }
     }
 
-    public void testGetJcaModelCreateNew() throws AbstractMuleException, ResourceException
+    public void testGetJcaModelCreateNew() throws MuleException, ResourceException
     {
         JcaModel jcaModel = resourceAdapter.getJcaModel("jca");
         assertEquals("jca", jcaModel.getName());
     }
 
-    public void testGetJcaModelUseExisting() throws AbstractMuleException, ResourceException
+    public void testGetJcaModelUseExisting() throws MuleException, ResourceException
     {
         Model jcaModel = new JcaModel();
         jcaModel.setName("jca");
@@ -105,7 +105,7 @@ public class MuleResourceAdapterTestCase extends AbstractMuleTestCase
         assertEquals(jcaModel, jcaModel2);
     }
 
-    public void testGetJcaModel3ExistingWrongType() throws AbstractMuleException
+    public void testGetJcaModel3ExistingWrongType() throws MuleException
     {
         Model sedaModel = new SedaModel();
         sedaModel.setName("jca");
@@ -120,7 +120,7 @@ public class MuleResourceAdapterTestCase extends AbstractMuleTestCase
         }
     }
 
-    public void testCreateMessageInflowEndpoint() throws AbstractMuleException
+    public void testCreateMessageInflowEndpoint() throws MuleException
     {
         MuleActivationSpec activationSpec = new MuleActivationSpec();
         activationSpec.setEndpoint("test://testEndpoint");

@@ -46,9 +46,9 @@ public interface MuleEvent
      * Reterns the conents of the message as a byte array.
      * 
      * @return the conents of the message as a byte array
-     * @throws AbstractMuleException if the message cannot be converted into an array of bytes
+     * @throws MuleException if the message cannot be converted into an array of bytes
      */
-    byte[] getMessageAsBytes() throws AbstractMuleException;
+    byte[] getMessageAsBytes() throws MuleException;
 
     /**
      * Transforms the message into it's recognised or expected format. The
@@ -102,18 +102,18 @@ public interface MuleEvent
      * encoding set on the event
      * 
      * @return the message contents as a string
-     * @throws AbstractMuleException if the message cannot be converted into a string
+     * @throws MuleException if the message cannot be converted into a string
      */
-    String getMessageAsString() throws AbstractMuleException;
+    String getMessageAsString() throws MuleException;
 
     /**
      * Returns the message contents as a string
      * 
      * @param encoding the encoding to use when converting the message to string
      * @return the message contents as a string
-     * @throws AbstractMuleException if the message cannot be converted into a string
+     * @throws MuleException if the message cannot be converted into a string
      */
-    String getMessageAsString(String encoding) throws AbstractMuleException;
+    String getMessageAsString(String encoding) throws MuleException;
 
     /**
      * Every event in the system is assigned a universally unique id (UUID).

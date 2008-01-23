@@ -10,7 +10,7 @@
 
 package org.mule.api.security;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.config.i18n.CoreMessages;
 
 /**
@@ -18,7 +18,7 @@ import org.mule.config.i18n.CoreMessages;
  * request is make with an unrecognised Authentication type.
  */
 
-public class UnknownAuthenticationTypeException extends AbstractMuleException
+public class UnknownAuthenticationTypeException extends MuleException
 {
     /**
      * Serial version

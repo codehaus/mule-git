@@ -10,7 +10,7 @@
 
 package org.mule.api.security;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.config.i18n.CoreMessages;
 
 /**
@@ -18,7 +18,7 @@ import org.mule.config.i18n.CoreMessages;
  * SecurityManager when an encryption scheme is set in a property or header that
  * has not been registered witrh the manager
  */
-public class EncryptionStrategyNotFoundException extends AbstractMuleException
+public class EncryptionStrategyNotFoundException extends MuleException
 {
     /**
      * Serial version

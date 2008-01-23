@@ -10,7 +10,7 @@
 
 package org.mule.transport.soap.axis.issues;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.endpoint.EndpointBuilder;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.transport.Connector;
@@ -25,7 +25,7 @@ public class EndpointRetrievalMule2021TestCase extends FunctionalTestCase
         return "endpoint-retrieval-mule-2021-test.xml";
     }
 
-    public void testLookupEndpoint() throws AbstractMuleException
+    public void testLookupEndpoint() throws MuleException
     {
         ImmutableEndpoint endpoint1 = muleContext.getRegistry().lookupEndpoint("Endpoint");
         // Null expected because lookupEndpoint does not create endpoints from global endpoint name.        
@@ -41,7 +41,7 @@ public class EndpointRetrievalMule2021TestCase extends FunctionalTestCase
         assertNull(endpoint2);
     }
 
-    public void testGetOutboundEndpoint() throws AbstractMuleException
+    public void testGetOutboundEndpoint() throws MuleException
     {
         ImmutableEndpoint endpoint1 = muleContext.getRegistry().lookupEndpointFactory().getOutboundEndpoint(
             "Endpoint");
@@ -51,7 +51,7 @@ public class EndpointRetrievalMule2021TestCase extends FunctionalTestCase
         assertEndpointOk(endpoint2);
     }
 
-    public void testGetInboundEndpoint() throws AbstractMuleException
+    public void testGetInboundEndpoint() throws MuleException
     {
         ImmutableEndpoint endpoint1 = muleContext.getRegistry().lookupEndpointFactory().getInboundEndpoint(
             "Endpoint");
@@ -61,7 +61,7 @@ public class EndpointRetrievalMule2021TestCase extends FunctionalTestCase
         assertEndpointOk(endpoint2);
     }
 
-    public void testGetResponseEndpoint() throws AbstractMuleException
+    public void testGetResponseEndpoint() throws MuleException
     {
         ImmutableEndpoint endpoint1 = muleContext.getRegistry().lookupEndpointFactory().getInboundEndpoint(
             "Endpoint");

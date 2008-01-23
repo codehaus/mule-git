@@ -10,7 +10,7 @@
 
 package org.mule.ra;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 
 import java.util.Map;
@@ -23,9 +23,9 @@ import javax.resource.ResourceException;
  */
 public interface MuleConnection
 {
-    void dispatch(String url, Object payload, Map messageProperties) throws AbstractMuleException;
+    void dispatch(String url, Object payload, Map messageProperties) throws MuleException;
 
-    MuleMessage receive(String url, long timeout) throws AbstractMuleException;
+    MuleMessage receive(String url, long timeout) throws MuleException;
 
     MuleManagedConnection getManagedConnection();
 
@@ -33,5 +33,5 @@ public interface MuleConnection
 
     void associateConnection(MuleManagedConnection newMc) throws ResourceException;
 
-    MuleMessage send(String url, Object payload, Map messageProperties) throws AbstractMuleException;
+    MuleMessage send(String url, Object payload, Map messageProperties) throws MuleException;
 }

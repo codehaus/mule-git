@@ -15,11 +15,11 @@ import org.mule.DefaultMuleMessage;
 import org.mule.DefaultMuleSession;
 import org.mule.MuleServer;
 import org.mule.RequestContext;
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleEventContext;
-import org.mule.api.MuleException;
+import org.mule.api.DefaultMuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.MuleSession;
 import org.mule.api.component.Component;
@@ -108,13 +108,13 @@ public class MuleManagerComponent implements Callable, Initialisable, MuleContex
         }
         else
         {
-            result = handleException(null, new MuleException(
+            result = handleException(null, new DefaultMuleException(
                 CoreMessages.eventTypeNotRecognised("AdminNotification:" + action.getAction())));
         }
         return result;
     }
 
-    protected Object invokeAction(AdminNotification action, MuleEventContext context) throws AbstractMuleException
+    protected Object invokeAction(AdminNotification action, MuleEventContext context) throws MuleException
     {
         String destComponent = null;
         MuleMessage result = null;
@@ -158,12 +158,12 @@ public class MuleManagerComponent implements Callable, Initialisable, MuleContex
         }
         else
         {
-            return handleException(result, new MuleException(
+            return handleException(result, new DefaultMuleException(
                 CoreMessages.couldNotDetermineDestinationComponentFromEndpoint(endpoint)));
         }
     }
 
-    protected Object sendAction(AdminNotification action, MuleEventContext context) throws AbstractMuleException
+    protected Object sendAction(AdminNotification action, MuleEventContext context) throws MuleException
     {
         MuleMessage result = null;
         ImmutableEndpoint endpoint = null;
@@ -202,7 +202,7 @@ public class MuleManagerComponent implements Callable, Initialisable, MuleContex
         }
     }
 
-    protected Object receiveAction(AdminNotification action, MuleEventContext context) throws AbstractMuleException
+    protected Object receiveAction(AdminNotification action, MuleEventContext context) throws MuleException
     {
         MuleMessage result = null;
         try
@@ -245,7 +245,7 @@ public class MuleManagerComponent implements Callable, Initialisable, MuleContex
                                                     WireFormat wireFormat,
                                                     String encoding,
                                                     int eventTimeout,
-                                                    MuleContext muleContext) throws AbstractMuleException
+                                                    MuleContext muleContext) throws MuleException
     {
         try
         {

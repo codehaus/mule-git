@@ -10,7 +10,7 @@
 
 package org.mule.test.config;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.transformer.NoActionTransformer;
@@ -19,7 +19,7 @@ import org.mule.transformer.TransformerUtils;
 public class EndpointTransformerTestCase extends AbstractMuleTestCase
 {
 
-    public void testTransformerProperty() throws AbstractMuleException
+    public void testTransformerProperty() throws MuleException
     {
         muleContext.getRegistry().registerTransformer(new NoActionTransformer());
         ImmutableEndpoint endpoint = muleContext.getRegistry().lookupEndpointFactory().getOutboundEndpoint(
@@ -27,7 +27,7 @@ public class EndpointTransformerTestCase extends AbstractMuleTestCase
         assertEquals("NoActionTransformer", TransformerUtils.firstOrNull(endpoint.getTransformers()).getName());
     }
 
-    public void testResponseTransformerProperty() throws AbstractMuleException
+    public void testResponseTransformerProperty() throws MuleException
     {
         muleContext.getRegistry().registerTransformer(new NoActionTransformer());
         ImmutableEndpoint endpoint = muleContext.getRegistry().lookupEndpointFactory().getInboundEndpoint(

@@ -11,7 +11,7 @@
 package org.mule.routing.outbound;
 
 import org.mule.DefaultMuleMessage;
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.MuleSession;
 import org.mule.api.endpoint.Endpoint;
@@ -120,7 +120,7 @@ public class ExceptionBasedRouterTestCase extends AbstractMuleTestCase
         assertTrue(router.isMatch(message));
 
         // exception to throw
-        AbstractMuleException rex = new RoutingException(message, endpoint1);
+        MuleException rex = new RoutingException(message, endpoint1);
         mockSession.expectAndThrow("sendEvent", C.args(C.eq(message), C.eq(endpoint1)), rex);
         mockSession.expectAndThrow("dispatchEvent", C.args(C.eq(message), C.eq(endpoint2)), rex);
         MuleSession session = (MuleSession)mockSession.proxy();
@@ -165,7 +165,7 @@ public class ExceptionBasedRouterTestCase extends AbstractMuleTestCase
 
         final MuleSession session = (MuleSession)mockSession.proxy();
         // exception to throw
-        AbstractMuleException rex = new RoutingException(message, endpoint1);
+        MuleException rex = new RoutingException(message, endpoint1);
         // 1st failure
         mockSession.expectAndThrow("sendEvent", C.args(C.eq(message), C.eq(endpoint1)), rex);
         // next endpoint
@@ -201,7 +201,7 @@ public class ExceptionBasedRouterTestCase extends AbstractMuleTestCase
 
         final MuleSession session = (MuleSession)mockSession.proxy();
         // exception to throw
-        AbstractMuleException rex = new RoutingException(message, endpoint1);
+        MuleException rex = new RoutingException(message, endpoint1);
         // 1st failure
         mockSession.expectAndThrow("sendEvent", C.args(C.eq(message), C.eq(endpoint1)), rex);
         // next endpoint

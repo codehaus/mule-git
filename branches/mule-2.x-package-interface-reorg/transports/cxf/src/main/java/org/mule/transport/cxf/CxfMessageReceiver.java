@@ -10,7 +10,7 @@
 
 package org.mule.transport.cxf;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.component.Component;
 import org.mule.api.endpoint.Endpoint;
 import org.mule.api.lifecycle.Callable;
@@ -162,7 +162,7 @@ public class CxfMessageReceiver extends AbstractMessageReceiver
 
             server = sfb.create();
         }
-        catch (AbstractMuleException e)
+        catch (MuleException e)
         {
             throw new InitialisationException(e, this);
         }
@@ -234,7 +234,7 @@ public class CxfMessageReceiver extends AbstractMessageReceiver
         }
     }
 
-    private Class<?> getInterface() throws AbstractMuleException, ClassNotFoundException
+    private Class<?> getInterface() throws MuleException, ClassNotFoundException
     {
         try
         {
@@ -263,12 +263,12 @@ public class CxfMessageReceiver extends AbstractMessageReceiver
         server.stop();
     }
 
-    public void doStart() throws AbstractMuleException
+    public void doStart() throws MuleException
     {
         // nothing to do
     }
 
-    public void doStop() throws AbstractMuleException
+    public void doStop() throws MuleException
     {
         // nothing to do
     }

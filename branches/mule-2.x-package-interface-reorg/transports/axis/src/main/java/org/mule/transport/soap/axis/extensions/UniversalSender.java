@@ -15,7 +15,7 @@ import org.mule.DefaultMuleMessage;
 import org.mule.MuleServer;
 import org.mule.RegistryContext;
 import org.mule.RequestContext;
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
@@ -103,7 +103,7 @@ public class UniversalSender extends BasicHandler
             {
                 endpoint = lookupEndpoint(uri);
             }
-            catch (AbstractMuleException e)
+            catch (MuleException e)
             {
                 requestEndpoint.getConnector().handleException(e);
                 return;
@@ -115,7 +115,7 @@ public class UniversalSender extends BasicHandler
             {
                 endpoint = lookupEndpoint(uri);
             }
-            catch (AbstractMuleException e)
+            catch (MuleException e)
             {
                 requestEndpoint.getConnector().handleException(e);
                 return;
@@ -258,7 +258,7 @@ public class UniversalSender extends BasicHandler
 
     }
 
-    protected ImmutableEndpoint lookupEndpoint(String uri) throws AbstractMuleException
+    protected ImmutableEndpoint lookupEndpoint(String uri) throws MuleException
     {
         Component axis = RegistryContext.getRegistry().lookupComponent(AxisConnector.AXIS_SERVICE_COMPONENT_NAME);
         EndpointURI endpoint = new MuleEndpointURI(uri);

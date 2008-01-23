@@ -10,7 +10,7 @@
 
 package org.mule.examples.loanbroker;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.config.ConfigurationBuilder;
 import org.mule.api.context.MuleContextFactory;
@@ -69,7 +69,7 @@ public abstract class AbstractLoanBrokerApp
         customers.add(new Customer("Jarno Trulli", 192));
     }
 
-    protected ConfigurationBuilder getConfigBuilder() throws AbstractMuleException
+    protected ConfigurationBuilder getConfigBuilder() throws MuleException
     {
         return new SpringXmlConfigurationBuilder(config);
     }

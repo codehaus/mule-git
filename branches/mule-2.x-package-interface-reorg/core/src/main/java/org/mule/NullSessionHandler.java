@@ -10,7 +10,7 @@
 
 package org.mule;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.MuleSession;
 import org.mule.api.transport.SessionHandler;
@@ -20,12 +20,12 @@ import org.mule.api.transport.SessionHandler;
  */
 public class NullSessionHandler implements SessionHandler
 {
-    public void retrieveSessionInfoFromMessage(MuleMessage message, MuleSession session) throws AbstractMuleException
+    public void retrieveSessionInfoFromMessage(MuleMessage message, MuleSession session) throws MuleException
     {
         // noop
     }
 
-    public void storeSessionInfoToMessage(MuleSession session, MuleMessage message) throws AbstractMuleException
+    public void storeSessionInfoToMessage(MuleSession session, MuleMessage message) throws MuleException
     {
         // noop
     }

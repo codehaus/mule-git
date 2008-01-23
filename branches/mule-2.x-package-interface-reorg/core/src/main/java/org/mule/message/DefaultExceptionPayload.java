@@ -10,7 +10,7 @@
 
 package org.mule.message;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.ExceptionPayload;
 import org.mule.config.ExceptionHelper;
 
@@ -35,7 +35,7 @@ public class DefaultExceptionPayload implements ExceptionPayload
     public DefaultExceptionPayload(Throwable exception)
     {
         this.exception = exception;
-        AbstractMuleException muleRoot = ExceptionHelper.getRootMuleException(exception);
+        MuleException muleRoot = ExceptionHelper.getRootMuleException(exception);
         if (muleRoot != null)
         {
             message = muleRoot.getMessage();

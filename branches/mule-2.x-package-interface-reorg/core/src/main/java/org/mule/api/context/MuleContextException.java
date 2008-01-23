@@ -10,14 +10,14 @@
 
 package org.mule.api.context;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.config.i18n.Message;
 
 /**
  * <code>MuleContextException</code> is thrown when an exception occurs with Manager
  * objects
  */
-public class MuleContextException extends AbstractMuleException
+public class MuleContextException extends MuleException
 {
     /**
      * Serial version

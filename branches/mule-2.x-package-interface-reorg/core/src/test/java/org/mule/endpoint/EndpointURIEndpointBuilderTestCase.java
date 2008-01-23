@@ -10,7 +10,7 @@
 
 package org.mule.endpoint;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.endpoint.EndpointBuilder;
 import org.mule.api.endpoint.EndpointException;
 import org.mule.api.endpoint.ImmutableEndpoint;
@@ -27,7 +27,7 @@ import org.mule.util.ObjectNameHelper;
 public class EndpointURIEndpointBuilderTestCase extends AbstractMuleTestCase
 {
 
-    public void testBuildInboundEndpoint() throws AbstractMuleException
+    public void testBuildInboundEndpoint() throws MuleException
     {
         String uri = "test://address";
         EndpointBuilder endpointBuilder = new EndpointURIEndpointBuilder(uri, muleContext);
@@ -49,7 +49,7 @@ public class EndpointURIEndpointBuilderTestCase extends AbstractMuleTestCase
         }
     }
 
-    public void testBuildOutboundEndpoint() throws AbstractMuleException
+    public void testBuildOutboundEndpoint() throws MuleException
     {
         String uri = "test://address";
         EndpointBuilder endpointBuilder = new EndpointURIEndpointBuilder(uri, muleContext);

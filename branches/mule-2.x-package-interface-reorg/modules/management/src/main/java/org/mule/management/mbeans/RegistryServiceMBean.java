@@ -10,7 +10,7 @@
 
 package org.mule.management.mbeans;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 
 /**
  * <code>RegistryServiceMBean</code> JMX Service interface for the Registry
@@ -18,9 +18,9 @@ import org.mule.api.AbstractMuleException;
 public interface RegistryServiceMBean
 {
 
-    void start() throws AbstractMuleException;
+    void start() throws MuleException;
 
-    void stop() throws AbstractMuleException;
+    void stop() throws MuleException;
 
     //String getPersistenceMode();
 

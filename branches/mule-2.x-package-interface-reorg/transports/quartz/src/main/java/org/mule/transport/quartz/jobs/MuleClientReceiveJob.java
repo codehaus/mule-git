@@ -10,7 +10,7 @@
 
 package org.mule.transport.quartz.jobs;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.transport.quartz.QuartzConnector;
@@ -69,7 +69,7 @@ public class MuleClientReceiveJob implements Job
                 client.dispatch(dispatchEndpoint, result);
             }
         }
-        catch (AbstractMuleException e)
+        catch (MuleException e)
         {
             throw new JobExecutionException(e);
         }

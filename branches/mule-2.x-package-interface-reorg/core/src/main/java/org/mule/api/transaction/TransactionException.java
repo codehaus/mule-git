@@ -10,7 +10,7 @@
 
 package org.mule.api.transaction;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.config.i18n.Message;
 
 /**
@@ -18,7 +18,7 @@ import org.mule.config.i18n.Message;
  * <code>TransactionException</code> is thrown when an exception occurs while
  * trying to create, start commit or rollback an exception
  */
-public class TransactionException extends AbstractMuleException
+public class TransactionException extends MuleException
 {
     /**
      * Serial version

@@ -24,7 +24,7 @@ import java.util.Map;
  * errors specific to Message processing occur..
  */
 
-public class MessagingException extends AbstractMuleException
+public class MessagingException extends MuleException
 {
     /**
      * Serial version

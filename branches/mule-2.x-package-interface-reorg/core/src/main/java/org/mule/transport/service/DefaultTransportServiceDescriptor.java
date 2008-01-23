@@ -11,7 +11,7 @@
 package org.mule.transport.service;
 
 import org.mule.MuleSessionHandler;
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.component.Component;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.endpoint.EndpointURIBuilder;
@@ -202,7 +202,7 @@ public class DefaultTransportServiceDescriptor extends AbstractServiceDescriptor
      */
     public MessageReceiver createMessageReceiver(Connector connector,
                                                     Component component,
-                                                    ImmutableEndpoint endpoint) throws AbstractMuleException
+                                                    ImmutableEndpoint endpoint) throws MuleException
     {
 
         return createMessageReceiver(connector, component, endpoint, null);
@@ -214,7 +214,7 @@ public class DefaultTransportServiceDescriptor extends AbstractServiceDescriptor
     public MessageReceiver createMessageReceiver(Connector connector,
                                                     Component component,
                                                     ImmutableEndpoint endpoint,
-                                                    Object[] args) throws AbstractMuleException
+                                                    Object[] args) throws MuleException
     {
         String receiverClass = messageReceiver;
 

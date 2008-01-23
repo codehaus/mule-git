@@ -12,7 +12,7 @@ package org.mule.routing.inbound;
 
 import org.mule.DefaultMuleEvent;
 import org.mule.DefaultMuleMessage;
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.MuleSession;
@@ -98,7 +98,7 @@ public class EventAggregatorTestCase extends AbstractMuleTestCase
                 {
                     newPayload.append(event.getMessageAsString()).append(" ");
                 }
-                catch (AbstractMuleException e)
+                catch (MuleException e)
                 {
                     throw new AggregationException(events, event.getEndpoint(), e);
                 }

@@ -11,7 +11,7 @@
 package org.mule.samples.errorhandler;
 
 import org.mule.MuleServer;
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.samples.errorhandler.handlers.DefaultHandler;
 import org.mule.samples.errorhandler.handlers.FatalHandler;
 
@@ -68,7 +68,7 @@ public class ErrorManager
         return (ExceptionHandler)obj;
     }
 
-    public void onException(ErrorMessage msg) throws AbstractMuleException
+    public void onException(ErrorMessage msg) throws MuleException
     {
         Class eClass = null;
         ExceptionHandler eh = null;

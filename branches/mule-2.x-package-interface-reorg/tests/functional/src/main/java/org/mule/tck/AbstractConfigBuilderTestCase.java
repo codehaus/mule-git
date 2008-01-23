@@ -12,8 +12,8 @@ package org.mule.tck;
 
 import org.mule.DefaultExceptionStrategy;
 import org.mule.RegistryContext;
-import org.mule.api.AbstractMuleException;
 import org.mule.api.MuleException;
+import org.mule.api.DefaultMuleException;
 import org.mule.api.component.Component;
 import org.mule.api.config.ThreadingProfile;
 import org.mule.api.context.ObjectNotFoundException;
@@ -76,7 +76,7 @@ public abstract class AbstractConfigBuilderTestCase extends AbstractScriptConfig
     }
 
     // @Override
-    public void testGlobalEndpointConfig() throws AbstractMuleException
+    public void testGlobalEndpointConfig() throws MuleException
     {
         super.testGlobalEndpointConfig();
         ImmutableEndpoint endpoint = null;
@@ -84,7 +84,7 @@ public abstract class AbstractConfigBuilderTestCase extends AbstractScriptConfig
         {
             endpoint = muleContext.getRegistry().lookupEndpointFactory().getInboundEndpoint("fruitBowlEndpoint");
         }
-        catch (AbstractMuleException e)
+        catch (MuleException e)
         {
             e.printStackTrace();
             fail(e.getMessage());
@@ -100,7 +100,7 @@ public abstract class AbstractConfigBuilderTestCase extends AbstractScriptConfig
     }
 
     // @Override
-    public void testEndpointConfig() throws AbstractMuleException
+    public void testEndpointConfig() throws MuleException
     {
         super.testEndpointConfig();
 
@@ -110,7 +110,7 @@ public abstract class AbstractConfigBuilderTestCase extends AbstractScriptConfig
         {
             endpoint = muleContext.getRegistry().lookupEndpointFactory().getInboundEndpoint("waterMelonEndpoint");
         }
-        catch (AbstractMuleException e)
+        catch (MuleException e)
         {
             e.printStackTrace();
             fail(e.getMessage());
@@ -215,7 +215,7 @@ public abstract class AbstractConfigBuilderTestCase extends AbstractScriptConfig
         assertTrue(router2 instanceof IdempotentReceiver);
     }
 
-    public void testThreadingConfig() throws MuleException
+    public void testThreadingConfig() throws DefaultMuleException
     {
         // expected default values from the configuration;
         // these should differ from the programmatic values!

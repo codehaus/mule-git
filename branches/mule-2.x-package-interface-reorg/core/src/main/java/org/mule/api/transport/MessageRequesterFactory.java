@@ -10,7 +10,7 @@
 
 package org.mule.api.transport;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.endpoint.ImmutableEndpoint;
 
 /**
@@ -42,9 +42,9 @@ public interface MessageRequesterFactory
      * @param endpoint the endoint for which this requester should be created
      * @return a properly created <code>UMOMessagerequester</code> for this
      *         transport
-     * @throws org.mule.api.AbstractMuleException if the requester cannot be created
+     * @throws org.mule.api.MuleException if the requester cannot be created
      */
-    MessageRequester create(ImmutableEndpoint endpoint) throws AbstractMuleException;
+    MessageRequester create(ImmutableEndpoint endpoint) throws MuleException;
 
     /**
      * Invoked <strong>before</strong> the given requester is handed out to a
@@ -52,9 +52,9 @@ public interface MessageRequesterFactory
      *
      * @param endpoint the endpoint of the requester
      * @param requester the requester to be activated
-     * @throws org.mule.api.AbstractMuleException if the requester cannot be activated
+     * @throws org.mule.api.MuleException if the requester cannot be activated
      */
-    void activate(ImmutableEndpoint endpoint, MessageRequester requester) throws AbstractMuleException;
+    void activate(ImmutableEndpoint endpoint, MessageRequester requester) throws MuleException;
 
     /**
      * Invoked <strong>after</strong> the requester is returned from a client but

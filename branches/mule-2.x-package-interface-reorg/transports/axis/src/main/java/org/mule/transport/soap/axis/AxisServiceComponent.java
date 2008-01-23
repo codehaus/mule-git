@@ -12,7 +12,7 @@ package org.mule.transport.soap.axis;
 
 import org.mule.DefaultMuleMessage;
 import org.mule.RequestContext;
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MessagingException;
 import org.mule.api.MuleEventContext;
 import org.mule.api.MuleMessage;
@@ -143,7 +143,7 @@ public class AxisServiceComponent implements Initialisable, Callable
     }
 
     public void doGet(MuleEventContext context, WriterMessageAdapter response)
-        throws AbstractMuleException, IOException
+        throws MuleException, IOException
     {
         try
         {

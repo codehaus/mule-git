@@ -10,7 +10,7 @@
 
 package org.mule.model.direct;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.model.AbstractComponentTestCase;
 import org.mule.util.object.SingletonObjectFactory;
 
@@ -31,7 +31,7 @@ public class DirectComponentTestCase extends AbstractComponentTestCase
         component = null;
     }
 
-    public void testStop() throws AbstractMuleException
+    public void testStop() throws MuleException
     {
         // TODO Remove this overridden empty implementation once MULE-2844 is resolved
     }

@@ -12,8 +12,8 @@ package org.mule.transport.file;
 
 import org.mule.DefaultMuleMessage;
 import org.mule.RegistryContext;
+import org.mule.api.DefaultMuleException;
 import org.mule.api.MuleException;
-import org.mule.api.AbstractMuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.transport.AbstractMessageRequester;
@@ -41,9 +41,9 @@ public class FileMessageRequester extends AbstractMessageRequester
     /**
      * There is no associated session for a file connector
      *
-     * @throws org.mule.api.AbstractMuleException
+     * @throws org.mule.api.MuleException
      */
-    public Object getDelegateSession() throws AbstractMuleException
+    public Object getDelegateSession() throws MuleException
     {
         return null;
     }
@@ -129,7 +129,7 @@ public class FileMessageRequester extends AbstractMessageRequester
                         // delete source
                         if (!result.delete())
                         {
-                            throw new MuleException(
+                            throw new DefaultMuleException(
                                 FileMessages.failedToDeleteFile(result.getAbsolutePath()));
                         }
                     }

@@ -10,7 +10,7 @@
 
 package org.mule.tck.testmodels.mule;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.model.seda.SedaComponent;
 
 
@@ -25,7 +25,7 @@ public class TestSedaComponent extends SedaComponent
     }
 
     //@Override
-    public Object getOrCreateService() throws AbstractMuleException
+    public Object getOrCreateService() throws MuleException
     {
         return super.getOrCreateService();
     }

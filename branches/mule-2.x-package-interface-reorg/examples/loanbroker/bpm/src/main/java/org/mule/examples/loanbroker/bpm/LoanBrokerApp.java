@@ -10,7 +10,7 @@
 
 package org.mule.examples.loanbroker.bpm;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.examples.loanbroker.AbstractLoanBrokerApp;
 import org.mule.transport.jdbc.util.MuleDerbyUtils;
 

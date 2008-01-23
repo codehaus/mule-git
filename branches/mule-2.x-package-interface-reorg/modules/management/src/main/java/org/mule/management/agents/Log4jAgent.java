@@ -11,7 +11,7 @@
 package org.mule.management.agents;
 
 import org.mule.AbstractAgent;
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.management.support.AutoDiscoveryJmxSupportFactory;
@@ -95,7 +95,7 @@ public class Log4jAgent extends AbstractAgent
      * 
      * @see org.mule.api.lifecycle.Startable#start()
      */
-    public void start() throws AbstractMuleException
+    public void start() throws MuleException
     {
         // nothing to do
     }
@@ -105,7 +105,7 @@ public class Log4jAgent extends AbstractAgent
      * 
      * @see org.mule.api.lifecycle.Stoppable#stop()
      */
-    public void stop() throws AbstractMuleException
+    public void stop() throws MuleException
     {
         // nothing to do
     }

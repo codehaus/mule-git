@@ -10,7 +10,7 @@
 
 package org.mule.transport.http;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.MuleSession;
 import org.mule.api.transport.SessionHandler;
@@ -34,7 +34,7 @@ public class HttpSessionHandler implements SessionHandler
      */
     protected transient Log logger = LogFactory.getLog(getClass());
 
-    public void retrieveSessionInfoFromMessage(MuleMessage message, MuleSession session) throws AbstractMuleException
+    public void retrieveSessionInfoFromMessage(MuleMessage message, MuleSession session) throws MuleException
     {
         Cookie[] cookies = (Cookie[])message.getProperty(HttpConnector.HTTP_COOKIES_PROPERTY);
         if (cookies != null)
@@ -51,7 +51,7 @@ public class HttpSessionHandler implements SessionHandler
         }
     }
 
-    public void storeSessionInfoToMessage(MuleSession session, MuleMessage message) throws AbstractMuleException
+    public void storeSessionInfoToMessage(MuleSession session, MuleMessage message) throws MuleException
     {
         Object name;
         Object value;

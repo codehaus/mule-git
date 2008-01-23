@@ -14,8 +14,8 @@ import org.mule.OptimizedRequestContext;
 import org.mule.RequestContext;
 import org.mule.api.MuleEvent;
 import org.mule.api.MessagingException;
+import org.mule.api.DefaultMuleException;
 import org.mule.api.MuleException;
-import org.mule.api.AbstractMuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.component.ComponentException;
 import org.mule.api.context.ObjectNotFoundException;
@@ -56,9 +56,9 @@ public class JcaComponent extends AbstractComponent implements WorkListener
      * 
      * @param event
      * @return
-     * @throws AbstractMuleException
+     * @throws MuleException
      */
-    public MuleMessage sendEvent(MuleEvent event) throws AbstractMuleException
+    public MuleMessage sendEvent(MuleEvent event) throws MuleException
     {
         throw new UnsupportedOperationException("sendEvent()");
     }
@@ -76,12 +76,12 @@ public class JcaComponent extends AbstractComponent implements WorkListener
         // therefore cannot be paused by mule
     }
 
-    protected void doPause() throws AbstractMuleException
+    protected void doPause() throws MuleException
     {
         throw new ComponentException(JcaMessages.cannotPauseResumeJcaComponent(), null, this);
     }
 
-    protected void doResume() throws AbstractMuleException
+    protected void doResume() throws MuleException
     {
         throw new ComponentException(JcaMessages.cannotPauseResumeJcaComponent(), null, this);
     }
@@ -94,7 +94,7 @@ public class JcaComponent extends AbstractComponent implements WorkListener
         }
     }
 
-    protected void doDispatch(MuleEvent event) throws AbstractMuleException
+    protected void doDispatch(MuleEvent event) throws MuleException
     {
         try
         {
@@ -102,14 +102,14 @@ public class JcaComponent extends AbstractComponent implements WorkListener
         }
         catch (Exception e)
         {
-            throw new MuleException(CoreMessages.failedToInvoke("UMO Component: " + getName()), e);
+            throw new DefaultMuleException(CoreMessages.failedToInvoke("UMO Component: " + getName()), e);
         }
     }
 
     /**
      * Implementation of template method which is never call because send() is overwritten
      */
-    protected MuleMessage doSend(MuleEvent event) throws AbstractMuleException
+    protected MuleMessage doSend(MuleEvent event) throws MuleException
     {
         return null;
     }
@@ -120,7 +120,7 @@ public class JcaComponent extends AbstractComponent implements WorkListener
      * the container. The container might create a Proxy object to intercept the actual method call to
      * implement transaction,security related functionalities
      */
-    public Object getManagedInstance() throws AbstractMuleException
+    public Object getManagedInstance() throws MuleException
     {
         Object managedInstance = null;
         try

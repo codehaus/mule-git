@@ -12,7 +12,7 @@ package org.mule.routing.inbound;
 
 import org.mule.DefaultMuleEvent;
 import org.mule.MuleServer;
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MessagingException;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleEvent;
@@ -105,7 +105,7 @@ public abstract class AbstractEventAggregator extends SelectiveConsumer
                             builder.setName(this.getClass().getName());
                             endpoint = muleContext.getRegistry().lookupEndpointFactory().getInboundEndpoint(builder);
                         }
-                        catch (AbstractMuleException e)
+                        catch (MuleException e)
                         {
                             throw new MessagingException(e.getI18nMessage(), returnMessage, e);
                         }

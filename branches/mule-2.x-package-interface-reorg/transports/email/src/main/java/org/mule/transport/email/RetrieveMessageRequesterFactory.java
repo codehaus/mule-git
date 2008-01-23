@@ -10,7 +10,7 @@
 
 package org.mule.transport.email;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.transport.MessageRequester;
 import org.mule.transport.AbstractMessageRequesterFactory;
@@ -33,7 +33,7 @@ public class RetrieveMessageRequesterFactory extends AbstractMessageRequesterFac
         return true;
     }
 
-    public MessageRequester create(ImmutableEndpoint endpoint) throws AbstractMuleException
+    public MessageRequester create(ImmutableEndpoint endpoint) throws MuleException
     {
         return new RetrieveMessageRequester(endpoint);
     }

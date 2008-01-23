@@ -11,7 +11,7 @@
 package org.mule.extras.spring.events;
 
 import org.mule.api.MuleEventContext;
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.transformer.TransformerException;
 import org.mule.extras.client.MuleClient;
@@ -289,7 +289,7 @@ public class SpringEventsTestCase extends AbstractMuleTestCase
                         client.send(url, payload, null);
                     }
                 }
-                catch (AbstractMuleException ex)
+                catch (MuleException ex)
                 {
                     fail(ExceptionUtils.getStackTrace(ex));
                 }

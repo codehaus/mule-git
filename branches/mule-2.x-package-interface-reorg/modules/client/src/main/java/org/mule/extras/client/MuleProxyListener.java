@@ -10,8 +10,8 @@
 
 package org.mule.extras.client;
 
+import org.mule.api.DefaultMuleException;
 import org.mule.api.MuleException;
-import org.mule.api.AbstractMuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.transformer.Transformer;
 import org.mule.extras.client.i18n.ClientMessages;
@@ -33,7 +33,7 @@ public class MuleProxyListener implements InvocationHandler
     private Object proxy;
     private MuleClient client;
 
-    public MuleProxyListener(Class listenerClass, String componentName) throws AbstractMuleException
+    public MuleProxyListener(Class listenerClass, String componentName) throws MuleException
     {
         setListenerClass(listenerClass);
         setEventTransformer(new EventObjectTransformer());
@@ -44,7 +44,7 @@ public class MuleProxyListener implements InvocationHandler
 
     public MuleProxyListener(Class listenerClass,
                              AbstractEventTransformer eventTransformer,
-                             String componentName) throws AbstractMuleException
+                             String componentName) throws MuleException
     {
         setListenerClass(listenerClass);
         setEventTransformer(eventTransformer);
@@ -114,7 +114,7 @@ public class MuleProxyListener implements InvocationHandler
     {
         if (args.length == 0)
         {
-            throw new MuleException(ClientMessages.noArgsForProxy());
+            throw new DefaultMuleException(ClientMessages.noArgsForProxy());
         }
         MuleMessage message = eventTransformer.transform(args[0], method);
         if (!"void".equals(method.getReturnType().getName()))

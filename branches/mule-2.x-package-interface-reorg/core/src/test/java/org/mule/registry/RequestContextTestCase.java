@@ -13,7 +13,7 @@ package org.mule.registry;
 import org.mule.DefaultMuleMessage;
 import org.mule.OptimizedRequestContext;
 import org.mule.RequestContext;
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
@@ -106,7 +106,7 @@ public class RequestContextTestCase extends AbstractMuleTestCase
             return null;  //To change body of implemented methods use File | Settings | File Templates.
         }
 
-        public byte[] getMessageAsBytes() throws AbstractMuleException
+        public byte[] getMessageAsBytes() throws MuleException
         {
             return new byte[0];  //To change body of implemented methods use File | Settings | File Templates.
         }
@@ -131,7 +131,7 @@ public class RequestContextTestCase extends AbstractMuleTestCase
             return null;  //To change body of implemented methods use File | Settings | File Templates.
         }
 
-        public String getMessageAsString() throws AbstractMuleException
+        public String getMessageAsString() throws MuleException
         {
             return null;  //To change body of implemented methods use File | Settings | File Templates.
         }
@@ -141,7 +141,7 @@ public class RequestContextTestCase extends AbstractMuleTestCase
             return null;  //To change body of implemented methods use File | Settings | File Templates.
         }
 
-        public String getMessageAsString(String encoding) throws AbstractMuleException
+        public String getMessageAsString(String encoding) throws MuleException
         {
             return null;  //To change body of implemented methods use File | Settings | File Templates.
         }

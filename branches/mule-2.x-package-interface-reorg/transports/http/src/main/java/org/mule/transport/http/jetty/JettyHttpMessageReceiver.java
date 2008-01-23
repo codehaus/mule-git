@@ -13,7 +13,7 @@ package org.mule.transport.http.jetty;
 import org.mule.MuleServer;
 import org.mule.RegistryContext;
 import org.mule.api.MuleContext;
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.component.Component;
 import org.mule.api.config.ThreadingProfile;
 import org.mule.api.endpoint.Endpoint;
@@ -171,7 +171,7 @@ public class JettyHttpMessageReceiver extends AbstractMessageReceiver
         }
     }
 
-    protected void doStart() throws AbstractMuleException
+    protected void doStart() throws MuleException
     {
         try
         {
@@ -183,7 +183,7 @@ public class JettyHttpMessageReceiver extends AbstractMessageReceiver
         }
     }
 
-    protected void doStop() throws AbstractMuleException
+    protected void doStop() throws MuleException
     {
         try
         {

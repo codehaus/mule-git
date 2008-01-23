@@ -15,7 +15,7 @@ import org.mule.DefaultMuleEvent;
 import org.mule.DefaultMuleSession;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleEvent;
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.MuleSession;
 import org.mule.api.config.MuleProperties;
@@ -60,9 +60,9 @@ public class DefaultMuleConnection implements MuleConnection
      * @param messageProperties any properties to be associated with the payload. In
      *            the case of Jms you could set the JMSReplyTo property in these
      *            properties.
-     * @throws org.mule.api.AbstractMuleException
+     * @throws org.mule.api.MuleException
      */
-    public void dispatch(String url, Object payload, Map messageProperties) throws AbstractMuleException
+    public void dispatch(String url, Object payload, Map messageProperties) throws MuleException
     {
         MuleMessage message = new DefaultMuleMessage(payload, messageProperties);
         MuleEvent event = getEvent(message, url, false);
@@ -70,7 +70,7 @@ public class DefaultMuleConnection implements MuleConnection
         {
             event.getSession().dispatchEvent(event);
         }
-        catch (AbstractMuleException e)
+        catch (MuleException e)
         {
             throw e;
         }
@@ -93,9 +93,9 @@ public class DefaultMuleConnection implements MuleConnection
      *            the case of Jms you could set the JMSReplyTo property in these
      *            properties.
      * @return a umomessage response.
-     * @throws org.mule.api.AbstractMuleException
+     * @throws org.mule.api.MuleException
      */
-    public MuleMessage send(String url, Object payload, Map messageProperties) throws AbstractMuleException
+    public MuleMessage send(String url, Object payload, Map messageProperties) throws MuleException
     {
         MuleMessage message = new DefaultMuleMessage(payload, messageProperties);
         MuleEvent event = getEvent(message, url, true);
@@ -105,7 +105,7 @@ public class DefaultMuleConnection implements MuleConnection
         {
             response = event.getSession().sendEvent(event);
         }
-        catch (AbstractMuleException e)
+        catch (MuleException e)
         {
             throw e;
         }
@@ -127,9 +127,9 @@ public class DefaultMuleConnection implements MuleConnection
      *            receive will not wait at all and if set to -1 the receive will wait
      *            forever
      * @return the message received or null if no message was received
-     * @throws org.mule.api.AbstractMuleException
+     * @throws org.mule.api.MuleException
      */
-    public MuleMessage receive(String url, long timeout) throws AbstractMuleException
+    public MuleMessage receive(String url, long timeout) throws MuleException
     {
         ImmutableEndpoint endpoint = manager.getRegistry().lookupEndpointFactory().getOutboundEndpoint(url);
 
@@ -150,10 +150,10 @@ public class DefaultMuleConnection implements MuleConnection
      * @param uri the destination endpointUri
      * @param synchronous whether the event will be synchronously processed
      * @return the MuleEvent
-     * @throws AbstractMuleException in case of Mule error
+     * @throws MuleException in case of Mule error
      */
     protected MuleEvent getEvent(MuleMessage message, String uri, boolean synchronous)
-        throws AbstractMuleException
+        throws MuleException
     {
         ImmutableEndpoint endpoint = manager.getRegistry().lookupEndpointFactory().getOutboundEndpoint(uri);
         //Connector connector = endpoint.getConnector();

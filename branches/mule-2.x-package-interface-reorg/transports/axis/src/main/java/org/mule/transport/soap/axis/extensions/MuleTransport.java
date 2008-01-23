@@ -10,7 +10,7 @@
 
 package org.mule.transport.soap.axis.extensions;
 
-import org.mule.api.MuleException;
+import org.mule.api.DefaultMuleException;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.transport.soap.axis.AxisConnector;
 
@@ -59,10 +59,10 @@ public class MuleTransport extends Transport
     /**
      * @param protocol the Axis soap transport to use
      * @return The corresponding transport class
-     * @throws MuleException if the transport is not supported by Axis
+     * @throws DefaultMuleException if the transport is not supported by Axis
      * @throws NullPointerException if the transport protocol is null
      */
-    public static Class getTransportClass(String protocol) throws MuleException
+    public static Class getTransportClass(String protocol) throws DefaultMuleException
     {
         if (protocol == null)
         {
@@ -70,7 +70,7 @@ public class MuleTransport extends Transport
         }
         if (!isTransportSupported(protocol))
         {
-            throw new MuleException(
+            throw new DefaultMuleException(
                 CoreMessages.schemeNotCompatibleWithConnector(protocol, AxisConnector.class));
         }
         return (Class)transports.get(protocol);

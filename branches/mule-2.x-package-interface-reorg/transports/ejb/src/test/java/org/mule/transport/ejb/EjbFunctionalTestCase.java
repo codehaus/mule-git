@@ -10,7 +10,7 @@
 
 package org.mule.transport.ejb;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.EndpointBuilder;
 import org.mule.api.endpoint.ImmutableEndpoint;
@@ -63,7 +63,7 @@ public class EjbFunctionalTestCase extends FunctionalTestCase
             send("ejb://localhost/TestService", "hello");
 
         }
-        catch (AbstractMuleException e)
+        catch (MuleException e)
         {
             assertTrue(e instanceof DispatchException);
             
@@ -78,7 +78,7 @@ public class EjbFunctionalTestCase extends FunctionalTestCase
         {
             send("ejb://localhost/TestService?method=foo", "hello");
         }
-        catch (AbstractMuleException e)
+        catch (MuleException e)
         {
             assertTrue(e.getCause() instanceof NoSuchMethodException);
         }
@@ -100,7 +100,7 @@ public class EjbFunctionalTestCase extends FunctionalTestCase
         {
             ep.send(getTestEvent("hello", ep));
         }
-        catch (AbstractMuleException e)
+        catch (MuleException e)
         {
             assertTrue(e.getCause() instanceof NoSuchMethodException);
         }
@@ -123,7 +123,7 @@ public class EjbFunctionalTestCase extends FunctionalTestCase
         {
             ep.send(getTestEvent("hello", ep));
         }
-        catch (AbstractMuleException e)
+        catch (MuleException e)
         {
             assertTrue(e.getCause() instanceof NoSuchMethodException);
         }

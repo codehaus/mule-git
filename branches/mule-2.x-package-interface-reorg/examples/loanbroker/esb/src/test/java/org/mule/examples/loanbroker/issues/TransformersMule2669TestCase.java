@@ -10,7 +10,7 @@
 
 package org.mule.examples.loanbroker.issues;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.examples.loanbroker.bank.Bank;
 import org.mule.examples.loanbroker.messages.LoanBrokerQuoteRequest;
@@ -28,7 +28,7 @@ public class TransformersMule2669TestCase extends FunctionalTestCase
         return "transformers-mule-2669.xml";
     }
 
-    public void testTransformers() throws AbstractMuleException
+    public void testTransformers() throws MuleException
     {
         MuleClient client = new MuleClient();
         LoanBrokerQuoteRequest request = new LoanBrokerQuoteRequest();

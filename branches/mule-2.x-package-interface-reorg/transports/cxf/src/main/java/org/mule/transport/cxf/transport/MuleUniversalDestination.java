@@ -38,7 +38,7 @@ public class MuleUniversalDestination extends AbstractDestination
         // System.out.println("creating endpoint " + uri);
         // ep = MuleEndpoint.getOrCreateEndpointForUri("cxf:" + uri,
         // Endpoint.ENDPOINT_TYPE_RECEIVER);
-        // } catch (AbstractMuleException e) {
+        // } catch (MuleException e) {
         // throw new RuntimeException(e);
         // }
         // ep.setConnector(transport.getConnector());

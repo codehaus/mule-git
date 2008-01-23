@@ -10,7 +10,7 @@
 
 package org.mule.tck.providers.soap;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.transport.DispatchException;
 import org.mule.extras.client.MuleClient;
@@ -147,7 +147,7 @@ public abstract class AbstractSoapFunctionalTestCase extends FunctionalTestCase
             client.send(getTestExceptionEndpoint(), new Person("Ross", "Mason"), null);
             fail("A nested Fault should have been raised");
         }
-        catch (AbstractMuleException e)
+        catch (MuleException e)
         {
             // toplevel
             assertTrue(e instanceof DispatchException);

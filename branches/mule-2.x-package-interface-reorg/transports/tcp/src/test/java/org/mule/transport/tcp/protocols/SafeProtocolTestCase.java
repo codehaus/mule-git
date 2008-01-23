@@ -10,7 +10,7 @@
 
 package org.mule.transport.tcp.protocols;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
@@ -25,13 +25,13 @@ public class SafeProtocolTestCase extends FunctionalTestCase
         return "safe-protocol-test.xml";
     }
 
-    public void testSafeToSafe() throws AbstractMuleException
+    public void testSafeToSafe() throws MuleException
     {
         MuleClient client = new MuleClient();
         assertResponseOk(client.send("tcp://localhost:65432?connector=safe", TEST_MESSAGE, null));
     }
 
-    public void testUnsafeToSafe() throws AbstractMuleException
+    public void testUnsafeToSafe() throws MuleException
     {
         MuleClient client = new MuleClient();
         assertResponseBad(client.send("tcp://localhost:65432?connector=unsafe", TEST_MESSAGE, null));

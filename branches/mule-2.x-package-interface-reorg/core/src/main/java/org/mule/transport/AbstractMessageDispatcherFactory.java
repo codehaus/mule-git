@@ -10,7 +10,7 @@
 
 package org.mule.transport;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.transport.MessageDispatcher;
 import org.mule.api.transport.MessageDispatcherFactory;
@@ -44,9 +44,9 @@ public abstract class AbstractMessageDispatcherFactory implements MessageDispatc
         return false;
     }
 
-    public abstract MessageDispatcher create(ImmutableEndpoint endpoint) throws AbstractMuleException;
+    public abstract MessageDispatcher create(ImmutableEndpoint endpoint) throws MuleException;
 
-    public void activate(ImmutableEndpoint endpoint, MessageDispatcher dispatcher) throws AbstractMuleException
+    public void activate(ImmutableEndpoint endpoint, MessageDispatcher dispatcher) throws MuleException
     {
         dispatcher.activate();
     }

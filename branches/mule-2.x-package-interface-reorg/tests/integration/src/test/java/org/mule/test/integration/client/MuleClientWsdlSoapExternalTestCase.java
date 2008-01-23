@@ -10,7 +10,7 @@
 
 package org.mule.test.integration.client;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.AbstractMuleTestCase;
@@ -41,7 +41,7 @@ public class MuleClientWsdlSoapExternalTestCase extends AbstractMuleTestCase
             result = client.send(url, INPUT, null);
             resultPayload = (result != null ? result.getPayloadAsString() : StringUtils.EMPTY);
         }
-        catch (AbstractMuleException e)
+        catch (MuleException e)
         {
             fail(ExceptionUtils.getStackTrace(e));
         }

@@ -10,7 +10,7 @@
 
 package org.mule.transport;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleRuntimeException;
 import org.mule.api.context.WorkManager;
 import org.mule.api.endpoint.ImmutableEndpoint;
@@ -80,7 +80,7 @@ public abstract class AbstractConnectable implements Connectable, ExceptionListe
             {
                 workManager = connector.getDispatcherWorkManager();
             }
-            catch (AbstractMuleException e)
+            catch (MuleException e)
             {
                 disposeAndLogException();
                 throw new MuleRuntimeException(CoreMessages.failedToStart("WorkManager"), e);

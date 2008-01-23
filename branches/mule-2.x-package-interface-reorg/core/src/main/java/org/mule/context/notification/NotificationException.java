@@ -10,14 +10,14 @@
 
 package org.mule.context.notification;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.config.i18n.Message;
 
 /**
  * Thrown by the ServerNotification Manager if unrecognised listeners or events are
  * passed to the manager
  */
-public class NotificationException extends AbstractMuleException
+public class NotificationException extends MuleException
 {
     /**
      * Serial version

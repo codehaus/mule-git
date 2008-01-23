@@ -10,7 +10,7 @@
 
 package org.mule.model;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleContext;
 import org.mule.api.context.notification.ServerNotification;
 import org.mule.api.lifecycle.InitialisationException;
@@ -144,9 +144,9 @@ public abstract class AbstractModel implements Model
     /**
      * Stops any registered components
      *
-     * @throws AbstractMuleException if a Component fails tcomponent
+     * @throws MuleException if a Component fails tcomponent
      */
-    public void stop() throws AbstractMuleException
+    public void stop() throws MuleException
     {
         fireNotification(new ModelNotification(this, ModelNotification.MODEL_STOPPING));
         started.set(false);
@@ -156,9 +156,9 @@ public abstract class AbstractModel implements Model
     /**
      * Starts all registered components
      *
-     * @throws AbstractMuleException if any of the components fail to start
+     * @throws MuleException if any of the components fail to start
      */
-    public void start() throws AbstractMuleException
+    public void start() throws MuleException
     {
         if (!initialised.get())
         {

@@ -12,7 +12,7 @@ package org.mule.config.builders;
 
 import org.mule.MuleServer;
 import org.mule.api.MuleContext;
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.config.ConfigurationException;
 import org.mule.api.context.MuleContextFactory;
 import org.mule.api.lifecycle.InitialisationException;
@@ -88,7 +88,7 @@ public class MuleXmlBuilderContextListener implements ServletContextListener
             muleContext = createManager(config, webappClasspath, context);
             muleContext.start();
         }
-        catch (AbstractMuleException ex)
+        catch (MuleException ex)
         {
             context.log(ex.getMessage(), ex);
             // Logging is not configured OOTB for Tomcat, so we'd better make a

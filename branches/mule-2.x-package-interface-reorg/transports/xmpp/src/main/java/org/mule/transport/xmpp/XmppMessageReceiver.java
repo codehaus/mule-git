@@ -11,7 +11,7 @@
 package org.mule.transport.xmpp;
 
 import org.mule.DefaultMuleMessage;
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.component.Component;
 import org.mule.api.endpoint.Endpoint;
@@ -77,12 +77,12 @@ public class XmppMessageReceiver extends AbstractMessageReceiver implements Pack
         }
     }
 
-    protected void doStart() throws AbstractMuleException
+    protected void doStart() throws MuleException
     {
         // nothing to do
     }
 
-    protected void doStop() throws AbstractMuleException
+    protected void doStop() throws MuleException
     {
         // nothing to do
     }

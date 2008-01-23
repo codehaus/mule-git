@@ -10,7 +10,7 @@
 
 package org.mule.components.script;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.component.Component;
 import org.mule.api.component.ComponentAware;
 import org.mule.api.config.ConfigurationException;
@@ -138,7 +138,7 @@ public abstract class AbstractScriptComponent
         this.autoReload = autoReload;
     }
 
-    public void start() throws AbstractMuleException
+    public void start() throws MuleException
     {
         if (monitor != null)
         {
@@ -146,7 +146,7 @@ public abstract class AbstractScriptComponent
         }
     }
 
-    public void stop() throws AbstractMuleException
+    public void stop() throws MuleException
     {
         if (monitor != null)
         {
@@ -160,7 +160,7 @@ public abstract class AbstractScriptComponent
         {
             stop();
         }
-        catch (AbstractMuleException e)
+        catch (MuleException e)
         {
             logger.error(e.getMessage(), e);
         }

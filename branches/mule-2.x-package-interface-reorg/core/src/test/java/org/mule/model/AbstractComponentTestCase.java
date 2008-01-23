@@ -11,7 +11,7 @@
 
 package org.mule.model;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.component.Component;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.tck.AbstractMuleTestCase;
@@ -21,14 +21,14 @@ public abstract class AbstractComponentTestCase extends AbstractMuleTestCase
 
     protected Component component;
 
-    public void testStart() throws AbstractMuleException
+    public void testStart() throws MuleException
     {
         try
         {
             component.start();
             fail("Exception expected: Cannot start an uninitialised component");
         }
-        catch (AbstractMuleException e)
+        catch (MuleException e)
         {
             // expected 
         }
@@ -52,7 +52,7 @@ public abstract class AbstractComponentTestCase extends AbstractMuleTestCase
 
     }
 
-    public void testPause() throws AbstractMuleException
+    public void testPause() throws MuleException
     {
         assertFalse(component.isStarted());
         assertFalse(component.isPaused());
@@ -62,7 +62,7 @@ public abstract class AbstractComponentTestCase extends AbstractMuleTestCase
             component.pause();
             fail("Exception expected: Cannot pause an uninitialised component");
         }
-        catch (AbstractMuleException e)
+        catch (MuleException e)
         {
             // expected 
         }
@@ -87,7 +87,7 @@ public abstract class AbstractComponentTestCase extends AbstractMuleTestCase
         assertTrue(component.isPaused());
     }
 
-    public void testResume() throws AbstractMuleException
+    public void testResume() throws MuleException
     {
         assertFalse(component.isStarted());
         assertFalse(component.isPaused());
@@ -97,7 +97,7 @@ public abstract class AbstractComponentTestCase extends AbstractMuleTestCase
             component.resume();
             fail("Exception expected: Cannot resume an uninitialised component");
         }
-        catch (AbstractMuleException e)
+        catch (MuleException e)
         {
             // expected 
         }
@@ -125,7 +125,7 @@ public abstract class AbstractComponentTestCase extends AbstractMuleTestCase
         assertFalse(component.isPaused());
     }
 
-    public void testStop() throws AbstractMuleException
+    public void testStop() throws MuleException
     {
         assertFalse(component.isStarted());
         assertFalse(component.isPaused());
@@ -136,7 +136,7 @@ public abstract class AbstractComponentTestCase extends AbstractMuleTestCase
             component.resume();
             fail("Exception expected: Cannot stop an uninitialised component");
         }
-        catch (AbstractMuleException e)
+        catch (MuleException e)
         {
             // expected 
         }
@@ -155,7 +155,7 @@ public abstract class AbstractComponentTestCase extends AbstractMuleTestCase
 
     }
 
-    public void testDispose() throws AbstractMuleException
+    public void testDispose() throws MuleException
     {
         assertFalse(component.isStarted());
         assertFalse(component.isPaused());

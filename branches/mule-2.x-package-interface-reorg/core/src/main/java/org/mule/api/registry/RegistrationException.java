@@ -10,9 +10,9 @@
 
 package org.mule.api.registry;
 
-import org.mule.api.MuleException;
+import org.mule.api.DefaultMuleException;
 
-public class RegistrationException extends MuleException
+public class RegistrationException extends DefaultMuleException
 {
     public RegistrationException(String message)
     {

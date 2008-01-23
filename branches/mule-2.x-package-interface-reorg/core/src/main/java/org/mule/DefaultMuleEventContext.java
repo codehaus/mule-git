@@ -10,7 +10,7 @@
 
 package org.mule;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.FutureMessageResult;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleEvent;
@@ -69,10 +69,10 @@ public class DefaultMuleEventContext implements MuleEventContext
      * Reterns the conents of the message as a byte array.
      * 
      * @return the conents of the message as a byte array
-     * @throws org.mule.api.AbstractMuleException if the message cannot be converted into an
+     * @throws org.mule.api.MuleException if the message cannot be converted into an
      *             array of bytes
      */
-    public byte[] getMessageAsBytes() throws AbstractMuleException
+    public byte[] getMessageAsBytes() throws MuleException
     {
         return event.getMessageAsBytes();
     }
@@ -131,10 +131,10 @@ public class DefaultMuleEventContext implements MuleEventContext
      * Returns the message contents as a string
      * 
      * @return the message contents as a string
-     * @throws org.mule.api.AbstractMuleException if the message cannot be converted into a
+     * @throws org.mule.api.MuleException if the message cannot be converted into a
      *             string
      */
-    public String getMessageAsString(String encoding) throws AbstractMuleException
+    public String getMessageAsString(String encoding) throws MuleException
     {
         return event.getMessageAsString(encoding);
     }
@@ -161,10 +161,10 @@ public class DefaultMuleEventContext implements MuleEventContext
      * encoding on the event
      * 
      * @return the message contents as a string
-     * @throws org.mule.api.AbstractMuleException if the message cannot be converted into a
+     * @throws org.mule.api.MuleException if the message cannot be converted into a
      *             string
      */
-    public String getMessageAsString() throws AbstractMuleException
+    public String getMessageAsString() throws MuleException
     {
         return event.getMessageAsString();
     }
@@ -193,10 +193,10 @@ public class DefaultMuleEventContext implements MuleEventContext
      * 
      * @param message the message to send
      * @return the result of the send if any
-     * @throws org.mule.api.AbstractMuleException if there is no outbound endpoint configured
+     * @throws org.mule.api.MuleException if there is no outbound endpoint configured
      *             on the component or the events fails during dispatch
      */
-    public MuleMessage sendEvent(Object message) throws AbstractMuleException
+    public MuleMessage sendEvent(Object message) throws MuleException
     {
         return sendEvent(new DefaultMuleMessage(message, event.getMessage()));
     }
@@ -209,10 +209,10 @@ public class DefaultMuleEventContext implements MuleEventContext
      * @param message the event message payload to send
      * @param endpoint The endpoint to disptch the event through.
      * @return the return Message from the call or null if there was no result
-     * @throws org.mule.api.AbstractMuleException if the event fails to be processed by the
+     * @throws org.mule.api.MuleException if the event fails to be processed by the
      *             component or the transport for the endpoint
      */
-    public MuleMessage sendEvent(MuleMessage message, ImmutableEndpoint endpoint) throws AbstractMuleException
+    public MuleMessage sendEvent(MuleMessage message, ImmutableEndpoint endpoint) throws MuleException
     {
         // If synchronous receive has not been explicitly set, default it to true
         setRemoteSync(message, endpoint);
@@ -226,10 +226,10 @@ public class DefaultMuleEventContext implements MuleEventContext
      * 
      * @param message the message payload to send
      * @return the return Message from the call or null if there was no result
-     * @throws org.mule.api.AbstractMuleException if the event fails to be processed by the
+     * @throws org.mule.api.MuleException if the event fails to be processed by the
      *             component or the transport for the endpoint
      */
-    public MuleMessage sendEvent(MuleMessage message) throws AbstractMuleException
+    public MuleMessage sendEvent(MuleMessage message) throws MuleException
     {
         // If synchronous receive has not been explicitly set, default it to
         // true
@@ -245,10 +245,10 @@ public class DefaultMuleEventContext implements MuleEventContext
      * @param message the event message payload to send
      * @param endpointUri The endpointUri to disptch the event through
      * @return the return Message from the call or null if there was no result
-     * @throws org.mule.api.AbstractMuleException if the event fails to be processed by the
+     * @throws org.mule.api.MuleException if the event fails to be processed by the
      *             component or the transport for the endpointUri
      */
-    public MuleMessage sendEvent(MuleMessage message, EndpointURI endpointUri) throws AbstractMuleException
+    public MuleMessage sendEvent(MuleMessage message, EndpointURI endpointUri) throws MuleException
     {
         ImmutableEndpoint endpoint = getMuleContext().getRegistry().lookupEndpointFactory().getEndpoint(
             endpointUri, ImmutableEndpoint.ENDPOINT_TYPE_SENDER);
@@ -271,11 +271,11 @@ public class DefaultMuleEventContext implements MuleEventContext
      * @param message the object that is the payload of the event
      * @param timeout how long to block in milliseconds waiting for a result
      * @return the result message if any of the invocation
-     * @throws org.mule.api.AbstractMuleException if the dispatch fails or the components or
+     * @throws org.mule.api.MuleException if the dispatch fails or the components or
      *             transfromers cannot be found
      * @see org.mule.api.FutureMessageResult
      */
-    public FutureMessageResult sendEventAsync(final Object message, final int timeout) throws AbstractMuleException
+    public FutureMessageResult sendEventAsync(final Object message, final int timeout) throws MuleException
     {
         Callable callable = new Callable()
         {
@@ -306,12 +306,12 @@ public class DefaultMuleEventContext implements MuleEventContext
      * @param message the MuleMessage of the event
      * @param timeout how long to block in milliseconds waiting for a result
      * @return the result message if any of the invocation
-     * @throws org.mule.api.AbstractMuleException if the dispatch fails or the components or
+     * @throws org.mule.api.MuleException if the dispatch fails or the components or
      *             transfromers cannot be found
      * @see org.mule.api.FutureMessageResult
      */
     public FutureMessageResult sendEventAsync(final MuleMessage message, final int timeout)
-        throws AbstractMuleException
+        throws MuleException
     {
         Callable callable = new Callable()
         {
@@ -342,13 +342,13 @@ public class DefaultMuleEventContext implements MuleEventContext
      * @param endpointUri the endpointUri to dispatch to
      * @param timeout how long to block in milliseconds waiting for a result
      * @return the result message if any of the invocation
-     * @throws org.mule.api.AbstractMuleException if the dispatch fails or the components or
+     * @throws org.mule.api.MuleException if the dispatch fails or the components or
      *             transfromers cannot be found
      * @see org.mule.api.FutureMessageResult
      */
     public FutureMessageResult sendEventAsync(final MuleMessage message,
                                               final EndpointURI endpointUri,
-                                              final int timeout) throws AbstractMuleException
+                                              final int timeout) throws MuleException
     {
         Callable callable = new Callable()
         {
@@ -381,13 +381,13 @@ public class DefaultMuleEventContext implements MuleEventContext
      *            mule manager configuration
      * @param timeout how long to block in milliseconds waiting for a result
      * @return the result message if any of the invocation
-     * @throws org.mule.api.AbstractMuleException if the dispatch fails or the components or
+     * @throws org.mule.api.MuleException if the dispatch fails or the components or
      *             transfromers cannot be found
      * @see org.mule.api.FutureMessageResult
      */
     public FutureMessageResult sendEventAsync(final MuleMessage message,
                                               final String endpointName,
-                                              final int timeout) throws AbstractMuleException
+                                              final int timeout) throws MuleException
     {
         Callable callable = new Callable()
         {
@@ -415,10 +415,10 @@ public class DefaultMuleEventContext implements MuleEventContext
      *            be looked up first on the component configuration and then on the
      *            mule manager configuration
      * @return the return Message from the call or null if there was no result
-     * @throws org.mule.api.AbstractMuleException if the event fails to be processed by the
+     * @throws org.mule.api.MuleException if the event fails to be processed by the
      *             component or the transport for the endpoint
      */
-    public MuleMessage sendEvent(MuleMessage message, String endpointName) throws AbstractMuleException
+    public MuleMessage sendEvent(MuleMessage message, String endpointName) throws MuleException
     {
         ImmutableEndpoint endpoint = RegistryContext.getRegistry().lookupEndpointFactory().getOutboundEndpoint(endpointName);
         setRemoteSync(message, endpoint);
@@ -430,10 +430,10 @@ public class DefaultMuleEventContext implements MuleEventContext
      * endpoint on the component for this session
      * 
      * @param message payload to dispatch
-     * @throws org.mule.api.AbstractMuleException if there is no outbound endpoint configured
+     * @throws org.mule.api.MuleException if there is no outbound endpoint configured
      *             on the component or the events fails during dispatch
      */
-    public void dispatchEvent(Object message) throws AbstractMuleException
+    public void dispatchEvent(Object message) throws MuleException
     {
         session.dispatchEvent(new DefaultMuleMessage(message, event.getMessage()));
     }
@@ -443,10 +443,10 @@ public class DefaultMuleEventContext implements MuleEventContext
      * endpoint on the component for this session
      * 
      * @param message the message to send
-     * @throws org.mule.api.AbstractMuleException if there is no outbound endpoint configured
+     * @throws org.mule.api.MuleException if there is no outbound endpoint configured
      *             on the component or the events fails during dispatch
      */
-    public void dispatchEvent(MuleMessage message) throws AbstractMuleException
+    public void dispatchEvent(MuleMessage message) throws MuleException
     {
         session.dispatchEvent(message);
     }
@@ -459,10 +459,10 @@ public class DefaultMuleEventContext implements MuleEventContext
      * @param message the event message payload to send
      * @param endpointUri the endpointUri to dispatc the event to first on the
      *            component configuration and then on the mule manager configuration
-     * @throws org.mule.api.AbstractMuleException if the event fails to be processed by the
+     * @throws org.mule.api.MuleException if the event fails to be processed by the
      *             component or the transport for the endpointUri
      */
-    public void dispatchEvent(MuleMessage message, EndpointURI endpointUri) throws AbstractMuleException
+    public void dispatchEvent(MuleMessage message, EndpointURI endpointUri) throws MuleException
     {
         ImmutableEndpoint endpoint = getMuleContext().getRegistry().lookupEndpointFactory().getEndpoint(
             endpointUri, ImmutableEndpoint.ENDPOINT_TYPE_SENDER);
@@ -478,10 +478,10 @@ public class DefaultMuleEventContext implements MuleEventContext
      * @param endpointName The endpoint name to disptch the event through. This will
      *            be looked up first on the component configuration and then on the
      *            mule manager configuration
-     * @throws org.mule.api.AbstractMuleException if the event fails to be processed by the
+     * @throws org.mule.api.MuleException if the event fails to be processed by the
      *             component or the transport for the endpoint
      */
-    public void dispatchEvent(MuleMessage message, String endpointName) throws AbstractMuleException
+    public void dispatchEvent(MuleMessage message, String endpointName) throws MuleException
     {
         session.dispatchEvent(message, endpointName);
     }
@@ -493,10 +493,10 @@ public class DefaultMuleEventContext implements MuleEventContext
      * 
      * @param message the event message payload to send
      * @param endpoint The endpoint name to disptch the event through.
-     * @throws org.mule.api.AbstractMuleException if the event fails to be processed by the
+     * @throws org.mule.api.MuleException if the event fails to be processed by the
      *             component or the transport for the endpoint
      */
-    public void dispatchEvent(MuleMessage message, ImmutableEndpoint endpoint) throws AbstractMuleException
+    public void dispatchEvent(MuleMessage message, ImmutableEndpoint endpoint) throws MuleException
     {
         session.dispatchEvent(message, endpoint);
     }
@@ -508,9 +508,9 @@ public class DefaultMuleEventContext implements MuleEventContext
      *            will be received
      * @param timeout time in milliseconds before the request timesout
      * @return The requested event or null if the request times out
-     * @throws org.mule.api.AbstractMuleException if the request operation fails
+     * @throws org.mule.api.MuleException if the request operation fails
      */
-    public MuleMessage receiveEvent(ImmutableEndpoint endpoint, long timeout) throws AbstractMuleException
+    public MuleMessage receiveEvent(ImmutableEndpoint endpoint, long timeout) throws MuleException
     {
         return session.receiveEvent(endpoint, timeout);
     }
@@ -522,9 +522,9 @@ public class DefaultMuleEventContext implements MuleEventContext
      *            event will be received
      * @param timeout time in milliseconds before the request timesout
      * @return The requested event or null if the request times out
-     * @throws org.mule.api.AbstractMuleException if the request operation fails
+     * @throws org.mule.api.MuleException if the request operation fails
      */
-    public MuleMessage receiveEvent(String endpointName, long timeout) throws AbstractMuleException
+    public MuleMessage receiveEvent(String endpointName, long timeout) throws MuleException
     {
         return session.receiveEvent(endpointName, timeout);
     }
@@ -535,9 +535,9 @@ public class DefaultMuleEventContext implements MuleEventContext
      * @param endpointUri the endpointUri on which the event will be received
      * @param timeout time in milliseconds before the request timesout
      * @return The requested event or null if the request times out
-     * @throws org.mule.api.AbstractMuleException if the request operation fails
+     * @throws org.mule.api.MuleException if the request operation fails
      */
-    public MuleMessage receiveEvent(EndpointURI endpointUri, long timeout) throws AbstractMuleException
+    public MuleMessage receiveEvent(EndpointURI endpointUri, long timeout) throws MuleException
     {
         ImmutableEndpoint endpoint = getMuleContext().getRegistry().lookupEndpointFactory().getEndpoint(
             endpointUri, ImmutableEndpoint.ENDPOINT_TYPE_SENDER);

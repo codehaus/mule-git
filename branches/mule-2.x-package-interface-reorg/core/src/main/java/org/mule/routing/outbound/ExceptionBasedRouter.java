@@ -10,7 +10,7 @@
 
 package org.mule.routing.outbound;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.ExceptionPayload;
 import org.mule.api.MuleMessage;
 import org.mule.api.MuleSession;
@@ -90,7 +90,7 @@ public class ExceptionBasedRouter extends FilteringOutboundRouter
                             break;
                         }
                     }
-                    catch (AbstractMuleException e)
+                    catch (MuleException e)
                     {
                         logger.warn("Failed to send to endpoint: " + endpoint.getEndpointURI().toString()
                                     + ". Error was: " + ExceptionHelper.getRootException(e) + ". Trying next endpoint");
@@ -104,7 +104,7 @@ public class ExceptionBasedRouter extends FilteringOutboundRouter
                         success = true;
                         break;
                     }
-                    catch (AbstractMuleException e)
+                    catch (MuleException e)
                     {
                         logger.info("Failed to dispatch to endpoint: " + endpoint.getEndpointURI().toString()
                                     + ". Error was: " + e.getMessage() + ". Trying next endpoint");

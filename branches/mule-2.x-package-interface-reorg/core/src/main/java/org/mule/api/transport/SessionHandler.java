@@ -10,7 +10,7 @@
 
 package org.mule.api.transport;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.MuleSession;
 
@@ -21,9 +21,9 @@ import org.mule.api.MuleSession;
 public interface SessionHandler
 {
 
-    void storeSessionInfoToMessage(MuleSession session, MuleMessage message) throws AbstractMuleException;
+    void storeSessionInfoToMessage(MuleSession session, MuleMessage message) throws MuleException;
 
-    void retrieveSessionInfoFromMessage(MuleMessage message, MuleSession session) throws AbstractMuleException;
+    void retrieveSessionInfoFromMessage(MuleMessage message, MuleSession session) throws MuleException;
 
     /**
      * The property name of the session id to use when creating the Mule session. by

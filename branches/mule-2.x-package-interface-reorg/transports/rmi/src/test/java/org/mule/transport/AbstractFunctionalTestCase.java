@@ -10,7 +10,7 @@
 
 package org.mule.transport;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.transport.DispatchException;
 import org.mule.config.i18n.Message;
@@ -89,7 +89,7 @@ public abstract class AbstractFunctionalTestCase extends FunctionalTestCase
         {
             send("://localhost/TestService", "hello");
         }
-        catch (AbstractMuleException e)
+        catch (MuleException e)
         {
             assertTrue(e instanceof DispatchException);
 
@@ -105,7 +105,7 @@ public abstract class AbstractFunctionalTestCase extends FunctionalTestCase
             send("://localhost/TestService?method=foo", "hello");
             fail("expected error");
         }
-        catch (AbstractMuleException e)
+        catch (MuleException e)
         {
             assertTrue(e.getCause() instanceof NoSuchMethodException);
         }
@@ -123,7 +123,7 @@ public abstract class AbstractFunctionalTestCase extends FunctionalTestCase
             new MuleClient().send("BadType", "hello", null);
             fail("expected error");
         }
-        catch (AbstractMuleException e)
+        catch (MuleException e)
         {
             assertTrue(e.getCause() instanceof NoSuchMethodException);
         }

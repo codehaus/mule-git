@@ -12,7 +12,7 @@ package org.mule.routing.inbound;
 
 import org.mule.DefaultMuleEvent;
 import org.mule.DefaultMuleMessage;
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.MuleSession;
@@ -110,7 +110,7 @@ public class EventResequencerTestCase extends AbstractMuleTestCase
             {
                 return ((MuleEvent)o1).getMessageAsString().compareTo(((MuleEvent)o2).getMessageAsString());
             }
-            catch (AbstractMuleException e)
+            catch (MuleException e)
             {
                 throw new IllegalArgumentException(e.getMessage());
             }

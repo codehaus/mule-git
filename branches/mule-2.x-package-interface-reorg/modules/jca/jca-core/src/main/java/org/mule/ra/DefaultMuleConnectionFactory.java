@@ -72,7 +72,7 @@ public class DefaultMuleConnectionFactory implements MuleConnectionFactory
         // catch (ResourceException e) {
         //            
         // logger.warn("Connection could not be created: " + e.getMessage(), e);
-        // throw new AbstractMuleException(e.getMessage());
+        // throw new MuleException(e.getMessage());
         // }
     }
 

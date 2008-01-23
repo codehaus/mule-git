@@ -11,8 +11,8 @@
 package org.mule.transport.file;
 
 import org.mule.DefaultMuleMessage;
+import org.mule.api.DefaultMuleException;
 import org.mule.api.MuleException;
-import org.mule.api.AbstractMuleException;
 import org.mule.api.component.Component;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.CreateException;
@@ -154,7 +154,7 @@ public class FileMessageReceiver extends AbstractPollingMessageReceiver
         }
     }
 
-    public synchronized void processFile(final File sourceFile) throws AbstractMuleException
+    public synchronized void processFile(final File sourceFile) throws MuleException
     {
         //TODO RM*: This can be put in a Filter. Also we can add an AndFileFilter/OrFileFilter to allow users to
         //combine file filters (since we can only pass a single filter to File.listFiles, we would need to wrap
@@ -242,7 +242,7 @@ public class FileMessageReceiver extends AbstractPollingMessageReceiver
             // Perform some quick checks to make sure file can be processed
             if (!(sourceFile.canRead() && sourceFile.exists() && sourceFile.isFile()))
             {
-                throw new MuleException(FileMessages.fileDoesNotExist(sourceFileOriginalName));
+                throw new DefaultMuleException(FileMessages.fileDoesNotExist(sourceFileOriginalName));
             }
 
             //If we are moving the file to a read directory, move it there now and hand over a reference to the
@@ -260,7 +260,7 @@ public class FileMessageReceiver extends AbstractPollingMessageReceiver
                 // move didn't work - bail out (will attempt rollback)
                 if (!fileWasMoved)
                 {
-                    throw new MuleException(
+                    throw new DefaultMuleException(
                             FileMessages.failedToMoveFile(
                                     sourceFile.getAbsolutePath(), destinationFile.getAbsolutePath()));
                 }
@@ -317,7 +317,7 @@ public class FileMessageReceiver extends AbstractPollingMessageReceiver
         return payload;
     }
 
-    private void delete(final File file, boolean moveTo) throws MuleException
+    private void delete(final File file, boolean moveTo) throws DefaultMuleException
     {
         // at this point msgAdapter either points to the old sourceFile
         // or the new destinationFile.
@@ -326,7 +326,7 @@ public class FileMessageReceiver extends AbstractPollingMessageReceiver
             // delete source
             if (!file.delete())
             {
-                throw new MuleException(
+                throw new DefaultMuleException(
                         FileMessages.failedToDeleteFile(file.getAbsolutePath()));
             }
         }
@@ -456,9 +456,9 @@ public class FileMessageReceiver extends AbstractPollingMessageReceiver
      * Get a list of files to be processed.
      *
      * @return an array of files to be processed.
-     * @throws org.mule.api.MuleException which will wrap any other exceptions or errors.
+     * @throws org.mule.api.DefaultMuleException which will wrap any other exceptions or errors.
      */
-    File[] listFiles() throws MuleException
+    File[] listFiles() throws DefaultMuleException
     {
         try
         {
@@ -477,7 +477,7 @@ public class FileMessageReceiver extends AbstractPollingMessageReceiver
         }
         catch (Exception e)
         {
-            throw new MuleException(FileMessages.errorWhileListingFiles(), e);
+            throw new DefaultMuleException(FileMessages.errorWhileListingFiles(), e);
         }
     }
 
@@ -505,7 +505,7 @@ public class FileMessageReceiver extends AbstractPollingMessageReceiver
             {
                 delete(currentFile, movedTo);
             }
-            catch (MuleException e)
+            catch (DefaultMuleException e)
             {
                 IOException e2 = new IOException();
                 e2.initCause(e);

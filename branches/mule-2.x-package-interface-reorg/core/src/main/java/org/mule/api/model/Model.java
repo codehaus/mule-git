@@ -56,16 +56,16 @@ public interface Model extends Lifecycle, MuleContextAware, NamedObject
 //     *
 //     * @param descriptor the <code>UMODescriptor</code> to register
 //     */
-//    void registerComponent(UMODescriptor descriptor) throws AbstractMuleException;
+//    void registerComponent(UMODescriptor descriptor) throws MuleException;
 //
 //    /**
 //     * Unregisters a component From the model
 //     *
 //     * @param descriptor the descriptor of the componnt to remove
-//     * @throws AbstractMuleException if the component is not registered or it failed to be
+//     * @throws MuleException if the component is not registered or it failed to be
 //     *                      disposing or the descriptor is null
 //     */
-//    void unregisterComponent(UMODescriptor descriptor) throws AbstractMuleException;
+//    void unregisterComponent(UMODescriptor descriptor) throws MuleException;
 //
 //    /**
 //     * Determines if a UMO component descriptor by the given name is regestered with
@@ -114,9 +114,9 @@ public interface Model extends Lifecycle, MuleContextAware, NamedObject
 //     * container
 //     *
 //     * @param descriptors
-//     * @throws AbstractMuleException
+//     * @throws MuleException
 //     */
-//    void setServiceDescriptors(List descriptors) throws AbstractMuleException;
+//    void setServiceDescriptors(List descriptors) throws MuleException;
 
     /**
      * The exception strategy to use by components managed by the model. The
@@ -166,20 +166,20 @@ public interface Model extends Lifecycle, MuleContextAware, NamedObject
 //     * listeners for that component are unregistered.
 //     *
 //     * @param name the name of the Mule UMO to stop
-//     * @throws AbstractMuleException if the MuleUMO is not registered or the component failed
+//     * @throws MuleException if the MuleUMO is not registered or the component failed
 //     *                      to stop
 //     */
-//    void stopComponent(String name) throws AbstractMuleException;
+//    void stopComponent(String name) throws MuleException;
 //
 //    /**
 //     * Starts a single Mule Component. This can be useful when stopping and starting
 //     * some Mule UMOs while letting others continue.
 //     *
 //     * @param name the name of the Mule UMO to start
-//     * @throws AbstractMuleException if the MuleUMO is not registered or the component failed
+//     * @throws MuleException if the MuleUMO is not registered or the component failed
 //     *                      to start
 //     */
-//    void startComponent(String name) throws AbstractMuleException;
+//    void startComponent(String name) throws MuleException;
 //
 //    /**
 //     * Pauses event processing for a single Mule Component. Unlike stopComponent(), a
@@ -190,21 +190,21 @@ public interface Model extends Lifecycle, MuleContextAware, NamedObject
 //     * state.
 //     *
 //     * @param name the name of the Mule UMO to stop
-//     * @throws AbstractMuleException if the MuleUMO is not registered or the component failed
+//     * @throws MuleException if the MuleUMO is not registered or the component failed
 //     *                      to pause.
 //     * @see org.mule.config.MuleConfiguration
 //     */
-//    void pauseComponent(String name) throws AbstractMuleException;
+//    void pauseComponent(String name) throws MuleException;
 //
 //    /**
 //     * Resumes a single Mule Component that has been paused. If the component is not
 //     * paused nothing is executed.
 //     *
 //     * @param name the name of the Mule UMO to resume
-//     * @throws AbstractMuleException if the MuleUMO is not registered or the component failed
+//     * @throws MuleException if the MuleUMO is not registered or the component failed
 //     *                      to resume
 //     */
-//    void resumeComponent(String name) throws AbstractMuleException;
+//    void resumeComponent(String name) throws MuleException;
 //
 //    /**
 //     * Gets an iterator of all component names registered in the model

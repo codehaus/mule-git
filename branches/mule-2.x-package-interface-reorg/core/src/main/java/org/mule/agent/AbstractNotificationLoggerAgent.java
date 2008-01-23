@@ -11,7 +11,7 @@
 package org.mule.agent;
 
 import org.mule.AbstractAgent;
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.context.notification.AdminNotificationListener;
 import org.mule.api.context.notification.ComponentNotificationListener;
 import org.mule.api.context.notification.ConnectionNotificationListener;
@@ -62,12 +62,12 @@ public abstract class AbstractNotificationLoggerAgent extends AbstractAgent
         super(name);
     }
 
-    public void start() throws AbstractMuleException
+    public void start() throws MuleException
     {
         // nothing to do
     }
 
-    public void stop() throws AbstractMuleException
+    public void stop() throws MuleException
     {
         // nothing to do
     }

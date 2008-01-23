@@ -11,7 +11,7 @@
 package org.mule.endpoint;
 
 import org.mule.RegistryContext;
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleContext;
 import org.mule.api.endpoint.EndpointBuilder;
 import org.mule.api.endpoint.EndpointException;
@@ -36,7 +36,7 @@ public class DefaultEndpointFactory implements EndpointFactory
     protected MuleContext muleContext;
     
     public ImmutableEndpoint getInboundEndpoint(String uri)
-        throws AbstractMuleException
+        throws MuleException
     {
         logger.debug("DefaultEndpointFactory request for inbound endpoint for uri: " + uri);
         EndpointBuilder endpointBuilder = lookupEndpointBuilder(uri);
@@ -49,7 +49,7 @@ public class DefaultEndpointFactory implements EndpointFactory
     }
 
     public ImmutableEndpoint getOutboundEndpoint(String uri)
-        throws AbstractMuleException
+        throws MuleException
     {
         logger.debug("DefaultEndpointFactory request for outbound endpoint for uri: " + uri);
         EndpointBuilder endpointBuilder = lookupEndpointBuilder(uri);
@@ -64,7 +64,7 @@ public class DefaultEndpointFactory implements EndpointFactory
 
     /** @deprecated */
     public ImmutableEndpoint getEndpoint(EndpointURI uri, String type)
-        throws AbstractMuleException
+        throws MuleException
     {
         logger.debug("DefaultEndpointFactory request for endpoint of type: " + type + ", for uri: " + uri);
         EndpointBuilder endpointBuilder = null;
@@ -111,21 +111,21 @@ public class DefaultEndpointFactory implements EndpointFactory
         return endpointBuilder;
     }
 
-    public ImmutableEndpoint getInboundEndpoint(EndpointBuilder builder) throws AbstractMuleException
+    public ImmutableEndpoint getInboundEndpoint(EndpointBuilder builder) throws MuleException
     {
         // TODO 1) Store in repo, 2) Register in registry, 3) Lifecycle ?
         return builder.buildInboundEndpoint();
     }
 
     public ImmutableEndpoint getOutboundEndpoint(EndpointBuilder builder)
-        throws AbstractMuleException
+        throws MuleException
     {
         // TODO 1) Store in repo, 2) Register in registry, 3) Lifecycle ?
         return builder.buildOutboundEndpoint();
     }
 
     public EndpointBuilder getEndpointBuilder(String uri)
-        throws AbstractMuleException
+        throws MuleException
     {
         logger.debug("DefaultEndpointFactory request for endpoint builder for uri: " + uri);
         EndpointBuilder endpointBuilder = lookupEndpointBuilder(uri);

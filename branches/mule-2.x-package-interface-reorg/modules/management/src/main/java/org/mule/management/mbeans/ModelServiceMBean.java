@@ -10,7 +10,7 @@
 
 package org.mule.management.mbeans;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 
 /**
  * <code>ModelServiceMBean</code> JMX Service interface for the Model.
@@ -18,23 +18,23 @@ import org.mule.api.AbstractMuleException;
 public interface ModelServiceMBean
 {
 
-    void start() throws AbstractMuleException;
+    void start() throws MuleException;
 
-    void stop() throws AbstractMuleException;
+    void stop() throws MuleException;
 
 //    boolean isComponentRegistered(String name);
 //
 //    UMODescriptor getComponentDescriptor(String name);
 //
-//    void startComponent(String name) throws AbstractMuleException;
+//    void startComponent(String name) throws MuleException;
 //
-//    void stopComponent(String name) throws AbstractMuleException;
+//    void stopComponent(String name) throws MuleException;
 //
-//    void pauseComponent(String name) throws AbstractMuleException;
+//    void pauseComponent(String name) throws MuleException;
 //
-//    void resumeComponent(String name) throws AbstractMuleException;
+//    void resumeComponent(String name) throws MuleException;
 //
-//    void unregisterComponent(String name) throws AbstractMuleException;
+//    void unregisterComponent(String name) throws MuleException;
 
     String getName();
 

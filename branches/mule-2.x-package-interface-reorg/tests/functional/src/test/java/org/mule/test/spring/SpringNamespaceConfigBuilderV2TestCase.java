@@ -157,10 +157,10 @@ public class SpringNamespaceConfigBuilderV2TestCase extends AbstractConfigBuilde
 //     * that defaults can be declared in the main configuration but overiding elements
 //     * can just replace certain values
 //     *
-//     * @throws MuleException
+//     * @throws DefaultMuleException
 //     */
 //    // @Override
-//    public void testThreadingConfig() throws MuleException
+//    public void testThreadingConfig() throws DefaultMuleException
 //    {
 //        // test config
 //        ThreadingProfile tp = RegistryContext.getConfiguration().getDefaultThreadingProfile();

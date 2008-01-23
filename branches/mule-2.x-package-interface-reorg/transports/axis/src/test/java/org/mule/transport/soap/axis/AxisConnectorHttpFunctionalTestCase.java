@@ -10,7 +10,7 @@
 
 package org.mule.transport.soap.axis;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.component.Component;
 import org.mule.api.endpoint.Endpoint;
 import org.mule.api.endpoint.ImmutableEndpoint;
@@ -64,7 +64,7 @@ public class AxisConnectorHttpFunctionalTestCase extends AbstractSoapUrlEndpoint
             muleContext.getRegistry().registerComponent(c);
             fail("Expected exception");
         }
-        catch (AbstractMuleException e)
+        catch (MuleException e)
         {
             e = ExceptionHelper.getRootMuleException(e);
             assertTrue(e instanceof InitialisationException);

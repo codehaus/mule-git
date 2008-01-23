@@ -11,7 +11,7 @@
 package org.mule.tck;
 
 import org.mule.AbstractExceptionListener;
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.component.Component;
 import org.mule.api.context.ObjectNotFoundException;
 import org.mule.api.endpoint.Endpoint;
@@ -72,7 +72,7 @@ public abstract class AbstractScriptConfigBuilderTestCase extends FunctionalTest
         assertTrue(c.getExceptionListener() instanceof TestExceptionStrategy);
     }
 
-    public void testGlobalEndpointConfig() throws AbstractMuleException
+    public void testGlobalEndpointConfig() throws MuleException
     {
         ImmutableEndpoint endpoint = muleContext.getRegistry().lookupEndpointFactory().getInboundEndpoint(
             "fruitBowlEndpoint");
@@ -92,7 +92,7 @@ public abstract class AbstractScriptConfigBuilderTestCase extends FunctionalTest
         //assertEquals(3000, ((SimpleRetryConnectionStrategy) ep.getConnectionStrategy()).getRetryFrequency());
     }
 
-    public void testEndpointConfig() throws AbstractMuleException
+    public void testEndpointConfig() throws MuleException
     {
         // test that endpoints have been resolved on endpoints
         ImmutableEndpoint endpoint = muleContext.getRegistry().lookupEndpointFactory().getInboundEndpoint(
@@ -240,7 +240,7 @@ public abstract class AbstractScriptConfigBuilderTestCase extends FunctionalTest
         {
             endpoint = muleContext.getRegistry().lookupEndpointFactory().getInboundEndpoint("appleInEndpoint");
         }
-        catch (AbstractMuleException e)
+        catch (MuleException e)
         {
             e.printStackTrace();
             fail(e.getMessage());
@@ -270,7 +270,7 @@ public abstract class AbstractScriptConfigBuilderTestCase extends FunctionalTest
         {
             endpoint = muleContext.getRegistry().lookupEndpointFactory().getInboundEndpoint("orangeEndpoint");
         }
-        catch (AbstractMuleException e)
+        catch (MuleException e)
         {
             e.printStackTrace();
             fail(e.getMessage());
@@ -313,7 +313,7 @@ public abstract class AbstractScriptConfigBuilderTestCase extends FunctionalTest
 
     /* excluded - dep on management
 
-    public void _testAgentConfiguration() throws AbstractMuleException
+    public void _testAgentConfiguration() throws MuleException
     {
         JmxAgent agent = (JmxAgent)muleContext.getRegistry().lookupAgent("jmxAgent");
         assertNotNull(agent);

@@ -14,7 +14,7 @@ import org.mule.DefaultMuleEvent;
 import org.mule.DefaultMuleSession;
 import org.mule.NullSessionHandler;
 import org.mule.RequestContext;
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MessagingException;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleSession;
@@ -58,7 +58,7 @@ public class WireTap extends SelectiveConsumer
         {
             throw e;
         }
-        catch (AbstractMuleException e)
+        catch (MuleException e)
         {
             throw new DispatchException(event.getMessage(), tap, e);
         }
@@ -70,7 +70,7 @@ public class WireTap extends SelectiveConsumer
         return tap;
     }
 
-    public void setEndpoint(ImmutableEndpoint endpoint) throws AbstractMuleException
+    public void setEndpoint(ImmutableEndpoint endpoint) throws MuleException
     {
         this.tap = endpoint;
     }

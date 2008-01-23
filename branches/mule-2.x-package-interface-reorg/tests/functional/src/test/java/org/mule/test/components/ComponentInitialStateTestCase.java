@@ -10,7 +10,7 @@
 
 package org.mule.test.components;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.component.Component;
 import org.mule.api.component.ComponentException;
 import org.mule.api.transport.MessageReceiver;
@@ -164,7 +164,7 @@ public class ComponentInitialStateTestCase extends FunctionalTestCase
                 {
                     c.resume();
                 }
-                catch (AbstractMuleException e)
+                catch (MuleException e)
                 {
                     fail(e.getMessage());
                 }

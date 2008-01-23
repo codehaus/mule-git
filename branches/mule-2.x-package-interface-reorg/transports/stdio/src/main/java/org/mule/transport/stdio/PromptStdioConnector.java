@@ -10,7 +10,7 @@
 
 package org.mule.transport.stdio;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.component.Component;
 import org.mule.api.endpoint.ImmutableEndpoint;
@@ -221,7 +221,7 @@ public class PromptStdioConnector extends StdioConnector
     }
 
 
-    public OutputStream getOutputStream(ImmutableEndpoint endpoint, MuleMessage message) throws AbstractMuleException
+    public OutputStream getOutputStream(ImmutableEndpoint endpoint, MuleMessage message) throws MuleException
     {
         OutputStream out;
         String streamName = endpoint.getEndpointURI().getAddress();

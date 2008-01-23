@@ -11,7 +11,7 @@
 package org.mule.transport.rmi;
 
 import org.mule.DefaultMuleMessage;
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.component.Component;
 import org.mule.api.endpoint.Endpoint;
 import org.mule.api.endpoint.EndpointURI;
@@ -144,12 +144,12 @@ public class RmiCallbackMessageReceiver extends AbstractMessageReceiver
         logger.debug("Disconnected successfully.");
     }
 
-    protected void doStart() throws AbstractMuleException
+    protected void doStart() throws MuleException
     {
         // nothing to do
     }
 
-    protected void doStop() throws AbstractMuleException
+    protected void doStop() throws MuleException
     {
         // nothing to do
     }
@@ -189,9 +189,9 @@ public class RmiCallbackMessageReceiver extends AbstractMessageReceiver
      *
      * @param message
      * @return
-     * @throws org.mule.api.AbstractMuleException
+     * @throws org.mule.api.MuleException
      */
-    public Object routeMessage(Object message) throws AbstractMuleException
+    public Object routeMessage(Object message) throws MuleException
     {
         MessageAdapter adapter = connector.getMessageAdapter(message);
 

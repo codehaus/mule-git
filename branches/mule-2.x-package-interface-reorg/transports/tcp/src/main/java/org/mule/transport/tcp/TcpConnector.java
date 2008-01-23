@@ -11,7 +11,7 @@
 package org.mule.transport.tcp;
 
 import org.mule.api.MessagingException;
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.InitialisationException;
@@ -180,7 +180,7 @@ public class TcpConnector extends AbstractConnector
     }
 
     public OutputStream getOutputStream(final ImmutableEndpoint endpoint, MuleMessage message)
-            throws AbstractMuleException
+            throws MuleException
     {
         final Socket socket;
         try
@@ -225,12 +225,12 @@ public class TcpConnector extends AbstractConnector
         socketsPool.clear();
     }
 
-    protected void doStart() throws AbstractMuleException
+    protected void doStart() throws MuleException
     {
         // template method
     }
 
-    protected void doStop() throws AbstractMuleException
+    protected void doStop() throws MuleException
     {
         // template method
     }

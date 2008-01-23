@@ -10,8 +10,8 @@
 
 package org.mule;
 
-import org.mule.api.AbstractMuleException;
 import org.mule.api.MuleException;
+import org.mule.api.DefaultMuleException;
 import org.mule.api.context.MuleContextException;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.routing.RoutingException;
@@ -26,7 +26,7 @@ public class ExceptionsTestCase extends AbstractMuleTestCase
         String rootMsg = "Root Test Exception Message";
         String msg = "Test Exception Message";
 
-        Exception e = new MuleContextException(MessageFactory.createStaticMessage(msg), new MuleException(
+        Exception e = new MuleContextException(MessageFactory.createStaticMessage(msg), new DefaultMuleException(
             MessageFactory.createStaticMessage(rootMsg)));
 
         assertEquals(rootMsg, e.getCause().getMessage());
@@ -34,13 +34,13 @@ public class ExceptionsTestCase extends AbstractMuleTestCase
         assertEquals(e.getClass().getName() + ": " + msg, e.toString());
     }
 
-    public final void testRoutingExceptionNullUMOMessageNullUMOImmutableEndpoint() throws AbstractMuleException
+    public final void testRoutingExceptionNullUMOMessageNullUMOImmutableEndpoint() throws MuleException
     {
         RoutingException rex = new RoutingException(null, null);
         assertNotNull(rex);
     }
 
-    public final void testRoutingExceptionNullUMOMessageValidUMOImmutableEndpoint() throws AbstractMuleException
+    public final void testRoutingExceptionNullUMOMessageValidUMOImmutableEndpoint() throws MuleException
     {
         ImmutableEndpoint endpoint = muleContext.getRegistry().lookupEndpointFactory().getOutboundEndpoint("test://outbound");
         assertNotNull(endpoint);

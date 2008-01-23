@@ -11,7 +11,7 @@
 package org.mule.model.direct;
 
 import org.mule.DefaultMuleMessage;
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.lifecycle.InitialisationException;
@@ -47,7 +47,7 @@ public class DirectComponent extends AbstractComponent
             pojoService = getOrCreateService();
             proxy = createComponentProxy(pojoService);
         }
-        catch (AbstractMuleException e)
+        catch (MuleException e)
         {
             throw new InitialisationException(e, this);
         }
@@ -67,7 +67,7 @@ public class DirectComponent extends AbstractComponent
         //proxy.dispose();
     }
 
-    protected MuleMessage doSend(MuleEvent event) throws AbstractMuleException
+    protected MuleMessage doSend(MuleEvent event) throws MuleException
     {
 
         Object obj = proxy.onCall(event);
@@ -81,17 +81,17 @@ public class DirectComponent extends AbstractComponent
         }
     }
 
-    protected void doDispatch(MuleEvent event) throws AbstractMuleException
+    protected void doDispatch(MuleEvent event) throws MuleException
     {
         proxy.onCall(event);
     }
 
-    protected void doStop() throws AbstractMuleException
+    protected void doStop() throws MuleException
     {
         proxy.stop();
     }
 
-    protected void doStart() throws AbstractMuleException
+    protected void doStart() throws MuleException
     {
         proxy.start();
     }

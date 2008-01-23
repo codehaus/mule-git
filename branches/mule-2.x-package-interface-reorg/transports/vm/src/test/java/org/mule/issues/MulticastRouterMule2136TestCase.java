@@ -10,7 +10,7 @@
 
 package org.mule.issues;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.modules.xml.functional.AbstractXmlFunctionalTestCase;
@@ -33,30 +33,30 @@ public class MulticastRouterMule2136TestCase extends AbstractXmlFunctionalTestCa
         return "issues/multicast-router-mule-2136-test.xml";
     }
 
-    protected MuleClient sendObject() throws AbstractMuleException
+    protected MuleClient sendObject() throws MuleException
     {
         MuleClient client = new MuleClient();
         client.dispatch("object-in", new Parent(new Child()), null);
         return client;
     }
 
-    public void testObjectOut() throws AbstractMuleException
+    public void testObjectOut() throws MuleException
     {
         request(sendObject(), "object-out", Parent.class);
     }
 
-    public void testObjectXmlOut() throws AbstractMuleException
+    public void testObjectXmlOut() throws MuleException
     {
         String xml = (String) request(sendObject(), "object-xml-out", String.class);
         assertEquals(SERIALIZED, xml);
     }
 
-    public void testXmlObjectOut() throws AbstractMuleException
+    public void testXmlObjectOut() throws MuleException
     {
         request(sendObject(), "xml-object-out", Parent.class);
     }
 
-    public void testStress() throws AbstractMuleException
+    public void testStress() throws MuleException
     {
         int tenth = TEST_COUNT / 10;
         for (int i = 0; i < TEST_COUNT; i++)
@@ -75,7 +75,7 @@ public class MulticastRouterMule2136TestCase extends AbstractXmlFunctionalTestCa
     }
 
 
-    protected Object request(MuleClient client, String endpoint, Class clazz) throws AbstractMuleException
+    protected Object request(MuleClient client, String endpoint, Class clazz) throws MuleException
     {
         MuleMessage message = client.request(endpoint, TIMEOUT);
         assertNotNull(message);

@@ -11,7 +11,7 @@
 package org.mule.management.agents;
 
 import org.mule.AbstractAgent;
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.management.i18n.ManagementMessages;
@@ -140,12 +140,12 @@ public class WrapperManagerAgent extends AbstractAgent
     }
 
     /* @see org.mule.api.lifecycle.Startable#start() */
-    public void start() throws AbstractMuleException {
+    public void start() throws MuleException {
         // no-op
     }
 
     /* @see org.mule.api.lifecycle.Stoppable#stop() */
-    public void stop() throws AbstractMuleException
+    public void stop() throws MuleException
     {
         // no-op
     }
@@ -229,7 +229,7 @@ public class WrapperManagerAgent extends AbstractAgent
             // remove the agent from the list, it's not functional
             muleContext.getRegistry().unregisterAgent(this.getName());
         }
-        catch (AbstractMuleException e)
+        catch (MuleException e)
         {
             // not interested, really
         }

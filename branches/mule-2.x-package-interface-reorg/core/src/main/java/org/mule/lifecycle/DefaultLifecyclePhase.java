@@ -10,7 +10,7 @@
 package org.mule.lifecycle;
 
 import org.mule.RegistryContext;
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleContext;
 import org.mule.api.lifecycle.LifecycleException;
 import org.mule.api.lifecycle.LifecyclePhase;
@@ -63,7 +63,7 @@ public class DefaultLifecyclePhase implements LifecyclePhase
         this.oppositeLifecyclePhase = oppositeLifecyclePhase;
     }
 
-    public void fireLifecycle(MuleContext muleContext, String currentPhase) throws AbstractMuleException
+    public void fireLifecycle(MuleContext muleContext, String currentPhase) throws MuleException
     {
         if (logger.isDebugEnabled())
         {

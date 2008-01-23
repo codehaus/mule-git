@@ -10,7 +10,7 @@
 
 package org.mule.api.routing;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.ImmutableEndpoint;
@@ -27,7 +27,7 @@ public interface ResponseRouterCollection extends RouterCollection
 {
     void route(MuleEvent event) throws RoutingException;
 
-    MuleMessage getResponse(MuleMessage message) throws AbstractMuleException;
+    MuleMessage getResponse(MuleMessage message) throws MuleException;
 
     ResponseRouter removeRouter(ResponseRouter router);
 

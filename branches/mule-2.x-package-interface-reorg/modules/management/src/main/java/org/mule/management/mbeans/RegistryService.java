@@ -10,7 +10,7 @@
 
 package org.mule.management.mbeans;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.registry.Registry;
 
 /**
@@ -26,12 +26,12 @@ public class RegistryService implements RegistryServiceMBean
         this.registry = registry;
     }
 
-    public void start() throws AbstractMuleException
+    public void start() throws MuleException
     {
        // registry.start();
     }
 
-    public void stop() throws AbstractMuleException
+    public void stop() throws MuleException
     {
        //registry.stop();
     }

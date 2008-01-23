@@ -14,7 +14,7 @@ import org.mule.DefaultMuleEvent;
 import org.mule.DefaultMuleMessage;
 import org.mule.OptimizedRequestContext;
 import org.mule.RequestContext;
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.ExceptionPayload;
 import org.mule.api.MessagingException;
 import org.mule.api.MuleContext;
@@ -70,7 +70,7 @@ public class DefaultMuleProxy implements MuleProxy
      * itself
      */
     public DefaultMuleProxy(Object pojoService, Component component, MuleContext muleContext)
-            throws AbstractMuleException
+            throws MuleException
     {
         //this.pojoService = pojoService;
         this.component = component;
@@ -81,7 +81,7 @@ public class DefaultMuleProxy implements MuleProxy
         umo = model.getLifecycleAdapterFactory().create(pojoService, component, resolver);
     }
 
-    public void start() throws AbstractMuleException
+    public void start() throws MuleException
     {
         checkDisposed();
         if (!umo.isStarted())
@@ -104,7 +104,7 @@ public class DefaultMuleProxy implements MuleProxy
         return umo.isStarted();
     }
 
-    public void stop() throws AbstractMuleException
+    public void stop() throws MuleException
     {
         checkDisposed();
         if (umo.isStarted())
@@ -160,9 +160,9 @@ public class DefaultMuleProxy implements MuleProxy
      *
      * @param event the event to pass to the UMO
      * @return the return event from the UMO
-     * @throws AbstractMuleException if the call fails
+     * @throws MuleException if the call fails
      */
-    public Object onCall(MuleEvent event) throws AbstractMuleException
+    public Object onCall(MuleEvent event) throws MuleException
     {
         if (logger.isTraceEnabled())
         {
@@ -346,7 +346,7 @@ public class DefaultMuleProxy implements MuleProxy
         return replyToHandler;
     }
 
-    private void processReplyTo(MuleMessage returnMessage) throws AbstractMuleException
+    private void processReplyTo(MuleMessage returnMessage) throws MuleException
     {
         if (returnMessage != null && returnMessage.getReplyTo() != null)
         {

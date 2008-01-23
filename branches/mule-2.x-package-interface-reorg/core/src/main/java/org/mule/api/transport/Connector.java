@@ -10,7 +10,7 @@
 
 package org.mule.api.transport;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MessagingException;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleEvent;
@@ -211,9 +211,9 @@ public interface Connector extends Lifecycle, MuleContextAware, NamedObject
      * @param endpoint the endpoint that releates to this Dispatcher
      * @param message the current message being processed
      * @return the output stream to use for this request
-     * @throws AbstractMuleException
+     * @throws MuleException
      */
-    OutputStream getOutputStream(ImmutableEndpoint endpoint, MuleMessage message) throws AbstractMuleException;
+    OutputStream getOutputStream(ImmutableEndpoint endpoint, MuleMessage message) throws MuleException;
 
     MuleContext getMuleContext();
 }

@@ -12,7 +12,7 @@ package org.mule.model.seda.optimised;
 
 import org.mule.DefaultMuleMessage;
 import org.mule.RequestContext;
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MessagingException;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleEventContext;
@@ -73,13 +73,13 @@ public class OptimisedMuleProxy implements MuleProxy
      * @param component the Component descriptor associated with the component
      */
     public OptimisedMuleProxy(Callable pojoService, Component component)
-        throws AbstractMuleException
+        throws MuleException
     {
         this.component = component;
         this.pojoService = pojoService;
     }
 
-    public void start() throws AbstractMuleException
+    public void start() throws MuleException
     {
         checkDisposed();
         if (!started && pojoService instanceof Startable)
@@ -103,7 +103,7 @@ public class OptimisedMuleProxy implements MuleProxy
         return started;
     }
 
-    public void stop() throws AbstractMuleException
+    public void stop() throws MuleException
     {
         checkDisposed();
 
@@ -165,9 +165,9 @@ public class OptimisedMuleProxy implements MuleProxy
      * 
      * @param event the event to pass to the UMO
      * @return the return event from the UMO
-     * @throws org.mule.api.AbstractMuleException if the call fails
+     * @throws org.mule.api.MuleException if the call fails
      */
-    public Object onCall(MuleEvent event) throws AbstractMuleException
+    public Object onCall(MuleEvent event) throws MuleException
     {
         if (logger.isTraceEnabled())
         {
@@ -261,7 +261,7 @@ public class OptimisedMuleProxy implements MuleProxy
         catch (Exception e)
         {
             event.getSession().setValid(false);
-            if (e instanceof AbstractMuleException)
+            if (e instanceof MuleException)
             {
                 handleException(e);
             }
@@ -335,7 +335,7 @@ public class OptimisedMuleProxy implements MuleProxy
         suspended = false;
     }
 
-    // private void processReplyTo(MuleMessage returnMessage) throws AbstractMuleException
+    // private void processReplyTo(MuleMessage returnMessage) throws MuleException
     // {
     // if (returnMessage != null && returnMessage.getReplyTo() != null) {
     // logger.info("sending reply to: " + returnMessage.getReplyTo());
@@ -426,7 +426,7 @@ public class OptimisedMuleProxy implements MuleProxy
         catch (Exception e)
         {
             event.getSession().setValid(false);
-            if (e instanceof AbstractMuleException)
+            if (e instanceof MuleException)
             {
                 handleException(e);
             }

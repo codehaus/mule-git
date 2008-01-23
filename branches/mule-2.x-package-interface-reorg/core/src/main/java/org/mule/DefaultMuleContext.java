@@ -9,7 +9,7 @@
  */
 package org.mule;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleRuntimeException;
 import org.mule.api.agent.Agent;
@@ -181,7 +181,7 @@ public class DefaultMuleContext implements MuleContext
         systemName = domain + "." + clusterId + "." + id;
     }
 
-    public synchronized void start() throws AbstractMuleException
+    public synchronized void start() throws MuleException
     {
         lifecycleManager.checkPhase(Startable.PHASE_NAME);
         if (!isStarted())
@@ -213,10 +213,10 @@ public class DefaultMuleContext implements MuleContext
      * Stops the <code>MuleManager</code> which stops all sessions and
      * connectors
      *
-     * @throws AbstractMuleException if either any of the sessions or connectors fail to
+     * @throws MuleException if either any of the sessions or connectors fail to
      *                      stop
      */
-    public synchronized void stop() throws AbstractMuleException
+    public synchronized void stop() throws MuleException
     {
         lifecycleManager.checkPhase(Stoppable.PHASE_NAME);
 
@@ -244,7 +244,7 @@ public class DefaultMuleContext implements MuleContext
                 stop();
             }
         }
-        catch (AbstractMuleException e)
+        catch (MuleException e)
         {
             logger.error("Failed to stop manager: " + e.getMessage(), e);
         }
@@ -253,7 +253,7 @@ public class DefaultMuleContext implements MuleContext
         {
             lifecycleManager.firePhase(this, Disposable.PHASE_NAME);
         }
-        catch (AbstractMuleException e)
+        catch (MuleException e)
         {
             logger.debug("Failed to cleanly dispose Mule: " + e.getMessage(), e);
         }
@@ -397,13 +397,13 @@ public class DefaultMuleContext implements MuleContext
         this.systemName = systemName;
     }
 
-    public Store getStore(String name) throws AbstractMuleException
+    public Store getStore(String name) throws MuleException
     {
         //TODO LM: get store from registry
         return null;
     }
 
-    public Store createStore(String name) throws AbstractMuleException
+    public Store createStore(String name) throws MuleException
     {
         //TODO LM: backed by registry
         return null;
@@ -828,7 +828,7 @@ public class DefaultMuleContext implements MuleContext
      * Apply current phase of the LifecycleManager.  Note: this is NOT the same lifecycle manager
      * as the one in the Registry.
      */
-    public void applyLifecycle(Object object) throws AbstractMuleException
+    public void applyLifecycle(Object object) throws MuleException
     {
         lifecycleManager.applyLifecycle(this, object);
     }

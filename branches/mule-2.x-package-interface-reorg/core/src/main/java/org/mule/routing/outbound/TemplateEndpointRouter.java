@@ -10,7 +10,7 @@
 
 package org.mule.routing.outbound;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.MuleSession;
 import org.mule.api.endpoint.EndpointURI;
@@ -97,7 +97,7 @@ public class TemplateEndpointRouter extends FilteringOutboundRouter
                 dispatch(session, message, ep);
             }
         }
-        catch (AbstractMuleException e)
+        catch (MuleException e)
         {
             throw new CouldNotRouteOutboundMessageException(message, (ImmutableEndpoint) endpoints.get(0), e);
         }

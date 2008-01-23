@@ -42,10 +42,10 @@ public interface MuleSession extends Serializable
      * 
      * @param message the message to send
      * @return the result of the send if any
-     * @throws org.mule.api.AbstractMuleException if there is no outbound endpoint configured
+     * @throws org.mule.api.MuleException if there is no outbound endpoint configured
      *             on the component or the events fails during dispatch
      */
-    MuleMessage sendEvent(MuleMessage message) throws AbstractMuleException;
+    MuleMessage sendEvent(MuleMessage message) throws MuleException;
 
     /**
      * Depending on the session state this methods either Passes an event
@@ -54,10 +54,10 @@ public interface MuleSession extends Serializable
      * 
      * @param event the event to process
      * @return the return Message from the call or null if there was no result
-     * @throws AbstractMuleException if the event fails to be processed by the component or
+     * @throws MuleException if the event fails to be processed by the component or
      *             the transport for the endpoint
      */
-    MuleMessage sendEvent(MuleEvent event) throws AbstractMuleException;
+    MuleMessage sendEvent(MuleEvent event) throws MuleException;
 
     /**
      * Depending on the session state this methods either Passes an event
@@ -67,10 +67,10 @@ public interface MuleSession extends Serializable
      * @param message the event message payload to send
      * @param endpoint The endpoint to disptch the event through
      * @return the return Message from the call or null if there was no result
-     * @throws AbstractMuleException if the event fails to be processed by the component or
+     * @throws MuleException if the event fails to be processed by the component or
      *             the transport for the endpoint
      */
-    MuleMessage sendEvent(MuleMessage message, ImmutableEndpoint endpoint) throws AbstractMuleException;
+    MuleMessage sendEvent(MuleMessage message, ImmutableEndpoint endpoint) throws MuleException;
 
     /**
      * Depending on the session state this methods either Passes an event
@@ -82,20 +82,20 @@ public interface MuleSession extends Serializable
      *            be looked up first on the component configuration and then on the
      *            mule manager configuration
      * @return the return Message from the call or null if there was no result
-     * @throws AbstractMuleException if the event fails to be processed by the component or
+     * @throws MuleException if the event fails to be processed by the component or
      *             the transport for the endpoint
      */
-    MuleMessage sendEvent(MuleMessage message, String endpointName) throws AbstractMuleException;
+    MuleMessage sendEvent(MuleMessage message, String endpointName) throws MuleException;
 
     /**
      * This will dispatch an event asynchronously via the configured outbound
      * endpoint on the component for this session
      * 
      * @param message the message to send
-     * @throws AbstractMuleException if there is no outbound endpoint configured on the
+     * @throws MuleException if there is no outbound endpoint configured on the
      *             component or the events fails during dispatch
      */
-    void dispatchEvent(MuleMessage message) throws AbstractMuleException;
+    void dispatchEvent(MuleMessage message) throws MuleException;
 
     /**
      * Depending on the session state this methods either Passes an event
@@ -104,10 +104,10 @@ public interface MuleSession extends Serializable
      * 
      * @param event the event message payload to send first on the component
      *            configuration and then on the mule manager configuration
-     * @throws AbstractMuleException if the event fails to be processed by the component or
+     * @throws MuleException if the event fails to be processed by the component or
      *             the transport for the endpoint
      */
-    void dispatchEvent(MuleEvent event) throws AbstractMuleException;
+    void dispatchEvent(MuleEvent event) throws MuleException;
 
     /**
      * Depending on the session state this methods either Passes an event
@@ -116,10 +116,10 @@ public interface MuleSession extends Serializable
      * 
      * @param message the event message payload to send
      * @param endpoint The endpoint name to disptch the event through
-     * @throws AbstractMuleException if the event fails to be processed by the component or
+     * @throws MuleException if the event fails to be processed by the component or
      *             the transport for the endpoint
      */
-    void dispatchEvent(MuleMessage message, ImmutableEndpoint endpoint) throws AbstractMuleException;
+    void dispatchEvent(MuleMessage message, ImmutableEndpoint endpoint) throws MuleException;
 
     /**
      * Depending on the session state this methods either Passes an event
@@ -130,10 +130,10 @@ public interface MuleSession extends Serializable
      * @param endpointName The endpoint name to disptch the event through. This will
      *            be looked up first on the component configuration and then on the
      *            mule manager configuration
-     * @throws AbstractMuleException if the event fails to be processed by the component or
+     * @throws MuleException if the event fails to be processed by the component or
      *             the transport for the endpoint
      */
-    void dispatchEvent(MuleMessage message, String endpointName) throws AbstractMuleException;
+    void dispatchEvent(MuleMessage message, String endpointName) throws MuleException;
 
     /**
      * Requests a synchronous receive of an event on the component
@@ -142,9 +142,9 @@ public interface MuleSession extends Serializable
      *            will be received
      * @param timeout time in milliseconds before the request timesout
      * @return The requested event or null if the request times out
-     * @throws AbstractMuleException if the request operation fails
+     * @throws MuleException if the request operation fails
      */
-    MuleMessage receiveEvent(ImmutableEndpoint endpoint, long timeout) throws AbstractMuleException;
+    MuleMessage receiveEvent(ImmutableEndpoint endpoint, long timeout) throws MuleException;
 
     /**
      * Requests a synchronous receive of an event on the component
@@ -153,9 +153,9 @@ public interface MuleSession extends Serializable
      *            event will be received
      * @param timeout time in milliseconds before the request timesout
      * @return The requested event or null if the request times out
-     * @throws AbstractMuleException if the request operation fails
+     * @throws MuleException if the request operation fails
      */
-    MuleMessage receiveEvent(String endpointName, long timeout) throws AbstractMuleException;
+    MuleMessage receiveEvent(String endpointName, long timeout) throws MuleException;
 
     /**
      * Determines if this session is valid. A session becomes invalid if an exception
@@ -180,10 +180,10 @@ public interface MuleSession extends Serializable
      * @param endpoint the endpoint to send/dispatch through
      * @param previousEvent the previous event (if any) on this session
      * @return the event to send/dispatch
-     * @throws AbstractMuleException if the evnet cannot be created
+     * @throws MuleException if the evnet cannot be created
      */
     MuleEvent createOutboundEvent(MuleMessage message, ImmutableEndpoint endpoint, MuleEvent previousEvent)
-        throws AbstractMuleException;
+        throws MuleException;
 
     /**
      * Returns the unique id for this session

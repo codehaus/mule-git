@@ -10,7 +10,7 @@
 
 package org.mule.transport.soap.xfire;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleRuntimeException;
 import org.mule.api.component.Component;
 import org.mule.api.context.WorkManager;
@@ -206,7 +206,7 @@ public class XFireConnector extends AbstractConnector
         {
             wm.start();
         }
-        catch (AbstractMuleException e)
+        catch (MuleException e)
         {
             throw new MuleRuntimeException(CoreMessages.failedToStart("local channel work manager"), e);
         }
@@ -338,12 +338,12 @@ public class XFireConnector extends AbstractConnector
         // template method
     }
 
-    protected void doStart() throws AbstractMuleException
+    protected void doStart() throws MuleException
     {
 
     }
 
-    protected void doStop() throws AbstractMuleException
+    protected void doStop() throws MuleException
     {
         // template method
     }
@@ -359,7 +359,7 @@ public class XFireConnector extends AbstractConnector
     }
 
     protected void registerReceiverWithMuleService(MessageReceiver receiver, EndpointURI ep)
-        throws AbstractMuleException
+        throws MuleException
     {
     	 // TODO MULE-2228 Simplify this API
     	SedaComponent c = new SedaComponent();
@@ -588,7 +588,7 @@ public class XFireConnector extends AbstractConnector
                 {
                     muleContext.getRegistry().registerComponent(c);
                 }
-                catch (AbstractMuleException e)
+                catch (MuleException e)
                 {
                     handleException(e);
                 }

@@ -10,7 +10,7 @@
 
 package org.mule.transport.email;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
@@ -39,7 +39,7 @@ public class EmailRoundTripTestCase extends FunctionalTestCase
         return "email-round-trip-test.xml";
     }
 
-    public void testRoundTrip() throws AbstractMuleException, InterruptedException
+    public void testRoundTrip() throws MuleException, InterruptedException
     {
         // first, check that the conversion happened - we should have a copy of
         // the message as rfc822 encoded bytes on vm://rfc822

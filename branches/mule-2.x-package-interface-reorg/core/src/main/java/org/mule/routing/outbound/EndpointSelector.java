@@ -10,7 +10,7 @@
 
 package org.mule.routing.outbound;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.MuleSession;
 import org.mule.api.context.MuleContextAware;
@@ -109,7 +109,7 @@ public class EndpointSelector extends FilteringOutboundRouter implements MuleCon
                     dispatch(session, message, ep);
                 }
             }
-            catch (AbstractMuleException e)
+            catch (MuleException e)
             {
                 throw new CouldNotRouteOutboundMessageException(message, ep, e);
             }
@@ -117,7 +117,7 @@ public class EndpointSelector extends FilteringOutboundRouter implements MuleCon
         return result;
     }
 
-    protected ImmutableEndpoint lookupEndpoint(String endpointName) throws AbstractMuleException
+    protected ImmutableEndpoint lookupEndpoint(String endpointName) throws MuleException
     {
         ImmutableEndpoint ep;
         Iterator iterator = endpoints.iterator();

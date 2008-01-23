@@ -10,7 +10,7 @@
 
 package org.mule.config.spring.parsers.endpoint;
 
-import org.mule.api.AbstractMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.transformer.Transformer;
 
@@ -28,7 +28,7 @@ public class MultipleTransformerRefsTestCase  extends AbstractEndpointTestCase
         return "org/mule/config/spring/parsers/endpoint/multiple-transformer-refs-test.xml";
     }
 
-    public void testMultipleRefs() throws AbstractMuleException
+    public void testMultipleRefs() throws MuleException
     {
         ImmutableEndpoint endpoint = doTest("many");
         List transformers = endpoint.getTransformers();
@@ -42,7 +42,7 @@ public class MultipleTransformerRefsTestCase  extends AbstractEndpointTestCase
         assertEquals("c", ((Transformer) transformers.get(2)).getName());
     }
 
-    public void testSingleRef() throws AbstractMuleException
+    public void testSingleRef() throws MuleException
     {
         ImmutableEndpoint endpoint = doTest("single");
         List transformers = endpoint.getTransformers();
