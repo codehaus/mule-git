@@ -103,9 +103,24 @@ public class FileConnector extends AbstractConnector
      */
     public FileConnector()
     {
+        super();
+        // MULE-1773: limit the number of dispatchers per endpoint to 1 until
+        // there is a proper (Distributed)LockManager in place (MULE-2402).
+        // We also override the setter to prevent "wrong" configuration for now.
+        super.setMaxDispatchersActive(1);
         filenameParser = new SimpleFilenameParser();
     }
 
+    // @Override
+    public void setMaxDispatchersActive(int value)
+    {
+        if (value != 1)
+        {
+            throw new IllegalArgumentException("MULE-1773: cannot configure maxDispatchersActive");
+        }
+    }
+
+    // @Override
     protected Object getReceiverKey(UMOComponent component, UMOEndpoint endpoint)
     {
         if (endpoint.getFilter() != null)
