@@ -629,18 +629,6 @@ public class JdbcConnector extends AbstractConnector
             if (message != null)
             {
                 PropertyExtractor pe = (PropertyExtractor) propertyExtractorCache.get(query + param);
-                if (pe != null)
-                {
-                    value = pe.getProperty(name, message);
-                    if (value != null)
-                    {
-                        foundValue = true;
-                    }
-                    else
-                    {
-                        pe = null;
-                    }
-                }
                 if (pe == null) 
                 {
                     for (Iterator iterator = propertyExtractors.iterator(); iterator.hasNext();)
@@ -654,6 +642,11 @@ public class JdbcConnector extends AbstractConnector
                             break;
                         }    
                     }
+                }
+                else 
+                {
+                    value = pe.getProperty(name, message);
+                    foundValue = true;
                 }
                 if (StringUtils.EMPTY.equals(value) && pe instanceof BeanPropertyExtractor)
                 {

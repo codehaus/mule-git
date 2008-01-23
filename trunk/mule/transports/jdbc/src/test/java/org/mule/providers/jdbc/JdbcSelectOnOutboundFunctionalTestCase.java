@@ -21,7 +21,6 @@ import org.mule.umo.UMOMessage;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
@@ -127,23 +126,6 @@ public class JdbcSelectOnOutboundFunctionalTestCase extends FunctionalTestCase
         internalStoredProcTest("vm://proc2.test");
     }
 
-    public void testCallProcByPropertyExtractor() throws Exception
-    {
-        MuleClient client = new MuleClient();
-        MessageFactory[] factories = {new MapMessageFactory(), new PayloadMessageFacory(), new PropertiesMessageFactory()};
-        for (int i = 0; i < factories.length; i++) {
-            UMOMessage message = factories[i].createMessage();
-            UMOMessage reply = client.send("vm://proc3.test", message);
-            assertNotNull(reply.getPayload());
-            assertTrue(reply.getPayload() instanceof Map);
-            Map resultMap = (Map) reply.getPayload();
-            assertTrue(resultMap.size() == 3);
-            assertEquals(resultMap.get("b"), new Integer(10));
-            assertEquals(resultMap.get("c"), new Double(8.3));
-            assertEquals(resultMap.get("s"), "test");
-        }
-    }
-
     public void testInsert() throws Exception
     {
         MuleClient client = new MuleClient();
@@ -197,66 +179,6 @@ public class JdbcSelectOnOutboundFunctionalTestCase extends FunctionalTestCase
         public void setType(int type)
         {
             this.type = type;
-        }
-    }
-
-    public static class EnotherMessage implements Serializable
-    {
-        private int a;
-        private int b;
-
-        public EnotherMessage(int a, int b) {
-            this.a = a;
-            this.b = b;
-        }
-
-        public int getA() {
-            return a;
-        }
-
-        public void setA(int a) {
-            this.a = a;
-        }
-
-        public int getB() {
-            return b;
-        }
-
-        public void setB(int b) {
-            this.b = b;
-        }
-    }
-
-    interface MessageFactory
-    {
-        UMOMessage createMessage();
-    }
-
-    class MapMessageFactory implements MessageFactory
-    {
-        public UMOMessage createMessage() {
-            Map payload = new HashMap();
-            payload.put("a", new Integer(3));
-            payload.put("b", new Integer(5));
-            return new MuleMessage(payload);
-        }
-    }
-
-    class PayloadMessageFacory implements MessageFactory
-    {
-        public UMOMessage createMessage() {
-            EnotherMessage payload = new EnotherMessage(3, 5);
-            return new MuleMessage(payload);
-        }
-    }
-
-    class PropertiesMessageFactory implements MessageFactory
-    {
-        public UMOMessage createMessage() {
-            UMOMessage message = new MuleMessage(NullPayload.getInstance());
-            message.setIntProperty("a", 3);
-            message.setIntProperty("b", 5);
-            return message;
         }
     }
 

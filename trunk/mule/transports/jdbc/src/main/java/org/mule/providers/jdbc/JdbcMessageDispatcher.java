@@ -95,8 +95,8 @@ public class JdbcMessageDispatcher extends AbstractMessageDispatcher
 
         Object[][] types = connector.getParamsTypes(paramNames);
 
-        Object[] paramValues = connector.getParams(endpoint, paramNames,
-                event.getMessage(), this.endpoint.getEndpointURI().getAddress());
+        Object[] paramValues = connector.getParams(endpoint, paramNames, new MuleMessage(
+            event.getTransformedMessage()), this.endpoint.getEndpointURI().getAddress());
 
         UMOTransaction tx = TransactionCoordination.getInstance().getTransaction();
         Connection con = null;
