@@ -116,7 +116,7 @@ public class ObjectToMimeMessage extends StringToEmailMessage
         DataHandler handler;
         if (payload instanceof String)
         {
-            handler = new DataHandler(new PlainTextDataSource(contentType, payload.toString()));
+            handler = new DataHandler(new ByteArrayDataSource((String)payload, contentType));
         }
         else if (payload instanceof byte[])
         {
