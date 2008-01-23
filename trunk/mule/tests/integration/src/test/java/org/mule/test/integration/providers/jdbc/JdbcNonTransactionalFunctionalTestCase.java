@@ -109,7 +109,7 @@ public class JdbcNonTransactionalFunctionalTestCase extends AbstractJdbcFunction
         initialiseComponent(null);
         MuleManager.getInstance().start();
 
-        execSqlUpdate("INSERT INTO TEST(TYPE, DATA, ACK, RESULT) VALUES (1, '" + DEFAULT_MESSAGE
+        execSqlUpdate("INSERT INTO TEST(TYPE, DATA, ACK, RESULT) VALUES (2, '" + DEFAULT_MESSAGE
                         + "', NULL, NULL)");
 
         long t0 = System.currentTimeMillis();
