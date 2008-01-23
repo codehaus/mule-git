@@ -11,6 +11,8 @@
 package org.mule.providers.vm;
 
 import org.mule.MuleManager;
+import org.mule.transaction.TransactionTemplate;
+import org.mule.transaction.TransactionCallback;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.impl.MuleMessage;
 import org.mule.providers.AbstractMessageDispatcher;
@@ -117,7 +119,7 @@ public class VMMessageDispatcher extends AbstractMessageDispatcher
         }
     }
 
-    protected void doDispatch(UMOEvent event) throws Exception
+    protected void doDispatch(final UMOEvent event) throws Exception
     {
         UMOEndpointURI endpointUri = event.getEndpoint().getEndpointURI();
 
@@ -140,7 +142,7 @@ public class VMMessageDispatcher extends AbstractMessageDispatcher
         }
         else
         {
-            VMMessageReceiver receiver = connector.getReceiver(event.getEndpoint().getEndpointURI());
+            final VMMessageReceiver receiver = connector.getReceiver(event.getEndpoint().getEndpointURI());
             if (receiver == null)
             {
                 logger.warn("No receiver for endpointUri: " + event.getEndpoint().getEndpointURI());
@@ -154,7 +156,25 @@ public class VMMessageDispatcher extends AbstractMessageDispatcher
                 UMOStreamMessageAdapter sma = connector.getStreamMessageAdapter(in, out);
                 sma.write(event);
             }
-            receiver.onEvent(event);
+            if (receiver.getEndpoint().getTransactionConfig().isTransacted())
+            {
+                TransactionTemplate tt = new TransactionTemplate(receiver.getEndpoint().getTransactionConfig(), connector
+                        .getExceptionListener());
+
+                TransactionCallback cb = new TransactionCallback()
+                {
+                    public Object doInTransaction() throws Exception
+                    {
+                        receiver.onEvent(event);
+                        return null;
+                    }
+                };
+                tt.execute(cb);
+            }
+            else
+            {
+                receiver.onEvent(event);
+            }
         }
         if (logger.isDebugEnabled())
         {
@@ -162,11 +182,11 @@ public class VMMessageDispatcher extends AbstractMessageDispatcher
         }
     }
 
-    protected UMOMessage doSend(UMOEvent event) throws Exception
+    protected UMOMessage doSend(final UMOEvent event) throws Exception
     {
-        UMOMessage retMessage;
+        UMOMessage retMessage = null;
         UMOEndpointURI endpointUri = event.getEndpoint().getEndpointURI();
-        VMMessageReceiver receiver = connector.getReceiver(endpointUri);
+        final VMMessageReceiver receiver = connector.getReceiver(endpointUri);
         if (receiver == null)
         {
             if (connector.isQueueEvents())
@@ -183,8 +203,8 @@ public class VMMessageDispatcher extends AbstractMessageDispatcher
             else
             {
                 throw new NoReceiverForEndpointException(
-                    VMMessages.noReceiverForEndpoint(connector.getName(), 
-                        event.getEndpoint().getEndpointURI()));
+                        VMMessages.noReceiverForEndpoint(connector.getName(),
+                                                         event.getEndpoint().getEndpointURI()));
             }
         }
         if (event.isStreaming())
@@ -195,18 +215,35 @@ public class VMMessageDispatcher extends AbstractMessageDispatcher
             sma.write(event);
         }
 
-        retMessage = (UMOMessage)receiver.onCall(event);
+        if (receiver.getEndpoint().getTransactionConfig().isTransacted())
+        {
+            TransactionTemplate tt = new TransactionTemplate(receiver.getEndpoint().getTransactionConfig(), connector
+                    .getExceptionListener());
+
+            TransactionCallback cb = new TransactionCallback()
+            {
+                public Object doInTransaction() throws Exception
+                {
+                    return receiver.onCall(event);
+                }
+            };
+            retMessage = (UMOMessage) tt.execute(cb);
+        }
+        else
+        {
+            retMessage = (UMOMessage) receiver.onCall(event);
+        }
 
         if (event.isStreaming() && retMessage != null)
         {
             InputStream in;
             if (retMessage.getPayload() instanceof InputStream)
             {
-                in = (InputStream)retMessage.getPayload();
+                in = (InputStream) retMessage.getPayload();
             }
             else
             {
-                in = new ByteArrayInputStream((byte[])objectToByteArray.transform(retMessage.getPayload()));
+                in = new ByteArrayInputStream((byte[]) objectToByteArray.transform(retMessage.getPayload()));
             }
             UMOStreamMessageAdapter sma = connector.getStreamMessageAdapter(in, null);
             retMessage = new MuleMessage(sma, retMessage);
