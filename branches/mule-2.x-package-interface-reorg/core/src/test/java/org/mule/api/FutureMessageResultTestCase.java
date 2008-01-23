@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.umo;
+package org.mule.api;
 
 import org.mule.api.FutureMessageResult;
 import org.mule.api.transformer.TransformerException;
