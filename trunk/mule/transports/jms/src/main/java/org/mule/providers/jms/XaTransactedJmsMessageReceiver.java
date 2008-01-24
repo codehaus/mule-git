@@ -27,8 +27,6 @@ import org.mule.util.ClassUtils;
 import org.mule.util.MapUtils;
 
 import java.util.List;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Proxy;
 
 import javax.jms.Destination;
 import javax.jms.JMSException;
@@ -37,7 +35,6 @@ import javax.jms.MessageConsumer;
 import javax.jms.Session;
 
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
-import edu.emory.mathcs.backport.java.util.Arrays;
 
 public class XaTransactedJmsMessageReceiver extends TransactedPollingMessageReceiver
 {
