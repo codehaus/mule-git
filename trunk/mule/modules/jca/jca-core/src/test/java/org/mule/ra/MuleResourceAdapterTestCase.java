@@ -184,7 +184,7 @@ public class MuleResourceAdapterTestCase extends AbstractMuleTestCase
         resourceAdapter.endpointActivation(endpointFactory, activationSpec);
         assertEquals(1, resourceAdapter.endpoints.size());
 
-        MuleEndpointKey key = new MuleEndpointKey(endpointFactory, (MuleActivationSpec) activationSpec);
+        MuleEndpointKey key = new MuleEndpointKey(endpointFactory, activationSpec);
         UMODescriptor descriptor = (UMODescriptor) resourceAdapter.endpoints.get(key);
 
         assertEquals("JcaComponent#" + endpointFactory.hashCode(), descriptor.getName());

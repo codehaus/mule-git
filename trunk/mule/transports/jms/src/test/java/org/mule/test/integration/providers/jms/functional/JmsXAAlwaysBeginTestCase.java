@@ -25,6 +25,7 @@ import javax.transaction.xa.XAResource;
 import javax.transaction.xa.Xid;
 
 import edu.emory.mathcs.backport.java.util.concurrent.CopyOnWriteArrayList;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -184,8 +185,5 @@ public class JmsXAAlwaysBeginTestCase extends AbstractJmsFunctionalTestCase
             return message;
         }
     }
-
-    ;
-
 
 }

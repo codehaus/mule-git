@@ -15,7 +15,6 @@ import org.mule.providers.jms.JmsTopicResolver;
 import org.mule.providers.jms.xa.ConnectionFactoryWrapper;
 import org.mule.providers.jms.xa.ConnectionInvocationHandler;
 import org.mule.tck.AbstractMuleTestCase;
-import org.mule.tck.testmodels.mule.TestTransactionManagerFactory;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
