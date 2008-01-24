@@ -140,12 +140,7 @@ public class MuleTransactionConfig implements UMOTransactionConfig
 
     public boolean isTransacted()
     {
-        return isConfigured() && factory.isTransacted() && action != ACTION_NONE;
-    }
-
-    public boolean isConfigured()
-    {
-        return factory != null;
+        return factory != null && factory.isTransacted() && action != ACTION_NONE;
     }
 
     public ConstraintFilter getConstraint()

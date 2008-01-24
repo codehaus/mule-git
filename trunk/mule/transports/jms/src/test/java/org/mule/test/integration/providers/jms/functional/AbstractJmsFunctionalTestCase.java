@@ -96,11 +96,7 @@ public abstract class AbstractJmsFunctionalTestCase extends FunctionalTestCase
 
         String getInputQueue();
 
-        void setInputQueue(String inputQueue);
-
         String getOutputQueue();
-
-        void setOutputQueue(String outputQueue);
 
         int getAcknowledge();
 
@@ -113,10 +109,6 @@ public abstract class AbstractJmsFunctionalTestCase extends FunctionalTestCase
 
     abstract class AbstractScenario implements Scenario
     {
-
-        private String inputQueue = DEFAULT_INPUT_MQ_QUEUE_NAME;
-        private String outputQueue = DEFAULT_OUTPUT_MQ_QUEUE_NAME;
-
         public String getBrokerUrl()
         {
             return DEFAULT_BROKER_URL;
@@ -124,22 +116,12 @@ public abstract class AbstractJmsFunctionalTestCase extends FunctionalTestCase
 
         public String getInputQueue()
         {
-            return inputQueue;
+            return DEFAULT_INPUT_MQ_QUEUE_NAME;
         }
 
         public String getOutputQueue()
         {
-            return outputQueue;
-        }
-
-        public void setInputQueue(String inputQueue)
-        {
-            this.inputQueue = inputQueue;
-        }
-
-        public void setOutputQueue(String outputQueue)
-        {
-            this.outputQueue = outputQueue;
+            return DEFAULT_OUTPUT_MQ_QUEUE_NAME;
         }
 
         public int getAcknowledge()

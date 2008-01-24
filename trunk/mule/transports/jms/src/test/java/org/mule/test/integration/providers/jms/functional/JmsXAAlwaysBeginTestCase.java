@@ -134,12 +134,24 @@ public class JmsXAAlwaysBeginTestCase extends AbstractJmsFunctionalTestCase
     class CurrentScenario extends AbstractScenario
     {
 
+        private String inputQueue;
+        private String outputQueue;
         private boolean recieve = true;
 
         public CurrentScenario(String inputQueue, String outputQueue, boolean recieve)
         {
-            setInputQueue(inputQueue);
-            setOutputQueue(outputQueue);
+            this.inputQueue = inputQueue;
+            this.outputQueue = outputQueue;
+        }
+
+        public String getInputQueue()
+        {
+            return inputQueue;
+        }
+
+        public String getOutputQueue()
+        {
+            return outputQueue;
         }
 
         public boolean isRecieve()

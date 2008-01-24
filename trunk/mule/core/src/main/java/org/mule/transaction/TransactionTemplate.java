@@ -35,7 +35,7 @@ public class TransactionTemplate
 
     public Object execute(TransactionCallback callback) throws Exception
     {
-        if (config == null || (config!=null && !config.isConfigured()))
+        if (config == null)
         {
             return callback.doInTransaction();
         }

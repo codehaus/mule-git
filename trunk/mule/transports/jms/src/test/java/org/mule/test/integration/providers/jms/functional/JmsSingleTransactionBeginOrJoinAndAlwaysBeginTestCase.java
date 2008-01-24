@@ -9,6 +9,9 @@
  */
 package org.mule.test.integration.providers.jms.functional;
 
+/**
+ * BEGIN_OR_JOIN is same action as ALWAYS_BEGIN for current impl JmsTransaction
+ */
 public class JmsSingleTransactionBeginOrJoinAndAlwaysBeginTestCase extends AbstractJmsFunctionalTestCase
 {
     protected String getConfigResources()

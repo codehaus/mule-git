@@ -14,25 +14,23 @@ import org.mule.MuleManager;
 import org.mule.config.MuleProperties;
 import org.mule.routing.AbstractRouter;
 import org.mule.routing.CorrelationPropertiesExtractor;
-import org.mule.transaction.TransactionCallback;
-import org.mule.transaction.TransactionTemplate;
 import org.mule.umo.UMOException;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.UMOSession;
 import org.mule.umo.UMOTransactionConfig;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
-import org.mule.umo.routing.RoutingException;
 import org.mule.umo.routing.UMOOutboundRouter;
 import org.mule.util.ClassUtils;
 import org.mule.util.StringMessageUtils;
 import org.mule.util.SystemUtils;
 import org.mule.util.properties.PropertyExtractor;
 
+import edu.emory.mathcs.backport.java.util.concurrent.CopyOnWriteArrayList;
+
 import java.util.Iterator;
 import java.util.List;
 
-import edu.emory.mathcs.backport.java.util.concurrent.CopyOnWriteArrayList;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -60,7 +58,7 @@ public abstract class AbstractOutboundRouter extends AbstractRouter implements U
 
     protected UMOTransactionConfig transactionConfig;
 
-    public void dispatch(final UMOSession session, final UMOMessage message, final UMOEndpoint endpoint) throws UMOException
+    public void dispatch(UMOSession session, UMOMessage message, UMOEndpoint endpoint) throws UMOException
     {
         setMessageProperties(session, message, endpoint);
 
@@ -78,27 +76,7 @@ public abstract class AbstractOutboundRouter extends AbstractRouter implements U
             }
         }
 
-        TransactionTemplate tt = new TransactionTemplate(endpoint.getTransactionConfig(),
-                                                         session.getComponent().getDescriptor().getExceptionListener());
-
-        TransactionCallback cb = new TransactionCallback()
-        {
-            public Object doInTransaction() throws Exception
-            {
-                session.dispatchEvent(message, endpoint);
-                return null;
-            }
-        };
-
-        try
-        {
-            tt.execute(cb);
-        }
-        catch (Exception e)
-        {
-            throw new RoutingException(message, null, e);
-        }
-
+        session.dispatchEvent(message, endpoint);
         if (getRouterStatistics() != null)
         {
             if (getRouterStatistics().isEnabled())
@@ -108,7 +86,7 @@ public abstract class AbstractOutboundRouter extends AbstractRouter implements U
         }
     }
 
-    public UMOMessage send(final UMOSession session, final UMOMessage message, final UMOEndpoint endpoint) throws UMOException
+    public UMOMessage send(UMOSession session, UMOMessage message, UMOEndpoint endpoint) throws UMOException
     {
         if (replyTo != null)
         {
@@ -137,26 +115,7 @@ public abstract class AbstractOutboundRouter extends AbstractRouter implements U
             }
         }
 
-        TransactionTemplate tt = new TransactionTemplate(endpoint.getTransactionConfig(),
-                                                         session.getComponent().getDescriptor().getExceptionListener());
-
-        TransactionCallback cb = new TransactionCallback()
-        {
-            public Object doInTransaction() throws Exception
-            {
-                return session.sendEvent(message, endpoint);
-            }
-        };
-
-        UMOMessage result;
-        try
-        {
-            result = (UMOMessage) tt.execute(cb);
-        }
-        catch (Exception e)
-        {
-            throw new RoutingException(message, null, e);
-        }
+        UMOMessage result = session.sendEvent(message, endpoint);
 
         if (getRouterStatistics() != null)
         {

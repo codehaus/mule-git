@@ -45,7 +45,7 @@ public abstract class TransactedPollingMessageReceiver extends AbstractPollingMe
                                             final UMOEndpoint endpoint) throws InitialisationException
     {
         super(connector, component, endpoint);
-        this.setReceiveMessagesInTransaction(endpoint.getTransactionConfig().isConfigured());
+        this.setReceiveMessagesInTransaction(endpoint.getTransactionConfig().getFactory() != null);
     }
 
     /**
