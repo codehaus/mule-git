@@ -11,7 +11,6 @@
 package org.mule.examples.loanbroker.transformers;
 
 import org.mule.examples.loanbroker.bank.Bank;
-import org.mule.examples.loanbroker.messages.CustomerQuoteRequest;
 import org.mule.examples.loanbroker.messages.LoanBrokerQuoteRequest;
 import org.mule.routing.outbound.StaticRecipientList;
 import org.mule.transformers.AbstractEventAwareTransformer;

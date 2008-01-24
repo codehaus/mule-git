@@ -10,20 +10,18 @@
 
 package org.mule.routing.inbound;
 
+import org.mule.MuleManager;
 import org.mule.impl.MuleEvent;
 import org.mule.impl.MuleMessage;
-import org.mule.impl.model.AbstractComponent;
 import org.mule.impl.model.seda.SedaComponent;
 import org.mule.umo.MessagingException;
+import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOEvent;
 import org.mule.umo.UMOException;
 import org.mule.umo.UMOMessage;
-import org.mule.umo.UMOComponent;
 import org.mule.umo.routing.RoutingException;
-import org.mule.umo.routing.UMOOutboundRouterCollection;
 import org.mule.umo.routing.UMOInboundRouterCollection;
-import org.mule.components.simple.BridgeComponent;
-import org.mule.MuleManager;
+import org.mule.umo.routing.UMOOutboundRouterCollection;
 
 /**
  * <code>ForwardingConsumer</code> is used to forward an incoming event over

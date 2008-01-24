@@ -10,7 +10,6 @@
 
 package org.mule.test.config;
 
-import org.mule.MuleException;
 import org.mule.MuleManager;
 import org.mule.config.ConfigurationBuilder;
 import org.mule.config.ConfigurationException;

@@ -21,7 +21,6 @@ import org.mule.providers.AbstractConnector;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.tck.testmodels.fruit.Apple;
 import org.mule.umo.UMOComponent;
-import org.mule.umo.UMODescriptor;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.manager.UMOManager;
 import org.mule.umo.model.UMOModel;
