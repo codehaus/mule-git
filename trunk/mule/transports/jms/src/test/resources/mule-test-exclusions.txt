@@ -12,5 +12,3 @@ org.mule.test.integration.providers.jms.activemq.ActiveMQJmsXaTransactionFunctio
 MULE-2011
 org.mule.test.integration.providers.jms.functional.JmsXATransactionComponentTestCase
 
-MULE-2923
-org.mule.test.integration.providers.jms.functional.JmsSingleTransactionAlwaysBeginConfigurationTestCase

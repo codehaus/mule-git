@@ -30,6 +30,7 @@ public class MulticastingRouterTestCase extends AbstractMuleTestCase
     public void testMulticastingRouter() throws Exception
     {
         Mock session = MuleTestUtils.getMockSession();
+        session.matchAndReturn("getComponent", getTestComponent(getTestDescriptor("TEST", "java.lang.Object")));
         OutboundRouterCollection messageRouter = new OutboundRouterCollection();
         messageRouter.setCatchAllStrategy(new LoggingCatchAllStrategy());
 

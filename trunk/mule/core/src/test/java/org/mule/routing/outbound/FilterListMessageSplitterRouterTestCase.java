@@ -34,7 +34,7 @@ public class FilterListMessageSplitterRouterTestCase extends AbstractMuleTestCas
     public void testMessageSplitterRouter() throws Exception
     {
         Mock session = MuleTestUtils.getMockSession();
-
+        session.matchAndReturn("getComponent", getTestComponent(getTestDescriptor("TEST", "java.lang.Object")));
         UMOEndpoint endpoint1 = getTestEndpoint("Test1endpoint", UMOEndpoint.ENDPOINT_TYPE_SENDER);
         endpoint1.setEndpointURI(new MuleEndpointURI("test://endpointUri.1"));
         endpoint1.setFilter(new PayloadTypeFilter(Apple.class));

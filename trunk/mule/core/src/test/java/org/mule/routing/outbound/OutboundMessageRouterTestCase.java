@@ -32,7 +32,7 @@ public class OutboundMessageRouterTestCase extends AbstractMuleTestCase
     public void testOutboundMessageRouter() throws Exception
     {
         Mock session = MuleTestUtils.getMockSession();
-        session.expectAndReturn("getComponent", getTestComponent(getTestDescriptor("test", "blah")));
+        session.matchAndReturn("getComponent", getTestComponent(getTestDescriptor("test", "blah")));
         OutboundRouterCollection messageRouter = new OutboundRouterCollection();
         messageRouter.setCatchAllStrategy(new LoggingCatchAllStrategy());
         assertNotNull(messageRouter.getCatchAllStrategy());

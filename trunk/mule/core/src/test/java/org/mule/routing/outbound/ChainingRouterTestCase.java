@@ -11,6 +11,7 @@
 package org.mule.routing.outbound;
 
 import org.mule.impl.MuleMessage;
+import org.mule.impl.MuleDescriptor;
 import org.mule.impl.endpoint.MuleEndpointURI;
 import org.mule.routing.LoggingCatchAllStrategy;
 import org.mule.routing.filters.PayloadTypeFilter;
@@ -57,6 +58,9 @@ public class ChainingRouterTestCase extends AbstractMuleTestCase
         router.setEndpoints(endpoints);
 
         assertEquals(filter, router.getFilter());
+
+        session.matchAndReturn("getComponent", getTestComponent(getTestDescriptor("TEST", "java.lang.Object")));
+
     }
 
     public void testChainingOutboundRouterSynchronous() throws Exception

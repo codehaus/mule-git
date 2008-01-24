@@ -86,7 +86,7 @@ public class RoundRobinXmlSplitterTestCase extends AbstractMuleTestCase
     private void internalTestSuccessfulXmlSplitter(Object payload) throws Exception
     {
         Mock session = MuleTestUtils.getMockSession();
-
+        session.matchAndReturn("getComponent", getTestComponent(getTestDescriptor("TEST", "java.lang.Object")));
         UMOMessage message = new MuleMessage(payload);
 
         assertTrue(xmlSplitter.isMatch(message));
@@ -114,7 +114,7 @@ public class RoundRobinXmlSplitterTestCase extends AbstractMuleTestCase
     {
         final String invalidSchemaLocation = "non-existent.xsd";
         Mock session = MuleTestUtils.getMockSession();
-
+        session.matchAndReturn("getComponent", getTestComponent(getTestDescriptor("TEST", "java.lang.Object")));
         UMOEndpoint endpoint1 = getTestEndpoint("Test1Endpoint", UMOEndpoint.ENDPOINT_TYPE_SENDER);
         endpoint1.setEndpointURI(new MuleEndpointURI("test://endpointUri.1"));
 
@@ -145,7 +145,7 @@ public class RoundRobinXmlSplitterTestCase extends AbstractMuleTestCase
         Exception unsupportedPayload = new Exception();
 
         Mock session = MuleTestUtils.getMockSession();
-
+        session.matchAndReturn("getComponent", getTestComponent(getTestDescriptor("TEST", "java.lang.Object")));
         UMOMessage message = new MuleMessage(unsupportedPayload);
 
         assertTrue(xmlSplitter.isMatch(message));
@@ -162,7 +162,7 @@ public class RoundRobinXmlSplitterTestCase extends AbstractMuleTestCase
     public void testInvalidXmlPayloadThrowsException() throws Exception
     {
         Mock session = MuleTestUtils.getMockSession();
-
+        session.matchAndReturn("getComponent", getTestComponent(getTestDescriptor("TEST", "java.lang.Object")));
         RoundRobinXmlSplitter splitter = new RoundRobinXmlSplitter();
 
         UMOMessage message = new MuleMessage("This is not XML.");
