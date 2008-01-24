@@ -54,19 +54,19 @@ public class JmsSingleTransactionAlwaysBeginConfigurationTestCase extends Abstra
         receive(scenarioNotReceive);
     }
 
-    public void testConfigrationC() throws Exception
-    {
-        scenarioCommit.setInputQueue(JMS_QUEUE_INPUT_CONF_C);
-        scenarioRollback.setInputQueue(JMS_QUEUE_INPUT_CONF_C);
-        scenarioNotReceive.setInputQueue(JMS_QUEUE_INPUT_CONF_C);
-        scenarioCommit.setOutputQueue(JMS_QUEUE_OUTPUT_CONF_C);
-        scenarioRollback.setOutputQueue(JMS_QUEUE_OUTPUT_CONF_C);
-        scenarioNotReceive.setOutputQueue(JMS_QUEUE_OUTPUT_CONF_C);
-
-        send(scenarioCommit);
-        receive(scenarioRollback);
-        receive(scenarioCommit);
-        receive(scenarioNotReceive);
-    }
+//    public void testConfigrationC() throws Exception
+//    {
+//        scenarioCommit.setInputQueue(JMS_QUEUE_INPUT_CONF_C);
+//        scenarioRollback.setInputQueue(JMS_QUEUE_INPUT_CONF_C);
+//        scenarioNotReceive.setInputQueue(JMS_QUEUE_INPUT_CONF_C);
+//        scenarioCommit.setOutputQueue(JMS_QUEUE_OUTPUT_CONF_C);
+//        scenarioRollback.setOutputQueue(JMS_QUEUE_OUTPUT_CONF_C);
+//        scenarioNotReceive.setOutputQueue(JMS_QUEUE_OUTPUT_CONF_C);
+//
+//        send(scenarioCommit);
+//        receive(scenarioRollback);
+//        receive(scenarioCommit);
+//        receive(scenarioNotReceive);
+//    }
 
 }

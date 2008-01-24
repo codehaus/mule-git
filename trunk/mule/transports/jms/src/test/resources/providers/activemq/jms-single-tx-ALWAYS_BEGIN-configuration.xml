@@ -71,25 +71,26 @@
             </properties>
         </mule-descriptor>
 
-        <mule-descriptor name="ConfigurationC" implementation="org.mule.tck.functional.FunctionalTestComponent"
-                         singleton="true">
-            <inbound-router>
-                <endpoint address="jms://in3" connector="jmsConnector1">
-                    <transaction action="BEGIN_OR_JOIN"
-                                 factory="org.mule.providers.jms.JmsTransactionFactory"/>
-                </endpoint>
-            </inbound-router>
-            <outbound-router>
-                <router className="org.mule.routing.outbound.OutboundPassThroughRouter">
-                    <endpoint address="jms://out3" connector="jmsConnector2"/>
-                    <transaction action="ALWAYS_BEGIN"
-                                 factory="org.mule.providers.jms.JmsTransactionFactory"/>
-                </router>
-            </outbound-router>
-            <properties>
-                <property name="returnMessage" value="OUTPUT MESSAGE"/>
-            </properties>
-        </mule-descriptor>
+<!-- Incorrect configuration -->
+        <!--<mule-descriptor name="ConfigurationC" implementation="org.mule.tck.functional.FunctionalTestComponent"-->
+                         <!--singleton="true">-->
+            <!--<inbound-router>-->
+                <!--<endpoint address="jms://in3" connector="jmsConnector1">-->
+                    <!--<transaction action="BEGIN_OR_JOIN"-->
+                                 <!--factory="org.mule.providers.jms.JmsTransactionFactory"/>-->
+                <!--</endpoint>-->
+            <!--</inbound-router>-->
+            <!--<outbound-router>-->
+                <!--<router className="org.mule.routing.outbound.OutboundPassThroughRouter">-->
+                    <!--<endpoint address="jms://out3" connector="jmsConnector2"/>-->
+                    <!--<transaction action="ALWAYS_BEGIN"-->
+                                 <!--factory="org.mule.providers.jms.JmsTransactionFactory"/>-->
+                <!--</router>-->
+            <!--</outbound-router>-->
+            <!--<properties>-->
+                <!--<property name="returnMessage" value="OUTPUT MESSAGE"/>-->
+            <!--</properties>-->
+        <!--</mule-descriptor>-->
 
     </model>
 
