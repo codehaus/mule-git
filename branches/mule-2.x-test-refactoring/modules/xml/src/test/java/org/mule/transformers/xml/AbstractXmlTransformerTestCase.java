@@ -10,7 +10,7 @@
 
 package org.mule.transformers.xml;
 
-import org.mule.tck.AbstractTransformerTestCase;
+import org.mule.transformer.AbstractTransformerTestCase;
 
 import org.custommonkey.xmlunit.XMLUnit;
 import org.w3c.dom.Document;

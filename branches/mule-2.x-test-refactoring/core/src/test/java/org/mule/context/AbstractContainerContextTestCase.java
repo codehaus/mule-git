@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.tck.model;
+package org.mule.context;
 
 import org.mule.api.component.Component;
 import org.mule.api.config.ConfigurationException;
