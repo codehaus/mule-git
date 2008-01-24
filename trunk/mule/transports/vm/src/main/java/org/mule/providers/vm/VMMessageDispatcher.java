@@ -11,12 +11,12 @@
 package org.mule.providers.vm;
 
 import org.mule.MuleManager;
-import org.mule.transaction.TransactionTemplate;
-import org.mule.transaction.TransactionCallback;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.impl.MuleMessage;
 import org.mule.providers.AbstractMessageDispatcher;
 import org.mule.providers.vm.i18n.VMMessages;
+import org.mule.transaction.TransactionCallback;
+import org.mule.transaction.TransactionTemplate;
 import org.mule.transformers.simple.ObjectToByteArray;
 import org.mule.umo.UMOEvent;
 import org.mule.umo.UMOMessage;
@@ -45,17 +45,17 @@ public class VMMessageDispatcher extends AbstractMessageDispatcher
     public VMMessageDispatcher(UMOImmutableEndpoint endpoint)
     {
         super(endpoint);
-        this.connector = (VMConnector)endpoint.getConnector();
+        this.connector = (VMConnector) endpoint.getConnector();
         objectToByteArray = new ObjectToByteArray();
     }
 
     /**
      * Make a specific request to the underlying transport
-     * 
+     *
      * @param timeout the maximum time the operation should block before returning.
-     *            The call should return immediately if there is data available. If
-     *            no data becomes available before the timeout elapses, null will be
-     *            returned
+     *                The call should return immediately if there is data available. If
+     *                no data becomes available before the timeout elapses, null will be
+     *                returned
      * @return the result of the request wrapped in a UMOMessage object. Null will be
      *         returned if no data was available
      * @throws Exception if the call to the underlying protocol causes an exception
@@ -89,7 +89,7 @@ public class VMMessageDispatcher extends AbstractMessageDispatcher
                 }
                 try
                 {
-                    event = (UMOEvent)queue.poll(timeout);
+                    event = (UMOEvent) queue.poll(timeout);
                 }
                 catch (InterruptedException e)
                 {
@@ -132,7 +132,7 @@ public class VMMessageDispatcher extends AbstractMessageDispatcher
         if (endpointUri == null)
         {
             throw new DispatchException(
-                CoreMessages.objectIsNull("Endpoint"), event.getMessage(), event.getEndpoint());
+                    CoreMessages.objectIsNull("Endpoint"), event.getMessage(), event.getEndpoint());
         }
         if (connector.isQueueEvents())
         {
@@ -156,25 +156,18 @@ public class VMMessageDispatcher extends AbstractMessageDispatcher
                 UMOStreamMessageAdapter sma = connector.getStreamMessageAdapter(in, out);
                 sma.write(event);
             }
-            if (receiver.getEndpoint().getTransactionConfig().isTransacted())
-            {
-                TransactionTemplate tt = new TransactionTemplate(receiver.getEndpoint().getTransactionConfig(), connector
-                        .getExceptionListener());
+            TransactionTemplate tt = new TransactionTemplate(receiver.getEndpoint().getTransactionConfig(), connector
+                    .getExceptionListener());
 
-                TransactionCallback cb = new TransactionCallback()
-                {
-                    public Object doInTransaction() throws Exception
-                    {
-                        receiver.onEvent(event);
-                        return null;
-                    }
-                };
-                tt.execute(cb);
-            }
-            else
+            TransactionCallback cb = new TransactionCallback()
             {
-                receiver.onEvent(event);
-            }
+                public Object doInTransaction() throws Exception
+                {
+                    receiver.onEvent(event);
+                    return null;
+                }
+            };
+            tt.execute(cb);
         }
         if (logger.isDebugEnabled())
         {
@@ -215,24 +208,17 @@ public class VMMessageDispatcher extends AbstractMessageDispatcher
             sma.write(event);
         }
 
-        if (receiver.getEndpoint().getTransactionConfig().isTransacted())
-        {
-            TransactionTemplate tt = new TransactionTemplate(receiver.getEndpoint().getTransactionConfig(), connector
-                    .getExceptionListener());
+        TransactionTemplate tt = new TransactionTemplate(receiver.getEndpoint().getTransactionConfig(), connector
+                .getExceptionListener());
 
-            TransactionCallback cb = new TransactionCallback()
-            {
-                public Object doInTransaction() throws Exception
-                {
-                    return receiver.onCall(event);
-                }
-            };
-            retMessage = (UMOMessage) tt.execute(cb);
-        }
-        else
+        TransactionCallback cb = new TransactionCallback()
         {
-            retMessage = (UMOMessage) receiver.onCall(event);
-        }
+            public Object doInTransaction() throws Exception
+            {
+                return receiver.onCall(event);
+            }
+        };
+        retMessage = (UMOMessage) tt.execute(cb);
 
         if (event.isStreaming() && retMessage != null)
         {
@@ -269,7 +255,7 @@ public class VMMessageDispatcher extends AbstractMessageDispatcher
             // use the default queue profile to configure this queue.
             // Todo We may want to allow users to specify this at the connector level
             MuleManager.getConfiguration().getQueueProfile().configureQueue(
-                endpoint.getEndpointURI().getAddress());
+                    endpoint.getEndpointURI().getAddress());
         }
     }
 
