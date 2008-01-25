@@ -19,11 +19,11 @@ import org.mule.tck.FunctionalTestCase;
 import org.mule.umo.UMOMessage;
 
 import java.io.Serializable;
-import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.dbutils.QueryRunner;
 
@@ -198,12 +198,12 @@ public class JdbcSelectOnOutboundFunctionalTestCase extends FunctionalTestCase
         }
     }
 
-    public static class EnotherMessage implements Serializable
+    public static class AnotherMessage implements Serializable
     {
         private int a;
         private int b;
 
-        public EnotherMessage(int a, int b) {
+        public AnotherMessage(int a, int b) {
             this.a = a;
             this.b = b;
         }
@@ -243,7 +243,7 @@ public class JdbcSelectOnOutboundFunctionalTestCase extends FunctionalTestCase
     class PayloadMessageFactory implements MessageFactory
     {
         public UMOMessage createMessage() {
-            EnotherMessage payload = new EnotherMessage(3, 5);
+            AnotherMessage payload = new AnotherMessage(3, 5);
             return new MuleMessage(payload);
         }
     }
