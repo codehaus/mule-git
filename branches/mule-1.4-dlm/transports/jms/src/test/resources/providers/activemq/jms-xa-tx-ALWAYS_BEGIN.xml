@@ -38,11 +38,9 @@
             <outbound-router>
                 <router className="org.mule.routing.outbound.OutboundPassThroughRouter">
                     <endpoint address="jms://out" connector="jmsConnectorXA">
-                        <transaction action="BEGIN_OR_JOIN"
+                        <transaction action="ALWAYS_BEGIN"
                                      factory="org.mule.transaction.XaTransactionFactory"/>
                     </endpoint>
-                    <transaction action="ALWAYS_BEGIN"
-                                 factory="org.mule.transaction.XaTransactionFactory"/>
                 </router>
             </outbound-router>
 

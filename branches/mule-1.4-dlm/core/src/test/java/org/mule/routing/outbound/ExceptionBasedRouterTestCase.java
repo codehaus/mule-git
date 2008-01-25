@@ -41,6 +41,7 @@ public class ExceptionBasedRouterTestCase extends AbstractMuleTestCase
     public void testSuccessfulExceptionRouter() throws Exception
     {
         Mock session = MuleTestUtils.getMockSession();
+        session.matchAndReturn("getComponent", getTestComponent(getTestDescriptor("TEST", "java.lang.Object")));
         OutboundRouterCollection messageRouter = new OutboundRouterCollection();
         messageRouter.setCatchAllStrategy(new LoggingCatchAllStrategy());
 
@@ -87,6 +88,7 @@ public class ExceptionBasedRouterTestCase extends AbstractMuleTestCase
     public void testBothFailing() throws Exception
     {
         Mock mockSession = MuleTestUtils.getMockSession();
+        mockSession.matchAndReturn("getComponent", getTestComponent(getTestDescriptor("TEST", "java.lang.Object")));
         OutboundRouterCollection messageRouter = new OutboundRouterCollection();
         messageRouter.setCatchAllStrategy(new LoggingCatchAllStrategy());
 
@@ -136,7 +138,7 @@ public class ExceptionBasedRouterTestCase extends AbstractMuleTestCase
     public void testFailFirstSuccessSecondSync() throws Exception
     {
         Mock mockSession = MuleTestUtils.getMockSession();
-
+        mockSession.matchAndReturn("getComponent", getTestComponent(getTestDescriptor("TEST", "java.lang.Object")));
         UMOEndpoint endpoint1 = getTestEndpoint("TestFailEndpoint", UMOEndpoint.ENDPOINT_TYPE_SENDER);
         endpoint1.setEndpointURI(new MuleEndpointURI("test://Failure"));
         UMOEndpoint endpoint2 = getTestEndpoint("TestSuccessEndpoint", UMOEndpoint.ENDPOINT_TYPE_SENDER);
@@ -172,7 +174,7 @@ public class ExceptionBasedRouterTestCase extends AbstractMuleTestCase
     public void testFailFirstSuccessSecondAsync() throws Exception
     {
         Mock mockSession = MuleTestUtils.getMockSession();
-
+        mockSession.matchAndReturn("getComponent", getTestComponent(getTestDescriptor("TEST", "java.lang.Object")));
         UMOEndpoint endpoint1 = getTestEndpoint("TestFailEndpoint", UMOEndpoint.ENDPOINT_TYPE_SENDER);
         endpoint1.setEndpointURI(new MuleEndpointURI("test://Failure"));
         UMOEndpoint endpoint2 = getTestEndpoint("TestSuccessEndpoint", UMOEndpoint.ENDPOINT_TYPE_SENDER);
@@ -207,7 +209,7 @@ public class ExceptionBasedRouterTestCase extends AbstractMuleTestCase
     public void testFirstHadExceptionPayloadSuccessSecondSyncWithExceptionPayload() throws Exception
     {
         Mock mockSession = MuleTestUtils.getMockSession();
-
+        mockSession.matchAndReturn("getComponent", getTestComponent(getTestDescriptor("TEST", "java.lang.Object")));
         UMOEndpoint endpoint1 = getTestEndpoint("TestFailEndpoint", UMOEndpoint.ENDPOINT_TYPE_SENDER);
         endpoint1.setEndpointURI(new MuleEndpointURI("test://Failure"));
         UMOEndpoint endpoint2 = getTestEndpoint("TestSuccessEndpoint", UMOEndpoint.ENDPOINT_TYPE_SENDER);
