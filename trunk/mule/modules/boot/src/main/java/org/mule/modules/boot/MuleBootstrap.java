@@ -94,10 +94,11 @@ public final class MuleBootstrap
         }
 
         MuleBootstrapUtils.addLocalJarFilesToClasspath(muleHome, muleBase);
-        MuleBootstrapUtils.addExternalJarFilesToClasspath(muleHome, null);
         
         setSystemMuleVersion();
         requestLicenseAcceptance();           
+
+        MuleBootstrapUtils.addExternalJarFilesToClasspath(muleHome, null);
     }
     
     private static File lookupMuleHome() throws Exception
