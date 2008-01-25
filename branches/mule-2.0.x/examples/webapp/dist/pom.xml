@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.mule.examples</groupId>
+    <artifactId>mule-example-webapp</artifactId>
+    <version>1.0</version>
+    <packaging>war</packaging>
+    <name>Web App Example</name>
+    <description>Is a webapp that provides an interface to some of the examples here such as the LoanBroker, Hello World and Echo examples. It also provides examples of accessing Mule using REST style service calls and is itself an example of how to embed Mule in a webapp.</description>
+
+    <properties>
+        <muleVersion>2.0.0-RC2-SNAPSHOT</muleVersion>
+        <webappName>mule-examples</webappName>
+        <jettyVersion>6.1.6</jettyVersion>
+    </properties>
+
+    <build>
+        <!-- Default goal is to build the war and start it up in Jetty
+             (surf to http://localhost:8090/mule-examples to test) -->
+        <defaultGoal>jetty:run-war</defaultGoal>
+
+        <!-- Allow config files to be in the "conf" directory to make it easier for users to find them. -->
+        <resources>
+            <resource>
+                <directory>conf</directory>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+        </resources>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <configuration>
+                    <warName>${webappName}</warName>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                 <groupId>org.mortbay.jetty</groupId>
+                 <artifactId>maven-jetty-plugin</artifactId>
+                 <configuration>
+                    <contextPath>/${webappName}</contextPath>
+                    <webApp>${project.build.directory}/${webappName}.war</webApp>
+                    <scanIntervalSeconds>10</scanIntervalSeconds>
+                    <connectors>
+                        <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
+                            <port>8090</port>
+                            <maxIdleTime>60000</maxIdleTime>
+                        </connector>
+                    </connectors>
+                 </configuration>
+            </plugin>
+
+            <!-- skip unit test run, tests to be executed during integration-test phase -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>surefire-it</id>
+                        <phase>integration-test</phase>
+                        <goals>
+                          <goal>test</goal>
+                        </goals>
+                        <configuration>
+                          <skip>false</skip>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.mule.examples</groupId>
+            <artifactId>mule-example-echo</artifactId>
+            <version>${muleVersion}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>jetty</groupId>
+                    <artifactId>org.mortbay.jetty</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.mule.examples</groupId>
+            <artifactId>mule-example-hello</artifactId>
+            <version>${muleVersion}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>jetty</groupId>
+                    <artifactId>org.mortbay.jetty</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.mule.examples</groupId>
+            <artifactId>mule-example-stockquote</artifactId>
+            <version>${muleVersion}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>jetty</groupId>
+                    <artifactId>org.mortbay.jetty</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.mule.examples</groupId>
+            <artifactId>mule-example-loanbroker-esn</artifactId>
+            <version>${muleVersion}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>jetty</groupId>
+                    <artifactId>org.mortbay.jetty</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.mule.modules</groupId>
+            <artifactId>mule-module-spring-config</artifactId>
+            <version>${muleVersion}</version>
+        </dependency>
+        <!-- For REST Servlet example -->
+        <dependency>
+            <groupId>org.mule.transports</groupId>
+            <artifactId>mule-transport-http</artifactId>
+            <version>${muleVersion}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>jetty</groupId>
+                    <artifactId>org.mortbay.jetty</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.mule.transports</groupId>
+            <artifactId>mule-transport-file</artifactId>
+            <version>${muleVersion}</version>
+        </dependency>
+
+        <!-- For Jetty unit test --> 
+        <dependency>
+          <groupId>org.mortbay.jetty</groupId>
+          <artifactId>jetty</artifactId>
+          <version>${jettyVersion}</version>
+          <scope>test</scope>
+        </dependency>
+    </dependencies>
+    
+    <repositories>
+        <repository>
+            <id>codehaus</id>
+            <name>Codehaus Maven 2.x Release Repository</name>
+            <url>http://repository.codehaus.org</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>codehaus-snapshots</id>
+            <name>Codehaus Maven 2.x Snapshots Repository</name>
+            <url>http://snapshots.repository.codehaus.org</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>apache-plugin-snapshots</id>
+            <name>Apache Maven Plugins Snapshot Repository</name>
+            <url>http://people.apache.org/maven-snapshot-repository</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+        </pluginRepository>
+    </pluginRepositories>  
+</project>

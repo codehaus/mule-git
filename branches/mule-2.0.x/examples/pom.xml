@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.mule</groupId>
+        <artifactId>mule</artifactId>
+    <version>2.0.0-RC2-SNAPSHOT</version>
+    </parent>
+    <groupId>org.mule.examples</groupId>
+    <artifactId>mule-examples</artifactId>
+    <packaging>pom</packaging>
+    <name>Mule Examples</name>
+    <description>Mule Example Applications</description>
+
+    <!-- Note: osgi examples are in the osgi profile section, below -->
+    <modules>
+        <module>all-examples</module>
+        <module>echo</module>
+        <module>errorhandler</module>
+        <module>hello</module>
+        <module>loanbroker</module>
+        <module>scripting</module>
+        <module>stockquote</module>
+        <module>webapp</module>
+    </modules>
+
+    <build>
+        <!-- Allow config files to be in the "conf" directory to make it easier for users to find them. -->
+        <resources>
+            <resource>
+                <directory>conf</directory>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+        </resources>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>osgi</id>
+            <modules>
+                <module>hello-osgi</module>
+            </modules>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.felix</groupId>
+                        <artifactId>maven-bundle-plugin</artifactId>
+                        <configuration>
+                            <instructions>
+                                <Include-Resource>conf, src/main/resources</Include-Resource>
+                            </instructions>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+</project>
