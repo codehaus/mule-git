@@ -84,6 +84,7 @@ public class DeferredOutputStream extends OutputStream
          out.write(b, off, len);
      }
 
+    // @Override    
     public void flush() throws IOException
     {
         //out could be null if the stream hasn't been written to yet
@@ -98,6 +99,7 @@ public class DeferredOutputStream extends OutputStream
         }
     }
 
+    // @Override
     public void close() throws IOException
     {
         //out could be null if the stream hasn't been written to yet
