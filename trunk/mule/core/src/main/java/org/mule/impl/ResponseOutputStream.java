@@ -24,45 +24,18 @@ import java.net.Socket;
 
 public class ResponseOutputStream extends BufferedOutputStream
 {
-
-    private boolean used = false;
-    private Socket socket = null;
+    private final Socket socket;
 
     public ResponseOutputStream(OutputStream stream)
     {
         super(stream);
+        socket = null;
     }
 
     public ResponseOutputStream(Socket socket) throws IOException
     {
         super(socket.getOutputStream());
         this.socket = socket;
-    }
-
-    // @Override
-    public void write(int b) throws IOException
-    {
-        super.write(b);
-        used = true;
-    }
-
-    // @Override
-    public void write(byte b[]) throws IOException
-    {
-        super.write(b);
-        used = true;
-    }
-
-    // @Override
-    public void write(byte b[], int off, int len) throws IOException 
-    {
-         super.write(b, off, len);
-         used = true;
-     }
-
-    public boolean isUsed()
-    {
-        return used;
     }
 
     public Socket getSocket()
