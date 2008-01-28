@@ -11,8 +11,8 @@
 package org.mule.transport;
 
 import org.mule.api.DefaultMuleException;
-import org.mule.api.component.Component;
 import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.api.service.Service;
 import org.mule.api.transport.Connector;
 import org.mule.api.transport.MessageAdapter;
 import org.mule.api.transport.MessageDispatcherFactory;
@@ -20,7 +20,6 @@ import org.mule.api.transport.MessageRequesterFactory;
 import org.mule.config.i18n.MessageFactory;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.tck.testmodels.fruit.Apple;
-import org.mule.transport.AbstractConnector;
 
 import com.mockobjects.dynamic.C;
 import com.mockobjects.dynamic.Mock;
@@ -40,11 +39,6 @@ public abstract class AbstractConnectorTestCase extends AbstractMuleTestCase
         setStartContext(true);
     }
     
-    /*
-     * (non-Javadoc)
-     * 
-     * @see junit.framework.TestCase#setUp()
-     */
     protected void doSetUp() throws Exception
     {
         Connector connector = createConnector();
@@ -147,7 +141,7 @@ public abstract class AbstractConnectorTestCase extends AbstractMuleTestCase
         Connector connector = getConnector();
         assertNotNull(connector);
 
-        Component component = getTestComponent("anApple", Apple.class);
+        Service service = getTestService("anApple", Apple.class);
 
         ImmutableEndpoint endpoint = 
             muleContext.getRegistry().lookupEndpointFactory().getOutboundEndpoint(getTestEndpointURI());
@@ -174,7 +168,7 @@ public abstract class AbstractConnectorTestCase extends AbstractMuleTestCase
 
         try
         {
-            connector.registerListener(component, null);
+            connector.registerListener(service, null);
             fail("cannot register null");
         }
         catch (Exception e)
@@ -182,10 +176,10 @@ public abstract class AbstractConnectorTestCase extends AbstractMuleTestCase
             // expected
         }
 
-        connector.registerListener(component, endpoint);
+        connector.registerListener(service, endpoint);
 
         // this should work
-        connector.unregisterListener(component, endpoint);
+        connector.unregisterListener(service, endpoint);
         // so should this
         try
         {
@@ -198,7 +192,7 @@ public abstract class AbstractConnectorTestCase extends AbstractMuleTestCase
         }
         try
         {
-            connector.unregisterListener(component, null);
+            connector.unregisterListener(service, null);
             fail("cannot unregister null");
         }
         catch (Exception e)
@@ -215,8 +209,8 @@ public abstract class AbstractConnectorTestCase extends AbstractMuleTestCase
         {
             // expected
         }
-        connector.unregisterListener(component, endpoint);
-        muleContext.getRegistry().unregisterComponent(component.getName());
+        connector.unregisterListener(service, endpoint);
+        muleContext.getRegistry().unregisterComponent(service.getName());
     }
 
     public void testConnectorBeanProps() throws Exception
