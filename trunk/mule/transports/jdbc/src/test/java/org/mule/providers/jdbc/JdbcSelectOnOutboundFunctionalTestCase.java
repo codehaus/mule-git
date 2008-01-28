@@ -137,8 +137,9 @@ public class JdbcSelectOnOutboundFunctionalTestCase extends FunctionalTestCase
         internalStoredProcTest("vm://proc3.test", new PayloadMessageFactory().createMessage());
     }
 
-    public void testCallProcByPropertiesPropertyExtractor() throws Exception
+    public void testCallProcByMessagePropertyExtractor() throws Exception
     {
+        //TODO: MULE-2941
         internalStoredProcTest("vm://proc4.test", new PropertiesMessageFactory().createMessage());
     }
 
