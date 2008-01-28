@@ -117,7 +117,6 @@ public class XaTransaction extends AbstractTransaction
             TransactionManager txManager = MuleManager.getInstance().getTransactionManager();
             delistResources();
             txManager.commit();
-            closeResources();
         }
         catch (RollbackException e)
         {
@@ -141,6 +140,7 @@ public class XaTransaction extends AbstractTransaction
                 TransactionCoordination unbinds the association immediately on this method's exit.
             */
             this.transaction = null;
+            closeResources();
         }
     }
 
@@ -188,7 +188,6 @@ public class XaTransaction extends AbstractTransaction
             TransactionManager txManager = MuleManager.getInstance().getTransactionManager();
             delistResources();
             txManager.rollback();
-            closeResources();
         }
         catch (SystemException e)
         {
@@ -208,6 +207,7 @@ public class XaTransaction extends AbstractTransaction
                 TransactionCoordination unbinds the association immediately on this method's exit.
             */
             this.transaction = null;
+            closeResources();
         }
     }
 
@@ -371,7 +371,7 @@ public class XaTransaction extends AbstractTransaction
         return transaction;
     }
 
-    protected void delistResources() throws Exception
+    protected void delistResources()
     {
         Iterator i = resources.entrySet().iterator();
         while (i.hasNext())
@@ -380,13 +380,20 @@ public class XaTransaction extends AbstractTransaction
             if (entry.getValue() instanceof MuleXaObject)
             {
                 //there is need for reuse object
-                ((MuleXaObject) entry.getValue()).delist();
+                try
+                {
+                    ((MuleXaObject) entry.getValue()).delist();
+                }
+                catch (Exception e)
+                {
+                    logger.error("Cann't delist resource " + entry.getValue() + " " + e);
+                }
             }
         }
     }
 
 
-    protected void closeResources() throws Exception
+    protected void closeResources()
     {
         Iterator i = resources.entrySet().iterator();
         while (i.hasNext())
@@ -397,9 +404,15 @@ public class XaTransaction extends AbstractTransaction
                 MuleXaObject xaObject = (MuleXaObject) entry.getValue();
                 if (!xaObject.isReuseObject())
                 {
-                    xaObject.close();
+                    try
+                    {
+                        xaObject.close();
+                    }
+                    catch (Exception e)
+                    {
+                        logger.error("Cann't close resource " + xaObject);
+                    }
                 }
-
             }
         }
     }
