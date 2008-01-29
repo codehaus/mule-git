@@ -299,7 +299,7 @@
                                     <destFileName>${artifactId}.jar</destFileName>
                                 </artifactItem>
                                 <artifactItem>
-                                    <groupId>org.apache.activemq</groupId> 
+                                    <groupId>org.apache.activemq</groupId>
                                     <artifactId>activemq-core</artifactId>
                                     <version>${activemqVersion}</version>
                                 </artifactItem>
@@ -322,5 +322,12 @@
                 </executions>
             </plugin>
         </plugins>
+
+        <resources>
+            <resource>
+                <directory>conf</directory>
+            </resource>
+        </resources>
+
     </build>
 </project>
