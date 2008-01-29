@@ -12,8 +12,8 @@ package org.mule.providers.email;
 
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.umo.UMOMessage;
 import org.mule.umo.UMOException;
+import org.mule.umo.UMOMessage;
 
 import javax.mail.internet.MimeMessage;
 
@@ -26,7 +26,7 @@ import javax.mail.internet.MimeMessage;
  * The Mule services (defined in round-trip-test.xml) are started by the test framework.
  * So all we need to do here is test that the message is handled correctly.</p>
  */
-public class RoundTripTestCase extends FunctionalTestCase
+public class EmailRoundTripTestCase extends FunctionalTestCase
 {
 
     public static final long WAIT_MS = 3000L;

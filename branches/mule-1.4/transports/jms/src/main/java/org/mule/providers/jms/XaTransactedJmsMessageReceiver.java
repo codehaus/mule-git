@@ -39,7 +39,7 @@ public class XaTransactedJmsMessageReceiver extends TransactedPollingMessageRece
 {
     public static final long DEFAULT_JMS_POLL_FREQUENCY = 100;
     public static final TimeUnit DEFAULT_JMS_POLL_TIMEUNIT = TimeUnit.MILLISECONDS;
-    
+
     protected final JmsConnector connector;
     protected boolean reuseConsumer;
     protected boolean reuseSession;
@@ -185,7 +185,7 @@ public class XaTransactedJmsMessageReceiver extends TransactedPollingMessageRece
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.mule.providers.TransactionEnabledPollingMessageReceiver#getMessages()
      */
     protected List getMessages() throws Exception
@@ -268,7 +268,7 @@ public class XaTransactedJmsMessageReceiver extends TransactedPollingMessageRece
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.mule.providers.TransactionEnabledPollingMessageReceiver#processMessage(java.lang.Object)
      */
     protected void processMessage(Object msg) throws Exception
@@ -301,7 +301,7 @@ public class XaTransactedJmsMessageReceiver extends TransactedPollingMessageRece
 
     /**
      * Create a consumer for the jms destination
-     * 
+     *
      * @throws Exception
      */
     protected void createConsumer() throws Exception

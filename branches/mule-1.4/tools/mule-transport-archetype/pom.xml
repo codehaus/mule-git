@@ -19,7 +19,7 @@
         <dependency>
             <groupId>org.mule.tools</groupId>
             <artifactId>bobberplus</artifactId>
-            <version>${version}</version>
+            <version>1.4.3-SNAPSHOT</version>
         </dependency>
     </dependencies> 
 </project>
