@@ -11,6 +11,7 @@
 package org.mule.providers.ftp;
 
 import org.mule.extras.client.MuleClient;
+import org.mule.providers.file.FileConnector;
 import org.mule.providers.ftp.server.NamedPayload;
 import org.mule.umo.UMOMessage;
 
@@ -43,6 +44,8 @@ public class FtpFunctionalTestCase extends AbstractFtpServerTestCase
         logger.info("received message OK!");
         UMOMessage retrieved = client.receive("ftp://anonymous:email@localhost:" + PORT, getTimeout());
         assertNotNull(retrieved);
+        assertNotNull(retrieved.getProperty(FileConnector.PROPERTY_ORIGINAL_FILENAME));
+        assertNotNull(retrieved.getProperty(FileConnector.PROPERTY_FILE_SIZE));
         assertEquals(retrieved.getPayloadAsString(), TEST_MESSAGE);
     }
 

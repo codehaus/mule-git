@@ -12,6 +12,7 @@ package org.mule.providers.ftp;
 
 import org.mule.impl.MuleMessage;
 import org.mule.providers.AbstractMessageDispatcher;
+import org.mule.providers.file.FileConnector;
 import org.mule.umo.UMOEvent;
 import org.mule.umo.UMOMessage;
 import org.mule.umo.endpoint.UMOEndpointURI;
@@ -165,8 +166,11 @@ public class FtpMessageDispatcher extends AbstractMessageDispatcher
             {
                 throw new IOException("Ftp error: " + client.getReplyCode());
             }
-            return new MuleMessage(connector.getMessageAdapter(baos.toByteArray()));
-
+            
+            UMOMessage reply = new MuleMessage(connector.getMessageAdapter(baos.toByteArray()));
+            reply.setProperty(FileConnector.PROPERTY_ORIGINAL_FILENAME, file.getName());
+            reply.setProperty(FileConnector.PROPERTY_FILE_SIZE, new Long(file.getSize()));
+            return reply;
         }
         finally
         {
