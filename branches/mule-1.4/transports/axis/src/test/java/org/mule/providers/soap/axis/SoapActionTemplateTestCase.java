@@ -17,12 +17,9 @@ import org.mule.umo.endpoint.UMOImmutableEndpoint;
 
 import javax.xml.namespace.QName;
 
-/**
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
- */
 public class SoapActionTemplateTestCase extends AbstractMuleTestCase
 {
+
     public void testHostInfoReplace() throws Exception
     {
         UMOImmutableEndpoint ep = new ImmutableMuleEndpoint(

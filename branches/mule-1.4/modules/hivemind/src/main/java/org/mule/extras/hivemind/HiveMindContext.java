@@ -27,9 +27,6 @@ import org.apache.hivemind.impl.RegistryBuilder;
 /**
  * <code>HiveMindContext</code> is a HiveMind Context that can expose HiveMind
  * managed services for use in the Mule framework.
- * 
- * @author <a href="mailto:massimo@datacode.it">Massimo Lusetti</a>
- * @version $Revision$
  */
 public class HiveMindContext extends AbstractContainerContext
 {

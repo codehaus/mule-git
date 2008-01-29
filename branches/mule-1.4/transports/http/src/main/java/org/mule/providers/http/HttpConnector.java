@@ -91,19 +91,31 @@ public class HttpConnector extends TcpConnector
     protected void doInitialise() throws InitialisationException
     {
         super.doInitialise();
-        if(clientConnectionManager==null)
+        if (clientConnectionManager == null)
         {
             clientConnectionManager = new MultiThreadedHttpConnectionManager();
             HttpConnectionManagerParams params = new HttpConnectionManagerParams();
-            if(getSendBufferSize()!= INT_VALUE_NOT_SET ) params.setSendBufferSize(getSendBufferSize());
-            if(getReceiveBufferSize()!= INT_VALUE_NOT_SET ) params.setReceiveBufferSize(getReceiveBufferSize());
-            if(getSendTimeout()!= INT_VALUE_NOT_SET ) params.setSoTimeout(getSendTimeout());
-            if(getSendSocketLinger()!= INT_VALUE_NOT_SET ) params.setLinger(getSendSocketLinger());
+            if (getSendBufferSize() != INT_VALUE_NOT_SET)
+            {
+                params.setSendBufferSize(getSendBufferSize());
+            }
+            if (getReceiveBufferSize() != INT_VALUE_NOT_SET)
+            {
+                params.setReceiveBufferSize(getReceiveBufferSize());
+            }
+            if (getSendTimeout() != INT_VALUE_NOT_SET)
+            {
+                params.setSoTimeout(getSendTimeout());
+            }
+            if (getSendSocketLinger() != INT_VALUE_NOT_SET)
+            {
+                params.setLinger(getSendSocketLinger());
+            }
 
             params.setTcpNoDelay(isSendTcpNoDelay());
             params.setMaxTotalConnections(getDispatcherThreadingProfile().getMaxThreadsActive());
             params.setDefaultMaxConnectionsPerHost(getDispatcherThreadingProfile().getMaxThreadsActive());
-            
+
             clientConnectionManager.setParams(params);
         }
     }
@@ -122,7 +134,7 @@ public class HttpConnector extends TcpConnector
                 Map newProperties = new HashMap(endpointProperties.size());
                 for (Iterator entries = endpointProperties.entrySet().iterator(); entries.hasNext();)
                 {
-                    Map.Entry entry = (Map.Entry)entries.next();
+                    Map.Entry entry = (Map.Entry) entries.next();
                     Object key = entry.getKey();
                     Object normalizedKey = HttpConstants.ALL_HEADER_NAMES.get(key);
                     if (normalizedKey != null)

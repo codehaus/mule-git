@@ -29,7 +29,7 @@ public abstract class AbstractBaseBackupMule2050TestCase extends ImapConnectorTe
 
     public UMOConnector getConnector(boolean init) throws Exception
     {
-        UMOConnector connector = super.getConnector(init);
+        UMOConnector connector = super.createConnector(init);
         ((AbstractRetrieveMailConnector) connector).setBackupEnabled(backupEnabled);
         return connector;
     }

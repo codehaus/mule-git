@@ -19,10 +19,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 /**
- * <code>AllStatistics</code> todo
- * 
- * @author <a href="mailto:S.Vanmeerhaege@gfdi.be">Vanmeerhaeghe Stéphane </a>
- * @version $Revision$
+ * <code>AllStatistics</code> TODO
  */
 public class AllStatistics
 {

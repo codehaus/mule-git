@@ -22,9 +22,6 @@ import org.objectweb.jotm.Jotm;
  * href="http://jotm.objectweb.org">JOTM </a>. If an existing JOTM instance exists
  * (for example if running on JOnAS) it will retrieve it, else if will create a new
  * local JOTM instance.
- * 
- * @author Guillaume Nodet
- * @version $Revision$
  */
 public class JotmTransactionManagerFactory implements UMOTransactionManagerFactory
 {

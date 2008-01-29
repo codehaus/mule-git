@@ -19,11 +19,8 @@ import org.mule.umo.transformer.UMOTransformer;
 import java.util.Map;
 
 /**
- * <code>UMOEndpoint</code> describes a Provider in the Mule Server. A endpoint is
+ * <code>UMOEndpoint</code> describes a Provider in the Mule Server. An endpoint is
  * a grouping of an endpoint, an endpointUri and a transformer.
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
  */
 public interface UMOEndpoint extends UMOImmutableEndpoint
 {

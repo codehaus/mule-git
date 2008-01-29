@@ -39,10 +39,6 @@ import java.util.Map;
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 
-/**
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
- */
 public class EventMetaDataPropagationTestCase extends FunctionalTestCase implements Callable
 {
     private Apple testObjectProperty = new Apple();

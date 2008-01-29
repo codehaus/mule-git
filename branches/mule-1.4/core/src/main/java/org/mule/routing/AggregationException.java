@@ -18,10 +18,7 @@ import org.mule.umo.endpoint.UMOImmutableEndpoint;
 import org.mule.umo.routing.RoutingException;
 
 /**
- * todo document
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
+ * TODO document
  */
 public class AggregationException extends RoutingException
 {

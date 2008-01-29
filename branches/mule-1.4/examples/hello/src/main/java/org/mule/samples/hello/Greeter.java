@@ -14,9 +14,6 @@ package org.mule.samples.hello;
  * <code>Greeter</code> expects a valid <code>NameString</code> object. If invalid,
  * an exception is created and returned. The outbound router will filter exceptions
  * as user errors and return the messages to the original requester accordingly.
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
  */
 public class Greeter
 {

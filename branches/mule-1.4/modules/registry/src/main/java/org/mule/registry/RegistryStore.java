@@ -12,13 +12,9 @@ package org.mule.registry;
 
 /**
  * TODO document
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
  */
 public interface RegistryStore
 {
-
     public Registry create(String location, RegistryFactory factory) throws RegistryException;
 
     public Registry load(String location) throws RegistryException;

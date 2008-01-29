@@ -17,10 +17,7 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Is thrown when an object loaded from a descriptor is invalid
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
+ * Is thrown when an object loaded from a descriptor is invalid.
  */
 public class ValidationException extends RegistryException
 {

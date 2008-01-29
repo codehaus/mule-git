@@ -20,12 +20,9 @@ import java.util.Iterator;
 import javax.xml.namespace.QName;
 import javax.xml.rpc.ParameterMode;
 
-/**
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
- */
 public class SoapMethodTestCase extends AbstractMuleTestCase
 {
+
     public void testNamedParameterParsing() throws Exception
     {
         SoapMethod method = new SoapMethod("getFruit",

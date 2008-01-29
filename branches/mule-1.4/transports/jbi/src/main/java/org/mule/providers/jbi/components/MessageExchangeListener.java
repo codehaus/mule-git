@@ -13,14 +13,7 @@ package org.mule.providers.jbi.components;
 import javax.jbi.messaging.MessageExchange;
 import javax.jbi.messaging.MessagingException;
 
-/**
- * A Jbi MEssage exchange listener
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
- */
 public interface MessageExchangeListener
 {
-
     public void onExchange(MessageExchange me) throws MessagingException;
 }

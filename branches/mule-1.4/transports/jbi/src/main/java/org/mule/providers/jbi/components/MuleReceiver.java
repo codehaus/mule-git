@@ -41,10 +41,7 @@ import javax.xml.namespace.QName;
 
 /**
  * Can receive events over Mule transports. Given an muleEndpoint (or endpoint string
- * i.e. jms://my.queue) This component will set up the necessary bindings with Mule
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
+ * i.e. jms://my.queue) this component will set up the necessary bindings with Mule.
  */
 public class MuleReceiver extends AbstractEndpointComponent implements InternalMessageListener
 {

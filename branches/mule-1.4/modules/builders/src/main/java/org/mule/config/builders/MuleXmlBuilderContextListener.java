@@ -117,6 +117,10 @@ public class MuleXmlBuilderContextListener implements ServletContextListener
 
     public void destroy()
     {
-        MuleManager.getInstance().dispose();
+        if (MuleManager.isInstanciated())
+        {
+            MuleManager.getInstance().dispose();
+        }
     }
+
 }

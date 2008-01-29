@@ -13,10 +13,7 @@ package org.mule.config.builders;
 import org.apache.commons.digester.CallMethodRule;
 
 /**
- * todo document
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
+ * TODO document
  */
 public class CallMethodOnIndexRule extends CallMethodRule
 {

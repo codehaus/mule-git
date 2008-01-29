@@ -28,10 +28,7 @@ import java.util.List;
 import javax.management.ObjectName;
 
 /**
- * todo document
- * 
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
+ * TODO document
  */
 public abstract class AbstractRegistryComponent extends AbstractEntry implements RegistryComponent
 {

@@ -19,9 +19,6 @@ import javax.resource.spi.work.Work;
 import javax.resource.spi.work.WorkEvent;
 import javax.resource.spi.work.WorkException;
 
-/**
- * @author <a href="mailto:aperepel@gmail.com">Andrew Perepelytsya</a>
- */
 public class SedaComponentTestCase extends AbstractMuleTestCase
 {
 

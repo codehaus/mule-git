@@ -12,9 +12,6 @@ package org.mule.registry;
 
 import org.mule.ManagementContext;
 
-/**
- * @author <a href="mailto:gnt@codehaus.org">Guillaume Nodet</a>
- */
 public interface Registry
 {
 

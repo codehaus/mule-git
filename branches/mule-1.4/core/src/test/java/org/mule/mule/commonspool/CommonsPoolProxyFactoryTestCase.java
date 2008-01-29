@@ -21,11 +21,6 @@ import org.mule.util.ObjectPool;
 import com.mockobjects.dynamic.C;
 import com.mockobjects.dynamic.Mock;
 
-/**
- * @author <a href="mailto:ross.mason@symphonysoft.com">Ross Mason</a>
- * @version $Revision$
- */
-
 public class CommonsPoolProxyFactoryTestCase extends AbstractProxyPoolFactoryTestCase
 {
     public ObjectFactory getProxyFactory(MuleDescriptor descriptor, ObjectPool pool)

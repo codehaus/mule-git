@@ -31,7 +31,7 @@ import javax.security.auth.login.LoginContext;
 import javax.security.auth.login.LoginException;
 
 /**
- * @author Marie.Rizzo This is the Provider for Mule's Jaas Security
+ * This is the Provider for Mule's Jaas Security
  */
 public class JaasSimpleAuthenticationProvider implements UMOSecurityProvider
 {

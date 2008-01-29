@@ -28,10 +28,6 @@ import java.util.HashMap;
 
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
 
-/**
- * @author Guillaume Nodet
- * @version $Revision$
- */
 public abstract class AbstractJdbcTransactionalFunctionalTestCase extends AbstractJdbcFunctionalTestCase
 {
 
