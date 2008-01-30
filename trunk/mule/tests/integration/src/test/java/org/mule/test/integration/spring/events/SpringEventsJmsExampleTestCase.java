@@ -10,7 +10,6 @@
 
 package org.mule.test.integration.spring.events;
 
-import org.mule.MuleManager;
 import org.mule.extras.client.MuleClient;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.tck.functional.EventCallback;
@@ -27,9 +26,9 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  */
 public class SpringEventsJmsExampleTestCase extends AbstractMuleTestCase
 {
-    private static final AtomicInteger eventCount = new AtomicInteger(0);
+    private final AtomicInteger eventCount = new AtomicInteger(0);
 
-    private static ClassPathXmlApplicationContext context;
+    private ClassPathXmlApplicationContext context;
 
     protected void doSetUp() throws Exception
     {
@@ -61,11 +60,10 @@ public class SpringEventsJmsExampleTestCase extends AbstractMuleTestCase
         };
         subscriptionBean.setEventCallback(callback);
 
-        MuleManager.getConfiguration().setSynchronous(true);
         MuleClient client = new MuleClient();
         Order order = new Order("Sausage and Mash");
-        client.send("jms://orders.queue", order, null);
-        Thread.sleep(1000);
+        client.dispatch("jms://orders.queue", order, null);
+        Thread.sleep(2000);
         assertTrue(eventCount.get() == 1);
 
         UMOMessage result = client.receive("jms://processed.queue", 10000);
