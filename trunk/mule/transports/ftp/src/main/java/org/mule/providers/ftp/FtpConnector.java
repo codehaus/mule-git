@@ -537,14 +537,14 @@ public class FtpConnector extends AbstractConnector
     private String getFilename(UMOImmutableEndpoint endpoint, UMOMessage message) throws IOException
     {
         String filename = (String)message.getProperty(FtpConnector.PROPERTY_FILENAME);
-        if (filename == null)
+        String outPattern = (String) endpoint.getProperty(FtpConnector.PROPERTY_OUTPUT_PATTERN);
+        if (outPattern == null)
         {
-            String outPattern = (String) endpoint.getProperty(FtpConnector.PROPERTY_OUTPUT_PATTERN);
-            if (outPattern == null)
-            {
-                outPattern = message.getStringProperty(FtpConnector.PROPERTY_OUTPUT_PATTERN,
-                        getOutputPattern());
-            }
+            outPattern = message.getStringProperty(FtpConnector.PROPERTY_OUTPUT_PATTERN,
+                    getOutputPattern());
+        }
+        if (outPattern != null || filename == null)
+        {
             filename = generateFilename(message, outPattern);
         }
         if (filename == null)
