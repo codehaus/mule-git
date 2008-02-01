@@ -44,6 +44,7 @@ public class MuleServer implements Runnable
             {"main", "true", "Main Class"},
             {"mode", "true", "Run Mode"},
             {"version", "false", "Show product and version information"},
+            {"debug", "false", "Configure Mule for JPDA remote debugging."},
             {"props", "true", "Startup Properties"}
     };
 
@@ -108,7 +109,7 @@ public class MuleServer implements Runnable
             System.exit(1);
         }
 
-//        print version string
+        // print version string
         if (options.containsKey("version"))
         {
             System.out.println(CoreMessages.productInformation().toString());
