@@ -67,7 +67,6 @@ import org.mule.util.SpiUtils;
 import org.mule.util.StringMessageUtils;
 import org.mule.util.StringUtils;
 import org.mule.util.UUID;
-import org.mule.util.queue.CachingPersistenceStrategy;
 import org.mule.util.queue.QueueManager;
 import org.mule.util.queue.QueuePersistenceStrategy;
 import org.mule.util.queue.TransactionalQueueManager;
@@ -734,8 +733,7 @@ public class MuleManager implements UMOManager
                     try
                     {
                         TransactionalQueueManager queueMgr = new TransactionalQueueManager();
-                        QueuePersistenceStrategy ps = new CachingPersistenceStrategy(
-                            getConfiguration().getPersistenceStrategy());
+                        QueuePersistenceStrategy ps = getConfiguration().getPersistenceStrategy();
                         queueMgr.setPersistenceStrategy(ps);
                         queueManager = queueMgr;
                     }
