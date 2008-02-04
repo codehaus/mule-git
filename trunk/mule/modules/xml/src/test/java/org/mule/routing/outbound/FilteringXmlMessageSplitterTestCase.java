@@ -69,11 +69,11 @@ public class FilteringXmlMessageSplitterTestCase extends AbstractMuleTestCase
         String payload = IOUtils.getResourceAsString("purchase-order.xml", getClass());
         internalTestSuccessfulXmlSplitter(payload);
     }
-    
+
     public void testStringPayloadXmlMessageSplitterWithoutXsd() throws Exception
     {
-     xmlSplitter.setExternalSchemaLocation(null);
-     xmlSplitter.setValidateSchema(false);
+        xmlSplitter.setExternalSchemaLocation(null);
+        xmlSplitter.setValidateSchema(false);
         String payload = IOUtils.getResourceAsString("purchase-order.xml", getClass());
         internalTestSuccessfulXmlSplitter(payload);
     }
@@ -91,24 +91,32 @@ public class FilteringXmlMessageSplitterTestCase extends AbstractMuleTestCase
         internalTestSuccessfulXmlSplitter(payload.getBytes());
     }
 
+    public void testByteArrayPayloadCorrelateNever() throws Exception
+    {
+        String payload = IOUtils.getResourceAsString("purchase-order.xml", getClass());
+        xmlSplitter.setEnableCorrelation(AbstractOutboundRouter.ENABLE_CORRELATION_NEVER);
+        internalTestSuccessfulXmlSplitter(payload.getBytes());
+    }
+
     private void internalTestSuccessfulXmlSplitter(Object payload) throws Exception
     {
         Mock session = MuleTestUtils.getMockSession();
-        session.matchAndReturn("getComponent", getTestComponent(getTestDescriptor("TEST", "java.lang.Object")));
+        session.matchAndReturn("getComponent",
+            getTestComponent(getTestDescriptor("TEST", "java.lang.Object")));
         UMOMessage message = new MuleMessage(payload);
 
         assertTrue(xmlSplitter.isMatch(message));
         final ItemNodeConstraint itemNodeConstraint = new ItemNodeConstraint();
         session.expect("dispatchEvent", C.args(itemNodeConstraint, C.eq(endpoint1)));
         session.expect("dispatchEvent", C.args(itemNodeConstraint, C.eq(endpoint1)));
-        xmlSplitter.route(message, (UMOSession)session.proxy(), false);
+        xmlSplitter.route(message, (UMOSession) session.proxy(), false);
         session.verify();
 
         message = new MuleMessage(payload);
 
         session.expectAndReturn("sendEvent", C.args(itemNodeConstraint, C.eq(endpoint1)), message);
         session.expectAndReturn("sendEvent", C.args(itemNodeConstraint, C.eq(endpoint1)), message);
-        UMOMessage result = xmlSplitter.route(message, (UMOSession)session.proxy(), true);
+        UMOMessage result = xmlSplitter.route(message, (UMOSession) session.proxy(), true);
         assertNotNull(result);
         assertEquals(message, result);
         session.verify();
@@ -133,7 +141,7 @@ public class FilteringXmlMessageSplitterTestCase extends AbstractMuleTestCase
         assertTrue(splitter.isMatch(message));
         try
         {
-            splitter.route(message, (UMOSession)session.proxy(), false);
+            splitter.route(message, (UMOSession) session.proxy(), false);
             fail("Should have thrown an exception, because XSD is not found.");
         }
         catch (IllegalArgumentException iaex)
@@ -153,12 +161,12 @@ public class FilteringXmlMessageSplitterTestCase extends AbstractMuleTestCase
         UMOMessage message = new MuleMessage(unsupportedPayload);
 
         assertTrue(xmlSplitter.isMatch(message));
-        xmlSplitter.route(message, (UMOSession)session.proxy(), false);
+        xmlSplitter.route(message, (UMOSession) session.proxy(), false);
         session.verify();
 
         message = new MuleMessage(unsupportedPayload);
 
-        UMOMessage result = xmlSplitter.route(message, (UMOSession)session.proxy(), true);
+        UMOMessage result = xmlSplitter.route(message, (UMOSession) session.proxy(), true);
         assertNull(result);
         session.verify();
     }
@@ -173,7 +181,7 @@ public class FilteringXmlMessageSplitterTestCase extends AbstractMuleTestCase
 
         try
         {
-            splitter.route(message, (UMOSession)session.proxy(), false);
+            splitter.route(message, (UMOSession) session.proxy(), false);
             fail("No exception thrown.");
         }
         catch (IllegalArgumentException iaex)
@@ -188,14 +196,23 @@ public class FilteringXmlMessageSplitterTestCase extends AbstractMuleTestCase
     {
         public boolean eval(Object o)
         {
-            final UMOMessage message = (UMOMessage)o;
+            final UMOMessage message = (UMOMessage) o;
             final Object payload = message.getPayload();
             assertTrue("Wrong class type for node.", payload instanceof Document);
 
-            Document node = (Document)payload;
+            // MULE-2963
+            if (xmlSplitter.enableCorrelation == AbstractOutboundRouter.ENABLE_CORRELATION_NEVER)
+            {
+                assertEquals(-1, message.getCorrelationGroupSize());                
+            }
+            else
+            {
+                // the purchase order document contains two parts
+                assertEquals(2, message.getCorrelationGroupSize());
+            }
 
+            Document node = (Document) payload;
             final String partNumber = node.getRootElement().attributeValue("partNum");
-
             return "872-AA".equals(partNumber) || "926-AA".equals(partNumber);
         }
     }
