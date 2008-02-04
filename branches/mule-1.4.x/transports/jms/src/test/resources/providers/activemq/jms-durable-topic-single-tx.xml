@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mule-configuration PUBLIC "-//MuleSource //DTD mule-configuration XML V1.0//EN"
+        "http://mule.mulesource.org/dtds/mule-configuration.dtd">
+<mule-configuration id="persistent_vmqueue_test" version="1.0">
+
+    <!--<transaction-manager factory="org.mule.modules.jboss.transactions.JBossArjunaTransactionManagerFactory"/>-->
+
+    <connector name="jmsConnector" className="org.mule.providers.jms.activemq.ActiveMqJmsConnector">
+        <properties>
+            <property name="connectionFactoryClass" value="org.apache.activemq.ActiveMQConnectionFactory"/>
+            <map name="connectionFactoryProperties">
+                <property name="brokerURL" value="vm://localhost?broker.persistent=false&amp;broker.useJmx=false"/>
+            </map>
+            <property name="specification" value="1.1"/>
+        </properties>
+    </connector>
+
+
+    <model name="TEST">
+
+        <mule-descriptor name="Part1" implementation="org.mule.components.simple.BridgeComponent" singleton="true">
+            <inbound-router>
+                <endpoint address="jms://in" connector="jmsConnector">
+                    <transaction action="BEGIN_OR_JOIN" factory="org.mule.providers.jms.JmsTransactionFactory"/>
+                </endpoint>
+            </inbound-router>
+            <outbound-router>
+                <router className="org.mule.routing.outbound.OutboundPassThroughRouter">
+                    <endpoint address="jms://topic:durable.broadcast" connector="jmsConnector">
+                        <transaction action="BEGIN_OR_JOIN" factory="org.mule.providers.jms.JmsTransactionFactory"/>
+                    </endpoint>
+                </router>
+            </outbound-router>
+        </mule-descriptor>
+    </model>
+</mule-configuration>

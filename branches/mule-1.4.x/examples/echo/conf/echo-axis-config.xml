@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mule-configuration PUBLIC "-//MuleSource //DTD mule-configuration XML V1.0//EN"
+                                "http://mule.mulesource.org/dtds/mule-configuration.dtd">
+
+<mule-configuration id="Mule_Echo_Axis_Sample" version="1.0">
+
+    <description>
+    This config is identical to echo-config.xml but exposes the EchoUMO as a SOAP web service.
+
+    To invoke the EchoUMO hit the following URL -
+        http://localhost:65081/services/EchoUMO?method=echo&amp;param=Is there an echo?
+    (remember to replace the '&amp;' with an ampersand)
+
+    To view the WSDL for the EchoUMO service go to -
+        http://localhost:65081/services/EchoUMO?wsdl
+    </description>
+    
+    <transformers>
+        <transformer name="HttpRequestToSoapRequest" className="org.mule.providers.soap.transformers.HttpRequestToSoapRequest"/>
+    </transformers>
+
+    <model name="echoSample">
+        <mule-descriptor name="EchoUMO" implementation="org.mule.components.simple.EchoComponent">
+            <inbound-router>
+                <endpoint address="axis:http://localhost:65081/services" transformers="HttpRequestToSoapRequest" />
+                <endpoint address="axis:http://localhost:65082/services"/>
+                <endpoint address="vm://echo" />                
+            </inbound-router>
+        </mule-descriptor>
+    </model>
+</mule-configuration>
