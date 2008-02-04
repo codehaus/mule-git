@@ -31,7 +31,6 @@ import org.mule.util.UUID;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OptionalDataException;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
@@ -636,29 +635,66 @@ public class MuleEvent extends EventObject implements UMOEvent, ThreadSafeAccess
         return outputStream;
     }
 
-    private void marshallTransformers(UMOTransformer trans, ObjectOutputStream out) throws IOException
+    private void marshallTransformers(UMOTransformer firstTransformer, ObjectOutputStream out) throws IOException
     {
-        if (trans != null)
+        UMOTransformer cursor = firstTransformer;
+
+        // first count the number of transformers
+        int num = 0;
+        while (cursor != null)
         {
-            out.writeObject(trans.getName());
-            marshallTransformers(trans.getNextTransformer(), out);
+            num++;
+            cursor = cursor.getNextTransformer();
+        }
+
+        // write number
+        out.writeInt(num);
+
+        // write transformer names if necessary
+        if (num > 0)
+        {
+            cursor = firstTransformer;
+            while (cursor != null)
+            {
+                out.writeObject(cursor.getName());            
+                cursor = cursor.getNextTransformer();
+            }
         }
     }
 
     private UMOTransformer unmarshallTransformers(ObjectInputStream in) throws IOException, ClassNotFoundException
     {
-        UMOTransformer trans = null;
-        try {
-            String transformerName = (String) in.readObject();
-            trans = MuleManager.getInstance().lookupTransformer(transformerName);
-            trans.setNextTransformer(unmarshallTransformers(in));
-        } catch (OptionalDataException e) {
-            if (logger.isDebugEnabled())
+        UMOTransformer first = null;
+        int count = in.readInt();
+
+        if (count > 0)
+        {
+            String firstName = (String) in.readObject();
+            first = MuleManager.getInstance().lookupTransformer(firstName);
+
+            if (first == null)
             {
-                logger.debug("Failed to load transformers from stream", e);
+                throw new IllegalStateException(CoreMessages.objectNotFound(firstName).toString());
+            }
+
+            UMOTransformer cursor = first;
+            while (--count > 0)
+            {
+                String nextName = (String)in.readObject();
+                UMOTransformer next = MuleManager.getInstance().lookupTransformer(nextName);
+                if (next == null)
+                {
+                    throw new IllegalStateException(CoreMessages.objectNotFound(nextName).toString());
+                }
+                else
+                {
+                    cursor.setNextTransformer(next);
+                    cursor = next;
+                }
             }
         }
-        return trans;
+
+        return first;
     }
 
     private void writeObject(ObjectOutputStream out) throws IOException
