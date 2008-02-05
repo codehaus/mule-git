@@ -124,6 +124,11 @@ public abstract class AbstractReceiverWorker implements Work
             List results = (List)tt.execute(cb);
             handleResults(results);
         }
+        catch (InterruptedException iex)
+        {
+            // preserve interrupt status and exit
+            Thread.currentThread().interrupt();
+        }
         catch (Exception e)
         {
             handleException(e);
