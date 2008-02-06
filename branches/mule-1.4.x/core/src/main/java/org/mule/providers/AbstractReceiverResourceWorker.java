@@ -44,13 +44,15 @@ public abstract class AbstractReceiverResourceWorker extends AbstractReceiverWor
         try
         {
             Object message = getNextMessage(resource);
-            while (message != null)
+            while (message != null && !Thread.currentThread().isInterrupted())
             {
                 messages.add(message);
                 super.doRun();
-                message = getNextMessage(resource);
+                if (!Thread.currentThread().isInterrupted())
+                {
+                    message = getNextMessage(resource);
+                }
             }
-
         }
         catch (Exception e)
         {

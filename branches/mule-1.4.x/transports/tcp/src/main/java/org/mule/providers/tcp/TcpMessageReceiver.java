@@ -385,17 +385,14 @@ public class TcpMessageReceiver extends AbstractMessageReceiver implements Work
         //Override
         protected Object getNextMessage(Object resource) throws Exception
         {
+            latch = new CountDownLatch(2);
+            dataIn = new CloseCountDownInputStream(dataIn, latch);
+            
             //all we can do for streaming is connect the streams
             if (endpoint.isSynchronous())
             {
-                latch = new CountDownLatch(2);
                 dataOut = new CloseCountDownOutputStream(dataOut, latch);
             }
-            else
-            {
-                latch = new CountDownLatch(2);
-            }
-            dataIn = new CloseCountDownInputStream(dataIn, latch);
 
             UMOMessageAdapter adapter = connector.getStreamMessageAdapter(dataIn, dataOut);
             return adapter;
