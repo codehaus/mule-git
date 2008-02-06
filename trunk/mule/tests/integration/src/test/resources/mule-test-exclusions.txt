@@ -8,6 +8,10 @@ org.mule.test.integration.client.MuleClientAxisExternalTestCase
 org.mule.test.integration.client.MuleClientWsdlSoapExternalTestCase
 org.mule.test.integration.providers.xmpp.XmppFunctionalTestCase
 
+# occasionally webservicex.net is down; move to test against internal StockQuote
+org.mule.test.integration.client.MuleClientWSDLExternalTestCase
+
+# why are these excluded?
 org.mule.test.integration.routing.replyto.ReplytoChainIntegration2TestCase
 org.mule.test.integration.routing.replyto.ReplytoChainIntegration4TestCase
 
@@ -16,8 +20,10 @@ org.mule.test.usecases.axis.AxisClientWithComplexTypesTestCase
 org.mule.test.integration.EventMetaDataPropagationTestCase
 org.mule.test.integration.VisualizerServiceTestCase
 
+# why is this excluded?
 org.mule.test.integration.spring.events.async.SpringEventsJmsAsyncExampleTestCase
 
+# why are these excluded?
 org.mule.test.integration.client.RemoteExceptionTestCase
 org.mule.test.integration.client.MuleClientRemotingHttpTestCase
 org.mule.test.integration.client.MuleClientRemotingJmsTestCase
