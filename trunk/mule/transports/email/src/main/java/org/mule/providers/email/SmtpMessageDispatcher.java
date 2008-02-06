@@ -79,27 +79,20 @@ public class SmtpMessageDispatcher extends AbstractMessageDispatcher
         }
     }
 
-    protected void doDispatch(UMOEvent event)
+    protected void doDispatch(UMOEvent event) throws Exception
     {
-        try
-        {
-            Object data = event.getTransformedMessage();
+        Object data = event.getTransformedMessage();
 
-            if (!(data instanceof Message))
-            {
-                throw new DispatchException(
-                    CoreMessages.transformUnexpectedType(data.getClass(), Message.class),
-                    event.getMessage(), event.getEndpoint());
-            }
-            else
-            {
-                // Check the message for any unset data and use defaults
-                sendMailMessage((Message) data);
-            }
-        }
-        catch (Exception e)
+        if (!(data instanceof Message))
         {
-            connector.handleException(e);
+            throw new DispatchException(
+                CoreMessages.transformUnexpectedType(data.getClass(), Message.class),
+                event.getMessage(), event.getEndpoint());
+        }
+        else
+        {
+            // Check the message for any unset data and use defaults
+            sendMailMessage((Message) data);
         }
     }
 
