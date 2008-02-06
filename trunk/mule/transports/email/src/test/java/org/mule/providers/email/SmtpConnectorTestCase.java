@@ -36,20 +36,20 @@ import javax.mail.internet.MimeMessage;
  */
 public class SmtpConnectorTestCase extends AbstractMailConnectorFunctionalTestCase
 {
-    
+
     public static final long DELIVERY_DELAY_MS = 5000;
-    
-    public SmtpConnectorTestCase() 
+
+    public SmtpConnectorTestCase()
     {
         this("SmtpConnector");
     }
 
-    SmtpConnectorTestCase(String connectorName) 
+    SmtpConnectorTestCase(String connectorName)
     {
         super(false, connectorName);
     }
 
-   public UMOConnector createConnector(boolean init) throws Exception
+    public UMOConnector createConnector(boolean init) throws Exception
     {
         SmtpConnector c = new SmtpConnector();
         c.setName(getConnectorName());
@@ -66,9 +66,8 @@ public class SmtpConnectorTestCase extends AbstractMailConnectorFunctionalTestCa
     }
 
     /**
-     * The SmtpConnector does not accept listeners, so the test in the
-     * superclass makes no sense here.  Instead, we simply check that
-     * a listener is rejected.
+     * The SmtpConnector does not accept listeners, so the test in the superclass makes no
+     * sense here. Instead, we simply check that a listener is rejected.
      */
     // @Override
     public void testConnectorListenerSupport() throws Exception
@@ -78,9 +77,8 @@ public class SmtpConnectorTestCase extends AbstractMailConnectorFunctionalTestCa
         MuleDescriptor d = getTestDescriptor("anApple", Apple.class.getName());
         UMOModel model = getModel();
         UMOComponent component = model.registerComponent(d);
-        UMOEndpoint endpoint = 
-            new MuleEndpoint("test", new MuleEndpointURI(getTestEndpointURI()), connector,
-                null, UMOEndpoint.ENDPOINT_TYPE_SENDER, 0, null, new HashMap());
+        UMOEndpoint endpoint = new MuleEndpoint("test", new MuleEndpointURI(getTestEndpointURI()), connector,
+            null, UMOEndpoint.ENDPOINT_TYPE_SENDER, 0, null, new HashMap());
         try
         {
             connector.registerListener(component, endpoint);
@@ -104,8 +102,8 @@ public class SmtpConnectorTestCase extends AbstractMailConnectorFunctionalTestCa
         QuickConfigurationBuilder builder = new QuickConfigurationBuilder();
         builder.getManager().registerConnector(createConnector(false));
         UMOEndpoint endpoint = new MuleEndpoint(getTestEndpointURI(), false);
-        builder.registerComponent(FunctionalTestComponent.class.getName(), 
-            "testComponent", null, endpoint, props);
+        builder.registerComponent(FunctionalTestComponent.class.getName(), "testComponent", null, endpoint,
+            props);
 
         logger.debug("starting mule");
         MuleManager.getInstance().start();
@@ -113,10 +111,9 @@ public class SmtpConnectorTestCase extends AbstractMailConnectorFunctionalTestCa
         // default transformer is string to mail message, so send string
         UMOMessage message = new MuleMessage(AbstractGreenMailSupport.MESSAGE);
         message.setStringProperty(MailProperties.TO_ADDRESSES_PROPERTY, TO);
-        UMOSession session = 
-            getTestSession(getTestComponent(getTestDescriptor("apple", Apple.class.getName())));
-        MuleEvent event = 
-            new MuleEvent(message, endpoint, session, true, new ResponseOutputStream(System.out));
+        UMOSession session = getTestSession(getTestComponent(getTestDescriptor("apple", Apple.class.getName())));
+        MuleEvent event = new MuleEvent(message, endpoint, session, true,
+            new ResponseOutputStream(System.out));
         endpoint.dispatch(event);
 
         getServers().waitForIncomingEmail(DELIVERY_DELAY_MS, 1);
@@ -125,5 +122,29 @@ public class SmtpConnectorTestCase extends AbstractMailConnectorFunctionalTestCa
         assertEquals("did not receive 1 mail", 1, messages.length);
         assertMessageOk(messages[0]);
     }
-    
+
+    // MULE-2130 (Impossible to re-initialise SMTP connector)
+    public void testConnectorReinitialise() throws Exception
+    {
+        UMOConnector c = getConnector();
+
+        c.startConnector();
+        assertTrue(c.isStarted());
+
+        c.stopConnector();
+        assertFalse(c.isStarted());
+
+        // The test provided in the JIRA calls dispose(), after which the connector is
+        // considered dead forever. Calling initialise() itself should be enough to zap
+        // the internal state.
+
+        c.initialise();
+        assertFalse(c.isDisposed());
+        assertFalse(c.isStarted());
+
+        c.startConnector();
+        assertFalse(c.isDisposed());
+        assertTrue(c.isStarted());
+    }
+
 }
