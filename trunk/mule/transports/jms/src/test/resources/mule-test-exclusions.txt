@@ -12,5 +12,3 @@ org.mule.test.integration.providers.jms.activemq.ActiveMQJmsXaTransactionFunctio
 MULE-2011
 org.mule.test.integration.providers.jms.functional.JmsXATransactionComponentTestCase
 
-# MULE-2868
-org.mule.providers.jms.issues.JmsRemoteSyncMule2868TestCase

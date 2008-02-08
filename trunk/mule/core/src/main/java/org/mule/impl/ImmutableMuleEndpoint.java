@@ -766,7 +766,8 @@ public class ImmutableMuleEndpoint implements UMOImmutableEndpoint
                 throw new InitialisationException(e, this);
             }
         }
-        if (responseTransformer == null)
+        // Only set default transport response transformer if inbound endpoint (MULE-2868)
+        if (responseTransformer == null  && ENDPOINT_TYPE_RECEIVER.equals(type))
         {
             if (connector instanceof AbstractConnector)
             {
