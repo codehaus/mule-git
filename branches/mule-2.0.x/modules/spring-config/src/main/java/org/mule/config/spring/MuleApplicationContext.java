@@ -24,6 +24,7 @@ import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.AbstractXmlApplicationContext;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 
@@ -160,7 +161,21 @@ public class MuleApplicationContext extends AbstractXmlApplicationContext
         for (int i = 0; i < resources.length; i++)
         {
             ConfigResource resource = resources[i];
-            configResources[i] = new UrlResource(resource.getResource());
+            if(resource.getUrl()!=null)
+            {
+                configResources[i] = new UrlResource(resource.getUrl());
+            }
+            else
+            {
+                try
+                {
+                    configResources[i] = new InputStreamResource(resource.getInputStream());
+                }
+                catch (IOException e)
+                {
+                    //ignore, should never happen
+                }
+            }
         }
         return configResources;
     }

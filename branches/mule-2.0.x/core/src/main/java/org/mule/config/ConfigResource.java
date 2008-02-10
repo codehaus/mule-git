@@ -17,29 +17,29 @@ import java.io.IOException;
 import java.net.URL;
 
 /**
- * A ConfigResource holds the resource description (or location) and the resource stream. It is useful to associate the two
+ * A ConfigResource holds the url description (or location) and the url stream. It is useful to associate the two
  * for error reporting when the stream cannot be read.
  */
 public class ConfigResource
 {
     private String resourceName;
-    private URL resource;
+    private URL url;
     private InputStream inputStream;
 
     public ConfigResource(String resourceName) throws IOException
     {
         this.resourceName = resourceName;
-        resource = IOUtils.getResourceAsUrl(resourceName, getClass(), true, true);
-        if(resource == null)
+        url = IOUtils.getResourceAsUrl(resourceName, getClass(), true, true);
+        if(url == null)
         {
             throw new FileNotFoundException(resourceName);
         }
     }
 
-    public ConfigResource(URL resource)
+    public ConfigResource(URL url)
     {
-        this.resource = resource;
-        this.resourceName = resource.toExternalForm();
+        this.url = url;
+        this.resourceName = url.toExternalForm();
     }
 
     public ConfigResource(String resourceName, InputStream inputStream)
@@ -50,16 +50,16 @@ public class ConfigResource
 
     public InputStream getInputStream() throws IOException
     {
-        if(inputStream==null && resource!=null)
+        if(inputStream==null && url !=null)
         {
-            inputStream = resource.openStream();
+            inputStream = url.openStream();
         }
         return inputStream;
     }
 
-    public URL getResource()
+    public URL getUrl()
     {
-        return resource;
+        return url;
     }
 
     public String getResourceName()
@@ -97,7 +97,7 @@ public class ConfigResource
     {
         int result;
         result = (resourceName != null ? resourceName.hashCode() : 0);
-        result = 31 * result + (resource != null ? resource.hashCode() : 0);
+        result = 31 * result + (url != null ? url.hashCode() : 0);
         return result;
     }
 

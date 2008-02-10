@@ -26,8 +26,9 @@ import org.apache.commons.logging.LogFactory;
 /**
  * Abstract {@link ConfigurationBuilder} implementation used for
  * ConfigurationBuider's that use one of more configuration resources of the same
- * type that are defined using strings. <br/><br/> TODO Extend/improve this to use
- * some sort of <code>Resource</code> abstraction that supports files, uri's etc.
+ * type that are defined using strings or {@link ConfigResource} objects.  It is recommended that
+ * {@link org.mule.config.ConfigResource} objects are used over strings since they can be more descriptive, but
+ * Strings will be supported for quite some time.
  */
 public abstract class AbstractResourceConfigurationBuilder extends AbstractConfigurationBuilder
 {
@@ -39,6 +40,7 @@ public abstract class AbstractResourceConfigurationBuilder extends AbstractConfi
     /**
      * @param configResources a comma separated list of configuration files to load,
      *            this should be accessible on the classpath or filesystem
+     * @throws org.mule.api.config.ConfigurationException usually if the config resources cannot be loaded
      */
     public AbstractResourceConfigurationBuilder(String configResources) throws ConfigurationException
     {
@@ -48,6 +50,7 @@ public abstract class AbstractResourceConfigurationBuilder extends AbstractConfi
     /**
      * @param configResources an array of configuration files to load, this should be
      *            accessible on the classpath or filesystem
+     * @throws org.mule.api.config.ConfigurationException usually if the config resources cannot be loaded
      */
     public AbstractResourceConfigurationBuilder(String[] configResources) throws ConfigurationException
     {
