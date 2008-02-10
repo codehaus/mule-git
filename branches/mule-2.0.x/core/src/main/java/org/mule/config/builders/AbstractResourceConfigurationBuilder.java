@@ -13,12 +13,12 @@ package org.mule.config.builders;
 import org.mule.api.MuleContext;
 import org.mule.api.config.ConfigurationBuilder;
 import org.mule.api.config.ConfigurationException;
+import org.mule.config.ConfigResource;
 import org.mule.config.i18n.CoreMessages;
-import org.mule.util.IOUtils;
 import org.mule.util.StringUtils;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -34,22 +34,30 @@ public abstract class AbstractResourceConfigurationBuilder extends AbstractConfi
 
     protected static final Log logger = LogFactory.getLog(AutoConfigurationBuilder.class);
 
-    protected String[] configResources;
+    protected ConfigResource[] configResources;
 
     /**
      * @param configResources a comma separated list of configuration files to load,
      *            this should be accessible on the classpath or filesystem
      */
-    public AbstractResourceConfigurationBuilder(String configResources)
+    public AbstractResourceConfigurationBuilder(String configResources) throws ConfigurationException
     {
-        this.configResources = StringUtils.splitAndTrim(configResources, ",; ");
+        this.configResources = loadConfigResources(StringUtils.splitAndTrim(configResources, ",; "));
     }
 
     /**
      * @param configResources an array of configuration files to load, this should be
      *            accessible on the classpath or filesystem
      */
-    public AbstractResourceConfigurationBuilder(String[] configResources)
+    public AbstractResourceConfigurationBuilder(String[] configResources) throws ConfigurationException
+    {
+        this.configResources = loadConfigResources(configResources);
+    }
+
+    /**
+     * @param configResources an array Reader oject that provides acces to a configuration either locally or remotely
+     */
+    public AbstractResourceConfigurationBuilder(ConfigResource[] configResources)
     {
         this.configResources = configResources;
     }
@@ -62,7 +70,7 @@ public abstract class AbstractResourceConfigurationBuilder extends AbstractConfi
     {
         if (configResources == null)
         {
-            throw new ConfigurationException(CoreMessages.objectIsNull("Configuration Resource"));
+            throw new ConfigurationException(CoreMessages.objectIsNull("Configuration Resources"));
         }
 
         super.configure(muleContext);
@@ -72,34 +80,24 @@ public abstract class AbstractResourceConfigurationBuilder extends AbstractConfi
         muleContext.getRegistry().getConfiguration().setConfigResources(configResources);
     }
 
-    /**
-     * Attempt to load a configuration resource from the file system, classpath, or
-     * as a URL, in that order.
-     * 
-     * @param configResource Mule configuration resources
-     * @return an InputStream to the resource
-     * @throws ConfigurationException if the resource could not be loaded by any
-     *             means
-     */
-    protected InputStream loadConfig(String configResource) throws ConfigurationException
+    protected ConfigResource[] loadConfigResources(String[] configs) throws ConfigurationException
     {
-        InputStream is;
         try
         {
-            is = IOUtils.getResourceAsStream(configResource, getClass());
+            configResources = new ConfigResource[configs.length];
+            for (int i = 0; i < configs.length; i++)
+            {
+                configResources[i] = new ConfigResource(configs[i]);
+            }
+            return configResources;
+        }
+        catch (FileNotFoundException e)
+        {
+            throw new ConfigurationException(CoreMessages.configurationBuilderNoMatching(e.getMessage()), e);
         }
         catch (IOException e)
         {
-            throw new ConfigurationException(CoreMessages.cannotLoadFromClasspath(configResource), e);
-        }
-
-        if (is != null)
-        {
-            return is;
-        }
-        else
-        {
-            throw new ConfigurationException(CoreMessages.cannotLoadFromClasspath(configResource));
+            throw new ConfigurationException(e);
         }
     }
 

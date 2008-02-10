@@ -13,6 +13,7 @@ package org.mule.config.builders;
 import org.mule.api.MuleContext;
 import org.mule.api.config.ConfigurationBuilder;
 import org.mule.api.config.ConfigurationException;
+import org.mule.config.ConfigResource;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.util.ClassUtils;
 
@@ -28,9 +29,19 @@ public class AutoConfigurationBuilder extends AbstractResourceConfigurationBuild
 {
     protected static final Log logger = LogFactory.getLog(AutoConfigurationBuilder.class);
 
-    public AutoConfigurationBuilder(String resource)
+    public AutoConfigurationBuilder(String resource) throws ConfigurationException
     {
         super(resource);
+    }
+
+    public AutoConfigurationBuilder(String[] resources) throws ConfigurationException
+    {
+        super(resources);
+    }
+
+    public AutoConfigurationBuilder(ConfigResource[] resources)
+    {
+        super(resources);
     }
 
     protected void doConfigure(MuleContext muleContext) throws ConfigurationException
@@ -44,7 +55,7 @@ public class AutoConfigurationBuilder extends AbstractResourceConfigurationBuild
      * @return
      * @throws ConfigurationException
      */
-    protected void autoConfigure(MuleContext muleContext, String[] configResources) throws ConfigurationException
+    protected void autoConfigure(MuleContext muleContext, ConfigResource[] configResources) throws ConfigurationException
     {
 
         ConfigurationBuilder configurationBuilder = null;
