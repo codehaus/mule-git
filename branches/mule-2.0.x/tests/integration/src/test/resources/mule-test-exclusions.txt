@@ -15,12 +15,10 @@ org.mule.test.integration.routing.replyto.ReplytoChainIntegration4TestCase
 
 # More testing on these: not recorded in Jira yet
 org.mule.test.usecases.axis.AxisClientWithComplexTypesTestCase
-#org.mule.test.integration.EventMetaDataPropagationTestCase
 org.mule.test.integration.VisualizerServiceTestCase
 
 org.mule.test.integration.spring.events.async.SpringEventsJmsAsyncExampleTestCase
 
-#org.mule.test.integration.client.RemoteExceptionTestCase
 org.mule.test.integration.transaction.OutboundTransactionsTestCase
 
 # These tests work when run from the IDE (IntelliJ)
@@ -61,9 +59,6 @@ org.mule.test.integration.client.MuleClientTransactionTestCase
 # MULE-2192, 2474
 # probably a duplicate of MessageChunkingMule2192TestCase?
 org.mule.test.integration.routing.MessageChunkingTestCase
-
-# MULE-2881
-org.mule.test.integration.client.MuleClientRemotingAxisTestCase
 
 # MULE-2740
 org.mule.test.integration.MuleEndpointConfigurationTestCase
