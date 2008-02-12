@@ -43,8 +43,8 @@ public class ScriptConfigurationBuilder extends AbstractResourceConfigurationBui
         super(configResource);
         if (scriptEngineName == null)
         {
-            throw new IllegalArgumentException(BuildersMessages.systemPropertyNotSet(
-                SCRIPT_ENGINE_NAME_PROPERTY).getMessage());
+            // we can guess engine by file extension
+            logger.warn(BuildersMessages.systemPropertyNotSet(SCRIPT_ENGINE_NAME_PROPERTY).getMessage());
         }
         scriptComponent.setScriptEngineName(scriptEngineName);
     }
@@ -54,8 +54,8 @@ public class ScriptConfigurationBuilder extends AbstractResourceConfigurationBui
         super(configResources);
         if (scriptEngineName == null)
         {
-            throw new IllegalArgumentException(BuildersMessages.systemPropertyNotSet(
-                SCRIPT_ENGINE_NAME_PROPERTY).getMessage());
+            // we can guess engine by file extension
+            logger.warn(BuildersMessages.systemPropertyNotSet(SCRIPT_ENGINE_NAME_PROPERTY).getMessage());
         }
         scriptComponent.setScriptEngineName(scriptEngineName);
     }

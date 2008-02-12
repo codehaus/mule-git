@@ -10,8 +10,8 @@
 
 package org.mule.module.client;
 
-import org.mule.DefaultMuleMessage;
 import org.mule.DefaultMuleEvent;
+import org.mule.DefaultMuleMessage;
 import org.mule.DefaultMuleSession;
 import org.mule.MuleSessionHandler;
 import org.mule.RegistryContext;
@@ -28,10 +28,9 @@ import org.mule.api.lifecycle.Disposable;
 import org.mule.api.security.Credentials;
 import org.mule.api.transformer.wire.WireFormat;
 import org.mule.api.transport.DispatchException;
-import org.mule.context.notification.AdminNotification;
 import org.mule.security.MuleCredentials;
-import org.mule.transformer.wire.SerializationWireFormat;
 import org.mule.transformer.TransformerUtils;
+import org.mule.transformer.wire.SerializationWireFormat;
 import org.mule.transport.AbstractConnector;
 
 import java.io.ByteArrayInputStream;

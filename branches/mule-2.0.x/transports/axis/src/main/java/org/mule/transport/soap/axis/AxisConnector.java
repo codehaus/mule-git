@@ -13,7 +13,6 @@ package org.mule.transport.soap.axis;
 import org.mule.api.MuleException;
 import org.mule.api.context.notification.ManagerNotificationListener;
 import org.mule.api.context.notification.ServerNotification;
-import org.mule.api.endpoint.Endpoint;
 import org.mule.api.endpoint.EndpointBuilder;
 import org.mule.api.endpoint.EndpointURI;
 import org.mule.api.endpoint.ImmutableEndpoint;
@@ -319,7 +318,7 @@ public class AxisConnector extends AbstractConnector implements ManagerNotificat
 
         for (Iterator iterator = axisComponent.getInboundRouter().getEndpoints().iterator(); iterator.hasNext();)
         {
-            Endpoint umoEndpoint = (Endpoint) iterator.next();
+            ImmutableEndpoint umoEndpoint = (ImmutableEndpoint) iterator.next();
             if (endpointKey.startsWith(umoEndpoint.getEndpointURI().getAddress()))
             {
                 logger.info("Unregistering Axis endpoint: " + endpointKey + " for service: "
@@ -398,7 +397,7 @@ public class AxisConnector extends AbstractConnector implements ManagerNotificat
         // endpoint
         serviceEndpointbuilder.setSecurityFilter(receiver.getEndpoint().getSecurityFilter());
 
-        // TODO Do we really need to modify the existing receiver endpoint? What happnes if we don't security,
+        // TODO Do we really need to modify the existing receiver endpoint? What happens if we don't security,
         // filters and transformers will get invoked twice?
         EndpointBuilder receiverEndpointBuilder = new EndpointURIEndpointBuilder(receiver.getEndpoint(),
             muleContext);

@@ -8,17 +8,16 @@
  * LICENSE.txt file.
  */
 
-package org.mule.test.integration.service;
+package org.mule.test.integration.transformer.response;
 
-public class TestComponentException extends Exception
+public interface BindingInterface
 {
-    private static final long serialVersionUID = -3906931231398539327L;
+    String hello1(String s);
 
-    public static final String MESSAGE_PREFIX = "Message: ";
+    String hello2(String s);
 
-    public TestComponentException(String message)
-    {
-        super(MESSAGE_PREFIX + message);
-    }
+    String hello3(String s);
+
+    String hello4(String s);
 
 }

@@ -24,13 +24,6 @@ org.mule.test.integration.transaction.OutboundTransactionsTestCase
 # These tests work when run from the IDE (IntelliJ)
 org.mule.test.usecases.dlq.DLQExceptionHandlerTestCase
 
-# MULE-2868
-org.mule.test.integration.transport.jms.NestedRouterTestCase
-# The following test is also affected but has 2/3 test methods commented out rather than excluding whole
-# test to ensure we have at least one nested-router functional test.
-#org.mule.test.integration.routing.nested.NestedRouterTestCase
-
-
 # MULE-2258: fails on the build server
 org.mule.test.usecases.sync.TcpToFileTestCase
 
@@ -56,12 +49,8 @@ org.mule.test.integration.client.MuleClientTransactionTestCase
 # Unfinished 2.x implementation
 ##########################################################################
 
-# MULE-2192, 2474
-# probably a duplicate of MessageChunkingMule2192TestCase?
-org.mule.test.integration.routing.MessageChunkingTestCase
-
 # MULE-2740
-org.mule.test.integration.MuleEndpointConfigurationTestCase
+#org.mule.test.integration.MuleEndpointConfigurationTestCase
 
 ##########################################################################
 # Mule 2.x-specific failures
@@ -117,5 +106,5 @@ org.mule.test.integration.spring.events.SpringEventsJmsExampleTestCase
 # How to configure <persistence-strategy className="org.mule.util.queue.FilePersistenceStrategy"/> ?
 org.mule.test.integration.persistence.FilePersistenceTestCase
 
-# Pending - message requested not generated
-#org.mule.context.notification.MessageNotificationTestCase;
+# MULE-2105
+org.mule.test.integration.management.ManagementStartupTestCase

@@ -30,6 +30,7 @@ import org.mule.util.ClassUtils;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -68,12 +69,12 @@ public abstract class ImmutableMuleEndpoint implements ImmutableEndpoint
     /**
      * The transformers used to transform the incoming or outgoing data
      */
-    protected AtomicReference transformers = new AtomicReference(TransformerUtils.UNDEFINED);
+    protected AtomicReference transformers = new AtomicReference(new LinkedList());
 
     /**
      * The transformers used to transform the incoming or outgoing data
      */
-    protected AtomicReference responseTransformers = new AtomicReference(TransformerUtils.UNDEFINED);
+    protected AtomicReference responseTransformers = new AtomicReference(new LinkedList());
 
     /**
      * The name for the endpoint
@@ -137,8 +138,6 @@ public abstract class ImmutableMuleEndpoint implements ImmutableEndpoint
     protected String initialState = INITIAL_STATE_STARTED;
 
     protected String endpointEncoding;
-
-    protected String registryId = null;
 
     protected MuleContext muleContext;
 
@@ -243,56 +242,37 @@ public abstract class ImmutableMuleEndpoint implements ImmutableEndpoint
     {
         return transactionConfig;
     }
-
-    public boolean equals(Object o)
+    
+    protected static boolean equal(Object a, Object b)
     {
-        if (this == o)
-        {
-            return true;
-        }
-        if (!(o instanceof ImmutableMuleEndpoint))
-        {
-            return false;
-        }
+        return ClassUtils.equal(a, b);
+    }
 
-        final ImmutableMuleEndpoint immutableMuleProviderDescriptor = (ImmutableMuleEndpoint) o;
+    public boolean equals(Object obj)
+    {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
 
-        if (!connector.getName().equals(immutableMuleProviderDescriptor.connector.getName()))
-        {
-            return false;
-        }
-        if (endpointUri != null && immutableMuleProviderDescriptor.endpointUri != null
-                                                                                      ? !endpointUri.getAddress()
-                                                                                          .equals(
-                                                                                              immutableMuleProviderDescriptor.endpointUri.getAddress())
-                                                                                      : immutableMuleProviderDescriptor.endpointUri != null)
-        {
-            return false;
-        }
-        if (!name.equals(immutableMuleProviderDescriptor.name))
-        {
-            return false;
-        }
-        // MULE-1551 - transformer excluded from comparison here
-        return isInbound() == immutableMuleProviderDescriptor.isInbound() &&
-                isOutbound() == immutableMuleProviderDescriptor.isOutbound();
+        final ImmutableMuleEndpoint other = (ImmutableMuleEndpoint) obj;
+        return equal(connectionStrategy, other.connectionStrategy) && equal(connector, other.connector)
+               && deleteUnacceptedMessages == other.deleteUnacceptedMessages
+               && equal(endpointEncoding, other.endpointEncoding) && equal(endpointUri, other.endpointUri)
+               && equal(filter, other.filter) && equal(initialState, other.initialState)
+               && equal(initialised, other.initialised) && equal(name, other.name)
+               && equal(properties, other.properties) && remoteSync == other.remoteSync
+               && equal(remoteSyncTimeout, other.remoteSyncTimeout)
+               && equal(responseTransformers, other.responseTransformers)
+               && equal(securityFilter, other.securityFilter) && synchronous == other.synchronous
+               && equal(transactionConfig, other.transactionConfig) && equal(transformers, other.transformers);
     }
 
     public int hashCode()
     {
-        int result = appendHash(0, connector);
-        result = appendHash(result, endpointUri);
-        // MULE-1551 - transformer excluded from hash here
-        result = appendHash(result, name);
-        result = appendHash(result, Boolean.valueOf(isInbound()));
-        result = appendHash(result, Boolean.valueOf(isOutbound()));
-        return result;
-    }
-
-    private int appendHash(int hash, Object component)
-    {
-        int delta = component != null ? component.hashCode() : 0;
-        return 29 * hash + delta;
+        return ClassUtils.hash(new Object[]{connectionStrategy, connector,
+            deleteUnacceptedMessages ? Boolean.TRUE : Boolean.FALSE, endpointEncoding, endpointUri, filter,
+            initialState, initialised, name, properties, remoteSync ? Boolean.TRUE : Boolean.FALSE, remoteSyncTimeout,
+            responseTransformers, securityFilter, synchronous ? Boolean.TRUE : Boolean.FALSE, transactionConfig,
+            transformers});
     }
 
     public Filter getFilter()
@@ -303,14 +283,6 @@ public abstract class ImmutableMuleEndpoint implements ImmutableEndpoint
     public boolean isDeleteUnacceptedMessages()
     {
         return deleteUnacceptedMessages;
-    }
-
-    protected void setTransformersIfUndefined(AtomicReference reference, List transformers)
-    {
-        TransformerUtils.discourageNullTransformers(transformers);
-        if(transformers.size()==0) transformers = TransformerUtils.UNDEFINED;
-        reference.compareAndSet(TransformerUtils.UNDEFINED, transformers);
-        updateTransformerEndpoints(reference);
     }
 
     // TODO - remove (or fix)

@@ -8,12 +8,18 @@
  * LICENSE.txt file.
  */
 
-package org.mule.test.integration.service;
+package org.mule.transformer.simple;
 
-/**
- * <code>DateService</code> defines a Date service
- */
-public interface DateService
+import org.mule.transformer.simple.StringAppendTransformer;
+
+public class InboundAppendTransformer  extends StringAppendTransformer
 {
-    public String getDate();
+
+    public InboundAppendTransformer()
+    {
+        super(" inbound");
+    }
+
 }
+
+

@@ -628,28 +628,7 @@ public abstract class AbstractConnector
         if (dispatchers != null)
         {
             logger.debug("Disposing Dispatchers");
-
-            try
-            {
-                // disposeDispatcher() is also called from initialise() and
-                // JMSConnector.onNotification(), so we need to handle this
-                // differently
-                if (this.isDisposing())
-                {
-                    // close() implies clear()
-                    dispatchers.close();
-                }
-                else
-                {
-                    dispatchers.clear();
-                }
-            }
-            catch (Exception ex)
-            {
-                // TODO MULE-863: What should we really do?
-                // ignored
-            }
-
+            dispatchers.clear();
             logger.debug("Dispatchers Disposed");
         }
     }
@@ -659,26 +638,7 @@ public abstract class AbstractConnector
         if (requesters != null)
         {
             logger.debug("Disposing Requesters");
-
-            try
-            {
-                // may not be needed for requesters?
-                if (this.isDisposing())
-                {
-                    // close() implies clear()
-                    requesters.close();
-                }
-                else
-                {
-                    requesters.clear();
-                }
-            }
-            catch (Exception ex)
-            {
-                // TODO MULE-863: What should we really do?
-                // ignored
-            }
-
+             requesters.clear();
             logger.debug("Requesters Disposed");
         }
     }
@@ -1061,23 +1021,18 @@ public abstract class AbstractConnector
         logger.info("Registering listener: " + service.getName() + " on endpointUri: "
                         + endpointUri.toString());
 
-        MessageReceiver receiver = this.getReceiver(service, endpoint);
-
-        if (receiver != null)
+        if (getReceiver(service, endpoint) != null)
         {
             throw new ConnectorException(CoreMessages.listenerAlreadyRegistered(endpointUri), this);
         }
-        else
-        {
 
-            receiver = this.createReceiver(service, endpoint);
-            Object receiverKey = getReceiverKey(service, endpoint);
-            receiver.setReceiverKey(receiverKey.toString());
-            //Since we're managing the creation we also need to initialise
-            receiver.initialise();
-            receivers.put(receiverKey, receiver);
-            // receivers.put(getReceiverKey(service, endpoint), receiver);
-        }
+        MessageReceiver receiver = createReceiver(service, endpoint);
+        Object receiverKey = getReceiverKey(service, endpoint);
+        receiver.setReceiverKey(receiverKey.toString());
+        // Since we're managing the creation we also need to initialise
+        receiver.initialise();
+        receivers.put(receiverKey, receiver);
+        // receivers.put(getReceiverKey(service, endpoint), receiver);
 
         return receiver;
     }

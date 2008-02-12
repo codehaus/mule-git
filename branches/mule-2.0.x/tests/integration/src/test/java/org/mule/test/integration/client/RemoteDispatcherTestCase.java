@@ -9,7 +9,6 @@
  */
 package org.mule.test.integration.client;
 
-import org.mule.extras.client.remoting.RemoteDispatcherAgent;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.transformer.wire.SerializedMuleMessageWireFormat;
 

@@ -119,9 +119,10 @@ public class DefaultMuleContextFactoryTestCase extends AbstractMuleTestCase
 
     public void testCreateMuleContextString() throws InitialisationException, ConfigurationException
     {
+        MuleContext muleContext = null;
         try
         {
-            MuleContext muleContext = muleContextFactory.createMuleContext("my-resource.xml");
+            muleContext = muleContextFactory.createMuleContext("my-resource.xml");
 
         }
         catch (ConfigurationException e)
@@ -140,9 +141,10 @@ public class DefaultMuleContextFactoryTestCase extends AbstractMuleTestCase
         properties.put("testKey1", "testValue1");
         properties.put("testKey2", "testValue2");
 
+        MuleContext muleContext = null;
         try
         {
-            MuleContext muleContext = muleContextFactory.createMuleContext("my-resource.xml", properties);
+            muleContext = muleContextFactory.createMuleContext("my-resource.xml", properties);
 
         }
         catch (ConfigurationException e)
