@@ -33,10 +33,6 @@ org.mule.test.integration.transaction.OutboundTransactionsTestCase
 org.mule.test.integration.routing.replyto.ReplytoChainIntegration3TestCase
 org.mule.test.usecases.dlq.DLQExceptionHandlerTestCase
 
-# MULE-2249
-org.mule.test.integration.routing.nested.NestedRouterTestCase
-org.mule.test.integration.providers.jms.NestedRouterTestCase
-
 # MULE-2258: fails on the build server
 org.mule.test.usecases.sync.TcpToFileTestCase
 
