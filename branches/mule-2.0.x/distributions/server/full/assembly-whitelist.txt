@@ -50,7 +50,7 @@ geronimo-jms_1.1_spec-1.1
 geronimo-jta_1.0.1B_spec-1.1
 geronimo-servlet_2.4_spec-1.1
 geronimo-ws-metadata_2.0_spec-1.1.1
-groovy-all-1.5.1
+groovy-all-1.5.2
 groovy-engine-1.1-jdk14
 hibernate-3.2.2.ga
 javassist-3.6.ga
@@ -70,6 +70,7 @@ junit-3.8.2
 log4j-1.2.14
 mockobjects-core-0.09
 mule-core
+mule-core-tests
 mule-example-echo
 mule-example-errorhandler
 mule-example-hello

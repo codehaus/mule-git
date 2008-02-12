@@ -46,7 +46,7 @@ org.mule.test.integration.transport.jdbc.JdbcTransactionalXaFunctionalTestCase
 # MULE-2747
 org.mule.test.integration.transport.xmpp.XmppFunctionalTestCase
 
-org.mule.test.integration.EventMetaDataPropagationTestCase
+#org.mule.test.integration.EventMetaDataPropagationTestCase
 org.mule.test.integration.message.AttachmentsPropagationTestCase
 org.mule.test.integration.transaction.XATransactionsWithSpringDAO
 # Convert transacted endpoint to XML config
@@ -117,4 +117,5 @@ org.mule.test.integration.spring.events.SpringEventsJmsExampleTestCase
 # How to configure <persistence-strategy className="org.mule.util.queue.FilePersistenceStrategy"/> ?
 org.mule.test.integration.persistence.FilePersistenceTestCase
 
-
+# Pending (acooke)
+org.mule.context.notification.ServerNotificationManagerTestCase

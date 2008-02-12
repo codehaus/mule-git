@@ -62,6 +62,8 @@ public class ScriptConfigurationBuilder extends AbstractResourceConfigurationBui
 
     protected void doConfigure(MuleContext muleContext) throws Exception
     {
+        this.muleContext = muleContext;
+        
         for (int i = 0; i < configResources.length; i++)
         {
             ConfigResource configResource = configResources[i];
