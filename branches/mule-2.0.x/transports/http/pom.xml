@@ -36,7 +36,7 @@
                                 </Import-Package>
                                 <Export-Package>org.mule.transport.http.*</Export-Package>
                                 <Private-Package>
-                                    org.mule.modules.osgi, org.apache.commons.codec.*,
+                                    org.mule.module.osgi, org.apache.commons.codec.*,
                                     org.apache.commons.httpclient.*, org.mortbay.http.*, org.mortbay.jetty.*,
                                     org.mortbay.log, org.mortbay.xml, org.mortbay.util
                                 </Private-Package>

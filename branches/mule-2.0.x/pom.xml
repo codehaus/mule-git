@@ -878,7 +878,7 @@
                         </group>
                         <group>
                             <title>Modules (not part of the Mule core)</title>
-                            <packages>org.mule.extras.*:org.mule.components.*</packages>
+                            <packages>org.mule.module.*:org.mule.components.*</packages>
                         </group>
                         <group>
                             <title>Transports</title>
@@ -894,7 +894,7 @@
                         </group>
                         <group>
                             <title>Examples</title>
-                            <packages>org.mule.samples.*:org.mule.examples.*</packages>
+                            <packages>org.mule.example.*</packages>
                         </group>
                     </groups>
                 </configuration>

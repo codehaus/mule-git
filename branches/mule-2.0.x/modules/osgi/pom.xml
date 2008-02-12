@@ -27,8 +27,8 @@
                             *
                         </Import-Package>-->
                         <Export-Package>
-                            org.mule.modules.osgi,
-                            org.mule.modules.osgi.util
+                            org.mule.module.osgi,
+                            org.mule.module.osgi.util
                         </Export-Package>
                     </instructions>
                 </configuration>

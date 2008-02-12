@@ -49,7 +49,7 @@ public abstract class AbstractMessageRequester extends AbstractConnectable imple
             if (result != null && connector.isEnableMessageEvents())
             {
                 connector.fireNotification(new MessageNotification(result, endpoint, null,
-                    MessageNotification.MESSAGE_RECEIVED));
+                    MessageNotification.MESSAGE_REQUESTED));
             }
             return result;
         }
