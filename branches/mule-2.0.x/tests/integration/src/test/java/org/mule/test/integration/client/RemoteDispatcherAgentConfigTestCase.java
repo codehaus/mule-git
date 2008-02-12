@@ -9,6 +9,7 @@
  */
 package org.mule.test.integration.client;
 
+import org.mule.module.client.remoting.RemoteDispatcherAgent;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.transformer.wire.TransformerPairWireFormat;
 

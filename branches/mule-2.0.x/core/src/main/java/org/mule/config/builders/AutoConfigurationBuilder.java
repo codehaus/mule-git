@@ -71,7 +71,7 @@ public class AutoConfigurationBuilder extends AbstractResourceConfigurationBuild
         for (int i = 0; i < configResources.length; i++)
         {
             String configExtension = StringUtils.substringAfterLast(
-                ((ConfigResource)configResources[i]).toString(), ".");
+                ((ConfigResource)configResources[i]).getUrl().getFile(), ".");
             List configs = (List) configsMap.get(configExtension);
             if (configs == null)
             {
@@ -100,7 +100,7 @@ public class AutoConfigurationBuilder extends AbstractResourceConfigurationBuild
                     throw new ConfigurationException(CoreMessages.configurationBuilderNoMatching(createConfigResourcesString()));
                 }
 
-                String[] constructorArg = new String[configs.size()];
+                ConfigResource[] constructorArg = new ConfigResource[configs.size()];
                 System.arraycopy(configs.toArray(), 0, constructorArg, 0, configs.size());
                 ConfigurationBuilder cb = (ConfigurationBuilder) ClassUtils.instanciateClass(className, new Object[]{constructorArg});
                 cb.configure(muleContext);
