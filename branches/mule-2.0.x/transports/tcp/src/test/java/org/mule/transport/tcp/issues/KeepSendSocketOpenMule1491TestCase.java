@@ -108,26 +108,19 @@ public class KeepSendSocketOpenMule1491TestCase extends FunctionalTestCase
                     Socket socket = server.accept();
                     logger.debug("have connection " + count);
                     count.incrementAndGet();
-                    try
+                    InputStream stream = new BufferedInputStream(socket.getInputStream());
+                    // repeat for as many messages as we receive until null received
+                    while (true)
                     {
-                        InputStream stream = new BufferedInputStream(socket.getInputStream());
-                        // repeat for as many messages as we receive until null received
-                        while (true)
+                        Object read = protocol.read(stream);
+                        if (null == read)
                         {
-                            Object read = protocol.read(stream);
-                            if (null == read)
-                            {
-                                break;
-                            }
-                            String msg = new String((byte[]) read);
-                            logger.debug("read: " + msg);
-                            logger.debug("writing reply");
-                            protocol.write(socket.getOutputStream(), "ok");
+                            break;
                         }
-                    }
-                    catch (Exception e)
-                    {
-                        logger.error(e.getMessage(), e);
+                        String msg = new String((byte[]) read);
+                        logger.debug("read: " + msg);
+                        logger.debug("writing reply");
+                        protocol.write(socket.getOutputStream(), "ok");
                     }
                 }
             }
