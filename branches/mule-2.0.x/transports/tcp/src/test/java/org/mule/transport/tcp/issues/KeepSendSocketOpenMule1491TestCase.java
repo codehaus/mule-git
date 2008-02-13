@@ -103,8 +103,6 @@ public class KeepSendSocketOpenMule1491TestCase extends FunctionalTestCase
             try
             {
                 LengthProtocol protocol = new LengthProtocol();
-                // repeat for as many connections as we receive until the close()
-                // method here causes the accept to thrown a exception
                 while (true)
                 {
                     Socket socket = server.accept();
