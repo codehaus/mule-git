@@ -16,6 +16,7 @@ import org.mule.tck.FunctionalTestCase;
 import org.mule.transport.tcp.protocols.LengthProtocol;
 
 import java.io.BufferedInputStream;
+import java.io.InputStream;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -75,7 +76,7 @@ public class KeepSendSocketOpenMule1491TestCase extends FunctionalTestCase
 
     public void testClose() throws Exception
     {
-        useServer("tcp://localhost:60196?connector=closeConnectorLength", 60196, 3);
+        useServer("tcp://localhost:60196?connector=closeConnectorLength", 60196, 2);
     }
 
     private class SimpleServerSocket implements Runnable
@@ -111,12 +112,16 @@ public class KeepSendSocketOpenMule1491TestCase extends FunctionalTestCase
                     count.incrementAndGet();
                     try
                     {
-                        // repeat for as many messages as we receive before closing
-                        // of the socket by the client causes an exception to exit this loop
+                        InputStream stream = new BufferedInputStream(socket.getInputStream());
+                        // repeat for as many messages as we receive until null received
                         while (true)
                         {
-                            String msg =
-                                    new String((byte[]) protocol.read(new BufferedInputStream(socket.getInputStream())));
+                            Object read = protocol.read(stream);
+                            if (null == read)
+                            {
+                                break;
+                            }
+                            String msg = new String((byte[]) read);
                             logger.debug("read: " + msg);
                             logger.debug("writing reply");
                             protocol.write(socket.getOutputStream(), "ok");
@@ -124,7 +129,7 @@ public class KeepSendSocketOpenMule1491TestCase extends FunctionalTestCase
                     }
                     catch (Exception e)
                     {
-                        logger.debug(e);
+                        logger.error(e.getMessage(), e);
                     }
                 }
             }
