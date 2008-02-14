@@ -17,6 +17,7 @@ import org.mule.api.MuleMessage;
 import org.mule.api.lifecycle.Callable;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.lifecycle.Lifecycle;
+import org.mule.api.lifecycle.LifecycleTransitionResult;
 import org.mule.config.i18n.MessageFactory;
 import org.mule.transport.http.HttpConnector;
 import org.mule.transport.http.HttpConstants;
@@ -129,22 +130,23 @@ public class XFireServiceComponent implements Callable, Lifecycle
 
     }
 
-    public void start() throws MuleException
+    public LifecycleTransitionResult start() throws MuleException
     {
-        // template method
+        return LifecycleTransitionResult.OK;
     }
 
-    public void stop() throws MuleException
+    public LifecycleTransitionResult stop() throws MuleException
     {
-        // template method
+        return LifecycleTransitionResult.OK;
     }
 
-    public void initialise() throws InitialisationException
+    public LifecycleTransitionResult initialise() throws InitialisationException
     {
         if (xfire == null)
         {
             throw new InitialisationException(MessageFactory.createStaticMessage("No XFire instance, this component has not been initialized properly."), this);
         }
+        return LifecycleTransitionResult.OK;
     }
 
     public void dispose()
