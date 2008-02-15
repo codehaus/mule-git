@@ -43,7 +43,7 @@ import org.apache.commons.logging.LogFactory;
 
 public abstract class AbstractEndpointSecurityFilter implements EndpointSecurityFilter, MuleContextAware
 {
-    /** logger used by this class */
+
     protected transient Log logger = LogFactory.getLog(getClass());
 
     protected SecurityManager securityManager;

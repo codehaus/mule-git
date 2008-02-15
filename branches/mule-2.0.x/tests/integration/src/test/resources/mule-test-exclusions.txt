@@ -105,3 +105,6 @@ org.mule.test.integration.spring.events.SpringEventsJmsExampleTestCase
 # MULE-2745
 # How to configure <persistence-strategy className="org.mule.util.queue.FilePersistenceStrategy"/> ?
 org.mule.test.integration.persistence.FilePersistenceTestCase
+
+# MULE-2996
+org.mule.config.spring.VmSchemaValidationTestCase
