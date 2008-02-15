@@ -11,8 +11,8 @@
 package org.mule.transport.soap.xfire;
 
 import org.mule.DefaultMuleMessage;
-import org.mule.api.MuleException;
 import org.mule.api.MuleEventContext;
+import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.lifecycle.Callable;
 import org.mule.api.lifecycle.InitialisationException;
@@ -125,7 +125,7 @@ public class XFireServiceComponent implements Callable, Lifecycle
             
             MuleLocalChannel channel = (MuleLocalChannel)transport.createChannel(eventContext.getEndpointURI()
                 .getFullScheme());
-            return channel.onCall(eventContext);
+            return channel.onCall(eventContext, xfire);
         }
 
     }

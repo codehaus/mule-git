@@ -21,8 +21,8 @@ import org.mule.api.lifecycle.Initialisable;
 import org.mule.api.lifecycle.InitialisationCallback;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.lifecycle.LifecycleException;
-import org.mule.api.lifecycle.LifecycleTransitionResult;
 import org.mule.api.lifecycle.LifecycleLogic;
+import org.mule.api.lifecycle.LifecycleTransitionResult;
 import org.mule.api.model.EntryPointResolver;
 import org.mule.api.model.EntryPointResolverSet;
 import org.mule.api.model.Model;
@@ -58,10 +58,8 @@ import org.mule.util.object.SingletonObjectFactory;
 import java.beans.ExceptionListener;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
 
@@ -153,13 +151,6 @@ public abstract class AbstractService implements Service
      * Indicates whether a service has passed its initial startup state.
      */
     private AtomicBoolean beyondInitialState = new AtomicBoolean(false);
-
-    /**
-     * The properties for the Mule UMO.
-     *
-     * @deprecated MULE-1933 Properties for the underlying service should be set on the ServiceFactory instead.
-     */
-    protected Map properties = new HashMap();
 
     /**
      * For Spring only
@@ -916,16 +907,6 @@ public abstract class AbstractService implements Service
     public void setName(String name)
     {
         this.name = name;
-    }
-
-    public Map getProperties()
-    {
-        return properties;
-    }
-
-    public void setProperties(Map properties)
-    {
-        this.properties = properties;
     }
 
     /**
