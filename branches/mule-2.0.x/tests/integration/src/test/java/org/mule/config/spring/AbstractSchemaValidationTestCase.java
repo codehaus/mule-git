@@ -44,24 +44,6 @@ public abstract class AbstractSchemaValidationTestCase extends AbstractMuleTestC
         schemas.put(name, IOUtils.getResourceAsUrl(location, getClass()).getFile());
     }
 
-    protected String getSchemasAsString()
-    {
-        StringBuffer buffer = new StringBuffer();
-        for (Iterator keys = schemas.keySet().iterator(); keys.hasNext();)
-        {
-            String name = (String) keys.next();
-            String location = (String) schemas.get(name);
-            buffer.append(name);
-            buffer.append(SEPARATOR);
-            buffer.append(location);
-            if (keys.hasNext())
-            {
-                buffer.append(SEPARATOR);
-            }
-        }
-        return buffer.toString();
-    }
-
     protected Source[] getSchemasAsSources() throws IOException
     {
         Source[] sources = new Source[schemas.size()];
