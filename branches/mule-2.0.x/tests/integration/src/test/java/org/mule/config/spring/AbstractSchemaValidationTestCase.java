@@ -41,7 +41,7 @@ public abstract class AbstractSchemaValidationTestCase extends AbstractMuleTestC
 
     protected void addSchema(String name, String location)
     {
-        schemas.put(name, IOUtils.getResourceAsUrl(location, getClass()).getFile());
+        schemas.put(name, location);
     }
 
     protected Source[] getSchemasAsSources() throws IOException
