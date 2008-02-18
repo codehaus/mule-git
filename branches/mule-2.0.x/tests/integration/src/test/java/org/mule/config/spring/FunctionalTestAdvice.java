@@ -11,6 +11,7 @@
 package org.mule.config.spring;
 
 import org.mule.util.concurrent.Latch;
+import org.mule.api.MuleEventContext;
 
 import java.lang.reflect.Method;
 
@@ -21,18 +22,21 @@ public class FunctionalTestAdvice implements MethodBeforeAdvice
 {
 
     private Latch latch = new Latch();
-    private Object[] args;
+    private String message;
 
     public void before(Method method, Object[] args, Object target) throws Throwable
     {
-        this.args = args;
+        if (null != args && args.length == 1 && args[0] instanceof MuleEventContext)
+        {
+            message = ((MuleEventContext) args[0]).getMessageAsString();
+        }
         latch.countDown();
     }
 
-    public Object[] getArgs(long ms) throws InterruptedException
+    public String getMessage(long ms) throws InterruptedException
     {
         latch.await(ms, TimeUnit.MILLISECONDS);
-        return args;
+        return message;
     }
 
 }
