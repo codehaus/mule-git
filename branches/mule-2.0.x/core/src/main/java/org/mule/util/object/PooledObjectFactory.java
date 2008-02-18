@@ -149,10 +149,11 @@ public class PooledObjectFactory extends AbstractObjectFactory implements KeyedP
      */
     public void release(Object object) throws Exception
     {
-        if (object instanceof Identifiable)
-        {
-            pool.returnObject(((Identifiable) object).getId(), object);
-        }
+// TODO HH: fixme
+//        if (object instanceof Identifiable)
+//        {
+//            pool.returnObject(((Identifiable) object).getId(), object);
+//        }
     }
     
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -162,10 +163,11 @@ public class PooledObjectFactory extends AbstractObjectFactory implements KeyedP
     public Object makeObject(Object key) throws Exception
     {
         Object obj = super.getOrCreate();
-        if (obj instanceof Identifiable)
-        {
-            ((Identifiable) obj).setId((String) key);
-        }
+// TODO HH: fixme
+//        if (obj instanceof Identifiable)
+//        {
+//            ((Identifiable) obj).setId((String) key);
+//        }
         return obj;
     }
 
