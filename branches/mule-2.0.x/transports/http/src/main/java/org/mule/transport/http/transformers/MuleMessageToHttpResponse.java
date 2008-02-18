@@ -41,7 +41,7 @@ import org.apache.commons.httpclient.HttpVersion;
  * response.
  */
 
-public class UMOMessageToHttpResponse extends AbstractMessageAwareTransformer
+public class MuleMessageToHttpResponse extends AbstractMessageAwareTransformer
 {
     public static final String CUSTOM_HEADER_PREFIX = "";
 
@@ -49,7 +49,7 @@ public class UMOMessageToHttpResponse extends AbstractMessageAwareTransformer
     private SimpleDateFormat format;
     private String server;
 
-    public UMOMessageToHttpResponse()
+    public MuleMessageToHttpResponse()
     {
         registerSourceType(Object.class);
         setReturnClass(HttpResponse.class);
