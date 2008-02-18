@@ -144,12 +144,6 @@ public class PooledObjectFactory extends AbstractObjectFactory implements KeyedP
         return pool.borrowObject(UUID.getUUID());
     }
 
-    /** {@inheritDoc} */
-    public Object lookup(String id) throws Exception
-    {
-        return pool.borrowObject(id);
-    }
-
     /** 
      * Returns the object instance to the pool.
      */

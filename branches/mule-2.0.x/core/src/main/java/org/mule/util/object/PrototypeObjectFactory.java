@@ -95,19 +95,6 @@ public class PrototypeObjectFactory extends AbstractObjectFactory
         return obj;
     }
 
-    /** {@inheritDoc} */
-    public Object lookup(String id) throws Exception
-    {
-        if (instances != null)
-        {
-            return instances.get(id);
-        }
-        else 
-        {
-            return null;
-        }
-    }
-
     /** 
      * Removes the object instance from the list of active instances.
      */

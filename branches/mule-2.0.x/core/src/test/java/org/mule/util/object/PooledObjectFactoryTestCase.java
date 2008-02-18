@@ -282,37 +282,7 @@ public class PooledObjectFactoryTestCase extends AbstractMuleTestCase
         of.passivateObject(id, obj);
         of.destroyObject(id, obj);
     }
-    
-    public void testLookupObject() throws Exception
-    {
-        PooledObjectFactory of = new PooledObjectFactory(UniqueComponent.class, getDefaultPoolingProfile());
-        of.initialise();
 
-        assertEquals(0, of.getPoolSize());
-
-        Identifiable obj1 = (Identifiable)of.getOrCreate();
-        assertNotNull(obj1);
-        String id1 = obj1.getId();
-        assertNotNull(id1);
-
-        Identifiable obj2 = (Identifiable)of.getOrCreate();
-        assertNotNull(obj2);
-        String id2 = obj2.getId();
-        assertNotNull(id2);
-
-        assertFalse("Service IDs " + id1 + " and " + id2 + " should be different", id1.equals(id2));
-
-        Identifiable obj1A = (Identifiable)of.lookup(id1);
-        assertNotNull(obj1A);
-        assertEquals(id1, obj1A.getId());
-        assertEquals(obj1, obj1A);
-
-        Identifiable obj2A = (Identifiable)of.lookup(id2);
-        assertNotNull(obj2A);
-        assertEquals(id2, obj2A.getId());
-        assertEquals(obj2, obj2A);
-    }    
-    
     private class Borrower extends Thread
     {
         private PooledObjectFactory of;
