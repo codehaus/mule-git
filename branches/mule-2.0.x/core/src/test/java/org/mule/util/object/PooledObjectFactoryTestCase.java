@@ -12,19 +12,48 @@ package org.mule.util.object;
 
 import org.mule.api.service.Service;
 import org.mule.config.PoolingProfile;
-import org.mule.model.seda.SedaService;
 import org.mule.model.seda.SedaModel;
-import org.mule.tck.AbstractMuleTestCase;
+import org.mule.model.seda.SedaService;
 import org.mule.tck.services.UniqueComponent;
 import org.mule.tck.testmodels.fruit.Orange;
 import org.mule.tck.testmodels.fruit.WaterMelon;
 import org.mule.util.ExceptionUtils;
 import org.mule.util.UUID;
 
-public class PooledObjectFactoryTestCase extends AbstractMuleTestCase
+public class PooledObjectFactoryTestCase extends AbstractObjectFactoryTestCase
 {
     public static final byte MAX_ACTIVE = 3;
     public static final long MAX_WAIT = 1500;
+
+    // @Override
+    public void testInitialise()
+    {
+        // TODO HH: auto-generated method stub
+    }
+
+    // @Override
+    public void testDispose()
+    {
+        // TODO HH: auto-generated method stub
+    }
+
+    // @Override
+    public void testGet()
+    {
+        // TODO HH: auto-generated method stub
+    }
+
+    // @Override
+    public void testGetObjectClass()
+    {
+        // TODO HH: auto-generated method stub
+    }
+
+    // @Override
+    public void testRelease()
+    {
+        // TODO HH: auto-generated method stub 
+    }
 
     protected PoolingProfile getDefaultPoolingProfile()
     {
@@ -330,4 +359,5 @@ public class PooledObjectFactoryTestCase extends AbstractMuleTestCase
         }
 
     }
+
 }
