@@ -34,14 +34,14 @@
             </outbound>
         </custom-service>
 
-        <custom-service name="TestServer">
+        <service name="TestServer">
             <inbound>
                 <inbound-endpoint address="http://localhost:60206" remoteSync="true" connector-ref="HttpConnector"/>
             </inbound>
             <component>
                 <singleton-object class="org.mule.transport.http.functional.ETagComponent"/>
             </component>
-        </custom-service>
+        </service>
 
     </model>
 
