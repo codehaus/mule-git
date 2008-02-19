@@ -20,6 +20,13 @@ import org.w3c.dom.Element;
 public class ServiceDefinitionParser extends OrphanDefinitionParser
 {
 
+    // for custom services
+    public ServiceDefinitionParser()
+    {
+        super(true);
+        registerPreProcessor(new ProvideDefaultName("service"));
+    }
+
     public ServiceDefinitionParser(Class clazz)
     {
         super(clazz, true);

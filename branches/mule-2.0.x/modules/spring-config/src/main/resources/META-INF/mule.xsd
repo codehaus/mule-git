@@ -992,7 +992,7 @@
     <xsd:element name="abstract-service" abstract="true" type="abstractServiceType">
         <xsd:annotation>
             <xsd:documentation>
-                Abstract base for an service element.
+                Abstract base for a service element.
                 This allows various service implementations to be used.
             </xsd:documentation>
         </xsd:annotation>
@@ -1009,21 +1009,47 @@
 
     <xsd:complexType name="baseServiceType">
         <xsd:annotation>
-            <xsd:documentation>Base support for a model-based wrapper around the POJO service (SEDA, Streaming, etc.)
+            <xsd:documentation>
+                Base support for a model-based wrapper around the POJO service (SEDA, Streaming, etc.)
             </xsd:documentation>
         </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="abstractServiceType">
                 <xsd:sequence>
-                    <xsd:element name="inbound" type="inboundCollectionType" minOccurs="0"/>
+                    <xsd:element name="inbound" type="inboundCollectionType" minOccurs="0">
+                        <xsd:annotation>
+                            <xsd:documentation>
+                                The elements within "inbound" describe how messages enter the service.
+                            </xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
                     <!-- minOccurs="0" to allow for <forwarding-router/> and/or default component -->
                     <xsd:element ref="abstract-component" minOccurs="0"/>
-                    <xsd:element name="outbound" type="outboundCollectionType" minOccurs="0"/>
-                    <xsd:element name="async-reply" type="asyncReplyCollectionType" minOccurs="0"/>
+                    <xsd:element name="outbound" type="outboundCollectionType" minOccurs="0">
+                        <xsd:annotation>
+                            <xsd:documentation>
+                                The elements within "outbound" describe how messages leave the service.
+                            </xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element name="async-reply" type="asyncReplyCollectionType" minOccurs="0">
+                        <xsd:annotation>
+                            <xsd:documentation>
+                                The elements within "async-reply" describe how asynchronous replies are handled.
+                            </xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
                     <xsd:element ref="abstract-exception-strategy" minOccurs="0"/>
                 </xsd:sequence>
-                <xsd:attribute name="class" type="substitutableClass"/>
                 <xsd:attribute name="initialState" default="started">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                            The initial state of the service.
+                            Usually a service is started automatically, but this attribute can block any
+                            initial startup ("stopped") or stop the service immediately after initial
+                            startup ("paused").
+                        </xsd:documentation>
+                    </xsd:annotation>
                     <xsd:simpleType>
                         <xsd:restriction base="xsd:NMTOKEN">
                             <xsd:enumeration value="started"/>
@@ -1036,7 +1062,14 @@
         </xsd:complexContent>
     </xsd:complexType>
 
-    <xsd:element name="abstract-exception-strategy" abstract="true" type="abstractExceptionStrategyType"/>
+    <xsd:element name="abstract-exception-strategy" abstract="true" type="abstractExceptionStrategyType">
+        <xsd:annotation>
+            <xsd:documentation>
+                Abstract base for an exception strategy element.
+                This allows various exception strategy implementations to be used.
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
     <xsd:complexType name="abstractExceptionStrategyType"/>
 
     <xsd:complexType name="asyncReplyCollectionType">
@@ -1045,20 +1078,34 @@
             <xsd:element ref="abstract-async-reply-router" minOccurs="0" maxOccurs="unbounded"/>
             <xsd:element ref="abstract-transformer" minOccurs="0" maxOccurs="unbounded"/>
         </xsd:sequence>
-        <xsd:attribute name="transformer-refs" type="xsd:NMTOKENS"/>
-        <xsd:attribute name="timeout" type="xsd:string"/>
+        <xsd:attribute name="timeout" type="xsd:int">
+            <xsd:annotation>
+                <xsd:documentation>
+                    The timeout (ms) to wait for a reply.
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
     </xsd:complexType>
 
-    <xsd:element name="abstract-async-reply-router" abstract="true" type="abstractAsyncReplyRouterType"/>
+    <xsd:element name="abstract-async-reply-router" abstract="true" type="abstractAsyncReplyRouterType">
+        <xsd:annotation>
+            <xsd:documentation>
+                Abstract base for an async reply router element.
+                This allows various async reply router implementations to be used.
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
     <xsd:complexType name="abstractAsyncReplyRouterType"/>
 
-    <xsd:complexType name="defaultServiceType">
-        <xsd:complexContent>
-            <xsd:extension base="sedaServiceType"/>
-        </xsd:complexContent>
-    </xsd:complexType>
-
-    <xsd:element name="service" type="sedaServiceType" substitutionGroup="abstract-service"/>
+    <xsd:element name="service" type="sedaServiceType" substitutionGroup="abstract-service">
+        <xsd:annotation>
+            <xsd:documentation>
+                The standard SEDA service.
+                A service describes how to receive messages, deliver them to 
+                a component, and handle the results (if any).
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
     <xsd:complexType name="sedaServiceType">
         <xsd:complexContent>
             <xsd:extension base="baseServiceType">
@@ -1066,12 +1113,47 @@
                     <xsd:element ref="abstract-component-threading-profile" minOccurs="0"/>
                     <xsd:element ref="abstract-queue-profile" minOccurs="0"/>
                 </xsd:sequence>
-                <xsd:attribute name="queueTimeout" type="xsd:integer"/>
+                <xsd:attribute name="queueTimeout" type="xsd:integer">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                            The timeout used when taking messages from the SEDA queue.
+                        </xsd:documentation>
+                    </xsd:annotation>
+                </xsd:attribute>
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
 
-    <xsd:element name="abstract-component-threading-profile" abstract="true" type="abstractComponentThreadingProfileType"/>
+    <xsd:element name="custom-service" type="customServiceType" substitutionGroup="abstract-service">
+        <xsd:annotation>
+            <xsd:documentation>
+                A user-implemeted service
+                (typically used only in testing).
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="customServiceType">
+        <xsd:complexContent>
+            <xsd:extension base="baseServiceType">
+                <xsd:attribute name="class" type="substitutableClass" use="required">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                            The class to use for the service.
+                        </xsd:documentation>
+                    </xsd:annotation>
+                </xsd:attribute>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:element name="abstract-component-threading-profile" abstract="true" type="abstractComponentThreadingProfileType">
+        <xsd:annotation>
+            <xsd:documentation>
+                Abstract base for component threading profile element.
+                This allows various component threading profile implementations to be used.
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
     <xsd:complexType name="abstractComponentThreadingProfileType"/>
 
     <!--==============================================================-->

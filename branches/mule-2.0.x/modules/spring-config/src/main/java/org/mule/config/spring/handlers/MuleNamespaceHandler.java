@@ -259,6 +259,7 @@ public class MuleNamespaceHandler extends AbstractMuleNamespaceHandler
         // Services
         registerBeanDefinitionParser("seda-service", new ServiceDefinitionParser(SedaService.class));
         registerBeanDefinitionParser("service", new ServiceDefinitionParser(SedaService.class));
+        registerBeanDefinitionParser("custom-service", new ServiceDefinitionParser());
 
         // Pojo Components
         registerBeanDefinitionParser("component", new ComponentDefinitionParser());
