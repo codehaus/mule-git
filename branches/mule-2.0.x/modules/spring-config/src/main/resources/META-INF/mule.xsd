@@ -53,9 +53,9 @@
     <xsd:group name="rootElements">
         <xsd:choice>
             <xsd:element name="environment-property" type="environmentPropertyType"/>
-            <xsd:element name="configuration" type="managementContextType"/>
+            <xsd:element name="configuration" type="configurationType"/>
             <xsd:element name="notifications" type="notificationManagerType"/>
-            <xsd:element ref="description"/>
+            <xsd:element name="description" type="descriptionType"/>
             <xsd:element ref="abstract-extension"/>
             <xsd:element ref="abstract-security-manager"/>
             <xsd:element ref="abstract-transaction-manager"/>
@@ -67,15 +67,13 @@
         </xsd:choice>
     </xsd:group>
 
-    <xsd:element name="description" type="descriptionType">
+    <xsd:complexType name="descriptionType">
         <xsd:annotation>
             <xsd:documentation>
                 This can hold any kind of documentation consistent with the overall XML format).
                 It is intended to be "human readable" only and is not used by the system.
             </xsd:documentation>
         </xsd:annotation>
-    </xsd:element>
-    <xsd:complexType name="descriptionType">
         <xsd:complexContent mixed="true">
             <xsd:extension base="xsd:anyType"/>
         </xsd:complexContent>
@@ -310,49 +308,80 @@
             <xsd:element ref="abstract-catch-all-strategy" minOccurs="0"/>
             <xsd:element ref="abstract-outbound-router" maxOccurs="unbounded"/>
         </xsd:sequence>
-        <xsd:attribute name="matchAll" type="substitutableBoolean" default="false"/>
+        <xsd:attribute name="matchAll" type="substitutableBoolean" default="false">
+            <xsd:annotation>
+                <xsd:documentation>
+                    If true, the output message will be sent to all routers, otherwise only
+                    the first matching router is used.
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
     </xsd:complexType>
 
-    <xsd:element name="abstract-outbound-router" abstract="true" type="abstractOutboundRouterType"/>
+    <xsd:element name="abstract-outbound-router" abstract="true" type="abstractOutboundRouterType">
+        <xsd:annotation>
+            <xsd:documentation>
+                Abstract base for outbound router elements.
+                Other transports and modules may extend this if they need to add
+                outbound router elements to the configuration.
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
     <xsd:complexType name="abstractOutboundRouterType"/>
 
-    <xsd:complexType name="asyncReplyCollectionType">
-        <xsd:sequence>
-            <xsd:element ref="abstract-inbound-endpoint" minOccurs="0" maxOccurs="unbounded"/>
-            <xsd:element ref="abstract-async-reply-router" minOccurs="0" maxOccurs="unbounded"/>
-            <xsd:element ref="abstract-transformer" minOccurs="0" maxOccurs="unbounded"/>
-        </xsd:sequence>
-        <xsd:attribute name="transformer-refs" type="xsd:NMTOKENS"/>
-        <xsd:attribute name="timeout" type="xsd:string"/>
-    </xsd:complexType>
-
-    <xsd:element name="abstract-async-reply-router" abstract="true" type="abstractAsyncReplyRouterType"/>
-    <xsd:complexType name="abstractAsyncReplyRouterType"/>
-
-    <xsd:element name="abstract-component-threading-profile" abstract="true" type="abstractComponentThreadingProfileType"/>
-    <xsd:complexType name="abstractComponentThreadingProfileType"/>
-
-    <xsd:element name="abstract-exception-strategy" abstract="true" type="abstractExceptionStrategyType"/>
-    <xsd:complexType name="abstractExceptionStrategyType"/>
-
-    <xsd:element name="abstract-transaction-manager" abstract="true" type="abstractTransactionManagerType"/>
+    <xsd:element name="abstract-transaction-manager" abstract="true" type="abstractTransactionManagerType">
+        <xsd:annotation>
+            <xsd:documentation>
+                Abstract base for transaction manager elements.
+                Other transports and modules may extend this if they need to add
+                transaction manager elements to the configuration.
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
     <xsd:complexType name="abstractTransactionManagerType"/>
 
-    <xsd:complexType name="abstractAgentType">
-        <xsd:complexContent>
-            <xsd:extension base="abstractExtensionType">
-                <xsd:attribute name="name" type="substitutableName" use="required"/>
-            </xsd:extension>
-        </xsd:complexContent>
-    </xsd:complexType>
-
-    <xsd:complexType name="managementContextType">
+    <xsd:complexType name="configurationType">
+        <xsd:annotation>
+            <xsd:documentation>
+                Defaults and general settings for the entire Mule system.
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:sequence>
-            <xsd:element name="default-threading-profile" type="threadingProfileType" minOccurs="0"/>
-            <xsd:element name="default-dispatcher-threading-profile" type="threadingProfileType" minOccurs="0"/>
-            <xsd:element name="default-receiver-threading-profile" type="threadingProfileType" minOccurs="0"/>
-            <xsd:element name="default-component-threading-profile" type="threadingProfileType" minOccurs="0"/>
-            <xsd:element ref="abstract-storage" minOccurs="0"/>
+            <xsd:element name="default-threading-profile" type="threadingProfileType" minOccurs="0">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        The default threading profile,
+                        used by components and by endpoints for dispatching and receiving
+                        if no more specific configuration is given.
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="default-dispatcher-threading-profile" type="threadingProfileType" minOccurs="0">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        The default dispatching threading profile, modifies the default-threading-profile
+                        values and is used by endpoints for dispatching
+                        if no more specific configuration is given.
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="default-receiver-threading-profile" type="threadingProfileType" minOccurs="0">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        The default receiving threading profile, modifies the default-threading-profile
+                        values and is used by endpoints for receiving
+                        if no more specific configuration is given.
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="default-component-threading-profile" type="threadingProfileType" minOccurs="0">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        The default component threading profile, modifies the default-threading-profile
+                        values and is used if no more specific configuration is given.
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
             <xsd:element name="default-connection-strategy" type="connectionStrategyType" minOccurs="0"/>
         </xsd:sequence>
         <xsd:attribute name="defaultSynchronousEndpoints" type="substitutableBoolean" default="false"/>
@@ -533,9 +562,6 @@
         <xsd:attribute name="subscription" type="xsd:string"/>
     </xsd:complexType>
 
-    <xsd:element name="abstract-storage" abstract="true" type="abstractStorageType"/>
-    <xsd:complexType name="abstractStorageType"/>
-
     <xsd:element name="abstract-transaction" abstract="true" type="abstractTransactionType"/>
     <xsd:complexType name="abstractTransactionType">
         <xsd:attribute name="action">
@@ -600,6 +626,22 @@
         </xsd:complexContent>
     </xsd:complexType>
 
+    <xsd:element name="abstract-exception-strategy" abstract="true" type="abstractExceptionStrategyType"/>
+    <xsd:complexType name="abstractExceptionStrategyType"/>
+
+    <xsd:complexType name="asyncReplyCollectionType">
+        <xsd:sequence>
+            <xsd:element ref="abstract-inbound-endpoint" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:element ref="abstract-async-reply-router" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:element ref="abstract-transformer" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+        <xsd:attribute name="transformer-refs" type="xsd:NMTOKENS"/>
+        <xsd:attribute name="timeout" type="xsd:string"/>
+    </xsd:complexType>
+
+    <xsd:element name="abstract-async-reply-router" abstract="true" type="abstractAsyncReplyRouterType"/>
+    <xsd:complexType name="abstractAsyncReplyRouterType"/>
+
     <xsd:complexType name="defaultServiceType">
         <xsd:complexContent>
             <xsd:extension base="sedaServiceType"/>
@@ -618,6 +660,9 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
+
+    <xsd:element name="abstract-component-threading-profile" abstract="true" type="abstractComponentThreadingProfileType"/>
+    <xsd:complexType name="abstractComponentThreadingProfileType"/>
 
     <!--==============================================================-->
     <!-- Components                                              -->
@@ -1525,17 +1570,8 @@
         </xsd:complexContent>
     </xsd:complexType>
 
-    <xsd:element name="idempotent-receiver-router" type="idempotentReceiverRouterType"
+    <xsd:element name="idempotent-receiver-router" type="filteredInboundRouterType"
                  substitutionGroup="abstract-inbound-router"/>
-    <xsd:complexType name="idempotentReceiverRouterType">
-        <xsd:complexContent>
-            <xsd:extension base="filteredInboundRouterType">
-                <xsd:sequence>
-                    <xsd:element ref="abstract-storage" minOccurs="0"/>
-                </xsd:sequence>
-            </xsd:extension>
-        </xsd:complexContent>
-    </xsd:complexType>
 
     <xsd:element name="wire-tap-router" type="wireTapRouterType" substitutionGroup="abstract-inbound-router"/>
     <xsd:complexType name="wireTapRouterType">
