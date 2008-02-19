@@ -14,13 +14,14 @@ import org.mule.api.service.Service;
 import org.mule.config.PoolingProfile;
 import org.mule.model.seda.SedaModel;
 import org.mule.model.seda.SedaService;
+import org.mule.tck.AbstractMuleTestCase;
 import org.mule.tck.services.UniqueComponent;
 import org.mule.tck.testmodels.fruit.Orange;
 import org.mule.tck.testmodels.fruit.WaterMelon;
 import org.mule.util.ExceptionUtils;
 import org.mule.util.UUID;
 
-public class PooledObjectFactoryTestCase extends AbstractObjectFactoryTestCase
+public class PooledObjectFactoryTestCase extends AbstractMuleTestCase
 {
     public static final byte MAX_ACTIVE = 3;
     public static final long MAX_WAIT = 1500;
@@ -52,7 +53,7 @@ public class PooledObjectFactoryTestCase extends AbstractObjectFactoryTestCase
     // @Override
     public void testRelease()
     {
-        // TODO HH: auto-generated method stub 
+        // TODO HH: auto-generated method stub
     }
 
     protected PoolingProfile getDefaultPoolingProfile()
@@ -70,8 +71,8 @@ public class PooledObjectFactoryTestCase extends AbstractObjectFactoryTestCase
         PoolingProfile pp = getDefaultPoolingProfile();
         pp.setExhaustedAction(PoolingProfile.WHEN_EXHAUSTED_FAIL);
         PooledObjectFactory of = new PooledObjectFactory(Orange.class, pp);
-        of.initialise();        
-        
+        of.initialise();
+
         assertEquals(0, of.getPoolSize());
 
         Object borrowed = of.getOrCreate();
@@ -93,7 +94,7 @@ public class PooledObjectFactoryTestCase extends AbstractObjectFactoryTestCase
         PoolingProfile pp = getDefaultPoolingProfile();
         pp.setExhaustedAction(PoolingProfile.WHEN_EXHAUSTED_WAIT);
         PooledObjectFactory of = new PooledObjectFactory(Orange.class, pp);
-        of.initialise();        
+        of.initialise();
 
         Object borrowed = null;
 
@@ -120,7 +121,7 @@ public class PooledObjectFactoryTestCase extends AbstractObjectFactoryTestCase
         PoolingProfile pp = getDefaultPoolingProfile();
         pp.setExhaustedAction(PoolingProfile.WHEN_EXHAUSTED_WAIT);
         PooledObjectFactory of = new PooledObjectFactory(Orange.class, pp);
-        of.initialise();        
+        of.initialise();
 
         Object borrowed = null;
 
@@ -156,8 +157,8 @@ public class PooledObjectFactoryTestCase extends AbstractObjectFactoryTestCase
         PoolingProfile pp = getDefaultPoolingProfile();
         pp.setExhaustedAction(PoolingProfile.WHEN_EXHAUSTED_WAIT);
         PooledObjectFactory of = new PooledObjectFactory(Orange.class, pp);
-        of.initialise();        
-        
+        of.initialise();
+
         Object borrowed = null;
 
         assertEquals(0, of.getPoolSize());
@@ -197,13 +198,13 @@ public class PooledObjectFactoryTestCase extends AbstractObjectFactoryTestCase
         PoolingProfile pp = getDefaultPoolingProfile();
         pp.setExhaustedAction(PoolingProfile.WHEN_EXHAUSTED_GROW);
         PooledObjectFactory of = new PooledObjectFactory(Orange.class, pp);
-        of.initialise();        
+        of.initialise();
 
         Object borrowed = of.getOrCreate();
         borrowed = of.getOrCreate();
         borrowed = of.getOrCreate();
         assertEquals(3, of.getPoolSize());
-        //assertEquals(3, pool.getMaxSize());
+        // assertEquals(3, pool.getMaxSize());
 
         // Should now grow
         borrowed = of.getOrCreate();
@@ -217,7 +218,7 @@ public class PooledObjectFactoryTestCase extends AbstractObjectFactoryTestCase
         PoolingProfile pp = getDefaultPoolingProfile();
         pp.setExhaustedAction(PoolingProfile.WHEN_EXHAUSTED_FAIL);
         PooledObjectFactory of = new PooledObjectFactory(Orange.class, pp);
-        of.initialise();        
+        of.initialise();
 
         Object borrowed = of.getOrCreate();
         assertEquals(1, of.getPoolSize());
@@ -236,8 +237,8 @@ public class PooledObjectFactoryTestCase extends AbstractObjectFactoryTestCase
         PoolingProfile pp = getDefaultPoolingProfile();
         pp.setExhaustedAction(PoolingProfile.WHEN_EXHAUSTED_FAIL);
         PooledObjectFactory of = new PooledObjectFactory(UniqueComponent.class, pp);
-        of.initialise();        
-        
+        of.initialise();
+
         assertEquals(0, of.getPoolSize());
 
         Object obj;
@@ -267,23 +268,23 @@ public class PooledObjectFactoryTestCase extends AbstractObjectFactoryTestCase
     public void testOnRemoveCallsDispose() throws Exception
     {
         PooledObjectFactory of = new PooledObjectFactory(WaterMelon.class, getDefaultPoolingProfile());
-        of.initialise();        
+        of.initialise();
 
         WaterMelon wm = (WaterMelon) of.getOrCreate();
         of.release(wm);
         assertEquals("disposed", wm.getState());
     }
-    
+
     public void testWithinComponent() throws Exception
     {
         SedaModel model = new SedaModel();
         model.setMuleContext(muleContext);
         muleContext.applyLifecycle(model);
-        
+
         Service c = new SedaService();
         c.setName("test");
         PooledObjectFactory of = new PooledObjectFactory(Orange.class, getDefaultPoolingProfile());
-        of.initialise();        
+        of.initialise();
         c.setServiceFactory(of);
         c.setModel(model);
 
@@ -301,7 +302,7 @@ public class PooledObjectFactoryTestCase extends AbstractObjectFactoryTestCase
     public void testLifeCycleMethods() throws Exception
     {
         PooledObjectFactory of = new PooledObjectFactory(UniqueComponent.class, getDefaultPoolingProfile());
-        of.initialise();        
+        of.initialise();
 
         String id = UUID.getUUID();
         Object obj = of.makeObject(id);
@@ -334,7 +335,7 @@ public class PooledObjectFactoryTestCase extends AbstractObjectFactoryTestCase
 
         /*
          * (non-Javadoc)
-         *
+         * 
          * @see java.lang.Runnable#run()
          */
         public void run()
