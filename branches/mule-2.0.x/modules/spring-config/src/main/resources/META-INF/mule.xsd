@@ -675,7 +675,6 @@
             <xsd:annotation>
                 <xsd:documentation>
                     The name used to identify this model.
-                    If only a single model is used, then this is optional (the default value is "main").
                 </xsd:documentation>
             </xsd:annotation>
         </xsd:attribute>
@@ -990,9 +989,22 @@
     <!--  Services                                                    -->
     <!--==============================================================-->
 
-    <xsd:element name="abstract-service" abstract="true" type="abstractServiceType"/>
+    <xsd:element name="abstract-service" abstract="true" type="abstractServiceType">
+        <xsd:annotation>
+            <xsd:documentation>
+                Abstract base for an service element.
+                This allows various service implementations to be used.
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
     <xsd:complexType name="abstractServiceType">
-        <xsd:attribute name="name" type="nonBlankString" use="required"/>
+        <xsd:attribute name="name" type="nonBlankString">
+            <xsd:annotation>
+                <xsd:documentation>
+                    The name used to identify this service.
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
     </xsd:complexType>
 
     <xsd:complexType name="baseServiceType">
