@@ -52,10 +52,39 @@
 
     <xsd:group name="rootElements">
         <xsd:choice>
-            <xsd:element name="environment-property" type="environmentPropertyType"/>
-            <xsd:element name="configuration" type="configurationType"/>
-            <xsd:element name="notifications" type="notificationManagerType"/>
-            <xsd:element name="description" type="descriptionType"/>
+            <xsd:element name="environment-property" type="environmentPropertyType">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        An environment property is a named string.
+                        It can be used inserted in most attribute values using the ${...} syntax.
+                        So the attribute value "${foo}" would be replaced by the value associated with
+                        the property named "foo".
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="configuration" type="configurationType">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        Defaults and general settings for the entire Mule system.
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="notifications" type="notificationManagerType">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        Register listeners for notifications
+                        and associate interfaces with particular events.
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="description" type="descriptionType">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        This can hold any kind of documentation consistent with the overall XML format).
+                        It is intended to be "human readable" only and is not used by the system.
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
             <xsd:element ref="abstract-extension"/>
             <xsd:element ref="abstract-security-manager"/>
             <xsd:element ref="abstract-transaction-manager"/>
@@ -68,12 +97,6 @@
     </xsd:group>
 
     <xsd:complexType name="descriptionType">
-        <xsd:annotation>
-            <xsd:documentation>
-                This can hold any kind of documentation consistent with the overall XML format).
-                It is intended to be "human readable" only and is not used by the system.
-            </xsd:documentation>
-        </xsd:annotation>
         <xsd:complexContent mixed="true">
             <xsd:extension base="xsd:anyType"/>
         </xsd:complexContent>
@@ -82,6 +105,19 @@
     <!--==============================================================-->
     <!--   Abstract Types                                             -->
     <!--==============================================================-->
+
+    <xsd:complexType name="abstractAgentType">
+        <xsd:annotation>
+            <xsd:documentation>
+                Abstract base for agents.  Not used in core, but common to several modules.
+            </xsd:documentation>
+        </xsd:annotation>
+         <xsd:complexContent>
+            <xsd:extension base="abstractExtensionType">
+                <xsd:attribute name="name" type="substitutableName" use="required"/>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
 
     <xsd:element name="abstract-extension" abstract="true" type="abstractExtensionType">
         <xsd:annotation>
@@ -219,14 +255,6 @@
     </xsd:complexType>
 
     <xsd:complexType name="environmentPropertyType">
-        <xsd:annotation>
-            <xsd:documentation>
-                An environment property is a named string.
-                It can be used inserted in most attribute values using the ${...} syntax.
-                So the attribute value "${foo}" would be replaced by the value associated with
-                the property named "foo".
-            </xsd:documentation>
-        </xsd:annotation>
         <xsd:attribute name="name" type="substitutableName" use="required">
             <xsd:annotation>
                 <xsd:documentation>
@@ -341,11 +369,6 @@
     <xsd:complexType name="abstractTransactionManagerType"/>
 
     <xsd:complexType name="configurationType">
-        <xsd:annotation>
-            <xsd:documentation>
-                Defaults and general settings for the entire Mule system.
-            </xsd:documentation>
-        </xsd:annotation>
         <xsd:sequence>
             <xsd:element name="default-threading-profile" type="threadingProfileType" minOccurs="0">
                 <xsd:annotation>
@@ -382,17 +405,72 @@
                     </xsd:documentation>
                 </xsd:annotation>
             </xsd:element>
-            <xsd:element name="default-connection-strategy" type="connectionStrategyType" minOccurs="0"/>
+            <xsd:element name="default-connection-strategy" type="connectionStrategyType" minOccurs="0">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        The default connection strategy, used if no more specific configuration is given.
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
         </xsd:sequence>
-        <xsd:attribute name="defaultSynchronousEndpoints" type="substitutableBoolean" default="false"/>
-        <xsd:attribute name="workingDirectory" type="xsd:string"/>
-        <xsd:attribute name="defaultSynchronousEventTimeout" type="xsd:string" default="3000"/>
-        <xsd:attribute name="defaultEncoding" type="xsd:string" default="UTF-8"/>
-        <xsd:attribute name="defaultTransactionTimeout" type="xsd:string" default="5000"/>
-        <xsd:attribute name="defaultRemoteSync" type="substitutableBoolean" default="false"/>
-        <xsd:attribute name="serverId" type="nonBlankString"/>
-        <xsd:attribute name="clusterId" type="xsd:string"/>
-        <xsd:attribute name="domainId" type="xsd:string" default="org.mule"/>
+        <xsd:attribute name="defaultSynchronousEndpoints" type="substitutableBoolean" default="false">
+            <xsd:annotation>
+                <xsd:documentation>
+                    If true then connections to endpoints will wait for a response.
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="defaultRemoteSync" type="substitutableBoolean" default="false">
+            <xsd:annotation>
+                <xsd:documentation>
+                    Currently unused - JIRA issue MULE-3004.
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="workingDirectory" type="xsd:string">
+            <xsd:annotation>
+                <xsd:documentation>
+                    The location used when scratch data etc is stored to disk.
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="defaultSynchronousEventTimeout" type="xsd:string" default="3000">
+            <xsd:annotation>
+                <xsd:documentation>
+                    The default period (ms) to wait for a synchronous response.
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="defaultEncoding" type="xsd:string" default="UTF-8">
+            <xsd:annotation>
+                <xsd:documentation>
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="defaultTransactionTimeout" type="xsd:string" default="5000">
+            <xsd:annotation>
+                <xsd:documentation>
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="serverId" type="nonBlankString">
+            <xsd:annotation>
+                <xsd:documentation>
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="clusterId" type="xsd:string">
+            <xsd:annotation>
+                <xsd:documentation>
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="domainId" type="xsd:string" default="org.mule">
+            <xsd:annotation>
+                <xsd:documentation>
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
     </xsd:complexType>
 
     <xsd:complexType name="notificationManagerType">
