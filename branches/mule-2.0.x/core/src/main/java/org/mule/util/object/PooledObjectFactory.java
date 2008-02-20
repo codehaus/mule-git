@@ -153,7 +153,9 @@ public class PooledObjectFactory extends AbstractObjectFactory implements Poolab
      */
     public Object getOrCreate() throws Exception
     {
-        return pool.borrowObject();
+        // TODO HH: fallout from MULE-2676 prevents this from working properly..this is SO WRONG!
+        return super.getOrCreate();
+        // return pool.borrowObject();
     }
 
     /**
