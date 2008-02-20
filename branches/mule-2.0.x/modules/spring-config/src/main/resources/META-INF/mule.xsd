@@ -1378,6 +1378,7 @@
                  substitutionGroup="abstract-transaction-manager">
         <xsd:annotation>
             <xsd:documentation>
+                The JNDI transaction manager.
             </xsd:documentation>
         </xsd:annotation>
     </xsd:element>
@@ -1385,6 +1386,7 @@
                  substitutionGroup="abstract-transaction-manager">
         <xsd:annotation>
             <xsd:documentation>
+                The Weblogic transaction manager.
             </xsd:documentation>
         </xsd:annotation>
     </xsd:element>
@@ -1392,6 +1394,7 @@
                  substitutionGroup="abstract-transaction-manager">
         <xsd:annotation>
             <xsd:documentation>
+                The Websphere transaction manager.
             </xsd:documentation>
         </xsd:annotation>
     </xsd:element>
@@ -1399,6 +1402,7 @@
                  substitutionGroup="abstract-transaction-manager">
         <xsd:annotation>
             <xsd:documentation>
+                The JRun transaction manager.
             </xsd:documentation>
         </xsd:annotation>
     </xsd:element>
@@ -1406,6 +1410,7 @@
                  substitutionGroup="abstract-transaction-manager">
         <xsd:annotation>
             <xsd:documentation>
+                The JBoss transaction manager.
             </xsd:documentation>
         </xsd:annotation>
     </xsd:element>
@@ -1413,6 +1418,7 @@
                  substitutionGroup="abstract-transaction-manager">
         <xsd:annotation>
             <xsd:documentation>
+                The Resin transaction manager.
             </xsd:documentation>
         </xsd:annotation>
     </xsd:element>
@@ -1422,7 +1428,17 @@
     <!--   Endpoint elements                                          -->
     <!--==============================================================-->
 
-    <xsd:element name="endpoint" type="globalEndpointType" substitutionGroup="abstract-global-endpoint"/>
+    <xsd:element name="endpoint" type="globalEndpointType" substitutionGroup="abstract-global-endpoint">
+        <xsd:annotation>
+            <xsd:documentation>
+                An endpoint "template" which can be used to construct an inbound or outbound endpoint
+                elsewhere in the configuration by referencing the endpoint's name.
+                Each transport implements its own endpoint element, with a more friendly syntax,
+                but this generic element can be used with any transport by supplying the correct
+                address URI.  For example, "vm://foo" describes a VM transport endpoint.
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
     <xsd:complexType name="globalEndpointType">
         <xsd:complexContent>
             <xsd:extension base="abstractGlobalEndpointType">
@@ -1432,7 +1448,16 @@
         </xsd:complexContent>
     </xsd:complexType>
 
-    <xsd:element name="inbound-endpoint" type="inboundEndpointType" substitutionGroup="abstract-inbound-endpoint"/>
+    <xsd:element name="inbound-endpoint" type="inboundEndpointType" substitutionGroup="abstract-inbound-endpoint">
+        <xsd:annotation>
+            <xsd:documentation>
+                An inbound endpoint receives messages from the associated transport.
+                Each transport implements its own inbound endpoint element, with a more friendly syntax,
+                but this generic element can be used with any transport by supplying the correct
+                address URI.  For example, "vm://foo" describes a VM transport endpoint.
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
     <xsd:complexType name="inboundEndpointType">
         <xsd:complexContent>
             <xsd:extension base="abstractInboundEndpointType">
@@ -1442,7 +1467,16 @@
         </xsd:complexContent>
     </xsd:complexType>
 
-    <xsd:element name="outbound-endpoint" type="outboundEndpointType" substitutionGroup="abstract-outbound-endpoint"/>
+    <xsd:element name="outbound-endpoint" type="outboundEndpointType" substitutionGroup="abstract-outbound-endpoint">
+        <xsd:annotation>
+            <xsd:documentation>
+                An outbound endpoint sends messages to the associated transport.
+                Each transport implements its own outbound endpoint element, with a more friendly syntax,
+                but this generic element can be used with any transport by supplying the correct
+                address URI.  For example, "vm://foo" describes a VM transport endpoint.
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
     <xsd:complexType name="outboundEndpointType">
         <xsd:complexContent>
             <xsd:extension base="abstractOutboundEndpointType">
@@ -1466,15 +1500,48 @@
         </xsd:sequence>
     </xsd:group>
 
-    <xsd:element name="abstract-security-filter" abstract="true" type="abstractSecurityFilterType"/>
+    <xsd:element name="abstract-security-filter" abstract="true" type="abstractSecurityFilterType">
+        <xsd:annotation>
+            <xsd:documentation>
+                Abstract base for security filter elements.
+                Other transports and modules may extend this if they need to add
+                security filter elements to the configuration.
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
     <xsd:complexType name="abstractSecurityFilterType"/>
 
-    <xsd:element name="abstract-connection-strategy" abstract="true" type="abstractConnectionStrategyType"/>
+    <xsd:element name="abstract-connection-strategy" abstract="true" type="abstractConnectionStrategyType">
+        <xsd:annotation>
+            <xsd:documentation>
+                Abstract base for connection strategy elements.
+                Other transports and modules may extend this if they need to add
+                connection strategy elements to the configuration.
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
     <xsd:complexType name="abstractConnectionStrategyType"/>
 
-    <xsd:element name="abstract-transaction" abstract="true" type="abstractTransactionType"/>
+    <xsd:element name="abstract-transaction" abstract="true" type="abstractTransactionType">
+        <xsd:annotation>
+            <xsd:documentation>
+                Abstract base for transaction elements.
+                Other transports and modules may extend this if they need to add
+                transaction elements to the configuration.
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
     <xsd:complexType name="abstractTransactionType">
         <xsd:attribute name="action">
+            <xsd:annotation>
+                <xsd:documentation>
+                    NONE - Never participate in a transaction;
+                    ALWAYS_BEGIN - Always start a new transaction when receiving an event. An exception will be thrown if a transaction already exists;
+                    BEGIN_OR_JOIN - If a transaction is already in progress when an event is received, join the transaction, otherwise start a new transaction;
+                    ALWAYS_JOIN - Always expects a transaction to be in progress when an event is received, if there is no transaction an exception is thrown;
+                    JOIN_IF_POSSIBLE - Will join the current transaction if one is available otherwise no transaction is created.               
+                </xsd:documentation>
+            </xsd:annotation>
             <xsd:simpleType>
                 <xsd:restriction base="xsd:NMTOKEN">
                     <xsd:enumeration value="NONE"/>
@@ -1485,7 +1552,13 @@
                 </xsd:restriction>
             </xsd:simpleType>
         </xsd:attribute>
-        <xsd:attribute name="timeout" type="xsd:NMTOKEN"/>
+        <xsd:attribute name="timeout" type="xsd:NMTOKEN">
+            <xsd:annotation>
+                <xsd:documentation>
+                    Timeout for transaction (ms).
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
     </xsd:complexType>
 
     <xsd:attributeGroup name="defaultEndpointAttributes">
@@ -1493,33 +1566,131 @@
         <!-- these next two attributes are mutually exclusive and one is required.
              but there is no way to define this in a schema... -->
         <!-- endpoint references - dynamically checked to make sure not top level -->
-        <xsd:attribute name="ref" type="xsd:NMTOKEN"/>
+        <xsd:attribute name="ref" type="xsd:NMTOKEN">
+            <xsd:annotation>
+                <xsd:documentation>
+                    A reference to a global endpoint.
+                    If this attribute is used then the endpoint is used as a template to construct this endpoint.
+                    A template fixes the address (protocol, path, host, etc), and may specify initial values for
+                    various properties, but further properties can be defined locally (as long as they don't
+                    change the address in any way).
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
         <!-- explicit or global endpoints -->
-        <xsd:attribute name="address" type="xsd:string"/>
+        <xsd:attribute name="address" type="xsd:string">
+            <xsd:annotation>
+                <xsd:documentation>
+                    The generic address for this endpoint.
+                    If this attribute is used then the protocol must be specified as part of the URI.
+                    Alternatively, most transports provide alternative attributes for specifying the address
+                    (path, host etc).
+                    Note that the address attribute cannot be combined with "ref" or with the transport-provided
+                    alternative attributes.
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
     </xsd:attributeGroup>
 
     <xsd:attributeGroup name="restrictedEndpointAttributes">
-        <xsd:attribute name="synchronous" type="substitutableBoolean"/>
-        <xsd:attribute name="remoteSync" type="substitutableBoolean"/>
-        <xsd:attribute name="remoteSyncTimeout" type="xsd:NMTOKEN"/>
-        <xsd:attribute name="encoding" type="xsd:string"/>
-        <xsd:attribute name="connector-ref" type="xsd:NMTOKEN"/>
-        <xsd:attribute name="transformer-refs" type="xsd:NMTOKENS"/>
-        <xsd:attribute name="responseTransformer-refs" type="xsd:NMTOKENS"/>
+        <xsd:attribute name="synchronous" type="substitutableBoolean">
+            <xsd:annotation>
+                <xsd:documentation>
+                    If true the result from the component processing the incoming message will be
+                    returned as a response.
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="remoteSync" type="substitutableBoolean">
+            <xsd:annotation>
+                <xsd:documentation>
+                    If true the component will wait for a response to the outgoing message before
+                    replying to the incoming message.
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="remoteSyncTimeout" type="substitutableInt">
+            <xsd:annotation>
+                <xsd:documentation>
+                    The timeout for the remoteSync wait (ms).
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="encoding" type="xsd:string">
+            <xsd:annotation>
+                <xsd:documentation>
+                    String encoding used for messages.
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="connector-ref" type="xsd:NMTOKEN">
+            <xsd:annotation>
+                <xsd:documentation>
+                    The name of the connector associated with this endpoint.
+                    This must be specified if more than one connector is defined for this transport.
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="transformer-refs" type="xsd:NMTOKENS">
+            <xsd:annotation>
+                <xsd:documentation>
+                    A list of transformers which will be applied in order to the message before it is
+                    delivered to the component.
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="responseTransformer-refs" type="xsd:NMTOKENS">
+            <xsd:annotation>
+                <xsd:documentation>
+                    A list of transformers which will be applied in order to the synchronous response
+                    before it is returned via the transport.
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
     </xsd:attributeGroup>
 
-    <xsd:element name="custom-transaction" type="customTransactionType" substitutionGroup="abstract-transaction"/>
+    <xsd:element name="custom-transaction" type="customTransactionType" substitutionGroup="abstract-transaction">
+        <xsd:annotation>
+            <xsd:documentation>
+                Allow access to user-defined or otherwise unsupported third party transactions.
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
     <xsd:complexType name="customTransactionType">
         <xsd:complexContent>
             <xsd:extension base="abstractTransactionType">
-                <xsd:attribute name="factory-class" type="substitutableClass"/>
-                <xsd:attribute name="factory-ref" type="xsd:NMTOKEN"/>
+                <xsd:attribute name="factory-class" type="substitutableClass">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                            A class that implements the TransactionFactory interface.
+                            This will be instantiated and used to generate a transaction.
+                            The attribute and the "factory-ref" attribute are mutually exclusive;
+                            one of the two is required.
+                        </xsd:documentation>
+                    </xsd:annotation>
+                </xsd:attribute>
+                <xsd:attribute name="factory-ref" type="xsd:NMTOKEN">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                            A bean that implements the TransactionFactory interface.
+                            This will be used to generate a transaction.
+                            The attribute and the "factory-class" attribute are mutually exclusive;
+                            one of the two is required.
+                        </xsd:documentation>
+                    </xsd:annotation>
+                </xsd:attribute>
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
 
     <xsd:complexType name="replyToType">
-        <xsd:attribute name="address" type="xsd:string" use="required"/>
+        <xsd:attribute name="address" type="xsd:string" use="required">
+            <xsd:annotation>
+                <xsd:documentation>
+                    The destination address for a reply message.
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
     </xsd:complexType>
 
     <xsd:group name="endpointTransformers">
