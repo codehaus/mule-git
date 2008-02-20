@@ -80,6 +80,11 @@ public class ManagementNamespaceHandlerTestCase extends FunctionalTestCase
         assertEquals(EndpointNotificationLoggerAgent.class, agent.getClass());
         EndpointNotificationLoggerAgent enlAgent = (EndpointNotificationLoggerAgent) agent;
         assertEquals(enlAgent.getEndpointAddress(), "test://test");
+
+        agent = muleContext.getRegistry().lookupAgent("test-custom-agent");
+        assertNotNull(agent);
+        assertEquals(TestAgent.class, agent.getClass());
+        assertEquals("woggle", ((TestAgent) agent).getFrobbit());
     }
 
     public void testAgentsOrder() throws Exception

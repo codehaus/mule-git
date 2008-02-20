@@ -1218,22 +1218,48 @@
             <xsd:extension base="abstractComponentType">
                 <xsd:sequence>
                     <xsd:element ref="abstract-object-factory" minOccurs="0"/>
-                    <xsd:element name="binding" type="pojoBindingType" minOccurs="0" maxOccurs="unbounded"/>
+                    <xsd:element name="binding" type="pojoBindingType" minOccurs="0" maxOccurs="unbounded">
+                        <xsd:annotation>
+                            <xsd:documentation>
+                                A binding associates a Mule endpoint with an injected Java interface
+                                (this is like using Spring to inject a bean, but instead of calling a
+                                method on the bean a message is sent to an endpoint).
+                            </xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
                 </xsd:sequence>
-                <xsd:attribute name="class" type="substitutableClass"/>
+                <xsd:attribute name="class" type="substitutableClass">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                            Specify a component class.
+                            This is a shortcut that is equivalent to providing a singleton-object element.
+                        </xsd:documentation>
+                    </xsd:annotation>
+                </xsd:attribute>
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
     
     <xsd:complexType name="pojoBindingType">
-        <xsd:annotation>
-            <xsd:documentation>Binding between the pojo component and endpoints.</xsd:documentation>
-        </xsd:annotation>
         <xsd:sequence>
             <xsd:element ref="abstract-outbound-endpoint" minOccurs="0" maxOccurs="unbounded"/>
         </xsd:sequence>
-        <xsd:attribute name="interface" use="required"/>
-        <xsd:attribute name="method" use="optional"/>
+        <xsd:attribute name="interface" use="required">
+            <xsd:annotation>
+                <xsd:documentation>
+                    The interface to be injected.
+                    A proxy will be created that implements this interface by calling out to the endpoint.
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="method" use="optional">
+            <xsd:annotation>
+                <xsd:documentation>
+                    The method on the interface that should be used.
+                    This can be omitted if the interface has a single method.
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
     </xsd:complexType>
 
     <xsd:complexType name="defaultComponentType">
@@ -1245,7 +1271,9 @@
     <xsd:element name="bridge-component" type="defaultComponentType" substitutionGroup="abstract-component">
         <xsd:annotation>
             <xsd:documentation>
-                Built-in BridgeComponent that enables a bridge between an inbound and outbound endpoints.
+                This transfers a message from inbound to outbound endpoints.
+                This name is provided for backwards compatability - it is equivalent to a
+                pass-through-component, which is the default and does not need to be explicitly specified.
             </xsd:documentation>
         </xsd:annotation>
     </xsd:element>
@@ -1253,9 +1281,9 @@
     <xsd:element name="pass-through-component" type="defaultComponentType" substitutionGroup="abstract-component">
         <xsd:annotation>
             <xsd:documentation>
-                Built-in PassThroughComponent that enables a bridge between an inbound and outbound endpoints.
-                This is less efficient than the BridgeComponent, but respects inbound routers that "consume"
-                messages.
+                The default, "do nothing" component.
+                The message is simply transferred from inbound to outbound endpoints.
+                This is the default and need not be specified.
             </xsd:documentation>
         </xsd:annotation>
     </xsd:element>
@@ -1263,7 +1291,7 @@
     <xsd:element name="echo-component" type="defaultComponentType" substitutionGroup="abstract-component">
         <xsd:annotation>
             <xsd:documentation>
-                Built-in EchoComponent that logs the message and returns the payload back as the result.
+                This logs the message and returns the payload back as the result.
             </xsd:documentation>
         </xsd:annotation>
     </xsd:element>
@@ -1271,8 +1299,7 @@
     <xsd:element name="log-component" type="defaultComponentType" substitutionGroup="abstract-component">
         <xsd:annotation>
             <xsd:documentation>
-                Built-in LogComponent that simply logs the message content (or content length if it is a
-                large message).
+                 This logs the message content (or content length if it is a large message).
             </xsd:documentation>
         </xsd:annotation>
     </xsd:element>
@@ -1280,7 +1307,7 @@
     <xsd:element name="null-component" type="defaultComponentType" substitutionGroup="abstract-component">
         <xsd:annotation>
             <xsd:documentation>
-                Built-in NullComponent that will throw an exception if it receives a message.
+                This will throw an exception if it receives a message.
             </xsd:documentation>
         </xsd:annotation>
     </xsd:element>
