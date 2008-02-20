@@ -27,7 +27,7 @@ public class FileInboundEndpointMoveDeleteTestCase extends AbstractFileFunctiona
 
     private Latch latch;
 
-    @Override
+    //@Override
     protected void doSetUp() throws Exception
     {
         super.doSetUp();
