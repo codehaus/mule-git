@@ -758,6 +758,8 @@
                 that already contains resolvers to implement the standard logic.
                 This is already provided by default and is only needed explicitly if
                 it will be extended with other entry point resolvers.
+                This element can be set on the model or component;
+                the model value provides a default which individual component values can override.
             </xsd:documentation>
         </xsd:annotation>
     </xsd:element>
@@ -767,6 +769,8 @@
                 An extensible set of entry point resolvers.
                 These determine how a message is passed to a component in Java.
                 Each entry point resolver is tried in turn until one succeeds in delivering the messge to the component.
+                This element can be set on the model or component;
+                the model value provides a default which individual component values can override.
             </xsd:documentation>
         </xsd:annotation>
     </xsd:element>
@@ -786,6 +790,8 @@
             <xsd:documentation>
                 A custom entry point resolver set.
                 This allows user-supplied code to determine how a message is passed to a component in Java.
+                This element can be set on the model or component;
+                the model value provides a default which individual component values can override.
             </xsd:documentation>
         </xsd:annotation>
     </xsd:element>
@@ -819,6 +825,10 @@
             <xsd:documentation>
                 An entry point resolver for components that implement the Callable interface.
                 This passes a MuleEventContext to the component.
+                This element can be set on the model or component;
+                the model value provides a default which individual component values can override.
+                This element can also be used directly or as part of a set of resolvers;
+                the resolvers in a set are used in turn until one is successful.
             </xsd:documentation>
         </xsd:annotation>
     </xsd:element>
@@ -830,6 +840,10 @@
             <xsd:documentation>
                 A custom entry point resolver.
                 This allows user-supplied code to determine how a message is passed to a component in Java.
+                This element can be set on the model or component;
+                the model value provides a default which individual component values can override.
+                This element can also be used directly or as part of a set of resolvers;
+                the resolvers in a set are used in turn until one is successful.
             </xsd:documentation>
         </xsd:annotation>
     </xsd:element>
@@ -877,6 +891,10 @@
         <xsd:annotation>
             <xsd:documentation>
                 Use a message property to select the component method to be called.
+                This element can be set on the model or component;
+                the model value provides a default which individual component values can override.
+                This element can also be used directly or as part of a set of resolvers;
+                the resolvers in a set are used in turn until one is successful.
             </xsd:documentation>
         </xsd:annotation>
     </xsd:element>
@@ -898,6 +916,10 @@
         <xsd:annotation>
             <xsd:documentation>
                 Deliver the message to a named method.
+                This element can be set on the model or component;
+                the model value provides a default which individual component values can override.
+                This element can also be used directly or as part of a set of resolvers;
+                the resolvers in a set are used in turn until one is successful.
             </xsd:documentation>
         </xsd:annotation>
     </xsd:element>
@@ -915,6 +937,10 @@
         <xsd:annotation>
             <xsd:documentation>
                 Generate a list of candidate methods from the component via reflections.
+                This element can be set on the model or component;
+                the model value provides a default which individual component values can override.
+                This element can also be used directly or as part of a set of resolvers;
+                the resolvers in a set are used in turn until one is successful.
             </xsd:documentation>
         </xsd:annotation>
     </xsd:element>
@@ -946,6 +972,10 @@
         <xsd:annotation>
              <xsd:documentation>
                  Deliver the message to a method which takes a single array as argument.
+                 This element can be set on the model or component;
+                 the model value provides a default which individual component values can override.
+                 This element can also be used directly or as part of a set of resolvers;
+                 the resolvers in a set are used in turn until one is successful.
              </xsd:documentation>
          </xsd:annotation>
     </xsd:element>
@@ -1160,24 +1190,30 @@
     <!-- Components                                              -->
     <!--==============================================================-->
 
-    <xsd:element name="abstract-component" abstract="true" type="abstractComponentType"/>
-    <xsd:complexType name="abstractComponentType">
+    <xsd:element name="abstract-component" abstract="true" type="abstractComponentType">
         <xsd:annotation>
             <xsd:documentation>
-                A component that will be invoked by mule.
+                Abstract base for component element.
+                This allows various component implementations to be used.
             </xsd:documentation>
         </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="abstractComponentType">
         <xsd:sequence>
             <xsd:group ref="entryPointResolvers"/>
-            <!--<xsd:element ref="abstract-binding" minOccurs="0" maxOccurs="unbounded"/>-->
         </xsd:sequence>
     </xsd:complexType>
     
-    <xsd:element name="component" type="pojoComponentType" substitutionGroup="abstract-component"/>
-    <xsd:complexType name="pojoComponentType">
+    <xsd:element name="component" type="pojoComponentType" substitutionGroup="abstract-component">
         <xsd:annotation>
-            <xsd:documentation>Pojo component that will be invoked by mule.</xsd:documentation>
+            <xsd:documentation>
+                A simple POJO (Plain Old Java Object) component
+                that will be invoked by Mule when a message is received.
+                The instance can be specified via a factory, or via a class.
+            </xsd:documentation>
         </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="pojoComponentType">
         <xsd:complexContent>
             <xsd:extension base="abstractComponentType">
                 <xsd:sequence>
@@ -2393,9 +2429,7 @@
             </xsd:documentation>
         </xsd:annotation>
          <xsd:complexContent>
-            <xsd:extension base="abstractExtensionType">
-                <xsd:attribute name="name" type="substitutableName" use="required"/>
-            </xsd:extension>
+            <xsd:extension base="abstractExtensionType"/>
         </xsd:complexContent>
     </xsd:complexType>
 
