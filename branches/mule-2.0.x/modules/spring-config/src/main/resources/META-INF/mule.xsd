@@ -1320,7 +1320,14 @@
     <xsd:complexType name="transactionManagerType">
         <xsd:complexContent>
             <xsd:extension base="abstractTransactionManagerType">
-                <xsd:attribute name="name" type="substitutableName" default="transactionManagerFactory" use="optional"/>
+                <xsd:attribute name="name" type="substitutableName" default="transactionManager" use="optional">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                            An optional name for the transaction manager.
+                            The default value is "transactionManager".
+                        </xsd:documentation>
+                    </xsd:annotation>
+                </xsd:attribute>
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
@@ -1331,7 +1338,9 @@
                 <xsd:sequence>
                     <xsd:element name="environment" type="mapType" minOccurs="0" maxOccurs="1">
                         <xsd:annotation>
-                            <xsd:documentation>Properties to be set on the created object</xsd:documentation>
+                            <xsd:documentation>
+                                Properties to be set on the created object.
+                            </xsd:documentation>
                         </xsd:annotation>
                     </xsd:element>
                 </xsd:sequence>
@@ -1345,26 +1354,68 @@
                 <xsd:sequence>
                     <xsd:element ref="spring:property" minOccurs="0" maxOccurs="unbounded"/>
                 </xsd:sequence>
-                <xsd:attribute name="class" type="substitutableClass" use="required"/>
+                <xsd:attribute name="class" type="substitutableClass" use="required">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                            The class to instantiate to create a transaction manager.
+                        </xsd:documentation>
+                    </xsd:annotation>
+                </xsd:attribute>
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
 
 
     <xsd:element name="custom-transaction-manager" type="customTransactionManagerType"
-                 substitutionGroup="abstract-transaction-manager"/>
+                 substitutionGroup="abstract-transaction-manager">
+        <xsd:annotation>
+            <xsd:documentation>
+                A user-implemented transaction manager.
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
     <xsd:element name="jndi-transaction-manager" type="transactionManagerType"
-                 substitutionGroup="abstract-transaction-manager"/>
+                 substitutionGroup="abstract-transaction-manager">
+        <xsd:annotation>
+            <xsd:documentation>
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
     <xsd:element name="weblogic-transaction-manager" type="jndiTransactionManagerType"
-                 substitutionGroup="abstract-transaction-manager"/>
+                 substitutionGroup="abstract-transaction-manager">
+        <xsd:annotation>
+            <xsd:documentation>
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
     <xsd:element name="websphere-transaction-manager" type="transactionManagerType"
-                 substitutionGroup="abstract-transaction-manager"/>
+                 substitutionGroup="abstract-transaction-manager">
+        <xsd:annotation>
+            <xsd:documentation>
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
     <xsd:element name="jrun-transaction-manager" type="transactionManagerType"
-                 substitutionGroup="abstract-transaction-manager"/>
+                 substitutionGroup="abstract-transaction-manager">
+        <xsd:annotation>
+            <xsd:documentation>
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
     <xsd:element name="jboss-transaction-manager" type="transactionManagerType"
-                 substitutionGroup="abstract-transaction-manager"/>
+                 substitutionGroup="abstract-transaction-manager">
+        <xsd:annotation>
+            <xsd:documentation>
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
     <xsd:element name="resin-transaction-manager" type="transactionManagerType"
-                 substitutionGroup="abstract-transaction-manager"/>
+                 substitutionGroup="abstract-transaction-manager">
+        <xsd:annotation>
+            <xsd:documentation>
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
 
 
     <!--==============================================================-->
