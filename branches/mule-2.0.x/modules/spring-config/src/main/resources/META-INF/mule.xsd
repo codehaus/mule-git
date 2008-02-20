@@ -2812,6 +2812,7 @@
         <xsd:attribute name="messageAdapter" type="xsd:NMTOKEN"/>
         <xsd:attribute name="streamMessageAdapter" type="xsd:NMTOKEN"/>
         <xsd:attribute name="serviceFinder" type="xsd:NMTOKEN"/>
+        <xsd:attribute name="sessionHandler" type="xsd:NMTOKEN"/>
     </xsd:complexType>
 
     <!--==============================================================-->
