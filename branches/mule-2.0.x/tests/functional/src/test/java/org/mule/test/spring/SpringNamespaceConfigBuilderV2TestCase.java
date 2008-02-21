@@ -18,15 +18,14 @@ import org.mule.api.routing.OutboundRouterCollection;
 import org.mule.api.routing.ResponseRouterCollection;
 import org.mule.api.service.Service;
 import org.mule.api.transformer.Transformer;
-import org.mule.api.MuleContext;
 import org.mule.config.spring.SpringXmlConfigurationBuilder;
 import org.mule.routing.outbound.AbstractOutboundRouter;
 import org.mule.routing.response.AbstractResponseRouter;
 import org.mule.tck.AbstractConfigBuilderTestCase;
 import org.mule.tck.testmodels.fruit.Apple;
 import org.mule.tck.testmodels.mule.TestCompressionTransformer;
+import org.mule.util.ClassUtils;
 import org.mule.util.properties.PropertyExtractor;
-import org.mule.xml.util.properties.JXPathPropertyExtractor;
 
 import java.util.List;
 
@@ -73,8 +72,8 @@ public class SpringNamespaceConfigBuilderV2TestCase extends AbstractConfigBuilde
         AbstractOutboundRouter theRouter = (AbstractOutboundRouter)routers.get(0);
         PropertyExtractor pe = theRouter.getPropertyExtractor();
         assertNotNull(pe);
-        // the one we put in the config
-        assertTrue(pe instanceof JXPathPropertyExtractor);
+        // the one we put in the config; check only by class name to avoid compile dependency
+        assertTrue(ClassUtils.getShortClassName(pe.getClass()).equals("JXPathPropertyExtractor"));
     }
 
     public void testPropertyExtractorResponseRouterConfig() throws Exception
@@ -89,8 +88,8 @@ public class SpringNamespaceConfigBuilderV2TestCase extends AbstractConfigBuilde
         AbstractResponseRouter theRouter = (AbstractResponseRouter)routers.get(0);
         PropertyExtractor pe = theRouter.getPropertyExtractor();
         assertNotNull(pe);
-        // the one we put in the config
-        assertTrue(pe instanceof JXPathPropertyExtractor);
+        // the one we put in the config; check only by class name to avoid compile dependency
+        assertTrue(ClassUtils.getShortClassName(pe.getClass()).equals("JXPathPropertyExtractor"));
     }
 
     public void testPropertyTypesConfig() throws Exception
