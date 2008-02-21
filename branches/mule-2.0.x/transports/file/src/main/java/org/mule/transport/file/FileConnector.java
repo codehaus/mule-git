@@ -592,7 +592,8 @@ public class FileConnector extends AbstractConnector
 
     public boolean isStreaming()
     {
-        return streaming;
+        // MULE-226
+        return false;
     }
 
     public void setStreaming(boolean streaming)

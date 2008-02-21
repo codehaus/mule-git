@@ -19,6 +19,7 @@ import org.mule.api.routing.RoutingException;
 import org.mule.api.service.Service;
 import org.mule.api.transport.Connector;
 import org.mule.api.transport.MessageAdapter;
+import org.mule.config.i18n.CoreMessages;
 import org.mule.transport.AbstractPollingMessageReceiver;
 import org.mule.transport.ConnectException;
 import org.mule.transport.file.i18n.FileMessages;
@@ -203,16 +204,18 @@ public class FileMessageReceiver extends AbstractPollingMessageReceiver
         msgAdapter.setProperty(FileConnector.PROPERTY_ORIGINAL_FILENAME, sourceFileOriginalName);
 
         FileConnector fc = ((FileConnector) connector);
+        // TODO MULE-226
         // We can't move files if they're going to be deleted on the stream close
-        if (!fc.isStreaming() || (fc.isStreaming() && !fc.isAutoDelete())) 
-        {
-            moveAndDelete(sourceFile, destinationFile, sourceFileOriginalName, msgAdapter, fileIn);
-        }
-        else 
-        {
-            // finally deliver the file message
-            this.routeMessage(new DefaultMuleMessage(msgAdapter), endpoint.isSynchronous());
-        }
+        // if (!fc.isStreaming() || (fc.isStreaming() && !fc.isAutoDelete()))
+        // {
+        moveAndDelete(sourceFile, destinationFile, sourceFileOriginalName, msgAdapter, fileIn);
+        // }
+        // else
+        // {
+        // // finally deliver the file message
+        // this.routeMessage(new DefaultMuleMessage(msgAdapter),
+        // endpoint.isSynchronous());
+        //        }
     }
 
     private void moveAndDelete(final File sourceFile,
@@ -273,17 +276,39 @@ public class FileMessageReceiver extends AbstractPollingMessageReceiver
                 msgAdapter.setProperty(FileConnector.PROPERTY_FILENAME, destinationFile.getName());
                 msgAdapter.setProperty(FileConnector.PROPERTY_ORIGINAL_FILENAME, sourceFileOriginalName);
             }
-
+            
             // finally deliver the file message
             this.routeMessage(new DefaultMuleMessage(msgAdapter), endpoint.isSynchronous());
-
-            // Delete the file if we didn't stream it
-            if (!((FileConnector) connector).isStreaming())
+            
+            // at this point msgAdapter either points to the old sourceFile
+            // or the new destinationFile.
+            if (((FileConnector) connector).isAutoDelete())
             {
-                boolean moveTo = destinationFile != null;
-                File current = moveTo ? destinationFile : sourceFile;
-                delete(current, moveTo);
+                // no moveTo directory
+                if (destinationFile == null)
+                {
+                    // delete source
+                    if (!sourceFile.delete())
+                    {
+                        throw new DefaultMuleException(
+                            FileMessages.failedToDeleteFile(sourceFile.getAbsolutePath()));
+                    }
+                }
+                else
+                {
+                    // nothing to do here since moveFile() should have deleted
+                    // the source file for us
+                }
             }
+
+            // TODO MULE-226
+            // Delete the file if we didn't stream it
+            // if (!((FileConnector) connector).isStreaming())
+            // {
+            // boolean moveTo = destinationFile != null;
+            // File current = moveTo ? destinationFile : sourceFile;
+            //                delete(current, moveTo);
+            //            }
         }
         catch (Exception e)
         {
@@ -502,16 +527,17 @@ public class FileMessageReceiver extends AbstractPollingMessageReceiver
         {
             super.close();
 
-            try
-            {
-                delete(currentFile, movedTo);
-            }
-            catch (MuleException e)
-            {
-                IOException e2 = new IOException();
-                e2.initCause(e);
-                throw e2;
-            }
+            // TODO MULE-226
+            // try
+            // {
+            // delete(currentFile, movedTo);
+            // }
+            // catch (MuleException e)
+            // {
+            // IOException e2 = new IOException();
+            //                e2.initCause(e);
+            //                throw e2;
+            //            }
         }
 
         public File getCurrentFile()

@@ -170,14 +170,17 @@ public class FileInboundEndpointMoveDeleteTestCase extends AbstractFileFunctiona
     protected void assertFiles(File inFile, File moveToDir, boolean move, boolean delete) throws Exception
     {
         waitForFileSystem();
-        assertTrue(inFile.exists() == !delete);
 
-        if (!delete)
+        boolean inFileShouldExst = !delete && !move;
+
+        assertTrue(inFile.exists() == inFileShouldExst);
+
+        if (inFileShouldExst)
         {
             assertEquals(TEST_MESSAGE, new BufferedReader(new FileReader(inFile)).readLine());
         }
 
-        File movedFile = new File(moveToDir.getPath() + inFile.getName());
+        File movedFile = new File(moveToDir.getPath() + "/" + inFile.getName());
         assertTrue(movedFile.exists() == move);
 
         if (move)
