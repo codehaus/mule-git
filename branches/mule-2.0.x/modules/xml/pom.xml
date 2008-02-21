@@ -57,13 +57,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.mule.tests</groupId>
-            <artifactId>mule-tests-functional</artifactId>
-            <version>${version}</version>
-            <scope>test</scope>
-        </dependency>
-        
-        <dependency>
             <!-- Used by Xml based filters and transformers -->
             <groupId>dom4j</groupId>
             <artifactId>dom4j</artifactId>
