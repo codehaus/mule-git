@@ -13,7 +13,7 @@ package org.mule.module.client.remoting;
 import org.mule.AbstractAgent;
 import org.mule.RegistryContext;
 import org.mule.api.MuleException;
-import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.api.endpoint.InboundEndpoint;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.lifecycle.LifecycleTransitionResult;
 import org.mule.api.service.Service;
@@ -41,7 +41,7 @@ public class RemoteDispatcherAgent extends AbstractAgent
 
     private WireFormat wireFormat;
 
-    private ImmutableEndpoint endpoint;
+    private InboundEndpoint endpoint;
 
 
     public RemoteDispatcherAgent()
@@ -144,12 +144,12 @@ public class RemoteDispatcherAgent extends AbstractAgent
         this.wireFormat = wireFormat;
     }
 
-    public ImmutableEndpoint getEndpoint()
+    public InboundEndpoint getEndpoint()
     {
         return endpoint;
     }
 
-    public void setEndpoint(ImmutableEndpoint endpoint)
+    public void setEndpoint(InboundEndpoint endpoint)
     {
         this.endpoint = endpoint;
     }

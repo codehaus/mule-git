@@ -10,8 +10,8 @@
 
 package org.mule.transport.http;
 
-import org.mule.DefaultMuleMessage;
 import org.mule.DefaultMuleEvent;
+import org.mule.DefaultMuleMessage;
 import org.mule.DefaultMuleSession;
 import org.mule.NullSessionHandler;
 import org.mule.OptimizedRequestContext;
@@ -24,6 +24,7 @@ import org.mule.api.MuleMessage;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.endpoint.EndpointURI;
 import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.api.endpoint.InboundEndpoint;
 import org.mule.api.lifecycle.CreateException;
 import org.mule.api.service.Service;
 import org.mule.api.transformer.TransformerException;
@@ -60,7 +61,7 @@ public class HttpMessageReceiver extends TcpMessageReceiver
 {
     protected final Log logger = LogFactory.getLog(getClass());
 
-    public HttpMessageReceiver(Connector connector, Service service, ImmutableEndpoint endpoint)
+    public HttpMessageReceiver(Connector connector, Service service, InboundEndpoint endpoint)
             throws CreateException
     {
         super(connector, service, endpoint);

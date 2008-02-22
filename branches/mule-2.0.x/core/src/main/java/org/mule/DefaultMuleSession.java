@@ -10,13 +10,14 @@
 
 package org.mule;
 
-import org.mule.api.MuleException;
 import org.mule.api.MuleEvent;
+import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.MuleSession;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.endpoint.EndpointNotFoundException;
-import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.api.endpoint.InboundEndpoint;
+import org.mule.api.endpoint.OutboundEndpoint;
 import org.mule.api.routing.OutboundRouterCollection;
 import org.mule.api.security.SecurityContext;
 import org.mule.api.service.Service;
@@ -142,7 +143,7 @@ public final class DefaultMuleSession implements MuleSession
         dispatchEvent(message, RegistryContext.getRegistry().lookupEndpointFactory().getOutboundEndpoint(endpointName));
     }
  
-    public void dispatchEvent(MuleMessage message, ImmutableEndpoint endpoint) throws MuleException
+    public void dispatchEvent(MuleMessage message, OutboundEndpoint endpoint) throws MuleException
     {
         if (endpoint == null)
         {
@@ -188,7 +189,7 @@ public final class DefaultMuleSession implements MuleSession
         return result;
     }
 
-    public MuleMessage sendEvent(MuleMessage message, ImmutableEndpoint endpoint) throws MuleException
+    public MuleMessage sendEvent(MuleMessage message, OutboundEndpoint endpoint) throws MuleException
     {
         if (endpoint == null)
         {
@@ -226,7 +227,7 @@ public final class DefaultMuleSession implements MuleSession
      */
     public void dispatchEvent(MuleEvent event) throws MuleException
     {
-        if (event.getEndpoint().isOutbound())
+        if (event.getEndpoint() instanceof OutboundEndpoint)
         {
             try
             {
@@ -249,7 +250,7 @@ public final class DefaultMuleSession implements MuleSession
                     new MuleSessionHandler().storeSessionInfoToMessage(this, event.getMessage());
                 }
 
-                event.getEndpoint().dispatch(event);
+                ((OutboundEndpoint) event.getEndpoint()).dispatch(event);
             }
             catch (Exception e)
             {
@@ -293,7 +294,7 @@ public final class DefaultMuleSession implements MuleSession
             event.setTimeout(timeout);
         }
 
-        if (event.getEndpoint().isOutbound())
+        if (event.getEndpoint() instanceof OutboundEndpoint)
         {
             try
             {
@@ -316,7 +317,7 @@ public final class DefaultMuleSession implements MuleSession
                     new MuleSessionHandler().storeSessionInfoToMessage(this, event.getMessage());
                 }
 
-                MuleMessage response = event.getEndpoint().send(event);
+                MuleMessage response = ((OutboundEndpoint) event.getEndpoint()).send(event);
                 // See MULE-2692
                 response = OptimizedRequestContext.unsafeRewriteEvent(response);
                 processResponse(response);
@@ -391,7 +392,7 @@ public final class DefaultMuleSession implements MuleSession
      */
     public MuleMessage requestEvent(String endpointName, long timeout) throws MuleException
     {
-        ImmutableEndpoint endpoint = RegistryContext.getRegistry().lookupEndpointFactory().getOutboundEndpoint(endpointName);
+        InboundEndpoint endpoint = RegistryContext.getRegistry().lookupEndpointFactory().getInboundEndpoint(endpointName);
         return requestEvent(endpoint, timeout);
     }
 
@@ -401,7 +402,7 @@ public final class DefaultMuleSession implements MuleSession
      * @see org.mule.api.MuleSession#receiveEvent(org.mule.api.endpoint.Endpoint,
      *      long, org.mule.api.MuleEvent)
      */
-    public MuleMessage requestEvent(ImmutableEndpoint endpoint, long timeout) throws MuleException
+    public MuleMessage requestEvent(InboundEndpoint endpoint, long timeout) throws MuleException
     {
         try
         {
@@ -414,7 +415,7 @@ public final class DefaultMuleSession implements MuleSession
     }
 
     public MuleEvent createOutboundEvent(MuleMessage message,
-                                        ImmutableEndpoint endpoint,
+                                        OutboundEndpoint endpoint,
                                         MuleEvent previousEvent) throws MuleException
     {
         if (endpoint == null)

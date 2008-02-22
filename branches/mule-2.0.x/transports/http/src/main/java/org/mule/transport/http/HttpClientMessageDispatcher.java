@@ -13,7 +13,7 @@ package org.mule.transport.http;
 import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
-import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.api.endpoint.OutboundEndpoint;
 import org.mule.api.transformer.Transformer;
 import org.mule.api.transformer.TransformerException;
 import org.mule.api.transport.DispatchException;
@@ -54,7 +54,7 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
     private volatile HttpClient client = null;
     private final Transformer sendTransformer;
 
-    public HttpClientMessageDispatcher(ImmutableEndpoint endpoint)
+    public HttpClientMessageDispatcher(OutboundEndpoint endpoint)
     {
         super(endpoint);
         this.connector = (HttpConnector) endpoint.getConnector();

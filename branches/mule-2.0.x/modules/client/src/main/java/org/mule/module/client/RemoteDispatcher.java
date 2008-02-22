@@ -26,6 +26,7 @@ import org.mule.api.config.MuleProperties;
 import org.mule.api.endpoint.EndpointBuilder;
 import org.mule.api.endpoint.EndpointFactory;
 import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.api.endpoint.OutboundEndpoint;
 import org.mule.api.lifecycle.Disposable;
 import org.mule.api.security.Credentials;
 import org.mule.api.transformer.wire.WireFormat;
@@ -48,6 +49,7 @@ import java.util.Map;
 
 import edu.emory.mathcs.backport.java.util.concurrent.Callable;
 import edu.emory.mathcs.backport.java.util.concurrent.Executor;
+
 import org.apache.commons.lang.SerializationUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -69,8 +71,8 @@ public class RemoteDispatcher implements Disposable
     /**
      * dispatch destination
      */
-    private ImmutableEndpoint asyncServerEndpoint;
-    private ImmutableEndpoint syncServerEndpoint;
+    private OutboundEndpoint asyncServerEndpoint;
+    private OutboundEndpoint syncServerEndpoint;
     private Credentials credentials = null;
 
     /**
@@ -327,7 +329,7 @@ public class RemoteDispatcher implements Disposable
     protected MuleMessage dispatchAction(RemoteDispatcherNotification action, boolean synchronous, int timeout)
         throws MuleException
     {
-        ImmutableEndpoint serverEndpoint;
+        OutboundEndpoint serverEndpoint;
         if (synchronous)
         {
             serverEndpoint = syncServerEndpoint;

@@ -28,6 +28,8 @@ import org.mule.api.config.MuleProperties;
 import org.mule.api.endpoint.EndpointBuilder;
 import org.mule.api.endpoint.EndpointURI;
 import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.api.endpoint.InboundEndpoint;
+import org.mule.api.endpoint.OutboundEndpoint;
 import org.mule.api.lifecycle.Disposable;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.registry.RegistrationException;
@@ -668,7 +670,7 @@ public class MuleClient implements Disposable
      */
     public MuleMessage request(String url, long timeout) throws MuleException
     {
-        ImmutableEndpoint endpoint = getInboundEndpoint(url);
+        InboundEndpoint endpoint = getInboundEndpoint(url);
         try
         {
             MuleMessage message = endpoint.request(timeout);
@@ -761,12 +763,12 @@ public class MuleClient implements Disposable
         }
     }
 
-    protected ImmutableEndpoint getInboundEndpoint(String uri) throws MuleException
+    protected InboundEndpoint getInboundEndpoint(String uri) throws MuleException
     {
         return muleContext.getRegistry().lookupEndpointFactory().getInboundEndpoint(uri);
     }
 
-    protected ImmutableEndpoint getOutboundEndpoint(String uri) throws MuleException
+    protected OutboundEndpoint getOutboundEndpoint(String uri) throws MuleException
     {
         return muleContext.getRegistry().lookupEndpointFactory().getOutboundEndpoint(uri);
     }

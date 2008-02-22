@@ -10,8 +10,8 @@
 
 package org.mule.module.jca;
 
-import org.mule.DefaultMuleMessage;
 import org.mule.DefaultMuleEvent;
+import org.mule.DefaultMuleMessage;
 import org.mule.DefaultMuleSession;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleEvent;
@@ -20,6 +20,7 @@ import org.mule.api.MuleMessage;
 import org.mule.api.MuleSession;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.api.endpoint.InboundEndpoint;
 import org.mule.api.transport.DispatchException;
 import org.mule.api.transport.ReceiveException;
 import org.mule.config.i18n.CoreMessages;
@@ -129,9 +130,9 @@ public class DefaultMuleConnection implements MuleConnection
      * @return the message received or null if no message was received
      * @throws org.mule.api.MuleException
      */
-    public MuleMessage receive(String url, long timeout) throws MuleException
+    public MuleMessage request(String url, long timeout) throws MuleException
     {
-        ImmutableEndpoint endpoint = manager.getRegistry().lookupEndpointFactory().getOutboundEndpoint(url);
+        InboundEndpoint endpoint = manager.getRegistry().lookupEndpointFactory().getInboundEndpoint(url);
 
         try
         {
