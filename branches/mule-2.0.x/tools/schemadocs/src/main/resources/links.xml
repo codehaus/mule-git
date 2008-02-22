@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?><links xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-    <link><item>mule:inbound-endpoint</item><page>Configuring+Endpoints#mule:inbound-endpoint</page></link>
-    <link><item>mule:outbound-endpoint</item><page>Configuring+Endpoints#mule:outbound-endpoint</page></link>
+    <link><item>mule:inbound-endpoint</item><page>Configuring+Endpoints</page></link>
+    <link><item>mule:outbound-endpoint</item><page>Configuring+Endpoints</page></link>
 </links>

@@ -44,7 +44,13 @@
     <xsl:template match="xsd:element" mode="start">
         <a>
             <!-- define a tag we can link to -->
-            <xsl:attribute name="id">#<xsl:value-of select="@name"/></xsl:attribute>
+            <xsl:attribute name="id">
+                <xsl:call-template name="anchor">
+                    <xsl:with-param name="item">
+                        <xsl:value-of select="@name"/>
+                    </xsl:with-param>
+                </xsl:call-template>
+            </xsl:attribute>
             <h2>&lt;<xsl:value-of select="@name"/> ...&gt;</h2>
         </a>
         <!-- p>
@@ -397,6 +403,7 @@
 
 
     <!-- links via a separate index - see links.xml -->
+    <!-- this includes a confluence specific hack - the link itself has the name in -->
 
     <xsl:template name="link">
         <xsl:param name="item"/>
@@ -407,12 +414,31 @@
         </xsl:variable>
         <xsl:choose>
             <xsl:when test="string-length($page) > 0">
+                <xsl:variable name="pageNoSpaces" select="replace($page, ' ', '')"/>
                 <a>
                     <xsl:attribute name="href">
-                        <xsl:value-of select="$page"/>#<xsl:value-of select="$item"/>
+                        <xsl:value-of select="$page"/>#<xsl:value-of select="$pageNoSpaces"/>-<xsl:value-of select="$item"/>
                     </xsl:attribute>
                     <xsl:value-of select="$item"/>
                 </a>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:value-of select="$item"/>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+
+    <xsl:template name="anchor">
+        <xsl:param name="item"/>
+        <xsl:variable name="page">
+            <xsl:apply-templates select="$items-to-pages">
+                <xsl:with-param name="item" select="$item"/>
+            </xsl:apply-templates>
+        </xsl:variable>
+        <xsl:choose>
+            <xsl:when test="string-length($page) > 0">
+                <xsl:variable name="pageNoSpaces" select="replace($page, ' ', '')"/>
+                <xsl:value-of select="$pageNoSpaces"/>-<xsl:value-of select="$item"/>
             </xsl:when>
             <xsl:otherwise>
                 <xsl:value-of select="$item"/>
