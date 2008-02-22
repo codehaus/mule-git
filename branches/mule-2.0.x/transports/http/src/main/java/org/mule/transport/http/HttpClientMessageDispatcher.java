@@ -154,7 +154,7 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
                 client.getState().addCookie(cookie);
             }
         }
-        else
+        else if (cookieObject != null)
         {
             throw new IllegalArgumentException("Invalid cookies " + cookieObject);
         }
