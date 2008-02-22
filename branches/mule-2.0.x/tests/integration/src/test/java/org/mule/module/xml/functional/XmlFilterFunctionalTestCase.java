@@ -23,7 +23,7 @@ public class XmlFilterFunctionalTestCase extends AbstractXmlFunctionalTestCase
 
     protected String getConfigResources()
     {
-        return "xml/xml-filter-functional-test.xml";
+        return "org/mule/module/xml/xml-filter-functional-test.xml";
     }
 
     public void testNotXml() throws Exception

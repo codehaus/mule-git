@@ -13,7 +13,6 @@ package org.mule.routing.outbound;
 import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.ImmutableEndpoint;
-import org.mule.routing.outbound.AbstractMessageSplitter;
 import org.mule.util.ExceptionUtils;
 import org.mule.util.IOUtils;
 import org.mule.util.StringUtils;
