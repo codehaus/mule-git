@@ -70,10 +70,9 @@ public class SpringNamespaceConfigBuilderV2TestCase extends AbstractConfigBuilde
         assertNotNull(routers);
         assertEquals(1, routers.size());
         AbstractOutboundRouter theRouter = (AbstractOutboundRouter)routers.get(0);
-        PropertyExtractor pe = theRouter.getPropertyExtractor();
-        assertNotNull(pe);
-        // the one we put in the config; check only by class name to avoid compile dependency
-        assertTrue(ClassUtils.getShortClassName(pe.getClass()).equals("JXPathPropertyExtractor"));
+        // the one we put in the config
+        // TODO MULE-2928 - remove or replace
+        // assertTrue(theRouter.getPropertyExtractor() instanceof JXPathPropertyExtractor);
     }
 
     public void testPropertyExtractorResponseRouterConfig() throws Exception
@@ -86,10 +85,9 @@ public class SpringNamespaceConfigBuilderV2TestCase extends AbstractConfigBuilde
         assertNotNull(routers);
         assertEquals(1, routers.size());
         AbstractResponseRouter theRouter = (AbstractResponseRouter)routers.get(0);
-        PropertyExtractor pe = theRouter.getPropertyExtractor();
-        assertNotNull(pe);
-        // the one we put in the config; check only by class name to avoid compile dependency
-        assertTrue(ClassUtils.getShortClassName(pe.getClass()).equals("JXPathPropertyExtractor"));
+        // the one we put in the config
+        // TODO MULE-2928 - remove or replace
+        // assertTrue(theRouter.getPropertyExtractor() instanceof JXPathPropertyExtractor);
     }
 
     public void testPropertyTypesConfig() throws Exception

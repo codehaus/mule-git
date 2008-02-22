@@ -7,8 +7,7 @@
        xsi:schemaLocation="
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
        http://www.mulesource.org/schema/mule/test/2.0 http://www.mulesource.org/schema/mule/test/2.0/mule-test.xsd
-       http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
-       http://www.mulesource.org/schema/mule/xml/2.0 http://www.mulesource.org/schema/mule/xml/2.0/mule-xml.xsd">
+       http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd">
 
     <mule:mule>
 
@@ -61,9 +60,11 @@
         <mule:no-action-transformer name="TestTransformer" returnClass="[B"/>
 
         <mule:endpoint name="fruitBowlEndpoint" address="test://fruitBowlPublishQ">
+        <!-- TODO MULE-2928 - remove or replace
             <mxml:jxpath-filter pattern="name" expectedValue="bar">
                 <mxml:namespace prefix="foo" uri="http://foo.com"/>
             </mxml:jxpath-filter>
+            -->
         </mule:endpoint>
         <!-- cannot have aliases -->
         <!-- mule:endpoint name="waterMelonEndpoint" ref="TestQueue"/ -->
@@ -228,7 +229,9 @@
                 <mule:component class="org.mule.tck.testmodels.fruit.Apple"/>
                 <mule:outbound>
                     <mule:filtering-router>
+                        <!-- TODO MULE-2928 - remove or replace
                         <mxml:jxpath-property-extractor/>
+                        -->
                     </mule:filtering-router>
                 </mule:outbound>
             </mule:service>
@@ -238,7 +241,9 @@
                 <mule:component class="org.mule.tck.testmodels.fruit.Apple"/>
                 <mule:async-reply>
                     <mule:single-async-reply-router>
+                        <!-- TODO MULE-2928 - remove or replace
                         <mule:custom-property-extractor class="org.mule.xml.util.properties.JXPathPropertyExtractor"/>
+                        -->
                     </mule:single-async-reply-router>
                 </mule:async-reply>
             </mule:service>

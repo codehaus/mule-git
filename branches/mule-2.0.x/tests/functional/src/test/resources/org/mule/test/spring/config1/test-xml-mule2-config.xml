@@ -7,8 +7,7 @@
       xsi:schemaLocation="
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd
-       http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
-       http://www.mulesource.org/schema/mule/xml/2.0 http://www.mulesource.org/schema/mule/xml/2.0/mule-xml.xsd">
+       http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd">
 
     <configuration serverId="serverId" defaultSynchronousEndpoints="false" domainId="domainIn" clusterId="cluserId">
         <default-threading-profile maxBufferSize="42" maxThreadsActive="16"
@@ -52,10 +51,12 @@
     <no-action-transformer name="Default"/>
 
     <endpoint name="fruitBowlEndpoint" address="test://fruitBowlPublishQ">
+        <!-- TODO MULE-2928 - remove or replace
         <mxml:jxpath-filter expectedValue="bar" pattern="name">
             <mxml:namespace prefix="foo" uri="http://foo.com"/>
             <mxml:namespace prefix="bar" uri="http://bar.com"/>
         </mxml:jxpath-filter>
+         -->
     </endpoint>
     <endpoint name="waterMelonEndpoint" address="test://test.queue" encoding="UTF-8-TEST"/>
     <endpoint name="appleInEndpoint" address="test://AppleQueue"/>

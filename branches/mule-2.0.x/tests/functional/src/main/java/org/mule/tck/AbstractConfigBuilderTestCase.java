@@ -12,8 +12,8 @@ package org.mule.tck;
 
 import org.mule.DefaultExceptionStrategy;
 import org.mule.RegistryContext;
-import org.mule.api.MuleException;
 import org.mule.api.DefaultMuleException;
+import org.mule.api.MuleException;
 import org.mule.api.config.ThreadingProfile;
 import org.mule.api.context.ObjectNotFoundException;
 import org.mule.api.endpoint.ImmutableEndpoint;
@@ -31,7 +31,6 @@ import org.mule.model.seda.SedaService;
 import org.mule.routing.filters.PayloadTypeFilter;
 import org.mule.routing.filters.RegExFilter;
 import org.mule.routing.filters.logic.AndFilter;
-import org.mule.routing.filters.xml.JXPathFilter;
 import org.mule.routing.inbound.IdempotentReceiver;
 import org.mule.routing.inbound.SelectiveConsumer;
 import org.mule.routing.outbound.FilteringOutboundRouter;
@@ -91,12 +90,14 @@ public abstract class AbstractConfigBuilderTestCase extends AbstractScriptConfig
         }
         assertNotNull(endpoint);
         assertEquals(endpoint.getEndpointURI().getAddress(), "fruitBowlPublishQ");
-        assertNotNull(endpoint.getFilter());
-        JXPathFilter filter = (JXPathFilter) endpoint.getFilter();
-        assertEquals("name", filter.getPattern());
-        assertEquals("bar", filter.getExpectedValue());
-        assertNotNull(filter.getNamespaces());
-        assertEquals("http://foo.com", filter.getNamespaces().get("foo"));
+        
+        // TODO MULE-2928 - remove or replace
+//        JXPathFilter filter = (JXPathFilter) endpoint.getFilter();
+//        assertNotNull(filter);
+//        assertEquals("name", filter.getPattern());
+//        assertEquals("bar", filter.getExpectedValue());
+//        assertNotNull(filter.getNamespaces());
+//        assertEquals("http://foo.com", filter.getNamespaces().get("foo"));
     }
 
     // @Override
