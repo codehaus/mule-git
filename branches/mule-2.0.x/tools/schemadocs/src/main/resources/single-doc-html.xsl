@@ -63,7 +63,7 @@
         -->
         <h3>Attributes</h3>
         <table class="confluenceTable">
-            <th class="confluenceTh" style="width:20%">Name</th>
+            <th class="confluenceTh" style="width:10%">Name</th>
             <th class="confluenceTh" style="width:10%">Type</th>
             <th class="confluenceTh" style="width:10%">Required</th>
             <th class="confluenceTh" style="width:10%">Default</th>
