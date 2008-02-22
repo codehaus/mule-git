@@ -36,8 +36,7 @@
     <xsl:template match="/">
         <html>
             <body>
-                <xsl:apply-templates
-                        select="//xsd:element[@name=$elementName]" mode="start"/>
+                <xsl:apply-templates select="//xsd:element[@name=$elementName]" mode="start"/>
             </body>
         </html>
     </xsl:template>
@@ -80,8 +79,7 @@
             <xsl:call-template name="element-children"/>
             <xsl:if test="@type">
                 <xsl:variable name="type" select="@type"/>
-                <xsl:apply-templates
-                        select="/xsd:schema/xsd:complexType[@name=$type]" mode="elements"/>
+                <xsl:apply-templates select="/xsd:schema/xsd:complexType[@name=$type]" mode="elements"/>
             </xsl:if>
         </table>
         <!--
@@ -273,8 +271,7 @@
             <xsl:choose>
                 <!-- this should always be true when using the normalized schema -->
                 <xsl:when test="/xsd:schema/xsd:element[@substitutionGroup=$name]">
-                    This is an abstract element; another element with a compatible
-                    type must be used in its place:
+                    The following elements can be used here:
                     <ul>
                         <xsl:apply-templates
                                 select="/xsd:schema/xsd:element[@substitutionGroup=$name]"
@@ -291,7 +288,14 @@
     </xsl:template>
 
     <xsl:template match="xsd:element[@name]" mode="elements-list">
-        <li>&lt;<xsl:value-of select="@name"/> ...&gt;</li>
+        <li>
+            <xsl:call-template name="link">
+                <xsl:with-param name="item">
+                    <xsl:value-of select="@name"/>
+                </xsl:with-param>
+            </xsl:call-template>
+        </li>
+        <!-- li>&lt;<xsl:value-of select="@name"/> ...&gt;</li -->
     </xsl:template>
 
     <xsl:template match="xsd:element" mode="elements-doc">
@@ -422,12 +426,19 @@
 
     <xsl:template name="rewrite-type">
         <xsl:param name="type"/>
+        <xsl:variable name="simpleType">
+            <xsl:choose>
+                <xsl:when test="starts-with($type, 'mule:')"><xsl:value-of select="substring($type, 6)"/></xsl:when>
+                <xsl:otherwise><xsl:value-of select="$type"/></xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>
         <xsl:choose>
-            <xsl:when test="$type='mule:substitutableInt'">integer</xsl:when>
-            <xsl:when test="$type='mule:substitutableBoolean'">boolean</xsl:when>
-            <xsl:when test="$type='mule:substitutableLong'">long</xsl:when>
-            <xsl:when test="$type='mule:substitutablePortNumber'">port number</xsl:when>
-            <xsl:when test="$type='mule:substitutableClass'">class name</xsl:when>
+            <xsl:when test="$simpleType='substitutableInt'">integer</xsl:when>
+            <xsl:when test="$simpleType='substitutableBoolean'">boolean</xsl:when>
+            <xsl:when test="$simpleType='substitutableLong'">long</xsl:when>
+            <xsl:when test="$simpleType='substitutablePortNumber'">port number</xsl:when>
+            <xsl:when test="$simpleType='substitutableClass'">class name</xsl:when>
+            <xsl:when test="$simpleType='substitutableName'">name (no spaces)</xsl:when>
             <xsl:when test="starts-with($type, 'xsd:')"><xsl:value-of select="substring($type, 5)"/></xsl:when>
             <xsl:otherwise><xsl:value-of select="$type"/></xsl:otherwise>
         </xsl:choose>
