@@ -312,8 +312,20 @@
         <xsl:apply-templates select="xsd:extension" mode="elements"/>
     </xsl:template>
 
-    <xsl:template match="xsd:element" mode="elements">
-        <xsl:apply-templates select="." mode="elements-doc"/>
+    <xsl:template match="xsd:element[@name]" mode="elements">
+        <tr>
+            <xsl:variable name="name" select="@name"/>
+            <td rowspan="1">
+                <xsl:call-template name="link">
+                    <xsl:with-param name="item">
+                        <xsl:value-of select="@name"/>
+                    </xsl:with-param>
+                </xsl:call-template>
+            </td>
+            <td>
+                <xsl:apply-templates select="." mode="elements-doc"/>
+            </td>
+        </tr>
     </xsl:template>
 
     <xsl:template match="xsd:group" mode="elements">
