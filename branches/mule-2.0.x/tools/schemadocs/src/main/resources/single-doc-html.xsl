@@ -312,6 +312,10 @@
         <xsl:apply-templates select="xsd:extension" mode="elements"/>
     </xsl:template>
 
+    <xsl:template match="xsd:element" mode="elements">
+        <xsl:apply-templates select="." mode="elements-doc"/>
+    </xsl:template>
+
     <xsl:template match="xsd:group" mode="elements">
         <xsl:if test="@ref">
             <xsl:variable name="ref" select="@ref"/>
