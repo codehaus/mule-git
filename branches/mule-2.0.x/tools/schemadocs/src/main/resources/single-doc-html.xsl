@@ -414,10 +414,8 @@
         </xsl:variable>
         <xsl:choose>
             <xsl:when test="string-length($page) > 0">
-                <xsl:variable name="pageNoSpace" select="$page"/>
-                <xsl:variable name="itemNoColon" select="$item"/>
-                <!-- xsl:variable name="pageNoSpace" select="replace($page, '\+', '')"/>
-                <xsl:variable name="itemNoColon" select="replace($item, ':', '-')"/ -->
+                <xsl:variable name="pageNoSpace" select="translate($page, '\+', '')"/>
+                <xsl:variable name="itemNoColon" select="translate($item, ':', '-')"/>
                 <a>
                     <xsl:attribute name="href">
                         <xsl:value-of select="$page"/>#<xsl:value-of select="$pageNoSpace"/>-<xsl:value-of select="$itemNoColon"/>
@@ -440,10 +438,8 @@
         </xsl:variable>
         <xsl:choose>
             <xsl:when test="string-length($page) > 0">
-                <xsl:variable name="pageNoSpace" select="$page"/>
-                <xsl:variable name="itemNoColon" select="$item"/>
-                <!-- xsl:variable name="pageNoSpace" select="replace($page, '\+', '')"/>
-                <xsl:variable name="itemNoColon" select="replace($item, ':', '-')"/ -->
+                <xsl:variable name="pageNoSpace" select="translate($page, '\+', '')"/>
+                <xsl:variable name="itemNoColon" select="translate($item, ':', '-')"/>
                 <xsl:value-of select="$pageNoSpace"/>-<xsl:value-of select="$itemNoColon"/>
             </xsl:when>
             <xsl:otherwise>
