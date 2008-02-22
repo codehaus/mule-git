@@ -30,7 +30,7 @@
 
     <!-- the table of pages for linking -->
     <xsl:key name="item-to-page" match="link" use="item"/>
-    <xsl:variable name="items-to-pages" select="document('http://svn.codehaus.org/mule/branches/mule-2.x/tools/schemadocs/src/main/resources/links.xml')/links"/>
+    <xsl:variable name="items-to-pages" select="document('http://svn.codehaus.org/mule/branches/mule-2.0.x/tools/schemadocs/src/main/resources/links.xml')/links"/>
     <!-- xsl:variable name="items-to-pages" select="document('links.xml')/links"/ -->
 
     <xsl:template match="/">
@@ -56,11 +56,6 @@
             Change the "elementName" parameter to select the element you want displayed.</em>
         </p -->
         <xsl:apply-templates select="." mode="documentation"/>
-        <!--
-        <xsl:if test="@type">
-            <p>Type: <xsl:value-of select="@type"/></p>
-        </xsl:if>
-        -->
         <h3>Attributes</h3>
         <table class="confluenceTable">
             <th class="confluenceTh" style="width:10%">Name</th>
@@ -82,14 +77,6 @@
                 <xsl:apply-templates select="/xsd:schema/xsd:complexType[@name=$type]" mode="elements"/>
             </xsl:if>
         </table>
-        <!--
-        <h3>Substitution</h3>
-        <xsl:apply-templates select="." mode="substitution"/>
-        <h3>Type Hierarchy</h3>
-        <ul>
-            <xsl:apply-templates select="." mode="types"/>
-        </ul>
-        -->
     </xsl:template>
 
 
@@ -374,50 +361,6 @@
         </p>
         <xsl:apply-templates
                 select="/xsd:schema/xsd:element[@name=$sub]" mode="documentation"/>
-    </xsl:template>
-
-
-    <!-- types -->
-
-    <xsl:template match="xsd:element[@type]" mode="types">
-        <xsl:variable name="type" select="@type"/>
-        <xsl:choose>
-            <xsl:when test="/xsd:schema/xsd:complexType[@name=$type]">
-                <xsl:apply-templates
-                        select="/xsd:schema/xsd:complexType[@name=$type]" mode="types"/>
-            </xsl:when>
-            <xsl:otherwise>
-                <li><xsl:value-of select="@type"/>
-                    (This type is not defined in this schema.  This means that
-                    other attributes and elements may exist which are not documented
-                    here)</li>
-            </xsl:otherwise>
-        </xsl:choose>
-    </xsl:template>
-      
-    <xsl:template match="xsd:element[./xsd:complexType]" mode="types">
-        <xsl:apply-templates select="xsd:complexType"/>
-    </xsl:template>
-      
-    <xsl:template name="type-children">
-        <xsl:apply-templates select="xsd:complexType" mode="types"/>
-        <xsl:apply-templates select="xsd:complexContent" mode="types"/>
-        <xsl:apply-templates select="xsd:extension" mode="types"/>
-    </xsl:template>
-
-    <xsl:template match="xsd:complexType" mode="types">
-        <li><xsl:value-of select="@name"/></li>
-        <xsl:call-template name="type-children"/>
-    </xsl:template>
-
-    <xsl:template match="xsd:complexContent" mode="types">
-        <xsl:call-template name="type-children"/>
-    </xsl:template>
-
-    <xsl:template match="xsd:extension" mode="types">
-        <xsl:variable name="base" select="@base"/>
-        <xsl:apply-templates
-                select="/xsd:schema/xsd:complexType[@name=$base]" mode="types"/>
     </xsl:template>
 
 

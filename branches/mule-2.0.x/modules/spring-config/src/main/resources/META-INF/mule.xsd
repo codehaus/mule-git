@@ -3460,7 +3460,13 @@
     <xsd:element name="properties" type="mapType">
         <xsd:annotation>
             <xsd:documentation>
-                Set properties via Spring's entry attribute.
+                Set Mule properties.
+                These are name/value pairs that can be set on components, services, etc,
+                and which provide a generic way of configuring the system.
+                In Mule v2 you typically shouldn't need to use generic properties like
+                this, since almost all functionality is exposed via dedicated elements.
+                However, they can be useful in configuring obscure or overlooked options
+                and in configuring transports from the generic endpoint elements.
             </xsd:documentation>
         </xsd:annotation>
     </xsd:element>
@@ -3472,7 +3478,19 @@
 
     <xsd:group name="propertiesGroup">
         <xsd:sequence>
-            <xsd:element name="property" type="keyValueType" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:element name="property" type="keyValueType" minOccurs="0" maxOccurs="unbounded">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        Set a Mule property.
+                        This is a name/value pair that can be set on components, services, etc,
+                        and which provide a generic way of configuring the system.
+                        In Mule v2 you typically shouldn't need to use a generic property like
+                        this, since almost all functionality is exposed via dedicated elements.
+                        However, it can be useful in configuring obscure or overlooked options
+                        and in configuring transports from the generic endpoint elements.
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
             <xsd:element ref="properties" minOccurs="0"/>
         </xsd:sequence>
     </xsd:group>
