@@ -234,8 +234,7 @@
 
     <xsl:template match="xsd:extension" mode="attributes">
         <xsl:variable name="base" select="@base"/>
-        <xsl:apply-templates
-                select="/xsd:schema/xsd:complexType[@name=$base]" mode="attributes"/>
+        <xsl:apply-templates select="/xsd:schema/xsd:complexType[@name=$base]" mode="attributes"/>
         <xsl:call-template name="attribute-children"/>
     </xsl:template>
 
@@ -429,6 +428,7 @@
         <xsl:variable name="simpleType">
             <xsl:choose>
                 <xsl:when test="starts-with($type, 'mule:')"><xsl:value-of select="substring($type, 6)"/></xsl:when>
+                <xsl:when test="starts-with($type, 'xsd:')"><xsl:value-of select="substring($type, 5)"/></xsl:when>
                 <xsl:otherwise><xsl:value-of select="$type"/></xsl:otherwise>
             </xsl:choose>
         </xsl:variable>
@@ -439,8 +439,7 @@
             <xsl:when test="$simpleType='substitutablePortNumber'">port number</xsl:when>
             <xsl:when test="$simpleType='substitutableClass'">class name</xsl:when>
             <xsl:when test="$simpleType='substitutableName'">name (no spaces)</xsl:when>
-            <xsl:when test="starts-with($type, 'xsd:')"><xsl:value-of select="substring($type, 5)"/></xsl:when>
-            <xsl:otherwise><xsl:value-of select="$type"/></xsl:otherwise>
+            <xsl:otherwise><xsl:value-of select="$simpleType"/></xsl:otherwise>
         </xsl:choose>
     </xsl:template>
 
