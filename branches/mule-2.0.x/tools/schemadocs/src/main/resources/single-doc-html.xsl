@@ -415,7 +415,7 @@
         <xsl:choose>
             <xsl:when test="string-length($page) > 0">
                 <xsl:variable name="pageNoSpace" select="replace($page, '\+', '')"/>
-                <xsl:variable name="itemNoColon" select="replace($item, ':', '')"/>
+                <xsl:variable name="itemNoColon" select="replace($item, ':', '-')"/>
                 <a>
                     <xsl:attribute name="href">
                         <xsl:value-of select="$page"/>#<xsl:value-of select="$pageNoSpace"/>-<xsl:value-of select="$itemNoColon"/>
@@ -439,7 +439,7 @@
         <xsl:choose>
             <xsl:when test="string-length($page) > 0">
                 <xsl:variable name="pageNoSpace" select="replace($page, '\+', '')"/>
-                <xsl:variable name="itemNoColon" select="replace($item, ':', '')"/>
+                <xsl:variable name="itemNoColon" select="replace($item, ':', '-')"/>
                 <xsl:value-of select="$pageNoSpace"/>-<xsl:value-of select="$itemNoColon"/>
             </xsl:when>
             <xsl:otherwise>
