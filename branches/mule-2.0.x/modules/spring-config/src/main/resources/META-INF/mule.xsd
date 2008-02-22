@@ -105,7 +105,7 @@
     <xsd:element name="abstract-extension" abstract="true" type="abstractExtensionType">
         <xsd:annotation>
             <xsd:documentation>
-                Abstract base for arbitrary extensions as children of the mule element.
+                A placeholder for arbitrary extensions as children of the mule element.
                 Other transports and modules may extend this if they need to add global
                 elements to the configuration (but consider the more specific elements
                 like abstract-connector first).
@@ -117,7 +117,7 @@
     <xsd:element name="abstract-connector" abstract="true" type="abstractConnectorType">
         <xsd:annotation>
             <xsd:documentation>
-                Abstract base for connector elements.
+                A placeholder for connector elements.
                 Other transports and modules may extend this if they need to add global
                 connector elements to the configuration.
             </xsd:documentation>
@@ -136,7 +136,7 @@
     <xsd:element name="abstract-global-endpoint" abstract="true" type="abstractGlobalEndpointType">
         <xsd:annotation>
             <xsd:documentation>
-                Abstract base for endpoint elements.
+                A placeholder for endpoint elements.
                 Other transports and modules may extend this if they need to add global
                 endpoint elements to the configuration.
             </xsd:documentation>
@@ -156,7 +156,7 @@
     <xsd:element name="abstract-inbound-endpoint" abstract="true" type="abstractInboundEndpointType">
         <xsd:annotation>
             <xsd:documentation>
-                Abstract base for inbound endpoint elements.
+                A placeholder for inbound endpoint elements.
                 Other transports and modules may extend this if they need to add
                 inbound endpoint elements to the configuration.
             </xsd:documentation>
@@ -166,7 +166,7 @@
         <xsd:attribute name="name" type="substitutableName">
             <xsd:annotation>
                 <xsd:documentation>
-                    Identifies the inbound endpoint, but is of relatively little use
+                    Identifies the inbound endpoint in the registry, but is of relatively little use
                     - it cannot be referred to from MuleClient, for example.
                     For more useful aliases, use global endpoints.
                 </xsd:documentation>
@@ -177,7 +177,7 @@
     <xsd:element name="abstract-outbound-endpoint" abstract="true" type="abstractOutboundEndpointType">
         <xsd:annotation>
             <xsd:documentation>
-                Abstract base for outbound endpoint elements.
+                A placeholder for outbound endpoint elements.
                 Other transports and modules may extend this if they need to add
                 outbound endpoint elements to the configuration.
             </xsd:documentation>
@@ -187,7 +187,7 @@
         <xsd:attribute name="name" type="substitutableName">
             <xsd:annotation>
                 <xsd:documentation>
-                    Identifies the outbound endpoint, but is of relatively little use
+                    Identifies the outbound endpoint in the registry, but is of relatively little use
                     - it cannot be referred to from MuleClient, for example.
                     For more useful aliases, use global endpoints.
                 </xsd:documentation>
@@ -198,7 +198,7 @@
     <xsd:element name="abstract-transformer" abstract="true" type="abstractTransformerType">
         <xsd:annotation>
             <xsd:documentation>
-                Abstract base for transformer elements.
+                A placeholder for transformer elements.
                 Other transports and modules may extend this if they need to add
                 transformer elements to the configuration.
             </xsd:documentation>
@@ -268,7 +268,7 @@
     <xsd:element name="abstract-catch-all-strategy" abstract="true" type="abstractCatchAllStrategyType">
         <xsd:annotation>
             <xsd:documentation>
-                Abstract base for catch-all strategy elements.
+                A placeholder for catch-all strategy elements.
                 Other transports and modules may extend this if they need to add
                 catch-all strategy elements to the configuration.
             </xsd:documentation>
@@ -279,7 +279,7 @@
     <xsd:element name="abstract-inbound-router" abstract="true" type="abstractInboundRouterType">
         <xsd:annotation>
             <xsd:documentation>
-                Abstract base for inbound router elements.
+                A placeholder for inbound router elements.
                 Other transports and modules may extend this if they need to add
                 inbound router elements to the configuration.
             </xsd:documentation>
@@ -290,7 +290,7 @@
     <xsd:element name="abstract-filter" abstract="true" type="abstractFilterType">
         <xsd:annotation>
             <xsd:documentation>
-                Abstract base for filter elements.
+                A placeholder for filter elements.
                 Other transports and modules may extend this if they need to add
                 filter elements to the configuration.
             </xsd:documentation>
@@ -332,7 +332,7 @@
     <xsd:element name="abstract-outbound-router" abstract="true" type="abstractOutboundRouterType">
         <xsd:annotation>
             <xsd:documentation>
-                Abstract base for outbound router elements.
+                A placeholder for outbound router elements.
                 Other transports and modules may extend this if they need to add
                 outbound router elements to the configuration.
             </xsd:documentation>
@@ -343,7 +343,7 @@
     <xsd:element name="abstract-transaction-manager" abstract="true" type="abstractTransactionManagerType">
         <xsd:annotation>
             <xsd:documentation>
-                Abstract base for transaction manager elements.
+                A placeholder for transaction manager elements.
                 Other transports and modules may extend this if they need to add
                 transaction manager elements to the configuration.
             </xsd:documentation>
@@ -659,7 +659,7 @@
     <xsd:element name="abstract-model" abstract="true" type="abstractModelType">
         <xsd:annotation>
             <xsd:documentation>
-                Abstract base for model elements.
+                A placeholder for model elements.
                 Other modules may extend this if they need to add
                 model elements to the configuration.
             </xsd:documentation>
@@ -724,7 +724,7 @@
     <xsd:element name="abstract-queue-profile" abstract="true" type="abstractQueueProfileType">
         <xsd:annotation>
             <xsd:documentation>
-                Abstract base for queue profile elements.
+                A placeholder for queue profile elements.
                 Other modules may extend this if they need to add
                 queue profile elements to the configuration.
             </xsd:documentation>
@@ -744,7 +744,7 @@
     <xsd:element name="abstract-entry-point-resolver-set" abstract="true" type="abstractEntryPointResolverSetType">
         <xsd:annotation>
             <xsd:documentation>
-                Abstract base for entry point resolver set elements.
+                A placeholder for entry point resolver set elements.
                 This allows various entry point resolver set implementations to be used.
             </xsd:documentation>
         </xsd:annotation>
@@ -815,7 +815,7 @@
     <xsd:element name="abstract-entry-point-resolver" abstract="true" type="abstractEntryPointResolverType">
         <xsd:annotation>
             <xsd:documentation>
-                Abstract base for an entry point resolver element.
+                A placeholder for an entry point resolver element.
                 This allows various entry point resolver implementations to be used.
             </xsd:documentation>
         </xsd:annotation>
@@ -1022,7 +1022,7 @@
     <xsd:element name="abstract-service" abstract="true" type="abstractServiceType">
         <xsd:annotation>
             <xsd:documentation>
-                Abstract base for a service element.
+                A placeholder for a service element.
                 This allows various service implementations to be used.
             </xsd:documentation>
         </xsd:annotation>
@@ -1095,7 +1095,7 @@
     <xsd:element name="abstract-exception-strategy" abstract="true" type="abstractExceptionStrategyType">
         <xsd:annotation>
             <xsd:documentation>
-                Abstract base for an exception strategy element.
+                A placeholder for an exception strategy element.
                 This allows various exception strategy implementations to be used.
             </xsd:documentation>
         </xsd:annotation>
@@ -1120,7 +1120,7 @@
     <xsd:element name="abstract-async-reply-router" abstract="true" type="abstractAsyncReplyRouterType">
         <xsd:annotation>
             <xsd:documentation>
-                Abstract base for an async reply router element.
+                A placeholder for an async reply router element.
                 This allows various async reply router implementations to be used.
             </xsd:documentation>
         </xsd:annotation>
@@ -1179,7 +1179,7 @@
     <xsd:element name="abstract-component-threading-profile" abstract="true" type="abstractComponentThreadingProfileType">
         <xsd:annotation>
             <xsd:documentation>
-                Abstract base for component threading profile element.
+                A placeholder for component threading profile element.
                 This allows various component threading profile implementations to be used.
             </xsd:documentation>
         </xsd:annotation>
@@ -1193,7 +1193,7 @@
     <xsd:element name="abstract-component" abstract="true" type="abstractComponentType">
         <xsd:annotation>
             <xsd:documentation>
-                Abstract base for component element.
+                A placeholder for component element.
                 This allows various component implementations to be used.
             </xsd:documentation>
         </xsd:annotation>
@@ -1320,7 +1320,7 @@
     <xsd:element name="abstract-transaction" abstract="true" type="abstractTransactionType">
         <xsd:annotation>
             <xsd:documentation>
-                Abstract base for transaction elements.
+                A placeholder for transaction elements.
                 Other transports and modules may extend this if they need to add
                 transaction elements to the configuration.
             </xsd:documentation>
@@ -1594,7 +1594,7 @@
     <xsd:element name="abstract-security-filter" abstract="true" type="abstractSecurityFilterType">
         <xsd:annotation>
             <xsd:documentation>
-                Abstract base for security filter elements.
+                A placeholder for security filter elements.
                 Other transports and modules may extend this if they need to add
                 security filter elements to the configuration.
             </xsd:documentation>
@@ -1605,7 +1605,7 @@
     <xsd:element name="abstract-connection-strategy" abstract="true" type="abstractConnectionStrategyType">
         <xsd:annotation>
             <xsd:documentation>
-                Abstract base for connection strategy elements.
+                A placeholder for connection strategy elements.
                 Other transports and modules may extend this if they need to add
                 connection strategy elements to the configuration.
             </xsd:documentation>
@@ -3164,7 +3164,7 @@
     <xsd:complexType name="abstractAgentType">
         <xsd:annotation>
             <xsd:documentation>
-                Abstract base for agents.  Not used in core, but common to several modules.
+                A placeholder for agents.  Not used in core, but common to several modules.
             </xsd:documentation>
         </xsd:annotation>
          <xsd:complexContent>
