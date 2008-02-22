@@ -138,9 +138,9 @@ public class DefaultEndpointFactory implements EndpointFactory
     {
         return (InboundEndpoint) getEndpoint(uri, new EndpointSource()
         {
-            public InboundEndpoint getEndpoint(EndpointBuilder builder) throws MuleException
+            public ImmutableEndpoint getEndpoint(EndpointBuilder builder) throws MuleException
             {
-                return getInboundEndpoint(builder);
+                return getEndpoint(builder);
             }
         });
     }
@@ -149,7 +149,7 @@ public class DefaultEndpointFactory implements EndpointFactory
     {
         return (OutboundEndpoint) getEndpoint(uri, new EndpointSource()
         {
-            public OutboundEndpoint getEndpoint(EndpointBuilder builder) throws MuleException
+            public ImmutableEndpoint getEndpoint(EndpointBuilder builder) throws MuleException
             {
                 return getOutboundEndpoint(builder);
             }
