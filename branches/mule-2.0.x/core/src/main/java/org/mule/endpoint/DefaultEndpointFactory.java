@@ -140,7 +140,7 @@ public class DefaultEndpointFactory implements EndpointFactory
         {
             public ImmutableEndpoint getEndpoint(EndpointBuilder builder) throws MuleException
             {
-                return getEndpoint(builder);
+                return getInboundEndpoint(builder);
             }
         });
     }
