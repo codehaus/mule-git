@@ -19,6 +19,3 @@ org.mule.transport.http.functional.HttpsFunctionalTestCase
 #
 # Explanation at: http://jakarta.apache.org/bcel/faq.html
 org.mule.transport.http.functional.HttpContentLengthPropagationTestCase
-
-# MULE-3008: this does not yet work
-org.mule.transport.http.functional.HttpCookieTestCase

@@ -19,31 +19,18 @@
             </inbound>
             <outbound>
                 <outbound-pass-through-router>
-                    <!--                    <http:outbound-endpoint address="http://localhost:1234"/>-->
-                    <http:outbound-endpoint address="http://localhost:1234" method="POST">
+                    <http:outbound-endpoint address="http://localhost:60212" method="POST">
                         <properties>
                             <spring:entry key="Content-Type" value="text/xml" />
                             <spring:entry key="cookies">
                                 <spring:map>
                                     <spring:entry key="customCookie" value="yes"/>
                                 </spring:map>
-<!--                                <spring:list>-->
-<!--                                    <spring:bean class="java.lang.String">-->
-<!--                                        <spring:constructor-arg value="customCookie=yes" />-->
-<!--                                    </spring:bean>-->
-<!--                                </spring:list>-->
                             </spring:entry>
                         </properties>
                     </http:outbound-endpoint>
                 </outbound-pass-through-router>
             </outbound>
-        </service>
-
-        <service name="receiveService">
-            <inbound>
-                <http:inbound-endpoint connector-ref="httpConnector" address="http://localhost:1234" />
-            </inbound>
-            <component class="org.mule.transport.http.functional.CookieTestComponent"/>
         </service>
     </model>
 </mule>

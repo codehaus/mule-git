@@ -27,12 +27,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Iterator;
+import java.util.Map;
 
 import org.apache.commons.httpclient.Cookie;
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethod;
+import org.apache.commons.httpclient.cookie.CookiePolicy;
 import org.apache.commons.httpclient.methods.ByteArrayRequestEntity;
 import org.apache.commons.httpclient.methods.EntityEnclosingMethod;
 import org.apache.commons.httpclient.params.HttpMethodParams;
@@ -122,12 +125,38 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
     protected void processCookies(MuleEvent event)
     {
         MuleMessage msg = event.getMessage();
-        Cookie[] cookies = (Cookie[]) msg.removeProperty(HttpConnector.HTTP_COOKIES_PROPERTY);
-        if (cookies != null && cookies.length > 0)
+        Object cookieObject = msg.removeProperty(HttpConnector.HTTP_COOKIES_PROPERTY);
+        if (cookieObject instanceof Cookie[])
         {
-            String policy = (String) msg.removeProperty(HttpConnector.HTTP_COOKIE_SPEC_PROPERTY);
-            client.getParams().setCookiePolicy(CookieHelper.getCookiePolicy(policy));
-            client.getState().addCookies(cookies);
+            // cookies came in via a regular HTTP request
+            Cookie[] cookies = (Cookie[]) cookieObject;
+            if (cookies != null && cookies.length > 0)
+            {
+                String policy = (String) msg.removeProperty(HttpConnector.HTTP_COOKIE_SPEC_PROPERTY);
+                client.getParams().setCookiePolicy(CookieHelper.getCookiePolicy(policy));
+                client.getState().addCookies(cookies);
+            }
+        }
+        else if (cookieObject instanceof Map)
+        {
+            // cookies were configured on the endpoint
+            client.getParams().setCookiePolicy(CookiePolicy.RFC_2109);
+
+            String host = this.getEndpoint().getEndpointURI().getHost();
+            String path = this.getEndpoint().getEndpointURI().getPath();
+            Map cookieMap = (Map) cookieObject;
+            Iterator keyIter = cookieMap.keySet().iterator();
+            while (keyIter.hasNext())
+            {
+                String key = (String) keyIter.next();
+                String value = (String) cookieMap.get(key);
+                Cookie cookie = new Cookie(host, key, value, path, null, false);
+                client.getState().addCookie(cookie);
+            }
+        }
+        else
+        {
+            throw new IllegalArgumentException("Invalid cookies " + cookieObject);
         }
     }
 
