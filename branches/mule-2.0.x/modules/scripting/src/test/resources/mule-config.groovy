@@ -4,7 +4,7 @@ import org.mule.tck.testmodels.mule.TestTransactionManagerFactory
 import org.mule.tck.testmodels.mule.TestConnector
 import org.mule.tck.testmodels.mule.TestExceptionStrategy
 import org.mule.tck.testmodels.mule.TestCompressionTransformer
-import org.mule.routing.filters.xml.JXPathFilter
+import org.mule.routing.filters.MessagePropertyFilter
 import org.mule.api.endpoint.EndpointBuilder
 import org.mule.endpoint.EndpointURIEndpointBuilder
 import org.mule.model.seda.SedaModel
@@ -67,10 +67,9 @@ testCompressionTransformer.beanProperty2 = 12
 testCompressionTransformer.containerProperty = "myString"
 muleContext.registry.registerTransformer(testCompressionTransformer);
 
-//Register endpoints
-filter = new JXPathFilter("name");
-filter.value = "bar"
-filter.namespaces = [foo: "http://foo.com"]
+//Register Filter
+filter = new MessagePropertyFilter();
+filter.expression = "foo=bar"
 
 // Global Endpoint
 epBuilder= new EndpointURIEndpointBuilder("test://fruitBowlPublishQ", muleContext)
