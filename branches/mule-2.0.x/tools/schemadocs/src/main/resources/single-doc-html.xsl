@@ -156,7 +156,23 @@
             <td rowspan="1">
                 <xsl:value-of select="@name"/>
             </td>
-            <td style="text-align: center"><xsl:call-template name="rewrite-type"><xsl:with-param name="type" select="@type"/></xsl:call-template></td>
+            <td style="text-align: center">
+                <xsl:choose>
+                    <xsl:when test="string-length(@type)">
+                        <xsl:call-template name="rewrite-type">
+                            <xsl:with-param name="type" select="@type"/>
+                        </xsl:call-template>
+                    </xsl:when>
+                    <xsl:when test="xsd:simpleType/xsd:restriction/xsd:enumeration">
+                        <xsl:for-each select="xsd:simpleType/xsd:restriction/xsd:enumeration">
+                            <xsl:if test="@value">
+                                <xsl:value-of select="@value"/>
+                                <xsl:if test="position()!=last()"> / </xsl:if>
+                            </xsl:if>
+                        </xsl:for-each>
+                    </xsl:when>
+                </xsl:choose>
+            </td>
             <td style="text-align: center">
                 <xsl:choose>
                     <xsl:when test="@required">yes</xsl:when>
@@ -423,6 +439,7 @@
             <xsl:when test="$simpleType='substitutablePortNumber'">port number</xsl:when>
             <xsl:when test="$simpleType='substitutableClass'">class name</xsl:when>
             <xsl:when test="$simpleType='substitutableName' or $simpleType='NMTOKEN'">name (no spaces)</xsl:when>
+            <xsl:when test="$simpleType='nonBlankString'">name</xsl:when>
             <xsl:when test="$simpleType='NMTOKENS'">list of names</xsl:when>
             <xsl:otherwise><xsl:value-of select="$simpleType"/></xsl:otherwise>
         </xsl:choose>
