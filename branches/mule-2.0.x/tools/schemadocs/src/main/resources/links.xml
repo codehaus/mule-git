@@ -56,7 +56,7 @@
     <link><item>mule:custom-filter</item><page>Configuring+Models</page></link>
     <link><item>xml:is-xml-filter</item><page>Configuring+Models</page></link>
     <link><item>xml:jxpath-filter</item><page>Configuring+Models</page></link>
-    <link><item>file:filter-filename-wildcard</item><page>Configuring+Models</page></link>
+    <link><item>file:filename-wildcard-filter</item><page>Configuring+Models</page></link>
     <link><item>jms:property-filter</item><page>Configuring+Models</page></link>
     <link><item>ognl:filter</item><page>Configuring+Models</page></link>
 
