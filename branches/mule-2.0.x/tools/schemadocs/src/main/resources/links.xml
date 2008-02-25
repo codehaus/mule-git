@@ -19,6 +19,9 @@
     <link><item>mule:reflection-entry-point-resolver</item><page>Configuring+Models</page></link>
     <link><item>mule:array-entry-point-resolver</item><page>Configuring+Models</page></link>
     <link><item>mule:no-arguments-entry-point-resolver</item><page>Configuring+Models</page></link>
+    <link><item>mule:exclude-object-methods</item><page>Configuring+Models</page></link>
+    <link><item>mule:exclude-entry-point</item><page>Configuring+Models</page></link>
+    <link><item>mule:include-entry-point</item><page>Configuring+Models</page></link>
 
     <link><item>mule:inbound-endpoint</item><page>Configuring+Endpoints</page></link>
     <link><item>mule:outbound-endpoint</item><page>Configuring+Endpoints</page></link>
