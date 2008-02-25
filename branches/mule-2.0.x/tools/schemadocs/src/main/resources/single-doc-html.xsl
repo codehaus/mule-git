@@ -240,11 +240,19 @@
         <tr>
             <xsl:variable name="ref" select="@ref"/>
             <td rowspan="1">
-                <xsl:call-template name="link">
-                    <xsl:with-param name="item">
-                        <xsl:value-of select="@ref"/>
-                    </xsl:with-param>
-                </xsl:call-template>
+                <xsl:choose>
+                    <xsl:when test="contains(@ref, ':abstract-')">
+                        <xsl:variable name="name" select="substring-after(@ref, ':abstract-')"/>
+                        A <xsl:value-of select="$name"/> element
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:call-template name="link">
+                            <xsl:with-param name="item">
+                                <xsl:value-of select="@ref"/>
+                            </xsl:with-param>
+                        </xsl:call-template>
+                    </xsl:otherwise>
+                </xsl:choose>
             </td>
             <td>
                 <!-- include both ref and element doc -->
