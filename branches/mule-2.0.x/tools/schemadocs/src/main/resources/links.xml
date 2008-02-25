@@ -2,6 +2,7 @@
 
     <link><item>mule:model</item><page>Configuring+Models</page></link>
     <link><item>mule:service</item><page>Configuring+Models</page></link>
+    <link><item>mule:custom-service</item><page>Configuring+Models</page></link>
     <link><item>mule:inbound</item><page>Configuring+Models</page></link>
     <link><item>mule:outbound</item><page>Configuring+Models</page></link>
     <link><item>mule:component</item><page>Configuring+Models</page></link>
