@@ -11,5 +11,9 @@
     <link><item>axis:component</item><page>Axis+Transport</page></link>
     <link><item>axis:inbound-endpoint</item><page>Axis+Transport</page></link>
     <link><item>axis:outbound-endpoint</item><page>Axis+Transport</page></link>
-    <link><item>axis:endpoint</item><page></page>Axis+Transport</link>
+    <link><item>axis:endpoint</item><page>Axis+Transport</page></link>
+    <link><item>axis:options</item><page>Axis+Transport</page></link>
+    <link><item>axis:bean-type</item><page>Axis+Transport</page></link>
+    <link><item>axis:soap-service</item><page>Axis+Transport</page></link>
+    <link><item>axis:soap-method</item><page>Axis+Transport</page></link>
 </links>
