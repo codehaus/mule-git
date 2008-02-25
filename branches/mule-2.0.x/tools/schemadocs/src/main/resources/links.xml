@@ -44,6 +44,21 @@
     <link><item>mule:message-chunking-aggregator-router</item><page>Configuring+Models</page></link>
     <link><item>mule:custom-correlation-aggregator-router</item><page>Configuring+Models</page></link>
     <link><item>mule:custom-inbound-router</item><page>Configuring+Models</page></link>
+    <link><item>mule:filter</item><page>Configuring+Models</page></link>
+    <link><item>mule:not-filter</item><page>Configuring+Models</page></link>
+    <link><item>mule:and-filter</item><page>Configuring+Models</page></link>
+    <link><item>mule:or-filter</item><page>Configuring+Models</page></link>
+    <link><item>mule:wildcard-filter</item><page>Configuring+Models</page></link>
+    <link><item>mule:regex-filter</item><page>Configuring+Models</page></link>
+    <link><item>mule:message-property-filter</item><page>Configuring+Models</page></link>
+    <link><item>mule:exception-type-filter</item><page>Configuring+Models</page></link>
+    <link><item>mule:payload-type-filter</item><page>Configuring+Models</page></link>
+    <link><item>mule:custom-filter</item><page>Configuring+Models</page></link>
+    <link><item>xml:is-xml-filter</item><page>Configuring+Models</page></link>
+    <link><item>xml:jxpath-filter</item><page>Configuring+Models</page></link>
+    <link><item>file:filter-filename-wildcard</item><page>Configuring+Models</page></link>
+    <link><item>jms:property-filter</item><page>Configuring+Models</page></link>
+    <link><item>ognl:filter</item><page>Configuring+Models</page></link>
 
     <link><item>mule:inbound-endpoint</item><page>Configuring+Endpoints</page></link>
     <link><item>mule:outbound-endpoint</item><page>Configuring+Endpoints</page></link>
