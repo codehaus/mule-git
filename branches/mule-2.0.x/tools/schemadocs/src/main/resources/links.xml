@@ -7,4 +7,9 @@
     <link><item>mule:inbound-endpoint</item><page>Configuring+Endpoints</page></link>
     <link><item>mule:outbound-endpoint</item><page>Configuring+Endpoints</page></link>
     <link><item>mule:endpoint</item><page>Configuring+Endpoints</page></link>
+
+    <link><item>axis:component</item><page>Axis+Transport</page></link>
+    <link><item>axis:inbound-endpoint</item><page>Axis+Transport</page></link>
+    <link><item>axis:outbound-endpoint</item><page>Axis+Transport</page></link>
+    <link><item>axis:endpoint</item><page></page>Axis+Transport</link>
 </links>
