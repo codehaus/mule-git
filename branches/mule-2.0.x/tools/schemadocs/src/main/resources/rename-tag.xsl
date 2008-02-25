@@ -124,6 +124,10 @@
                     </xsl:otherwise>
                 </xsl:choose>
             </xsl:if>
+            <!-- is there a better way of doing this? -->
+            <xsl:if test="@value">
+                <xsl:attribute name="value"><xsl:value-of select="@value"/></xsl:attribute>
+            </xsl:if>
             <xsl:apply-templates select="./*"/>
         </xsl:copy>
     </xsl:template>
