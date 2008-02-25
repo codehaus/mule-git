@@ -22,7 +22,8 @@
     <link><item>mule:exclude-object-methods</item><page>Configuring+Models</page></link>
     <link><item>mule:exclude-entry-point</item><page>Configuring+Models</page></link>
     <link><item>mule:include-entry-point</item><page>Configuring+Models</page></link>
-
+    <link><item>mule:queue-profile</item><page>Configuring+Models</page></link>
+    
     <link><item>mule:inbound-endpoint</item><page>Configuring+Endpoints</page></link>
     <link><item>mule:outbound-endpoint</item><page>Configuring+Endpoints</page></link>
     <link><item>mule:endpoint</item><page>Configuring+Endpoints</page></link>
