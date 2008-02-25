@@ -34,6 +34,16 @@
     <link><item>mule:custom-catch-all-strategy</item><page>Configuring+Models</page></link>
     <link><item>mule:forwarding-catch-all-strategy</item><page>Configuring+Models</page></link>
     <link><item>mule:custom-forwarding-catch-all-strategy</item><page>Configuring+Models</page></link>
+    <link><item>mule:idempotent-secure-hash-receiver-router</item><page>Configuring+Models</page></link>
+    <link><item>mule:inbound-pass-through-router</item><page>Configuring+Models</page></link>
+    <link><item>mule:idempotent-receiver-router</item><page>Configuring+Models</page></link>
+    <link><item>mule:wire-tap-router</item><page>Configuring+Models</page></link>
+    <link><item>mule:forwarding-router</item><page>Configuring+Models</page></link>
+    <link><item>mule:selective-consumer-router</item><page>Configuring+Models</page></link>
+    <link><item>mule:correlation-resequencer-router</item><page>Configuring+Models</page></link>
+    <link><item>mule:message-chunking-aggregator-router</item><page>Configuring+Models</page></link>
+    <link><item>mule:custom-correlation-aggregator-router</item><page>Configuring+Models</page></link>
+    <link><item>mule:custom-inbound-router</item><page>Configuring+Models</page></link>
 
     <link><item>mule:inbound-endpoint</item><page>Configuring+Endpoints</page></link>
     <link><item>mule:outbound-endpoint</item><page>Configuring+Endpoints</page></link>
