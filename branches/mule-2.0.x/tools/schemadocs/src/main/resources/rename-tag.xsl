@@ -28,6 +28,10 @@
         </xsl:copy>
     </xsl:template>
 
+    <xsl:template match="xsd:simpleType">
+        <xsl:call-template name="copyWithRename"/>
+    </xsl:template>
+
     <xsl:template match="xsd:complexType">
         <xsl:call-template name="copyWithRename"/>
     </xsl:template>
@@ -37,6 +41,14 @@
     </xsl:template>
 
     <xsl:template match="xsd:extension">
+        <xsl:call-template name="copyWithRename"/>
+    </xsl:template>
+
+    <xsl:template match="xsd:restriction">
+        <xsl:call-template name="copyWithRename"/>
+    </xsl:template>
+
+    <xsl:template match="xsd:enumeration">
         <xsl:call-template name="copyWithRename"/>
     </xsl:template>
 
