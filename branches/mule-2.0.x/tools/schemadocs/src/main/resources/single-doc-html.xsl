@@ -236,6 +236,7 @@
     <!-- documentation here more restricted than "documentation" mode -->
 
     <xsl:template match="xsd:element[@ref]" mode="elements">
+        <!--element ref <xsl:value-of select="@ref"/>-->
         <tr>
             <xsl:variable name="ref" select="@ref"/>
             <td rowspan="1">
@@ -254,10 +255,12 @@
                         select="/xsd:schema/xsd:element[@name=$ref]" mode="elements-abstract"/>
             </td>
         </tr>
+        <!--element ref done-->
     </xsl:template>
 
     <xsl:template match="xsd:element[contains(@name, ':abstract-')]"
                   mode="elements-abstract">
+        <!--element (abstract) <xsl:value-of select="@name"/>-->
         <xsl:variable name="name" select="@name"/>
         <p>
             <xsl:choose>
@@ -277,9 +280,14 @@
                 </xsl:otherwise>
             </xsl:choose>
         </p>
+        <!--element (abstract) done-->
     </xsl:template>
 
+    <!-- otherwise, do nothing -->
+    <xsl:template match="xsd:element" mode="elements-abstract"/>
+
     <xsl:template match="xsd:element[@name]" mode="elements-list">
+        <!--element (list) <xsl:value-of select="@name"/>-->
         <li>
             <xsl:call-template name="link">
                 <xsl:with-param name="item">
@@ -288,17 +296,21 @@
             </xsl:call-template>
         </li>
         <!-- li>&lt;<xsl:value-of select="@name"/> ...&gt;</li -->
+        <!--element (list) done-->
     </xsl:template>
 
     <xsl:template match="xsd:element" mode="elements-doc">
+        <!--element (doc) <xsl:value-of select="@name"/>-->
         <xsl:if test="xsd:annotation/xsd:documentation/text()">
             <p>
                 <xsl:value-of select="xsd:annotation/xsd:documentation/text()"/>
             </p>
         </xsl:if>
+        <!--element (doc) done-->
     </xsl:template>
 
     <xsl:template name="element-children">
+        <!--children-->
         <xsl:apply-templates select="xsd:element" mode="elements"/>
         <xsl:apply-templates select="xsd:group" mode="elements"/>
         <xsl:apply-templates select="xsd:sequence" mode="elements"/>
@@ -306,9 +318,11 @@
         <xsl:apply-templates select="xsd:complexType" mode="elements"/>
         <xsl:apply-templates select="xsd:complexContent" mode="elements"/>
         <xsl:apply-templates select="xsd:extension" mode="elements"/>
+        <!--children done-->
     </xsl:template>
 
     <xsl:template match="xsd:element[@name]" mode="elements">
+        <!--element <xsl:value-of select="@name"/>-->
         <tr>
             <xsl:variable name="name" select="@name"/>
             <td rowspan="1">
@@ -322,38 +336,51 @@
                 <xsl:apply-templates select="." mode="elements-doc"/>
             </td>
         </tr>
+        <!--element done-->
     </xsl:template>
 
     <xsl:template match="xsd:group" mode="elements">
+        <!--group <xsl:value-of select="@name"/>-->
         <xsl:if test="@ref">
             <xsl:variable name="ref" select="@ref"/>
             <xsl:apply-templates
                     select="/xsd:schema/xsd:group[@name=$ref]" mode="elements"/>
         </xsl:if>
         <xsl:call-template name="element-children"/>
+        <!--group done-->
     </xsl:template>
 
     <xsl:template match="xsd:sequence" mode="elements">
+        <!--sequence <xsl:value-of select="@name"/>-->
         <xsl:call-template name="element-children"/>
+        <!--sequence done-->
     </xsl:template>
 
     <xsl:template match="xsd:choice" mode="elements">
+        <!--choice <xsl:value-of select="@name"/>-->
         <xsl:call-template name="element-children"/>
+        <!--choice done-->
     </xsl:template>
 
     <xsl:template match="xsd:complexType" mode="elements">
+        <!--complexType <xsl:value-of select="@name"/>-->
         <xsl:call-template name="element-children"/>
+        <!--complexType done-->
     </xsl:template>
 
     <xsl:template match="xsd:complexContent" mode="elements">
+        <!--complexContent <xsl:value-of select="@name"/>-->
         <xsl:call-template name="element-children"/>
+        <!--complexContent done-->
     </xsl:template>
 
     <xsl:template match="xsd:extension" mode="elements">
+        <!--extension <xsl:value-of select="@name"/>-->
         <xsl:variable name="base" select="@base"/>
         <xsl:apply-templates
                 select="/xsd:schema/xsd:complexType[@name=$base]" mode="elements"/>
         <xsl:call-template name="element-children"/>
+        <!--extension done-->
     </xsl:template>
 
 
