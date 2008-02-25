@@ -6,6 +6,11 @@
     <link><item>mule:inbound</item><page>Configuring+Models</page></link>
     <link><item>mule:outbound</item><page>Configuring+Models</page></link>
     <link><item>mule:component</item><page>Configuring+Models</page></link>
+    <link><item>mule:bridge-component</item><page>Configuring+Models</page></link>
+    <link><item>mule:echo-component</item><page>Configuring+Models</page></link>
+    <link><item>mule:log-component</item><page>Configuring+Models</page></link>
+    <link><item>mule:null-component</item><page>Configuring+Models</page></link>
+    <link><item>http:rest-service-component</item><page>Configuring+Models</page></link>
     <link><item>mule:default-service-exception-strategy</item><page>Configuring+Models</page></link>
     <link><item>mule:default-connector-exception-strategy</item><page>Configuring+Models</page></link>
     <link><item>mule:custom-exception-strategy</item><page>Configuring+Models</page></link>
