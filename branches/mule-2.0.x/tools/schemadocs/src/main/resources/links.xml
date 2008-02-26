@@ -67,6 +67,50 @@
     <link><item>xml:jxpath-property-extractor</item><page>Configuring+Models</page></link>
     <link><item>xml:dom4j-property-extractor</item><page>Configuring+Models</page></link>
     <link><item>xml:jdom-property-extractor</item><page>Configuring+Models</page></link>
+    <link><item>mule:transformer</item><page>Configuring+Models</page></link>
+    <link><item>mule:custom-transformer</item><page>Configuring+Models</page></link>
+    <link><item>mule:message-properties-transformer</item><page>Configuring+Models</page></link>
+    <link><item>mule:no-action-transformer</item><page>Configuring+Models</page></link>
+    <link><item>mule:base64-encoder-transformer</item><page>Configuring+Models</page></link>
+    <link><item>mule:base64-decoder-transformer</item><page>Configuring+Models</page></link>
+    <link><item>mule:xml-entity-encoder-transformer</item><page>Configuring+Models</page></link>
+    <link><item>mule:xml-entity-decoder-transformer</item><page>Configuring+Models</page></link>
+    <link><item>mule:gzip-compress-transformer</item><page>Configuring+Models</page></link>
+    <link><item>mule:gzip-uncompress-transformer</item><page>Configuring+Models</page></link>
+    <link><item>mule:byte-array-to-hex-string-transformer</item><page>Configuring+Models</page></link>
+    <link><item>mule:hex-string-to-byte-array-transformer</item><page>Configuring+Models</page></link>
+    <link><item>mule:byte-array-to-object-transformer</item><page>Configuring+Models</page></link>
+    <link><item>mule:object-to-byte-array-transformer</item><page>Configuring+Models</page></link>
+    <link><item>mule:object-to-string-transformer</item><page>Configuring+Models</page></link>
+    <link><item>mule:byte-array-to-serializable-transformer</item><page>Configuring+Models</page></link>
+    <link><item>mule:serializable-to-byte-array-transformer</item><page>Configuring+Models</page></link>
+    <link><item>mule:byte-array-to-string-transformer</item><page>Configuring+Models</page></link>
+    <link><item>mule:string-to-byte-array-transformer</item><page>Configuring+Models</page></link>
+    <link><item>mule:append-string-transformer</item><page>Configuring+Models</page></link>
+    <link><item>mule:encrypt-transformer</item><page>Configuring+Models</page></link>
+    <link><item>mule:decrypt-transformer</item><page>Configuring+Models</page></link>
+    <link><item>xml:dom-to-xml-transformer</item><page>Configuring+Models</page></link>
+    <link><item>xml:dom-to-output-handler-transformer</item><page>Configuring+Models</page></link>
+    <link><item>xml:jxpath-extractor-transformer</item><page>Configuring+Models</page></link>
+    <link><item>xml:object-to-xml-transformer</item><page>Configuring+Models</page></link>
+    <link><item>xml:xml-to-dom-transformer</item><page>Configuring+Models</page></link>
+    <link><item>xml:xml-to-object-transformer</item><page>Configuring+Models</page></link>
+    <link><item>xml:xslt-transformer</item><page>Configuring+Models</page></link>
+    <link><item>xml:xml-prettyprinter-transformer</item><page>Configuring+Models</page></link>
+    <link><item>email:email-to-string-transformer</item><page>Configuring+Models</page></link>
+    <link><item>email:string-to-email-transformer</item><page>Configuring+Models</page></link>
+    <link><item>email:object-to-mime-transformer</item><page>Configuring+Models</page></link>
+    <link><item>email:mime-to-bytes-transformer</item><page>Configuring+Models</page></link>
+    <link><item>email:bytes-to-mime-transformer</item><page>Configuring+Models</page></link>
+    <link><item>soap:http-to-soap-request-transformer</item><page>Configuring+Models</page></link>
+    <link><item>http:http-client-response-to-object-transformer</item><page>Configuring+Models</page></link>
+    <link><item>http:http-response-to-string-transformer</item><page>Configuring+Models</page></link>
+    <link><item>http:object-to-http-client-request-transformer</item><page>Configuring+Models</page></link>
+    <link><item>http:message-to-http-response-transformer</item><page>Configuring+Models</page></link>
+    <link><item>file:file-to-byte-array-transformer</item><page>Configuring+Models</page></link>
+    <link><item>file:file-to-string-transformer</item><page>Configuring+Models</page></link>
+    <link><item>jms:jmsmessage-to-object-transformer</item><page>Configuring+Models</page></link>
+    <link><item>jms:object-to-jmsmessage-transformer</item><page>Configuring+Models</page></link>
 
     <link><item>mule:inbound-endpoint</item><page>Configuring+Endpoints</page></link>
     <link><item>mule:outbound-endpoint</item><page>Configuring+Endpoints</page></link>
