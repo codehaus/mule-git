@@ -77,11 +77,12 @@ public abstract class AbstractObjectFactory implements ObjectFactory, ServiceAwa
     public LifecycleTransitionResult initialise() throws InitialisationException
     {
         // TODO HH WTF? add error checking, break everything?
-//        if (objectClass == null && objectClassName == null)
-//        {
-//            throw new InitialisationException(
-//                MessageFactory.createStaticMessage("Object factory has not been initialized."), this);
-//        }
+        // if (objectClass == null && objectClassName == null)
+        // {
+        // throw new InitialisationException(
+        // MessageFactory.createStaticMessage("Object factory has not been initialized."),
+        // this);
+        // }
 
         if (objectClass == null && objectClassName != null)
         {
@@ -154,10 +155,6 @@ public abstract class AbstractObjectFactory implements ObjectFactory, ServiceAwa
     {
         this.service = service;
     }
-
-    // /////////////////////////////////////////////////////////////////////////////////////
-    // Getters and Setters
-    // /////////////////////////////////////////////////////////////////////////////////////
 
     public Class getObjectClass()
     {

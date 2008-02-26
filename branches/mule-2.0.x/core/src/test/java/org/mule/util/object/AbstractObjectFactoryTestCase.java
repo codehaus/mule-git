@@ -75,7 +75,6 @@ public abstract class AbstractObjectFactoryTestCase extends AbstractMuleTestCase
         assertNotNull(factory.getInstance());
     }
 
-    // @Override
     public void testDispose() throws Exception
     {
         AbstractObjectFactory factory = (AbstractObjectFactory) getObjectFactory();
@@ -83,6 +82,8 @@ public abstract class AbstractObjectFactoryTestCase extends AbstractMuleTestCase
 
         factory.initialise();
         factory.dispose();
+
+        assertNull(factory.getObjectClass());
 
         try
         {
