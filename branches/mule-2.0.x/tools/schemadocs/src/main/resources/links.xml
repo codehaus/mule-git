@@ -136,6 +136,7 @@
     <link><item>jms:transaction</item><page>Configuring+Models</page></link>
     <link><item>jms:client-ack-transaction</item><page>Configuring+Models</page></link>
     <link><item>jms:xa-transaction</item><page>Configuring+Models</page></link>
+    <link><item>jdbc:transaction</item><page>Configuring+Models</page></link>
     <link><item>http:payloadParameterName</item><page>Configuring+Models</page></link>
     <link><item>http:requiredParameter</item><page>Configuring+Models</page></link>
     <link><item>http:optionalParameter</item><page>Configuring+Models</page></link>
