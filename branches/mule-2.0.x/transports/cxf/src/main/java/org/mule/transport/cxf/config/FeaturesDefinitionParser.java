@@ -19,6 +19,11 @@ import org.mule.config.spring.parsers.assembly.configuration.SimplePropertyConfi
 import org.mule.config.spring.parsers.assembly.configuration.PropertyConfiguration;
 import org.mule.config.spring.MuleHierarchicalBeanDefinitionParserDelegate;
 
+/**
+ * This parser allows us to inter-operate with third party (Apache CXF) bean definition parsers.
+ * It "calls out" to the parsers for the child elements and sets them as collection entries on the
+ * property "features".
+ */
 public class FeaturesDefinitionParser extends ChildSingletonMapDefinitionParser
 {
 
