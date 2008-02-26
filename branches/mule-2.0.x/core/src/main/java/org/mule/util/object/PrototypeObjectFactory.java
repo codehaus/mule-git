@@ -76,9 +76,9 @@ public class PrototypeObjectFactory extends AbstractObjectFactory
     /**
      * Creates a new instance of the object on each call.
      */
-    public Object getOrCreate() throws Exception
+    public Object getInstance() throws Exception
     {
-        Object obj = super.getOrCreate();
+        Object obj = super.getInstance();
         String id = UUID.getUUID();
 
         if (instances != null)

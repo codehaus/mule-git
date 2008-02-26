@@ -615,7 +615,7 @@ public class MuleEventMulticaster
             s.setQueueProfile(new QueueProfile());
             s.getInboundRouter().addEndpoint(
                 muleContext.getRegistry().lookupEndpointFactory().getInboundEndpoint(newEndpoint));
-            s.setServiceFactory(new SingletonObjectFactory(listener));
+            s.setComponentFactory(new SingletonObjectFactory(listener));
             muleContext.getRegistry().registerService(s);
             return true;
         }
@@ -715,7 +715,7 @@ public class MuleEventMulticaster
                 messageRouter.addEndpoint(endpoint);
             }
         }
-        service.setServiceFactory(new SingletonObjectFactory(this));
+        service.setComponentFactory(new SingletonObjectFactory(this));
         return service;
     }
 

@@ -455,7 +455,7 @@ public class AxisConnector extends AbstractConnector implements ManagerNotificat
             props.put(AXIS, axis);
             SingletonObjectFactory of = new SingletonObjectFactory(AxisServiceComponent.class, props);
             of.initialise();
-            c.setServiceFactory(of);
+            c.setComponentFactory(of);
         }
         return c;
     }

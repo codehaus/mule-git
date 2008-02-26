@@ -39,7 +39,7 @@ public class ComponentDefinitionParserTestCase extends AbstractMuleTestCase
         muleContext = muleContextFactory.createMuleContext(configBuilder);
         Service service = muleContext.getRegistry().lookupService("service");
         validateCorrectServiceCreation(service);
-        assertEquals(SingletonObjectFactory.class, service.getServiceFactory().getClass());
+        assertEquals(SingletonObjectFactory.class, service.getComponentFactory().getClass());
         assertEquals(1, service.getNestedRouter().getRouters().size());
     }
 
@@ -50,7 +50,7 @@ public class ComponentDefinitionParserTestCase extends AbstractMuleTestCase
         muleContext = muleContextFactory.createMuleContext(configBuilder);
         Service service = muleContext.getRegistry().lookupService("service2");
         validateCorrectServiceCreation(service);
-        assertEquals(PooledObjectFactory.class, service.getServiceFactory().getClass());
+        assertEquals(PooledObjectFactory.class, service.getComponentFactory().getClass());
         assertEquals(2, service.getNestedRouter().getRouters().size());
     }
 
@@ -76,9 +76,9 @@ public class ComponentDefinitionParserTestCase extends AbstractMuleTestCase
     protected void validateCorrectServiceCreation(Service service) throws Exception
     {
         assertNotNull(service);
-        assertNotNull(service.getServiceFactory());
-        assertFalse(service.getServiceFactory().getOrCreate() instanceof PassThroughComponent);
-        assertTrue(service.getServiceFactory().getOrCreate() instanceof StaticComponent);
+        assertNotNull(service.getComponentFactory());
+        assertFalse(service.getComponentFactory().getInstance() instanceof PassThroughComponent);
+        assertTrue(service.getComponentFactory().getInstance() instanceof StaticComponent);
         assertNotNull(service.getNestedRouter());
         assertTrue(service.getNestedRouter().getRouters().get(0) instanceof DefaultNestedRouter);
     }

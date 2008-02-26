@@ -76,7 +76,7 @@ public class SpringBeanLookup implements ObjectFactory, ApplicationContextAware
         return applicationContext.getType(bean);
     }
 
-    public Object getOrCreate() throws Exception
+    public Object getInstance() throws Exception
     {
         return applicationContext.getBean(bean);
     }
