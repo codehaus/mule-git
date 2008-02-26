@@ -115,6 +115,9 @@
     <link><item>mule:singleton-object</item><page>Configuring+Models</page></link>
     <link><item>mule:prototype-object</item><page>Configuring+Models</page></link>
     <link><item>mule:pooled-object</item><page>Configuring+Models</page></link>
+    <link><item>mule:binding</item><page>Configuring+Models</page></link>
+    <link><item>mule:property</item><page>Configuring+Models</page></link>
+    <link><item>mule:properties</item><page>Configuring+Models</page></link>
 
     <link><item>mule:inbound-endpoint</item><page>Configuring+Endpoints</page></link>
     <link><item>mule:outbound-endpoint</item><page>Configuring+Endpoints</page></link>
