@@ -119,6 +119,19 @@
     <link><item>mule:property</item><page>Configuring+Models</page></link>
     <link><item>mule:properties</item><page>Configuring+Models</page></link>
     <link><item>mule:pooling-profile</item><page>Configuring+Models</page></link>
+    <link><item>mule:outbound-pass-through-router</item><page>Configuring+Models</page></link>
+    <link><item>mule:filtering-router</item><page>Configuring+Models</page></link>
+    <link><item>mule:chaining-router</item><page>Configuring+Models</page></link>
+    <link><item>mule:exception-based-router</item><page>Configuring+Models</page></link>
+    <link><item>mule:multicasting-router</item><page>Configuring+Models</page></link>
+    <link><item>mule:template-endpoint-router</item><page>Configuring+Models</page></link>
+    <link><item>mule:endpoint-selector-router</item><page>Configuring+Models</page></link>
+    <link><item>mule:list-message-splitter-router</item><page>Configuring+Models</page></link>
+    <link><item>mule:message-chunking-router</item><page>Configuring+Models</page></link>
+    <link><item>mule:static-recipient-list-router</item><page>Configuring+Models</page></link>
+    <link><item>mule:custom-outbound-router</item><page>Configuring+Models</page></link>
+    <link><item>xml:message-splitter</item><page>Configuring+Models</page></link>
+    <link><item>xml:round-robin-splitter</item><page>Configuring+Models</page></link>
 
     <link><item>mule:inbound-endpoint</item><page>Configuring+Endpoints</page></link>
     <link><item>mule:outbound-endpoint</item><page>Configuring+Endpoints</page></link>
