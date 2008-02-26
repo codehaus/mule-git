@@ -687,7 +687,7 @@ public class MuleEventMulticaster
         Service service = muleContext.getRegistry().lookupService(EVENT_MULTICASTER_DESCRIPTOR_NAME);
         if (service != null)
         {
-            muleContext.getRegistry().unregisterComponent(service.getName());
+            muleContext.getRegistry().unregisterService(service.getName());
         }
         service = new SedaService();
         service.setName(EVENT_MULTICASTER_DESCRIPTOR_NAME);

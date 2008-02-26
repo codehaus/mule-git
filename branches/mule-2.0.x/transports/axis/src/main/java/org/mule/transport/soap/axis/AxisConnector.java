@@ -355,7 +355,7 @@ public class AxisConnector extends AbstractConnector implements ManagerNotificat
         {
             // Lets unregister the 'template' instance, configure it and
             // then register again later
-            muleContext.getRegistry().unregisterComponent(AXIS_SERVICE_PROPERTY + getName());
+            muleContext.getRegistry().unregisterService(AXIS_SERVICE_PROPERTY + getName());
         }
 
         String serviceName = ((AxisMessageReceiver) receiver).getSoapService().getName();

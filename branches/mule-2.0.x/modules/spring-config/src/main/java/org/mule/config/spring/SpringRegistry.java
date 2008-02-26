@@ -29,7 +29,6 @@ import org.mule.api.transport.Connector;
 import org.mule.config.MuleConfiguration;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.config.i18n.MessageFactory;
-import org.mule.container.MultiContainerContext;
 import org.mule.lifecycle.ContainerManagedLifecyclePhase;
 import org.mule.lifecycle.GenericLifecycleManager;
 import org.mule.registry.AbstractRegistry;
@@ -50,13 +49,6 @@ public class SpringRegistry extends AbstractRegistry
     public static final String REGISTRY_ID = "org.mule.Registry.Spring";
 
     protected ConfigurableApplicationContext applicationContext;
-
-    /**
-     * TODO MULE-1908
-     *
-     * @deprecated Should MultiContainerContext still be used in 2.x? MULE-1908
-     */
-    protected MultiContainerContext containerContext;
 
     public SpringRegistry()
     {
@@ -229,12 +221,12 @@ public class SpringRegistry extends AbstractRegistry
     public void registerService(Service service)
             throws MuleException
     {
-        unsupportedOperation("registerComponent", service);
+        unsupportedOperation("registerService", service);
     }
 
-    public void unregisterComponent(String componentName)
+    public void unregisterService(String serviceName)
     {
-        unsupportedOperation("unregisterComponent", componentName);
+        unsupportedOperation("unregisterService", serviceName);
     }
 
     public void registerModel(Model model) throws MuleException

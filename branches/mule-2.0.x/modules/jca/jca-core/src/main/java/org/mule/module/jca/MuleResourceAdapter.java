@@ -214,7 +214,7 @@ public class MuleResourceAdapter implements ResourceAdapter, Serializable
 
             try
             {
-                muleContext.getRegistry().unregisterComponent(service.getName());
+                muleContext.getRegistry().unregisterService(service.getName());
             }
             catch (MuleException e)
             {

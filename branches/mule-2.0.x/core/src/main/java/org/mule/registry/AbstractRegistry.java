@@ -202,6 +202,20 @@ public abstract class AbstractRegistry implements Registry
         return (Connector) lookupObject(name);
     }
 
+    /**
+     * Removed this method from {@link Registry} API as it should only be used
+     * internally and may confuse users. The {@link EndpointFactory} should be used
+     * for creating endpoints.<br/><br/> Looks up an returns endpoints registered in the
+     * registry by their idendifier (currently endpoint name)<br/><br/ <b>NOTE:
+     * This method does not create new endpoint instances, but rather returns
+     * existing endpoint instances that have been registered. This lookup method
+     * should be avoided and the intelligent, role specific endpoint lookup methods
+     * should be used instead.<br/><br/>
+     * 
+     * @param name the idendtifer/name used to register endpoint in registry
+     * @see #lookupInboundEndpoint(String, org.mule.api.MuleContext)
+     * @see #lookupResponseEndpoint(String, org.mule.api.MuleContext)
+     */
     public ImmutableEndpoint lookupEndpoint(String name)
     {
         Object obj = lookupObject(name);
@@ -418,14 +432,14 @@ public abstract class AbstractRegistry implements Registry
         return (Service) lookupObject(name);
     }
 
-    public Collection/*<Service>*/ lookupComponents()
+    public Collection/*<Service>*/ lookupServices()
     {
         return lookupObjects(Service.class);
     }
 
-    public Collection/*<Service>*/ lookupComponents(String model)
+    public Collection/*<Service>*/ lookupServices(String model)
     {
-        Collection/*<Service>*/ components = lookupComponents();
+        Collection/*<Service>*/ components = lookupServices();
         List modelComponents = new ArrayList();
         Iterator it = components.iterator();
         Service service;
