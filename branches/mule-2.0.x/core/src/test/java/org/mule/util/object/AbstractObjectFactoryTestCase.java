@@ -15,16 +15,21 @@ import org.mule.tck.AbstractMuleTestCase;
 
 public abstract class AbstractObjectFactoryTestCase extends AbstractMuleTestCase
 {
-    protected ObjectFactory factory;
 
-    // @Override
-    public void doSetUp()
+    public void testInitialisationFailure() throws Exception
     {
-        factory = getObjectFactory();
-    }
+        AbstractObjectFactory factory = (AbstractObjectFactory) getObjectFactory();
 
-    public final void testInitialise() throws Exception
-    {
+        try
+        {
+            factory.initialise();
+            fail("expected InitialisationException");
+        }
+        catch (InitialisationException iex)
+        {
+            // OK
+        }
+
         try
         {
             factory.getInstance();
@@ -34,6 +39,29 @@ public abstract class AbstractObjectFactoryTestCase extends AbstractMuleTestCase
         {
             // OK
         }
+    }
+
+    public void testInitialiseWithClass() throws Exception
+    {
+        AbstractObjectFactory factory = (AbstractObjectFactory) getObjectFactory();
+        factory.setObjectClass(Object.class);
+
+        try
+        {
+            factory.initialise();
+        }
+        catch (InitialisationException iex)
+        {
+            fail(iex.getDetailedMessage());
+        }
+
+        assertNotNull(factory.getInstance());
+    }
+
+    public void testInitialiseWithClassName() throws Exception
+    {
+        AbstractObjectFactory factory = (AbstractObjectFactory) getObjectFactory();
+        factory.setObjectClassName(Object.class.getName());
 
         try
         {
@@ -48,8 +76,11 @@ public abstract class AbstractObjectFactoryTestCase extends AbstractMuleTestCase
     }
 
     // @Override
-    public final void testDispose() throws Exception
+    public void testDispose() throws Exception
     {
+        AbstractObjectFactory factory = (AbstractObjectFactory) getObjectFactory();
+        factory.setObjectClass(Object.class);
+
         factory.initialise();
         factory.dispose();
 
@@ -62,7 +93,6 @@ public abstract class AbstractObjectFactoryTestCase extends AbstractMuleTestCase
         {
             // OK
         }
-
     }
 
     public abstract ObjectFactory getObjectFactory();
