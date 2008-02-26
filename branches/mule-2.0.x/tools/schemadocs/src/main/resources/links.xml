@@ -89,11 +89,10 @@
     <link><item>file:filename-wildcard-filter</item><page>Additional+Configuration</page></link>
     <link><item>jms:property-filter</item><page>Additional+Configuration</page></link>
     <link><item>ognl:filter</item><page>Additional+Configuration</page></link>
-    <link><item>mule:bean-property-extractor</item><page>Additional+Configuration</page></link>
-    <link><item>mule:correlation-property-extractor</item><page>Additional+Configuration</page></link>
     <link><item>mule:map-property-extractor</item><page>Additional+Configuration</page></link>
     <link><item>mule:message-property-extractor</item><page>Additional+Configuration</page></link>
-    <link><item>mule:payload-property-extractor</item><page>Additional+Configuration</page></link>
+    <link><item>mule:correlation-property-extractor</item><page>Additional+Configuration</page></link>
+    <link><item>mule:function-property-extractor</item><page>Additional+Configuration</page></link>
     <link><item>xml:jxpath-property-extractor</item><page>Additional+Configuration</page></link>
     <link><item>xml:dom4j-property-extractor</item><page>Additional+Configuration</page></link>
     <link><item>xml:jdom-property-extractor</item><page>Additional+Configuration</page></link>
