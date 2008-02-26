@@ -111,6 +111,10 @@
     <link><item>file:file-to-string-transformer</item><page>Configuring+Models</page></link>
     <link><item>jms:jmsmessage-to-object-transformer</item><page>Configuring+Models</page></link>
     <link><item>jms:object-to-jmsmessage-transformer</item><page>Configuring+Models</page></link>
+    <link><item>mule:spring-object</item><page>Configuring+Models</page></link>
+    <link><item>mule:singleton-object</item><page>Configuring+Models</page></link>
+    <link><item>mule:prototype-object</item><page>Configuring+Models</page></link>
+    <link><item>mule:pooled-object</item><page>Configuring+Models</page></link>
 
     <link><item>mule:inbound-endpoint</item><page>Configuring+Endpoints</page></link>
     <link><item>mule:outbound-endpoint</item><page>Configuring+Endpoints</page></link>
