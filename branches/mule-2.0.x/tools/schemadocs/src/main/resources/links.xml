@@ -132,6 +132,11 @@
     <link><item>mule:custom-outbound-router</item><page>Configuring+Models</page></link>
     <link><item>xml:message-splitter</item><page>Configuring+Models</page></link>
     <link><item>xml:round-robin-splitter</item><page>Configuring+Models</page></link>
+    <link><item>mule:custom-transaction</item><page>Configuring+Models</page></link>
+    <link><item>jms:transaction</item><page>Configuring+Models</page></link>
+    <link><item>jms:client-ack-transaction</item><page>Configuring+Models</page></link>
+    <link><item>jms:xa-transaction</item><page>Configuring+Models</page></link>
+    <link><item>jdbc:transaction</item><page>Configuring+Models</page></link>
 
     <link><item>mule:inbound-endpoint</item><page>Configuring+Endpoints</page></link>
     <link><item>mule:outbound-endpoint</item><page>Configuring+Endpoints</page></link>
