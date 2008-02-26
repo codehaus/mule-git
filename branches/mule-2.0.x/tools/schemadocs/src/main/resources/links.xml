@@ -94,8 +94,8 @@
     <link><item>mule:correlation-property-extractor</item><page>Additional+Configuration</page></link>
     <link><item>mule:function-property-extractor</item><page>Additional+Configuration</page></link>
     <link><item>xml:jxpath-property-extractor</item><page>Additional+Configuration</page></link>
-    <link><item>xml:dom4j-property-extractor</item><page>Additional+Configuration</page></link>
-    <link><item>xml:jdom-property-extractor</item><page>Additional+Configuration</page></link>
+    <link><item>xml:xpath-property-extractor</item><page>Additional+Configuration</page></link>
+    <link><item>xml:bean-property-extractor</item><page>Additional+Configuration</page></link>
     <link><item>mule:transformer</item><page>Additional+Configuration</page></link>
     <link><item>mule:custom-transformer</item><page>Additional+Configuration</page></link>
     <link><item>mule:message-properties-transformer</item><page>Additional+Configuration</page></link>
