@@ -89,6 +89,7 @@
     <link><item>file:filename-wildcard-filter</item><page>Additional+Configuration</page></link>
     <link><item>jms:property-filter</item><page>Additional+Configuration</page></link>
     <link><item>ognl:filter</item><page>Additional+Configuration</page></link>
+    <link><item>mule:custom-property-extractor</item><page>Additional+Configuration</page></link>
     <link><item>mule:map-property-extractor</item><page>Additional+Configuration</page></link>
     <link><item>mule:message-property-extractor</item><page>Additional+Configuration</page></link>
     <link><item>mule:correlation-property-extractor</item><page>Additional+Configuration</page></link>
