@@ -69,6 +69,8 @@
 
     <link><item>mule:property</item><page>Additional+Configuration</page></link>
     <link><item>mule:properties</item><page>Additional+Configuration</page></link>
+    <link><item>mule:jndi-property</item><page>Additional+Configuration</page></link>
+    <link><item>mule:jndi-properties</item><page>Additional+Configuration</page></link>
     <link><item>mule:custom-transaction</item><page>Additional+Configuration</page></link>
     <link><item>jms:transaction</item><page>Additional+Configuration</page></link>
     <link><item>jms:client-ack-transaction</item><page>Additional+Configuration</page></link>
