@@ -150,7 +150,7 @@
     <link><item>mule:outbound-endpoint</item><page>Configuring+Endpoints</page></link>
     <link><item>mule:endpoint</item><page>Configuring+Endpoints</page></link>
     <link><item>mule:retry-connection-strategy</item><page>Configuring+Endpoints</page></link>
-    <link><item>mule:custom-connection-strateg</item><page>Configuring+Endpoints</page></link>
+    <link><item>mule:custom-connection-strategy</item><page>Configuring+Endpoints</page></link>
 
     <link><item>axis:component</item><page>Axis+Transport</page></link>
     <link><item>axis:inbound-endpoint</item><page>Axis+Transport</page></link>
