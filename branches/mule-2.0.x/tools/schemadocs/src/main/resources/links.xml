@@ -155,8 +155,9 @@
     <link><item>mule:response-transformers</item><page>Configuring+Endpoints</page></link>
 
     <link><item>mule:receiver-threading-profile</item><page>General+Transport+Configuration</page></link>
-    <link><item>mule:dispatcher-threading-profile</item><page>General+Transport+Configuration</page></link>    
-
+    <link><item>mule:dispatcher-threading-profile</item><page>General+Transport+Configuration</page></link>
+    <link><item>mule:service-overrides</item><page>General+Transport+Configuration</page></link>
+    
     <link><item>axis:connector</item><page>Axis+Transport</page></link>
     <link><item>axis:inbound-endpoint</item><page>Axis+Transport</page></link>
     <link><item>axis:outbound-endpoint</item><page>Axis+Transport</page></link>
