@@ -22,7 +22,6 @@ import org.mule.api.service.Service;
 import org.mule.api.transformer.Transformer;
 import org.mule.api.transformer.TransformerException;
 import org.mule.api.transport.Connector;
-import org.mule.config.MuleConfiguration;
 
 import java.util.Collection;
 import java.util.List;
@@ -106,9 +105,6 @@ public interface Registry extends Initialisable, Disposable
 
     Agent lookupAgent(String agentName);
 
-    // TODO MULE-2162 MuleConfiguration belongs in the MuleContext rather than the Registry
-    MuleConfiguration getConfiguration();
-
     /** @deprecated Use lookupModel() instead */
     Collection getModels();
 
@@ -166,9 +162,6 @@ public interface Registry extends Initialisable, Disposable
     void registerAgent(Agent agent) throws MuleException;
 
     void unregisterAgent(String agentName) throws MuleException;
-
-    // TODO MULE-2162 MuleConfiguration belongs in the MuleContext rather than the Registry
-    void setConfiguration(MuleConfiguration config);
 
     // /////////////////////////////////////////////////////////////////////////
     // Creation methods

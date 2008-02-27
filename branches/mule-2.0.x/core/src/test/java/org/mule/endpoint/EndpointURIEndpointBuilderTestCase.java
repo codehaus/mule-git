@@ -26,9 +26,22 @@ import org.mule.transformer.TransformerUtils;
 import org.mule.transport.SingleAttemptConnectionStrategy;
 import org.mule.util.ObjectNameHelper;
 
+import java.util.Random;
+
 public class EndpointURIEndpointBuilderTestCase extends AbstractMuleTestCase
 {
 
+    @Override
+    protected void doSetUp() throws Exception
+    {
+        super.doSetUp();
+        muleContext.getConfiguration().setDefaultSynchronousEndpoints(new Random().nextBoolean());
+        muleContext.getConfiguration().setDefaultRemoteSync(new Random().nextBoolean());
+        muleContext.getConfiguration().setDefaultSynchronousEventTimeout(new Random().nextInt());
+        muleContext.getConfiguration().setDefaultEncoding("US-ASCII");
+    }
+    
+    
     public void testBuildInboundEndpoint() throws MuleException
     {
         String uri = "test://address";
@@ -72,14 +85,14 @@ public class EndpointURIEndpointBuilderTestCase extends AbstractMuleTestCase
 
     // TODO DF: Test more than defaults with tests using builder to set non-default values
 
-    public void testDefaultCommonEndpointAttributes(ImmutableEndpoint ep)
+    protected void testDefaultCommonEndpointAttributes(ImmutableEndpoint ep)
     {
         assertEquals(ep.getEndpointURI().getUri().toString(), "test://address");
-        assertEquals(muleContext.getRegistry().getConfiguration().getDefaultSynchronousEventTimeout(),
+        assertEquals(muleContext.getConfiguration().getDefaultSynchronousEventTimeout(),
             ep.getRemoteSyncTimeout());
-        assertEquals(muleContext.getRegistry().getConfiguration().isDefaultSynchronousEndpoints(),
-            ep.isSynchronous());
-        assertEquals(false, ep.isRemoteSync());
+        assertEquals(muleContext.getConfiguration().isDefaultSynchronousEndpoints()
+                     || muleContext.getConfiguration().isDefaultRemoteSync(), ep.isSynchronous());
+        assertEquals(muleContext.getConfiguration().isDefaultRemoteSync(), ep.isRemoteSync());
         assertTrue(ep.getConnectionStrategy() instanceof SingleAttemptConnectionStrategy);
         assertTrue(ep.getTransactionConfig() instanceof MuleTransactionConfig);
         assertTrue(ep.getTransactionConfig() instanceof MuleTransactionConfig);
@@ -87,7 +100,7 @@ public class EndpointURIEndpointBuilderTestCase extends AbstractMuleTestCase
         assertTrue(ep.getConnector() instanceof TestConnector);
         assertEquals(ObjectNameHelper.getEndpointName(ep), ep.getName());
         assertFalse(ep.isDeleteUnacceptedMessages());
-        assertEquals(muleContext.getRegistry().getConfiguration().getDefaultEncoding(), ep.getEncoding());
+        assertEquals(muleContext.getConfiguration().getDefaultEncoding(), ep.getEncoding());
         assertEquals(null, ep.getFilter());
         assertEquals(ImmutableEndpoint.INITIAL_STATE_STARTED, ep.getInitialState());
     }

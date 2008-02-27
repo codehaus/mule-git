@@ -103,6 +103,6 @@ public class AutoDeleteOnFileDispatcherReceiverTestCase extends AbstractMuleTest
 
     public String getTestEndpointURI()
     {
-        return "file://" + muleContext.getRegistry().getConfiguration().getWorkingDirectory();
+        return "file://" + muleContext.getConfiguration().getWorkingDirectory();
     }
 }

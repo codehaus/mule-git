@@ -32,7 +32,6 @@ import org.mule.api.service.Service;
 import org.mule.api.transformer.DiscoverableTransformer;
 import org.mule.api.transformer.Transformer;
 import org.mule.api.transport.Connector;
-import org.mule.config.MuleConfiguration;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.lifecycle.GenericLifecycleManager;
 import org.mule.lifecycle.phases.TransientRegistryDisposePhase;
@@ -58,9 +57,6 @@ public class TransientRegistry extends AbstractRegistry
 
     /** Map of Maps registry */
     private Map registry;
-
-    //TODO MULE-2162 how do we handle Muleconfig across Registries
-    private MuleConfiguration config; // = new MuleConfiguration();
 
     public TransientRegistry()
     {
@@ -179,16 +175,6 @@ public class TransientRegistry extends AbstractRegistry
         return o;
     }
 
-    protected MuleConfiguration getLocalConfiguration()
-    {
-        return config;
-    }
-
-    public void setConfiguration(MuleConfiguration config)
-    {
-        this.config = config;
-    }
-
     public Collection doLookupObjects(Class returntype)
     {
         Map map = (Map) registry.get(returntype);
@@ -201,7 +187,6 @@ public class TransientRegistry extends AbstractRegistry
             return null;
         }
     }
-
 
     /** Looks up the service descriptor from a singleton cache and creates a new one if not found. */
     public ServiceDescriptor lookupServiceDescriptor(String type, String name, Properties overrides) throws ServiceException

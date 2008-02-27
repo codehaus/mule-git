@@ -51,7 +51,7 @@ public class JBossArjunaTransactionManagerFactory implements TransactionManagerF
         {
             if (!properties.containsKey(Environment.OBJECTSTORE_DIR))
             {
-                final String muleInternalDir = RegistryContext.getRegistry().getConfiguration().getWorkingDirectory();
+                final String muleInternalDir = RegistryContext.getConfiguration().getWorkingDirectory();
                 arjPropertyManager.propertyManager.setProperty(Environment.OBJECTSTORE_DIR, muleInternalDir + "/transaction-log");
             }
 

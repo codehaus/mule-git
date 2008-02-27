@@ -32,7 +32,6 @@ import org.mule.api.transformer.DiscoverableTransformer;
 import org.mule.api.transformer.Transformer;
 import org.mule.api.transformer.TransformerException;
 import org.mule.api.transport.Connector;
-import org.mule.config.MuleConfiguration;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.transformer.TransformerCollection;
 import org.mule.transformer.TransformerWeighting;
@@ -673,43 +672,6 @@ public abstract class AbstractRegistry implements Registry
 
     protected abstract void doRegisterTransformer(Transformer transformer) throws MuleException;
 
-    public final MuleConfiguration getConfiguration()
-    {
-        MuleConfiguration config = getLocalConfiguration();
-        if (config == null && getParent() != null)
-        {
-            config = getParent().getConfiguration();
-        }
-        if (config == null)
-        {
-            config = new MuleConfiguration();
-            setConfiguration(config);
-        }
-        return config;
-    }
-
-    /**
-     * TODO MULE-2162
-     *
-     * @return the MuleConfiguration for this MuleManager. This object is immutable
-     *         once the manager has initialised.
-     */
-    protected MuleConfiguration getLocalConfiguration()
-    {
-        Collection collection = lookupObjects(MuleConfiguration.class);
-        if (collection == null)
-        {
-            logger.warn("No MuleConfiguration was found in registry");
-            return null;
-        }
-
-        if (collection.size() > 1)
-        {
-            logger.warn("More than one MuleConfiguration was found in registry");
-        }
-        return (MuleConfiguration) collection.iterator().next();
-    }
-    
     // /////////////////////////////////////////////////////////////////////////
     // Registry Metadata
     // /////////////////////////////////////////////////////////////////////////
