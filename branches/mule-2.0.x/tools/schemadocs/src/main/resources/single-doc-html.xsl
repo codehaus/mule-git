@@ -438,7 +438,7 @@
             <xsl:when test="$simpleType='substitutableLong'">long</xsl:when>
             <xsl:when test="$simpleType='substitutablePortNumber'">port number</xsl:when>
             <xsl:when test="$simpleType='substitutableClass'">class name</xsl:when>
-            <xsl:when test="$simpleType='substitutableName' or $simpleType='NMTOKEN'">name (no spaces)</xsl:when>
+            <xsl:when test="$simpleType='substitutableName' or $simpleType='NMTOKEN' or $simpleType='IDREF'">name (no spaces)</xsl:when>
             <xsl:when test="$simpleType='nonBlankString'">name</xsl:when>
             <xsl:when test="$simpleType='NMTOKENS'">list of names</xsl:when>
             <xsl:otherwise><xsl:value-of select="$simpleType"/></xsl:otherwise>
