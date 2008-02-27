@@ -177,6 +177,7 @@
     <link><item>cxf:inbound-endpoint</item><page>CXF+Transport</page></link>
     <link><item>cxf:outbound-endpoint</item><page>CXF+Transport</page></link>
     <link><item>cxf:endpoint</item><page>Cxf+Transport</page></link>
+    <link><item>cxf:features</item><page>Cxf+Transport</page></link>
 
     <link><item>ejb:connector</item><page>EJB+Transport</page></link>
     <link><item>ejb:inbound-endpoint</item><page>EJB+Transport</page></link>
