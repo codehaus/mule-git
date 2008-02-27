@@ -53,7 +53,7 @@
         <productUrl>http://mule.mulesource.org</productUrl>
         <springVersion>2.5.1</springVersion>
         <xfireVersion>1.2.6</xfireVersion>
-        <cxfVersion>2.0.1-incubator</cxfVersion>
+        <cxfVersion>2.0.4-incubator</cxfVersion>
         <coberturaVersion>2.2</coberturaVersion>
         <geronimoSpecsVersion>1.1</geronimoSpecsVersion>
     </properties>

@@ -195,6 +195,12 @@
             </exclusions>
         </dependency>
         <dependency>
+        	<groupId>org.apache.cxf</groupId>
+        	<artifactId>cxf-rt-ws-security</artifactId>
+        	<version>${cxfVersion}</version>
+        	<scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-testutils</artifactId>
             <version>${cxfVersion}</version>
