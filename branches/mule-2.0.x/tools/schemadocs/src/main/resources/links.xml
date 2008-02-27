@@ -141,7 +141,7 @@
     <link><item>file:file-to-string-transformer</item><page>Additional+Configuration</page></link>
     <link><item>jms:jmsmessage-to-object-transformer</item><page>Additional+Configuration</page></link>
     <link><item>jms:object-to-jmsmessage-transformer</item><page>Additional+Configuration</page></link>
-    <link><item>mule:encryption-security-filte</item><page>Additional+Configuration</page></link>
+    <link><item>mule:encryption-security-filter</item><page>Additional+Configuration</page></link>
     <link><item>jaas:jaas-security-filter</item><page>Additional+Configuration</page></link>
     <link><item>acegi:http-security-filter</item><page>Additional+Configuration</page></link>
     <link><item>pgp:security-filter</item><page>Additional+Configuration</page></link>
