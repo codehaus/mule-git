@@ -168,5 +168,6 @@
     <link><item>axis:soap-method</item><page>Axis+Transport</page></link>
     <link><item>axis:soap-parameter</item><page>Axis+Transport</page></link>
     <link><item>axis:soap-return</item><page>Axis+Transport</page></link>
+    <link><item>axis:supported-scheme</item><page>Axis+Transport</page></link>
 
 </links>
