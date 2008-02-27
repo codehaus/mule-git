@@ -1727,7 +1727,7 @@
                         <xsd:group ref="transformersList"/>
                     </xsd:complexType>
                 </xsd:element>
-                <xsd:element name="responseTransformers" minOccurs="0">
+                <xsd:element name="response-transformers" minOccurs="0">
                     <xsd:annotation>
                         <xsd:documentation>
                             A list of transformer elements that will be applied to the response message
