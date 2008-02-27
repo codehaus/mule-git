@@ -144,7 +144,6 @@
     <link><item>mule:encryption-security-filte</item><page>Additional+Configuration</page></link>
     <link><item>jaas:jaas-security-filter</item><page>Additional+Configuration</page></link>
     <link><item>acegi:http-security-filter</item><page>Additional+Configuration</page></link>
-    <link><item>wssecurity:security-filter</item><page>Additional+Configuration</page></link>
     <link><item>pgp:security-filter</item><page>Additional+Configuration</page></link>
     
     <link><item>mule:inbound-endpoint</item><page>Configuring+Endpoints</page></link>
