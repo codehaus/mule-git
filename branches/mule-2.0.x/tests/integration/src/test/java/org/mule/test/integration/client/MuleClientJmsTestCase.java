@@ -25,7 +25,7 @@ public class MuleClientJmsTestCase extends FunctionalTestCase
 
     public MuleClientJmsTestCase()
     {
-        setDisposeManagerPerSuite(true);
+        setDisposeManagerPerSuite(false);
     }
 
     protected String getConfigResources()
