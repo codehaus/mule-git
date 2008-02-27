@@ -1720,7 +1720,7 @@
                             Note that a list of transformers can also be specified directly
                             (without the "transformers" element), but then it is not possible
                             to also specify response transformers
-                            (using the "responseTransformers" element).
+                            (using the "response-transformers" element).
                         </xsd:documentation>
                     </xsd:annotation>
                     <xsd:complexType>
