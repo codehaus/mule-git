@@ -171,4 +171,9 @@
     <link><item>axis:soap-return</item><page>Axis+Transport</page></link>
     <link><item>axis:supported-scheme</item><page>Axis+Transport</page></link>
 
+    <link><item>bpm:connector</item><page>Bpm+Transport</page></link>
+    <link><item>bpm:inbound-endpoint</item><page>Bpm+Transport</page></link>
+    <link><item>bpm:outbound-endpoint</item><page>Bpm+Transport</page></link>
+    <link><item>bpm:endpoint</item><page>Bpm+Transport</page></link>
+
 </links>
