@@ -176,4 +176,9 @@
     <link><item>bpm:outbound-endpoint</item><page>Bpm+Transport</page></link>
     <link><item>bpm:endpoint</item><page>Bpm+Transport</page></link>
 
+    <link><item>cxf:connector</item><page>Cxf+Transport</page></link>
+    <link><item>cxf:inbound-endpoint</item><page>Cxf+Transport</page></link>
+    <link><item>cxf:outbound-endpoint</item><page>Cxf+Transport</page></link>
+    <link><item>cxf:endpoint</item><page>Cxf+Transport</page></link>
+
 </links>
