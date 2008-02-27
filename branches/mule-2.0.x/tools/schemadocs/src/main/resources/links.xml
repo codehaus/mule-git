@@ -154,7 +154,7 @@
     <link><item>mule:transformers</item><page>Configuring+Endpoints</page></link>
     <link><item>mule:response-transformers</item><page>Configuring+Endpoints</page></link>
     
-    <link><item>axis:component</item><page>Axis+Transport</page></link>
+    <link><item>axis:connector</item><page>Axis+Transport</page></link>
     <link><item>axis:inbound-endpoint</item><page>Axis+Transport</page></link>
     <link><item>axis:outbound-endpoint</item><page>Axis+Transport</page></link>
     <link><item>axis:endpoint</item><page>Axis+Transport</page></link>
