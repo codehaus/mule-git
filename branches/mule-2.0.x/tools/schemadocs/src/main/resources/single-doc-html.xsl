@@ -94,7 +94,7 @@
        - the type
        we don't use extension or substitution here -->
 
-    <xsl:template match="xsd:element[@name='spring:proeprty']" mode="documentation">
+    <xsl:template match="xsd:element[@name='spring:property']" mode="documentation">
         <p>
             A Spring property definition.
             This allows an arbitrary value to be set on the parent object being created.
