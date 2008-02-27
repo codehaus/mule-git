@@ -323,17 +323,6 @@
         <!--element (list) done-->
     </xsl:template>
 
-    <xsl:template match="xsd:element[@ref='spring:property']" mode="elements-doc">
-        <p>
-            A Spring property definition.
-            This allows an arbitrary value to be set on the parent object being created.
-            Typically this is used only when configuring custom classes which do not have
-            a specific schema.
-            See Spring documentation for further details (the "bean" on which this value is
-            set should be clear from the context - it is typically a filter, transformer, etc).
-        </p>
-    </xsl:template>
-
     <xsl:template match="xsd:element" mode="elements-doc">
         <!--element (doc) <xsl:value-of select="@name"/>-->
         <xsl:if test="xsd:annotation/xsd:documentation/text()">
