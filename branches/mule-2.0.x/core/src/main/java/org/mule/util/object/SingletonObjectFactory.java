@@ -55,6 +55,7 @@ public class SingletonObjectFactory extends AbstractObjectFactory
      */
     public SingletonObjectFactory(Object instance)
     {
+        super(instance.getClass());
         this.instance = instance;
     }
 

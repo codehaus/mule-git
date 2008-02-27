@@ -16,7 +16,7 @@ import org.mule.tck.AbstractMuleTestCase;
 public abstract class AbstractObjectFactoryTestCase extends AbstractMuleTestCase
 {
 
-    public void _testInitialisationFailure() throws Exception
+    public void testInitialisationFailure() throws Exception
     {
         AbstractObjectFactory factory = (AbstractObjectFactory) getObjectFactory();
 
