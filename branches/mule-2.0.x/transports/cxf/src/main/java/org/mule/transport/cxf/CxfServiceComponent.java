@@ -200,7 +200,7 @@ public class CxfServiceComponent implements Callable, Lifecycle
             if (payload instanceof InputStream)
             {
                 m.put(Message.ENCODING, ctx.getEncoding());
-                m.setContent(InputStream.class, (InputStream) payload);
+                m.setContent(InputStream.class, payload);
             }
             else if (payload instanceof Reader)
             {
