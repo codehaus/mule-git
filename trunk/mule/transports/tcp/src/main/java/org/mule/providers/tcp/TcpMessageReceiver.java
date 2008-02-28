@@ -43,6 +43,7 @@ import java.net.Socket;
 import java.net.SocketAddress;
 import java.net.SocketTimeoutException;
 import java.net.URI;
+import java.net.SocketException;
 import java.util.Iterator;
 import java.util.List;
 
@@ -264,7 +265,14 @@ public class TcpMessageReceiver extends AbstractMessageReceiver implements Work
                     socket.setSoTimeout(tcpConnector.getReceiveTimeout());
                 }
 
-                socket.setTcpNoDelay(tcpConnector.isSendTcpNoDelay());
+                try
+                {
+                    socket.setTcpNoDelay(tcpConnector.isSendTcpNoDelay());
+                }
+                catch (SocketException e)
+                {
+                    // MULE-2800 - Solaris may throw an exception here that we want to ignore
+                }
                 socket.setKeepAlive(tcpConnector.isKeepAlive());
 
                 dataIn = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
