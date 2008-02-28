@@ -23,7 +23,6 @@ import org.mule.impl.endpoint.MuleEndpoint;
 import org.mule.impl.endpoint.MuleEndpointURI;
 import org.mule.impl.message.ExceptionPayload;
 import org.mule.management.stats.ComponentStatistics;
-import org.mule.management.stats.SedaComponentStatistics;
 import org.mule.providers.AbstractConnector;
 import org.mule.providers.NullPayload;
 import org.mule.providers.ReplyToHandler;
@@ -43,7 +42,6 @@ import org.mule.umo.lifecycle.UMOLifecycleAdapter;
 import org.mule.umo.model.ModelException;
 import org.mule.umo.model.UMOEntryPointResolver;
 import org.mule.umo.model.UMOModel;
-import org.mule.util.ObjectPool;
 import org.mule.util.queue.QueueSession;
 
 import java.util.ArrayList;
@@ -88,8 +86,6 @@ public class DefaultMuleProxy implements MuleProxy
 
     private List interceptorList;
 
-    private ObjectPool proxyPool;
-
     private ComponentStatistics stat = null;
 
     private QueueSession queueSession = null;
@@ -101,11 +97,9 @@ public class DefaultMuleProxy implements MuleProxy
      * @param component the underlying object that with receive events
      * @param descriptor the UMOComponent descriptor associated with the component
      */
-    public DefaultMuleProxy(Object component, MuleDescriptor descriptor, UMOModel model, ObjectPool proxyPool)
-        throws UMOException
+    public DefaultMuleProxy(Object component, MuleDescriptor descriptor, UMOModel model) throws UMOException
     {
         this.descriptor = new ImmutableMuleDescriptor(descriptor);
-        this.proxyPool = proxyPool;
 
         UMOEntryPointResolver resolver = model.getEntryPointResolver();
         umo = model.getLifecycleAdapterFactory().create(component, descriptor, resolver);
@@ -441,6 +435,14 @@ public class DefaultMuleProxy implements MuleProxy
         }
     }
 
+    /**
+     * This is the entry point for the thread that runs an asynchronous
+     * component request. This method executes the request and
+     * <p>
+     * <b>NOTE:</b> It is the responsibility of the creator of this proxy to
+     * release it (e.g., return it to the object pool), once this method has
+     * completed.
+     */
     public void run()
     {
         if (logger.isTraceEnabled())
@@ -512,25 +514,8 @@ public class DefaultMuleProxy implements MuleProxy
                         event.getMessage(), e));
             }
         }
-        finally
-        {
-            try
-            {
-                proxyPool.returnObject(this);
-            }
-            catch (Exception e2)
-            {
-                // TODO MULE-863: If this is an error, do something about it
-                logger.error("Failed to return proxy: " + e2.getMessage(), e2);
-            }
-            //TODO RM* clean this up
-            if (getStatistics() instanceof SedaComponentStatistics)
-            {
-                ((SedaComponentStatistics) getStatistics()).setComponentPoolSize(proxyPool.getSize());
-            }
-        }
     }
-
+    
     public void release()
     {
         // nothing to do

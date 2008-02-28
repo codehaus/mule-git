@@ -55,7 +55,7 @@ public abstract class AbstractProxyFactory implements ObjectFactory
 
     protected Object createProxy(Object component) throws UMOException
     {
-        return new DefaultMuleProxy(component, descriptor, model, pool);
+        return new DefaultMuleProxy(component, descriptor, model);
     }
 
     protected void afterComponentCreate(Object component) throws InitialisationException
