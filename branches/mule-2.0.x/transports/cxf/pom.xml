@@ -58,7 +58,7 @@
                 <!-- We use stax-api -->
                 <exclusion>
                     <groupId>org.apache.geronimo.specs</groupId>
-                    <artifactId>geronimo-stax-api_1.0_spec-1.0</artifactId>
+                    <artifactId>geronimo-stax-api_1.0_spec</artifactId>
                 </exclusion>
                 <!-- We use slf4j -->
                 <exclusion>
@@ -85,7 +85,7 @@
                 <!-- We use stax-api -->
                 <exclusion>
                     <groupId>org.apache.geronimo.specs</groupId>
-                    <artifactId>geronimo-stax-api_1.0_spec-1.0</artifactId>
+                    <artifactId>geronimo-stax-api_1.0_spec</artifactId>
                 </exclusion>
                 <!-- We use slf4j -->
                 <exclusion>
@@ -112,7 +112,7 @@
                 <!-- We use stax-api -->
                 <exclusion>
                     <groupId>org.apache.geronimo.specs</groupId>
-                    <artifactId>geronimo-stax-api_1.0_spec-1.0</artifactId>
+                    <artifactId>geronimo-stax-api_1.0_spec</artifactId>
                 </exclusion>
                 <!-- We use slf4j -->
                 <exclusion>
@@ -139,7 +139,7 @@
                 <!-- We use stax-api -->
                 <exclusion>
                     <groupId>org.apache.geronimo.specs</groupId>
-                    <artifactId>geronimo-stax-api_1.0_spec-1.0</artifactId>
+                    <artifactId>geronimo-stax-api_1.0_spec</artifactId>
                 </exclusion>
                 <!-- We use slf4j -->
                 <exclusion>
@@ -166,7 +166,7 @@
                 <!-- We use stax-api -->
                 <exclusion>
                     <groupId>org.apache.geronimo.specs</groupId>
-                    <artifactId>geronimo-stax-api_1.0_spec-1.0</artifactId>
+                    <artifactId>geronimo-stax-api_1.0_spec</artifactId>
                 </exclusion>
                 <!-- We use slf4j -->
                 <exclusion>
@@ -193,7 +193,7 @@
                 <!-- We use stax-api -->
                 <exclusion>
                     <groupId>org.apache.geronimo.specs</groupId>
-                    <artifactId>geronimo-stax-api_1.0_spec-1.0</artifactId>
+                    <artifactId>geronimo-stax-api_1.0_spec</artifactId>
                 </exclusion>
                 <!-- We use slf4j -->
                 <exclusion>
@@ -220,7 +220,7 @@
                 <!-- We use stax-api -->
                 <exclusion>
                     <groupId>org.apache.geronimo.specs</groupId>
-                    <artifactId>geronimo-stax-api_1.0_spec-1.0</artifactId>
+                    <artifactId>geronimo-stax-api_1.0_spec</artifactId>
                 </exclusion>
                 <!-- We use slf4j -->
                 <exclusion>
