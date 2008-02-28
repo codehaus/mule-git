@@ -55,6 +55,11 @@
                     <groupId>org.apache.geronimo.specs</groupId>
                     <artifactId>geronimo-javamail_1.4_spec</artifactId>
                 </exclusion>
+                <!-- We use stax-api -->
+                <exclusion>
+                    <groupId>org.apache.geronimo.specs</groupId>
+                    <artifactId>geronimo-stax-api_1.0_spec-1.0</artifactId>
+                </exclusion>
                 <!-- We use slf4j -->
                 <exclusion>
                     <groupId>commons-logging</groupId>
@@ -76,6 +81,11 @@
                 <exclusion>
                     <groupId>org.apache.geronimo.specs</groupId>
                     <artifactId>geronimo-javamail_1.4_spec</artifactId>
+                </exclusion>
+                <!-- We use stax-api -->
+                <exclusion>
+                    <groupId>org.apache.geronimo.specs</groupId>
+                    <artifactId>geronimo-stax-api_1.0_spec-1.0</artifactId>
                 </exclusion>
                 <!-- We use slf4j -->
                 <exclusion>
@@ -99,6 +109,11 @@
                     <groupId>org.apache.geronimo.specs</groupId>
                     <artifactId>geronimo-javamail_1.4_spec</artifactId>
                 </exclusion>
+                <!-- We use stax-api -->
+                <exclusion>
+                    <groupId>org.apache.geronimo.specs</groupId>
+                    <artifactId>geronimo-stax-api_1.0_spec-1.0</artifactId>
+                </exclusion>
                 <!-- We use slf4j -->
                 <exclusion>
                     <groupId>commons-logging</groupId>
@@ -120,6 +135,11 @@
                 <exclusion>
                     <groupId>org.apache.geronimo.specs</groupId>
                     <artifactId>geronimo-javamail_1.4_spec</artifactId>
+                </exclusion>
+                <!-- We use stax-api -->
+                <exclusion>
+                    <groupId>org.apache.geronimo.specs</groupId>
+                    <artifactId>geronimo-stax-api_1.0_spec-1.0</artifactId>
                 </exclusion>
                 <!-- We use slf4j -->
                 <exclusion>
@@ -143,6 +163,11 @@
                     <groupId>org.apache.geronimo.specs</groupId>
                     <artifactId>geronimo-javamail_1.4_spec</artifactId>
                 </exclusion>
+                <!-- We use stax-api -->
+                <exclusion>
+                    <groupId>org.apache.geronimo.specs</groupId>
+                    <artifactId>geronimo-stax-api_1.0_spec-1.0</artifactId>
+                </exclusion>
                 <!-- We use slf4j -->
                 <exclusion>
                     <groupId>commons-logging</groupId>
@@ -165,6 +190,11 @@
                     <groupId>org.apache.geronimo.specs</groupId>
                     <artifactId>geronimo-javamail_1.4_spec</artifactId>
                 </exclusion>
+                <!-- We use stax-api -->
+                <exclusion>
+                    <groupId>org.apache.geronimo.specs</groupId>
+                    <artifactId>geronimo-stax-api_1.0_spec-1.0</artifactId>
+                </exclusion>
                 <!-- We use slf4j -->
                 <exclusion>
                     <groupId>commons-logging</groupId>
@@ -186,6 +216,11 @@
                 <exclusion>
                     <groupId>org.apache.geronimo.specs</groupId>
                     <artifactId>geronimo-javamail_1.4_spec</artifactId>
+                </exclusion>
+                <!-- We use stax-api -->
+                <exclusion>
+                    <groupId>org.apache.geronimo.specs</groupId>
+                    <artifactId>geronimo-stax-api_1.0_spec-1.0</artifactId>
                 </exclusion>
                 <!-- We use slf4j -->
                 <exclusion>
