@@ -664,9 +664,11 @@ public abstract class AbstractService implements Service
             if (receiver != null && endpoint.getConnector().isStarted()
                     && endpoint.getInitialState().equals(ImmutableEndpoint.INITIAL_STATE_STARTED))
             {
-                if (LifecycleTransitionResult.OK != receiver.start())
+                LifecycleTransitionResult result = receiver.start();
+                if (! result.isOk())
                 {
-                    throw new InitialisationException(CoreMessages.nestedRetry(), receiver);
+                    throw (InitialisationException) new InitialisationException(CoreMessages.nestedRetry(), receiver)
+                            .initCause(result.getThrowable());
                 }
             }
         }
@@ -686,9 +688,11 @@ public abstract class AbstractService implements Service
                     endpoint);
             if (receiver != null)
             {
-                if (LifecycleTransitionResult.OK != receiver.stop())
+                LifecycleTransitionResult result = receiver.stop();
+                if (! result.isOk())
                 {
-                    throw new LifecycleException(CoreMessages.nestedRetry(), receiver);
+                    throw (InitialisationException) new InitialisationException(CoreMessages.nestedRetry(), receiver)
+                            .initCause(result.getThrowable());
                 }
             }
         }
