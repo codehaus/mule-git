@@ -95,21 +95,6 @@
                         </xsd:documentation>
                     </xsd:annotation>
                 </xsd:attribute>
-                <xsd:attribute name="comparator" type="mule:substitutableClass">
-                    <xsd:annotation>
-                        <xsd:documentation>
-                            Sort incoming files using this comparator.
-                            The class must implement java.util.Comparator interface.
-                        </xsd:documentation>
-                    </xsd:annotation>
-                </xsd:attribute>
-                <xsd:attribute name="reverseOrder" type="mule:substitutableBoolean">
-                    <xsd:annotation>
-                        <xsd:documentation>
-                            Should comparator order be reversed?
-                        </xsd:documentation>
-                    </xsd:annotation>
-                </xsd:attribute>
                 <xsd:attribute name="streaming" type="mule:substitutableBoolean">
                     <xsd:annotation>
                         <xsd:documentation>
@@ -190,8 +175,21 @@
                 </xsd:documentation>
             </xsd:annotation>
         </xsd:attribute>
-        <xsd:attribute name="comparator" type="xsd:string"/>
-        <xsd:attribute name="reverseOrder" type="mule:substitutableBoolean"/>
+        <xsd:attribute name="comparator" type="mule:substitutableClass">
+            <xsd:annotation>
+                <xsd:documentation>
+                    Sort incoming files using this comparator.
+                    The class must implement java.util.Comparator interface.
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="reverseOrder" type="mule:substitutableBoolean">
+            <xsd:annotation>
+                <xsd:documentation>
+                    Should comparator order be reversed?
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
     </xsd:attributeGroup>
 
     <xsd:attributeGroup name="outboundAttributes">
