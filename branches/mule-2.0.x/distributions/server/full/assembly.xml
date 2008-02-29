@@ -412,13 +412,13 @@ Assembly descriptor for the full Mule distribution.
         <!-- Tools -->
         <include>org.mule.tools:mule-tools-visualizer</include>
       </includes>
-      <!-- no XML -->
       <excludes>
-          <exclude>xml-apis:xml-apis</exclude>
-          <exclude>xerces:xercesImpl</exclude>
-          <exclude>xerces:xml-serializer</exclude>
-          <exclude>xalan:xalan</exclude>
-      </excludes>
+        <!-- no XML -->
+        <exclude>xml-apis:xml-apis</exclude>
+        <exclude>xerces:xercesImpl</exclude>
+        <exclude>xerces:xml-serializer</exclude>
+        <exclude>xalan:xalan</exclude>
+    </excludes>
     </dependencySet>
 
     <!-- Non-Mule libraries -->
@@ -507,6 +507,9 @@ Assembly descriptor for the full Mule distribution.
         <exclude>xerces:xercesImpl</exclude>
         <exclude>xerces:xml-serializer</exclude>
         <exclude>xalan:xalan</exclude>
+
+        <!-- MULE-3044: exclude the wsdl4j artifact from the axis transport -->
+        <exclude>axis:axis-wsdl4j</exclude>
       </excludes>
     </dependencySet>
 
