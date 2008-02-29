@@ -188,6 +188,7 @@
     <link><item>email:bytes-to-mime-transformer</item><page>Email+Transport</page></link>
 
     <link><item>file:connector</item><page>File+Transport</page></link>
+    <link><item>file:filename-parser</item><page>File+Transport</page></link>
     <link><item>file:inbound-endpoint</item><page>File+Transport</page></link>
     <link><item>file:outbound-endpoint</item><page>File+Transport</page></link>
     <link><item>file:endpoint</item><page>File+Transport</page></link>
