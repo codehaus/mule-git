@@ -69,14 +69,14 @@ public abstract class AbstractChildElementIterator implements PostProcessor
     {
         BeanDefinition childBean = null;
         
-        if ("http://www.springframework.org/schema/beans".equals(child.getNamespaceURI())) 
-        {
-            childBean = context.getDelegate().parseBeanDefinitionElement(child).getBeanDefinition();
-        } 
-        else 
-        {
+//        if ("http://www.springframework.org/schema/beans".equals(child.getNamespaceURI()))
+//        {
+//            childBean = context.getDelegate().parseBeanDefinitionElement(child).getBeanDefinition();
+//        }
+//        else
+//        {
             childBean = context.getDelegate().parseCustomElement(child, assembler.getBean().getBeanDefinition());
-        }
+//        }
         BeanAssembler targetAssembler = beanAssemblerFactory.newBeanAssembler(null, null,
                 configuration, assembler.getBean().getRawBeanDefinition());
         insertBean(targetAssembler, childBean, parent, child);
