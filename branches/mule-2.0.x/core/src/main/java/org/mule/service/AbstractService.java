@@ -773,9 +773,9 @@ public abstract class AbstractService implements Service
         this.muleContext = context;
     }
 
-    protected MuleProxy createComponentProxy(Object pojoService) throws MuleException
+    protected MuleProxy createComponentProxy(Object pojo) throws MuleException
     {
-        MuleProxy proxy = new DefaultMuleProxy(pojoService, this, muleContext);
+        MuleProxy proxy = new DefaultMuleProxy(pojo, this, muleContext);
         proxy.setStatistics(getStatistics());
         return proxy;
     }
