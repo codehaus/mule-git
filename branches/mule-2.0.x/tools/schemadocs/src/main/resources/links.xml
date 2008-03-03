@@ -196,4 +196,10 @@
     <link><item>file:file-to-byte-array-transformer</item><page>File+Transport</page></link>
     <link><item>file:file-to-string-transformer</item><page>File+Transport</page></link>
 
+    <link><item>ftp:connector</item><page>Ftp+Transport</page></link>
+    <link><item>ftp:filename-parser</item><page>Ftp+Transport</page></link>
+    <link><item>ftp:inbound-endpoint</item><page>Ftp+Transport</page></link>
+    <link><item>ftp:outbound-endpoint</item><page>Ftp+Transport</page></link>
+    <link><item>ftp:endpoint</item><page>Ftp+Transport</page></link>
+
 </links>
