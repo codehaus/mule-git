@@ -25,8 +25,6 @@ import org.mule.config.i18n.CoreMessages;
 import org.mule.context.notification.ManagerNotification;
 import org.mule.context.notification.NotificationException;
 import org.mule.management.i18n.ManagementMessages;
-import org.mule.management.mbeans.ServiceService;
-import org.mule.management.mbeans.ServiceServiceMBean;
 import org.mule.management.mbeans.ConnectorService;
 import org.mule.management.mbeans.ConnectorServiceMBean;
 import org.mule.management.mbeans.EndpointService;
@@ -37,6 +35,8 @@ import org.mule.management.mbeans.MuleConfigurationService;
 import org.mule.management.mbeans.MuleConfigurationServiceMBean;
 import org.mule.management.mbeans.MuleService;
 import org.mule.management.mbeans.MuleServiceMBean;
+import org.mule.management.mbeans.ServiceService;
+import org.mule.management.mbeans.ServiceServiceMBean;
 import org.mule.management.mbeans.StatisticsService;
 import org.mule.management.support.AutoDiscoveryJmxSupportFactory;
 import org.mule.management.support.JmxSupport;
@@ -46,13 +46,14 @@ import org.mule.transport.AbstractConnector;
 import org.mule.util.ClassUtils;
 import org.mule.util.StringUtils;
 
+import java.io.IOException;
+import java.rmi.server.ExportException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.io.IOException;
 
 import javax.management.InstanceAlreadyExistsException;
 import javax.management.MBeanRegistrationException;
@@ -252,7 +253,7 @@ public class JmxAgent extends AbstractAgent
      * @see org.mule.api.lifecycle.Startable#start()
      */
     public LifecycleTransitionResult start() throws MuleException
-    {
+    {        
         if (connectorServer != null)
         {
             try
@@ -264,6 +265,10 @@ public class JmxAgent extends AbstractAgent
                 logger.info("Starting JMX agent connector Server");
                 connectorServer.start();
             }
+            catch (ExportException e)
+            {
+                throw new JmxManagementException(CoreMessages.failedToStart("Jmx Agent"), e);
+            }
             catch (IOException e)
             {
                 // this probably means that the RMI server isn't started so we request a retry
@@ -271,7 +276,7 @@ public class JmxAgent extends AbstractAgent
             }
             catch (Exception e)
             {
-                throw new JmxManagementException(CoreMessages.failedToStart("Jmx Connector"), e);
+                throw new JmxManagementException(CoreMessages.failedToStart("Jmx Agent"), e);
             }
         }
         return LifecycleTransitionResult.OK;
