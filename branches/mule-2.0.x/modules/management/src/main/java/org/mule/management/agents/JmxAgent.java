@@ -272,7 +272,7 @@ public class JmxAgent extends AbstractAgent
             catch (IOException e)
             {
                 // this probably means that the RMI server isn't started so we request a retry
-                return LifecycleTransitionResult.retry(e);
+                return LifecycleTransitionResult.retry(e, this);
             }
             catch (Exception e)
             {
