@@ -32,35 +32,49 @@
         </xsd:annotation>
     </xsd:element>
     <xsd:complexType name="muleType">
-        <xsd:sequence minOccurs="0" maxOccurs="unbounded">
-            <xsd:choice>
-                <xsd:group ref="rootElements"/>
-                <xsd:element ref="spring:beans">
-                    <xsd:annotation>
-                        <xsd:documentation>
-                            Allow embedding of further spring documents.
-                        </xsd:documentation>
-                    </xsd:annotation>
-                </xsd:element>
-                <xsd:element ref="spring:bean">
-                    <xsd:annotation>
-                        <xsd:documentation>
-                            We support direct use of spring beans via this tag.
-                        </xsd:documentation>
-                    </xsd:annotation>
-                </xsd:element>
-                <xsd:element ref="spring-context:property-placeholder">
-                    <xsd:annotation>
-                        <xsd:documentation>
-                            We support direct use of property placeholders via this tag.
-                        </xsd:documentation>
-                    </xsd:annotation>
-                </xsd:element>
+        <xsd:sequence>
+            <xsd:element name="description" type="descriptionType" minOccurs="0">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        This can hold any kind of documentation consistent with the overall XML format).
+                        It is intended to be "human readable" only and is not used by the system.
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:choice minOccurs="0" maxOccurs="unbounded">
+                <xsd:group ref="springRootElements"/>
+                <xsd:group ref="muleRootElements"/>
             </xsd:choice>
         </xsd:sequence>
     </xsd:complexType>
 
-    <xsd:group name="rootElements">
+    <xsd:group name="springRootElements">
+        <xsd:choice>
+            <xsd:element ref="spring:beans">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        Allow embedding of further spring documents.
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element ref="spring:bean">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        We support direct use of spring beans via this tag.
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element ref="spring-context:property-placeholder">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        We support direct use of property placeholders via this tag.
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:choice>
+    </xsd:group>
+
+    <xsd:group name="muleRootElements">
         <xsd:choice>
             <xsd:element name="environment-property" type="environmentPropertyType">
                 <xsd:annotation>
@@ -84,14 +98,6 @@
                     <xsd:documentation>
                         Register listeners for notifications
                         and associate interfaces with particular events.
-                    </xsd:documentation>
-                </xsd:annotation>
-            </xsd:element>
-            <xsd:element name="description" type="descriptionType">
-                <xsd:annotation>
-                    <xsd:documentation>
-                        This can hold any kind of documentation consistent with the overall XML format).
-                        It is intended to be "human readable" only and is not used by the system.
                     </xsd:documentation>
                 </xsd:annotation>
             </xsd:element>
