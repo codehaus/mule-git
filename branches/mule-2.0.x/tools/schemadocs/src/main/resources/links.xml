@@ -12,10 +12,6 @@
     <link><item>mule:echo-component</item><page>Configuring+Models</page></link>
     <link><item>mule:log-component</item><page>Configuring+Models</page></link>
     <link><item>mule:null-component</item><page>Configuring+Models</page></link>
-    <link><item>http:rest-service-component</item><page>Configuring+Models</page></link>
-    <link><item>http:payloadParameterName</item><page>Configuring+Models</page></link>
-    <link><item>http:requiredParameter</item><page>Configuring+Models</page></link>
-    <link><item>http:optionalParameter</item><page>Configuring+Models</page></link>
     <link><item>mule:default-service-exception-strategy</item><page>Configuring+Models</page></link>
     <link><item>mule:default-connector-exception-strategy</item><page>Configuring+Models</page></link>
     <link><item>mule:custom-exception-strategy</item><page>Configuring+Models</page></link>
@@ -129,10 +125,6 @@
     <link><item>xml:xslt-transformer</item><page>Additional+Configuration</page></link>
     <link><item>xml:xml-prettyprinter-transformer</item><page>Additional+Configuration</page></link>
     <link><item>soap:http-to-soap-request-transformer</item><page>Additional+Configuration</page></link>
-    <link><item>http:http-client-response-to-object-transformer</item><page>Additional+Configuration</page></link>
-    <link><item>http:http-response-to-string-transformer</item><page>Additional+Configuration</page></link>
-    <link><item>http:object-to-http-client-request-transformer</item><page>Additional+Configuration</page></link>
-    <link><item>http:message-to-http-response-transformer</item><page>Additional+Configuration</page></link>
     <link><item>jms:jmsmessage-to-object-transformer</item><page>Additional+Configuration</page></link>
     <link><item>jms:object-to-jmsmessage-transformer</item><page>Additional+Configuration</page></link>
     <link><item>mule:encryption-security-filter</item><page>Additional+Configuration</page></link>
@@ -196,10 +188,23 @@
     <link><item>file:file-to-byte-array-transformer</item><page>File+Transport</page></link>
     <link><item>file:file-to-string-transformer</item><page>File+Transport</page></link>
 
-    <link><item>ftp:connector</item><page>Ftp+Transport</page></link>
-    <link><item>ftp:filename-parser</item><page>Ftp+Transport</page></link>
-    <link><item>ftp:inbound-endpoint</item><page>Ftp+Transport</page></link>
-    <link><item>ftp:outbound-endpoint</item><page>Ftp+Transport</page></link>
-    <link><item>ftp:endpoint</item><page>Ftp+Transport</page></link>
+    <link><item>ftp:connector</item><page>FTP+Transport</page></link>
+    <link><item>ftp:filename-parser</item><page>FTP+Transport</page></link>
+    <link><item>ftp:inbound-endpoint</item><page>FTP+Transport</page></link>
+    <link><item>ftp:outbound-endpoint</item><page>FTP+Transport</page></link>
+    <link><item>ftp:endpoint</item><page>FTP+Transport</page></link>
+
+    <link><item>http:connector</item><page>HTTP+Transport</page></link>
+    <link><item>http:rest-service-component</item><page>HTTP+Transport</page></link>
+    <link><item>http:payloadParameterName</item><page>HTTP+Transport</page></link>
+    <link><item>http:requiredParameter</item><page>HTTP+Transport</page></link>
+    <link><item>http:optionalParameter</item><page>HTTP+Transport</page></link>
+    <link><item>http:http-client-response-to-object-transformer</item><page>HTTP+Transport</page></link>
+    <link><item>http:http-response-to-string-transformer</item><page>HTTP+Transport</page></link>
+    <link><item>http:object-to-http-client-request-transformer</item><page>HTTP+Transport</page></link>
+    <link><item>http:message-to-http-response-transformer</item><page>HTTP+Transport</page></link>
+    <link><item>http:inbound-endpoint</item><page>HTTP+Transport</page></link>
+    <link><item>http:outbound-endpoint</item><page>HTTP+Transport</page></link>
+    <link><item>http:endpoint</item><page>HTTP+Transport</page></link>
 
 </links>
