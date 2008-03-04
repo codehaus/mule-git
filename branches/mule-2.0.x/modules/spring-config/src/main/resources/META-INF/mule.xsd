@@ -1242,7 +1242,7 @@
                     <xsd:annotation>
                         <xsd:documentation>
                             Specify a component class.
-                            This is a shortcut that is equivalent to providing a singleton-object element.
+                            This is a shortcut that is equivalent to providing a prototype-object element.
                         </xsd:documentation>
                     </xsd:annotation>
                 </xsd:attribute>
@@ -3155,46 +3155,6 @@
     <!--  Utils / Standard Types                                      -->
     <!--==============================================================-->
 
-    <xsd:attribute name="path" type="xsd:string">
-        <xsd:annotation>
-            <xsd:documentation>
-                A file location.
-            </xsd:documentation>
-        </xsd:annotation>
-    </xsd:attribute>
-
-    <xsd:attribute name="user" type="xsd:string">
-        <xsd:annotation>
-            <xsd:documentation>
-                A username.
-            </xsd:documentation>
-        </xsd:annotation>
-    </xsd:attribute>
-
-    <xsd:attribute name="password" type="xsd:string">
-        <xsd:annotation>
-            <xsd:documentation>
-                A password.
-            </xsd:documentation>
-        </xsd:annotation>
-    </xsd:attribute>
-
-    <xsd:attribute name="host" type="xsd:string">
-        <xsd:annotation>
-            <xsd:documentation>
-                An IP address (eg www.mulesource.com, localhost, 127.0.0.1).
-            </xsd:documentation>
-        </xsd:annotation>
-    </xsd:attribute>
-
-    <xsd:attribute name="port" type="substitutablePortNumber">
-        <xsd:annotation>
-            <xsd:documentation>
-                A port number.
-            </xsd:documentation>
-        </xsd:annotation>
-    </xsd:attribute>
-
 
     <xsd:complexType name="abstractAgentType">
         <xsd:annotation>
@@ -3661,5 +3621,53 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
+
+
+
+    <!-- these cannot be references (unless we use qualified attribute names, which are ugly),
+         but serve as templates to cut+paste in individual transports
+
+    <xsd:attribute name="path" type="xsd:string">
+        <xsd:annotation>
+            <xsd:documentation>
+                A file location.
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:attribute>
+
+    <xsd:attribute name="user" type="xsd:string">
+        <xsd:annotation>
+            <xsd:documentation>
+                A username.
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:attribute>
+
+    <xsd:attribute name="password" type="xsd:string">
+        <xsd:annotation>
+            <xsd:documentation>
+                A password.
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:attribute>
+
+    <xsd:attribute name="host" type="xsd:string">
+        <xsd:annotation>
+            <xsd:documentation>
+                An IP address (eg www.mulesource.com, localhost, 127.0.0.1).
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:attribute>
+
+    <xsd:attribute name="port" type="substitutablePortNumber">
+        <xsd:annotation>
+            <xsd:documentation>
+                A port number.
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:attribute>
+    
+    -->
+
 
 </xsd:schema>

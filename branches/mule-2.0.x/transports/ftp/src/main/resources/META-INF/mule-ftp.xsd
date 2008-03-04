@@ -132,11 +132,41 @@
     </xsd:attributeGroup>
 
     <xsd:attributeGroup name="addressAttributes">
-        <xsd:attribute ref="mule:user"/>
-        <xsd:attribute ref="mule:password"/>
-        <xsd:attribute ref="mule:host"/>
-        <xsd:attribute ref="mule:port"/>
-        <xsd:attribute ref="mule:path"/>
+        <xsd:attribute name="path" type="xsd:string">
+            <xsd:annotation>
+                <xsd:documentation>
+                    A file location.
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="user" type="xsd:string">
+            <xsd:annotation>
+                <xsd:documentation>
+                    A username.
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="password" type="xsd:string">
+            <xsd:annotation>
+                <xsd:documentation>
+                    A password.
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="host" type="xsd:string">
+            <xsd:annotation>
+                <xsd:documentation>
+                    An IP address (eg www.mulesource.com, localhost, 127.0.0.1).
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="port" type="mule:substitutablePortNumber">
+            <xsd:annotation>
+                <xsd:documentation>
+                    A port number.
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
     </xsd:attributeGroup>
 
 </xsd:schema>
