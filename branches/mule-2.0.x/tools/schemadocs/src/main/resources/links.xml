@@ -207,4 +207,13 @@
     <link><item>http:outbound-endpoint</item><page>HTTP+Transport</page></link>
     <link><item>http:endpoint</item><page>HTTP+Transport</page></link>
 
+    <link><item>https:connector</item><page>HTTPS+Transport</page></link>
+    <link><item>https:tls-client</item><page>HTTPS+Transport</page></link>
+    <link><item>https:tls-key-store</item><page>HTTPS+Transport</page></link>
+    <link><item>https:tls-server</item><page>HTTPS+Transport</page></link>
+    <link><item>https:tls-protocol-handler</item><page>HTTPS+Transport</page></link>
+    <link><item>https:inbound-endpoint</item><page>HTTPS+Transport</page></link>
+    <link><item>https:outbound-endpoint</item><page>HTTPS+Transport</page></link>
+    <link><item>https:endpoint</item><page>HTTPS+Transport</page></link>
+
 </links>
