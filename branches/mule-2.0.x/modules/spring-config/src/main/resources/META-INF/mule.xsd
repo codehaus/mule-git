@@ -3031,64 +3031,6 @@
 
 
     <!--==============================================================-->
-    <!--  Container Contexts                                             -->
-    <!--==============================================================-->
-
-    <xsd:element name="custom-container" type="customContainerContextType"/>
-    <xsd:element name="rmi-container" type="rmiContainerContextType"/>
-    <xsd:element name="ejb-container" type="rmiContainerContextType"/>
-    <xsd:element name="properties-container" type="propertiesContainerContextType"/>
-    <xsd:element name="plexus-container" type="iocContainerContextType"/>
-    <xsd:element name="pico-container" type="iocContainerContextType"/>
-    <xsd:element name="hivemind-container" type="iocContainerContextType"/>
-    <xsd:element name="jndi-container" type="baseContainerContextType"/>
-
-    <xsd:complexType name="baseContainerContextType">
-        <xsd:sequence>
-            <xsd:any namespace="##other" processContents="strict" minOccurs="0" maxOccurs="unbounded"/>
-        </xsd:sequence>
-    </xsd:complexType>
-
-    <xsd:complexType name="rmiContainerContextType">
-        <xsd:complexContent>
-            <xsd:extension base="baseContainerContextType">
-                <xsd:attribute name="securityPolicy" type="xsd:string"/>
-                <xsd:attribute name="securityManager" type="xsd:string"/>
-                <xsd:attribute name="name" type="substitutableName" default="rmi"/>
-            </xsd:extension>
-        </xsd:complexContent>
-    </xsd:complexType>
-
-    <xsd:complexType name="propertiesContainerContextType">
-        <xsd:complexContent>
-            <xsd:extension base="baseContainerContextType">
-                <xsd:attribute name="name" type="substitutableName" default="properties"/>
-                <xsd:attribute name="includeSystemProperties" type="substitutableBoolean"/>
-                <xsd:attribute name="enableTemplates" type="substitutableBoolean"/>
-            </xsd:extension>
-        </xsd:complexContent>
-    </xsd:complexType>
-
-    <xsd:complexType name="iocContainerContextType">
-        <xsd:complexContent>
-            <xsd:extension base="baseContainerContextType">
-                <xsd:attribute name="configLocation" type="xsd:string"/>
-                <xsd:attribute name="configurationText" type="xsd:string"/>
-            </xsd:extension>
-        </xsd:complexContent>
-    </xsd:complexType>
-
-    <xsd:complexType name="customContainerContextType">
-        <xsd:complexContent>
-            <xsd:extension base="baseContainerContextType">
-                <xsd:attribute name="class" type="substitutableClass" use="required"/>
-                <xsd:attribute name="name" type="substitutableName" use="required"/>
-            </xsd:extension>
-        </xsd:complexContent>
-    </xsd:complexType>
-
-
-    <!--==============================================================-->
     <!--  Object Factories                                            -->
     <!--==============================================================-->
 
