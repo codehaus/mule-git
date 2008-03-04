@@ -204,7 +204,7 @@
     </xsd:attributeGroup>
 
     <xsd:attributeGroup name="addressAttributes">
-        <xsd:attribute name="path" type="xsd:string"/>
+        <xsd:attribute ref="mule:path"/>
     </xsd:attributeGroup>
 
 </xsd:schema>
