@@ -417,14 +417,14 @@
         <xsd:attribute name="defaultRemoteSync" type="substitutableBoolean" default="false">
             <xsd:annotation>
                 <xsd:documentation>
-                    Currently unused - JIRA issue MULE-3004.
+                    If true then connections to endpoints will wait for a response.
                 </xsd:documentation>
             </xsd:annotation>
         </xsd:attribute>
         <xsd:attribute name="workingDirectory" type="xsd:string">
             <xsd:annotation>
                 <xsd:documentation>
-                    The location used when scratch data etc is stored to disk.
+                    If true then connections to endpoints will wait for a response from the remote service.
                 </xsd:documentation>
             </xsd:annotation>
         </xsd:attribute>
@@ -438,7 +438,6 @@
         <xsd:attribute name="defaultEncoding" type="xsd:string" default="UTF-8">
             <xsd:annotation>
                 <xsd:documentation>
-                    Currently unused - see JIRA issue MULE-3005.
                     This is the encoding assumed when dealing with Strings
                     if no more specific configuration is given.
                 </xsd:documentation>
