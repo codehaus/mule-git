@@ -216,4 +216,8 @@
     <link><item>https:outbound-endpoint</item><page>HTTPS+Transport</page></link>
     <link><item>https:endpoint</item><page>HTTPS+Transport</page></link>
 
+    <link><item>imap:connector</item><page>IMAP+Transport</page></link>
+    <link><item>imap:inbound-endpoint</item><page>IMAP+Transport</page></link>
+    <link><item>imap:endpoint</item><page>IMAP+Transport</page></link>
+
 </links>
