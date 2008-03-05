@@ -124,7 +124,7 @@
         <xsl:if test="@type">
             <xsl:variable name="type" select="@type"/>
             <xsl:apply-templates
-                    select="xsd:complexType[@name=$type]" mode="documentation"/>
+                    select="/xsd:schema/xsd:complexType[@name=$type]" mode="documentation"/>
         </xsl:if>
     </xsl:template>
 
