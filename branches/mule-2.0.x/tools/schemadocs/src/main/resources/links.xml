@@ -226,4 +226,11 @@
     <link><item>imaps:inbound-endpoint</item><page>IMAPS+Transport</page></link>
     <link><item>imaps:endpoint</item><page>IMAPS+Transport</page></link>
 
+    <link><item>jdbc:connector</item><page>JDBC+Transport</page></link>
+    <link><item>jdbc:inbound-endpoint</item><page>JDBC+Transport</page></link>
+    <link><item>jdbc:outbound-endpoint</item><page>JDBC+Transport</page></link>
+    <link><item>jdbc:endpoint</item><page>JDBC+Transport</page></link>
+    <link><item>jdbc:transaction</item><page>JDBC+Transport</page></link>
+    <link><item>jdbc:query</item><page>JDBC+Transport</page></link>
+
 </links>
