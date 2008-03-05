@@ -274,4 +274,9 @@
     <link><item>quartz:outbound-endpoint</item><page>Quartz+Transport</page></link>
     <link><item>quartz:endpoint</item><page>Quartz+Transport</page></link>
 
+    <link><item>rmi:connector</item><page>RMI+Transport</page></link>
+    <link><item>rmi:inbound-endpoint</item><page>RMI+Transport</page></link>
+    <link><item>rmi:outbound-endpoint</item><page>RMI+Transport</page></link>
+    <link><item>rmi:endpoint</item><page>RMI+Transport</page></link>
+
 </links>
