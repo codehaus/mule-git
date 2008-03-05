@@ -30,7 +30,6 @@ public class HttpRequestToInputStream extends AbstractDiscoverableTransformer
         registerSourceType(HttpServletRequest.class);
     }
 
-    @Override
     protected Object doTransform(Object src, String encoding) throws TransformerException
     {
         try
