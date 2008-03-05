@@ -23,7 +23,7 @@ import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.transport.Connector;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.context.notification.ConnectionNotification;
-import org.mule.context.notification.ManagerNotification;
+import org.mule.context.notification.MuleContextNotification;
 import org.mule.context.notification.ModelNotification;
 import org.mule.transport.NullPayload;
 
@@ -49,11 +49,11 @@ public class EndpointNotificationLoggerAgent extends AbstractNotificationLoggerA
         super("Endpoint Logger Agent");
         // List of notifications to ignore, because when these notifications are
         // received the notification endpoint is no longer available
-        ignoredNotifications.add(new Integer(ManagerNotification.MANAGER_DISPOSING_CONNECTORS));
-        ignoredNotifications.add(new Integer(ManagerNotification.MANAGER_DISPOSED_CONNECTORS));
-        ignoredNotifications.add(new Integer(ManagerNotification.MANAGER_STOPPED));
-        ignoredNotifications.add(new Integer(ManagerNotification.MANAGER_DISPOSING));   
-        ignoredNotifications.add(new Integer(ManagerNotification.MANAGER_DISPOSED));
+        ignoredNotifications.add(new Integer(MuleContextNotification.CONTEXT_DISPOSING_CONNECTORS));
+        ignoredNotifications.add(new Integer(MuleContextNotification.CONTEXT_DISPOSED_CONNECTORS));
+        ignoredNotifications.add(new Integer(MuleContextNotification.CONTEXT_STOPPED));
+        ignoredNotifications.add(new Integer(MuleContextNotification.CONTEXT_DISPOSING));   
+        ignoredNotifications.add(new Integer(MuleContextNotification.CONTEXT_DISPOSED));
         ignoredNotifications.add(new Integer(ModelNotification.MODEL_STOPPED));
         ignoredNotifications.add(new Integer(ModelNotification.MODEL_DISPOSING));
         ignoredNotifications.add(new Integer(ModelNotification.MODEL_DISPOSED));

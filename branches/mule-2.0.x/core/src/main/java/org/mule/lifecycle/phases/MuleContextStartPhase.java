@@ -18,7 +18,7 @@ import org.mule.api.model.Model;
 import org.mule.api.registry.Registry;
 import org.mule.api.service.Service;
 import org.mule.api.transport.Connector;
-import org.mule.context.notification.ManagerNotification;
+import org.mule.context.notification.MuleContextNotification;
 import org.mule.lifecycle.DefaultLifecyclePhase;
 import org.mule.lifecycle.NotificationLifecycleObject;
 
@@ -48,8 +48,8 @@ public class MuleContextStartPhase extends DefaultLifecyclePhase
         Set startOrderedObjects = new LinkedHashSet();
         startOrderedObjects.add(new NotificationLifecycleObject(Connector.class));
         startOrderedObjects.add(new NotificationLifecycleObject(Agent.class));
-        startOrderedObjects.add(new NotificationLifecycleObject(Model.class, ManagerNotification.class,
-                ManagerNotification.MANAGER_STARTING_MODELS, ManagerNotification.MANAGER_STARTED_MODELS));
+        startOrderedObjects.add(new NotificationLifecycleObject(Model.class, MuleContextNotification.class,
+                MuleContextNotification.CONTEXT_STARTING_MODELS, MuleContextNotification.CONTEXT_STARTED_MODELS));
         startOrderedObjects.add(new NotificationLifecycleObject(Service.class));
         startOrderedObjects.add(new NotificationLifecycleObject(Startable.class));
 
