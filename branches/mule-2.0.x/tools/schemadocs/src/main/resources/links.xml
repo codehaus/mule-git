@@ -248,4 +248,14 @@
     <link><item>jms:selector</item><page>JMS+Transport</page></link>
     <link><item>jms:property-filter</item><page>JMS+Transport</page></link>
 
+    <link><item>jnp:connector</item><page>JNP+Transport</page></link>
+    <link><item>jnp:inbound-endpoint</item><page>JNP+Transport</page></link>
+    <link><item>jnp:outbound-endpoint</item><page>JNP+Transport</page></link>
+    <link><item>jnp:endpoint</item><page>JNP+Transport</page></link>
+
+    <link><item>multicast:connector</item><page>Multicast+Transport</page></link>
+    <link><item>multicast:inbound-endpoint</item><page>Multicast+Transport</page></link>
+    <link><item>multicast:outbound-endpoint</item><page>Multicast+Transport</page></link>
+    <link><item>multicast:endpoint</item><page>Multicast+Transport</page></link>
+
 </links>
