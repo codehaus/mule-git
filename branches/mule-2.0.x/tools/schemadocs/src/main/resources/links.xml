@@ -68,9 +68,6 @@
     <link><item>mule:jndi-provider-property</item><page>Additional+Configuration</page></link>
     <link><item>mule:jndi-provider-properties</item><page>Additional+Configuration</page></link>
     <link><item>mule:custom-transaction</item><page>Additional+Configuration</page></link>
-    <link><item>jms:transaction</item><page>Additional+Configuration</page></link>
-    <link><item>jms:client-ack-transaction</item><page>Additional+Configuration</page></link>
-    <link><item>jms:xa-transaction</item><page>Additional+Configuration</page></link>
     <link><item>mule:filter</item><page>Additional+Configuration</page></link>
     <link><item>mule:not-filter</item><page>Additional+Configuration</page></link>
     <link><item>mule:and-filter</item><page>Additional+Configuration</page></link>
@@ -83,7 +80,6 @@
     <link><item>mule:custom-filter</item><page>Additional+Configuration</page></link>
     <link><item>xml:is-xml-filter</item><page>Additional+Configuration</page></link>
     <link><item>xml:jxpath-filter</item><page>Additional+Configuration</page></link>
-    <link><item>jms:property-filter</item><page>Additional+Configuration</page></link>
     <link><item>ognl:filter</item><page>Additional+Configuration</page></link>
     <link><item>mule:custom-property-extractor</item><page>Additional+Configuration</page></link>
     <link><item>mule:map-property-extractor</item><page>Additional+Configuration</page></link>
@@ -124,8 +120,6 @@
     <link><item>xml:xslt-transformer</item><page>Additional+Configuration</page></link>
     <link><item>xml:xml-prettyprinter-transformer</item><page>Additional+Configuration</page></link>
     <link><item>soap:http-to-soap-request-transformer</item><page>Additional+Configuration</page></link>
-    <link><item>jms:jmsmessage-to-object-transformer</item><page>Additional+Configuration</page></link>
-    <link><item>jms:object-to-jmsmessage-transformer</item><page>Additional+Configuration</page></link>
     <link><item>mule:encryption-security-filter</item><page>Additional+Configuration</page></link>
     <link><item>jaas:jaas-security-filter</item><page>Additional+Configuration</page></link>
     <link><item>acegi:http-security-filter</item><page>Additional+Configuration</page></link>
@@ -236,5 +230,22 @@
     <link><item>jetty:inbound-endpoint</item><page>Jetty+Transport</page></link>
     <link><item>jetty:outbound-endpoint</item><page>Jetty+Transport</page></link>
     <link><item>jetty:endpoint</item><page>Jetty+Transport</page></link>
+
+    <link><item>jms:connector</item><page>JMS+Transport</page></link>
+    <link><item>jms:custom-connector</item><page>JMS+Transport</page></link>
+    <link><item>jms:activemq-connector</item><page>JMS+Transport</page></link>
+    <link><item>jms:activemq-xa-connector</item><page>JMS+Transport</page></link>
+    <link><item>jms:weblogic-connector</item><page>JMS+Transport</page></link>
+    <link><item>jms:websphere-connector</item><page>JMS+Transport</page></link>
+    <link><item>jms:transaction</item><page>JMS+Transport</page></link>
+    <link><item>jms:client-ack-transaction</item><page>JMS+Transport</page></link>
+    <link><item>jms:xa-transaction</item><page>JMS+Transport</page></link>
+    <link><item>jms:jmsmessage-to-object-transformer</item><page>JMS+Transport</page></link>
+    <link><item>jms:object-to-jmsmessage-transformer</item><page>JMS+Transport</page></link>
+    <link><item>jms:inbound-endpoint</item><page>JMS+Transport</page></link>
+    <link><item>jms:outbound-endpoint</item><page>JMS+Transport</page></link>
+    <link><item>jms:endpoint</item><page>JMS+Transport</page></link>
+    <link><item>jms:selector</item><page>JMS+Transport</page></link>
+    <link><item>jms:property-filter</item><page>JMS+Transport</page></link>
 
 </links>
