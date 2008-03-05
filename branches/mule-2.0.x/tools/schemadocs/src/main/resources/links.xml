@@ -258,4 +258,14 @@
     <link><item>multicast:outbound-endpoint</item><page>Multicast+Transport</page></link>
     <link><item>multicast:endpoint</item><page>Multicast+Transport</page></link>
 
+    <link><item>pop3:connector</item><page>POP3+Transport</page></link>
+    <link><item>pop3:inbound-endpoint</item><page>POP3+Transport</page></link>
+    <link><item>pop3:endpoint</item><page>POP3+Transport</page></link>
+
+    <link><item>pop3s:connector</item><page>POP3S+Transport</page></link>
+    <link><item>pop3s:tls-client</item><page>POP3S+Transport</page></link>
+    <link><item>pop3s:tls-trust-store</item><page>POP3S+Transport</page></link>
+    <link><item>pop3s:inbound-endpoint</item><page>POP3S+Transport</page></link>
+    <link><item>pop3s:endpoint</item><page>POP3S+Transport</page></link>
+
 </links>
