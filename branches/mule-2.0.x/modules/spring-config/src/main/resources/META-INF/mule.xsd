@@ -417,14 +417,14 @@
         <xsd:attribute name="defaultRemoteSync" type="substitutableBoolean" default="false">
             <xsd:annotation>
                 <xsd:documentation>
-                    If true then connections to endpoints will wait for a response.
+                    If true then connections to endpoints will wait for a response from the remote service.
                 </xsd:documentation>
             </xsd:annotation>
         </xsd:attribute>
         <xsd:attribute name="workingDirectory" type="xsd:string">
             <xsd:annotation>
                 <xsd:documentation>
-                    If true then connections to endpoints will wait for a response from the remote service.
+                    The location used when scratch data etc is stored to disk.
                 </xsd:documentation>
             </xsd:annotation>
         </xsd:attribute>
