@@ -60,8 +60,6 @@
     <link><item>mule:message-chunking-router</item><page>Configuring+Models</page></link>
     <link><item>mule:static-recipient-list-router</item><page>Configuring+Models</page></link>
     <link><item>mule:custom-outbound-router</item><page>Configuring+Models</page></link>
-    <link><item>xml:message-splitter</item><page>Configuring+Models</page></link>
-    <link><item>xml:round-robin-splitter</item><page>Configuring+Models</page></link>
 
     <link><item>mule:property</item><page>Additional+Configuration</page></link>
     <link><item>mule:properties</item><page>Additional+Configuration</page></link>
@@ -78,17 +76,11 @@
     <link><item>mule:exception-type-filter</item><page>Additional+Configuration</page></link>
     <link><item>mule:payload-type-filter</item><page>Additional+Configuration</page></link>
     <link><item>mule:custom-filter</item><page>Additional+Configuration</page></link>
-    <link><item>xml:is-xml-filter</item><page>Additional+Configuration</page></link>
-    <link><item>xml:jxpath-filter</item><page>Additional+Configuration</page></link>
-    <link><item>ognl:filter</item><page>Additional+Configuration</page></link>
     <link><item>mule:custom-property-extractor</item><page>Additional+Configuration</page></link>
     <link><item>mule:map-property-extractor</item><page>Additional+Configuration</page></link>
     <link><item>mule:message-property-extractor</item><page>Additional+Configuration</page></link>
     <link><item>mule:correlation-property-extractor</item><page>Additional+Configuration</page></link>
     <link><item>mule:function-property-extractor</item><page>Additional+Configuration</page></link>
-    <link><item>xml:jxpath-property-extractor</item><page>Additional+Configuration</page></link>
-    <link><item>xml:xpath-property-extractor</item><page>Additional+Configuration</page></link>
-    <link><item>xml:bean-property-extractor</item><page>Additional+Configuration</page></link>
     <link><item>mule:transformer</item><page>Additional+Configuration</page></link>
     <link><item>mule:custom-transformer</item><page>Additional+Configuration</page></link>
     <link><item>mule:message-properties-transformer</item><page>Additional+Configuration</page></link>
@@ -111,16 +103,7 @@
     <link><item>mule:append-string-transformer</item><page>Additional+Configuration</page></link>
     <link><item>mule:encrypt-transformer</item><page>Additional+Configuration</page></link>
     <link><item>mule:decrypt-transformer</item><page>Additional+Configuration</page></link>
-    <link><item>xml:dom-to-xml-transformer</item><page>Additional+Configuration</page></link>
-    <link><item>xml:dom-to-output-handler-transformer</item><page>Additional+Configuration</page></link>
-    <link><item>xml:jxpath-extractor-transformer</item><page>Additional+Configuration</page></link>
-    <link><item>xml:object-to-xml-transformer</item><page>Additional+Configuration</page></link>
-    <link><item>xml:xml-to-dom-transformer</item><page>Additional+Configuration</page></link>
-    <link><item>xml:xml-to-object-transformer</item><page>Additional+Configuration</page></link>
-    <link><item>xml:xslt-transformer</item><page>Additional+Configuration</page></link>
-    <link><item>xml:xml-prettyprinter-transformer</item><page>Additional+Configuration</page></link>
     <link><item>mule:encryption-security-filter</item><page>Additional+Configuration</page></link>
-    <link><item>pgp:security-filter</item><page>Additional+Configuration</page></link>
     
     <link><item>mule:inbound-endpoint</item><page>Configuring+Endpoints</page></link>
     <link><item>mule:outbound-endpoint</item><page>Configuring+Endpoints</page></link>
@@ -415,5 +398,26 @@
     <link><item>scripting:script</item><page>Scripting+Module</page></link>
     <link><item>scripting:groovy-refreshable</item><page>Scripting+Module</page></link>
     <link><item>scripting:lang</item><page>Scripting+Module</page></link>
+
+    <link><item>xml:is-xml-filter</item><page>XML+Module</page></link>
+    <link><item>xml:jxpath-filter</item><page>XML+Module</page></link>
+    <link><item>xml:namespace</item><page>XML+Module</page></link>
+    <link><item>xml:context-property</item><page>XML+Module</page></link>
+    <link><item>xml:message-splitter</item><page>XML+Module</page></link>
+    <link><item>xml:namespace</item><page>XML+Module</page></link>
+    <link><item>xml:round-robin-splitter</item><page>XML+Module</page></link>
+    <link><item>xml:dom-to-xml-transformer</item><page>XML+Module</page></link>
+    <link><item>xml:dom-to-output-handler-transformer</item><page>XML+Module</page></link>
+    <link><item>xml:jxpath-extractor-transformer</item><page>XML+Module</page></link>
+    <link><item>xml:object-to-xml-transformer</item><page>XML+Module</page></link>
+    <link><item>xml:xml-to-dom-transformer</item><page>XML+Module</page></link>
+    <link><item>xml:xml-to-object-transformer</item><page>XML+Module</page></link>
+    <link><item>xml:xslt-transformer</item><page>XML+Module</page></link>
+    <link><item>xml:xslt-text</item><page>XML+Module</page></link>
+    <link><item>xml:context-property</item><page>XML+Module</page></link>
+    <link><item>xml:xml-prettyprinter-transformer</item><page>XML+Module</page></link>
+    <link><item>xml:jxpath-property-extractor</item><page>XML+Module</page></link>
+    <link><item>xml:xpath-property-extractor</item><page>XML+Module</page></link>
+    <link><item>xml:bean-property-extractor</item><page>XML+Module</page></link>
 
 </links>
