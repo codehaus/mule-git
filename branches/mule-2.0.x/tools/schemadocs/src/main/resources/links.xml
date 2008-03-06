@@ -311,4 +311,17 @@
     <link><item>stdio:outbound-endpoint</item><page>STDIO+Transport</page></link>
     <link><item>stdio:endpoint</item><page>STDIO+Transport</page></link>
 
+    <link><item>tcp:connector</item><page>TCP+Transport</page></link>
+    <link><item>tcp:streaming-protocol</item><page>TCP+Transport</page></link>
+    <link><item>tcp:xml-protocol</item><page>TCP+Transport</page></link>
+    <link><item>tcp:xml-eof-protocol</item><page>TCP+Transport</page></link>
+    <link><item>tcp:eof-protocol</item><page>TCP+Transport</page></link>
+    <link><item>tcp:direct-protocol</item><page>TCP+Transport</page></link>
+    <link><item>tcp:safe-protocol</item><page>TCP+Transport</page></link>
+    <link><item>tcp:length-protocol</item><page>TCP+Transport</page></link>
+    <link><item>tcp:custom-protocol</item><page>TCP+Transport</page></link>
+    <link><item>tcp:inbound-endpoint</item><page>TCP+Transport</page></link>
+    <link><item>tcp:outbound-endpoint</item><page>TCP+Transport</page></link>
+    <link><item>tcp:endpoint</item><page>TCP+Transport</page></link>
+
 </links>
