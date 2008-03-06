@@ -360,4 +360,14 @@
     <link><item>xfire:soap-11-transport</item><page>XFire+Transport</page></link>
     <link><item>xfire:complex-type</item><page>XFire+Transport</page></link>
 
+    <link><item>xmpp:connector</item><page>XMPP+Transport</page></link>
+    <link><item>xmpp:inbound-endpoint</item><page>XMPP+Transport</page></link>
+    <link><item>xmpp:outbound-endpoint</item><page>XMPP+Transport</page></link>
+    <link><item>xmpp:endpoint</item><page>XMPP+Transport</page></link>
+
+    <link><item>xmpps:connector</item><page>XMPPS+Transport</page></link>
+    <link><item>xmpps:inbound-endpoint</item><page>XMPPS+Transport</page></link>
+    <link><item>xmpps:outbound-endpoint</item><page>XMPPS+Transport</page></link>
+    <link><item>xmpps:endpoint</item><page>XMPPS+Transport</page></link>
+
 </links>
