@@ -384,4 +384,6 @@
     <link><item>jaas:security-provider</item><page>JAAS+Module</page></link>
     <link><item>jaas:jaas-security-filter</item><page>JAAS+Module</page></link>
 
+    <link><item>jbossts:transaction-manager</item><page>JBossTS+Module</page></link>
+
 </links>
