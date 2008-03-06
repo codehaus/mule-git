@@ -344,4 +344,8 @@
     <link><item>vm:outbound-endpoint</item><page>VM+Transport</page></link>
     <link><item>vm:endpoint</item><page>VM+Transport</page></link>
 
+    <link><item>wsdl-xfire:inbound-endpoint</item><page>WSDL-XFire+Transport</page></link>
+    <link><item>wsdl-xfire:outbound-endpoint</item><page>WSDL-XFire+Transport</page></link>
+    <link><item>wsdl-xfire:endpoint</item><page>WSDL-XFire+Transport</page></link>
+
 </links>
