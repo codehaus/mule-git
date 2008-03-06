@@ -37,6 +37,7 @@ public class ObjectToOutputHandler extends AbstractTransformer implements Discov
         registerSourceType(byte[].class);
         registerSourceType(String.class);
         registerSourceType(InputStream.class);
+        registerSourceType(Serializable.class);
         setReturnClass(OutputHandler.class);
     }
 
