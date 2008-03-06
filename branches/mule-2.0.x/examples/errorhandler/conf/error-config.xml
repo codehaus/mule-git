@@ -69,10 +69,10 @@
     <jms:object-to-jmsmessage-transformer name="ObjectToJMSMessage"/>
     <jms:jmsmessage-to-object-transformer name="JMSMessageToObject"/>
     <custom-transformer name="XMLToExceptionBean"
-                             class="org.mule.transformers.xml.XmlToObject"
+                             class="org.mule.module.xml.transformers.XmlToObject"
                              returnClass="org.mule.example.errorhandler.ExceptionBean"/>
     <custom-transformer name="ExceptionBeanToXML" 
-                             class="org.mule.transformers.xml.ObjectToXml"
+                             class="org.mule.module.xml.transformers.ObjectToXml"
                              returnClass="java.lang.String"/>
     <custom-transformer name="ExceptionBeanToErrorMessage" 
                              class="org.mule.example.errorhandler.ExceptionBeanToErrorMessage"
