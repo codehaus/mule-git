@@ -10,19 +10,19 @@
 
 
     <tls:connector name="sslConnector" sendBufferSize="1024" receiveBufferSize="2048" keepAlive="true">
-        <tls:tls-client
+        <tls:client
                 path="clientKeystore"
                 storePassword="mulepassword"/>
-        <tls:tls-key-store
+        <tls:key-store
                 keyPassword="mulepassword"
                 path="serverKeystore"
                 storePassword="mulepassword"/>
-        <tls:tls-server
+        <tls:server
                 path="trustStore"
                 storePassword="mulepassword"
                 explicitOnly="true"
                 requireClientAuthentication="true"/>
-        <tls:tls-protocol-handler property="foo"/>
+        <tls:protocol-handler property="foo"/>
     </tls:connector>
 
 </mule>

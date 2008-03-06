@@ -298,10 +298,10 @@
     <link><item>soap:http-to-soap-request-transformer</item><page>SOAP+Transport</page></link>
 
     <link><item>ssl:connector</item><page>SSL+Transport</page></link>
-    <link><item>ssl:ssl-client</item><page>SSL+Transport</page></link>
-    <link><item>ssl:ssl-key-store</item><page>SSL+Transport</page></link>
-    <link><item>ssl:ssl-server</item><page>SSL+Transport</page></link>
-    <link><item>ssl:ssl-protocol-handler</item><page>SSL+Transport</page></link>
+    <link><item>ssl:client</item><page>SSL+Transport</page></link>
+    <link><item>ssl:key-store</item><page>SSL+Transport</page></link>
+    <link><item>ssl:server</item><page>SSL+Transport</page></link>
+    <link><item>ssl:protocol-handler</item><page>SSL+Transport</page></link>
     <link><item>ssl:inbound-endpoint</item><page>SSL+Transport</page></link>
     <link><item>ssl:outbound-endpoint</item><page>SSL+Transport</page></link>
     <link><item>ssl:endpoint</item><page>SSL+Transport</page></link>
