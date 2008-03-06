@@ -407,4 +407,13 @@
     <link><item>ognl:filter</item><page>OGNL+Module</page></link>
     <link><item>ognl:expression</item><page>OGNL+Module</page></link>
 
+    <link><item>pgp:security-manager</item><page>PGP+Module</page></link>
+    <link><item>pgp:security-provider</item><page>PGP+Module</page></link>
+    <link><item>pgp:keybased-encryption-strategy</item><page>PGP+Module</page></link>
+    <link><item>pgp:security-filter</item><page>PGP+Module</page></link>
+
+    <link><item>scripting:script</item><page>Scripting+Module</page></link>
+    <link><item>scripting:groovyRefreshable</item><page>Scripting+Module</page></link>
+    <link><item>scripting:lang</item><page>Scripting+Module</page></link>
+
 </links>
