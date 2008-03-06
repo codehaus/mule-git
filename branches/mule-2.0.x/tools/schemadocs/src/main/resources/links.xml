@@ -348,4 +348,16 @@
     <link><item>wsdl-xfire:outbound-endpoint</item><page>WSDL-XFire+Transport</page></link>
     <link><item>wsdl-xfire:endpoint</item><page>WSDL-XFire+Transport</page></link>
 
+    <link><item>xfire:connector</item><page>XFire+Transport</page></link>
+    <link><item>xfire:client-in-handler</item><page>XFire+Transport</page></link>
+    <link><item>xfire:client-out-handler</item><page>XFire+Transport</page></link>
+    <link><item>xfire:client-service</item><page>XFire+Transport</page></link>
+    <link><item>xfire:server-in-handler</item><page>XFire+Transport</page></link>
+    <link><item>xfire:server-out-handler</item><page>XFire+Transport</page></link>
+    <link><item>xfire:inbound-endpoint</item><page>XFire+Transport</page></link>
+    <link><item>xfire:outbound-endpoint</item><page>XFire+Transport</page></link>
+    <link><item>xfire:endpoint</item><page>XFire+Transport</page></link>
+    <link><item>xfire:soap-11-transport</item><page>XFire+Transport</page></link>
+    <link><item>xfire:complex-type</item><page>XFire+Transport</page></link>
+
 </links>
