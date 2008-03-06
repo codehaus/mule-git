@@ -7,14 +7,14 @@
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
-package org.mule.module.xml.util.properties;
+package org.mule.module.xml.expression;
 
 import org.jaxen.JaxenException;
 import org.jaxen.XPath;
 import org.jaxen.javabean.JavaBeanXPath;
 
 /** TODO */
-public class BeanPayloadPropertyExtractor extends AbstractXPathPropertyExtractor
+public class BeanPayloadExpressionEvaluator extends AbstractXPathExpressionEvaluator
 {
     public static final String NAME = "bean";
 

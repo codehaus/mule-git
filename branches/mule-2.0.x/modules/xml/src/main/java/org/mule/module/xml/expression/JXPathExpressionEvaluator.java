@@ -8,10 +8,10 @@
  * LICENSE.txt file.
  */
 
-package org.mule.module.xml.util.properties;
+package org.mule.module.xml.expression;
 
-import org.mule.api.MuleMessage;
-import org.mule.util.properties.PropertyExtractor;
+import org.mule.api.transport.MessageAdapter;
+import org.mule.util.expression.ExpressionEvaluator;
 
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.logging.Log;
@@ -23,7 +23,7 @@ import org.dom4j.DocumentHelper;
 /**
  * Will extract properties based on Xpath expressions. Will work on Xml/Dom and beans
  */
-public class JXPathPropertyExtractor implements PropertyExtractor
+public class JXPathExpressionEvaluator implements ExpressionEvaluator
 {
     public static final String NAME = "jxpath";
     /**
@@ -31,14 +31,14 @@ public class JXPathPropertyExtractor implements PropertyExtractor
      */
     protected transient Log logger = LogFactory.getLog(getClass());
 
-    public Object getProperty(String name, Object message)
+    public Object evaluate(String name, Object message)
     {
 
         Object result = null;
         Object payload = message;
-        if (message instanceof MuleMessage)
+        if (message instanceof MessageAdapter)
         {
-            payload = ((MuleMessage) message).getPayload();
+            payload = ((MessageAdapter) message).getPayload();
         }
 
         if (payload instanceof String)

@@ -8,9 +8,9 @@
  * LICENSE.txt file.
  */
 
-package org.mule.util.properties;
+package org.mule.util.expression;
 
-import org.mule.api.MuleMessage;
+import org.mule.api.transport.MessageAdapter;
 
 import java.util.Map;
 
@@ -18,16 +18,16 @@ import java.util.Map;
  * If the message payload is a map this extractor will look up the property value in
  * the map
  */
-public class MapPayloadPropertyExtractor implements PropertyExtractor
+public class MapPayloadExpressionEvaluator implements ExpressionEvaluator
 {
     public static final String NAME = "map";
     
-    public Object getProperty(String name, Object message)
+    public Object evaluate(String name, Object message)
     {
         Object payload = message;
-        if (message instanceof MuleMessage)
+        if (message instanceof MessageAdapter)
         {
-            payload = ((MuleMessage) message).getPayload();
+            payload = ((MessageAdapter) message).getPayload();
         }
         if (payload instanceof Map)
         {

@@ -9,12 +9,13 @@
  */
 package org.mule.config.bootstrap;
 
-import org.mule.api.MuleException;
 import org.mule.api.MuleContext;
+import org.mule.api.MuleException;
 import org.mule.api.context.MuleContextAware;
 import org.mule.api.lifecycle.Initialisable;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.lifecycle.LifecycleTransitionResult;
+import org.mule.api.registry.ObjectProcessor;
 import org.mule.api.registry.Registry;
 import org.mule.api.transformer.DiscoverableTransformer;
 import org.mule.api.transformer.Transformer;
@@ -187,7 +188,12 @@ public class SimpleRegistryBootstrap implements Initialisable, MuleContextAware
             Map.Entry entry = (Map.Entry) iterator.next();
             Object object = ClassUtils.instanciateClass(entry.getValue().toString(), ClassUtils.NO_ARGS);
             String key = entry.getKey().toString();
-            registry.registerObject(key, object);
+            Class meta = Object.class;
+            if(object instanceof ObjectProcessor)
+            {
+                meta = ObjectProcessor.class;
+            }
+            registry.registerObject(key, object, meta);
         }
         props.clear();
     }
@@ -200,7 +206,12 @@ public class SimpleRegistryBootstrap implements Initialisable, MuleContextAware
         {
 
             Object o = ClassUtils.instanciateClass(objectString, ClassUtils.NO_ARGS);
-            registry.registerObject(OBJECT_PREFIX + i + "#" + o.hashCode(), o);
+            Class meta = Object.class;
+            if(o instanceof ObjectProcessor)
+            {
+                meta = ObjectProcessor.class;
+            }
+            registry.registerObject(OBJECT_PREFIX + i + "#" + o.hashCode(), o, meta);
             props.remove(OBJECT_PREFIX + i++);
             objectString = props.getProperty(OBJECT_PREFIX + i);
         }

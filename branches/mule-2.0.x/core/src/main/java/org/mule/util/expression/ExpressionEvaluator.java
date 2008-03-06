@@ -8,19 +8,19 @@
  * LICENSE.txt file.
  */
 
-package org.mule.util.properties;
+package org.mule.util.expression;
 
 import org.mule.api.NamedObject;
 
 /**
- * <code>PropertyExtractor</code> extracts a property from the message in a generic
+ * <code>ExpressionEvaluator</code> extracts a property from the message in a generic
  * way. i.e. composite properties can be pulled and aggregated depending on this
  * strategy. This can be used to extract Correlation Ids, Message Ids etc.
  *
  * These objects are used to execute property expressions (usually on the
  * current message) at runtime to extracta dynamic value.
  */
-public interface PropertyExtractor extends NamedObject
+public interface ExpressionEvaluator extends NamedObject
 {
     /**
      * Extracts a single property from the message
@@ -29,6 +29,6 @@ public interface PropertyExtractor extends NamedObject
      * @param message the message to extract from
      * @return the result of the extraction or null if the property was not found
      */
-    Object getProperty(String expression, Object message);
+    Object evaluate(String expression, Object message);
 
 }

@@ -10,27 +10,27 @@
 
 package org.mule.routing;
 
-import org.mule.api.MuleMessage;
 import org.mule.api.config.MuleProperties;
-import org.mule.util.properties.MessageHeaderPropertyExtractor;
+import org.mule.api.transport.MessageAdapter;
+import org.mule.util.expression.MessageHeaderExpressionEvaluator;
 
 /**
- * <code>CorrelationPropertiesExtractor</code> is a default implementation used for
+ * <code>CorrelationPropertiesExpressionEvaluator</code> is a default implementation used for
  * getting the Correlation information from a message. This object is only used when
  * getting a specific property to be set on the message. When reading the property
  * the getProperty(...) or the direct property accessor will be used i.e.
  * message.getCorrelationId() or
  * message.getProperty(MuleProperties.MULE_CORRELATION_ID_PROPERTY)
  */
-public class CorrelationPropertiesExtractor extends MessageHeaderPropertyExtractor
+public class CorrelationPropertiesExpressionEvaluator extends MessageHeaderExpressionEvaluator
 {
-    public final Object getProperty(String name, Object message)
+    public final Object evaluate(String name, Object message)
     {
         Object result;
-        MuleMessage msg = null;
-        if (message instanceof MuleMessage)
+        MessageAdapter msg = null;
+        if (message instanceof MessageAdapter)
         {
-            msg = (MuleMessage) message;
+            msg = (MessageAdapter) message;
         }
         if (msg != null)
         {
@@ -55,17 +55,17 @@ public class CorrelationPropertiesExtractor extends MessageHeaderPropertyExtract
         }
         else
         {
-            return super.getProperty(name, message);
+            return super.evaluate(name, message);
         }
         return result;
     }
 
-    public String getMessageId(MuleMessage message)
+    public String getMessageId(MessageAdapter message)
     {
         return message.getUniqueId();
     }
 
-    public String getCorrelationId(MuleMessage message)
+    public String getCorrelationId(MessageAdapter message)
     {
         String id = message.getCorrelationId();
         if (id == null)

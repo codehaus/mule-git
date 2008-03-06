@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.module.xml.util.properties;
+package org.mule.module.xml.expression;
 
 import org.mule.module.xml.i18n.XmlMessages;
 
@@ -22,7 +22,7 @@ import org.w3c.dom.Document;
 /**
  * Will select the text of a single node based on the property name
  */
-public class XPathPayloadPropertyExtractor extends AbstractXPathPropertyExtractor
+public class XPathExpressionEvaluator extends AbstractXPathExpressionEvaluator
 {
     public static final String NAME = "xpath";
 

@@ -7,7 +7,7 @@
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
-package org.mule.util.properties;
+package org.mule.util.expression;
 
 import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleMessage;
@@ -20,39 +20,39 @@ public class PropertyExtractorManagerTestCase extends AbstractMuleTestCase
 {
     public void testManager() throws Exception
     {
-        PropertyExtractorManager.setDefaultExtractor(FunctionPropertyExtractor.NAME);
+        ExpressionEvaluatorManager.setDefaultEvaluator(FunctionExpressionEvaluator.NAME);
 
         MuleMessage message = new DefaultMuleMessage("test");
-        Object o = PropertyExtractorManager.processExpression("uuid", message);
+        Object o = ExpressionEvaluatorManager.evaluate("uuid", message);
         assertNotNull(o);
-        o = PropertyExtractorManager.processExpression("now", message);
+        o = ExpressionEvaluatorManager.evaluate("now", message);
         assertNotNull(o);
         assertTrue(o instanceof Timestamp);
     }
 
     public void testDefaultExtractor() throws Exception
     {
-        assertEquals(MessageHeaderPropertyExtractor.NAME, PropertyExtractorManager.getDefaultExtractor());
-        PropertyExtractorManager.setDefaultExtractor(MapPayloadPropertyExtractor.NAME);
+        assertEquals(MessageHeaderExpressionEvaluator.NAME, ExpressionEvaluatorManager.getDefaultEvaluator());
+        ExpressionEvaluatorManager.setDefaultEvaluator(MapPayloadExpressionEvaluator.NAME);
 
-        assertEquals(MapPayloadPropertyExtractor.NAME, PropertyExtractorManager.getDefaultExtractor());
+        assertEquals(MapPayloadExpressionEvaluator.NAME, ExpressionEvaluatorManager.getDefaultEvaluator());
         try
         {
-            PropertyExtractorManager.setDefaultExtractor("bork");
+            ExpressionEvaluatorManager.setDefaultEvaluator("bork");
             fail("bork is not a valid property extractor");
         }
         catch (IllegalArgumentException e)
         {
             //Expected
         }
-        assertEquals(MapPayloadPropertyExtractor.NAME, PropertyExtractorManager.getDefaultExtractor());
+        assertEquals(MapPayloadExpressionEvaluator.NAME, ExpressionEvaluatorManager.getDefaultEvaluator());
         //Lets remove the default
-        PropertyExtractorManager.unregisterExtractor(MapPayloadPropertyExtractor.NAME);
-        assertEquals(PropertyExtractorManager.DEFAULT_EXTRACTOR_NAME, PropertyExtractorManager.getDefaultExtractor());
+        ExpressionEvaluatorManager.unregisterEvaluator(MapPayloadExpressionEvaluator.NAME);
+        assertEquals(ExpressionEvaluatorManager.DEFAULT_EVALUATOR_NAME, ExpressionEvaluatorManager.getDefaultEvaluator());
 
         try
         {
-            PropertyExtractorManager.setDefaultExtractor(MapPayloadPropertyExtractor.NAME);
+            ExpressionEvaluatorManager.setDefaultEvaluator(MapPayloadExpressionEvaluator.NAME);
             fail("Map extractor should no longer be registered");
         }
         catch (IllegalArgumentException e)
@@ -65,7 +65,7 @@ public class PropertyExtractorManagerTestCase extends AbstractMuleTestCase
     {
         try
         {
-            PropertyExtractorManager.registerExtractor(new MapPayloadPropertyExtractor());
+            ExpressionEvaluatorManager.registerEvaluator(new MapPayloadExpressionEvaluator());
             fail("extractor already exists");
         }
         catch (IllegalArgumentException e)
@@ -75,14 +75,14 @@ public class PropertyExtractorManagerTestCase extends AbstractMuleTestCase
 
         try
         {
-            PropertyExtractorManager.registerExtractor(null);
+            ExpressionEvaluatorManager.registerEvaluator(null);
             fail("null extractor");
         }
         catch (IllegalArgumentException e)
         {
             //Expected
         }
-        assertNull(PropertyExtractorManager.unregisterExtractor(null));
+        assertNull(ExpressionEvaluatorManager.unregisterEvaluator(null));
 
     }
 }

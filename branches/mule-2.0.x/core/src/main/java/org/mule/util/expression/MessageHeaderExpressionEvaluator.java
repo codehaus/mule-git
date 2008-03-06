@@ -8,30 +8,30 @@
  * LICENSE.txt file.
  */
 
-package org.mule.util.properties;
+package org.mule.util.expression;
 
-import org.mule.api.MuleMessage;
+import org.mule.api.transport.MessageAdapter;
 import org.mule.transport.NullPayload;
 
 /**
  * Looks up the property on the message using the name given.
  */
-public class MessageHeaderPropertyExtractor implements PropertyExtractor
+public class MessageHeaderExpressionEvaluator implements ExpressionEvaluator
 {
     public static final String NAME = "header";
 
-    public Object getProperty(String name, Object message)
+    public Object evaluate(String name, Object message)
     {
-        if (message instanceof MuleMessage)
+        if (message instanceof MessageAdapter)
         {
             if (name.equalsIgnoreCase("payload"))
             {
-                Object payload = ((MuleMessage) message).getPayload();
+                Object payload = ((MessageAdapter) message).getPayload();
                 return (payload instanceof NullPayload ? null : payload);
             }
             else
             {
-                return ((MuleMessage) message).getProperty(name);
+                return ((MessageAdapter) message).getProperty(name);
             }
         }
         return null;

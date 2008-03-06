@@ -7,12 +7,13 @@
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
-package org.mule.module.xml.util.properties;
+package org.mule.module.xml.expression;
 
 import org.mule.api.MuleMessage;
 import org.mule.api.MuleRuntimeException;
+import org.mule.api.lifecycle.Disposable;
 import org.mule.module.xml.i18n.XmlMessages;
-import org.mule.util.properties.PropertyExtractor;
+import org.mule.util.expression.ExpressionEvaluator;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -27,12 +28,12 @@ import org.jaxen.XPath;
  * Provides a base class for XPath property extractors. The XPath engine used is jaxen (http://jaxen.org) which supports
  * XPath queries on other object models such as JavaBeans as well as Xml
  */
-public abstract class AbstractXPathPropertyExtractor implements PropertyExtractor
+public abstract class AbstractXPathExpressionEvaluator implements ExpressionEvaluator, Disposable
 {
     private Map cache = new WeakHashMap(8);
 
     /** {@inheritDoc} */
-    public Object getProperty(String expression, Object message)
+    public Object evaluate(String expression, Object message)
     {
         try
         {
@@ -96,6 +97,16 @@ public abstract class AbstractXPathPropertyExtractor implements PropertyExtracto
         }
         return newResults;
     }
-    
+
+    /**
+     * A lifecycle method where implementor should free up any resources. If an
+     * exception is thrown it should just be logged and processing should continue.
+     * This method should not throw Runtime exceptions.
+     */
+    public void dispose()
+    {
+        cache.clear();
+    }
+
     protected abstract Object extractResultFromNode(Object result);
 }

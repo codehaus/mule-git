@@ -39,7 +39,7 @@ import org.mule.transformer.simple.ObjectToByteArray;
 import org.mule.transformer.simple.ObjectToString;
 import org.mule.util.CollectionUtils;
 import org.mule.util.UUID;
-import org.mule.util.properties.PropertyExtractorManager;
+import org.mule.util.expression.ExpressionEvaluatorManager;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -118,7 +118,7 @@ public abstract class AbstractRegistry implements Registry
             {
                 // remove this reference once there is no one else left to dispose
                 RegistryContext.setRegistry(null);
-                PropertyExtractorManager.clear();
+                ExpressionEvaluatorManager.clearEvaluators();
             }
         }
         catch (MuleException e)

@@ -7,7 +7,7 @@
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
-package org.mule.util.properties;
+package org.mule.util.expression;
 
 import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleMessage;
@@ -22,28 +22,28 @@ public class FunctionPropertyExtractorTestCase extends AbstractMuleTestCase
     public void testFunctions() throws Exception
     {
         MuleMessage message = new DefaultMuleMessage("test");
-        FunctionPropertyExtractor extractor = new FunctionPropertyExtractor();
-        Object o = extractor.getProperty("uuid", message);
+        FunctionExpressionEvaluator extractor = new FunctionExpressionEvaluator();
+        Object o = extractor.evaluate("uuid", message);
         assertNotNull(o);
-        o = extractor.getProperty("now", message);
+        o = extractor.evaluate("now", message);
         assertNotNull(o);
         assertTrue(o instanceof Timestamp);
 
-        o = extractor.getProperty("date", message);
+        o = extractor.evaluate("date", message);
         assertNotNull(o);
         assertTrue(o instanceof Date);
 
-        o = extractor.getProperty("hostname", message);
+        o = extractor.evaluate("hostname", message);
         assertNotNull(o);
         assertEquals(InetAddress.getLocalHost().getHostName(), o);
 
-        o = extractor.getProperty("ip", message);
+        o = extractor.evaluate("ip", message);
         assertNotNull(o);
         assertEquals(InetAddress.getLocalHost().getHostAddress(), o);
 
         try
         {
-            o = extractor.getProperty("bork", message);
+            o = extractor.evaluate("bork", message);
             fail("bork is not a valid function");
         }
         catch (Exception e)
@@ -54,30 +54,30 @@ public class FunctionPropertyExtractorTestCase extends AbstractMuleTestCase
 
     public void testFunctionsFromExtractorManager() throws Exception
     {
-        PropertyExtractorManager.setDefaultExtractor(FunctionPropertyExtractor.NAME);
+        ExpressionEvaluatorManager.setDefaultEvaluator(FunctionExpressionEvaluator.NAME);
         
         MuleMessage message = new DefaultMuleMessage("test");
-        Object o = PropertyExtractorManager.processExpression("uuid", message);
+        Object o = ExpressionEvaluatorManager.evaluate("uuid", message);
         assertNotNull(o);
-        o = PropertyExtractorManager.processExpression("now", message);
+        o = ExpressionEvaluatorManager.evaluate("now", message);
         assertNotNull(o);
         assertTrue(o instanceof Timestamp);
 
-        o = PropertyExtractorManager.processExpression("date", message);
+        o = ExpressionEvaluatorManager.evaluate("date", message);
         assertNotNull(o);
         assertTrue(o instanceof Date);
 
-        o = PropertyExtractorManager.processExpression("hostname", message);
+        o = ExpressionEvaluatorManager.evaluate("hostname", message);
         assertNotNull(o);
         assertEquals(InetAddress.getLocalHost().getHostName(), o);
 
-        o = PropertyExtractorManager.processExpression("ip", message);
+        o = ExpressionEvaluatorManager.evaluate("ip", message);
         assertNotNull(o);
         assertEquals(InetAddress.getLocalHost().getHostAddress(), o);
 
         try
         {
-            o = PropertyExtractorManager.processExpression("bork", message);
+            o = ExpressionEvaluatorManager.evaluate("bork", message);
             fail("bork is not a valid function");
         }
         catch (Exception e)
