@@ -324,4 +324,13 @@
     <link><item>tcp:outbound-endpoint</item><page>TCP+Transport</page></link>
     <link><item>tcp:endpoint</item><page>TCP+Transport</page></link>
 
+    <link><item>tls:connector</item><page>TLS+Transport</page></link>
+    <link><item>tls:client</item><page>TLS+Transport</page></link>
+    <link><item>tls:key-store</item><page>TLS+Transport</page></link>
+    <link><item>tls:server</item><page>TLS+Transport</page></link>
+    <link><item>tls:protocol-handler</item><page>TLS+Transport</page></link>
+    <link><item>tls:inbound-endpoint</item><page>TLS+Transport</page></link>
+    <link><item>tls:outbound-endpoint</item><page>TLS+Transport</page></link>
+    <link><item>tls:endpoint</item><page>TLS+Transport</page></link>
+
 </links>
