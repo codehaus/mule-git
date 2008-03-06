@@ -374,4 +374,10 @@
     <link><item>acegi:security-property</item><page>Acegi+Module</page></link>
     <link><item>acegi:http-security-filter</item><page>Acegi+Module</page></link>
 
+    <link><item>client:remote-dispatcher-agent</item><page>Client+Module</page></link>
+    <link><item>client:remote-endpoint</item><page>Client+Module</page></link>
+    <link><item>client:xml-wire-format</item><page>Client+Module</page></link>
+    <link><item>client:serialization-wire-format</item><page>Client+Module</page></link>
+    <link><item>client:custom-wire-format</item><page>Client+Module</page></link>
+
 </links>
