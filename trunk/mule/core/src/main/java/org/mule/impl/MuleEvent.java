@@ -15,7 +15,9 @@ import org.mule.MuleManager;
 import org.mule.config.MuleProperties;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.impl.endpoint.MuleEndpoint;
+import org.mule.impl.model.ModelHelper;
 import org.mule.impl.security.MuleCredentials;
+import org.mule.umo.MessagingException;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOEvent;
 import org.mule.umo.UMOException;
@@ -77,7 +79,7 @@ public class MuleEvent extends EventObject implements UMOEvent, ThreadSafeAccess
      */
     private UMOMessage message = null;
 
-    private transient UMOSession session;
+    private UMOSession session;
 
     private boolean stopFurtherProcessing = false;
 
@@ -701,18 +703,39 @@ public class MuleEvent extends EventObject implements UMOEvent, ThreadSafeAccess
     {
         out.defaultWriteObject();
         out.writeObject(endpoint.getEndpointURI().toString());
+        out.writeObject(endpoint.getType());
+        if ((session.getComponent() == null) || 
+            (session.getComponent().getDescriptor() == null)) 
+        {
+            out.writeObject("");
+        } 
+        else
+        {
+            out.writeObject(session.getComponent().getDescriptor().getName());
+        }
         marshallTransformers(endpoint.getTransformer(), out);
     }
 
-    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException, MessagingException
     {
         logger = LogFactory.getLog(getClass());
         in.defaultReadObject();
         String uri = (String) in.readObject();
+        String type = (String) in.readObject();
+        String componentName = (String) in.readObject();
+        if ((componentName.length()!=0) && (session != null)) 
+        {
+            if (!ModelHelper.isComponentRegistered(componentName)) {
+                throw new MessagingException(
+                        CoreMessages.objectNotRegisteredWithManager("Component '" + componentName + "'"), 
+                        message, null);
+            }
+            ((MuleSession)session).setComponent(ModelHelper.getComponent(componentName));
+        }
         UMOTransformer trans = unmarshallTransformers(in);
         try
         {
-            endpoint = MuleEndpoint.getOrCreateEndpointForUri(uri, UMOEndpoint.ENDPOINT_TYPE_SENDER);
+            endpoint = MuleEndpoint.getOrCreateEndpointForUri(uri,type);
 
             if (endpoint.getTransformer() == null)
             {

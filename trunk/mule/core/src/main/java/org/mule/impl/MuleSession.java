@@ -58,7 +58,7 @@ public final class MuleSession implements UMOSession
     /**
      * The Mule component associated with the session
      */
-    private UMOComponent component = null;
+    private transient UMOComponent component = null;
 
     /**
      * Determines if the component is valid

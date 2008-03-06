@@ -31,6 +31,7 @@ import org.mule.umo.transformer.TransformerException;
 import org.mule.umo.transformer.UMOTransformer;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.Properties;
 
 public class MuleEventTestCase extends AbstractMuleTestCase
@@ -191,7 +192,8 @@ public class MuleEventTestCase extends AbstractMuleTestCase
         UMOEndpoint endpoint = getTestEndpoint("Test", UMOEndpoint.ENDPOINT_TYPE_SENDER);
         endpoint.setTransformer(trans1);
 
-        UMOEvent event = RequestContext.setEvent(getTestEvent("payload", endpoint));
+        // need a session without component        
+        UMOEvent event = RequestContext.setEvent(new MuleEvent(new MuleMessage("payload", new HashMap()), endpoint, getTestSession(null), true));
 
         Serializable serialized = (Serializable)new SerializableToByteArray().transform(event);
         assertNotNull(serialized);

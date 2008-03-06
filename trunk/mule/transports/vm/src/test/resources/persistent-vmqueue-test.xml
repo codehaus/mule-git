@@ -23,7 +23,7 @@
     <model name="TEST">
 
         <mule-descriptor name="ReceiverUMO"
-                         implementation="org.mule.components.simple.BridgeComponent">
+                         implementation="org.mule.components.simple.EchoComponent">
             <inbound-router>
                 <endpoint address="vm://receiver">
                 </endpoint>
