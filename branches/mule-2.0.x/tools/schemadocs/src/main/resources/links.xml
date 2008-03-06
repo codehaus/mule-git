@@ -306,4 +306,9 @@
     <link><item>ssl:outbound-endpoint</item><page>SSL+Transport</page></link>
     <link><item>ssl:endpoint</item><page>SSL+Transport</page></link>
 
+    <link><item>stdio:connector</item><page>STDIO+Transport</page></link>
+    <link><item>stdio:inbound-endpoint</item><page>STDIO+Transport</page></link>
+    <link><item>stdio:outbound-endpoint</item><page>STDIO+Transport</page></link>
+    <link><item>stdio:endpoint</item><page>STDIO+Transport</page></link>
+
 </links>
