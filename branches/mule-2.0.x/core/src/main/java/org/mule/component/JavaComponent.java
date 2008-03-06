@@ -20,6 +20,7 @@ import org.mule.api.MuleContext;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
+import org.mule.api.component.Component;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.endpoint.InboundEndpoint;
 import org.mule.api.endpoint.OutboundEndpoint;
@@ -28,7 +29,6 @@ import org.mule.api.lifecycle.LifecycleTransitionResult;
 import org.mule.api.model.EntryPointResolverSet;
 import org.mule.api.model.Model;
 import org.mule.api.model.ModelException;
-import org.mule.api.model.MuleProxy;
 import org.mule.api.service.Service;
 import org.mule.api.transport.ReplyToHandler;
 import org.mule.config.i18n.CoreMessages;
@@ -36,18 +36,27 @@ import org.mule.management.stats.ServiceStatistics;
 import org.mule.message.DefaultExceptionPayload;
 import org.mule.transport.AbstractConnector;
 import org.mule.transport.NullPayload;
+import org.mule.util.object.ObjectFactory;
 import org.mule.util.queue.QueueSession;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * <code>MuleProxy</code> is a proxy to an UMO. It can be executed in its own thread.
+ * <code>JavaComponent</code> is a Java {@link Component} implementation used to
+ * invoke Java component implementations. A <code>JavaComponent</code> uses an
+ * {@link ObjectFactory} to specify the object instance's source and allows for
+ * singleton, pooled and prototype implementations to be used along with custom
+ * {@link ObjectFactory} that allow component instances to be obtained from other
+ * containers such as Spring. A <code>JavaComponent</code> uses a customizable
+ * {@link EntryPointResolverSet} in order to work out which method should be invoked,
+ * and allows bindings to be configure that use outbound endpoints to populate
+ * component instance variables before invocation.
  */
-public class DefaultMuleProxy implements MuleProxy
+public class JavaComponent implements Component
 {
     /** logger used by this class */
-    private static Log logger = LogFactory.getLog(DefaultMuleProxy.class);
+    private static Log logger = LogFactory.getLog(JavaComponent.class);
 
     /** Holds the current event being processed */
     private MuleEvent event;
@@ -74,7 +83,7 @@ public class DefaultMuleProxy implements MuleProxy
      * Constructs a Proxy using the UMO's AbstractMessageDispatcher and the UMO
      * itself
      */
-    public DefaultMuleProxy(Object pojoService, Service service, MuleContext muleContext)
+    public JavaComponent(Object pojoService, Service service, MuleContext muleContext)
             throws MuleException
     {
         // MULE-2676 workaround

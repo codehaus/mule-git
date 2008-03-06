@@ -8,24 +8,31 @@
  * LICENSE.txt file.
  */
 
-package org.mule.api.model;
+package org.mule.api.component;
 
-import org.mule.api.MuleException;
 import org.mule.api.MuleEvent;
+import org.mule.api.MuleException;
 import org.mule.api.lifecycle.Disposable;
 import org.mule.api.lifecycle.Startable;
 import org.mule.api.lifecycle.Stoppable;
+import org.mule.api.routing.InboundRouterCollection;
+import org.mule.api.service.Service;
 import org.mule.management.stats.ServiceStatistics;
 import org.mule.util.queue.QueueSession;
 
 import javax.resource.spi.work.Work;
 
 /**
- * <code>MuleProxy</code> is a proxy to a UMO. It is an object that 
- * can be executed in it's own thread.
+ * A <code>Component</code> is a invoked by a {@link Service} for each incoming
+ * {@link MuleEvent} routed on by the {@link InboundRouterCollection}. A component
+ * processes a {@link MuleEvent} by invoking the component instance that has been
+ * configured, optionally returning a result. <br/> Implementations of
+ * <code/>Component</code> can use different types of component implementation,
+ * implement component instance pooling or implement <i>binding's<i/> which allow
+ * for service composition. <br/><br/> <b>TODO</b> <code>Component</code>
+ * implementations should be state-less.
  */
-
-public interface MuleProxy extends Work, Startable, Stoppable, Disposable
+public interface Component extends Work, Startable, Stoppable, Disposable
 {
 
     /**

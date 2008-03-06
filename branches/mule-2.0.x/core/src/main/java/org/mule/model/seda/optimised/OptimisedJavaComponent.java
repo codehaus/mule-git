@@ -17,6 +17,7 @@ import org.mule.api.MuleEvent;
 import org.mule.api.MuleEventContext;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
+import org.mule.api.component.Component;
 import org.mule.api.endpoint.InboundEndpoint;
 import org.mule.api.endpoint.OutboundEndpoint;
 import org.mule.api.lifecycle.Callable;
@@ -25,7 +26,6 @@ import org.mule.api.lifecycle.LifecycleTransitionResult;
 import org.mule.api.lifecycle.Startable;
 import org.mule.api.lifecycle.Stoppable;
 import org.mule.api.model.ModelException;
-import org.mule.api.model.MuleProxy;
 import org.mule.api.service.Service;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.management.stats.ServiceStatistics;
@@ -39,12 +39,12 @@ import org.apache.commons.logging.LogFactory;
  * executed in its own thread.
  */
 
-public class OptimisedMuleProxy implements MuleProxy
+public class OptimisedJavaComponent implements Component
 {
     /**
      * logger used by this class
      */
-    private static Log logger = LogFactory.getLog(OptimisedMuleProxy.class);
+    private static Log logger = LogFactory.getLog(OptimisedJavaComponent.class);
 
     /**
      * Holds the current event being processed
@@ -75,7 +75,7 @@ public class OptimisedMuleProxy implements MuleProxy
      * @param service the underlying object that with receive events
      * @param service the Service descriptor associated with the service
      */
-    public OptimisedMuleProxy(Callable pojoService, Service service)
+    public OptimisedJavaComponent(Callable pojoService, Service service)
         throws MuleException
     {
         this.service = service;
