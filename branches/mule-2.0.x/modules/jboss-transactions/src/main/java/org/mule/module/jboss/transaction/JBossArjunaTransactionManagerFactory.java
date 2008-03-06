@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.module.jboss.transactions;
+package org.mule.module.jboss.transaction;
 
 import org.mule.RegistryContext;
 import org.mule.api.transaction.TransactionManagerFactory;

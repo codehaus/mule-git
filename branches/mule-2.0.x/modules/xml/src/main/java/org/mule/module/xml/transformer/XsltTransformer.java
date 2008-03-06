@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.module.xml.transformers;
+package org.mule.module.xml.transformer;
 
 import org.mule.RequestContext;
 import org.mule.api.MuleEventContext;
@@ -21,7 +21,7 @@ import org.mule.module.xml.util.XMLUtils;
 import org.mule.util.ClassUtils;
 import org.mule.util.IOUtils;
 import org.mule.util.StringUtils;
-import org.mule.util.expression.ExpressionEvaluatorManager;
+import org.mule.util.properties.PropertyExtractorManager;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -474,7 +474,7 @@ public class XsltTransformer extends AbstractXmlTransformer
                 {
                     throw new TransformerException(CoreMessages.noCurrentEventForTransformer(), this);
                 }
-                return ExpressionEvaluatorManager.evaluate(value.toString(), context.getMessage());
+                return PropertyExtractorManager.processExpression(value.toString(), context.getMessage());
             }
         }
 

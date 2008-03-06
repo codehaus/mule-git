@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.module.scripting.transformers;
+package org.mule.module.scripting.transformer;
 
 import org.mule.api.MuleMessage;
 import org.mule.api.lifecycle.InitialisationException;

@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.module.client.remoting.notifications;
+package org.mule.module.client.remoting.notification;
 
 import org.mule.api.context.notification.ServerNotificationListener;
 

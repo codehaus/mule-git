@@ -7,13 +7,12 @@
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
-package org.mule.module.client.config.spring.handlers;
+package org.mule.module.client.config;
 
 import org.mule.config.spring.factories.InboundEndpointFactoryBean;
 import org.mule.config.spring.parsers.generic.ChildDefinitionParser;
 import org.mule.config.spring.parsers.specific.endpoint.GenericEndpointDefinitionParser;
-import org.mule.module.client.config.spring.parsers.RemoteDispatcherAgentDefinitionParser;
-import org.mule.module.xml.transformers.XStreamWireFormat;
+import org.mule.module.xml.transformer.XStreamWireFormat;
 import org.mule.transformer.wire.SerializedMuleMessageWireFormat;
 
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;

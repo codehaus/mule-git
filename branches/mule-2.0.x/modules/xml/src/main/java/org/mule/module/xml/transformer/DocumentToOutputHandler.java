@@ -7,7 +7,7 @@
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
-package org.mule.module.xml.transformers;
+package org.mule.module.xml.transformer;
 
 import org.mule.api.MuleEvent;
 import org.mule.api.transformer.DiscoverableTransformer;

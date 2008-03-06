@@ -7,7 +7,7 @@
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
-package org.mule.module.client.config.spring.parsers;
+package org.mule.module.client.config;
 
 import org.mule.config.spring.parsers.specific.AgentDefinitionParser;
 import org.mule.module.client.remoting.RemoteDispatcherAgent;
