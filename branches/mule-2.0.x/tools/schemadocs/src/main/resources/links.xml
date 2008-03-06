@@ -333,4 +333,9 @@
     <link><item>tls:outbound-endpoint</item><page>TLS+Transport</page></link>
     <link><item>tls:endpoint</item><page>TLS+Transport</page></link>
 
+    <link><item>udp:connector</item><page>UDP+Transport</page></link>
+    <link><item>udp:inbound-endpoint</item><page>UDP+Transport</page></link>
+    <link><item>udp:outbound-endpoint</item><page>UDP+Transport</page></link>
+    <link><item>udp:endpoint</item><page>UDP+Transport</page></link>
+
 </links>
