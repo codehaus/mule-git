@@ -119,7 +119,6 @@
     <link><item>xml:xml-to-object-transformer</item><page>Additional+Configuration</page></link>
     <link><item>xml:xslt-transformer</item><page>Additional+Configuration</page></link>
     <link><item>xml:xml-prettyprinter-transformer</item><page>Additional+Configuration</page></link>
-    <link><item>soap:http-to-soap-request-transformer</item><page>Additional+Configuration</page></link>
     <link><item>mule:encryption-security-filter</item><page>Additional+Configuration</page></link>
     <link><item>jaas:jaas-security-filter</item><page>Additional+Configuration</page></link>
     <link><item>acegi:http-security-filter</item><page>Additional+Configuration</page></link>
@@ -295,5 +294,7 @@
     <link><item>smtps:tls-trust-store</item><page>SMTPS+Transport</page></link>
     <link><item>smtps:outbound-endpoint</item><page>SMTPS+Transport</page></link>
     <link><item>smtps:endpoint</item><page>SMTPS+Transport</page></link>
+
+    <link><item>soap:http-to-soap-request-transformer</item><page>SOAP+Transport</page></link>
 
 </links>
