@@ -413,7 +413,7 @@
     <link><item>pgp:security-filter</item><page>PGP+Module</page></link>
 
     <link><item>scripting:script</item><page>Scripting+Module</page></link>
-    <link><item>scripting:groovyRefreshable</item><page>Scripting+Module</page></link>
+    <link><item>scripting:groovy-refreshable</item><page>Scripting+Module</page></link>
     <link><item>scripting:lang</item><page>Scripting+Module</page></link>
 
 </links>
