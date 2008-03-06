@@ -120,7 +120,6 @@
     <link><item>xml:xslt-transformer</item><page>Additional+Configuration</page></link>
     <link><item>xml:xml-prettyprinter-transformer</item><page>Additional+Configuration</page></link>
     <link><item>mule:encryption-security-filter</item><page>Additional+Configuration</page></link>
-    <link><item>jaas:jaas-security-filter</item><page>Additional+Configuration</page></link>
     <link><item>pgp:security-filter</item><page>Additional+Configuration</page></link>
     
     <link><item>mule:inbound-endpoint</item><page>Configuring+Endpoints</page></link>
@@ -379,5 +378,10 @@
     <link><item>client:xml-wire-format</item><page>Client+Module</page></link>
     <link><item>client:serialization-wire-format</item><page>Client+Module</page></link>
     <link><item>client:custom-wire-format</item><page>Client+Module</page></link>
+
+    <link><item>jaas:security-manager</item><page>JAAS+Module</page></link>
+    <link><item>jaas:password-encryption-strategy</item><page>JAAS+Module</page></link>
+    <link><item>jaas:security-provider</item><page>JAAS+Module</page></link>
+    <link><item>jaas:jaas-security-filter</item><page>JAAS+Module</page></link>
 
 </links>
