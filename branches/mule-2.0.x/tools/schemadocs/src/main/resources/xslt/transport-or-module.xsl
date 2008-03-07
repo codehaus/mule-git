@@ -25,7 +25,8 @@
     <!-- xsl:include href="http://svn.codehaus.org/mule/branches/mule-2.0.x/tools/schemadocs/src/main/resources/xslt/schemadoc-core.xsl"/ -->
 
     <xsl:template match="/">
-        <html>
+        poop
+        <!-- html>
             <body>
 <h2>Detailed Configuration Information</h2>
         <xsl:apply-templates select="//xsd:element[@name=concat($prefix, 'connector')]" mode="wiki-menu-connector"/>
@@ -53,7 +54,7 @@
 
 </xsl:text>
             </body>
-        </html>
+        </html -->
     </xsl:template>
 
     <xsl:template match="xsd:element[@name]" mode="wiki-menu-connector"><xsl:variable name="textname" select="translate(@name, '-', ' ')"/>
