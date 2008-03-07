@@ -24,6 +24,8 @@
     <xsl:include href="schemadoc-core.xsl"/>
 
     <xsl:template match="/">
+        <html>
+            <body>
 <h2>Detailed Configuration Information</h2>
         <xsl:apply-templates select="//xsd:element[@name=concat($prefix, 'connector')]" mode="wiki-menu-connector"/>
         <xsl:apply-templates select="//xsd:element[@name=concat($prefix, 'inbound-endpoint')]" mode="wiki-menu"/>
@@ -34,7 +36,7 @@
         @name!=concat($prefix, 'endpoint') and
         @name!=concat($prefix, 'inbound-endpoint') and
         @name!=concat($prefix, 'outbound-endpoint') and
-        starts-with($prefix, @name)]" mode="wiki-menu"/>
+        starts-with(@name, $prefix)]" mode="wiki-menu"/>
 
         <xsl:apply-templates select="//xsd:element[@name=concat($prefix, 'connector')]" mode="single-element"/>
         <xsl:apply-templates select="//xsd:element[@name=concat($prefix, 'inbound-endpoint')]" mode="single-element"/>
@@ -45,10 +47,12 @@
         @name!=concat($prefix, 'endpoint') and
         @name!=concat($prefix, 'inbound-endpoint') and
         @name!=concat($prefix, 'outbound-endpoint') and
-        starts-with($prefix, @name)]" mode="single-element"/>
+        starts-with(@name, $prefix)]" mode="single-element"/>
         <xsl:text>
 
 </xsl:text>
+            </body>
+        </html>
     </xsl:template>
 
     <xsl:template match="xsd:element[@name]" mode="wiki-menu-connector"><xsl:variable name="textname" select="translate(@name, '-', ' ')"/>
