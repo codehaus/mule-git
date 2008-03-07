@@ -16,7 +16,7 @@
     <xsl:variable name="prefix" select="concat($transport, ':')"/>
 
     <xsl:output method="html"/>
-    <!-- xsl:include href="schemadoc-core.xsl"/ -->
+    <xsl:include href="schemadoc-core.xsl"/>
     <!-- xsl:include href="http://svn.codehaus.org/mule/branches/mule-2.0.x/tools/schemadocs/src/main/resources/xslt/schemadoc-core.xsl"/ -->
 
     <xsl:template match="/">
