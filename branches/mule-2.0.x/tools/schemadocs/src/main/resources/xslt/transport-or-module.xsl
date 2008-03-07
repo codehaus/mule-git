@@ -23,16 +23,18 @@
         <html>
             <body>
 <h2>Detailed Configuration Information</h2>
-        <xsl:apply-templates select="//xsd:element[@name=concat($prefix, 'connector')]" mode="wiki-menu-connector"/>
+                <ul>
+        <xsl:apply-templates select="//xsd:element[@name=concat($prefix, 'connector')]" mode="wiki-menu"/>
         <xsl:apply-templates select="//xsd:element[@name=concat($prefix, 'inbound-endpoint')]" mode="wiki-menu"/>
         <xsl:apply-templates select="//xsd:element[@name=concat($prefix, 'outbound-endpoint')]" mode="wiki-menu"/>
-        <xsl:apply-templates select="//xsd:element[@name=concat($prefix, 'endpoint')]" mode="wiki-menu-global"/>
+        <xsl:apply-templates select="//xsd:element[@name=concat($prefix, 'endpoint')]" mode="wiki-menu"/>
         <xsl:apply-templates select="//xsd:element[
         @name!=concat($prefix, 'connector') and
         @name!=concat($prefix, 'endpoint') and
         @name!=concat($prefix, 'inbound-endpoint') and
         @name!=concat($prefix, 'outbound-endpoint') and
         starts-with(@name, $prefix)]" mode="wiki-menu"/>
+                </ul>
 
         <xsl:apply-templates select="//xsd:element[@name=concat($prefix, 'connector')]" mode="single-element"/>
         <xsl:apply-templates select="//xsd:element[@name=concat($prefix, 'inbound-endpoint')]" mode="single-element"/>
@@ -53,13 +55,18 @@
 
     <!-- note that confluence xslt doesn't have upper-case extension -->
 
-    <xsl:template match="xsd:element[@name]" mode="wiki-menu-connector"><xsl:variable name="textname" select="translate(@name, '-', ' ')"/>
-* [<xsl:value-of select="translate(substring($transport, 1, 1), 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ')"/><xsl:value-of select="substring($transport, 2)"/> connector|#<xsl:value-of select="$transport"/>-<xsl:value-of select="@name"/>]</xsl:template>
-
-    <xsl:template match="xsd:element[@name]" mode="wiki-menu-global"><xsl:variable name="textname" select="translate(@name, '-', ' ')"/>
-* [Global endpoint|#<xsl:value-of select="$transport"/>-<xsl:value-of select="@name"/>]</xsl:template>
-
-    <xsl:template match="xsd:element[@name]" mode="wiki-menu"><xsl:variable name="textname" select="translate(substring-after(@name, ':'), '-', ' ')"/>
-* [<xsl:value-of select="translate(substring($textname, 1, 1), 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ')"/><xsl:value-of select="substring($textname, 2)"/>|#<xsl:value-of select="$transport"/>-<xsl:value-of select="@name"/>]</xsl:template>
+    <xsl:template match="xsd:element[@name]" mode="wiki-menu">
+        <li>
+            <a>
+                <xsl:attribute name="href">
+                    <xsl:call-template name="link">
+                        <xsl:with-param name="item">
+                            <xsl:value-of select="@name"/>
+                        </xsl:with-param>
+                    </xsl:call-template>
+                </xsl:attribute>
+            </a>
+        </li>
+    </xsl:template>
 
 </xsl:stylesheet>
