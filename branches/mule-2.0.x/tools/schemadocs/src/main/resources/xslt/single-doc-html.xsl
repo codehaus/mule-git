@@ -6,14 +6,9 @@
 
     <!-- $Id: -->
 
-    <!-- generate text to cut+paste into the wiki and links document
+    <!-- generate documentation for an entire transport or module
 
-         this should be run on a transport's schema
-
-         for example,
-         saxon ./transports/http/src/main/resources/META-INF/mule-https.xsd \
-               ./tools/schemadocs/src/main/resources/transport-to-wiki.xsl transport=https
-
+         to be embedded in confluence pages
     -->
 
     <!-- the transport we are generating docs for -->
@@ -26,11 +21,6 @@
 
     <xsl:template match="/">
         <html>
-            <body>
-                poop
-            </body>
-        </html>
-        <!-- html>
             <body>
 <h2>Detailed Configuration Information</h2>
         <xsl:apply-templates select="//xsd:element[@name=concat($prefix, 'connector')]" mode="wiki-menu-connector"/>
@@ -58,7 +48,7 @@
 
 </xsl:text>
             </body>
-        </html -->
+        </html>
     </xsl:template>
 
     <!-- note that confluence xslt doesn't have upper-case extension -->
