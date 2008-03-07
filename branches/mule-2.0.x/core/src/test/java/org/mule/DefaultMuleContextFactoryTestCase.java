@@ -284,7 +284,12 @@ public class DefaultMuleContextFactoryTestCase extends AbstractMuleTestCase
         public MuleContext buildMuleContext()
         {
             MuleContext muleContext = new TestMuleContext(getLifecycleManager());
-            muleContext.setConfiguration(getMuleConfiguration());
+            if (muleConfiguration == null)
+            {
+                muleConfiguration = new MuleConfiguration();
+            }
+            muleContext.setWorkManager(getWorkManager());
+            muleContext.setConfiguration(muleConfiguration);
             muleContext.setWorkManager(getWorkManager());
             muleContext.setNotificationManager(getNotificationManager());
             return muleContext;

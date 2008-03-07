@@ -14,28 +14,28 @@ import org.mule.DefaultMuleContext;
 import org.mule.api.MuleContext;
 import org.mule.api.context.MuleContextBuilder;
 import org.mule.api.context.WorkManager;
-import org.mule.api.context.notification.ServiceNotificationListener;
 import org.mule.api.context.notification.ConnectionNotificationListener;
 import org.mule.api.context.notification.CustomNotificationListener;
 import org.mule.api.context.notification.ExceptionNotificationListener;
 import org.mule.api.context.notification.ManagementNotificationListener;
-import org.mule.api.context.notification.MuleContextNotificationListener;
 import org.mule.api.context.notification.ModelNotificationListener;
+import org.mule.api.context.notification.MuleContextNotificationListener;
 import org.mule.api.context.notification.RegistryNotificationListener;
 import org.mule.api.context.notification.SecurityNotificationListener;
+import org.mule.api.context.notification.ServiceNotificationListener;
 import org.mule.api.context.notification.TransactionNotificationListener;
 import org.mule.api.lifecycle.LifecycleManager;
 import org.mule.config.MuleConfiguration;
-import org.mule.context.notification.ServiceNotification;
 import org.mule.context.notification.ConnectionNotification;
 import org.mule.context.notification.CustomNotification;
 import org.mule.context.notification.ExceptionNotification;
 import org.mule.context.notification.ManagementNotification;
-import org.mule.context.notification.MuleContextNotification;
 import org.mule.context.notification.ModelNotification;
+import org.mule.context.notification.MuleContextNotification;
 import org.mule.context.notification.RegistryNotification;
 import org.mule.context.notification.SecurityNotification;
 import org.mule.context.notification.ServerNotificationManager;
+import org.mule.context.notification.ServiceNotification;
 import org.mule.context.notification.TransactionNotification;
 import org.mule.lifecycle.GenericLifecycleManager;
 import org.mule.lifecycle.phases.MuleContextDisposePhase;
@@ -74,8 +74,12 @@ public class DefaultMuleContextBuilder implements MuleContextBuilder
     {
         logger.debug("Building new DefaultMuleContext instance with MuleContextBuilder: " + this);
         MuleContext muleContext = new DefaultMuleContext(getLifecycleManager());
-        muleContext.setConfiguration(getMuleConfiguration());
+        if (muleConfiguration == null)
+        {
+            muleConfiguration = new MuleConfiguration();
+        }
         muleContext.setWorkManager(getWorkManager());
+        muleContext.setConfiguration(muleConfiguration);
         muleContext.setNotificationManager(getNotificationManager());
         return muleContext;
     }
@@ -104,19 +108,6 @@ public class DefaultMuleContextBuilder implements MuleContextBuilder
         return this;
     }
 
-    protected MuleConfiguration getMuleConfiguration()
-    {
-        if (muleConfiguration != null)
-        {
-            return muleConfiguration;
-        }
-        else
-        {
-            return new MuleConfiguration();
-
-        }
-    }
-
     protected LifecycleManager getLifecycleManager()
     {
         if (lifecycleManager != null)
@@ -142,7 +133,7 @@ public class DefaultMuleContextBuilder implements MuleContextBuilder
         }
         else
         {
-            return new MuleWorkManager(getMuleConfiguration().getDefaultComponentThreadingProfile(),
+            return new MuleWorkManager(muleConfiguration.getDefaultComponentThreadingProfile(),
                 "MuleServer");
         }
     }
