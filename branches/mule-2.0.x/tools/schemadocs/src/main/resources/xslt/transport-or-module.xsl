@@ -53,8 +53,6 @@
         </html>
     </xsl:template>
 
-    <!-- note that confluence xslt doesn't have upper-case extension -->
-
     <xsl:template match="xsd:element[@name]" mode="wiki-menu">
         <li>
             <xsl:call-template name="link">
