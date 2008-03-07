@@ -14,6 +14,7 @@
     <!-- the transport we are generating docs for -->
     <xsl:param name="transport"/>
     <xsl:variable name="prefix" select="concat($transport, ':')"/>
+    <xsl:variable name="abstract" select="concat($prefix, 'abstract')"/>
 
     <xsl:output method="html"/>
     <!-- xsl:include href="schemadoc-core.xsl"/ -->
@@ -33,7 +34,8 @@
         @name!=concat($prefix, 'endpoint') and
         @name!=concat($prefix, 'inbound-endpoint') and
         @name!=concat($prefix, 'outbound-endpoint') and
-        starts-with(@name, $prefix)]" mode="wiki-menu"/>
+        starts-with(@name, $prefix) and
+        not(starts-with(@name, $abstract))]" mode="wiki-menu"/>
                 </ul>
 
         <xsl:apply-templates select="//xsd:element[@name=concat($prefix, 'connector')]" mode="single-element"/>
@@ -45,7 +47,8 @@
         @name!=concat($prefix, 'endpoint') and
         @name!=concat($prefix, 'inbound-endpoint') and
         @name!=concat($prefix, 'outbound-endpoint') and
-        starts-with(@name, $prefix)]" mode="single-element"/>
+        starts-with(@name, $prefix) and
+        not(starts-with(@name, $abstract))]" mode="single-element"/>
         <xsl:text>
 
 </xsl:text>
