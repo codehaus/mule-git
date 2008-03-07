@@ -4,7 +4,6 @@
         xmlns:xsd="http://www.w3.org/2001/XMLSchema"
         >
 
-
     <xsl:output method="html"/>
 
     <xsl:template match="/">
@@ -14,14 +13,5 @@
             </body>
         </html>
     </xsl:template>
-
-    <xsl:template match="xsd:element[@name]" mode="wiki-menu-connector"><xsl:variable name="textname" select="translate(@name, '-', ' ')"/>
-* [<xsl:value-of select="upper-case(substring($transport, 1, 1))"/><xsl:value-of select="substring($transport, 2)"/> connector|#<xsl:value-of select="$transport"/>-<xsl:value-of select="@name"/>]</xsl:template>
-
-    <xsl:template match="xsd:element[@name]" mode="wiki-menu-global"><xsl:variable name="textname" select="translate(@name, '-', ' ')"/>
-* [Global endpoint|#<xsl:value-of select="$transport"/>-<xsl:value-of select="@name"/>]</xsl:template>
-
-    <xsl:template match="xsd:element[@name]" mode="wiki-menu"><xsl:variable name="textname" select="translate(substring-after(@name, ':'), '-', ' ')"/>
-* [<xsl:value-of select="upper-case(substring($textname, 1, 1))"/><xsl:value-of select="substring($textname, 2)"/>|#<xsl:value-of select="$transport"/>-<xsl:value-of select="@name"/>]</xsl:template>
 
 </xsl:stylesheet>
