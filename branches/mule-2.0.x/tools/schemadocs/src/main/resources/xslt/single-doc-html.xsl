@@ -5,6 +5,7 @@
         >
 
     <xsl:output method="html"/>
+    <xsl:variable name="transport" select="'poop'"/>
 
     <xsl:template match="/">
         <html>
