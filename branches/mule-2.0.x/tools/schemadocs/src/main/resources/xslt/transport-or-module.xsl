@@ -57,15 +57,11 @@
 
     <xsl:template match="xsd:element[@name]" mode="wiki-menu">
         <li>
-            <a>
-                <xsl:attribute name="href">
-                    <xsl:call-template name="link">
-                        <xsl:with-param name="item">
-                            <xsl:value-of select="@name"/>
-                        </xsl:with-param>
-                    </xsl:call-template>
-                </xsl:attribute>
-            </a>
+            <xsl:call-template name="link">
+                <xsl:with-param name="item">
+                    <xsl:value-of select="@name"/>
+                </xsl:with-param>
+            </xsl:call-template>
         </li>
     </xsl:template>
 
