@@ -25,7 +25,11 @@
     <!-- xsl:include href="http://svn.codehaus.org/mule/branches/mule-2.0.x/tools/schemadocs/src/main/resources/xslt/schemadoc-core.xsl"/ -->
 
     <xsl:template match="/">
-        poop
+        <html>
+            <body>
+                poop
+            </body>
+        </html>
         <!-- html>
             <body>
 <h2>Detailed Configuration Information</h2>
