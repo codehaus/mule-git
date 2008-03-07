@@ -12,6 +12,7 @@ package org.mule.api.component;
 
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleException;
+import org.mule.api.lifecycle.Disposable;
 import org.mule.api.lifecycle.Startable;
 import org.mule.api.lifecycle.Stoppable;
 import org.mule.api.routing.InboundRouterCollection;
@@ -33,7 +34,7 @@ import javax.resource.spi.work.Work;
  * which allow for service composition. <br/><br/> <b>TODO</b> <code>Component</code>
  * implementations should be state-less.
  */
-public interface Component extends Work, Startable, Stoppable
+public interface Component extends Work, Startable, Stoppable, Disposable
 {
 
     /**

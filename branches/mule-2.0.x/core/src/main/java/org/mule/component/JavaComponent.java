@@ -133,6 +133,18 @@ public class JavaComponent implements Component
     public void dispose()
     {
         checkDisposed();
+        if (umo.isStarted())
+        {
+            try
+            {
+                umo.stop();
+            }
+            catch (MuleException e)
+            {
+                logger.error(CoreMessages.failedToStop("Service '" + service.getName() + "'"), e);
+            }
+        }
+        umo.dispose();
     }
 
     private void checkDisposed()
