@@ -45,7 +45,7 @@ public class MessagePayloadExpressionEvaluator implements ExpressionEvaluator
     {
         if (message instanceof MuleMessage)
         {
-            if(expression.equalsIgnoreCase(NAME))
+            if(expression==null)
             {
                 return ((MuleMessage) message).getPayload();
             }
@@ -53,12 +53,14 @@ public class MessagePayloadExpressionEvaluator implements ExpressionEvaluator
             {
                 try
                 {
-                    String clazz = expression.substring(NAME.length()+1);
-                    if(clazz.equals(BYTE_ARRAY))
+                    if(expression.equals(BYTE_ARRAY))
                     {
                         return ((MuleMessage) message).getPayload(byte[].class);
                     }
-                    return ((MuleMessage) message).getPayload(ClassUtils.loadClass(clazz, getClass()));
+                    else
+                    {
+                        return ((MuleMessage) message).getPayload(ClassUtils.loadClass(expression, getClass()));
+                    }
                 }
                 catch (TransformerException e)
                 {
