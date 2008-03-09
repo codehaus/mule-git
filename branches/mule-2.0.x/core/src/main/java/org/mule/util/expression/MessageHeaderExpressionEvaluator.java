@@ -11,28 +11,28 @@
 package org.mule.util.expression;
 
 import org.mule.api.transport.MessageAdapter;
-import org.mule.transport.NullPayload;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.StringTokenizer;
 
 /**
- * Looks up the property on the message using the name given.
+ * Looks up the property on the message using the property name given.
+ *
+ * @see MessageHeadersListExpressionEvaluator
+ * @see MessageHeadersExpressionEvaluator
+ * @see ExpressionEvaluator
+ * @see ExpressionEvaluatorManager
  */
 public class MessageHeaderExpressionEvaluator implements ExpressionEvaluator
 {
     public static final String NAME = "header";
 
-    public Object evaluate(String name, Object message)
+    public Object evaluate(String expression, Object message)
     {
         if (message instanceof MessageAdapter)
         {
-            if (name.equalsIgnoreCase("payload"))
-            {
-                Object payload = ((MessageAdapter) message).getPayload();
-                return (payload instanceof NullPayload ? null : payload);
-            }
-            else
-            {
-                return ((MessageAdapter) message).getProperty(name);
-            }
+            return ((MessageAdapter) message).getProperty(expression);
         }
         return null;
     }
