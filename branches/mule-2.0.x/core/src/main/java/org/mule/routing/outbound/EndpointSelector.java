@@ -47,6 +47,7 @@ import java.util.List;
 public class EndpointSelector extends FilteringOutboundRouter implements MuleContextAware
 {
     public static final String DEFAULT_SELECTOR_PROPERTY = "endpoint";
+    public static final String HEADER_EVALUATOR = "header:";
 
     private String selectorProperty = DEFAULT_SELECTOR_PROPERTY;
 
@@ -58,7 +59,7 @@ public class EndpointSelector extends FilteringOutboundRouter implements MuleCon
         List endpoints;
         String endpointName;
         
-        Object property = ExpressionEvaluatorManager.evaluate(getSelectorProperty(), message);
+        Object property = ExpressionEvaluatorManager.evaluate(HEADER_EVALUATOR + getSelectorProperty(), message);
         if(property ==null)
         {
             throw new CouldNotRouteOutboundMessageException(
