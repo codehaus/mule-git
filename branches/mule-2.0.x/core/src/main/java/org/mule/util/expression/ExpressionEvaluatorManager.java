@@ -93,7 +93,7 @@ public class ExpressionEvaluatorManager
         ExpressionEvaluator extractor = (ExpressionEvaluator) evaluator.get(name);
         if(extractor==null)
         {
-            throw new IllegalArgumentException(CoreMessages.noExtractorRegisteredWithKey(name).getMessage());
+            throw new IllegalArgumentException(CoreMessages.expressionEvaluatorNotRegistered(name).getMessage());
         }
         return extractor.evaluate(expression, object);
     }
