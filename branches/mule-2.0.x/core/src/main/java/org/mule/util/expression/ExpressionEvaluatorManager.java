@@ -109,4 +109,29 @@ public class ExpressionEvaluatorManager
         }
         evaluator.clear();
     }
+
+    public static boolean isValidExpression(String expression)
+    {
+        return isValidExpression(expression, DEFAULT_EXPRESSION_PREFIX);
+    }
+
+    public static boolean isValidExpression(String expression, String expressionPrefix)
+    {
+        if(expression.startsWith(expressionPrefix))
+        {
+            expression = expression.substring(2, expression.length()-1);
+        }
+        String name;
+        int i = expression.indexOf(":");
+        if(i>-1)
+        {
+            name = expression.substring(0, i);
+        }
+        else
+        {
+            name = expression;
+        }
+        return isEvaluatorRegistered(name);
+    }
+
 }
