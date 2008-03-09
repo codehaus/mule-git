@@ -7,9 +7,11 @@
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
-package org.mule.util.expression;
+package org.mule.expression;
 
 import org.mule.DefaultMuleMessage;
+import org.mule.util.expression.ExpressionEvaluatorManager;
+import org.mule.util.expression.MapPayloadExpressionEvaluator;
 import org.mule.api.MuleMessage;
 import org.mule.tck.AbstractMuleTestCase;
 
