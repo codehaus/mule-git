@@ -11,17 +11,10 @@
 package org.mule.example.echo;
 
 /**
- * Tests the echo example using Xfire
+ * Tests the echo example using XFire.
  */
-public class XFireEchoTestCase extends AxisEchoTestCase
+public class XFireEchoTestCase extends AbstractEchoTestCase
 {
-
-    public void testPostEcho() throws Exception
-    {
-        // TODO Auto-generated method stub
-        super.testPostEcho();
-    }
-
     protected String getConfigResources()
     {
         return "echo-xfire-config.xml";
