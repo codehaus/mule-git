@@ -13,23 +13,10 @@
     <description>Is a simple component example that demostrates how to expose a component over multiple transports (soap and stream).</description>
 
     <build>
-        <plugins>
-            <plugin>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <excludes>
-                    </excludes>
-                </configuration>
-            </plugin>
-        </plugins>
         <!-- Allow config files to be in the "conf" directory to make it easier for users to find them. -->
         <resources>
             <resource>
                 <directory>conf</directory>
-                <excludes>
-                    <!-- MULE-2531: do not bundle log4j.properties for the full distribution -->
-                    <exclude>log4j.properties</exclude>
-                </excludes>
             </resource>
             <resource>
                 <directory>src/main/resources</directory>
@@ -42,19 +29,26 @@
             <groupId>org.mule.transports</groupId>
             <artifactId>mule-transport-vm</artifactId>
             <version>${version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mule.transports</groupId>
+            <artifactId>mule-transport-cxf</artifactId>
+            <version>${version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.mule.transports</groupId>
             <artifactId>mule-transport-axis</artifactId>
             <version>${version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.mule.transports</groupId>
             <artifactId>mule-transport-xfire</artifactId>
             <version>${version}</version>
+            <scope>test</scope>
         </dependency>
-
-        <!-- Better testing of XML -->        
         <dependency>
             <groupId>xmlunit</groupId>
             <artifactId>xmlunit</artifactId>
