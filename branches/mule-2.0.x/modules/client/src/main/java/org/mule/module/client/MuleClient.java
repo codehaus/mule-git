@@ -57,6 +57,7 @@ import java.util.List;
 import java.util.Map;
 
 import edu.emory.mathcs.backport.java.util.concurrent.Callable;
+import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -106,6 +107,9 @@ public class MuleClient implements Disposable
     private MuleCredentials user;
 
     private DefaultMuleContextFactory muleContextFactory = new DefaultMuleContextFactory();
+    
+    private ConcurrentHashMap inboundEndpointCache = new ConcurrentHashMap();
+    private ConcurrentHashMap outboundEndpointCache = new ConcurrentHashMap();
 
     /**
      * Creates a default Mule client that will use the default serverEndpoint to
@@ -765,12 +769,44 @@ public class MuleClient implements Disposable
 
     protected InboundEndpoint getInboundEndpoint(String uri) throws MuleException
     {
-        return muleContext.getRegistry().lookupEndpointFactory().getInboundEndpoint(uri);
+        // There was a potential leak here between get() and putIfAbsent(). This
+        // would cause the endpoint that was created to be used rather an endpoint
+        // with the same key that has been created and put in the cache by another
+        // thread. To avoid this we test for the result of putIfAbsent result and if
+        // it is non-null then an endpoint was created and added concurrently and we
+        // return this instance instead.
+        InboundEndpoint endpoint = (InboundEndpoint) inboundEndpointCache.get(uri);
+        if (endpoint == null)
+        {
+            endpoint = muleContext.getRegistry().lookupEndpointFactory().getInboundEndpoint(uri);
+            InboundEndpoint concurrentlyAddedEndpoint = (InboundEndpoint) inboundEndpointCache.putIfAbsent(uri, endpoint);
+            if (concurrentlyAddedEndpoint != null)
+            {
+                return concurrentlyAddedEndpoint;
+            }
+        }
+        return endpoint;
     }
 
     protected OutboundEndpoint getOutboundEndpoint(String uri) throws MuleException
     {
-        return muleContext.getRegistry().lookupEndpointFactory().getOutboundEndpoint(uri);
+        // There was a potential leak here between get() and putIfAbsent(). This
+        // would cause the endpoint that was created to be used rather an endpoint
+        // with the same key that has been created and put in the cache by another
+        // thread. To avoid this we test for the result of putIfAbsent result and if
+        // it is non-null then an endpoint was created and added concurrently and we
+        // return this instance instead.
+        OutboundEndpoint endpoint = (OutboundEndpoint) outboundEndpointCache.get(uri);
+        if (endpoint == null)
+        {
+            endpoint = muleContext.getRegistry().lookupEndpointFactory().getOutboundEndpoint(uri);
+            OutboundEndpoint concurrentlyAddedEndpoint = (OutboundEndpoint) outboundEndpointCache.putIfAbsent(uri, endpoint);
+            if (concurrentlyAddedEndpoint != null)
+            {
+                return concurrentlyAddedEndpoint;
+            }
+        }
+        return endpoint;
     }
 
     protected ImmutableEndpoint getDefaultClientEndpoint(Service service, Object payload)
