@@ -50,7 +50,9 @@ public class DefaultResponseRouterCollection extends AbstractRouterCollection im
 
     public LifecycleTransitionResult initialise() throws InitialisationException
     {
-        return LifecycleTransitionResult.initialiseAll(super.initialise(), endpoints.iterator());
+        super.initialise();
+        return LifecycleTransitionResult.OK;
+    
     }
 
     public void route(MuleEvent event) throws RoutingException
