@@ -10,8 +10,8 @@
 package org.mule.lifecycle;
 
 import org.mule.RegistryContext;
-import org.mule.api.MuleException;
 import org.mule.api.MuleContext;
+import org.mule.api.MuleException;
 import org.mule.api.lifecycle.LifecycleException;
 import org.mule.api.lifecycle.LifecyclePhase;
 import org.mule.api.lifecycle.LifecycleTransitionResult;
@@ -24,9 +24,9 @@ import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
-import java.util.Set;
-import java.util.List;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -111,10 +111,6 @@ public class DefaultLifecyclePhase implements LifecyclePhase
                         }
                         else
                         {
-                            // delayed start for rmi registry (forces retry request from jmx)
-//                            if (o.getClass().getName().indexOf("RmiRegistryAgent") > -1 && 0 == retryCount) continue;
-                            // delayed start for jmx (forces correct ordering for jmx)
-//                            if (o.getClass().getName().indexOf("JmxAgent") > -1 && 0 == retryCount) continue;
                             if (logger.isDebugEnabled())
                             {
                                 logger.debug("lifecycle phase: " + getName() + " for object: " + o);
