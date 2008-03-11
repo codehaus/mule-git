@@ -31,6 +31,8 @@ import org.mule.util.StringUtils;
 import org.mule.util.SystemUtils;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.security.CodeSource;
@@ -39,11 +41,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 import junit.framework.TestCase;
 import junit.framework.TestResult;
-
-import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
-
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.logging.Log;
@@ -473,8 +473,11 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
 
                 if (fileUrl != null)
                 {
+                    // in case .txt is in jar
+                    URI fileUri = new URI(StringUtils.removeStart(fileUrl.toString(), "jar:"));
+
                     // this iterates over all lines in the exclusion file
-                    Iterator lines = FileUtils.lineIterator(FileUtils.newFile(fileUrl.getFile()));
+                    Iterator lines = FileUtils.lineIterator(FileUtils.newFile(fileUri));
 
                     // ..and this finds non-comments that match the test case name
                     excluded = IteratorUtils.filteredIterator(lines, new Predicate()
@@ -487,6 +490,10 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
                 }
             }
             catch (IOException ioex)
+            {
+                // ignore
+            }
+            catch (URISyntaxException e)
             {
                 // ignore
             }
