@@ -12,21 +12,14 @@ package org.mule.transformer.compression;
 
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.transformer.Transformer;
-import org.mule.api.transformer.TransformerException;
 import org.mule.transformer.AbstractTransformerTestCase;
 import org.mule.util.compression.GZipCompression;
-
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.util.Arrays;
-
-import junit.framework.Assert;
 
 import org.apache.commons.lang.SerializationUtils;
 
 public class GZipTransformerTestCase extends AbstractTransformerTestCase
 {
-    private static final String TEST_DATA = "the quick brown fox jumped over the lazy dog the quick brown fox jumped over the lazy dog the quick brown fox jumped over the lazy dog";
+    protected static final String TEST_DATA = "the quick brown fox jumped over the lazy dog the quick brown fox jumped over the lazy dog the quick brown fox jumped over the lazy dog";
     protected GZipCompression strat;
 
     // @Override
@@ -74,25 +67,5 @@ public class GZipTransformerTestCase extends AbstractTransformerTestCase
 
         return transformer;
     }
-    
-    public void testStreamingCompression() throws TransformerException
-    {
-        GZipCompressTransformer transformer = new GZipCompressTransformer();
-        
-        InputStream input = new ByteArrayInputStream(SerializationUtils.serialize(TEST_DATA));
 
-        byte[] expected = (byte[]) this.getResultData();
-        byte[] result = (byte[]) transformer.transform(input);
-        
-        Assert.assertTrue(Arrays.equals(expected, result));
-    }
-
-    public void testStreamingDecompression() throws TransformerException
-    {
-        GZipUncompressTransformer transformer = new GZipUncompressTransformer();
-        
-        InputStream input = new ByteArrayInputStream((byte[]) this.getResultData());
-        byte[] resultBytes = (byte[]) transformer.transform(input);
-        Assert.assertEquals(TEST_DATA, SerializationUtils.deserialize(resultBytes));
-    }
 }

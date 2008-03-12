@@ -18,6 +18,3 @@ org.mule.registry.DuplicateRegistrationTestCase
 
 # MULE-2964: MuleMessage does not serialize attachments
 org.mule.MuleMessageTestCase
-
-
-org.mule.transformer.compression.GZipTransformerRawBytesTestCase
