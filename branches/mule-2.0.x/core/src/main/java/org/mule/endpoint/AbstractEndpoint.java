@@ -30,7 +30,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import edu.emory.mathcs.backport.java.util.Collections;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -319,7 +318,7 @@ public abstract class AbstractEndpoint implements ImmutableEndpoint
             endpointUri,
             filter,
             initialState,
-            // don't include lifecycle state as lifeccle code includes hashing
+            // don't include lifecycle state as lifecycle code includes hashing
             // initialised,
             name, properties, remoteSync ? Boolean.TRUE : Boolean.FALSE, new Integer(remoteSyncTimeout),
             responseTransformers, securityFilter, synchronous ? Boolean.TRUE : Boolean.FALSE, transactionConfig,
