@@ -18,8 +18,6 @@ import org.mule.tck.testmodels.fruit.Apple;
 
 import java.io.ByteArrayInputStream;
 
-import junit.framework.Assert;
-
 public class XmlObjectTransformersTestCase extends AbstractXmlTransformerTestCase
 {
     private Apple testObject = null;
@@ -56,6 +54,6 @@ public class XmlObjectTransformersTestCase extends AbstractXmlTransformerTestCas
         XmlToObject transformer = new XmlToObject();
         
         String input = (String) this.getResultData();
-        Assert.assertEquals(testObject, transformer.transform(new ByteArrayInputStream(input.getBytes())));
+        assertEquals(testObject, transformer.transform(new ByteArrayInputStream(input.getBytes())));
     }
 }

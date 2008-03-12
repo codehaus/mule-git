@@ -16,8 +16,6 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.Arrays;
 
-import junit.framework.Assert;
-
 import org.apache.commons.lang.SerializationUtils;
 
 public class GZipTransformerStreamTestCase extends GZipTransformerTestCase
@@ -32,7 +30,7 @@ public class GZipTransformerStreamTestCase extends GZipTransformerTestCase
         byte[] expected = (byte[]) this.getResultData();
         byte[] result = (byte[]) transformer.transform(input);
         
-        Assert.assertTrue(Arrays.equals(expected, result));
+        assertTrue(Arrays.equals(expected, result));
     }
 
     public void testStreamingDecompression() throws TransformerException
@@ -41,7 +39,7 @@ public class GZipTransformerStreamTestCase extends GZipTransformerTestCase
         
         InputStream input = new ByteArrayInputStream((byte[]) this.getResultData());
         byte[] resultBytes = (byte[]) transformer.transform(input);
-        Assert.assertEquals(TEST_DATA, SerializationUtils.deserialize(resultBytes));
+        assertEquals(TEST_DATA, SerializationUtils.deserialize(resultBytes));
     }
 
 }

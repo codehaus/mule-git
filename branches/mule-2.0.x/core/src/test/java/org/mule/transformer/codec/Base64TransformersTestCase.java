@@ -14,8 +14,6 @@ import org.mule.api.transformer.Transformer;
 import org.mule.transformer.AbstractTransformerTestCase;
 import org.mule.util.Base64;
 
-import junit.framework.Assert;
-
 public class Base64TransformersTestCase extends AbstractTransformerTestCase
 {
     private static final String TEST_DATA = "the quick brown fox jumped over the lazy dog";
@@ -28,7 +26,7 @@ public class Base64TransformersTestCase extends AbstractTransformerTestCase
         }
         catch (Exception ex)
         {
-            Assert.fail();
+            fail();
             return null;
         }
     }
