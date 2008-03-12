@@ -156,7 +156,7 @@ public abstract class AbstractEndpoint implements ImmutableEndpoint
         this.endpointUri = endpointUri;
         if (transformers == null)
         {
-            this.transformers = java.util.Collections.unmodifiableList(java.util.Collections.EMPTY_LIST);
+            this.transformers = Collections.unmodifiableList(java.util.Collections.EMPTY_LIST);
         }
         else
         {
@@ -165,7 +165,7 @@ public abstract class AbstractEndpoint implements ImmutableEndpoint
         }
         if (responseTransformers == null)
         {
-            this.responseTransformers = java.util.Collections.unmodifiableList(java.util.Collections.EMPTY_LIST);
+            this.responseTransformers = Collections.unmodifiableList(java.util.Collections.EMPTY_LIST);
         }
         else
         {
