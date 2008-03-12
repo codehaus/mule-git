@@ -14,24 +14,28 @@ import org.mule.api.transformer.Transformer;
 import org.mule.transformer.AbstractTransformerTestCase;
 import org.mule.util.Base64;
 
+import junit.framework.Assert;
+
 public class Base64TransformersTestCase extends AbstractTransformerTestCase
 {
-
+    private static final String TEST_DATA = "the quick brown fox jumped over the lazy dog";
+    
     public Object getResultData()
     {
         try
         {
-            return Base64.encodeBytes(getTestData().toString().getBytes());
+            return Base64.encodeBytes(TEST_DATA.getBytes());
         }
         catch (Exception ex)
         {
+            Assert.fail();
             return null;
         }
     }
 
     public Object getTestData()
     {
-        return "the quick brown fox jumped over the lazy dog";
+        return TEST_DATA;
     }
 
     public Transformer getTransformer()
@@ -43,8 +47,8 @@ public class Base64TransformersTestCase extends AbstractTransformerTestCase
     {
         Transformer t = new Base64Decoder();
         // our input is a String so we expect a String as output
-        t.setReturnClass(this.getTestData().getClass());
+        t.setReturnClass(String.class);
         return t;
     }
-
+    
 }
