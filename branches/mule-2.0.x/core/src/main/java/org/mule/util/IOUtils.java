@@ -267,7 +267,7 @@ public class IOUtils extends org.apache.commons.io.IOUtils
     
     /**
      * This method wraps {@link org.apache.commons.io.IOUtils}' <code>toByteArray(InputStream)</code>
-     * method but caches any {@link IOException} and wraps it into a {@link RuntimeException}.
+     * method but catches any {@link IOException} and wraps it into a {@link RuntimeException}.
      */
     public static byte[] toByteArray(InputStream input)
     {
