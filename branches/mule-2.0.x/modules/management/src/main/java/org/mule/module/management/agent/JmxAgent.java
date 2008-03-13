@@ -205,7 +205,7 @@ public class JmxAgent extends AbstractAgent
             }
         };
 
-        if (StringUtils.isBlank(muleContext.getId()))
+        if (StringUtils.isBlank(muleContext.getConfiguration().getId()))
         {
             // TODO i18n the message properly
             throw new IllegalArgumentException(

@@ -13,6 +13,7 @@ package org.mule.endpoint;
 import org.mule.RegistryContext;
 import org.mule.api.DefaultMuleException;
 import org.mule.api.MuleContext;
+import org.mule.api.config.MuleProperties;
 import org.mule.api.endpoint.EndpointBuilder;
 import org.mule.api.endpoint.EndpointException;
 import org.mule.api.endpoint.EndpointURI;
@@ -28,7 +29,6 @@ import org.mule.api.transaction.TransactionConfig;
 import org.mule.api.transformer.Transformer;
 import org.mule.api.transport.ConnectionStrategy;
 import org.mule.api.transport.Connector;
-import org.mule.config.MuleConfiguration;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.config.i18n.Message;
 import org.mule.transaction.MuleTransactionConfig;
@@ -95,7 +95,7 @@ public abstract class AbstractEndpointBuilder implements EndpointBuilder
 
     protected void setPropertiesFromProperties(Map properties)
     {
-        synchronous = getBooleanProperty(properties, MuleConfiguration.SYNCHRONOUS_PROPERTY, synchronous);
+        synchronous = getBooleanProperty(properties, MuleProperties.SYNCHRONOUS_PROPERTY, synchronous);
         remoteSync = getBooleanProperty(properties, PROPERTY_REMOTE_SYNC, remoteSync);
         remoteSyncTimeout = getIntegerProperty(properties, PROPERTY_REMOTE_SYNC_TIMEOUT, remoteSyncTimeout);
     }
@@ -227,7 +227,7 @@ public abstract class AbstractEndpointBuilder implements EndpointBuilder
         }
         else
         {
-            return RegistryContext.getConfiguration().isDefaultSynchronousEndpoints();
+            return muleContext.getConfiguration().isDefaultSynchronousEndpoints();
         }
     }
 

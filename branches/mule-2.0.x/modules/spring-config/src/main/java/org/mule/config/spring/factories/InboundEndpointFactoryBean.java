@@ -10,8 +10,11 @@
 
 package org.mule.config.spring.factories;
 
+import org.mule.api.config.ConfigurationException;
 import org.mule.api.endpoint.EndpointException;
+import org.mule.api.endpoint.EndpointFactory;
 import org.mule.api.endpoint.InboundEndpoint;
+import org.mule.config.i18n.MessageFactory;
 import org.mule.endpoint.EndpointURIEndpointBuilder;
 
 /**
@@ -37,7 +40,15 @@ public class InboundEndpointFactoryBean extends AbstractEndpointFactoryBean
 
     public Object doGetObject() throws Exception
     {
-        return muleContext.getRegistry().lookupEndpointFactory().getInboundEndpoint(this);
+        EndpointFactory ef = muleContext.getRegistry().lookupEndpointFactory();
+        if (ef != null)
+        {
+            return ef.getInboundEndpoint(this);
+        }
+        else
+        {
+            throw new ConfigurationException(MessageFactory.createStaticMessage("EndpointFactory not found in Registry"));
+        }
     }
 
 }

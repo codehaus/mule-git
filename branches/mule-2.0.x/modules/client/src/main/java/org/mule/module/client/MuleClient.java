@@ -14,7 +14,6 @@ import org.mule.DefaultMuleEvent;
 import org.mule.DefaultMuleMessage;
 import org.mule.DefaultMuleSession;
 import org.mule.MuleServer;
-import org.mule.RegistryContext;
 import org.mule.api.FutureMessageResult;
 import org.mule.api.MessagingException;
 import org.mule.api.MuleContext;
@@ -329,11 +328,11 @@ public class MuleClient implements Disposable
             trans = TransformerUtils.getTransformers(transformers);
         }
 
-        if (!RegistryContext.getConfiguration().isDefaultSynchronousEndpoints())
+        if (!muleContext.getConfiguration().isDefaultSynchronousEndpoints())
         {
             logger.warn("The mule muleContext is not running synchronously, a null message payload will be returned");
         }
-        MuleSession session = new DefaultMuleSession(service);
+        MuleSession session = new DefaultMuleSession(service, muleContext);
         ImmutableEndpoint endpoint = getDefaultClientEndpoint(service, message.getPayload());
         MuleEvent event = new DefaultMuleEvent(message, endpoint, session, true);
 
@@ -388,7 +387,7 @@ public class MuleClient implements Disposable
             throw new MessagingException(CoreMessages.objectNotRegistered("Service", componentName),
                 message);
         }
-        MuleSession session = new DefaultMuleSession(service);
+        MuleSession session = new DefaultMuleSession(service, muleContext);
         ImmutableEndpoint endpoint = getDefaultClientEndpoint(service, message.getPayload());
         MuleEvent event = new DefaultMuleEvent(message, endpoint, session, true);
 
@@ -751,7 +750,7 @@ public class MuleClient implements Disposable
         try
         {
             DefaultMuleSession session = new DefaultMuleSession(message,
-                ((AbstractConnector) endpoint.getConnector()).getSessionHandler());
+                ((AbstractConnector) endpoint.getConnector()).getSessionHandler(), muleContext);
 
             if (user != null)
             {
@@ -1044,6 +1043,6 @@ public class MuleClient implements Disposable
 
     public MuleConfiguration getConfiguration()
     {
-        return RegistryContext.getConfiguration();
+        return muleContext.getConfiguration();
     }
 }

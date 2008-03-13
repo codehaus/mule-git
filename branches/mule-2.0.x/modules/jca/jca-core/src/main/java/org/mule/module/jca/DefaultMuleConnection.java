@@ -39,14 +39,14 @@ import javax.resource.ResourceException;
 public class DefaultMuleConnection implements MuleConnection
 {
     private final MuleCredentials credentials;
-    private final MuleContext manager;
+    private final MuleContext muleContext;
     private MuleManagedConnection managedConnection;
 
     public DefaultMuleConnection(MuleManagedConnection managedConnection,
-                                 MuleContext manager,
+                                 MuleContext muleContext,
                                  MuleCredentials credentials)
     {
-        this.manager = manager;
+        this.muleContext = muleContext;
         this.credentials = credentials;
         this.managedConnection = managedConnection;
     }
@@ -132,7 +132,7 @@ public class DefaultMuleConnection implements MuleConnection
      */
     public MuleMessage request(String url, long timeout) throws MuleException
     {
-        InboundEndpoint endpoint = manager.getRegistry().lookupEndpointFactory().getInboundEndpoint(url);
+        InboundEndpoint endpoint = muleContext.getRegistry().lookupEndpointFactory().getInboundEndpoint(url);
 
         try
         {
@@ -156,7 +156,7 @@ public class DefaultMuleConnection implements MuleConnection
     protected MuleEvent getEvent(MuleMessage message, String uri, boolean synchronous)
         throws MuleException
     {
-        ImmutableEndpoint endpoint = manager.getRegistry().lookupEndpointFactory().getOutboundEndpoint(uri);
+        ImmutableEndpoint endpoint = muleContext.getRegistry().lookupEndpointFactory().getOutboundEndpoint(uri);
         //Connector connector = endpoint.getConnector();
 
 //        if (!connector.isStarted() && manager.isStarted())
@@ -167,7 +167,7 @@ public class DefaultMuleConnection implements MuleConnection
         try
         {
             MuleSession session = new DefaultMuleSession(message,
-                ((AbstractConnector)endpoint.getConnector()).getSessionHandler());
+                ((AbstractConnector)endpoint.getConnector()).getSessionHandler(), muleContext);
 
             if (credentials != null)
             {

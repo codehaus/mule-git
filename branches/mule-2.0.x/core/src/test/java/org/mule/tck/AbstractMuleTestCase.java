@@ -440,7 +440,7 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
 
                 if (RegistryContext.getRegistry() != null)
                 {
-                    final String workingDir = RegistryContext.getConfiguration().getWorkingDirectory();
+                    final String workingDir = muleContext.getConfiguration().getWorkingDirectory();
                     // do not delete TM recovery object store, everything else is good to go
                     FileUtils.deleteTree(FileUtils.newFile(workingDir), IGNORED_DOT_MULE_DIRS);
 
@@ -538,9 +538,9 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
         return MuleTestUtils.getTestEvent(data, service, endpoint, muleContext);
     }
 
-    public static MuleSession getTestSession(Service service)
+    public static MuleSession getTestSession(Service service, MuleContext context)
     {
-        return MuleTestUtils.getTestSession(service);
+        return MuleTestUtils.getTestSession(service, context);
     }
 
     public static TestConnector getTestConnector() throws Exception

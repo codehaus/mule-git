@@ -23,7 +23,6 @@ import org.mule.config.i18n.CoreMessages;
 import org.mule.transport.AbstractMessageAdapter;
 import org.mule.transport.DefaultMessageAdapter;
 import org.mule.transport.NullPayload;
-import org.mule.util.DebugOptions;
 
 import java.io.InputStream;
 import java.lang.reflect.Proxy;
@@ -158,7 +157,7 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess
 
         //The transformer to execute on this message
         Transformer transformer = null;
-        transformer = RegistryContext.getRegistry().lookupTransformer(inputCls, outputType);
+        transformer = MuleServer.getMuleContext().getRegistry().lookupTransformer(inputCls, outputType);
 
         //no transformers found
         if (transformer == null)
@@ -257,7 +256,7 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess
             return cache;
         }
         byte[] result = (byte[]) getPayload(byte[].class);
-        if (DebugOptions.isCacheMessageAsBytes())
+        if (MuleServer.getMuleContext().getConfiguration().isCacheMessageAsBytes())
         {
             cache = result;
         }
@@ -273,7 +272,7 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess
             return new String(cache, encoding);
         }
         String result = (String) getPayload(String.class);
-        if (DebugOptions.isCacheMessageAsBytes())
+        if (MuleServer.getMuleContext().getConfiguration().isCacheMessageAsBytes())
         {
             cache = result.getBytes(encoding);
         }
@@ -558,7 +557,7 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess
                 {
                     Object result = transformer.transform(this);
 
-                    if (originalAdapter == null && DebugOptions.isCacheMessageOriginalPayload())
+                    if (originalAdapter == null && MuleServer.getMuleContext().getConfiguration().isCacheMessageOriginalPayload())
                     {
                         originalAdapter = adapter;
                     }

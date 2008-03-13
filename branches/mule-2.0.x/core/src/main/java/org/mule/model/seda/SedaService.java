@@ -91,11 +91,11 @@ public class SedaService extends AbstractService implements Work, WorkListener
      */
     protected synchronized void doInitialise() throws InitialisationException
     {
-        MuleConfiguration config = RegistryContext.getConfiguration();
+        MuleConfiguration config = muleContext.getConfiguration();
         if (threadingProfile == null)
         {
             // TODO MULE-2102 This should be configured in the default template.
-            threadingProfile = config.getDefaultComponentThreadingProfile();
+            threadingProfile = muleContext.getDefaultComponentThreadingProfile();
         }
         // Create thread pool
         workManager = threadingProfile.createWorkManager(getName());

@@ -12,90 +12,71 @@ package org.mule.config;
 
 import org.mule.RegistryContext;
 import org.mule.api.MuleRuntimeException;
+import org.mule.api.agent.Agent;
 import org.mule.api.config.MuleProperties;
-import org.mule.api.config.ThreadingProfile;
 import org.mule.api.context.DefaultWorkListener;
-import org.mule.api.registry.Registry;
+import org.mule.api.lifecycle.FatalException;
 import org.mule.api.transport.ConnectionStrategy;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.transport.SingleAttemptConnectionStrategy;
 import org.mule.util.FileUtils;
+import org.mule.util.NumberUtils;
+import org.mule.util.StringMessageUtils;
 import org.mule.util.StringUtils;
 import org.mule.util.UUID;
 
-import java.io.File;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.jar.Manifest;
 
 import javax.resource.spi.work.WorkListener;
+import javax.xml.parsers.SAXParserFactory;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
  * <code>MuleConfiguration</code> holds the runtime configuration specific to the
- * <code>MuleManager</code>. Once the <code>MuleManager</code> has been
+ * <code>MuleContext</code>. Once the <code>MuleContext</code> has been
  * initialised this class is immutable.
  */
-public class MuleConfiguration
+public class MuleConfiguration 
 {
-
-    private static final String DEFAULT_LOG_DIRECTORY = "logs";
-
-    /** logger used by this class */
-    protected transient Log logger = LogFactory.getLog(getClass());
-
     /**
-     * Specifies whether mule should process messages sysnchonously, i.e. that a
-     * mule-model can only processone message at a time, or asynchonously. The
-     * default value is 'false'.
+     * The prefix for any Mule-specific properties set in the system properties
      */
-    public static final String SYNCHRONOUS_PROPERTY = "synchronous";
+    public static final String SYSTEM_PROPERTY_PREFIX = "mule.";
 
-    public static final String DEFAULT_ENCODING = "UTF-8";
-    /** Default encoding used in OS running Mule */
-    public static final String DEFAULT_OS_ENCODING = System.getProperty("file.encoding");
-
-    /** Default value for SYNCHRONOUS_PROPERTY */
-    public static final boolean DEFAULT_SYNCHRONOUS = false;
-
-    /** Default value for MAX_OUTSTANDING_MESSAGES_PROPERTY */
-
-    public static final int DEFAULT_TIMEOUT = 10000;
-
-    public static final int DEFAULT_TRANSACTION_TIMEOUT = 30000;
-
-    public static final String DEFAULT_SYSTEM_MODEL_TYPE = "seda";
-
-    /** Where Mule stores any runtime files to disk */
-    public static final String DEFAULT_WORKING_DIRECTORY = "./.mule";
-
-    /** The default queueStore directory for persistence */
-    public static final String DEFAULT_QUEUE_STORE = "queuestore";
-
-    /** holds the value for SYNCHRONOUS */
-    private boolean synchronous = DEFAULT_SYNCHRONOUS;
+    private boolean synchronous = false;
 
     /**
      * The type of model used for the internal system model where system created
      * services are registered
      */
-    private String systemModelType = DEFAULT_SYSTEM_MODEL_TYPE;
+    private String systemModelType = "seda";
 
-    private String encoding = DEFAULT_ENCODING;
-
-    private String osEncoding = DEFAULT_OS_ENCODING;
+    private String encoding = "UTF-8";
 
     /**
      * When running sychonously, return events can be received over transports that
      * support ack or replyTo This property determines how long to wait for a receive
      */
-    private int synchronousEventTimeout = DEFAULT_TIMEOUT;
+    private int synchronousEventTimeout = 10000;
 
     /**
      * The default transaction timeout value used if no specific transaction time out
      * has been set on the transaction config
      */
-    private int defaultTransactionTimeout = DEFAULT_TRANSACTION_TIMEOUT;
+    private int defaultTransactionTimeout = 30000;
 
     /**
      * Determines whether when running synchronously, return events are received
@@ -104,11 +85,8 @@ public class MuleConfiguration
      */
     private boolean remoteSync = false;
     
-    /** Where mule will store any runtime files to disk */
-    private String workingDirectory;
-
-    /** The configuration resources used to configure the MuleManager instance */
-    private ConfigResource[] configResources = new ConfigResource[]{};
+    /** Where Mule stores any runtime files to disk */
+    private String workingDirectory = "./.mule";
 
     /**
      * Whether the server instance is running in client mode, which means that some
@@ -116,15 +94,36 @@ public class MuleConfiguration
      */
     private boolean clientMode = false;
 
-    /** The unique Id for this MuleContext */
-    private String id;
+    /**
+     * Should we fail when we detect "message scribbling"?  
+     * @see AbstractMessageAdapter.checkMutable()
+     */
+    private boolean failOnMessageScribbling = true;
+    
+    /** the unique id for this Mule instance */
+    private String id = UUID.getUUID();
 
-    /** The cluster Id for this MuleContext */
-    private String clusterId;
+    /** If this node is part of a cluster then this is the shared cluster Id */
+    private String clusterId = null;
 
-    /** The Domain Id for this MuleContext */
-    private String domainId;
+    /** The domain name that this instance belongs to. */
+    private String domainId = null;
 
+    /** the date in milliseconds from when the server was started */
+    private long startDate = System.currentTimeMillis();
+
+    // Debug options
+    
+    private boolean cacheMessageAsBytes = true;
+
+    private boolean cacheMessageOriginalPayload = true;
+
+    private boolean enableStreaming = true;
+
+    private boolean assertMessageAccess = true;
+
+    private boolean autoWrapMessageAwareTransform = true;
+    
     /**
      * The default connection Strategy used for a connector when one hasn't been
      * defined for the connector
@@ -133,12 +132,256 @@ public class MuleConfiguration
 
     private WorkListener workListener = new DefaultWorkListener();
 
-    public MuleConfiguration()
+    protected transient Log logger = LogFactory.getLog(getClass());
+
+    public MuleConfiguration()  
     {
         super();
-        setWorkingDirectory(DEFAULT_WORKING_DIRECTORY);
-        setId(UUID.getUUID());
-        setDomainId("org.mule");
+        
+        // Apply any settings which come from the JVM system properties.
+        applySystemProperties();
+        
+        setupIds();
+        try
+        {
+            validateEncoding();
+            validateXML();
+        }
+        catch (FatalException e)
+        {
+            throw new RuntimeException(e);
+        }
+        startDate = System.currentTimeMillis();
+    }
+
+    /**
+     * Apply any settings which come from the JVM system properties.
+     */
+    protected void applySystemProperties() 
+    {
+        String p;
+        
+        p = System.getProperty(SYSTEM_PROPERTY_PREFIX + "encoding");
+        if (p != null)
+        {
+            encoding = p;
+        }
+        p = System.getProperty(SYSTEM_PROPERTY_PREFIX + "endpoints.synchronous");
+        if (p != null)
+        {
+            synchronous = BooleanUtils.toBoolean(p);
+        }
+        p = System.getProperty(SYSTEM_PROPERTY_PREFIX + "systemModelType");
+        if (p != null)
+        {
+            systemModelType = p;
+        }
+        p = System.getProperty(SYSTEM_PROPERTY_PREFIX + "timeout.synchronous");
+        if (p != null)
+        {
+            synchronousEventTimeout = NumberUtils.toInt(p);
+        }
+        p = System.getProperty(SYSTEM_PROPERTY_PREFIX + "timeout.transaction");
+        if (p != null)
+        {
+            defaultTransactionTimeout = NumberUtils.toInt(p);
+        }
+        p = System.getProperty(SYSTEM_PROPERTY_PREFIX + "remoteSync");
+        if (p != null)
+        {
+            remoteSync = BooleanUtils.toBoolean(p);
+        }
+        p = System.getProperty(SYSTEM_PROPERTY_PREFIX + "workingDirectory");
+        if (p != null)
+        {
+            workingDirectory = p;
+        }
+        p = System.getProperty(SYSTEM_PROPERTY_PREFIX + "clientMode");
+        if (p != null)
+        {
+            clientMode = BooleanUtils.toBoolean(p);
+        }
+        p = System.getProperty(SYSTEM_PROPERTY_PREFIX + "disable.threadsafemessages");
+        if (p != null)
+        {
+            failOnMessageScribbling = !BooleanUtils.toBoolean(p);
+        }
+        p = System.getProperty(SYSTEM_PROPERTY_PREFIX + "serverId");
+        if (p != null)
+        {
+            id = p;
+        }
+        p = System.getProperty(SYSTEM_PROPERTY_PREFIX + "clusterId");
+        if (p != null)
+        {
+            clusterId = p;
+        }
+        p = System.getProperty(SYSTEM_PROPERTY_PREFIX + "domainId");
+        if (p != null)
+        {
+            domainId = p;
+        }
+        p = System.getProperty(SYSTEM_PROPERTY_PREFIX + "message.cacheBytes");
+        if (p != null)
+        {
+            cacheMessageAsBytes = BooleanUtils.toBoolean(p);
+        }
+        p = System.getProperty(SYSTEM_PROPERTY_PREFIX + "message.cacheOriginal");
+        if (p != null)
+        {
+            cacheMessageOriginalPayload = BooleanUtils.toBoolean(p);
+        }
+        p = System.getProperty(SYSTEM_PROPERTY_PREFIX + "streaming.enable");
+        if (p != null)
+        {
+            enableStreaming = BooleanUtils.toBoolean(p);
+        }
+        p = System.getProperty(SYSTEM_PROPERTY_PREFIX + "message.assertAccess");
+        if (p != null)
+        {
+            assertMessageAccess = BooleanUtils.toBoolean(p);
+        }
+        p = System.getProperty(SYSTEM_PROPERTY_PREFIX + "transform.autoWrap");
+        if (p != null)
+        {
+            autoWrapMessageAwareTransform = BooleanUtils.toBoolean(p);
+        }
+    }
+
+    protected void setupIds() 
+    {
+        if (clusterId == null)
+        {
+            clusterId = CoreMessages.notClustered().getMessage();
+        }
+
+        if (domainId == null)
+        {
+            try
+            {
+                domainId = InetAddress.getLocalHost().getHostName();
+            }
+            catch (UnknownHostException e)
+            {
+                logger.warn(e);
+                domainId = "org.mule";
+            }
+        }
+    }
+
+    protected void validateEncoding() throws FatalException
+    {
+        //Check we have a valid and supported encoding
+        if (!Charset.isSupported(encoding))
+        {
+            throw new FatalException(CoreMessages.propertyHasInvalidValue("encoding", encoding), this);
+        }
+    }
+
+    /**
+     * Mule needs a proper JAXP implementation and will complain when run with a plain JDK
+     * 1.4. Use the supplied launcher or specify a proper JAXP implementation via
+     * <code>-Djava.endorsed.dirs</code>. See the following URLs for more information:
+     * <ul>
+     * <li> {@link http://xerces.apache.org/xerces2-j/faq-general.html#faq-4}
+     * <li> {@link http://xml.apache.org/xalan-j/faq.html#faq-N100D6}
+     * <li> {@link http://java.sun.com/j2se/1.4.2/docs/guide/standards/}
+     * </ul>
+     */
+    protected void validateXML() throws FatalException
+    {
+        SAXParserFactory f = SAXParserFactory.newInstance();
+        if (f == null || f.getClass().getName().indexOf("crimson") != -1)
+        {
+            throw new FatalException(CoreMessages.valueIsInvalidFor(f.getClass().getName(),
+                "javax.xml.parsers.SAXParserFactory"), this);
+        }
+    }
+
+    /**
+     * Returns a formatted string that is a summary of the configuration of the
+     * server. This is the brock of information that gets displayed when the server
+     * starts
+     *
+     * @return a string summary of the server information
+     */
+    public String getStartSplash()
+    {
+        String notset = CoreMessages.notSet().getMessage();
+
+        // Mule Version, Timestamp, and Server ID
+        List message = new ArrayList();
+        Manifest mf = MuleManifest.getManifest();
+        Map att = mf.getMainAttributes();
+        if (att.values().size() > 0)
+        {
+            message.add(StringUtils.defaultString(MuleManifest.getProductDescription(), notset));
+            message.add(CoreMessages.version().getMessage() + " Build: "
+                    + StringUtils.defaultString(MuleManifest.getBuildNumber(), notset));
+
+            message.add(StringUtils.defaultString(MuleManifest.getVendorName(), notset));
+            message.add(StringUtils.defaultString(MuleManifest.getProductMoreInfo(), notset));
+        }
+        else
+        {
+            message.add(CoreMessages.versionNotSet().getMessage());
+        }
+        message.add(" ");
+        message.add(CoreMessages.serverStartedAt(getStartDate()).getMessage());
+        message.add("Server ID: " + id);
+
+        // JDK, OS, and Host
+        message.add("JDK: " + System.getProperty("java.version") + " (" + System.getProperty("java.vm.info")
+                + ")");
+        String patch = System.getProperty("sun.os.patch.level", null);
+        message.add("OS: " + System.getProperty("os.name")
+                + (patch != null && !"unknown".equalsIgnoreCase(patch) ? " - " + patch : "") + " ("
+                + System.getProperty("os.version") + ", " + System.getProperty("os.arch") + ")");
+        try
+        {
+            InetAddress host = InetAddress.getLocalHost();
+            message.add("Host: " + host.getHostName() + " (" + host.getHostAddress() + ")");
+        }
+        catch (UnknownHostException e)
+        {
+            // ignore
+        }
+
+        // Mule Agents
+        message.add(" ");
+        //List agents
+        Collection agents = RegistryContext.getRegistry().lookupObjects(Agent.class);
+        if (agents.size() == 0)
+        {
+            message.add(CoreMessages.agentsRunning().getMessage() + " "
+                    + CoreMessages.none().getMessage());
+        }
+        else
+        {
+            message.add(CoreMessages.agentsRunning().getMessage());
+            Agent umoAgent;
+            for (Iterator iterator = agents.iterator(); iterator.hasNext();)
+            {
+                umoAgent = (Agent) iterator.next();
+                message.add("  " + umoAgent.getDescription());
+            }
+        }
+        return StringMessageUtils.getBoilerPlate(message, '*', 70);
+    }
+
+    public String getEndSplash()
+    {
+        List message = new ArrayList(2);
+        long currentTime = System.currentTimeMillis();
+        message.add(CoreMessages.shutdownNormally(new Date()).getMessage());
+        long duration = 10;
+        if (startDate > 0)
+        {
+            duration = currentTime - startDate;
+        }
+        message.add(CoreMessages.serverWasUpForDuration(duration).getMessage());
+
+        return StringMessageUtils.getBoilerPlate(message, '*', 78);
     }
 
     /** @return true if the model is running synchronously or false otherwise */
@@ -150,52 +393,6 @@ public class MuleConfiguration
     public void setDefaultSynchronousEndpoints(boolean synchronous)
     {
         this.synchronous = synchronous;
-    }
-
-    public ThreadingProfile getDefaultMessageDispatcherThreadingProfile()
-    {
-        return getThreadingProfile(MuleProperties.OBJECT_DEFAULT_MESSAGE_DISPATCHER_THREADING_PROFILE);
-    }
-
-    public ThreadingProfile getDefaultMessageRequesterThreadingProfile()
-    {
-        return getThreadingProfile(MuleProperties.OBJECT_DEFAULT_MESSAGE_REQUESTER_THREADING_PROFILE);
-    }
-
-    public ThreadingProfile getDefaultMessageReceiverThreadingProfile()
-    {
-        return getThreadingProfile(MuleProperties.OBJECT_DEFAULT_MESSAGE_RECEIVER_THREADING_PROFILE);
-    }
-
-    public ThreadingProfile getDefaultComponentThreadingProfile()
-    {
-        return getThreadingProfile(MuleProperties.OBJECT_DEFAULT_COMPONENT_THREADING_PROFILE);
-    }
-
-    public ThreadingProfile getDefaultThreadingProfile()
-    {
-        return getThreadingProfile(MuleProperties.OBJECT_DEFAULT_THREADING_PROFILE);
-    }
-
-    private ThreadingProfile getThreadingProfile(String name)
-    {
-        ThreadingProfile tp = null;
-
-        Registry registry = RegistryContext.getRegistry();
-        if (registry != null)
-        {
-            tp = (ThreadingProfile) RegistryContext.getRegistry().lookupObject(name);
-        }
-
-        if (null != tp)
-        {
-            return tp;
-        }
-        else
-        {
-            // only used in tests, where no registry is present
-            return ThreadingProfile.DEFAULT_THREADING_PROFILE;
-        }
     }
 
     public int getDefaultSynchronousEventTimeout()
@@ -228,36 +425,10 @@ public class MuleConfiguration
         return System.getProperty(MuleProperties.MULE_HOME_DIRECTORY_PROPERTY);
     }
 
-    public String getLogDirectory()
-    {
-        return getMuleHomeDirectory() + File.separator + DEFAULT_LOG_DIRECTORY;
-    }
-
     public void setWorkingDirectory(String workingDirectory)
     {
         // fix windows backslashes in absolute paths, convert them to forward ones
         this.workingDirectory = FileUtils.newFile(workingDirectory).getAbsolutePath().replaceAll("\\\\", "/");
-    }
-
-    public ConfigResource[] getConfigResources()
-    {
-        return configResources;
-    }
-
-    public void setConfigResources(ConfigResource[] configResources)
-    {
-        if (configResources != null)
-        {
-            int current = this.configResources.length;
-            ConfigResource[] newResources = new ConfigResource[configResources.length + current];
-            System.arraycopy(this.configResources, 0, newResources, 0, current);
-            System.arraycopy(configResources, 0, newResources, current, configResources.length);
-            this.configResources = newResources;
-        }
-        else
-        {
-            this.configResources = configResources;
-        }
     }
 
     public int getDefaultTransactionTimeout()
@@ -312,22 +483,7 @@ public class MuleConfiguration
 
     public void setDefaultEncoding(String encoding)
     {
-        if (StringUtils.isEmpty(encoding))
-        {
-            logger.warn("Cannot set encoding to null or empty String");
-            return;
-        }
         this.encoding = encoding;
-    }
-
-    public String getDefaultOSEncoding()
-    {
-        return osEncoding;
-    }
-
-    public void setDefaultOSEncoding(String osEncoding)
-    {
-        this.osEncoding = osEncoding;
     }
 
     public WorkListener getDefaultWorkListener()
@@ -393,4 +549,78 @@ public class MuleConfiguration
         this.clientMode = clientMode;
     }
 
+    public String getSystemName()
+    {
+        return domainId + "." + clusterId + "." + id;
+    }
+
+    /**
+     * Returns the long date when the server was started
+     *
+     * @return the long date when the server was started
+     */
+    public long getStartDate()
+    {
+        return startDate;
+    }
+
+    public boolean isFailOnMessageScribbling()
+    {
+        return failOnMessageScribbling;
+    }
+
+    public void setFailOnMessageScribbling(boolean failOnMessageScribbling)
+    {
+        this.failOnMessageScribbling = failOnMessageScribbling;
+    }
+
+    public boolean isAssertMessageAccess()
+    {
+        return assertMessageAccess;
+    }
+
+    public void setAssertMessageAccess(boolean assertMessageAccess)
+    {
+        this.assertMessageAccess = assertMessageAccess;
+    }
+
+    public boolean isAutoWrapMessageAwareTransform()
+    {
+        return autoWrapMessageAwareTransform;
+    }
+
+    public void setAutoWrapMessageAwareTransform(boolean autoWrapMessageAwareTransform)
+    {
+        this.autoWrapMessageAwareTransform = autoWrapMessageAwareTransform;
+    }
+
+    public boolean isCacheMessageAsBytes()
+    {
+        return cacheMessageAsBytes;
+    }
+
+    public void setCacheMessageAsBytes(boolean cacheMessageAsBytes)
+    {
+        this.cacheMessageAsBytes = cacheMessageAsBytes;
+    }
+
+    public boolean isCacheMessageOriginalPayload()
+    {
+        return cacheMessageOriginalPayload;
+    }
+
+    public void setCacheMessageOriginalPayload(boolean cacheMessageOriginalPayload)
+    {
+        this.cacheMessageOriginalPayload = cacheMessageOriginalPayload;
+    }
+
+    public boolean isEnableStreaming()
+    {
+        return enableStreaming;
+    }
+
+    public void setEnableStreaming(boolean enableStreaming)
+    {
+        this.enableStreaming = enableStreaming;
+    }
 }

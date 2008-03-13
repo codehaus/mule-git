@@ -12,6 +12,7 @@ package org.mule.context;
 
 import org.mule.DefaultMuleContext;
 import org.mule.api.MuleContext;
+import org.mule.api.config.ThreadingProfile;
 import org.mule.api.context.MuleContextBuilder;
 import org.mule.api.context.WorkManager;
 import org.mule.api.context.notification.ConnectionNotificationListener;
@@ -59,8 +60,6 @@ public class DefaultMuleContextBuilder implements MuleContextBuilder
 
     protected static final Log logger = LogFactory.getLog(DefaultMuleContextBuilder.class);
 
-    protected MuleConfiguration muleConfiguration;
-
     protected LifecycleManager lifecycleManager;
 
     protected WorkManager workManager;
@@ -74,20 +73,9 @@ public class DefaultMuleContextBuilder implements MuleContextBuilder
     {
         logger.debug("Building new DefaultMuleContext instance with MuleContextBuilder: " + this);
         MuleContext muleContext = new DefaultMuleContext(getLifecycleManager());
-        if (muleConfiguration == null)
-        {
-            muleConfiguration = new MuleConfiguration();
-        }
         muleContext.setWorkManager(getWorkManager());
-        muleContext.setConfiguration(muleConfiguration);
         muleContext.setNotificationManager(getNotificationManager());
         return muleContext;
-    }
-
-    public DefaultMuleContextBuilder setMuleConfiguration(MuleConfiguration muleConfiguration)
-    {
-        this.muleConfiguration = muleConfiguration;
-        return this;
     }
 
     public DefaultMuleContextBuilder setWorkManager(WorkManager workManager)
@@ -133,8 +121,8 @@ public class DefaultMuleContextBuilder implements MuleContextBuilder
         }
         else
         {
-            return new MuleWorkManager(muleConfiguration.getDefaultComponentThreadingProfile(),
-                "MuleServer");
+            // TODO This should look up "_defaultComponentThreadingProfile" from the Registry.
+            return new MuleWorkManager(ThreadingProfile.DEFAULT_THREADING_PROFILE, "MuleServer");
         }
     }
 
@@ -171,8 +159,8 @@ public class DefaultMuleContextBuilder implements MuleContextBuilder
 
     public String toString()
     {
-        return ClassUtils.getClassName(getClass()) + "{muleConfiguration=" + muleConfiguration
-               + ", lifecycleManager=" + lifecycleManager + ", workManager=" + workManager
+        return ClassUtils.getClassName(getClass()) + "{lifecycleManager=" 
+               + lifecycleManager + ", workManager=" + workManager
                + ", notificationManager=" + notificationManager + "}";
     }
 }

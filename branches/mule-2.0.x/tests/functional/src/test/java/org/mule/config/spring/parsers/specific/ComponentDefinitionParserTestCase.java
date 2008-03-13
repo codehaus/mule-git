@@ -67,9 +67,8 @@ public class ComponentDefinitionParserTestCase extends AbstractMuleTestCase
         {
             assertEquals(ConfigurationException.class, e.getClass());
             assertEquals(BeanDefinitionStoreException.class, e.getCause().getClass());
-            assertEquals(CheckExclusiveClassAttributeObjectFactoryException.class, e.getCause()
-                .getCause()
-                .getClass());
+            assertEquals(CheckExclusiveClassAttributeObjectFactoryException.class, 
+                e.getCause().getCause().getClass());
         }
     }
 

@@ -31,7 +31,7 @@ public class JmxSupportTestCase extends AbstractMuleJmxTestCase
         ObjectName name = ObjectName.getInstance(TEST_DOMAIN + ":name=TestDuplicates");
         mBeanServer.registerMBean(new StatisticsService(), name);
 
-        muleContext.setId(MANAGER_ID);
+        muleContext.getConfiguration().setId(MANAGER_ID);
         JmxAgent agent = new JmxAgent();
         agent.setMuleContext(muleContext);
         agent.initialise();
@@ -60,7 +60,7 @@ public class JmxSupportTestCase extends AbstractMuleJmxTestCase
         assertEquals("Wrong number of domains created.",
                      numOriginalDomains + 2, mBeanServer.getDomains().length);
 
-        muleContext.setId(MANAGER_ID);
+        muleContext.getConfiguration().setId(MANAGER_ID);
         JmxAgent agent = new JmxAgent();
         agent.setMuleContext(muleContext);
         agent.initialise();
@@ -83,10 +83,10 @@ public class JmxSupportTestCase extends AbstractMuleJmxTestCase
         muleContext.getRegistry().registerAgent(jmxAgent);
         try
         {
-            muleContext.setId(null);
+            muleContext.getConfiguration().setId(null);
             fail("Should have failed.");
         }
-        catch (IllegalArgumentException e)
+        catch (Exception e)
         {
             // this form makes code coverage happier
             assertTrue(true);

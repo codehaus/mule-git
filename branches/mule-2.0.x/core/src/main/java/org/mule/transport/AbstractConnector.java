@@ -189,21 +189,18 @@ public abstract class AbstractConnector
     /**
      * Defines the dispatcher threading profile
      */
-    private volatile ThreadingProfile dispatcherThreadingProfile =
-            RegistryContext.getConfiguration().getDefaultMessageDispatcherThreadingProfile();
-
+    private volatile ThreadingProfile dispatcherThreadingProfile;
+    
     /**
      * Defines the requester threading profile
      */
-    private volatile ThreadingProfile requesterThreadingProfile =
-            RegistryContext.getConfiguration().getDefaultMessageRequesterThreadingProfile();
-
+    private volatile ThreadingProfile requesterThreadingProfile;
+    
     /**
      * Defines the receiver threading profile
      */
-    private volatile ThreadingProfile receiverThreadingProfile =
-            RegistryContext.getConfiguration().getDefaultMessageReceiverThreadingProfile();
-
+    private volatile ThreadingProfile receiverThreadingProfile;
+    
     /**
      * @see {@link #isCreateMultipleTransactedReceivers()}
      */
@@ -345,6 +342,11 @@ public abstract class AbstractConnector
         {
             logger.info("Initialising: " + this);
         }
+
+        // Use lazy-init (in get() methods) for this instead.
+        //dispatcherThreadingProfile = muleContext.getDefaultMessageDispatcherThreadingProfile();
+        //requesterThreadingProfile = muleContext.getDefaultMessageRequesterThreadingProfile();
+        //receiverThreadingProfile = muleContext.getDefaultMessageReceiverThreadingProfile();
 
         // Initialise the structure of this connector
         this.initFromServiceDescriptor();
@@ -1099,6 +1101,10 @@ public abstract class AbstractConnector
      */
     public ThreadingProfile getDispatcherThreadingProfile()
     {
+        if (dispatcherThreadingProfile == null && muleContext != null)
+        {
+            dispatcherThreadingProfile = muleContext.getDefaultMessageDispatcherThreadingProfile();
+        }
         return dispatcherThreadingProfile;
     }
 
@@ -1120,6 +1126,10 @@ public abstract class AbstractConnector
      */
     public ThreadingProfile getRequesterThreadingProfile()
     {
+        if (requesterThreadingProfile == null && muleContext != null)
+        {
+            requesterThreadingProfile = muleContext.getDefaultMessageRequesterThreadingProfile();
+        }
         return requesterThreadingProfile;
     }
 
@@ -1141,6 +1151,10 @@ public abstract class AbstractConnector
      */
     public ThreadingProfile getReceiverThreadingProfile()
     {
+        if (receiverThreadingProfile == null && muleContext != null)
+        {
+            receiverThreadingProfile = muleContext.getDefaultMessageReceiverThreadingProfile();
+        }
         return receiverThreadingProfile;
     }
 

@@ -10,7 +10,6 @@
 
 package org.mule.transport.file;
 
-import org.mule.RegistryContext;
 import org.mule.RequestContext;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
@@ -74,7 +73,7 @@ public class AutoDeleteOnFileDispatcherReceiverTestCase extends AbstractMuleTest
     {
         super.doSetUp();
         // The working directory is deleted on tearDown
-        tempDir = FileUtils.newFile(RegistryContext.getConfiguration().getWorkingDirectory(), tempDirName);
+        tempDir = FileUtils.newFile(muleContext.getConfiguration().getWorkingDirectory(), tempDirName);
         tempDir.deleteOnExit();
         if (!tempDir.exists())
         {

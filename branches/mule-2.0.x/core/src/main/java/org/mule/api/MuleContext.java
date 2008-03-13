@@ -9,7 +9,7 @@
  */
 package org.mule.api;
 
-import org.mule.Directories;
+import org.mule.api.config.ThreadingProfile;
 import org.mule.api.context.WorkManager;
 import org.mule.api.context.notification.ServerNotification;
 import org.mule.api.context.notification.ServerNotificationListener;
@@ -29,11 +29,6 @@ import javax.transaction.TransactionManager;
 
 public interface MuleContext extends Lifecycle
 {
-
-    String getSystemName();
-
-    Directories getDirectories();
-
     /**
      * Sets the Jta Transaction Manager to use with this Mule server instance
      *
@@ -82,13 +77,6 @@ public interface MuleContext extends Lifecycle
     boolean isDisposing();
 
     /**
-     * Returns the long date when the server was started
-     *
-     * @return the long date when the server was started
-     */
-    long getStartDate();
-
-    /**
      * Registers an intenal server event listener. The listener will be notified
      * when a particular event happens within the server. Typically this is not
      * an event in the same sense as an MuleEvent (although there is nothing
@@ -133,32 +121,6 @@ public interface MuleContext extends Lifecycle
      * @param notification the notification to fire
      */
     void fireNotification(ServerNotification notification);
-
-    /**
-     * Sets the unique Id for this Manager instance. this id can be used to
-     * assign an identy to the manager so it can be identified in a network of
-     * Mule nodes
-     *
-     * @param id the unique Id for this manager in the network
-     */
-    void setId(String id);
-
-    /**
-     * Gets the unique Id for this Manager instance. this id can be used to
-     * assign an identy to the manager so it can be identified in a network of
-     * Mule nodes
-     *
-     * @return the unique Id for this manager in the network
-     */
-    String getId();
-
-    String getDomain();
-
-    void setDomain(String domain);
-
-    String getClusterId();
-
-    void setClusterId(String clusterId);
 
     /**
      * Sets the security manager used by this Mule instance to authenticate and
@@ -235,7 +197,15 @@ public interface MuleContext extends Lifecycle
     
     void applyLifecycle(Object object) throws MuleException;
     
-    void setConfiguration(MuleConfiguration config);
-    
     MuleConfiguration getConfiguration();
+
+    ThreadingProfile getDefaultMessageDispatcherThreadingProfile();
+    
+    ThreadingProfile getDefaultMessageRequesterThreadingProfile();
+    
+    ThreadingProfile getDefaultMessageReceiverThreadingProfile();
+    
+    ThreadingProfile getDefaultComponentThreadingProfile();
+    
+    ThreadingProfile getDefaultThreadingProfile();
 }

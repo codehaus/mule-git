@@ -265,7 +265,7 @@ public abstract class AbstractExceptionListener implements ExceptionListener, In
                     exceptionMessage = new DefaultMuleMessage(msg, ctx.getMessage());
                 }
                 MuleEvent exceptionEvent = new DefaultMuleEvent(exceptionMessage, endpoint, new DefaultMuleSession(
-                    exceptionMessage, new MuleSessionHandler()), true);
+                    exceptionMessage, new MuleSessionHandler(), muleContext), true);
                 exceptionEvent = RequestContext.setEvent(exceptionEvent);
                 endpoint.send(exceptionEvent);
 

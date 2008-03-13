@@ -13,7 +13,6 @@ package org.mule.module.spring.events;
 import org.mule.DefaultMuleEvent;
 import org.mule.DefaultMuleMessage;
 import org.mule.DefaultMuleSession;
-import org.mule.RegistryContext;
 import org.mule.RequestContext;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleEventContext;
@@ -30,6 +29,9 @@ import org.mule.api.endpoint.InboundEndpoint;
 import org.mule.api.endpoint.MalformedEndpointException;
 import org.mule.api.endpoint.OutboundEndpoint;
 import org.mule.api.lifecycle.Callable;
+import org.mule.api.lifecycle.Initialisable;
+import org.mule.api.lifecycle.InitialisationException;
+import org.mule.api.lifecycle.LifecycleTransitionResult;
 import org.mule.api.model.Model;
 import org.mule.api.routing.InboundRouterCollection;
 import org.mule.api.routing.filter.ObjectFilter;
@@ -116,7 +118,7 @@ import org.springframework.context.event.ContextRefreshedEvent;
  * @see ApplicationEventMulticaster
  */
 public class MuleEventMulticaster
-    implements ApplicationEventMulticaster, ApplicationContextAware, MuleContextAware, Callable
+    implements ApplicationEventMulticaster, ApplicationContextAware, MuleContextAware, Callable, Initialisable
 {
     public static final String EVENT_MULTICASTER_DESCRIPTOR_NAME = "muleEventMulticasterDescriptor";
 
@@ -174,6 +176,26 @@ public class MuleEventMulticaster
     public void setMuleContext(MuleContext context)
     {
         this.muleContext = context;
+    }
+
+    public LifecycleTransitionResult initialise() throws InitialisationException
+    {
+        if (asynchronous)
+        {
+            if (asyncPool == null)
+            {
+                asyncPool = muleContext.getDefaultThreadingProfile().createPool("spring-events");
+            }
+        }
+        else
+        {
+            if (asyncPool != null)
+            {
+                asyncPool.shutdown();
+                asyncPool = null;
+            }
+        }
+        return LifecycleTransitionResult.OK;
     }
 
     /**
@@ -414,22 +436,6 @@ public class MuleEventMulticaster
     public void setAsynchronous(boolean asynchronous)
     {
         this.asynchronous = asynchronous;
-        if (asynchronous)
-        {
-            if (asyncPool == null)
-            {
-                asyncPool = RegistryContext.getConfiguration().getDefaultThreadingProfile().createPool(
-                    "spring-events");
-            }
-        }
-        else
-        {
-            if (asyncPool != null)
-            {
-                asyncPool.shutdown();
-                asyncPool = null;
-            }
-        }
     }
 
     /**
@@ -486,7 +492,7 @@ public class MuleEventMulticaster
                 else
                 {
                     MuleSession session = new DefaultMuleSession(message,
-                        ((AbstractConnector) endpoint.getConnector()).getSessionHandler(), service);
+                        ((AbstractConnector) endpoint.getConnector()).getSessionHandler(), service, muleContext);
                     RequestContext.setEvent(new DefaultMuleEvent(message, endpoint, session, false));
                     // transform if necessary
                     if (endpoint.getTransformers() != null)

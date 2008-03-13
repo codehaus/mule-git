@@ -11,7 +11,6 @@
 package org.mule.tck;
 
 import org.mule.DefaultExceptionStrategy;
-import org.mule.RegistryContext;
 import org.mule.api.DefaultMuleException;
 import org.mule.api.MuleException;
 import org.mule.api.config.ThreadingProfile;
@@ -227,7 +226,7 @@ public abstract class AbstractConfigBuilderTestCase extends AbstractScriptConfig
         int componentThreadPoolExhaustedAction = ThreadingProfile.WHEN_EXHAUSTED_DISCARD;
 
         // test default config
-        ThreadingProfile tp = RegistryContext.getConfiguration().getDefaultThreadingProfile();
+        ThreadingProfile tp = muleContext.getDefaultThreadingProfile();
         assertEquals(defaultMaxBufferSize, tp.getMaxBufferSize());
         assertEquals(defaultMaxThreadsActive, tp.getMaxThreadsActive());
         assertEquals(defaultMaxThreadsIdle, tp.getMaxThreadsIdle());
@@ -235,7 +234,7 @@ public abstract class AbstractConfigBuilderTestCase extends AbstractScriptConfig
         assertEquals(defaultThreadTTL, tp.getThreadTTL());
 
         // test service threading profile defaults
-        tp = RegistryContext.getConfiguration().getDefaultComponentThreadingProfile();
+        tp = muleContext.getDefaultComponentThreadingProfile();
         assertEquals(defaultMaxBufferSize, tp.getMaxBufferSize());
         assertEquals(defaultMaxThreadsActive, tp.getMaxThreadsActive());
         assertEquals(defaultMaxThreadsIdle, tp.getMaxThreadsIdle());

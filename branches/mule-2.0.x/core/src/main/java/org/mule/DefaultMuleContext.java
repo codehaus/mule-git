@@ -9,75 +9,44 @@
  */
 package org.mule;
 
-import org.mule.api.MuleException;
 import org.mule.api.MuleContext;
+import org.mule.api.MuleException;
 import org.mule.api.MuleRuntimeException;
-import org.mule.api.agent.Agent;
 import org.mule.api.config.MuleProperties;
+import org.mule.api.config.ThreadingProfile;
 import org.mule.api.context.WorkManager;
 import org.mule.api.context.notification.ServerNotification;
 import org.mule.api.context.notification.ServerNotificationListener;
 import org.mule.api.lifecycle.Disposable;
-import org.mule.api.lifecycle.FatalException;
 import org.mule.api.lifecycle.Initialisable;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.lifecycle.LifecycleManager;
+import org.mule.api.lifecycle.LifecycleTransitionResult;
 import org.mule.api.lifecycle.Startable;
 import org.mule.api.lifecycle.Stoppable;
-import org.mule.api.lifecycle.LifecycleTransitionResult;
 import org.mule.api.registry.RegistrationException;
 import org.mule.api.registry.Registry;
 import org.mule.api.security.SecurityManager;
 import org.mule.api.transaction.TransactionManagerFactory;
 import org.mule.config.MuleConfiguration;
-import org.mule.config.MuleManifest;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.context.notification.MuleContextNotification;
 import org.mule.context.notification.NotificationException;
 import org.mule.context.notification.ServerNotificationManager;
 import org.mule.management.stats.AllStatistics;
-import org.mule.util.FileUtils;
-import org.mule.util.StringMessageUtils;
-import org.mule.util.StringUtils;
 import org.mule.util.queue.QueueManager;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.jar.Manifest;
 
 import javax.transaction.TransactionManager;
-import javax.xml.parsers.SAXParserFactory;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 public class DefaultMuleContext implements MuleContext
 {
-
     /** logger used by this class */
     private static transient Log logger = LogFactory.getLog(DefaultMuleContext.class);
-
-    /** Default configuration */
-    private MuleConfiguration config;
-
-    /** the unique id for this manager */
-    private String id = null;
-
-    /** If this node is part of a cluster then this is the shared cluster Id */
-    private String clusterId = null;
-
-    /** The domain name that this instance belongs to. */
-    private String domain = null;
-
-    /** the date in milliseconds from when the server was started */
-    private long startDate = 0;
 
     /** stats used for management */
     private AllStatistics stats = new AllStatistics();
@@ -90,12 +59,10 @@ public class DefaultMuleContext implements MuleContext
      */
     protected LifecycleManager lifecycleManager;
 
-    protected Directories directories;
-
-    protected String systemName;
-    
     protected ServerNotificationManager notificationManager;
 
+    private MuleConfiguration config = new MuleConfiguration();
+        
     public DefaultMuleContext(LifecycleManager lifecycleManager)
     {
         if (lifecycleManager == null)
@@ -103,8 +70,6 @@ public class DefaultMuleContext implements MuleContext
             throw new NullPointerException(CoreMessages.objectIsNull("lifecycleManager").getMessage());
         }
         this.lifecycleManager = lifecycleManager;
-
-        startDate = System.currentTimeMillis();
     }
 
     public LifecycleTransitionResult initialise() throws InitialisationException
@@ -120,28 +85,15 @@ public class DefaultMuleContext implements MuleContext
         {
             throw new NullPointerException(CoreMessages.objectIsNull("workManager").getMessage());
         }
-        if (config == null)
-        {
-            logger.info("A mule configuration object was not registered. Using default configuration");
-            config = new MuleConfiguration();
-        }
 
         try
         {
-            setupIds();
-            validateEncoding();
-            validateOSEncoding();
-            validateXML();
-
-            directories = new Directories(FileUtils.newFile(config.getWorkingDirectory()));
-
             //We need to start the work manager straight away since we need it to fire notifications
             workManager.start();
             getNotificationManager().start(workManager);
 
             fireNotification(new MuleContextNotification(this, MuleContextNotification.CONTEXT_INITIALISING));
 
-            directories.createDirectories();
             lifecycleManager.firePhase(this, Initialisable.PHASE_NAME);
 
             fireNotification(new MuleContextNotification(this, MuleContextNotification.CONTEXT_INITIALISED));
@@ -153,34 +105,6 @@ public class DefaultMuleContext implements MuleContext
         return LifecycleTransitionResult.OK;
     }
 
-
-    protected void setupIds() throws InitialisationException
-    {
-        id = config.getId();
-        clusterId = config.getClusterId();
-        domain = config.getDomainId();
-
-        if (id == null)
-        {
-            throw new InitialisationException(CoreMessages.objectIsNull("Instance ID"), this);
-        }
-        if (clusterId == null)
-        {
-            clusterId = CoreMessages.notClustered().getMessage();
-        }
-        if (domain == null)
-        {
-            try
-            {
-                domain = InetAddress.getLocalHost().getHostName();
-            }
-            catch (UnknownHostException e)
-            {
-                throw new InitialisationException(e, this);
-            }
-        }
-        systemName = domain + "." + clusterId + "." + id;
-    }
 
     public synchronized LifecycleTransitionResult start() throws MuleException
     {
@@ -198,13 +122,11 @@ public class DefaultMuleContext implements MuleContext
 
             fireNotification(new MuleContextNotification(this, MuleContextNotification.CONTEXT_STARTING));
 
-            directories.deleteMarkedDirectories();
-
             lifecycleManager.firePhase(this, Startable.PHASE_NAME);
 
             if (logger.isInfoEnabled())
             {
-                logger.info(getStartSplash());
+                logger.info(getConfiguration().getStartSplash());
             }
             fireNotification(new MuleContextNotification(this, MuleContextNotification.CONTEXT_STARTED));
         }
@@ -261,9 +183,9 @@ public class DefaultMuleContext implements MuleContext
 
         notificationManager.fireNotification(new MuleContextNotification(this, MuleContextNotification.CONTEXT_DISPOSED));
 
-        if ((startDate > 0) && logger.isInfoEnabled())
+        if ((getConfiguration().getStartDate() > 0) && logger.isInfoEnabled())
         {
-            logger.info(getEndSplash());
+            logger.info(getConfiguration().getEndSplash());
         }
         //lifecycleManager.reset();
     }
@@ -324,88 +246,9 @@ public class DefaultMuleContext implements MuleContext
         return Disposable.PHASE_NAME.equals(lifecycleManager.getExecutingPhase());
     }
 
-    protected void validateEncoding() throws FatalException
-    {
-        String encoding = System.getProperty(MuleProperties.MULE_ENCODING_SYSTEM_PROPERTY);
-        if (encoding == null)
-        {
-            encoding = config.getDefaultEncoding();
-            System.setProperty(MuleProperties.MULE_ENCODING_SYSTEM_PROPERTY, encoding);
-        }
-        else
-        {
-            config.setDefaultEncoding(encoding);
-        }
-        //Check we have a valid and supported encoding
-        if (!Charset.isSupported(config.getDefaultEncoding()))
-        {
-            throw new FatalException(CoreMessages.propertyHasInvalidValue("encoding", config.getDefaultEncoding()), this);
-        }
-    }
-
-    protected void validateOSEncoding() throws FatalException
-    {
-        String encoding = System.getProperty(MuleProperties.MULE_OS_ENCODING_SYSTEM_PROPERTY);
-        if (encoding == null)
-        {
-            encoding = config.getDefaultOSEncoding();
-            System.setProperty(MuleProperties.MULE_OS_ENCODING_SYSTEM_PROPERTY, encoding);
-        }
-        else
-        {
-            config.setDefaultOSEncoding(encoding);
-        }
-        // Check we have a valid and supported encoding
-        if (!Charset.isSupported(config.getDefaultOSEncoding()))
-        {
-            throw new FatalException(CoreMessages.propertyHasInvalidValue("osEncoding",
-                    config.getDefaultOSEncoding()), this);
-        }
-    }
-
-    /**
-     * Mule needs a proper JAXP implementation and will complain when run with a plain JDK
-     * 1.4. Use the supplied launcher or specify a proper JAXP implementation via
-     * <code>-Djava.endorsed.dirs</code>. See the following URLs for more information:
-     * <ul>
-     * <li> {@link http://xerces.apache.org/xerces2-j/faq-general.html#faq-4}
-     * <li> {@link http://xml.apache.org/xalan-j/faq.html#faq-N100D6}
-     * <li> {@link http://java.sun.com/j2se/1.4.2/docs/guide/standards/}
-     * </ul>
-     */
-    protected void validateXML() throws FatalException
-    {
-        SAXParserFactory f = SAXParserFactory.newInstance();
-        if (f == null || f.getClass().getName().indexOf("crimson") != -1)
-        {
-            throw new FatalException(CoreMessages.valueIsInvalidFor(f.getClass().getName(),
-                "javax.xml.parsers.SAXParserFactory"), this);
-        }
-    }
-
     public LifecycleManager getLifecycleManager()
     {
         return lifecycleManager;
-    }
-
-    public String getSystemName()
-    {
-        return systemName;
-    }
-
-    public void setSystemName(String systemName)
-    {
-        this.systemName = systemName;
-    }
-
-    /**
-     * Returns the long date when the server was started
-     *
-     * @return the long date when the server was started
-     */
-    public long getStartDate()
-    {
-        return startDate;
     }
 
     /**
@@ -422,11 +265,6 @@ public class DefaultMuleContext implements MuleContext
     public void setStatistics(AllStatistics stat)
     {
         this.stats = stat;
-    }
-
-    public Directories getDirectories()
-    {
-        return directories;
     }
 
     public void registerListener(ServerNotificationListener l) throws NotificationException
@@ -474,44 +312,6 @@ public class DefaultMuleContext implements MuleContext
         {
             logger.debug("MuleEvent Manager is not enabled, ignoring notification: " + notification);
         }
-    }
-
-    public void setId(String id)
-    {
-        if (StringUtils.isBlank(id))
-        {
-            throw new IllegalArgumentException("Management Context ID can't be null or empty");
-        }
-        checkLifecycleForPropertySet("id", Startable.PHASE_NAME);
-        this.id = id;
-    }
-
-    public String getId()
-    {
-        return id;
-    }
-
-
-    public String getDomain()
-    {
-        return domain;
-    }
-
-    public void setDomain(String domain)
-    {
-        checkLifecycleForPropertySet("domain", Initialisable.PHASE_NAME);
-        this.domain = domain;
-    }
-
-    public String getClusterId()
-    {
-        return clusterId;
-    }
-
-    public void setClusterId(String clusterId)
-    {
-        checkLifecycleForPropertySet("clusterId", Initialisable.PHASE_NAME);
-        this.clusterId = clusterId;
     }
 
     /**
@@ -619,6 +419,15 @@ public class DefaultMuleContext implements MuleContext
         getRegistry().registerObject(MuleProperties.OBJECT_QUEUE_MANAGER, queueManager);
     }
 
+    /**
+    * @return the MuleConfiguration for this MuleContext. This object is immutable
+    *         once the context has initialised.
+    */
+    public MuleConfiguration getConfiguration()
+    {
+        return config;
+    }
+    
     public ServerNotificationManager getNotificationManager()
     {
         return notificationManager;
@@ -680,110 +489,6 @@ public class DefaultMuleContext implements MuleContext
         return transactionManager;
     }
 
-
-    /**
-     * Returns a formatted string that is a summary of the configuration of the
-     * server. This is the brock of information that gets displayed when the server
-     * starts
-     *
-     * @return a string summary of the server information
-     */
-    private String getStartSplash()
-    {
-        String notset = CoreMessages.notSet().getMessage();
-
-        // Mule Version, Timestamp, and Server ID
-        List message = new ArrayList();
-        Manifest mf = MuleManifest.getManifest();
-        Map att = mf.getMainAttributes();
-        if (att.values().size() > 0)
-        {
-            message.add(StringUtils.defaultString(MuleManifest.getProductDescription(), notset));
-            message.add(CoreMessages.version().getMessage() + " Build: "
-                    + StringUtils.defaultString(MuleManifest.getBuildNumber(), notset));
-
-            message.add(StringUtils.defaultString(MuleManifest.getVendorName(), notset));
-            message.add(StringUtils.defaultString(MuleManifest.getProductMoreInfo(), notset));
-        }
-        else
-        {
-            message.add(CoreMessages.versionNotSet().getMessage());
-        }
-        message.add(" ");
-        message.add(CoreMessages.serverStartedAt(getStartDate()).getMessage());
-        message.add("Server ID: " + id);
-
-        // JDK, OS, and Host
-        message.add("JDK: " + System.getProperty("java.version") + " (" + System.getProperty("java.vm.info")
-                + ")");
-        String patch = System.getProperty("sun.os.patch.level", null);
-        message.add("OS: " + System.getProperty("os.name")
-                + (patch != null && !"unknown".equalsIgnoreCase(patch) ? " - " + patch : "") + " ("
-                + System.getProperty("os.version") + ", " + System.getProperty("os.arch") + ")");
-        try
-        {
-            InetAddress host = InetAddress.getLocalHost();
-            message.add("Host: " + host.getHostName() + " (" + host.getHostAddress() + ")");
-        }
-        catch (UnknownHostException e)
-        {
-            // ignore
-        }
-
-        // Mule Agents
-        message.add(" ");
-        //List agents
-        Collection agents = RegistryContext.getRegistry().lookupObjects(Agent.class);
-        if (agents.size() == 0)
-        {
-            message.add(CoreMessages.agentsRunning().getMessage() + " "
-                    + CoreMessages.none().getMessage());
-        }
-        else
-        {
-            message.add(CoreMessages.agentsRunning().getMessage());
-            Agent umoAgent;
-            for (Iterator iterator = agents.iterator(); iterator.hasNext();)
-            {
-                umoAgent = (Agent) iterator.next();
-                message.add("  " + umoAgent.getDescription());
-            }
-        }
-        return StringMessageUtils.getBoilerPlate(message, '*', 70);
-    }
-
-    private String getEndSplash()
-    {
-        List message = new ArrayList(2);
-        long currentTime = System.currentTimeMillis();
-        message.add(CoreMessages.shutdownNormally(new Date()).getMessage());
-        long duration = 10;
-        if (startDate > 0)
-        {
-            duration = currentTime - startDate;
-        }
-        message.add(CoreMessages.serverWasUpForDuration(duration).getMessage());
-
-        return StringMessageUtils.getBoilerPlate(message, '*', 78);
-    }
-
-
-    public void register() throws RegistrationException
-    {
-        throw new UnsupportedOperationException("register");
-    }
-
-    public void deregister() throws RegistrationException
-    {
-        throw new UnsupportedOperationException("deregister");
-    }
-
-    public String getRegistryId()
-    {
-        throw new UnsupportedOperationException("registryId");
-    }
-
-
     protected void checkLifecycleForPropertySet(String propertyName, String phase) throws IllegalStateException
     {
         if (lifecycleManager.isPhaseComplete(phase))
@@ -815,15 +520,50 @@ public class DefaultMuleContext implements MuleContext
     {
         lifecycleManager.applyLifecycle(this, object);
     }
-    
-    public MuleConfiguration getConfiguration()
+
+    public ThreadingProfile getDefaultMessageDispatcherThreadingProfile()
     {
-        return config;
+        return getThreadingProfile(MuleProperties.OBJECT_DEFAULT_MESSAGE_DISPATCHER_THREADING_PROFILE);
     }
 
-    public void setConfiguration(MuleConfiguration config)
+    public ThreadingProfile getDefaultMessageRequesterThreadingProfile()
     {
-        this.config = config;
+        return getThreadingProfile(MuleProperties.OBJECT_DEFAULT_MESSAGE_REQUESTER_THREADING_PROFILE);
     }
 
+    public ThreadingProfile getDefaultMessageReceiverThreadingProfile()
+    {
+        return getThreadingProfile(MuleProperties.OBJECT_DEFAULT_MESSAGE_RECEIVER_THREADING_PROFILE);
+    }
+
+    public ThreadingProfile getDefaultComponentThreadingProfile()
+    {
+        return getThreadingProfile(MuleProperties.OBJECT_DEFAULT_COMPONENT_THREADING_PROFILE);
+    }
+
+    public ThreadingProfile getDefaultThreadingProfile()
+    {
+        return getThreadingProfile(MuleProperties.OBJECT_DEFAULT_THREADING_PROFILE);
+    }
+
+    private ThreadingProfile getThreadingProfile(String name)
+    {
+        ThreadingProfile tp = null;
+
+        Registry registry = RegistryContext.getRegistry();
+        if (registry != null)
+        {
+            tp = (ThreadingProfile) RegistryContext.getRegistry().lookupObject(name);
+        }
+
+        if (null != tp)
+        {
+            return tp;
+        }
+        else
+        {
+            // only used in tests, where no registry is present
+            return ThreadingProfile.DEFAULT_THREADING_PROFILE;
+        }
+    }
 }

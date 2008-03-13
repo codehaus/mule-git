@@ -32,23 +32,20 @@ public class XmlUMOMessageTransformersTestCase extends AbstractXmlTransformerTes
     // @Override
     protected void doSetUp() throws Exception
     {
+        Map props = new HashMap();
+        props.put("object", new Apple());
+        props.put("number", new Integer(1));
+        props.put("string", "hello");
+        testObject = new DefaultMuleMessage("test", props);
+        
         RequestContext.setEvent(new DefaultMuleEvent(testObject, getTestOutboundEndpoint("test"), MuleTestUtils
-            .getTestSession(), true));
+            .getTestSession(muleContext), true));
     }
 
     // @Override
     protected void doTearDown() throws Exception
     {
         RequestContext.clear();
-    }
-
-    public XmlUMOMessageTransformersTestCase()
-    {
-        Map props = new HashMap();
-        props.put("object", new Apple());
-        props.put("number", new Integer(1));
-        props.put("string", "hello");
-        testObject = new DefaultMuleMessage("test", props);
     }
 
     public Transformer getTransformer() throws Exception

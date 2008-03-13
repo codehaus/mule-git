@@ -55,7 +55,6 @@ public class CxfWsdlTestCase extends AbstractMuleTestCase
      */
     public void testCxfWsdlServiceWithEndpointParam() throws Exception
     {
-
         Registry registry = muleContext.getRegistry();
 
         EndpointBuilder endpointBuilder = new EndpointURIEndpointBuilder(TEST_URL_NOWSDL, muleContext);
@@ -65,7 +64,7 @@ public class CxfWsdlTestCase extends AbstractMuleTestCase
 
         MuleMessage message = new DefaultMuleMessage("test1");
         MuleSession session = new DefaultMuleSession(message,
-            ((AbstractConnector) endpoint.getConnector()).getSessionHandler());
+            ((AbstractConnector) endpoint.getConnector()).getSessionHandler(), muleContext);
         MuleEvent event = new DefaultMuleEvent(message, endpoint, session, true);
         MuleMessage reply = session.sendEvent(event);
 

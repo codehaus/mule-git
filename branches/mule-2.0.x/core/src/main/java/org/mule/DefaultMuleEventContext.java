@@ -49,11 +49,13 @@ public class DefaultMuleEventContext implements MuleEventContext
 
     private final MuleEvent event;
     private final MuleSession session;
+    private MuleContext muleContext;
 
     public DefaultMuleEventContext(MuleEvent event)
     {
         this.event = event;
         this.session = event.getSession();
+        this.muleContext = event.getMuleContext();
     }
 
     /**

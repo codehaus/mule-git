@@ -82,6 +82,9 @@ public class MuleResourceAdapter implements ResourceAdapter, Serializable
     public void start(BootstrapContext bootstrapContext) throws ResourceAdapterInternalException
     {
         this.bootstrapContext = bootstrapContext;
+
+        muleContext.getConfiguration().setSystemModelType(JcaModel.JCA_MODEL_TYPE);
+        
         if (info.getConfigurations() != null)
         {
             ConfigurationBuilder builder = null;

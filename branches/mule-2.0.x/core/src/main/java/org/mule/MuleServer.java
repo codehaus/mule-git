@@ -372,7 +372,7 @@ public class MuleServer implements Runnable
         msgs.add(CoreMessages.fatalErrorInShutdown());
         if (muleContext != null)
         {
-            msgs.add(CoreMessages.serverStartedAt(muleContext.getStartDate()));
+            msgs.add(CoreMessages.serverStartedAt(muleContext.getConfiguration().getStartDate()));
         }
         msgs.add(CoreMessages.serverShutdownAt(new Date()));
 
@@ -395,7 +395,7 @@ public class MuleServer implements Runnable
         logger.info("Mule server shutting dow due to normal shutdown request");
         List msgs = new ArrayList();
         msgs.add(CoreMessages.normalShutdown());
-        msgs.add(CoreMessages.serverStartedAt(muleContext.getStartDate()).getMessage());
+        msgs.add(CoreMessages.serverStartedAt(muleContext.getConfiguration().getStartDate()).getMessage());
         msgs.add(CoreMessages.serverShutdownAt(new Date()).getMessage());
         String shutdownMessage = StringMessageUtils.getBoilerPlate(msgs, '*', 80);
         logger.info(shutdownMessage);

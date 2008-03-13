@@ -51,7 +51,7 @@ public class WireTap extends SelectiveConsumer
         {
             //We have to create a new session for this dispatch, since the session may get altered
             //using this call, changing the behaviour of the request
-            MuleSession session = new DefaultMuleSession(event.getMessage(), new NullSessionHandler());
+            MuleSession session = new DefaultMuleSession(event.getMessage(), new NullSessionHandler(), getMuleContext());
             tap.dispatch(new DefaultMuleEvent(event.getMessage(), tap, session, false));
         }
         catch (MessagingException e)

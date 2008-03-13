@@ -79,7 +79,7 @@ public class PollingHttpMessageReceiver extends AbstractPollingMessageReceiver
         }
         req.setProperty(HttpConnector.HTTP_METHOD_PROPERTY, "GET");
 
-        MuleSession session = new DefaultMuleSession(service);
+        MuleSession session = new DefaultMuleSession(service, connector.getMuleContext());
         MuleEvent event = new DefaultMuleEvent(req, endpoint, session, true);
 
         // We need to create an outbound endpoint to do the polled request using
