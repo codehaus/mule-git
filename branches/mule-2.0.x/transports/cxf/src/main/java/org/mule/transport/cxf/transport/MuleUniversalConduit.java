@@ -13,6 +13,7 @@ import org.mule.api.MuleEventContext;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.MuleSession;
+import org.mule.api.config.MuleProperties;
 import org.mule.api.endpoint.OutboundEndpoint;
 import org.mule.api.transport.MessageAdapter;
 import org.mule.api.transport.OutputHandler;
@@ -28,12 +29,9 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 import java.util.logging.Logger;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.cxf.helpers.CastUtils;
 import org.apache.cxf.io.CachedOutputStream;
 import org.apache.cxf.message.ExchangeImpl;
 import org.apache.cxf.message.Message;
@@ -198,10 +196,17 @@ public class MuleUniversalConduit extends AbstractConduit
             for (Iterator i = msg.getPropertyNames().iterator(); i.hasNext();)
             {
                 String propertyName = (String) i.next();
-                req.setProperty(propertyName, msg.getProperty(propertyName));
+                
+             // But, don't copy mule message properties that should be on message but not on soap request
+                // (MULE-2721)
+                // Also see AxisMessageDispatcher.setCustomProperties()
+                if (!(propertyName.startsWith(MuleProperties.PROPERTY_PREFIX)))
+                {
+                    req.setProperty(propertyName, msg.getProperty(propertyName));
+                }
             }
         }
-
+     
         MuleMessage result = null;
 
         String uri = setupURL(m);

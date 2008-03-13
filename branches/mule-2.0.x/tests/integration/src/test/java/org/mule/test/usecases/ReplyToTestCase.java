@@ -71,7 +71,7 @@ public class ReplyToTestCase extends FunctionalTestCase
         assertNull("Extra message received at replyTo destination: " + result, result);        
     }
 
-    public void XXXtestCxf() throws Exception
+    public void testCxf() throws Exception
     {
         MuleClient client = new MuleClient();
         

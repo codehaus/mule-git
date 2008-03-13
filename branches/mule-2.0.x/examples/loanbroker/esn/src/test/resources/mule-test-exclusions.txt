@@ -2,6 +2,3 @@
 # Test cases listed in this file are not run.
 #
 
-org.mule.example.loanbroker.esn.CxfLoanBrokerAsynchronousFunctionalTestCase
-org.mule.example.loanbroker.esn.CxfLoanBrokerSynchronousFunctionalTestCase
-
