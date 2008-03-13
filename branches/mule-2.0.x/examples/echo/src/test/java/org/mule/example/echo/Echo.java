@@ -8,15 +8,17 @@
  * LICENSE.txt file.
  */
 
-package org.mule.example.loanbroker.esn;
+package org.mule.example.echo;
 
-import org.mule.example.loanbroker.tests.AbstractLoanBrokerTestCase;
+import javax.jws.WebParam;
+import javax.jws.WebResult;
+import javax.jws.WebService;
 
-public class XFireLoanBrokerSynchronousFunctionalTestCase extends AbstractLoanBrokerTestCase
+@WebService
+public interface Echo
 {
-    // @Override
-    protected String getConfigResources()
-    {
-        return "loan-broker-sync-config.xml, loan-broker-xfire-endpoints-config.xml";
-    }
+    @WebResult(name="text")
+    public String echo(@WebParam(name="text") String string);
 }
+
+

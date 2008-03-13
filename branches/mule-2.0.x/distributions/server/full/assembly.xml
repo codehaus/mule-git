@@ -392,7 +392,6 @@ Assembly descriptor for the full Mule distribution.
         <include>org.mule.transports:mule-transport-tcp</include>
         <include>org.mule.transports:mule-transport-udp</include>
         <include>org.mule.transports:mule-transport-vm</include>
-        <include>org.mule.transports:mule-transport-xfire</include>
         <include>org.mule.transports:mule-transport-xmpp</include>
         <!-- Modules -->
         <include>org.mule.modules:mule-module-acegi</include>
