@@ -947,6 +947,7 @@
                 </plugins>
             </build>
             <modules>
+                <module>examples</module>
                 <module>transports</module>
             </modules>
         </profile>
