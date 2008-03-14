@@ -12,7 +12,6 @@ package org.mule.config.spring;
 
 import org.mule.api.MuleException;
 import org.mule.api.agent.Agent;
-import org.mule.api.config.MuleProperties;
 import org.mule.api.endpoint.EndpointBuilder;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.Disposable;
@@ -123,15 +122,6 @@ public class SpringRegistry extends AbstractRegistry
             throw new ServiceException(CoreMessages.failedToLoad(type + " " + name));
         }
         return ServiceDescriptorFactory.create(type, name, props, overrides, this);
-    }
-
-    /**
-     * @return the MuleConfiguration for this MuleManager. This object is immutable
-     *         once the manager has initialised.
-     */
-    protected synchronized MuleConfiguration getLocalConfiguration()
-    {
-        return (MuleConfiguration) applicationContext.getBean(MuleProperties.OBJECT_MULE_CONFIGURATION);
     }
 
     /** {@inheritDoc} */
