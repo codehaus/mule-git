@@ -22,7 +22,7 @@ public class CxfLoanBrokerSynchronousFunctionalTestCase extends AbstractLoanBrok
         super.testSingleLoanRequest();
     }
 
-    // @Override
+    @Override
     protected String getConfigResources()
     {
         return "loan-broker-sync-config.xml, loan-broker-cxf-endpoints-config.xml";

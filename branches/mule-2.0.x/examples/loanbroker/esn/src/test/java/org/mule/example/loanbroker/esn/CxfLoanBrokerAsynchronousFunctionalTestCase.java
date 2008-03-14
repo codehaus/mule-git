@@ -15,20 +15,20 @@ import org.mule.example.loanbroker.tests.AbstractAsynchronousLoanBrokerTestCase;
 
 public class CxfLoanBrokerAsynchronousFunctionalTestCase extends AbstractAsynchronousLoanBrokerTestCase
 {
-    // @Override
+    @Override
     protected String getConfigResources()
     {
         return "loan-broker-async-config.xml, loan-broker-cxf-endpoints-config.xml";
     }
 
-    // @Override
+    @Override
     protected int getNumberOfRequests()
     {
         // MULE-3016
         return 1;
     }
 
-    // @Override
+    @Override
     protected int getWarmUpMessages()
     {
         // MULE-3016
