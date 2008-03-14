@@ -239,7 +239,7 @@ public abstract class AbstractEndpointBuilder implements EndpointBuilder
 
     protected ConnectionStrategy getDefaultConnectionStrategy(Connector connector)
     {
-        return muleContext.getConfiguration().getDefaultConnectionStrategy();
+        return muleContext.getDefaultConnectionStrategy();
     }
 
     protected TransactionConfig getTransactionConfig()
