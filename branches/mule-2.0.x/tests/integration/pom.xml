@@ -234,6 +234,14 @@
                     <groupId>asm</groupId>
                     <artifactId>asm-attrs</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>dom4j</groupId>
+                    <artifactId>dom4j</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>isorelax</groupId>
+                    <artifactId>isorelax</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
 
