@@ -42,7 +42,7 @@ public class MuleConfigurationTestCase extends TestCase
         config.setDefaultSynchronousEventTimeout(30000);
         config.setDefaultTransactionTimeout(60000);
         config.setDefaultRemoteSync(true);
-        config.setWorkingDirectory("/tmp");
+        config.setWorkingDirectory("/some/directory");
         config.setClientMode(true);
         config.setFailOnMessageScribbling(false);
         config.setId("MY_SERVER");
@@ -71,7 +71,7 @@ public class MuleConfigurationTestCase extends TestCase
         System.setProperty(MuleConfiguration.SYSTEM_PROPERTY_PREFIX + "timeout.synchronous", "30000");
         System.setProperty(MuleConfiguration.SYSTEM_PROPERTY_PREFIX + "timeout.transaction", "60000");
         System.setProperty(MuleConfiguration.SYSTEM_PROPERTY_PREFIX + "remoteSync", "true");
-        System.setProperty(MuleConfiguration.SYSTEM_PROPERTY_PREFIX + "workingDirectory", "/tmp");
+        System.setProperty(MuleConfiguration.SYSTEM_PROPERTY_PREFIX + "workingDirectory", "/some/directory");
         System.setProperty(MuleConfiguration.SYSTEM_PROPERTY_PREFIX + "clientMode", "true");
         System.setProperty(MuleConfiguration.SYSTEM_PROPERTY_PREFIX + "disable.threadsafemessages", "true");
         System.setProperty(MuleConfiguration.SYSTEM_PROPERTY_PREFIX + "serverId", "MY_SERVER");
@@ -98,7 +98,7 @@ public class MuleConfigurationTestCase extends TestCase
         assertEquals(30000, config.getDefaultSynchronousEventTimeout());
         assertEquals(60000, config.getDefaultTransactionTimeout());
         assertTrue(config.isDefaultRemoteSync());
-        assertEquals("/tmp", config.getWorkingDirectory());
+        assertEquals("/some/directory", config.getWorkingDirectory());
         assertTrue(config.isClientMode());
         assertFalse(config.isFailOnMessageScribbling());
         assertEquals("MY_SERVER", config.getId());
