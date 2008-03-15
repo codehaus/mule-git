@@ -14,10 +14,13 @@ import org.mule.RegistryContext;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleException;
 import org.mule.api.config.ConfigurationBuilder;
+import org.mule.api.context.MuleContextBuilder;
 import org.mule.api.endpoint.EndpointBuilder;
 import org.mule.api.endpoint.InboundEndpoint;
 import org.mule.api.model.Model;
 import org.mule.api.service.Service;
+import org.mule.config.DefaultMuleConfiguration;
+import org.mule.context.DefaultMuleContextBuilder;
 import org.mule.context.DefaultMuleContextFactory;
 import org.mule.endpoint.EndpointURIEndpointBuilder;
 import org.mule.endpoint.URIBuilder;
@@ -67,7 +70,6 @@ public class MuleResourceAdapter implements ResourceAdapter, Serializable
     public MuleResourceAdapter()
     {
         RegistryContext.getOrCreateRegistry();
-        RegistryContext.getConfiguration().setSystemModelType(JcaModel.JCA_MODEL_TYPE);
     }
 
     private void readObject(ObjectInputStream ois) throws ClassNotFoundException, IOException
@@ -83,14 +85,12 @@ public class MuleResourceAdapter implements ResourceAdapter, Serializable
     {
         this.bootstrapContext = bootstrapContext;
 
-        muleContext.getConfiguration().setSystemModelType(JcaModel.JCA_MODEL_TYPE);
-        
         if (info.getConfigurations() != null)
         {
-            ConfigurationBuilder builder = null;
+            ConfigurationBuilder configBuilder = null;
             try
             {
-                builder = (ConfigurationBuilder) ClassUtils.instanciateClass(info.getConfigurationBuilder(),
+                configBuilder = (ConfigurationBuilder) ClassUtils.instanciateClass(info.getConfigurationBuilder(),
                     new Object[]{info.getConfigurations()});
             }
             catch (Exception e)
@@ -102,7 +102,12 @@ public class MuleResourceAdapter implements ResourceAdapter, Serializable
             try
             {
                 logger.info("Initializing Mule...");
-                muleContext = new DefaultMuleContextFactory().createMuleContext(builder);
+
+                MuleContextBuilder contextBuilder = new DefaultMuleContextBuilder();
+                DefaultMuleConfiguration config = new DefaultMuleConfiguration();
+                config.setSystemModelType(JcaModel.JCA_MODEL_TYPE);
+                contextBuilder.setMuleConfiguration(config);
+                muleContext = new DefaultMuleContextFactory().createMuleContext(configBuilder, contextBuilder);
             }
             catch (MuleException e)
             {

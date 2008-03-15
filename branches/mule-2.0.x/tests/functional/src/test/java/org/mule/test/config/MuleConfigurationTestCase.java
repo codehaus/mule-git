@@ -13,7 +13,10 @@ package org.mule.test.config;
 import org.mule.MuleServer;
 import org.mule.RegistryContext;
 import org.mule.api.MuleContext;
-import org.mule.config.MuleConfiguration;
+import org.mule.api.config.MuleConfiguration;
+import org.mule.api.context.MuleContextBuilder;
+import org.mule.config.DefaultMuleConfiguration;
+import org.mule.context.DefaultMuleContextBuilder;
 import org.mule.context.DefaultMuleContextFactory;
 
 import junit.framework.TestCase;
@@ -32,9 +35,7 @@ public class MuleConfigurationTestCase extends TestCase
     
     public void testConfigureProgramatically() throws Exception
     {
-        muleContext = new DefaultMuleContextFactory().createMuleContext();
-        
-        MuleConfiguration config = muleContext.getConfiguration();
+        DefaultMuleConfiguration config = new DefaultMuleConfiguration();
         config.setDefaultEncoding("UTF-16");
         config.setDefaultSynchronousEndpoints(true);
         config.setSystemModelType("direct");
@@ -52,6 +53,10 @@ public class MuleConfigurationTestCase extends TestCase
         config.setEnableStreaming(false);
         config.setAssertMessageAccess(false);
         config.setAutoWrapMessageAwareTransform(false);
+        
+        MuleContextBuilder contextBuilder = new DefaultMuleContextBuilder();
+        contextBuilder.setMuleConfiguration(config);
+        muleContext = new DefaultMuleContextFactory().createMuleContext(contextBuilder);
         
         muleContext.start();
         

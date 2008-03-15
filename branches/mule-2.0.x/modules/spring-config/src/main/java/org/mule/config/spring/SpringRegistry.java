@@ -12,6 +12,7 @@ package org.mule.config.spring;
 
 import org.mule.api.MuleException;
 import org.mule.api.agent.Agent;
+import org.mule.api.config.MuleConfiguration;
 import org.mule.api.endpoint.EndpointBuilder;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.Disposable;
@@ -25,7 +26,6 @@ import org.mule.api.registry.ServiceException;
 import org.mule.api.service.Service;
 import org.mule.api.transformer.Transformer;
 import org.mule.api.transport.Connector;
-import org.mule.config.MuleConfiguration;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.config.i18n.MessageFactory;
 import org.mule.lifecycle.ContainerManagedLifecyclePhase;

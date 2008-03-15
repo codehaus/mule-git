@@ -10,27 +10,21 @@
 
 package org.mule.config;
 
-import org.mule.RegistryContext;
-import org.mule.api.agent.Agent;
+import org.mule.MuleServer;
+import org.mule.api.MuleContext;
+import org.mule.api.config.MuleConfiguration;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.lifecycle.FatalException;
+import org.mule.api.lifecycle.Startable;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.util.FileUtils;
 import org.mule.util.NumberUtils;
-import org.mule.util.StringMessageUtils;
 import org.mule.util.StringUtils;
 import org.mule.util.UUID;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.jar.Manifest;
 
 import javax.xml.parsers.SAXParserFactory;
 
@@ -39,17 +33,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * <code>MuleConfiguration</code> holds the runtime configuration specific to the
- * <code>MuleContext</code>. Once the <code>MuleContext</code> has been
- * initialised this class is immutable.
+ * Configuration info. which can be set when creating the MuleContext but becomes
+ * immutable after starting the MuleContext.
  */
-public class MuleConfiguration 
+public class DefaultMuleConfiguration implements MuleConfiguration 
 {
-    /**
-     * The prefix for any Mule-specific properties set in the system properties
-     */
-    public static final String SYSTEM_PROPERTY_PREFIX = "mule.";
-
     private boolean synchronous = false;
 
     /**
@@ -103,9 +91,6 @@ public class MuleConfiguration
     /** The domain name that this instance belongs to. */
     private String domainId;
 
-    /** the date in milliseconds from when the server was started */
-    private long startDate;
-
     // Debug options
     
     private boolean cacheMessageAsBytes = true;
@@ -118,9 +103,9 @@ public class MuleConfiguration
 
     private boolean autoWrapMessageAwareTransform = true;
     
-    protected transient Log logger = LogFactory.getLog(getClass());
+    protected transient Log logger = LogFactory.getLog(DefaultMuleConfiguration.class);
 
-    public MuleConfiguration()  
+    public DefaultMuleConfiguration()  
     {
         super();
         
@@ -159,8 +144,6 @@ public class MuleConfiguration
         {
             throw new RuntimeException(e);
         }
-
-        startDate = System.currentTimeMillis();
     }
 
     /**
@@ -286,93 +269,9 @@ public class MuleConfiguration
         }
     }
 
-    /**
-     * Returns a formatted string that is a summary of the configuration of the
-     * server. This is the brock of information that gets displayed when the server
-     * starts
-     *
-     * @return a string summary of the server information
+    /* (non-Javadoc)
+     * @see org.mule.config.MuleConfiguration#isDefaultSynchronousEndpoints()
      */
-    public String getStartSplash()
-    {
-        String notset = CoreMessages.notSet().getMessage();
-
-        // Mule Version, Timestamp, and Server ID
-        List message = new ArrayList();
-        Manifest mf = MuleManifest.getManifest();
-        Map att = mf.getMainAttributes();
-        if (att.values().size() > 0)
-        {
-            message.add(StringUtils.defaultString(MuleManifest.getProductDescription(), notset));
-            message.add(CoreMessages.version().getMessage() + " Build: "
-                    + StringUtils.defaultString(MuleManifest.getBuildNumber(), notset));
-
-            message.add(StringUtils.defaultString(MuleManifest.getVendorName(), notset));
-            message.add(StringUtils.defaultString(MuleManifest.getProductMoreInfo(), notset));
-        }
-        else
-        {
-            message.add(CoreMessages.versionNotSet().getMessage());
-        }
-        message.add(" ");
-        message.add(CoreMessages.serverStartedAt(getStartDate()).getMessage());
-        message.add("Server ID: " + id);
-
-        // JDK, OS, and Host
-        message.add("JDK: " + System.getProperty("java.version") + " (" + System.getProperty("java.vm.info")
-                + ")");
-        String patch = System.getProperty("sun.os.patch.level", null);
-        message.add("OS: " + System.getProperty("os.name")
-                + (patch != null && !"unknown".equalsIgnoreCase(patch) ? " - " + patch : "") + " ("
-                + System.getProperty("os.version") + ", " + System.getProperty("os.arch") + ")");
-        try
-        {
-            InetAddress host = InetAddress.getLocalHost();
-            message.add("Host: " + host.getHostName() + " (" + host.getHostAddress() + ")");
-        }
-        catch (UnknownHostException e)
-        {
-            // ignore
-        }
-
-        // Mule Agents
-        message.add(" ");
-        //List agents
-        Collection agents = RegistryContext.getRegistry().lookupObjects(Agent.class);
-        if (agents.size() == 0)
-        {
-            message.add(CoreMessages.agentsRunning().getMessage() + " "
-                    + CoreMessages.none().getMessage());
-        }
-        else
-        {
-            message.add(CoreMessages.agentsRunning().getMessage());
-            Agent umoAgent;
-            for (Iterator iterator = agents.iterator(); iterator.hasNext();)
-            {
-                umoAgent = (Agent) iterator.next();
-                message.add("  " + umoAgent.getDescription());
-            }
-        }
-        return StringMessageUtils.getBoilerPlate(message, '*', 70);
-    }
-
-    public String getEndSplash()
-    {
-        List message = new ArrayList(2);
-        long currentTime = System.currentTimeMillis();
-        message.add(CoreMessages.shutdownNormally(new Date()).getMessage());
-        long duration = 10;
-        if (startDate > 0)
-        {
-            duration = currentTime - startDate;
-        }
-        message.add(CoreMessages.serverWasUpForDuration(duration).getMessage());
-
-        return StringMessageUtils.getBoilerPlate(message, '*', 78);
-    }
-
-    /** @return true if the model is running synchronously or false otherwise */
     public boolean isDefaultSynchronousEndpoints()
     {
         return synchronous;
@@ -380,9 +279,15 @@ public class MuleConfiguration
 
     public void setDefaultSynchronousEndpoints(boolean synchronous)
     {
-        this.synchronous = synchronous;
+        if (verifyContextNotStarted())
+        {
+            this.synchronous = synchronous;
+        }
     }
 
+    /* (non-Javadoc)
+     * @see org.mule.config.MuleConfiguration#getDefaultSynchronousEventTimeout()
+     */
     public int getDefaultSynchronousEventTimeout()
     {
         return synchronousEventTimeout;
@@ -390,9 +295,15 @@ public class MuleConfiguration
 
     public void setDefaultSynchronousEventTimeout(int synchronousEventTimeout)
     {
-        this.synchronousEventTimeout = synchronousEventTimeout;
+        if (verifyContextNotStarted())
+        {
+            this.synchronousEventTimeout = synchronousEventTimeout;
+        }
     }
 
+    /* (non-Javadoc)
+     * @see org.mule.config.MuleConfiguration#isDefaultRemoteSync()
+     */
     public boolean isDefaultRemoteSync()
     {
         return remoteSync;
@@ -400,14 +311,23 @@ public class MuleConfiguration
 
     public void setDefaultRemoteSync(boolean remoteSync)
     {
-        this.remoteSync = remoteSync;
+        if (verifyContextNotStarted())
+        {
+            this.remoteSync = remoteSync;
+        }
     }
 
+    /* (non-Javadoc)
+     * @see org.mule.config.MuleConfiguration#getWorkingDirectory()
+     */
     public String getWorkingDirectory()
     {
         return workingDirectory;
     }
 
+    /* (non-Javadoc)
+     * @see org.mule.config.MuleConfiguration#getMuleHomeDirectory()
+     */
     public String getMuleHomeDirectory()
     {
         return System.getProperty(MuleProperties.MULE_HOME_DIRECTORY_PROPERTY);
@@ -415,10 +335,16 @@ public class MuleConfiguration
 
     public void setWorkingDirectory(String workingDirectory)
     {
-        // fix windows backslashes in absolute paths, convert them to forward ones
-        this.workingDirectory = FileUtils.newFile(workingDirectory).getAbsolutePath().replaceAll("\\\\", "/");
+        if (verifyContextNotStarted())
+        {
+            // fix windows backslashes in absolute paths, convert them to forward ones
+            this.workingDirectory = FileUtils.newFile(workingDirectory).getAbsolutePath().replaceAll("\\\\", "/");
+        }
     }
 
+    /* (non-Javadoc)
+     * @see org.mule.config.MuleConfiguration#getDefaultTransactionTimeout()
+     */
     public int getDefaultTransactionTimeout()
     {
         return defaultTransactionTimeout;
@@ -426,14 +352,23 @@ public class MuleConfiguration
 
     public void setDefaultTransactionTimeout(int defaultTransactionTimeout)
     {
-        this.defaultTransactionTimeout = defaultTransactionTimeout;
+        if (verifyContextNotStarted())
+        {
+            this.defaultTransactionTimeout = defaultTransactionTimeout;
+        }
     }
 
+    /* (non-Javadoc)
+     * @see org.mule.config.MuleConfiguration#isClientMode()
+     */
     public boolean isClientMode()
     {
         return clientMode;
     }
 
+    /* (non-Javadoc)
+     * @see org.mule.config.MuleConfiguration#getDefaultEncoding()
+     */
     public String getDefaultEncoding()
     {
         return encoding;
@@ -441,9 +376,15 @@ public class MuleConfiguration
 
     public void setDefaultEncoding(String encoding)
     {
-        this.encoding = encoding;
+        if (verifyContextNotStarted())
+        {
+            this.encoding = encoding;
+        }
     }
 
+    /* (non-Javadoc)
+     * @see org.mule.config.MuleConfiguration#getId()
+     */
     public String getId()
     {
         return id;
@@ -451,13 +392,19 @@ public class MuleConfiguration
 
     public void setId(String id)
     {
-        if (StringUtils.isBlank(id))
+        if (verifyContextNotStarted())
         {
-            throw new RuntimeException("Cannot set server id to null/blank");
+            if (StringUtils.isBlank(id))
+            {
+                throw new RuntimeException("Cannot set server id to null/blank");
+            }
+            this.id = id;
         }
-        this.id = id;
     }
 
+    /* (non-Javadoc)
+     * @see org.mule.config.MuleConfiguration#getClusterId()
+     */
     public String getClusterId()
     {
         return clusterId;
@@ -465,9 +412,15 @@ public class MuleConfiguration
 
     public void setClusterId(String clusterId)
     {
-        this.clusterId = clusterId;
+        if (verifyContextNotStarted())
+        {
+            this.clusterId = clusterId;
+        }
     }
 
+    /* (non-Javadoc)
+     * @see org.mule.config.MuleConfiguration#getDomainId()
+     */
     public String getDomainId()
     {
         return domainId;
@@ -475,9 +428,15 @@ public class MuleConfiguration
 
     public void setDomainId(String domainId)
     {
-        this.domainId = domainId;
+        if (verifyContextNotStarted())
+        {
+            this.domainId = domainId;
+        }
     }
 
+    /* (non-Javadoc)
+     * @see org.mule.config.MuleConfiguration#getSystemModelType()
+     */
     public String getSystemModelType()
     {
         return systemModelType;
@@ -485,29 +444,31 @@ public class MuleConfiguration
 
     public void setSystemModelType(String systemModelType)
     {
-        this.systemModelType = systemModelType;
+        if (verifyContextNotStarted())
+        {
+            this.systemModelType = systemModelType;
+        }
     }
 
     public void setClientMode(boolean clientMode)
     {
-        this.clientMode = clientMode;
+        if (verifyContextNotStarted())
+        {
+            this.clientMode = clientMode;
+        }
     }
 
+    /* (non-Javadoc)
+     * @see org.mule.config.MuleConfiguration#getSystemName()
+     */
     public String getSystemName()
     {
         return domainId + "." + clusterId + "." + id;
     }
 
-    /**
-     * Returns the long date when the server was started
-     *
-     * @return the long date when the server was started
+    /* (non-Javadoc)
+     * @see org.mule.config.MuleConfiguration#isFailOnMessageScribbling()
      */
-    public long getStartDate()
-    {
-        return startDate;
-    }
-
     public boolean isFailOnMessageScribbling()
     {
         return failOnMessageScribbling;
@@ -515,9 +476,15 @@ public class MuleConfiguration
 
     public void setFailOnMessageScribbling(boolean failOnMessageScribbling)
     {
-        this.failOnMessageScribbling = failOnMessageScribbling;
+        if (verifyContextNotStarted())
+        {
+            this.failOnMessageScribbling = failOnMessageScribbling;
+        }
     }
 
+    /* (non-Javadoc)
+     * @see org.mule.config.MuleConfiguration#isAssertMessageAccess()
+     */
     public boolean isAssertMessageAccess()
     {
         return assertMessageAccess;
@@ -525,9 +492,15 @@ public class MuleConfiguration
 
     public void setAssertMessageAccess(boolean assertMessageAccess)
     {
-        this.assertMessageAccess = assertMessageAccess;
+        if (verifyContextNotStarted())
+        {
+            this.assertMessageAccess = assertMessageAccess;
+        }
     }
 
+    /* (non-Javadoc)
+     * @see org.mule.config.MuleConfiguration#isAutoWrapMessageAwareTransform()
+     */
     public boolean isAutoWrapMessageAwareTransform()
     {
         return autoWrapMessageAwareTransform;
@@ -535,9 +508,15 @@ public class MuleConfiguration
 
     public void setAutoWrapMessageAwareTransform(boolean autoWrapMessageAwareTransform)
     {
-        this.autoWrapMessageAwareTransform = autoWrapMessageAwareTransform;
+        if (verifyContextNotStarted())
+        {
+            this.autoWrapMessageAwareTransform = autoWrapMessageAwareTransform;
+        }
     }
 
+    /* (non-Javadoc)
+     * @see org.mule.config.MuleConfiguration#isCacheMessageAsBytes()
+     */
     public boolean isCacheMessageAsBytes()
     {
         return cacheMessageAsBytes;
@@ -545,9 +524,15 @@ public class MuleConfiguration
 
     public void setCacheMessageAsBytes(boolean cacheMessageAsBytes)
     {
-        this.cacheMessageAsBytes = cacheMessageAsBytes;
+        if (verifyContextNotStarted())
+        {
+            this.cacheMessageAsBytes = cacheMessageAsBytes;
+        }
     }
 
+    /* (non-Javadoc)
+     * @see org.mule.config.MuleConfiguration#isCacheMessageOriginalPayload()
+     */
     public boolean isCacheMessageOriginalPayload()
     {
         return cacheMessageOriginalPayload;
@@ -555,9 +540,15 @@ public class MuleConfiguration
 
     public void setCacheMessageOriginalPayload(boolean cacheMessageOriginalPayload)
     {
-        this.cacheMessageOriginalPayload = cacheMessageOriginalPayload;
+        if (verifyContextNotStarted())
+        {
+            this.cacheMessageOriginalPayload = cacheMessageOriginalPayload;
+        }
     }
 
+    /* (non-Javadoc)
+     * @see org.mule.config.MuleConfiguration#isEnableStreaming()
+     */
     public boolean isEnableStreaming()
     {
         return enableStreaming;
@@ -565,6 +556,23 @@ public class MuleConfiguration
 
     public void setEnableStreaming(boolean enableStreaming)
     {
-        this.enableStreaming = enableStreaming;
+        if (verifyContextNotStarted())
+        {
+            this.enableStreaming = enableStreaming;
+        }
+    }
+
+    protected boolean verifyContextNotStarted()
+    {
+        MuleContext context = MuleServer.getMuleContext();
+        if (context != null && context.getLifecycleManager().isPhaseComplete(Startable.PHASE_NAME))
+        {
+            logger.warn("Cannot modify MuleConfiguration once the MuleContext has been started.  Modification will be ignored.");
+            return false;
+        }
+        else
+        {
+            return true;
+        }
     }
 }

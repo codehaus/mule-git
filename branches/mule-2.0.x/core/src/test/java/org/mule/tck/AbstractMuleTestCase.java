@@ -359,12 +359,21 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
             builders.add(new SimpleConfigurationBuilder(getStartUpProperties()));
             builders.add(getBuilder());
             MuleContextBuilder contextBuilder = new DefaultMuleContextBuilder();
-            contextBuilder.setWorkListener(new TestingWorkListener());
+            configureMuleContext(contextBuilder);
             context = muleContextFactory.createMuleContext(builders, contextBuilder);
         }
         return context;
     }
 
+    /**
+     * Override this method to set properties of the MuleContextBuilder before it is
+     * used to create the MuleContext.
+     */
+    protected void configureMuleContext(MuleContextBuilder contextBuilder)
+    {
+        contextBuilder.setWorkListener(new TestingWorkListener());
+    }
+    
     protected ConfigurationBuilder getBuilder() throws Exception
     {
         return new DefaultsConfigurationBuilder();

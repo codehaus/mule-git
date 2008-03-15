@@ -9,8 +9,8 @@
  */
 package org.mule;
 
+import org.mule.api.config.MuleConfiguration;
 import org.mule.api.registry.Registry;
-import org.mule.config.MuleConfiguration;
 import org.mule.registry.TransientRegistry;
 
 /** 
