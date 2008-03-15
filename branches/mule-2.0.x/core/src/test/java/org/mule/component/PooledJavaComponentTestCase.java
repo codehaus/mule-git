@@ -63,14 +63,14 @@ public class PooledJavaComponentTestCase extends AbstractComponentTestCase
     public void testPoolCreation() throws Exception
     {
         PooledJavaComponent component = new PooledJavaComponent(getObjectFactory(), getDefaultPoolingProfile());
-        assertNull(component.objectPool);
+        assertNull(component.lifecycleAdapterPool);
         component.setService(getTestService());
         component.initialise();
-        assertNull(component.objectPool);
+        assertNull(component.lifecycleAdapterPool);
         component.start();
-        assertNotNull(component.objectPool);
+        assertNotNull(component.lifecycleAdapterPool);
         component.stop();
-        assertNull(component.objectPool);
+        assertNull(component.lifecycleAdapterPool);
     }
 
     // @Override
@@ -94,20 +94,20 @@ public class PooledJavaComponentTestCase extends AbstractComponentTestCase
         component.initialise();
         component.start();
 
-        assertEquals(0, component.objectPool.getNumActive());
+        assertEquals(0, component.lifecycleAdapterPool.getNumActive());
 
         LifecycleAdapter borrowed = component.borrowComponentLifecycleAdaptor();
         assertNotNull(borrowed);
-        assertEquals(1, component.objectPool.getNumActive());
+        assertEquals(1, component.lifecycleAdapterPool.getNumActive());
         component.returnComponentLifecycleAdaptor(borrowed);
-        assertEquals(0, component.objectPool.getNumActive());
+        assertEquals(0, component.lifecycleAdapterPool.getNumActive());
 
         borrowed = component.borrowComponentLifecycleAdaptor();
         assertNotNull(borrowed);
-        assertEquals(1, component.objectPool.getNumActive());
+        assertEquals(1, component.lifecycleAdapterPool.getNumActive());
         Object borrowed2 = component.borrowComponentLifecycleAdaptor();
         assertNotNull(borrowed2);
-        assertEquals(2, component.objectPool.getNumActive());
+        assertEquals(2, component.lifecycleAdapterPool.getNumActive());
     }
 
     public void testFailOnExhaust() throws Exception
@@ -125,7 +125,7 @@ public class PooledJavaComponentTestCase extends AbstractComponentTestCase
         {
             borrowed = component.borrowComponentLifecycleAdaptor();
             assertNotNull(borrowed);
-            assertEquals(component.objectPool.getNumActive(), i + 1);
+            assertEquals(component.lifecycleAdapterPool.getNumActive(), i + 1);
         }
 
         try
@@ -150,14 +150,14 @@ public class PooledJavaComponentTestCase extends AbstractComponentTestCase
 
         Object borrowed = null;
 
-        assertEquals(0, component.objectPool.getNumActive());
+        assertEquals(0, component.lifecycleAdapterPool.getNumActive());
         borrowed = component.borrowComponentLifecycleAdaptor();
         assertNotNull(borrowed);
         borrowed = component.borrowComponentLifecycleAdaptor();;
         assertNotNull(borrowed);
         borrowed = component.borrowComponentLifecycleAdaptor();;
         assertNotNull(borrowed);
-        assertEquals(3, component.objectPool.getNumActive());
+        assertEquals(3, component.lifecycleAdapterPool.getNumActive());
 
         // TODO
         // long starttime = System.currentTimeMillis();
@@ -188,11 +188,11 @@ public class PooledJavaComponentTestCase extends AbstractComponentTestCase
 
         Object borrowed = null;
 
-        assertEquals(0, component.objectPool.getNumActive());
+        assertEquals(0, component.lifecycleAdapterPool.getNumActive());
 
         borrowed = component.borrowComponentLifecycleAdaptor();
         borrowed = component.borrowComponentLifecycleAdaptor();
-        assertEquals(2, component.objectPool.getNumActive());
+        assertEquals(2, component.lifecycleAdapterPool.getNumActive());
 
         // TODO
         // long starttime = System.currentTimeMillis();
@@ -232,14 +232,14 @@ public class PooledJavaComponentTestCase extends AbstractComponentTestCase
         Object borrowed = component.borrowComponentLifecycleAdaptor();
         borrowed = component.borrowComponentLifecycleAdaptor();
         borrowed = component.borrowComponentLifecycleAdaptor();
-        assertEquals(3, component.objectPool.getNumActive());
+        assertEquals(3, component.lifecycleAdapterPool.getNumActive());
         // assertEquals(3, pool.getMaxSize());
 
         // Should now grow
         borrowed = component.borrowComponentLifecycleAdaptor();
         assertNotNull(borrowed);
 
-        assertEquals(4, component.objectPool.getNumActive());
+        assertEquals(4, component.lifecycleAdapterPool.getNumActive());
     }
 
     public void testClearPool() throws Exception
@@ -252,12 +252,12 @@ public class PooledJavaComponentTestCase extends AbstractComponentTestCase
         component.start();
 
         LifecycleAdapter borrowed = component.borrowComponentLifecycleAdaptor();
-        assertEquals(1, component.objectPool.getNumActive());
+        assertEquals(1, component.lifecycleAdapterPool.getNumActive());
         component.returnComponentLifecycleAdaptor(borrowed);
 
         component.stop();
         component.start();
-        assertEquals(0, component.objectPool.getNumActive());
+        assertEquals(0, component.lifecycleAdapterPool.getNumActive());
     }
 
     public void testObjectUniqueness() throws Exception
@@ -269,7 +269,7 @@ public class PooledJavaComponentTestCase extends AbstractComponentTestCase
         component.initialise();
         component.start();
 
-        assertEquals(0, component.objectPool.getNumActive());
+        assertEquals(0, component.lifecycleAdapterPool.getNumActive());
 
         Object obj;
 
@@ -318,7 +318,7 @@ public class PooledJavaComponentTestCase extends AbstractComponentTestCase
         component.initialise();
         component.start();
 
-        Object obj = component.objectPool.getObjectFactory().getInstance();
+        Object obj = component.lifecycleAdapterPool.getObjectFactory().getInstance();
         assertNotNull(obj);
         // assertTrue(of.validateObject(obj));
         // of.activateObject(obj);

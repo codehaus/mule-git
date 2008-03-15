@@ -30,7 +30,7 @@ public class PooledJavaComponent extends AbstractJavaComponent
 {
 
     protected PoolingProfile poolingProfile;
-    protected LifecyleEnabledObjectPool objectPool;
+    protected LifecyleEnabledObjectPool lifecycleAdapterPool;
 
     public PooledJavaComponent()
     {
@@ -59,12 +59,12 @@ public class PooledJavaComponent extends AbstractJavaComponent
 
     protected LifecycleAdapter borrowComponentLifecycleAdaptor() throws Exception
     {
-        return (LifecycleAdapter) objectPool.borrowObject();
+        return (LifecycleAdapter) lifecycleAdapterPool.borrowObject();
     }
 
     protected void returnComponentLifecycleAdaptor(LifecycleAdapter lifecycleAdapter)
     {
-        objectPool.returnObject(lifecycleAdapter);
+        lifecycleAdapterPool.returnObject(lifecycleAdapter);
     }
 
     public LifecycleTransitionResult start() throws MuleException
@@ -72,19 +72,19 @@ public class PooledJavaComponent extends AbstractJavaComponent
         super.start();
         // Wrap pool's objectFactory with a LifeCycleAdaptor factory so we pool
         // LifeCycleAdaptor's and not just pojo instances.
-        objectPool = new LifecycleAdaptorPool(new LifeCycleAdaptorFactory(), poolingProfile);
-        objectPool.initialise();
-        objectPool.start();
+        lifecycleAdapterPool = new LifecycleAdaptorPool(new LifeCycleAdaptorFactory(), poolingProfile);
+        lifecycleAdapterPool.initialise();
+        lifecycleAdapterPool.start();
         return LifecycleTransitionResult.OK;
     }
 
     public LifecycleTransitionResult stop() throws MuleException
     {
-        if (objectPool != null)
+        if (lifecycleAdapterPool != null)
         {
-            objectPool.stop();
-            objectPool.close();
-            objectPool = null;
+            lifecycleAdapterPool.stop();
+            lifecycleAdapterPool.close();
+            lifecycleAdapterPool = null;
         }
         return LifecycleTransitionResult.OK;
     }

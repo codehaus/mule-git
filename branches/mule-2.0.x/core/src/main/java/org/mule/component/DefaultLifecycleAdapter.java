@@ -102,7 +102,11 @@ public class DefaultLifecycleAdapter implements LifecycleAdapter
         configureNestedRouter();
     }
 
-    // TODO IMPLMENTATIONS SHOULD THREAD-SAFE
+    /**
+     * Propagates start() life-cycle to component object implementations if they
+     * implement the mule {@link Startable} interface. NOT: It is up to component
+     * implementations to ensure their implementation of start() is thread-safe.
+     */
     public LifecycleTransitionResult start() throws MuleException
     {
         if (isStartable)
@@ -133,7 +137,11 @@ public class DefaultLifecycleAdapter implements LifecycleAdapter
         }
     }
 
-    // TODO IMPLMENTATIONS SHOULD THREAD-SAFE
+    /**
+     * Propagates stop() life-cycle to component object implementations if they
+     * implement the mule {@link Stoppable} interface. NOT: It is up to component
+     * implementations to ensure their implementation of stop() is thread-safe.
+     */
     public LifecycleTransitionResult stop() throws MuleException
     {
         if (isStoppable)
@@ -163,7 +171,11 @@ public class DefaultLifecycleAdapter implements LifecycleAdapter
         }
     }
 
-    // TODO IMPLMENTATIONS SHOULD THREAD-SAFE
+    /**
+     * Propagates dispose() life-cycle to component object implementations if they
+     * implement the mule {@link Disposable} interface. NOT: It is up to component
+     * implementations to ensure their implementation of dispose() is thread-safe.
+     */
     public void dispose()
     {
         if (isDisposable)
@@ -244,6 +256,11 @@ public class DefaultLifecycleAdapter implements LifecycleAdapter
         return resultMessage;
     }
 
+    /**
+     * Propagates initialise() life-cycle to component object implementations if they
+     * implement the mule {@link Initialisable} interface. NOT: It is up to component
+     * implementations to ensure their implementation of initialise() is thread-safe.
+     */
     public LifecycleTransitionResult initialise() throws InitialisationException
     {
         if (Initialisable.class.isInstance(componentObject))
@@ -277,23 +294,21 @@ public class DefaultLifecycleAdapter implements LifecycleAdapter
                     // Now lets set the proxy on the Service object
                     Method setterMethod;
 
-
-                    List methods =
-                            ClassUtils.getSatisfiableMethods(componentObject.getClass(),
-                                    new Class[]{nestedRouter.getInterface()}, true, false, null);
+                    List methods = ClassUtils.getSatisfiableMethods(componentObject.getClass(),
+                        new Class[]{nestedRouter.getInterface()}, true, false, null);
                     if (methods.size() == 1)
                     {
                         setterMethod = (Method) methods.get(0);
                     }
                     else if (methods.size() > 1)
                     {
-                        throw new TooManySatisfiableMethodsException(
-                            componentObject.getClass(), new Class[]{nestedRouter.getInterface()});
+                        throw new TooManySatisfiableMethodsException(componentObject.getClass(),
+                            new Class[]{nestedRouter.getInterface()});
                     }
                     else
                     {
-                        throw new NoSatisfiableMethodsException(
-                            componentObject.getClass(), new Class[]{nestedRouter.getInterface()});
+                        throw new NoSatisfiableMethodsException(componentObject.getClass(),
+                            new Class[]{nestedRouter.getInterface()});
                     }
 
                     try
@@ -302,9 +317,8 @@ public class DefaultLifecycleAdapter implements LifecycleAdapter
                     }
                     catch (Exception e)
                     {
-                        throw new InitialisationException(
-                                CoreMessages.failedToSetProxyOnService(nestedRouter,
-                                    componentObject.getClass()), e, this);
+                        throw new InitialisationException(CoreMessages.failedToSetProxyOnService(nestedRouter,
+                            componentObject.getClass()), e, this);
                     }
                 }
                 else
