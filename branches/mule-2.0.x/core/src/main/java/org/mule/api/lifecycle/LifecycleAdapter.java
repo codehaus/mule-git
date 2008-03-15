@@ -25,5 +25,4 @@ public interface LifecycleAdapter extends Lifecycle, Interceptor
 
     boolean isDisposed();
 
-    Service getService();
 }

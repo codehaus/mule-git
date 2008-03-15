@@ -107,12 +107,6 @@ public class SingletonObjectFactory extends AbstractObjectFactory
     }
 
     // @Override
-    public void release(Object object)
-    {
-        // nothing to do for a singleton
-    }
-
-    // @Override
     public Class getObjectClass()
     {
         if (instance != null)

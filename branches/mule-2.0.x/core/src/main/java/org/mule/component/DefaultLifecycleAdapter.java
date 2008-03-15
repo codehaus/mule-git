@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.lifecycle;
+package org.mule.component;
 
 import org.mule.RequestContext;
 import org.mule.VoidResult;
@@ -16,6 +16,7 @@ import org.mule.api.DefaultMuleException;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
+import org.mule.api.component.JavaComponent;
 import org.mule.api.interceptor.Invocation;
 import org.mule.api.lifecycle.Disposable;
 import org.mule.api.lifecycle.Initialisable;
@@ -26,7 +27,6 @@ import org.mule.api.lifecycle.Startable;
 import org.mule.api.lifecycle.Stoppable;
 import org.mule.api.model.EntryPointResolverSet;
 import org.mule.api.routing.NestedRouter;
-import org.mule.api.service.Service;
 import org.mule.api.service.ServiceAware;
 import org.mule.api.service.ServiceException;
 import org.mule.config.i18n.CoreMessages;
@@ -58,8 +58,8 @@ public class DefaultLifecycleAdapter implements LifecycleAdapter
     /** logger used by this class */
     protected static final Log logger = LogFactory.getLog(DefaultLifecycleAdapter.class);
 
-    private Object componentObject;
-    private Service service;
+    protected Object componentObject;
+    protected JavaComponent component;
     private boolean isStoppable = false;
     private boolean isStartable = false;
     private boolean isDisposable = false;
@@ -69,21 +69,16 @@ public class DefaultLifecycleAdapter implements LifecycleAdapter
 
     private EntryPointResolverSet entryPointResolver;
 
-    public DefaultLifecycleAdapter(Object componentObject, Service service) throws MuleException
+    public DefaultLifecycleAdapter(Object componentObject, JavaComponent component) throws MuleException
     {
-        this(componentObject, service, new LegacyEntryPointResolverSet());
+        this(componentObject, component, new LegacyEntryPointResolverSet());
     }
 
     public DefaultLifecycleAdapter(Object componentObject,
-                                   Service service,
-                                   EntryPointResolverSet epResolver) throws MuleException
+                                   JavaComponent component,
+                                   EntryPointResolverSet entryPointResolver) throws MuleException
     {
-        initialise(componentObject, service, epResolver);
-    }
 
-    protected void initialise(Object componentObject, Service service, EntryPointResolverSet entryPointResolver)
-            throws MuleException
-    {
         if (componentObject == null)
         {
             throw new IllegalArgumentException("POJO Service cannot be null");
@@ -93,7 +88,7 @@ public class DefaultLifecycleAdapter implements LifecycleAdapter
             entryPointResolver = new LegacyEntryPointResolverSet();
         }
         this.componentObject = componentObject;
-        this.service = service;
+        this.component = component;
         this.entryPointResolver = entryPointResolver;
 
         isStartable = Startable.class.isInstance(componentObject);
@@ -102,11 +97,12 @@ public class DefaultLifecycleAdapter implements LifecycleAdapter
 
         if (componentObject instanceof ServiceAware)
         {
-            ((ServiceAware) componentObject).setService(service);
+            ((ServiceAware) componentObject).setService(component.getService());
         }
         configureNestedRouter();
     }
 
+    // TODO IMPLMENTATIONS SHOULD THREAD-SAFE
     public LifecycleTransitionResult start() throws MuleException
     {
         if (isStartable)
@@ -125,7 +121,8 @@ public class DefaultLifecycleAdapter implements LifecycleAdapter
             }
             catch (Exception e)
             {
-                throw new DefaultMuleException(CoreMessages.failedToStart("UMO Service: " + service.getName()), e);
+                throw new DefaultMuleException(CoreMessages.failedToStart("UMO Service: "
+                                                                          + component.getService().getName()), e);
             }
 
         }
@@ -136,24 +133,27 @@ public class DefaultLifecycleAdapter implements LifecycleAdapter
         }
     }
 
+    // TODO IMPLMENTATIONS SHOULD THREAD-SAFE
     public LifecycleTransitionResult stop() throws MuleException
     {
         if (isStoppable)
         {
             try
             {
-                return LifecycleTransitionResult.startOrStopAll(((Stoppable) componentObject).stop(), new LifecycleTransitionResult.Closure()
-                {
-                    public LifecycleTransitionResult doContinue()
+                return LifecycleTransitionResult.startOrStopAll(((Stoppable) componentObject).stop(),
+                    new LifecycleTransitionResult.Closure()
                     {
-                        started = false;
-                        return LifecycleTransitionResult.OK;
-                    }
-                });
+                        public LifecycleTransitionResult doContinue()
+                        {
+                            started = false;
+                            return LifecycleTransitionResult.OK;
+                        }
+                    });
             }
             catch (Exception e)
             {
-                throw new DefaultMuleException(CoreMessages.failedToStop("UMO Service: " + service.getName()), e);
+                throw new DefaultMuleException(CoreMessages.failedToStop("UMO Service: "
+                                                                         + component.getService().getName()), e);
             }
         }
         else
@@ -163,6 +163,7 @@ public class DefaultLifecycleAdapter implements LifecycleAdapter
         }
     }
 
+    // TODO IMPLMENTATIONS SHOULD THREAD-SAFE
     public void dispose()
     {
         if (isDisposable)
@@ -174,7 +175,7 @@ public class DefaultLifecycleAdapter implements LifecycleAdapter
             catch (Exception e)
             {
                 // TODO MULE-863: Handle or fail
-                logger.error("failed to dispose: " + service.getName(), e);
+                logger.error("failed to dispose: " + component.getService().getName(), e);
             }
         }
         disposed = true;
@@ -192,11 +193,6 @@ public class DefaultLifecycleAdapter implements LifecycleAdapter
         return disposed;
     }
 
-    public void handleException(Object message, Exception e)
-    {
-        service.getExceptionListener().exceptionThrown(e);
-    }
-
     // Note: Invocation argument is not even used!
     public MuleMessage intercept(Invocation invocation) throws MuleException
     {
@@ -206,10 +202,10 @@ public class DefaultLifecycleAdapter implements LifecycleAdapter
 
         try
         {
-            //Use the overriding entrypoint resolver if one is set
-            if (service.getEntryPointResolverSet() != null)
+            // Use the overriding entrypoint resolver if one is set
+            if (component.getEntryPointResolverSet() != null)
             {
-                result = service.getEntryPointResolverSet().invoke(componentObject, RequestContext.getEventContext());
+                result = component.getEntryPointResolverSet().invoke(componentObject, RequestContext.getEventContext());
 
             }
             else
@@ -221,13 +217,13 @@ public class DefaultLifecycleAdapter implements LifecycleAdapter
         {
             // should all Exceptions caught here be a ServiceException?!?
             // TODO MULE-863: See above
-            throw new ServiceException(RequestContext.getEventContext().getMessage(), service, e);
+            throw new ServiceException(RequestContext.getEventContext().getMessage(), component.getService(), e);
         }
 
         MuleMessage resultMessage = null;
         if (result instanceof VoidResult)
         {
-            //This will rewire the current message
+            // This will rewire the current message
             event.transformMessage();
             resultMessage = event.getMessage();
         }
@@ -240,9 +236,8 @@ public class DefaultLifecycleAdapter implements LifecycleAdapter
             else
             {
                 event.getMessage().applyTransformers(
-                        Collections.singletonList(
-                                new TransformerTemplate(
-                                        new TransformerTemplate.OverwitePayloadCallback(result))));
+                    Collections.singletonList(new TransformerTemplate(new TransformerTemplate.OverwitePayloadCallback(
+                        result))));
                 resultMessage = event.getMessage();
             }
         }
@@ -260,11 +255,12 @@ public class DefaultLifecycleAdapter implements LifecycleAdapter
 
     protected void configureNestedRouter() throws MuleException
     {
-        // Initialise the nested router and bind the endpoints to the methods using a Proxy
-        if (service.getNestedRouter() != null)
+        // Initialise the nested router and bind the endpoints to the methods using a
+        // Proxy
+        if (component.getNestedRouter() != null)
         {
             Map bindings = new HashMap();
-            for (Iterator it = service.getNestedRouter().getRouters().iterator(); it.hasNext();)
+            for (Iterator it = component.getNestedRouter().getRouters().iterator(); it.hasNext();)
             {
                 NestedRouter nestedRouter = (NestedRouter) it.next();
                 Object proxy = bindings.get(nestedRouter.getInterface());
@@ -278,7 +274,7 @@ public class DefaultLifecycleAdapter implements LifecycleAdapter
                     proxy = nestedRouter.createProxy(componentObject);
                     bindings.put(nestedRouter.getInterface(), proxy);
 
-                    //Now lets set the proxy on the Service object
+                    // Now lets set the proxy on the Service object
                     Method setterMethod;
 
 
@@ -320,8 +316,4 @@ public class DefaultLifecycleAdapter implements LifecycleAdapter
         }
     }
 
-    public Service getService()
-    {
-        return service;
-    }
 }

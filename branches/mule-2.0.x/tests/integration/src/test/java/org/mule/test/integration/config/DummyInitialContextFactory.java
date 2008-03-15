@@ -11,6 +11,7 @@
 package org.mule.test.integration.config;
 
 import org.mule.MuleServer;
+import org.mule.api.lifecycle.InitialisationCallback;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.lifecycle.LifecycleTransitionResult;
 import org.mule.api.service.Service;
@@ -57,5 +58,10 @@ public class DummyInitialContextFactory implements ObjectFactory
     public Class getObjectClass()
     {
         throw new UnsupportedOperationException();
+    }
+
+    public void addObjectInitialisationCallback(InitialisationCallback callback)
+    {
+        throw new UnsupportedOperationException();        
     }
 }

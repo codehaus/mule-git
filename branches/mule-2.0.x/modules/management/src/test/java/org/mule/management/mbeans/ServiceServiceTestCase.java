@@ -11,9 +11,10 @@
 package org.mule.management.mbeans;
 
 import org.mule.api.config.ThreadingProfile;
+import org.mule.component.DefaultJavaComponent;
 import org.mule.management.AbstractMuleJmxTestCase;
-import org.mule.model.seda.SedaService;
 import org.mule.model.seda.SedaModel;
+import org.mule.model.seda.SedaService;
 import org.mule.module.management.mbean.ServiceService;
 import org.mule.util.object.SingletonObjectFactory;
 
@@ -29,7 +30,8 @@ public class ServiceServiceTestCase extends AbstractMuleJmxTestCase
 
         final SedaService component = new SedaService();
         component.setName("TEST_SERVICE");
-        component.setComponentFactory(new SingletonObjectFactory(new Object()));
+        component.setComponent(new DefaultJavaComponent(new SingletonObjectFactory(Object.class)));
+
         component.setThreadingProfile(ThreadingProfile.DEFAULT_THREADING_PROFILE);
         SedaModel model = new SedaModel();
         component.setModel(model);

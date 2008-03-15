@@ -25,7 +25,6 @@ import org.mule.context.DefaultMuleContextFactory;
 import org.mule.endpoint.EndpointURIEndpointBuilder;
 import org.mule.endpoint.URIBuilder;
 import org.mule.util.ClassUtils;
-import org.mule.util.object.SingletonObjectFactory;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -278,14 +277,15 @@ public class MuleResourceAdapter implements ResourceAdapter, Serializable
                                               InboundEndpoint endpoint) throws MuleException
     {
         String name = "JcaService#" + endpointFactory.hashCode();
-        Service service = new JcaService(new DelegateWorkManager(bootstrapContext.getWorkManager()));
+        Service service = new JcaService();
         service.setName(name);
         service.getInboundRouter().addEndpoint(endpoint);
 
         // Set endpointFactory rather than endpoint here, so we can obtain a
         // new endpoint instance from factory for each incoming message in
         // JcaComponet as reccomended by JCA specification
-        service.setComponentFactory(new SingletonObjectFactory(endpointFactory));
+        service.setComponent(new JcaComponent(endpointFactory, model.getEntryPointResolverSet(), service,
+            new DelegateWorkManager(bootstrapContext.getWorkManager())));
         service.setModel(model);
         muleContext.getRegistry().registerService(service);
         return service;

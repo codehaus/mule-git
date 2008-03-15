@@ -11,8 +11,8 @@
 package org.mule.util.object;
 
 import org.mule.api.config.ConfigurationException;
-import org.mule.api.lifecycle.Disposable;
 import org.mule.api.lifecycle.Initialisable;
+import org.mule.api.lifecycle.InitialisationCallback;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.lifecycle.LifecycleTransitionResult;
 import org.mule.api.service.Service;
@@ -21,6 +21,9 @@ import org.mule.config.i18n.MessageFactory;
 import org.mule.util.BeanUtils;
 import org.mule.util.ClassUtils;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
@@ -37,6 +40,7 @@ public abstract class AbstractObjectFactory implements ObjectFactory, ServiceAwa
     protected String objectClassName;
     protected Class objectClass = null;
     protected Map properties = null;
+    protected List initialisationCallbacks = new ArrayList();
 
     /**
      * This is not pretty but its the only way I could find to get the Service injected
@@ -131,17 +135,19 @@ public abstract class AbstractObjectFactory implements ObjectFactory, ServiceAwa
         {
             ((Initialisable) object).initialise();
         }
+        
+        fireInitialisationCallbacks(object);
+        
         return object;
     }
-
-    /**
-     * Disposes of the object if it is {@link Disposable}.
-     */
-    public void release(Object object)
+    
+    protected void fireInitialisationCallbacks(Object component) throws InitialisationException
     {
-        if (object instanceof Disposable)
+        InitialisationCallback callback;
+        for (Iterator iterator = initialisationCallbacks.iterator(); iterator.hasNext();)
         {
-            ((Disposable) object).dispose();
+            callback = (InitialisationCallback) iterator.next();
+            callback.initialise(component);
         }
     }
 
@@ -182,5 +188,10 @@ public abstract class AbstractObjectFactory implements ObjectFactory, ServiceAwa
     public void setProperties(Map properties)
     {
         this.properties = properties;
+    }
+    
+    public void addObjectInitialisationCallback(InitialisationCallback callback)
+    {
+        initialisationCallbacks.add(callback);
     }
 }

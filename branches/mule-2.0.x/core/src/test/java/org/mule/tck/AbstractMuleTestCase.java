@@ -528,6 +528,11 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
     {
         return MuleTestUtils.getTestEvent(data, muleContext);
     }
+    
+    public static MuleEvent getTestInboundEvent(Object data) throws Exception
+    {
+        return MuleTestUtils.getTestInboundEvent(data, muleContext);
+    }
 
     public static MuleEventContext getTestEventContext(Object data) throws Exception
     {

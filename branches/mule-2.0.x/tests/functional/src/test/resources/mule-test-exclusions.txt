@@ -7,6 +7,8 @@
 
 org.mule.test.firewall.FirewallTestCase
 
+org.mule.config.spring.parsers.MapMule2478TestCase
+
 # MULE-3108
 # I don't understand what kind of magic was making this test work previously 
 # since "name" is a required attribute on <service> according to the schema.

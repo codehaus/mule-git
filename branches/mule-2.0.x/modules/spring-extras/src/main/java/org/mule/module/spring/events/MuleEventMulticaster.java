@@ -39,6 +39,7 @@ import org.mule.api.service.Service;
 import org.mule.api.transformer.Transformer;
 import org.mule.api.transformer.TransformerException;
 import org.mule.api.transport.Connector;
+import org.mule.component.DefaultJavaComponent;
 import org.mule.config.QueueProfile;
 import org.mule.endpoint.MuleEndpointURI;
 import org.mule.model.seda.SedaModel;
@@ -622,7 +623,7 @@ public class MuleEventMulticaster
             s.setQueueProfile(new QueueProfile());
             s.getInboundRouter().addEndpoint(
                 muleContext.getRegistry().lookupEndpointFactory().getInboundEndpoint(newEndpoint));
-            s.setComponentFactory(new SingletonObjectFactory(listener));
+            s.setComponent(new DefaultJavaComponent(new SingletonObjectFactory(listener)));
             muleContext.getRegistry().registerService(s);
             return true;
         }
@@ -722,7 +723,7 @@ public class MuleEventMulticaster
                 messageRouter.addEndpoint(endpoint);
             }
         }
-        service.setComponentFactory(new SingletonObjectFactory(this));
+        service.setComponent(new DefaultJavaComponent(new SingletonObjectFactory(this)));
         return service;
     }
 

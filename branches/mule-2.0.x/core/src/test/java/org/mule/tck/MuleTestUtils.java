@@ -34,6 +34,7 @@ import org.mule.api.transformer.Transformer;
 import org.mule.api.transport.Connector;
 import org.mule.api.transport.MessageDispatcher;
 import org.mule.api.transport.MessageDispatcherFactory;
+import org.mule.component.DefaultJavaComponent;
 import org.mule.endpoint.EndpointURIEndpointBuilder;
 import org.mule.endpoint.MuleEndpointURI;
 import org.mule.model.seda.SedaModel;
@@ -271,10 +272,20 @@ public final class MuleTestUtils
         return getTestEvent(data, getTestService(context), context);
     }
 
+    public static MuleEvent getTestInboundEvent(Object data, MuleContext context) throws Exception
+    {
+        return getTestInboundEvent(data, getTestService(context), context);
+    }
+
     /** Supply service but no endpoint */
     public static MuleEvent getTestEvent(Object data, Service service, MuleContext context) throws Exception
     {
         return getTestEvent(data, service, getTestOutboundEndpoint("test1", context), context);
+    }
+
+    public static MuleEvent getTestInboundEvent(Object data, Service service, MuleContext context) throws Exception
+    {
+        return getTestEvent(data, service, getTestInboundEndpoint("test1", context), context);
     }
 
     /** Supply endpoint but no service */
@@ -354,7 +365,7 @@ public final class MuleTestUtils
         c.setName(name);
         ObjectFactory of = new SingletonObjectFactory(clazz, props);
         of.initialise();
-        c.setComponentFactory(of);
+        c.setComponent(new DefaultJavaComponent(of));
         c.setModel(model);
         if (initialize)
         {

@@ -12,6 +12,7 @@ package org.mule.util.object;
 
 import org.mule.api.lifecycle.Disposable;
 import org.mule.api.lifecycle.Initialisable;
+import org.mule.api.lifecycle.InitialisationCallback;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.lifecycle.LifecycleTransitionResult;
 import org.mule.config.i18n.CoreMessages;
@@ -131,12 +132,6 @@ public class JndiObjectFactory implements ObjectFactory, Initialisable, Disposab
         }    
         return _object;
     }
-
-    /** {@inheritDoc} */
-    public void release(Object object)
-    {
-        throw new UnsupportedOperationException();
-    }
     
     /** {@inheritDoc} */
     public Class getObjectClass()
@@ -206,5 +201,10 @@ public class JndiObjectFactory implements ObjectFactory, Initialisable, Disposab
     protected void setContext(Context context)
     {
         this._context = context;
+    }
+
+    public void addObjectInitialisationCallback(InitialisationCallback callback)
+    {
+        throw new UnsupportedOperationException();
     }
 }

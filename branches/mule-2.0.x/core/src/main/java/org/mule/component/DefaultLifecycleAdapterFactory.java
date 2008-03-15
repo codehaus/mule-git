@@ -8,13 +8,13 @@
  * LICENSE.txt file.
  */
 
-package org.mule.lifecycle;
+package org.mule.component;
 
 import org.mule.api.MuleException;
+import org.mule.api.component.JavaComponent;
 import org.mule.api.lifecycle.LifecycleAdapter;
 import org.mule.api.lifecycle.LifecycleAdapterFactory;
 import org.mule.api.model.EntryPointResolverSet;
-import org.mule.api.service.Service;
 
 /**
  * <code>DefaultLifecycleAdapterFactory</code> creates a DefaultLifeCycleAdapter.  Users can
@@ -23,8 +23,8 @@ import org.mule.api.service.Service;
  *
  * @see org.mule.api.lifecycle.LifecycleAdapter
  * @see org.mule.api.lifecycle.LifecycleAdapterFactory
- * @see org.mule.lifecycle.DefaultLifecycleAdapter
- * @see org.mule.lifecycle.DefaultLifecycleAdapterFactory
+ * @see org.mule.component.DefaultLifecycleAdapter
+ * @see org.mule.component.DefaultLifecycleAdapterFactory
  */
 public class DefaultLifecycleAdapterFactory implements LifecycleAdapterFactory
 {
@@ -39,11 +39,10 @@ public class DefaultLifecycleAdapterFactory implements LifecycleAdapterFactory
      * @see org.mule.api.lifecycle.LifecycleAdapterFactory#create(java.lang.Object,
      *      org.mule.api.UMODescriptor)
      */
-    public LifecycleAdapter create(Object pojoService,
-                                      Service service,
-                                      EntryPointResolverSet resolver) throws MuleException
+    public LifecycleAdapter create(Object pojoService, JavaComponent component, EntryPointResolverSet resolver)
+        throws MuleException
     {
-        return new DefaultLifecycleAdapter(pojoService, service, resolver);
+        return new DefaultLifecycleAdapter(pojoService, component, resolver);
     }
 
 }

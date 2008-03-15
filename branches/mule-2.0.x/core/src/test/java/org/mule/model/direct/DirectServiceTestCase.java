@@ -11,6 +11,7 @@
 package org.mule.model.direct;
 
 import org.mule.api.MuleException;
+import org.mule.component.DefaultJavaComponent;
 import org.mule.model.AbstractServiceTestCase;
 import org.mule.util.object.SingletonObjectFactory;
 
@@ -21,7 +22,7 @@ public class DirectServiceTestCase extends AbstractServiceTestCase
     {
         service = new DirectService();
         service.setName("direct");
-        service.setComponentFactory(new SingletonObjectFactory(Object.class));
+        service.setComponent(new DefaultJavaComponent(new SingletonObjectFactory(Object.class)));
         service.setModel(new DirectModel());
         service.setMuleContext(muleContext);
     }
