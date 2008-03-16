@@ -10,21 +10,20 @@
 
 package org.mule.config.spring;
 
-import org.mule.tck.FunctionalTestCase;
 import org.mule.api.model.Model;
-import org.mule.api.service.Service;
+import org.mule.tck.FunctionalTestCase;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.HashSet;
 
-public class DefaultModelAndServiceNames extends FunctionalTestCase
+public class DefaultModelNames extends FunctionalTestCase
 {
 
     protected String getConfigResources()
     {
-        return "default-model-service-names.xml";
+        return "default-model-names.xml";
     }
 
     public void testNames()
@@ -37,14 +36,6 @@ public class DefaultModelAndServiceNames extends FunctionalTestCase
             modelNames.add(((Model) each.next()).getName());
         }
         assertEquals(3, modelNames.size());
-        Collection services = muleContext.getRegistry().lookupObjects(Service.class);
-        assertEquals(3, services.size());
-        Set serviceNames = new HashSet();
-        for (Iterator each = models.iterator(); each.hasNext();)
-        {
-            serviceNames.add(((Model) each.next()).getName());
-        }
-        assertEquals(3, serviceNames.size());
     }
 
 }

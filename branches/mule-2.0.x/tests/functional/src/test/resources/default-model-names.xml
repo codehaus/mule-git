@@ -8,12 +8,12 @@
 
 
     <model>
-        <service/>
-        <service/>
+        <service name="1"/>
+        <service name="2"/>
     </model>
 
     <model>
-        <service/>
+        <service name="3"/>
     </model>
 
 </mule>
