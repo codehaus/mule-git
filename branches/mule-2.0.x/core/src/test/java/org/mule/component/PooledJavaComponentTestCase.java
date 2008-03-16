@@ -12,11 +12,11 @@ package org.mule.component;
 
 import org.mule.api.lifecycle.LifecycleAdapter;
 import org.mule.config.PoolingProfile;
+import org.mule.object.PrototypeObjectFactory;
 import org.mule.tck.services.UniqueComponent;
 import org.mule.tck.testmodels.fruit.Orange;
 import org.mule.tck.testmodels.fruit.WaterMelon;
 import org.mule.util.ExceptionUtils;
-import org.mule.util.object.PrototypeObjectFactory;
 
 public class PooledJavaComponentTestCase extends AbstractComponentTestCase
 {

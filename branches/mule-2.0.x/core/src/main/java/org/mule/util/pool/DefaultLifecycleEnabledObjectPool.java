@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.component;
+package org.mule.util.pool;
 
 import org.mule.api.MuleException;
 import org.mule.api.component.JavaComponent;
@@ -17,10 +17,9 @@ import org.mule.api.lifecycle.LifecycleAdapter;
 import org.mule.api.lifecycle.LifecycleTransitionResult;
 import org.mule.api.lifecycle.Startable;
 import org.mule.api.lifecycle.Stoppable;
+import org.mule.api.object.ObjectFactory;
+import org.mule.component.PooledJavaComponent;
 import org.mule.config.PoolingProfile;
-import org.mule.util.object.CommonsPoolObjectPool;
-import org.mule.util.object.LifecyleEnabledObjectPool;
-import org.mule.util.object.ObjectFactory;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -39,14 +38,14 @@ import org.apache.commons.pool.PoolableObjectFactory;
  * 
  * @see PooledJavaComponent
  */
-public class LifecycleAdaptorPool extends CommonsPoolObjectPool implements LifecyleEnabledObjectPool
+public class DefaultLifecycleEnabledObjectPool extends CommonsPoolObjectPool implements LifecyleEnabledObjectPool
 {
     /**
      * logger used by this class
      */
-    protected static final Log logger = LogFactory.getLog(LifecycleAdaptorPool.class);
+    protected static final Log logger = LogFactory.getLog(DefaultLifecycleEnabledObjectPool.class);
 
-    protected AtomicBoolean started;
+    protected AtomicBoolean started = new AtomicBoolean(false);
 
     private List items = new LinkedList();
 
@@ -55,14 +54,14 @@ public class LifecycleAdaptorPool extends CommonsPoolObjectPool implements Lifec
      *            {@link LifecycleAdapter} instance for the pool
      * @param poolingProfile The pooling progile ot be used to configure pool
      */
-    public LifecycleAdaptorPool(ObjectFactory objectFactory, PoolingProfile poolingProfile)
+    public DefaultLifecycleEnabledObjectPool(ObjectFactory objectFactory, PoolingProfile poolingProfile)
     {
         super(objectFactory, poolingProfile);
     }
 
     protected PoolableObjectFactory getPooledObjectFactory()
     {
-        return new PooledLifecycleAdaptorObjectFactory();
+        return new LifecycleEnabledPoolabeObjectFactoryAdaptor();
     }
 
     public LifecycleTransitionResult start() throws MuleException
@@ -92,7 +91,7 @@ public class LifecycleAdaptorPool extends CommonsPoolObjectPool implements Lifec
     /**
      * Wraps org.mule.object.ObjectFactory with commons-pool PoolableObjectFactory
      */
-    class PooledLifecycleAdaptorObjectFactory implements PoolableObjectFactory
+    class LifecycleEnabledPoolabeObjectFactoryAdaptor implements PoolableObjectFactory
     {
 
         public void activateObject(Object obj) throws Exception
@@ -102,6 +101,10 @@ public class LifecycleAdaptorPool extends CommonsPoolObjectPool implements Lifec
 
         public void destroyObject(Object obj) throws Exception
         {
+            if (started.get() && obj instanceof Stoppable)
+            {
+                ((Stoppable) obj).stop();
+            }
             if (obj instanceof Disposable)
             {
                 ((Disposable) obj).dispose();
@@ -115,6 +118,10 @@ public class LifecycleAdaptorPool extends CommonsPoolObjectPool implements Lifec
         public Object makeObject() throws Exception
         {
             Object object = objectFactory.getInstance();
+            if (!started.get() && object instanceof Startable)
+            {
+                ((Startable) object).start();
+            }
             synchronized (items)
             {
                 items.add(object);

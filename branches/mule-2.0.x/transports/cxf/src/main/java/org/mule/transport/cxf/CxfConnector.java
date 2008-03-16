@@ -23,12 +23,12 @@ import org.mule.component.DefaultJavaComponent;
 import org.mule.context.notification.MuleContextNotification;
 import org.mule.endpoint.EndpointURIEndpointBuilder;
 import org.mule.model.seda.SedaService;
+import org.mule.object.SingletonObjectFactory;
 import org.mule.routing.inbound.DefaultInboundRouterCollection;
 import org.mule.transport.AbstractConnector;
 import org.mule.transport.cxf.transport.MuleUniversalTransport;
 import org.mule.transport.http.HttpConnector;
 import org.mule.transport.http.HttpConstants;
-import org.mule.util.object.SingletonObjectFactory;
 
 import java.util.ArrayList;
 import java.util.List;

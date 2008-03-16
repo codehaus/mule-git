@@ -70,6 +70,8 @@ import org.mule.model.resolvers.NoArgumentsEntryPointResolver;
 import org.mule.model.resolvers.ReflectionEntryPointResolver;
 import org.mule.model.seda.SedaModel;
 import org.mule.model.seda.SedaService;
+import org.mule.object.PrototypeObjectFactory;
+import org.mule.object.SingletonObjectFactory;
 import org.mule.routing.CorrelationPropertiesExpressionEvaluator;
 import org.mule.routing.ForwardingCatchAllStrategy;
 import org.mule.routing.LoggingCatchAllStrategy;
@@ -138,8 +140,6 @@ import org.mule.transport.SimpleRetryConnectionStrategy;
 import org.mule.util.expression.FunctionExpressionEvaluator;
 import org.mule.util.expression.MapPayloadExpressionEvaluator;
 import org.mule.util.expression.MessageHeadersExpressionEvaluator;
-import org.mule.util.object.PrototypeObjectFactory;
-import org.mule.util.object.SingletonObjectFactory;
 
 /**
  * This is the core namespace handler for Mule and configures all Mule configuration elements under the

@@ -45,10 +45,10 @@ import org.mule.endpoint.MuleEndpointURI;
 import org.mule.model.seda.SedaModel;
 import org.mule.model.seda.SedaService;
 import org.mule.module.spring.i18n.SpringMessages;
+import org.mule.object.SingletonObjectFactory;
 import org.mule.routing.filters.WildcardFilter;
 import org.mule.transport.AbstractConnector;
 import org.mule.util.ClassUtils;
-import org.mule.util.object.SingletonObjectFactory;
 
 import java.beans.ExceptionListener;
 import java.util.ArrayList;

@@ -36,6 +36,7 @@ import org.mule.example.loanbroker.transformers.RestRequestToCustomerRequest;
 import org.mule.example.loanbroker.transformers.SetLendersAsRecipients;
 import org.mule.model.seda.SedaModel;
 import org.mule.model.seda.SedaService;
+import org.mule.object.PrototypeObjectFactory;
 import org.mule.routing.filters.MessagePropertyFilter;
 import org.mule.routing.inbound.DefaultInboundRouterCollection;
 import org.mule.routing.outbound.DefaultOutboundRouterCollection;
@@ -46,7 +47,6 @@ import org.mule.routing.response.DefaultResponseRouterCollection;
 import org.mule.transport.ejb.EjbConnector;
 import org.mule.transport.jms.activemq.ActiveMQJmsConnector;
 import org.mule.transport.jms.transformers.ObjectToJMSMessage;
-import org.mule.util.object.PrototypeObjectFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;

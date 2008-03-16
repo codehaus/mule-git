@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.util.object;
+package org.mule.object;
 
 import java.util.Map;
 

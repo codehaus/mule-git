@@ -12,7 +12,7 @@ import org.mule.tck.testmodels.fruit.FruitCleaner;
 import org.mule.tck.testmodels.fruit.Orange;
 import org.mule.tck.testmodels.mule.TestDefaultLifecycleAdapterFactory
 import org.mule.tck.testmodels.mule.TestEntryPointResolverSet
-import org.mule.util.object.SingletonObjectFactory
+import org.mule.object.SingletonObjectFactory
 import org.mule.routing.filters.PayloadTypeFilter
 import org.mule.routing.ForwardingCatchAllStrategy
 import org.mule.tck.testmodels.mule.TestResponseAggregator

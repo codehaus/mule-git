@@ -12,8 +12,8 @@ package org.mule.model.seda;
 
 import org.mule.api.MuleRuntimeException;
 import org.mule.component.DefaultJavaComponent;
+import org.mule.object.PrototypeObjectFactory;
 import org.mule.tck.AbstractMuleTestCase;
-import org.mule.util.object.PrototypeObjectFactory;
 
 import javax.resource.spi.work.Work;
 import javax.resource.spi.work.WorkEvent;

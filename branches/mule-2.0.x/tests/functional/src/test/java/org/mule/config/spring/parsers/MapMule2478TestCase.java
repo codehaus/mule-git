@@ -10,9 +10,9 @@
 
 package org.mule.config.spring.parsers;
 
+import org.mule.api.object.ObjectFactory;
 import org.mule.config.spring.parsers.beans.ChildBean;
 import org.mule.config.spring.parsers.beans.OrphanBean;
-import org.mule.util.object.ObjectFactory;
 
 import java.util.List;
 import java.util.Map;

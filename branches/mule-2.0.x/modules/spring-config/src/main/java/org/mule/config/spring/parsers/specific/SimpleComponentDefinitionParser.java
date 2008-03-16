@@ -13,8 +13,8 @@ package org.mule.config.spring.parsers.specific;
 import org.mule.api.lifecycle.Disposable;
 import org.mule.api.lifecycle.Initialisable;
 import org.mule.component.DefaultJavaComponent;
-import org.mule.util.object.AbstractObjectFactory;
-import org.mule.util.object.SingletonObjectFactory;
+import org.mule.object.AbstractObjectFactory;
+import org.mule.object.SingletonObjectFactory;
 
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;

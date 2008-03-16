@@ -16,7 +16,7 @@ import org.mule.management.AbstractMuleJmxTestCase;
 import org.mule.model.seda.SedaModel;
 import org.mule.model.seda.SedaService;
 import org.mule.module.management.mbean.ServiceService;
-import org.mule.util.object.SingletonObjectFactory;
+import org.mule.object.SingletonObjectFactory;
 
 import java.util.Set;
 

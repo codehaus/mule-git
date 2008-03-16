@@ -16,7 +16,6 @@ import org.mule.api.MuleEvent;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.lifecycle.InitialisationException;
-import org.mule.api.lifecycle.LifecycleTransitionResult;
 import org.mule.api.routing.filter.Filter;
 import org.mule.component.AbstractComponent;
 import org.mule.config.i18n.CoreMessages;
@@ -90,10 +89,11 @@ public class RestServiceWrapper extends AbstractComponent
     }
 
     /**
-     * Required params that are pulled from the message. If these params don't exist the call will fail
-     * Note that you can use {@link org.mule.util.expression.ExpressionEvaluator} expressions
-     * such as xpath, header, xquery, etc
-     *
+     * Required params that are pulled from the message. If these params don't exist
+     * the call will fail Note that you can use
+     * {@link org.mule.util.expression.ExpressionEvaluator} expressions such as
+     * xpath, header, xquery, etc
+     * 
      * @param requiredParams
      */
     public void setRequiredParams(Map requiredParams)
@@ -102,10 +102,10 @@ public class RestServiceWrapper extends AbstractComponent
     }
 
     /**
-     * Optional params that are pulled from the message. If these params don't exist execution will continue.
-     * Note that you can use {@link ExpressionEvaluator} expressions
-     * such as xpath, header, xquery, etc
-     *
+     * Optional params that are pulled from the message. If these params don't exist
+     * execution will continue. Note that you can use {@link ExpressionEvaluator}
+     * expressions such as xpath, header, xquery, etc
+     * 
      * @param requiredParams
      */
     public Map getOptionalParams()
@@ -158,7 +158,7 @@ public class RestServiceWrapper extends AbstractComponent
         this.errorExpression = errorExpression;
     }
 
-    public LifecycleTransitionResult initialise() throws InitialisationException
+    protected void doInitialise() throws InitialisationException
     {
         if (serviceUrl == null && !urlFromMessage)
         {
@@ -189,7 +189,6 @@ public class RestServiceWrapper extends AbstractComponent
                 errorFilter = new RegExFilter(errorExpression);
             }
         }
-        return LifecycleTransitionResult.OK;
     }
 
     public MuleMessage doOnCall(MuleEvent event)
@@ -282,9 +281,16 @@ public class RestServiceWrapper extends AbstractComponent
         return sep;
     }
 
-    //if requestBodyBuffer is null, it means that the request is a GET, otherwise it is a POST and  
-    //requestBodyBuffer must contain the body of the http method at the end of this function call
-    private void setRESTParams(StringBuffer url, MuleMessage msg, Object body, Map args, boolean optional, StringBuffer requestBodyBuffer)
+    // if requestBodyBuffer is null, it means that the request is a GET, otherwise it
+    // is a POST and
+    // requestBodyBuffer must contain the body of the http method at the end of this
+    // function call
+    private void setRESTParams(StringBuffer url,
+                               MuleMessage msg,
+                               Object body,
+                               Map args,
+                               boolean optional,
+                               StringBuffer requestBodyBuffer)
     {
         String sep;
 
@@ -311,7 +317,7 @@ public class RestServiceWrapper extends AbstractComponent
                     throw new IllegalArgumentException(CoreMessages.propertyIsNotSetOnEvent(exp).toString());
                 }
             }
-            else if (requestBodyBuffer != null) //implies this is a POST
+            else if (requestBodyBuffer != null) // implies this is a POST
             {
                 requestBodyBuffer.append(sep);
                 requestBodyBuffer.append(name).append('=').append(value);
@@ -334,11 +340,13 @@ public class RestServiceWrapper extends AbstractComponent
                 {
                     if (requestBodyBuffer != null)
                     {
-                        requestBodyBuffer.append(sep).append(payloadParameterNames.get(i)).append('=').append(requestArray[i].toString());
+                        requestBodyBuffer.append(sep).append(payloadParameterNames.get(i)).append('=').append(
+                            requestArray[i].toString());
                     }
                     else
                     {
-                        url.append(sep).append(payloadParameterNames.get(i)).append('=').append(requestArray[i].toString());
+                        url.append(sep).append(payloadParameterNames.get(i)).append('=').append(
+                            requestArray[i].toString());
                     }
 
                     sep = updateSeparator(sep);
@@ -382,5 +390,23 @@ public class RestServiceWrapper extends AbstractComponent
         {
             logger.error(e);
         }
+    }
+
+    // @Override
+    protected void doDispose()
+    {
+        // no-op
+    }
+
+    // @Override
+    protected void doStart() throws MuleException
+    {
+        // no-op
+    }
+
+    // @Override
+    protected void doStop() throws MuleException
+    {
+        // no-op
     }
 }

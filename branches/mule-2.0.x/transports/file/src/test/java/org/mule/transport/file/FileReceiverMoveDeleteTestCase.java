@@ -19,11 +19,11 @@ import org.mule.component.DefaultJavaComponent;
 import org.mule.endpoint.EndpointURIEndpointBuilder;
 import org.mule.endpoint.URIBuilder;
 import org.mule.model.seda.SedaService;
+import org.mule.object.SingletonObjectFactory;
 import org.mule.tck.functional.EventCallback;
 import org.mule.tck.functional.FunctionalTestComponent;
 import org.mule.transformer.AbstractMessageAwareTransformer;
 import org.mule.util.concurrent.Latch;
-import org.mule.util.object.SingletonObjectFactory;
 
 import java.io.File;
 

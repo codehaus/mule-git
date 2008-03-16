@@ -8,13 +8,14 @@
  * LICENSE.txt file.
  */
 
-package org.mule.util.object;
+package org.mule.object;
 
 import org.mule.api.lifecycle.Disposable;
 import org.mule.api.lifecycle.Initialisable;
 import org.mule.api.lifecycle.InitialisationCallback;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.lifecycle.LifecycleTransitionResult;
+import org.mule.api.object.ObjectFactory;
 import org.mule.config.i18n.CoreMessages;
 
 import java.util.Hashtable;
@@ -206,5 +207,10 @@ public class JndiObjectFactory implements ObjectFactory, Initialisable, Disposab
     public void addObjectInitialisationCallback(InitialisationCallback callback)
     {
         throw new UnsupportedOperationException();
+    }
+
+    public boolean isSingleton()
+    {
+        return false;
     }
 }

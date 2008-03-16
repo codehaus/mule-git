@@ -8,9 +8,11 @@
  * LICENSE.txt file.
  */
 
-package org.mule.util.object;
+package org.mule.object;
 
 import org.mule.api.lifecycle.InitialisationException;
+import org.mule.api.object.ObjectFactory;
+import org.mule.object.AbstractObjectFactory;
 import org.mule.tck.AbstractMuleTestCase;
 
 public abstract class AbstractObjectFactoryTestCase extends AbstractMuleTestCase

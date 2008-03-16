@@ -21,14 +21,13 @@ import org.mule.api.component.JavaComponent;
 import org.mule.api.lifecycle.Callable;
 import org.mule.api.lifecycle.Disposable;
 import org.mule.api.lifecycle.LifecycleAdapter;
-import org.mule.api.lifecycle.LifecycleTransitionResult;
 import org.mule.api.lifecycle.Startable;
 import org.mule.api.lifecycle.Stoppable;
 import org.mule.api.model.ModelException;
+import org.mule.api.object.ObjectFactory;
 import org.mule.config.i18n.CoreMessages;
+import org.mule.object.SingletonObjectFactory;
 import org.mule.transformer.TransformerTemplate;
-import org.mule.util.object.ObjectFactory;
-import org.mule.util.object.SingletonObjectFactory;
 
 import edu.emory.mathcs.backport.java.util.Collections;
 
@@ -91,59 +90,41 @@ public class SimpleCallableJavaComponent extends AbstractJavaComponent
         this.objectFactory = objectFactory;
     }
 
-    public LifecycleTransitionResult start() throws MuleException
+    protected void doStart() throws MuleException
     {
-        checkDisposed();
-        if (!started && Startable.class.isAssignableFrom(objectFactory.getObjectClass()))
+        super.doStart();
+        if (Startable.class.isAssignableFrom(objectFactory.getObjectClass()))
         {
             try
             {
-                return LifecycleTransitionResult.startOrStopAll(((Startable) objectFactory.getInstance()).start(),
-                    new LifecycleTransitionResult.Closure()
-                    {
-                        public LifecycleTransitionResult doContinue()
-                        {
-                            started = true;
-                            return LifecycleTransitionResult.OK;
-                        }
-                    });
+                ((Startable) objectFactory.getInstance()).start();
             }
             catch (Exception e)
             {
                 throw new ModelException(CoreMessages.failedToStart("Service '" + service.getName() + "'"), e);
             }
         }
-        else
-        {
-            return LifecycleTransitionResult.OK;
-        }
     }
 
-    public LifecycleTransitionResult stop() throws MuleException
+    protected void doStop() throws MuleException
     {
-        checkDisposed();
-
+        super.doStop();
         if (started && Stoppable.class.isAssignableFrom(objectFactory.getObjectClass()))
         {
-            started = false;
             try
             {
-                return ((Stoppable) objectFactory.getInstance()).stop();
+                ((Stoppable) objectFactory.getInstance()).stop();
             }
             catch (Exception e)
             {
                 throw new ModelException(CoreMessages.failedToStop("Service '" + service.getName() + "'"), e);
             }
         }
-        else
-        {
-            return LifecycleTransitionResult.OK;
-        }
     }
 
-    public void dispose()
+    protected void doDispose()
     {
-        checkDisposed();
+        super.doDispose();
         if (Disposable.class.isAssignableFrom(objectFactory.getObjectClass()))
         {
             try
@@ -154,15 +135,6 @@ public class SimpleCallableJavaComponent extends AbstractJavaComponent
             {
                 logger.error("Unable to dispose component instance", e);
             }
-            disposed = true;
-        }
-    }
-
-    private void checkDisposed()
-    {
-        if (disposed)
-        {
-            throw new IllegalStateException("Components Disposed Of");
         }
     }
 

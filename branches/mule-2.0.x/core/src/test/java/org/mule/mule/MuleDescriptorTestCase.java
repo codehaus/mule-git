@@ -16,10 +16,10 @@ import org.mule.api.service.Service;
 import org.mule.component.AbstractJavaComponent;
 import org.mule.component.simple.PassThroughComponent;
 import org.mule.model.seda.SedaService;
+import org.mule.object.SingletonObjectFactory;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.tck.testmodels.fruit.Orange;
 import org.mule.tck.testmodels.mule.TestExceptionStrategy;
-import org.mule.util.object.SingletonObjectFactory;
 
 public class MuleDescriptorTestCase extends AbstractMuleTestCase
 {

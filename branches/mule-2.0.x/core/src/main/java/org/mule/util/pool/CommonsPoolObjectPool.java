@@ -8,12 +8,13 @@
  * LICENSE.txt file.
  */
 
-package org.mule.util.object;
+package org.mule.util.pool;
 
 import org.mule.api.lifecycle.Disposable;
 import org.mule.api.lifecycle.Initialisable;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.lifecycle.LifecycleTransitionResult;
+import org.mule.api.object.ObjectFactory;
 import org.mule.config.PoolingProfile;
 import org.mule.config.i18n.MessageFactory;
 

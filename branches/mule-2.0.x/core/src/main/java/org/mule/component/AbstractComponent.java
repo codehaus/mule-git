@@ -10,14 +10,17 @@
 
 package org.mule.component;
 
+import org.mule.api.DefaultMuleException;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.component.Component;
 import org.mule.api.endpoint.InboundEndpoint;
+import org.mule.api.lifecycle.DisposeException;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.lifecycle.LifecycleTransitionResult;
 import org.mule.api.service.Service;
+import org.mule.api.service.ServiceException;
 import org.mule.api.transport.ReplyToHandler;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.config.i18n.MessageFactory;
@@ -25,6 +28,8 @@ import org.mule.management.stats.ComponentStatistics;
 import org.mule.transport.AbstractConnector;
 
 import javax.resource.spi.work.Work;
+
+import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -39,8 +44,12 @@ public abstract class AbstractComponent implements Component
     protected final Log logger = LogFactory.getLog(this.getClass());
 
     protected Service service;
-
     protected ComponentStatistics statistics = null;
+    protected final AtomicBoolean started = new AtomicBoolean(false);
+    protected final AtomicBoolean stopping = new AtomicBoolean(false);
+    protected final AtomicBoolean initialised = new AtomicBoolean(false);
+    protected final AtomicBoolean disposing = new AtomicBoolean(false);
+    protected final AtomicBoolean disposed = new AtomicBoolean(false);
 
     public AbstractComponent()
     {
@@ -53,13 +62,24 @@ public abstract class AbstractComponent implements Component
         {
             logger.trace(this.getClass().getName() + ": sync call for Mule Component " + service.getName());
         }
+        checkDisposed();
         if (!(event.getEndpoint() instanceof InboundEndpoint))
         {
             throw new IllegalStateException(
                 "Unable to process outbound event, components only process incoming events.");
         }
-
-        return doOnCall(event);
+        if (stopping.get() || !started.get())
+        {
+            throw new DefaultMuleException(CoreMessages.componentIsStopped(service.getName()));
+        }
+        try
+        {
+            return doOnCall(event);
+        }
+        catch (Exception e)
+        {
+            throw new ServiceException(CoreMessages.failedToInvoke(this.toString()), event.getMessage(), service, e);
+        }
     }
 
     public void onEvent(MuleEvent event)
@@ -68,12 +88,25 @@ public abstract class AbstractComponent implements Component
         {
             logger.trace(this.getClass().getName() + ": async call for Mule Component " + service.getName());
         }
-        if (!(event.getEndpoint() instanceof InboundEndpoint))
+        try
         {
-            throw new IllegalStateException(
-                "Unable to process outbound event, components only process incoming events.");
+            checkDisposed();
+            if (!(event.getEndpoint() instanceof InboundEndpoint))
+            {
+                throw new IllegalStateException(
+                    "Unable to process outbound event, components only process incoming events.");
+            }
+            if (stopping.get() || !started.get())
+            {
+                throw new DefaultMuleException(CoreMessages.componentIsStopped(service.getName()));
+            }
+            doOnEvent(event);
         }
-        doOnEvent(event);
+        catch (Exception e)
+        {
+            logger.error(new ServiceException(CoreMessages.failedToInvoke(this.toString()), event.getMessage(),
+                service, e));
+        }
     }
 
     protected abstract Object doOnCall(MuleEvent event);
@@ -139,39 +172,100 @@ public abstract class AbstractComponent implements Component
 
     public LifecycleTransitionResult initialise() throws InitialisationException
     {
-        // Default implementation. Implementations should override and call
-        // ensuring they call super.initialise()
-        if (service == null)
+        if (!initialised.get())
         {
-            throw new InitialisationException(
-                MessageFactory.createStaticMessage("Component has not been initialized properly, no service."), this);
+            if (logger.isInfoEnabled())
+            {
+                logger.info("Initialising: " + this);
+            }
+            if (service == null)
+            {
+                throw new InitialisationException(
+                    MessageFactory.createStaticMessage("Component has not been initialized properly, no service."),
+                    this);
+            }
+            doInitialise();
+            initialised.set(true);
         }
         return LifecycleTransitionResult.OK;
     }
 
+    protected abstract void doInitialise() throws InitialisationException;
+
     public void dispose()
     {
-        // Default implementation. Implementations should override if needed.
+        disposing.set(true);
         try
         {
-            stop();
+            if (started.get())
+            {
+                stop();
+            }
         }
         catch (MuleException e)
         {
             logger.error(CoreMessages.failedToStop(toString()));
         }
+        try
+        {
+            doDispose();
+        }
+        catch (Exception e)
+        {
+            logger.warn(CoreMessages.failedToDispose(toString()), e);
+        }
+        finally
+        {
+            disposed.set(true);
+            disposing.set(false);
+            initialised.set(false);
+        }
     }
+
+    protected abstract void doDispose();
 
     public LifecycleTransitionResult stop() throws MuleException
     {
-        // Default implementation. Implementations should override if needed.
+        checkDisposed();
+        if (started.get() && !stopping.get())
+        {
+            stopping.set(true);
+            if (logger.isInfoEnabled())
+            {
+                logger.info("Stopping: " + this);
+            }
+            doStop();
+            started.set(false);
+            stopping.set(false);
+        }
         return LifecycleTransitionResult.OK;
     }
 
+    protected abstract void doStart() throws MuleException;
+
     public LifecycleTransitionResult start() throws MuleException
     {
-        // Default implementation. Implementations should override if needed.
+        checkDisposed();
+        if (!started.get())
+        {
+            if (logger.isInfoEnabled())
+            {
+                logger.info("Starting: " + this);
+            }
+            doStart();
+            started.set(true);
+        }
         return LifecycleTransitionResult.OK;
+    }
+
+    protected abstract void doStop() throws MuleException;
+
+    protected void checkDisposed() throws DisposeException
+    {
+        if (disposed.get())
+        {
+            throw new DisposeException(CoreMessages.createStaticMessage("Cannot use a disposed component"), this);
+        }
     }
 
     private class ComponentWorker implements Work

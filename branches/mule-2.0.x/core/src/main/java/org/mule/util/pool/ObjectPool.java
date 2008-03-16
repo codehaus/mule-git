@@ -8,10 +8,11 @@
  * LICENSE.txt file.
  */
 
-package org.mule.util.object;
+package org.mule.util.pool;
 
 import org.mule.api.lifecycle.Disposable;
 import org.mule.api.lifecycle.Initialisable;
+import org.mule.api.object.ObjectFactory;
 
 /**
  * <code>ObjectPool</code> is a simple pooling interface for objects

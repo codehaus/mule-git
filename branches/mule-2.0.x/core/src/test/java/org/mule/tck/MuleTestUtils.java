@@ -25,6 +25,7 @@ import org.mule.api.endpoint.EndpointURI;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.endpoint.InboundEndpoint;
 import org.mule.api.endpoint.OutboundEndpoint;
+import org.mule.api.object.ObjectFactory;
 import org.mule.api.routing.OutboundRouter;
 import org.mule.api.routing.filter.Filter;
 import org.mule.api.service.Service;
@@ -39,6 +40,7 @@ import org.mule.endpoint.EndpointURIEndpointBuilder;
 import org.mule.endpoint.MuleEndpointURI;
 import org.mule.model.seda.SedaModel;
 import org.mule.model.seda.SedaService;
+import org.mule.object.SingletonObjectFactory;
 import org.mule.routing.outbound.OutboundPassThroughRouter;
 import org.mule.tck.testmodels.fruit.Apple;
 import org.mule.tck.testmodels.mule.TestAgent;
@@ -46,8 +48,6 @@ import org.mule.tck.testmodels.mule.TestCompressionTransformer;
 import org.mule.tck.testmodels.mule.TestConnector;
 import org.mule.transport.AbstractConnector;
 import org.mule.util.ClassUtils;
-import org.mule.util.object.ObjectFactory;
-import org.mule.util.object.SingletonObjectFactory;
 
 import com.mockobjects.dynamic.Mock;
 

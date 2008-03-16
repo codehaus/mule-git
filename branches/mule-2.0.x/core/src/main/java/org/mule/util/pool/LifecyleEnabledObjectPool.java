@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.util.object;
+package org.mule.util.pool;
 
 import org.mule.api.lifecycle.Startable;
 import org.mule.api.lifecycle.Stoppable;

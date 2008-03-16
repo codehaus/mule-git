@@ -8,21 +8,24 @@
  * LICENSE.txt file.
  */
 
-package org.mule.util.object;
+package org.mule.object;
 
-public class SingletonObjectFactoryTestCase extends AbstractObjectFactoryTestCase
+import org.mule.api.object.ObjectFactory;
+import org.mule.object.PrototypeObjectFactory;
+
+public class PrototypeObjectFactoryTestCase extends AbstractObjectFactoryTestCase
 {
 
     // @Override
     public ObjectFactory getObjectFactory()
     {
-        return new SingletonObjectFactory();
+        return new PrototypeObjectFactory();
     }
 
     // @Override
     public void testGetObjectClass() throws Exception
     {
-        SingletonObjectFactory factory = (SingletonObjectFactory) getObjectFactory();
+        PrototypeObjectFactory factory = (PrototypeObjectFactory) getObjectFactory();
         factory.setObjectClass(Object.class);
         factory.initialise();
         assertEquals(Object.class, factory.getObjectClass());
@@ -31,10 +34,10 @@ public class SingletonObjectFactoryTestCase extends AbstractObjectFactoryTestCas
     // @Override
     public void testGet() throws Exception
     {
-        SingletonObjectFactory factory = (SingletonObjectFactory) getObjectFactory();
+        PrototypeObjectFactory factory = (PrototypeObjectFactory) getObjectFactory();
         factory.setObjectClass(Object.class);
         factory.initialise();
-        assertSame(factory.getInstance(), factory.getInstance());
+        assertNotSame(factory.getInstance(), factory.getInstance());
     }
 
 }

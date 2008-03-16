@@ -14,14 +14,12 @@ import org.mule.api.MuleException;
 import org.mule.api.component.JavaComponent;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.lifecycle.LifecycleAdapter;
-import org.mule.api.lifecycle.LifecycleTransitionResult;
 import org.mule.api.model.EntryPointResolverSet;
 import org.mule.api.model.ModelException;
+import org.mule.api.object.ObjectFactory;
 import org.mule.api.routing.NestedRouterCollection;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.config.i18n.MessageFactory;
-import org.mule.util.object.ObjectFactory;
-import org.mule.util.object.SingletonObjectFactory;
 
 /**
  * Default implementation of {@link JavaComponent}. Component lifecycle is
@@ -50,16 +48,15 @@ public class DefaultJavaComponent extends AbstractJavaComponent
         super(objectFactory, entryPointResolverSet, nestedRouterCollection);
     }
 
-    public LifecycleTransitionResult start() throws MuleException
+    protected void doStart() throws MuleException
     {
-        checkDisposed();
-        super.start();
+        super.doStart();
 
         // If this component is using a SingletonObjectFactory we should create
         // LifecycleAdaptor wrapper just once now and not on each event. This also
         // allows start/stop life-cycle methods to be propagated to singleton
         // component instances.
-        if (objectFactory != null && objectFactory instanceof SingletonObjectFactory)
+        if (objectFactory != null && objectFactory.isSingleton())
         {
             // On first call, create and initialise singleton instance
             try
@@ -67,7 +64,6 @@ public class DefaultJavaComponent extends AbstractJavaComponent
                 if (singletonComponentLifecycleAdapter == null)
                 {
                     singletonComponentLifecycleAdapter = createLifeCycleAdaptor();
-                    singletonComponentLifecycleAdapter.initialise();
                 }
             }
             catch (Exception e)
@@ -81,7 +77,7 @@ public class DefaultJavaComponent extends AbstractJavaComponent
             {
                 try
                 {
-                    return singletonComponentLifecycleAdapter.start();
+                    singletonComponentLifecycleAdapter.start();
                 }
                 catch (Exception e)
                 {
@@ -89,34 +85,12 @@ public class DefaultJavaComponent extends AbstractJavaComponent
                 }
             }
         }
-        return LifecycleTransitionResult.OK;
     }
 
-    public LifecycleTransitionResult stop() throws MuleException
+    protected void doStop() throws MuleException
     {
+        super.doStop();
         // It only makes sense to propagate this life-cycle to singleton component
-        // implementations
-        if (singletonComponentLifecycleAdapter != null)
-        {
-            checkDisposed();
-            if (singletonComponentLifecycleAdapter.isStarted())
-            {
-                try
-                {
-                    return singletonComponentLifecycleAdapter.stop();
-                }
-                catch (Exception e)
-                {
-                    throw new ModelException(CoreMessages.failedToStop("Service '" + service.getName() + "'"), e);
-                }
-            }
-        }
-        return LifecycleTransitionResult.OK;
-    }
-
-    public void dispose()
-    {
-        // It only makes sense to propagating this life-cycle to singleton component
         // implementations
         if (singletonComponentLifecycleAdapter != null)
         {
@@ -126,20 +100,22 @@ public class DefaultJavaComponent extends AbstractJavaComponent
                 {
                     singletonComponentLifecycleAdapter.stop();
                 }
-                catch (MuleException e)
+                catch (Exception e)
                 {
-                    logger.error(CoreMessages.failedToStop("Service '" + service.getName() + "'"), e);
+                    throw new ModelException(CoreMessages.failedToStop("Service '" + service.getName() + "'"), e);
                 }
             }
-            singletonComponentLifecycleAdapter.dispose();
         }
     }
 
-    private void checkDisposed()
+    protected void doDispose()
     {
-        if (singletonComponentLifecycleAdapter != null && singletonComponentLifecycleAdapter.isDisposed())
+        super.doDispose();
+        // It only makes sense to propagating this life-cycle to singleton component
+        // implementations
+        if (singletonComponentLifecycleAdapter != null)
         {
-            throw new IllegalStateException("Service has already been disposed of");
+            singletonComponentLifecycleAdapter.dispose();
         }
     }
 
@@ -153,9 +129,7 @@ public class DefaultJavaComponent extends AbstractJavaComponent
         else
         {
             componentLifecycleAdapter = createLifeCycleAdaptor();
-            componentLifecycleAdapter.initialise();
             componentLifecycleAdapter.start();
-
         }
         return componentLifecycleAdapter;
     }
@@ -166,6 +140,7 @@ public class DefaultJavaComponent extends AbstractJavaComponent
         {
             lifecycleAdapter.stop();
             lifecycleAdapter.dispose();
+            lifecycleAdapter = null;
         }
     }
 

@@ -24,9 +24,9 @@ import org.mule.api.endpoint.InboundEndpoint;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.lifecycle.LifecycleAdapter;
 import org.mule.api.lifecycle.LifecycleAdapterFactory;
-import org.mule.api.lifecycle.LifecycleTransitionResult;
 import org.mule.api.model.EntryPointResolver;
 import org.mule.api.model.EntryPointResolverSet;
+import org.mule.api.object.ObjectFactory;
 import org.mule.api.routing.NestedRouterCollection;
 import org.mule.api.transport.ReplyToHandler;
 import org.mule.config.i18n.CoreMessages;
@@ -34,7 +34,6 @@ import org.mule.message.DefaultExceptionPayload;
 import org.mule.model.resolvers.DefaultEntryPointResolverSet;
 import org.mule.routing.nested.DefaultNestedRouterCollection;
 import org.mule.transport.NullPayload;
-import org.mule.util.object.ObjectFactory;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -268,29 +267,39 @@ public abstract class AbstractJavaComponent extends AbstractComponent implements
         return objectFactory.getObjectClass();
     }
 
+    /**
+     * Creates and initialises a new LifecycleAdaptor instance wrapped the component
+     * object instance obtained from the configured object factory.
+     * 
+     * @return
+     * @throws MuleException
+     * @throws Exception
+     */
     protected LifecycleAdapter createLifeCycleAdaptor() throws MuleException, Exception
     {
+        LifecycleAdapter lifecycleAdapter;
         if (lifecycleAdapterFactory != null)
         {
             // Custom lifecycleAdapterFactory set on component
-            return lifecycleAdapterFactory.create(objectFactory.getInstance(), this, entryPointResolverSet);
+            lifecycleAdapter = lifecycleAdapterFactory.create(objectFactory.getInstance(), this, entryPointResolverSet);
         }
         else
         {
             // Inherit lifecycleAdapterFactory from model
-            return service.getModel().getLifecycleAdapterFactory().create(objectFactory.getInstance(), this,
-                entryPointResolverSet);
+            lifecycleAdapter = service.getModel().getLifecycleAdapterFactory().create(objectFactory.getInstance(),
+                this, entryPointResolverSet);
         }
+        lifecycleAdapter.initialise();
+        return lifecycleAdapter;
     }
 
     protected abstract LifecycleAdapter borrowComponentLifecycleAdaptor() throws Exception;
 
     protected abstract void returnComponentLifecycleAdaptor(LifecycleAdapter lifecycleAdapter) throws Exception;
 
-    public LifecycleTransitionResult initialise() throws InitialisationException
+    // @Override
+    protected void doInitialise() throws InitialisationException
     {
-        super.initialise();
-
         if (objectFactory == null)
         {
             throw new InitialisationException(CoreMessages.objectIsNull("object factory"), this);
@@ -300,13 +309,11 @@ public abstract class AbstractJavaComponent extends AbstractComponent implements
         // spring then the objectFactory is still uninitialised so we need to
         // initialise it here.
         objectFactory.initialise();
-        return LifecycleTransitionResult.OK;
     }
 
-    public LifecycleTransitionResult start() throws MuleException
+    // @Override
+    protected void doStart() throws MuleException
     {
-        super.start();
-
         // We need to resolve entry point resolvers here rather than in initialise()
         // because when configuring with spring, although the service has been
         // injected and is available the injected service construction has not been
@@ -315,7 +322,21 @@ public abstract class AbstractJavaComponent extends AbstractComponent implements
         {
             entryPointResolverSet = service.getModel().getEntryPointResolverSet();
         }
-        return LifecycleTransitionResult.OK;
+    }
+
+    // @Override
+    protected void doStop() throws MuleException
+    {
+        // TODO no-op
+    }
+
+    // @Override
+    protected void doDispose()
+    {
+        // TODO This can't be implemented currently because AbstractService allows
+        // disposed services to be re-initialised, and re-use of a disposed object
+        // factory is not possible
+        // objectFactory.dispose();
     }
 
     public EntryPointResolverSet getEntryPointResolverSet()

@@ -17,7 +17,6 @@ import org.mule.api.MuleEvent;
 import org.mule.api.MuleException;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.lifecycle.LifecycleAdapter;
-import org.mule.api.lifecycle.LifecycleTransitionResult;
 import org.mule.api.model.EntryPointResolverSet;
 import org.mule.api.service.Service;
 import org.mule.component.AbstractJavaComponent;
@@ -96,27 +95,10 @@ public class JcaComponent extends AbstractJavaComponent implements WorkListener
         // Template method unused because doOnCall and doOnEvent have been overridden
     }
 
-    public LifecycleTransitionResult initialise() throws InitialisationException
+    // @Override
+    protected void doInitialise() throws InitialisationException
     {
-        // no-op
-        return LifecycleTransitionResult.OK;
-    }
-
-    public LifecycleTransitionResult start() throws MuleException
-    {
-        // no-op
-        return LifecycleTransitionResult.OK;
-    }
-
-    public LifecycleTransitionResult stop() throws MuleException
-    {
-        // no-op
-        return LifecycleTransitionResult.OK;
-    }
-
-    public void dispose()
-    {
-        // no-op
+        // no-op no object-factory
     }
 
     public class MuleJcaWorker implements Work

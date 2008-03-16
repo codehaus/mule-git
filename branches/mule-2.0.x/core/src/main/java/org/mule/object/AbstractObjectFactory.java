@@ -8,15 +8,12 @@
  * LICENSE.txt file.
  */
 
-package org.mule.util.object;
+package org.mule.object;
 
-import org.mule.api.config.ConfigurationException;
-import org.mule.api.lifecycle.Initialisable;
 import org.mule.api.lifecycle.InitialisationCallback;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.lifecycle.LifecycleTransitionResult;
-import org.mule.api.service.Service;
-import org.mule.api.service.ServiceAware;
+import org.mule.api.object.ObjectFactory;
 import org.mule.config.i18n.MessageFactory;
 import org.mule.util.BeanUtils;
 import org.mule.util.ClassUtils;
@@ -32,7 +29,7 @@ import org.apache.commons.logging.LogFactory;
 /**
  * Creates object instances based on the class and sets any properties.
  */
-public abstract class AbstractObjectFactory implements ObjectFactory, ServiceAware
+public abstract class AbstractObjectFactory implements ObjectFactory
 {
     public static final String ATTRIBUTE_OBJECT_CLASS_NAME = "objectClassName";
     public static final String ATTRIBUTE_OBJECT_CLASS = "objectClass";
@@ -41,12 +38,6 @@ public abstract class AbstractObjectFactory implements ObjectFactory, ServiceAwa
     protected Class objectClass = null;
     protected Map properties = null;
     protected List initialisationCallbacks = new ArrayList();
-
-    /**
-     * This is not pretty but its the only way I could find to get the Service injected
-     * into each instance of a POJO service.
-     */
-    Service service;
 
     protected transient Log logger = LogFactory.getLog(getClass());
 
@@ -124,18 +115,6 @@ public abstract class AbstractObjectFactory implements ObjectFactory, ServiceAwa
             BeanUtils.populate(object, properties);
         }
 
-        // This is not pretty but its the only way I could find to get the Service
-        // properly injected into each instance of a POJO service.
-        if (service != null)
-        {
-            BeanUtils.setProperty(object, "service", service);
-        }
-
-        if (object instanceof Initialisable)
-        {
-            ((Initialisable) object).initialise();
-        }
-        
         fireInitialisationCallbacks(object);
         
         return object;
@@ -149,15 +128,6 @@ public abstract class AbstractObjectFactory implements ObjectFactory, ServiceAwa
             callback = (InitialisationCallback) iterator.next();
             callback.initialise(component);
         }
-    }
-
-    /**
-     * This is not pretty but its the only way I could find to get the Service injected
-     * into each instance of a POJO service.
-     */
-    public void setService(Service service) throws ConfigurationException
-    {
-        this.service = service;
     }
 
     public Class getObjectClass()
@@ -194,4 +164,10 @@ public abstract class AbstractObjectFactory implements ObjectFactory, ServiceAwa
     {
         initialisationCallbacks.add(callback);
     }
+    
+    public boolean isSingleton()
+    {
+        return false;
+    }
+
 }

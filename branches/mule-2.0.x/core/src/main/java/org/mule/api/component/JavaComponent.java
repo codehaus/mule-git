@@ -12,11 +12,8 @@ package org.mule.api.component;
 
 import org.mule.api.lifecycle.LifecycleAdapterFactory;
 import org.mule.api.model.EntryPointResolverSet;
+import org.mule.api.object.ObjectFactory;
 import org.mule.api.routing.NestedRouterCollection;
-import org.mule.component.PooledJavaComponent;
-import org.mule.util.object.ObjectFactory;
-import org.mule.util.object.PrototypeObjectFactory;
-import org.mule.util.object.SingletonObjectFactory;
 
 /**
  * <code>JavaComponent</code> is a Java {@link Component} implementation used to

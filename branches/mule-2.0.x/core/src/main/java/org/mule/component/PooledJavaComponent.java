@@ -17,11 +17,12 @@ import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.lifecycle.LifecycleAdapter;
 import org.mule.api.lifecycle.LifecycleTransitionResult;
 import org.mule.api.model.EntryPointResolverSet;
+import org.mule.api.object.ObjectFactory;
 import org.mule.api.routing.NestedRouterCollection;
 import org.mule.config.PoolingProfile;
-import org.mule.util.object.LifecyleEnabledObjectPool;
-import org.mule.util.object.ObjectFactory;
-import org.mule.util.object.ObjectPool;
+import org.mule.util.pool.DefaultLifecycleEnabledObjectPool;
+import org.mule.util.pool.LifecyleEnabledObjectPool;
+import org.mule.util.pool.ObjectPool;
 
 /**
  * <code>PooledJavaComponent</code> implements pooling.
@@ -67,26 +68,25 @@ public class PooledJavaComponent extends AbstractJavaComponent
         lifecycleAdapterPool.returnObject(lifecycleAdapter);
     }
 
-    public LifecycleTransitionResult start() throws MuleException
+    protected void doStart() throws MuleException
     {
-        super.start();
+        super.doStart();
         // Wrap pool's objectFactory with a LifeCycleAdaptor factory so we pool
         // LifeCycleAdaptor's and not just pojo instances.
-        lifecycleAdapterPool = new LifecycleAdaptorPool(new LifeCycleAdaptorFactory(), poolingProfile);
+        lifecycleAdapterPool = new DefaultLifecycleEnabledObjectPool(new LifeCycleAdaptorFactory(), poolingProfile);
         lifecycleAdapterPool.initialise();
         lifecycleAdapterPool.start();
-        return LifecycleTransitionResult.OK;
     }
 
-    public LifecycleTransitionResult stop() throws MuleException
+    protected void doStop() throws MuleException
     {
+        super.doStop();
         if (lifecycleAdapterPool != null)
         {
             lifecycleAdapterPool.stop();
             lifecycleAdapterPool.close();
             lifecycleAdapterPool = null;
         }
-        return LifecycleTransitionResult.OK;
     }
 
     public void setPoolingProfile(PoolingProfile poolingProfile)
@@ -108,7 +108,7 @@ public class PooledJavaComponent extends AbstractJavaComponent
      * creates a new {@link LifecycleAdapter} wrapping the object instance obtained
      * for the component instance {@link ObjectFactory} set on the {@link Component}.<br/>
      * This allows us to keep {@link LifecycleAdapter} creation in the Component and
-     * out of the {@link LifecycleAdaptorPool} and to use the generic
+     * out of the {@link DefaultLifecyleEnabledObjectPool} and to use the generic
      * {@link ObjectPool} interface.
      */
     protected class LifeCycleAdaptorFactory implements ObjectFactory
@@ -138,6 +138,11 @@ public class PooledJavaComponent extends AbstractJavaComponent
         {
             objectFactory.addObjectInitialisationCallback(callback);
 
+        }
+
+        public boolean isSingleton()
+        {
+            return false;
         }
     }
 

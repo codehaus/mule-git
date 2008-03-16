@@ -26,6 +26,7 @@ import org.mule.config.i18n.CoreMessages;
 import org.mule.context.notification.MuleContextNotification;
 import org.mule.endpoint.EndpointURIEndpointBuilder;
 import org.mule.model.seda.SedaService;
+import org.mule.object.SingletonObjectFactory;
 import org.mule.transport.AbstractConnector;
 import org.mule.transport.http.servlet.ServletConnector;
 import org.mule.transport.service.TransportFactory;
@@ -36,7 +37,6 @@ import org.mule.transport.soap.axis.extensions.WSDDJavaMuleProvider;
 import org.mule.transport.soap.axis.i18n.AxisMessages;
 import org.mule.util.ClassUtils;
 import org.mule.util.MuleUrlStreamHandlerFactory;
-import org.mule.util.object.SingletonObjectFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;

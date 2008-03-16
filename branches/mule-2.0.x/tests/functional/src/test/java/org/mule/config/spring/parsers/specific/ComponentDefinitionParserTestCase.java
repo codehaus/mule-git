@@ -26,10 +26,10 @@ import org.mule.config.spring.SpringXmlConfigurationBuilder;
 import org.mule.config.spring.parsers.specific.ComponentDelegatingDefinitionParser.CheckExclusiveClassAttributeObjectFactoryException;
 import org.mule.config.spring.util.SpringBeanLookup;
 import org.mule.context.DefaultMuleContextFactory;
+import org.mule.object.PrototypeObjectFactory;
+import org.mule.object.SingletonObjectFactory;
 import org.mule.routing.nested.DefaultNestedRouter;
 import org.mule.tck.AbstractMuleTestCase;
-import org.mule.util.object.PrototypeObjectFactory;
-import org.mule.util.object.SingletonObjectFactory;
 
 import org.springframework.beans.factory.BeanDefinitionStoreException;
 

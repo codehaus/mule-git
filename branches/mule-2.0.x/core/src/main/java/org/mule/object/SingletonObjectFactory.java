@@ -8,9 +8,8 @@
  * LICENSE.txt file.
  */
 
-package org.mule.util.object;
+package org.mule.object;
 
-import org.mule.api.lifecycle.Disposable;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.lifecycle.LifecycleTransitionResult;
 import org.mule.config.i18n.MessageFactory;
@@ -80,11 +79,6 @@ public class SingletonObjectFactory extends AbstractObjectFactory
     // @Override
     public void dispose()
     {
-        if (instance != null && instance instanceof Disposable)
-        {
-            logger.debug("Disposing object instance: " + instance.toString());
-            ((Disposable) instance).dispose();
-        }
         instance = null;
         super.dispose();
     }
@@ -117,6 +111,11 @@ public class SingletonObjectFactory extends AbstractObjectFactory
         {
             return super.getObjectClass();
         }
+    }
+
+    public boolean isSingleton()
+    {
+        return true;
     }
 
 }

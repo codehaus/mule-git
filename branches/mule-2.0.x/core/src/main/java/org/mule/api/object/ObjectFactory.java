@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.util.object;
+package org.mule.api.object;
 
 import org.mule.api.lifecycle.Disposable;
 import org.mule.api.lifecycle.Initialisable;
@@ -33,6 +33,14 @@ public interface ObjectFactory extends Initialisable, Disposable
      * implementation.
      */
     Class getObjectClass();
+    
+    /**
+     * Returns true if the ObjectFactory implementation always returns the same object
+     * instance.
+     * 
+     * @return
+     */
+    boolean isSingleton();
 
     /**
      * Register a custom initialiser
