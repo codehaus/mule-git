@@ -52,7 +52,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class LoanBrokerEsbConfigutationBuilder extends AbstractConfigurationBuilder implements ConfigurationBuilder
+public class LoanBrokerEsbConfigurationBuilder extends AbstractConfigurationBuilder implements ConfigurationBuilder
 {
 
     @Override
