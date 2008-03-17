@@ -33,6 +33,7 @@ public class MuleConfigurationTestCase extends TestCase
 
     private MuleContext muleContext;
     
+    /** Test for MULE-3092 */
     public void testConfigureProgramatically() throws Exception
     {
         DefaultMuleConfiguration config = new DefaultMuleConfiguration();
@@ -63,6 +64,7 @@ public class MuleConfigurationTestCase extends TestCase
         verifyConfiguration();
     }
 
+    /** Test for MULE-3092 */
     public void testConfigureWithSystemProperties() throws Exception
     {
         System.setProperty(MuleConfiguration.SYSTEM_PROPERTY_PREFIX + "encoding", "UTF-16");
@@ -87,6 +89,87 @@ public class MuleConfigurationTestCase extends TestCase
         muleContext.start();
 
         verifyConfiguration();
+
+        System.clearProperty(MuleConfiguration.SYSTEM_PROPERTY_PREFIX + "encoding");
+        System.clearProperty(MuleConfiguration.SYSTEM_PROPERTY_PREFIX + "endpoints.synchronous");
+        System.clearProperty(MuleConfiguration.SYSTEM_PROPERTY_PREFIX + "systemModelType");
+        System.clearProperty(MuleConfiguration.SYSTEM_PROPERTY_PREFIX + "timeout.synchronous");
+        System.clearProperty(MuleConfiguration.SYSTEM_PROPERTY_PREFIX + "timeout.transaction");
+        System.clearProperty(MuleConfiguration.SYSTEM_PROPERTY_PREFIX + "remoteSync");
+        System.clearProperty(MuleConfiguration.SYSTEM_PROPERTY_PREFIX + "workingDirectory");
+        System.clearProperty(MuleConfiguration.SYSTEM_PROPERTY_PREFIX + "clientMode");
+        System.clearProperty(MuleConfiguration.SYSTEM_PROPERTY_PREFIX + "disable.threadsafemessages");
+        System.clearProperty(MuleConfiguration.SYSTEM_PROPERTY_PREFIX + "serverId");
+        System.clearProperty(MuleConfiguration.SYSTEM_PROPERTY_PREFIX + "clusterId");
+        System.clearProperty(MuleConfiguration.SYSTEM_PROPERTY_PREFIX + "domainId");
+        System.clearProperty(MuleConfiguration.SYSTEM_PROPERTY_PREFIX + "message.cacheBytes");
+        System.clearProperty(MuleConfiguration.SYSTEM_PROPERTY_PREFIX + "message.cacheOriginal");
+        System.clearProperty(MuleConfiguration.SYSTEM_PROPERTY_PREFIX + "streaming.enable");
+        System.clearProperty(MuleConfiguration.SYSTEM_PROPERTY_PREFIX + "message.assertAccess");
+        System.clearProperty(MuleConfiguration.SYSTEM_PROPERTY_PREFIX + "transform.autoWrap");
+    }
+
+    /** Test for MULE-3110 */
+    public void testConfigureAfterInitFails() throws Exception
+    {
+        muleContext = new DefaultMuleContextFactory().createMuleContext();        
+
+        DefaultMuleConfiguration mutableConfig = ((DefaultMuleConfiguration) muleContext.getConfiguration());
+        
+        // These are OK to change after init but before start
+        mutableConfig.setDefaultSynchronousEndpoints(true);
+        mutableConfig.setSystemModelType("direct");
+        mutableConfig.setDefaultSynchronousEventTimeout(30000);
+        mutableConfig.setDefaultTransactionTimeout(60000);
+        mutableConfig.setDefaultRemoteSync(true);
+        mutableConfig.setClientMode(true);
+
+        // These are not OK to change after init
+        mutableConfig.setDefaultEncoding("UTF-16");
+        mutableConfig.setWorkingDirectory("/some/directory");
+        mutableConfig.setId("MY_SERVER");
+        mutableConfig.setClusterId("MY_CLUSTER");
+        mutableConfig.setDomainId("MY_DOMAIN");
+
+        MuleConfiguration config = muleContext.getConfiguration();
+
+        // These are OK to change after init but before start
+        assertTrue(config.isDefaultSynchronousEndpoints());
+        assertEquals("direct", config.getSystemModelType());
+        assertEquals(30000, config.getDefaultSynchronousEventTimeout());
+        assertEquals(60000, config.getDefaultTransactionTimeout());
+        assertTrue(config.isDefaultRemoteSync());
+        assertTrue(config.isClientMode());
+        
+        // These are not OK to change after init
+        assertFalse("UTF-16".equals(config.getDefaultEncoding()));
+        assertFalse("/some/directory".equals(config.getWorkingDirectory()));
+        assertFalse("MY_SERVER".equals(config.getId()));
+        assertFalse("MY_CLUSTER".equals(config.getClusterId()));
+        assertFalse("MY_DOMAIN".equals(config.getDomainId()));
+    }
+
+    /** Test for MULE-3110 */
+    public void testConfigureAfterStartFails() throws Exception
+    {
+        muleContext = new DefaultMuleContextFactory().createMuleContext();        
+        muleContext.start();
+
+        DefaultMuleConfiguration mutableConfig = ((DefaultMuleConfiguration) muleContext.getConfiguration());
+        mutableConfig.setDefaultSynchronousEndpoints(true);
+        mutableConfig.setSystemModelType("direct");
+        mutableConfig.setDefaultSynchronousEventTimeout(30000);
+        mutableConfig.setDefaultTransactionTimeout(60000);
+        mutableConfig.setDefaultRemoteSync(true);
+        mutableConfig.setClientMode(true);
+
+        MuleConfiguration config = muleContext.getConfiguration();
+        assertFalse(config.isDefaultSynchronousEndpoints());
+        assertFalse("direct".equals(config.getSystemModelType()));
+        assertFalse(30000 == config.getDefaultSynchronousEventTimeout());
+        assertFalse(60000 == config.getDefaultTransactionTimeout());
+        assertFalse(config.isDefaultRemoteSync());
+        assertFalse(config.isClientMode());
     }
 
     protected void verifyConfiguration()
