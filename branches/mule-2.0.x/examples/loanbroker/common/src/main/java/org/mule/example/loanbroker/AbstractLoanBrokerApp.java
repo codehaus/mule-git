@@ -191,6 +191,7 @@ public abstract class AbstractLoanBrokerApp
             System.out.println(LocaleMessage.sentAsync());
             // let the request catch up
             Thread.sleep(1500);
+            System.out.println(LocaleMessage.requestResponse(client.request("CustomerResponses", 500).getPayload()));
         }
         else
         {
@@ -211,6 +212,7 @@ public abstract class AbstractLoanBrokerApp
         for (int i = 0; i < number; i++)
         {
             client.dispatch(endpoint, createRequest(), null);
+            System.out.println(LocaleMessage.requestResponse(client.request("CustomerResponses", 1000).getPayload()));
         }
     }
 
@@ -226,6 +228,21 @@ public abstract class AbstractLoanBrokerApp
         for (int i = 0; i < number; i++)
         {
             result = client.send(endpoint, createRequest(), properties);
+            if (result != null)
+            {
+                results.add(result.getPayload());
+            }
+        }
+        return results;
+    }
+    
+    public List requestRequest(int number, String endpoint, int timeout) throws Exception
+    {
+        List results = new ArrayList(number);
+        MuleMessage result;
+        for (int i = 0; i < number; i++)
+        {
+            result = client.request(endpoint, timeout);
             if (result != null)
             {
                 results.add(result.getPayload());
