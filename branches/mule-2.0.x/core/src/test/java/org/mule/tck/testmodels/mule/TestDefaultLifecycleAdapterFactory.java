@@ -12,8 +12,8 @@ package org.mule.tck.testmodels.mule;
 
 import org.mule.api.MuleException;
 import org.mule.api.component.JavaComponent;
-import org.mule.api.lifecycle.LifecycleAdapter;
-import org.mule.api.lifecycle.LifecycleAdapterFactory;
+import org.mule.api.component.LifecycleAdapter;
+import org.mule.api.component.LifecycleAdapterFactory;
 import org.mule.api.model.EntryPointResolverSet;
 
 public class TestDefaultLifecycleAdapterFactory implements LifecycleAdapterFactory

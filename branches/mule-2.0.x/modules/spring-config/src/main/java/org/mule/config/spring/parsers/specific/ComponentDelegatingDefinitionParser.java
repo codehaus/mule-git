@@ -82,6 +82,9 @@ public class ComponentDelegatingDefinitionParser extends AbstractParallelDelegat
 
         private static final String BINDING_CHILD_ELEMENT = "binding";
         private static final String POOLING_PROFILE_CHILD_ELEMENT = "pooling-profile";
+        private static final String LIFECYCLE_ADAPTER_FACTORT_CHILD_ELEMENT = "lifecycle-adapter-factory";
+        private static final String ENTRY_POINT_RESOLVER_CHILD_ELEMENT = "entry-point-resolver";
+        private static final String ENTRY_POINT_RESOLVER_SET_CHILD_ELEMENT = "entry-point-resolver-set";
 
         public void preProcess(PropertyConfiguration config, Element element)
         {
@@ -95,7 +98,11 @@ public class ComponentDelegatingDefinitionParser extends AbstractParallelDelegat
                     {
                         Node child = element.getChildNodes().item(j);
                         if (child instanceof Element
-                            && !(child.getLocalName().equals(BINDING_CHILD_ELEMENT) || (child.getLocalName().equals(POOLING_PROFILE_CHILD_ELEMENT))))
+                            && !(child.getLocalName().equals(BINDING_CHILD_ELEMENT)
+                                 || child.getLocalName().equals(POOLING_PROFILE_CHILD_ELEMENT)
+                                 || child.getLocalName().equals(ENTRY_POINT_RESOLVER_CHILD_ELEMENT)
+                                 || child.getLocalName().equals(ENTRY_POINT_RESOLVER_SET_CHILD_ELEMENT) || child.getLocalName()
+                                .endsWith(LIFECYCLE_ADAPTER_FACTORT_CHILD_ELEMENT)))
                         {
                             StringBuffer message = new StringBuffer("The child element '");
                             message.append(child.getLocalName());

@@ -10,7 +10,7 @@
 
 package org.mule.component;
 
-import org.mule.api.lifecycle.LifecycleAdapter;
+import org.mule.api.component.LifecycleAdapter;
 import org.mule.config.PoolingProfile;
 import org.mule.object.PrototypeObjectFactory;
 import org.mule.tck.services.UniqueComponent;

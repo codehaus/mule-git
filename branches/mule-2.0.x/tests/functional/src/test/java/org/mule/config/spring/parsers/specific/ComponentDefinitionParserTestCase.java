@@ -11,10 +11,14 @@
 package org.mule.config.spring.parsers.specific;
 
 import org.mule.api.MuleContext;
+import org.mule.api.MuleException;
 import org.mule.api.component.JavaComponent;
+import org.mule.api.component.LifecycleAdapter;
+import org.mule.api.component.LifecycleAdapterFactory;
 import org.mule.api.config.ConfigurationBuilder;
 import org.mule.api.config.ConfigurationException;
 import org.mule.api.context.MuleContextFactory;
+import org.mule.api.model.EntryPointResolverSet;
 import org.mule.api.service.Service;
 import org.mule.component.AbstractJavaComponent;
 import org.mule.component.DefaultJavaComponent;
@@ -26,6 +30,13 @@ import org.mule.config.spring.SpringXmlConfigurationBuilder;
 import org.mule.config.spring.parsers.specific.ComponentDelegatingDefinitionParser.CheckExclusiveClassAttributeObjectFactoryException;
 import org.mule.config.spring.util.SpringBeanLookup;
 import org.mule.context.DefaultMuleContextFactory;
+import org.mule.model.resolvers.ArrayEntryPointResolver;
+import org.mule.model.resolvers.CallableEntryPointResolver;
+import org.mule.model.resolvers.DefaultEntryPointResolverSet;
+import org.mule.model.resolvers.ExplicitMethodEntryPointResolver;
+import org.mule.model.resolvers.MethodHeaderPropertyEntryPointResolver;
+import org.mule.model.resolvers.NoArgumentsEntryPointResolver;
+import org.mule.model.resolvers.ReflectionEntryPointResolver;
 import org.mule.object.PrototypeObjectFactory;
 import org.mule.object.SingletonObjectFactory;
 import org.mule.routing.nested.DefaultNestedRouter;
@@ -49,6 +60,14 @@ public class ComponentDefinitionParserTestCase extends AbstractMuleTestCase
         assertEquals(PrototypeObjectFactory.class, ((AbstractJavaComponent) service.getComponent()).getObjectFactory()
             .getClass());
         assertEquals(1, ((JavaComponent) service.getComponent()).getNestedRouter().getRouters().size());
+        assertNotNull(((JavaComponent) service.getComponent()).getEntryPointResolverSet());
+        assertEquals(
+            2,
+            (((DefaultEntryPointResolverSet) ((JavaComponent) service.getComponent()).getEntryPointResolverSet()).getEntryPointResolvers().size()));
+        assertTrue((((DefaultEntryPointResolverSet) ((JavaComponent) service.getComponent()).getEntryPointResolverSet()).getEntryPointResolvers()
+            .toArray()[0] instanceof ArrayEntryPointResolver));
+        assertTrue((((DefaultEntryPointResolverSet) ((JavaComponent) service.getComponent()).getEntryPointResolverSet()).getEntryPointResolvers()
+            .toArray()[1] instanceof CallableEntryPointResolver));
     }
 
     public void testDefaultJavaComponentPrototype() throws Exception
@@ -62,6 +81,12 @@ public class ComponentDefinitionParserTestCase extends AbstractMuleTestCase
         assertEquals(PrototypeObjectFactory.class, ((AbstractJavaComponent) service.getComponent()).getObjectFactory()
             .getClass());
         assertEquals(1, ((JavaComponent) service.getComponent()).getNestedRouter().getRouters().size());
+        assertNotNull(((JavaComponent) service.getComponent()).getEntryPointResolverSet());
+        assertEquals(
+            1,
+            (((DefaultEntryPointResolverSet) ((JavaComponent) service.getComponent()).getEntryPointResolverSet()).getEntryPointResolvers().size()));
+        assertTrue((((DefaultEntryPointResolverSet) ((JavaComponent) service.getComponent()).getEntryPointResolverSet()).getEntryPointResolvers()
+            .toArray()[0] instanceof CallableEntryPointResolver));
     }
 
     public void testDefaultJavaComponentSingleton() throws Exception
@@ -75,6 +100,13 @@ public class ComponentDefinitionParserTestCase extends AbstractMuleTestCase
         assertEquals(SingletonObjectFactory.class, ((AbstractJavaComponent) service.getComponent()).getObjectFactory()
             .getClass());
         assertEquals(1, ((JavaComponent) service.getComponent()).getNestedRouter().getRouters().size());
+        assertNotNull(((JavaComponent) service.getComponent()).getEntryPointResolverSet());
+        assertEquals(
+            1,
+            (((DefaultEntryPointResolverSet) ((JavaComponent) service.getComponent()).getEntryPointResolverSet()).getEntryPointResolvers().size()));
+        assertTrue((((DefaultEntryPointResolverSet) ((JavaComponent) service.getComponent()).getEntryPointResolverSet()).getEntryPointResolvers()
+            .toArray()[0] instanceof ExplicitMethodEntryPointResolver));
+
     }
 
     public void testDefaultJavaComponentSpringBean() throws Exception
@@ -88,6 +120,12 @@ public class ComponentDefinitionParserTestCase extends AbstractMuleTestCase
         assertEquals(SpringBeanLookup.class, ((AbstractJavaComponent) service.getComponent()).getObjectFactory()
             .getClass());
         assertEquals(1, ((JavaComponent) service.getComponent()).getNestedRouter().getRouters().size());
+        assertNotNull(((JavaComponent) service.getComponent()).getEntryPointResolverSet());
+        assertEquals(
+            1,
+            (((DefaultEntryPointResolverSet) ((JavaComponent) service.getComponent()).getEntryPointResolverSet()).getEntryPointResolvers().size()));
+        assertTrue((((DefaultEntryPointResolverSet) ((JavaComponent) service.getComponent()).getEntryPointResolverSet()).getEntryPointResolvers()
+            .toArray()[0] instanceof NoArgumentsEntryPointResolver));
     }
 
     private void validatePoolingProfile(Service service)
@@ -116,6 +154,13 @@ public class ComponentDefinitionParserTestCase extends AbstractMuleTestCase
             .getClass());
         assertEquals(1, ((JavaComponent) service.getComponent()).getNestedRouter().getRouters().size());
         validatePoolingProfile(service);
+        assertNotNull(((JavaComponent) service.getComponent()).getEntryPointResolverSet());
+        assertEquals(
+            1,
+            (((DefaultEntryPointResolverSet) ((JavaComponent) service.getComponent()).getEntryPointResolverSet()).getEntryPointResolvers().size()));
+        assertTrue((((DefaultEntryPointResolverSet) ((JavaComponent) service.getComponent()).getEntryPointResolverSet()).getEntryPointResolvers()
+            .toArray()[0] instanceof MethodHeaderPropertyEntryPointResolver));
+
     }
 
     public void testPooledJavaComponentPrototype() throws Exception
@@ -130,6 +175,13 @@ public class ComponentDefinitionParserTestCase extends AbstractMuleTestCase
             .getClass());
         assertEquals(1, ((JavaComponent) service.getComponent()).getNestedRouter().getRouters().size());
         validatePoolingProfile(service);
+        assertNotNull(((JavaComponent) service.getComponent()).getEntryPointResolverSet());
+        assertEquals(
+            1,
+            (((DefaultEntryPointResolverSet) ((JavaComponent) service.getComponent()).getEntryPointResolverSet()).getEntryPointResolvers().size()));
+        assertTrue((((DefaultEntryPointResolverSet) ((JavaComponent) service.getComponent()).getEntryPointResolverSet()).getEntryPointResolvers()
+            .toArray()[0] instanceof ReflectionEntryPointResolver));
+
     }
 
     public void testPooledJavaComponentSingleton() throws Exception
@@ -144,6 +196,13 @@ public class ComponentDefinitionParserTestCase extends AbstractMuleTestCase
             .getClass());
         assertEquals(1, ((JavaComponent) service.getComponent()).getNestedRouter().getRouters().size());
         validatePoolingProfile(service);
+        assertNotNull(((JavaComponent) service.getComponent()).getEntryPointResolverSet());
+        assertEquals(
+            1,
+            (((DefaultEntryPointResolverSet) ((JavaComponent) service.getComponent()).getEntryPointResolverSet()).getEntryPointResolvers().size()));
+        assertTrue((((DefaultEntryPointResolverSet) ((JavaComponent) service.getComponent()).getEntryPointResolverSet()).getEntryPointResolvers()
+            .toArray()[0] instanceof ReflectionEntryPointResolver));
+
     }
 
     public void testPooledJavaComponentSpringBean() throws Exception
@@ -158,6 +217,7 @@ public class ComponentDefinitionParserTestCase extends AbstractMuleTestCase
             .getClass());
         assertEquals(1, ((JavaComponent) service.getComponent()).getNestedRouter().getRouters().size());
         validatePoolingProfile(service);
+        assertNull(((JavaComponent) service.getComponent()).getEntryPointResolverSet());
     }
 
     public void testClassAttributeAndObjectFactory() throws Exception
@@ -186,10 +246,24 @@ public class ComponentDefinitionParserTestCase extends AbstractMuleTestCase
         assertEquals(StaticComponent.class, ((JavaComponent) service.getComponent()).getObjectType());
         assertNotNull(((JavaComponent) service.getComponent()).getNestedRouter());
         assertTrue(((JavaComponent) service.getComponent()).getNestedRouter().getRouters().get(0) instanceof DefaultNestedRouter);
+        assertTrue(((JavaComponent) service.getComponent()).getLifecycleAdapterFactory() instanceof TestLifecycleAdapterFactory);
+
     }
 
     protected MuleContext createMuleContext() throws Exception
     {
+        return null;
+    }
+
+}
+
+class TestLifecycleAdapterFactory implements LifecycleAdapterFactory
+{
+
+    public LifecycleAdapter create(Object pojoService, JavaComponent component, EntryPointResolverSet resolver)
+        throws MuleException
+    {
+        // TODO Auto-generated method stub
         return null;
     }
 

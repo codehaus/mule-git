@@ -1198,6 +1198,7 @@
             <xsd:extension base="abstractComponentType">
                 <xsd:sequence>
                     <xsd:element ref="abstract-object-factory" minOccurs="0"/>
+                    <xsd:element ref="abstract-lifecycle-adapter-factory" minOccurs="0"/>
                     <xsd:element name="binding" type="pojoBindingType" minOccurs="0" maxOccurs="unbounded">
                         <xsd:annotation>
                             <xsd:documentation>
@@ -3098,6 +3099,37 @@
         </xsd:complexContent>
     </xsd:complexType>
 
+    <!--==============================================================-->
+    <!--  Lifecycle Adapters                                            -->
+    <!--==============================================================-->
+
+    <xsd:element name="abstract-lifecycle-adapter-factory" abstract="true" type="abstractLifecycleAdapterFactory"/>
+    <xsd:complexType name="abstractLifecycleAdapterFactory">
+        <xsd:annotation>
+            <xsd:documentation>
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:complexType>
+    <xsd:complexType name="customLifecycleAdapterFactory">
+        <xsd:complexContent>
+            <xsd:extension base="abstractLifecycleAdapterFactory">
+                <xsd:attribute name="class" type="substitutableClass" use="required">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                            An implementation of the LifecycleAdapter interface.
+                        </xsd:documentation>
+                    </xsd:annotation>
+                </xsd:attribute>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element name="custom-lifecycle-adapter-factory" type="customLifecycleAdapterFactory"
+                 substitutionGroup="abstract-lifecycle-adapter-factory">
+        <xsd:annotation>
+            <xsd:documentation>
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
 
     <!--==============================================================-->
     <!--  Object Factories                                            -->

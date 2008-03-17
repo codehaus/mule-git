@@ -12,13 +12,12 @@ package org.mule.util.pool;
 
 import org.mule.api.MuleException;
 import org.mule.api.component.JavaComponent;
+import org.mule.api.component.LifecycleAdapter;
 import org.mule.api.lifecycle.Disposable;
-import org.mule.api.lifecycle.LifecycleAdapter;
 import org.mule.api.lifecycle.LifecycleTransitionResult;
 import org.mule.api.lifecycle.Startable;
 import org.mule.api.lifecycle.Stoppable;
 import org.mule.api.object.ObjectFactory;
-import org.mule.component.PooledJavaComponent;
 import org.mule.config.PoolingProfile;
 
 import java.util.Iterator;

@@ -277,6 +277,9 @@ public class MuleNamespaceHandler extends AbstractMuleNamespaceHandler
         registerBeanDefinitionParser("prototype-object", new ObjectFactoryDefinitionParser(PrototypeObjectFactory.class, "objectFactory"));
         registerBeanDefinitionParser("spring-object", new ObjectFactoryDefinitionParser(SpringBeanLookup.class, "objectFactory"));
 
+        // Life-cycle Adapters Factories
+        registerBeanDefinitionParser("custom-lifecycle-adapter-factory", new ChildDefinitionParser("lifecycleAdapterFactory"));
+        
         //Routers
         registerBeanDefinitionParser("inbound", new ChildDefinitionParser("inboundRouter", DefaultInboundRouterCollection.class));
         registerBeanDefinitionParser("outbound", new ChildDefinitionParser("outboundRouter", DefaultOutboundRouterCollection.class));

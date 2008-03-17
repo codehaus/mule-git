@@ -12,8 +12,8 @@ package org.mule.component;
 
 import org.mule.api.MuleException;
 import org.mule.api.component.JavaComponent;
-import org.mule.api.lifecycle.LifecycleAdapter;
-import org.mule.api.lifecycle.LifecycleAdapterFactory;
+import org.mule.api.component.LifecycleAdapter;
+import org.mule.api.component.LifecycleAdapterFactory;
 import org.mule.api.model.EntryPointResolverSet;
 
 /**
@@ -21,8 +21,8 @@ import org.mule.api.model.EntryPointResolverSet;
  * implement their own LifeCycleAdapter factories to control lifecycle events on their services such
  * as introduce other lifecycle events that are controlled by external changes.
  *
- * @see org.mule.api.lifecycle.LifecycleAdapter
- * @see org.mule.api.lifecycle.LifecycleAdapterFactory
+ * @see org.mule.api.component.LifecycleAdapter
+ * @see org.mule.api.component.LifecycleAdapterFactory
  * @see org.mule.component.DefaultLifecycleAdapter
  * @see org.mule.component.DefaultLifecycleAdapterFactory
  */

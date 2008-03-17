@@ -10,10 +10,12 @@
 
 package org.mule.api.component;
 
-import org.mule.api.lifecycle.LifecycleAdapterFactory;
 import org.mule.api.model.EntryPointResolverSet;
 import org.mule.api.object.ObjectFactory;
 import org.mule.api.routing.NestedRouterCollection;
+import org.mule.component.PooledJavaComponent;
+import org.mule.object.PrototypeObjectFactory;
+import org.mule.object.SingletonObjectFactory;
 
 /**
  * <code>JavaComponent</code> is a Java {@link Component} implementation used to
@@ -86,7 +88,7 @@ public interface JavaComponent extends Component
      * 
      * @return
      */
-    public LifecycleAdapterFactory getLifecycleAdaptorFactory();
+    public LifecycleAdapterFactory getLifecycleAdapterFactory();
 
     /**
      * Sets the factory used create life-cycle adaptors that are used to wrap
@@ -94,5 +96,5 @@ public interface JavaComponent extends Component
      * 
      * @param lifecycleAdaptor
      */
-    public void setLifecycleAdaptorFactory(LifecycleAdapterFactory lifecycleAdaptor);
+    public void setLifecycleAdapterFactory(LifecycleAdapterFactory lifecycleAdaptor);
 }

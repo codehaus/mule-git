@@ -8,10 +8,9 @@
  * LICENSE.txt file.
  */
 
-package org.mule.api.lifecycle;
+package org.mule.api.component;
 
 import org.mule.api.MuleException;
-import org.mule.api.component.JavaComponent;
 import org.mule.api.model.EntryPointResolverSet;
 
 /** <code>LifecycleAdapterFactory</code> TODO (document class) */

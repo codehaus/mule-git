@@ -8,9 +8,10 @@
  * LICENSE.txt file.
  */
 
-package org.mule.api.lifecycle;
+package org.mule.api.component;
 
 import org.mule.api.interceptor.Interceptor;
+import org.mule.api.lifecycle.Lifecycle;
 import org.mule.api.service.Service;
 
 /**

@@ -19,11 +19,11 @@ import org.mule.api.MuleEvent;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.component.JavaComponent;
+import org.mule.api.component.LifecycleAdapter;
+import org.mule.api.component.LifecycleAdapterFactory;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.endpoint.InboundEndpoint;
 import org.mule.api.lifecycle.InitialisationException;
-import org.mule.api.lifecycle.LifecycleAdapter;
-import org.mule.api.lifecycle.LifecycleAdapterFactory;
 import org.mule.api.model.EntryPointResolver;
 import org.mule.api.model.EntryPointResolverSet;
 import org.mule.api.object.ObjectFactory;
@@ -387,12 +387,12 @@ public abstract class AbstractJavaComponent extends AbstractComponent implements
         this.objectFactory = objectFactory;
     }
 
-    public LifecycleAdapterFactory getLifecycleAdaptorFactory()
+    public LifecycleAdapterFactory getLifecycleAdapterFactory()
     {
         return lifecycleAdapterFactory;
     }
 
-    public void setLifecycleAdaptorFactory(LifecycleAdapterFactory lifecycleAdapterFactory)
+    public void setLifecycleAdapterFactory(LifecycleAdapterFactory lifecycleAdapterFactory)
     {
         this.lifecycleAdapterFactory = lifecycleAdapterFactory;
     }

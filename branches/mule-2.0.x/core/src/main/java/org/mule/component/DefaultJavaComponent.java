@@ -12,8 +12,8 @@ package org.mule.component;
 
 import org.mule.api.MuleException;
 import org.mule.api.component.JavaComponent;
+import org.mule.api.component.LifecycleAdapter;
 import org.mule.api.lifecycle.InitialisationException;
-import org.mule.api.lifecycle.LifecycleAdapter;
 import org.mule.api.model.EntryPointResolverSet;
 import org.mule.api.model.ModelException;
 import org.mule.api.object.ObjectFactory;
