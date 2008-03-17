@@ -19,7 +19,7 @@ import org.mule.example.loanbroker.messages.LoanBrokerQuoteRequest;
  */
 public class AsynchronousLoanBroker extends DefaultLoanBroker
 {
-    //@Override
+    @Override
     public Object getLoanQuote(CustomerQuoteRequest request) throws LoanBrokerException
     {
         super.getLoanQuote(request);
