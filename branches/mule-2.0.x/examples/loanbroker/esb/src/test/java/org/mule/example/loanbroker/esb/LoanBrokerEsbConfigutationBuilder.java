@@ -55,7 +55,7 @@ import java.util.Map;
 public class LoanBrokerEsbConfigutationBuilder extends AbstractConfigurationBuilder implements ConfigurationBuilder
 {
 
-    //@Override
+    @Override
     protected void doConfigure(MuleContext muleContext) throws Exception
     {
         // Set defaults
