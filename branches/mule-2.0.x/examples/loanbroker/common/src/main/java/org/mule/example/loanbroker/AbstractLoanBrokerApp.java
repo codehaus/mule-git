@@ -236,21 +236,6 @@ public abstract class AbstractLoanBrokerApp
         return results;
     }
     
-    public List requestRequest(int number, String endpoint, int timeout) throws Exception
-    {
-        List results = new ArrayList(number);
-        MuleMessage result;
-        for (int i = 0; i < number; i++)
-        {
-            result = client.request(endpoint, timeout);
-            if (result != null)
-            {
-                results.add(result.getPayload());
-            }
-        }
-        return results;
-    }
-
     protected void sendRandomRequests(int number, boolean synchronous) throws Exception
     {
         if (synchronous)
