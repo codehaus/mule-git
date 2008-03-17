@@ -25,7 +25,7 @@ public class JBpmFunctionalTestCase extends AbstractAsynchronousLoanBrokerTestCa
     /** For unit tests, we assume a virgin database, therefore the process ID is assumed to be = 1 */
     public static final long PROCESS_ID = 1;
 
-    @Override
+    //@Override
     protected void suitePreSetUp() throws Exception
     {
         // set the derby.system.home system property to make sure that all derby databases are
@@ -36,7 +36,7 @@ public class JBpmFunctionalTestCase extends AbstractAsynchronousLoanBrokerTestCa
         super.suitePreSetUp();
     }
 
-    @Override
+    //@Override
     protected ConfigurationBuilder getBuilder() throws Exception 
     {
         return new SpringXmlConfigurationBuilder(getConfigResources());
@@ -47,7 +47,7 @@ public class JBpmFunctionalTestCase extends AbstractAsynchronousLoanBrokerTestCa
         return "loan-broker-bpm-mule-config.xml";
     }
 
-    @Override
+    //@Override
     public void testSingleLoanRequest() throws Exception
     {
         super.testSingleLoanRequest();
@@ -65,7 +65,7 @@ public class JBpmFunctionalTestCase extends AbstractAsynchronousLoanBrokerTestCa
         //assertEquals("loanApproved", bpms.getState(bpms.lookupProcess(new Long(PROCESS_ID))));
     }
     
-    @Override
+    //@Override
     public void testLotsOfLoanRequests() throws Exception
     {
         super.testLotsOfLoanRequests();
