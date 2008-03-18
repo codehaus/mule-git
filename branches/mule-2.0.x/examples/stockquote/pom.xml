@@ -52,7 +52,7 @@
             <version>${version}</version>
         </dependency>
         <!-- Use the SpringConfigurationBuilder as a workaround because the MuleXmlConfigurationBuilder
-        (Commons Digester) has issues when merging config files. -->        
+        (Commons Digester) has issues when merging config files. -->
         <dependency>
             <groupId>org.mule.modules</groupId>
             <artifactId>mule-module-spring-extras</artifactId>
