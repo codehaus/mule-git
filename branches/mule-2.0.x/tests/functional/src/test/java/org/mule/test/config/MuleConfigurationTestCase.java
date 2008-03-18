@@ -90,23 +90,24 @@ public class MuleConfigurationTestCase extends TestCase
 
         verifyConfiguration();
 
-        System.clearProperty(MuleConfiguration.SYSTEM_PROPERTY_PREFIX + "encoding");
-        System.clearProperty(MuleConfiguration.SYSTEM_PROPERTY_PREFIX + "endpoints.synchronous");
-        System.clearProperty(MuleConfiguration.SYSTEM_PROPERTY_PREFIX + "systemModelType");
-        System.clearProperty(MuleConfiguration.SYSTEM_PROPERTY_PREFIX + "timeout.synchronous");
-        System.clearProperty(MuleConfiguration.SYSTEM_PROPERTY_PREFIX + "timeout.transaction");
-        System.clearProperty(MuleConfiguration.SYSTEM_PROPERTY_PREFIX + "remoteSync");
-        System.clearProperty(MuleConfiguration.SYSTEM_PROPERTY_PREFIX + "workingDirectory");
-        System.clearProperty(MuleConfiguration.SYSTEM_PROPERTY_PREFIX + "clientMode");
-        System.clearProperty(MuleConfiguration.SYSTEM_PROPERTY_PREFIX + "disable.threadsafemessages");
-        System.clearProperty(MuleConfiguration.SYSTEM_PROPERTY_PREFIX + "serverId");
-        System.clearProperty(MuleConfiguration.SYSTEM_PROPERTY_PREFIX + "clusterId");
-        System.clearProperty(MuleConfiguration.SYSTEM_PROPERTY_PREFIX + "domainId");
-        System.clearProperty(MuleConfiguration.SYSTEM_PROPERTY_PREFIX + "message.cacheBytes");
-        System.clearProperty(MuleConfiguration.SYSTEM_PROPERTY_PREFIX + "message.cacheOriginal");
-        System.clearProperty(MuleConfiguration.SYSTEM_PROPERTY_PREFIX + "streaming.enable");
-        System.clearProperty(MuleConfiguration.SYSTEM_PROPERTY_PREFIX + "message.assertAccess");
-        System.clearProperty(MuleConfiguration.SYSTEM_PROPERTY_PREFIX + "transform.autoWrap");
+        // TODO: re-enable after MULE-3135 has been resolved
+//        System.clearProperty(MuleConfiguration.SYSTEM_PROPERTY_PREFIX + "encoding");
+//        System.clearProperty(MuleConfiguration.SYSTEM_PROPERTY_PREFIX + "endpoints.synchronous");
+//        System.clearProperty(MuleConfiguration.SYSTEM_PROPERTY_PREFIX + "systemModelType");
+//        System.clearProperty(MuleConfiguration.SYSTEM_PROPERTY_PREFIX + "timeout.synchronous");
+//        System.clearProperty(MuleConfiguration.SYSTEM_PROPERTY_PREFIX + "timeout.transaction");
+//        System.clearProperty(MuleConfiguration.SYSTEM_PROPERTY_PREFIX + "remoteSync");
+//        System.clearProperty(MuleConfiguration.SYSTEM_PROPERTY_PREFIX + "workingDirectory");
+//        System.clearProperty(MuleConfiguration.SYSTEM_PROPERTY_PREFIX + "clientMode");
+//        System.clearProperty(MuleConfiguration.SYSTEM_PROPERTY_PREFIX + "disable.threadsafemessages");
+//        System.clearProperty(MuleConfiguration.SYSTEM_PROPERTY_PREFIX + "serverId");
+//        System.clearProperty(MuleConfiguration.SYSTEM_PROPERTY_PREFIX + "clusterId");
+//        System.clearProperty(MuleConfiguration.SYSTEM_PROPERTY_PREFIX + "domainId");
+//        System.clearProperty(MuleConfiguration.SYSTEM_PROPERTY_PREFIX + "message.cacheBytes");
+//        System.clearProperty(MuleConfiguration.SYSTEM_PROPERTY_PREFIX + "message.cacheOriginal");
+//        System.clearProperty(MuleConfiguration.SYSTEM_PROPERTY_PREFIX + "streaming.enable");
+//        System.clearProperty(MuleConfiguration.SYSTEM_PROPERTY_PREFIX + "message.assertAccess");
+//        System.clearProperty(MuleConfiguration.SYSTEM_PROPERTY_PREFIX + "transform.autoWrap");
     }
 
     /** Test for MULE-3110 */
