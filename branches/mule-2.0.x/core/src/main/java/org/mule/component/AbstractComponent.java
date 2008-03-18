@@ -27,8 +27,6 @@ import org.mule.config.i18n.MessageFactory;
 import org.mule.management.stats.ComponentStatistics;
 import org.mule.transport.AbstractConnector;
 
-import javax.resource.spi.work.Work;
-
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.commons.logging.Log;
@@ -56,7 +54,7 @@ public abstract class AbstractComponent implements Component
         statistics = new ComponentStatistics();
     }
 
-    public Object onCall(MuleEvent event) throws MuleException
+    public MuleMessage onCall(MuleEvent event) throws MuleException
     {
         if (logger.isTraceEnabled())
         {
@@ -109,7 +107,7 @@ public abstract class AbstractComponent implements Component
         }
     }
 
-    protected abstract Object doOnCall(MuleEvent event);
+    protected abstract MuleMessage doOnCall(MuleEvent event);
 
     protected abstract void doOnEvent(MuleEvent event);
 
@@ -153,11 +151,6 @@ public abstract class AbstractComponent implements Component
     public ComponentStatistics getStatistics()
     {
         return statistics;
-    }
-
-    public Work getWorker(MuleEvent event)
-    {
-        return new ComponentWorker(event);
     }
 
     public void setService(Service service)
@@ -265,26 +258,6 @@ public abstract class AbstractComponent implements Component
         if (disposed.get())
         {
             throw new DisposeException(CoreMessages.createStaticMessage("Cannot use a disposed component"), this);
-        }
-    }
-
-    private class ComponentWorker implements Work
-    {
-        private MuleEvent event;
-
-        public ComponentWorker(MuleEvent event)
-        {
-            this.event = event;
-        }
-
-        public void run()
-        {
-            onEvent(event);
-        }
-
-        public void release()
-        {
-            // no-op
         }
     }
 
