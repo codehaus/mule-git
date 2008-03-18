@@ -219,8 +219,9 @@ public abstract class AbstractComponent implements Component
 
     public LifecycleTransitionResult stop() throws MuleException
     {
-        checkDisposed();
-        if (started.get() && !stopping.get())
+        // If component is already disposed then ignore, don't fails, as stop() might
+        // get called by service after spring has called disposed etc.
+        if (!disposed.get() && started.get() && !stopping.get())
         {
             stopping.set(true);
             if (logger.isInfoEnabled())
