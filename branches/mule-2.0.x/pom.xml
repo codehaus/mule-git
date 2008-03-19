@@ -55,6 +55,9 @@
         <cxfVersion>2.0.4-incubator</cxfVersion>
         <coberturaVersion>2.2</coberturaVersion>
         <geronimoSpecsVersion>1.1</geronimoSpecsVersion>
+        <eclipsePluginVersion>2.5</eclipsePluginVersion>
+        <jdk14Name>jdk1.4</jdk14Name>
+        <jdk5Name>jdk5</jdk5Name>
     </properties>
 
     <!-- declare all dependencies that are used in more than one module here. -->
@@ -677,12 +680,17 @@
                 </dependencies>
             </plugin>
 
-            <!-- by default download all sources when generating project files -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-eclipse-plugin</artifactId>
+                <version>${eclipsePluginVersion}</version>
                 <configuration>
+                    <!-- by default download all sources when generating project files -->
                     <downloadSources>true</downloadSources>
+                    <!-- configure a JDK named 'jdk1.4' for this project -->
+                    <classpathContainers>
+                        <classpathContainer>org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/${jdk14Name}</classpathContainer>
+                    </classpathContainers>
                 </configuration>
             </plugin>
             <plugin>
@@ -942,6 +950,19 @@
                             <source>1.5</source>
                             <target>1.5</target>
                             <encoding>ISO-8859-1</encoding>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-eclipse-plugin</artifactId>
+                        <version>${eclipsePluginVersion}</version>
+                        <configuration>
+                            <!-- by default download all sources when generating project files -->
+                            <downloadSources>true</downloadSources>
+                            <!-- configure a JDK named 'jdk5' for this project -->
+                            <classpathContainers>
+                                <classpathContainer>org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/${jdk5Name}</classpathContainer>
+                            </classpathContainers>
                         </configuration>
                     </plugin>
                 </plugins>
