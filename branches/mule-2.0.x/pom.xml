@@ -55,7 +55,9 @@
         <cxfVersion>2.0.4-incubator</cxfVersion>
         <coberturaVersion>2.2</coberturaVersion>
         <geronimoSpecsVersion>1.1</geronimoSpecsVersion>
+
         <eclipsePluginVersion>2.5</eclipsePluginVersion>
+        <vmtype>org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType</vmtype>
         <jdk14Name>jdk1.4</jdk14Name>
         <jdk5Name>jdk5</jdk5Name>
     </properties>
@@ -689,7 +691,7 @@
                     <downloadSources>true</downloadSources>
                     <!-- configure a JDK named 'jdk1.4' for this project -->
                     <classpathContainers>
-                        <classpathContainer>org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/${jdk14Name}</classpathContainer>
+                        <classpathContainer>org.eclipse.jdt.launching.JRE_CONTAINER/${vmtype}/${jdk14Name}</classpathContainer>
                     </classpathContainers>
                 </configuration>
             </plugin>
@@ -961,7 +963,7 @@
                             <downloadSources>true</downloadSources>
                             <!-- configure a JDK named 'jdk5' for this project -->
                             <classpathContainers>
-                                <classpathContainer>org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/${jdk5Name}</classpathContainer>
+                                <classpathContainer>org.eclipse.jdt.launching.JRE_CONTAINER/${vmtype}/${jdk5Name}</classpathContainer>
                             </classpathContainers>
                         </configuration>
                     </plugin>
@@ -1034,6 +1036,18 @@
                      </plugin>
                 </plugins>
             </build>
+        </profile>
+
+        <profile>
+            <id>mac</id>
+            <activation>
+                <os>
+                    <family>mac</family>
+                </os>
+            </activation>
+            <properties>
+                <vmtype>org.eclipse.jdt.internal.launching.macosx.MacOSXType</vmtype>
+            </properties>
         </profile>
     </profiles>
 </project>
