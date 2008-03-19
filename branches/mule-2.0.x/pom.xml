@@ -972,6 +972,7 @@
             <modules>
                 <module>examples</module>
                 <module>transports</module>
+                <module>tests</module>
             </modules>
         </profile>
 
