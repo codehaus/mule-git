@@ -19,8 +19,6 @@ import org.tanukisoftware.wrapper.WrapperManager;
 
 public class OsgiFrameworkWrapper implements WrapperListener
 {
-    private final String DESKTOP_BUNDLE = "boot/osgi/desktop/desktop_all-2.0.0.jar";
-    
     private final boolean startGui;
 
     /*---------------------------------------------------------------

@@ -12,10 +12,6 @@ package org.mule.util.expression;
 
 import org.mule.api.transport.MessageAdapter;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.StringTokenizer;
-
 /**
  * Looks up the property on the message using the property name given.
  *

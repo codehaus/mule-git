@@ -17,6 +17,7 @@ import org.mule.api.component.JavaComponent;
 import org.mule.api.config.ThreadingProfile;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.endpoint.InboundEndpoint;
+import org.mule.api.endpoint.OutboundEndpoint;
 import org.mule.api.model.Model;
 import org.mule.api.routing.InboundRouter;
 import org.mule.api.routing.InboundRouterCollection;
@@ -68,7 +69,7 @@ public abstract class AbstractConfigBuilderTestCase extends AbstractScriptConfig
         assertNotNull(c.getExceptionListener());
         assertTrue(c.getExceptionListener() instanceof TestExceptionStrategy);
         //TODO RM* Move to the endpoint
-//        assertNotNull(c.getConnectionStrategy());
+        assertNotNull(c.getConnectionStrategy());
 //        assertTrue(c.getConnectionStrategy() instanceof SimpleRetryConnectionStrategy);
 //        assertEquals(4, ((SimpleRetryConnectionStrategy)c.getConnectionStrategy()).getRetryCount());
 //        assertEquals(3000, ((SimpleRetryConnectionStrategy)c.getConnectionStrategy()).getFrequency());
@@ -322,25 +323,23 @@ public abstract class AbstractConfigBuilderTestCase extends AbstractScriptConfig
         assertEquals("Prop1", inEndpoint.getProperties().get("testEndpointProperty"));
     }
 
-// TODO MULE-2185 Transaction config needs some work
-//    public void testTransactionConfig() throws Exception
-//    {
-//        // test transaction config
-//        UMODescriptor descriptor = muleContext.getRegistry().lookupService("appleComponent2");
-//        Endpoint inEndpoint = descriptor.getInboundRouter().getEndpoint("transactedInboundEndpoint");
-//        assertNotNull(inEndpoint);
-//        assertEquals(1, descriptor.getOutboundRouter().getRouters().size());
-//
-//        Endpoint outEndpoint = (Endpoint) ((OutboundRouter) descriptor.getOutboundRouter()
-//                .getRouters()
-//                .get(0)).getEndpoints().get(0);
-//
-//        assertNotNull(outEndpoint);
-//        assertNotNull(inEndpoint.getTransactionConfig());
+    public void testTransactionConfig() throws Exception
+    {
+        // test transaction config
+        Service apple = muleContext.getRegistry().lookupService("appleComponent2");
+        InboundEndpoint inEndpoint = apple.getInboundRouter().getEndpoint("transactedInboundEndpoint");
+        assertNotNull(inEndpoint);
+        assertEquals(1, apple.getOutboundRouter().getRouters().size());
+        assertNotNull(inEndpoint.getTransactionConfig());
+     // TODO MULE-2185 Transaction config needs some work
 //        assertEquals(TransactionConfig.ACTION_ALWAYS_BEGIN, inEndpoint.getTransactionConfig().getAction());
 //        assertTrue(inEndpoint.getTransactionConfig().getFactory() instanceof TestTransactionFactory);
 //        assertNull(inEndpoint.getTransactionConfig().getConstraint());
-//    }
+
+        OutboundRouter outRouter = (OutboundRouter) apple.getOutboundRouter().getRouters().get(0);
+        OutboundEndpoint outEndpoint = (OutboundEndpoint) outRouter.getEndpoints().get(0);
+        assertNotNull(outEndpoint);
+    }
 
     public void testEnvironmentProperties()
     {
