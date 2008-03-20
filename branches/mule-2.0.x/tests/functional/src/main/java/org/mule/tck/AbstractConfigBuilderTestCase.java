@@ -18,7 +18,6 @@ import org.mule.api.config.ThreadingProfile;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.endpoint.InboundEndpoint;
 import org.mule.api.endpoint.OutboundEndpoint;
-import org.mule.api.model.Model;
 import org.mule.api.routing.InboundRouter;
 import org.mule.api.routing.InboundRouterCollection;
 import org.mule.api.routing.NestedRouter;
@@ -129,13 +128,9 @@ public abstract class AbstractConfigBuilderTestCase extends AbstractScriptConfig
     // @Override
     public void testModelConfig() throws Exception
     {
-        super.testModelConfig();
-
-        Model model = muleContext.getRegistry().lookupModel("main");
-        super.testModelConfig();
-        // MULE-1995 Components are no longer registered with the model.
-//        assertTrue(model.isComponentRegistered("appleComponent"));
-//        assertTrue(model.isComponentRegistered("appleComponent2"));
+        super.testModelConfig();        
+        assertNotNull(muleContext.getRegistry().lookupService("appleComponent"));
+        assertNotNull(muleContext.getRegistry().lookupService("appleComponent2"));
     }
 
     public void testOutboundRouterConfig2()
