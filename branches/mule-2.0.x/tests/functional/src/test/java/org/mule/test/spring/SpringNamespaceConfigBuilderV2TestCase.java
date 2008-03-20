@@ -187,24 +187,4 @@ public class SpringNamespaceConfigBuilderV2TestCase extends AbstractConfigBuilde
 //        assertEquals(0, tp.getPoolExhaustedAction());
 //        assertEquals(60001, tp.getThreadTTL());
 //    }
-
-    // MULE-2458 (now has separate test)
-//    public void testGlobalEndpointOverrides()
-//    {
-//        ImmutableEndpoint ep = muleContext.getRegistry().lookupEndpoint("orangeEndpoint");
-//        assertNotNull(ep);
-//        assertEquals(1, ep.getProperties().size());
-//        assertEquals("value1", ep.getProperties().get("testGlobal"));
-//        assertNull(ep.getFilter());
-//
-//        MuleDescriptor descriptor = (MuleDescriptor)muleContext.getRegistry().lookupService(
-//            "orangeComponent");
-//        assertNotNull(descriptor);
-//        ep = descriptor.getInboundRouter().getEndpoint("orangeEndpoint");
-//        assertNotNull(ep);
-//        assertEquals("value1", ep.getProperties().get("testLocal"));
-//        assertEquals("value1", ep.getProperties().get("testGlobal"));
-//        assertEquals(2, ep.getProperties().size());
-//        assertNotNull(ep.getFilter());
-//    }
 }
