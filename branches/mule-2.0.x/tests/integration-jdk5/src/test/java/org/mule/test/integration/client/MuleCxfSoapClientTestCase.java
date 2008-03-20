@@ -12,14 +12,15 @@ package org.mule.test.integration.client;
 
 public class MuleCxfSoapClientTestCase extends MuleAxisSoapClientTestCase
 {
+    @Override
     public String getSoapProvider()
     {
         return "cxf";
     }
 
-    // TODO fix: xfire doesn't currently support overloaded methods
+    @Override
     public void testRequestResponseComplex2() throws Exception
     {
-        // no op
+        // TODO fix: cxf doesn't currently support overloaded methods
     }
 }
