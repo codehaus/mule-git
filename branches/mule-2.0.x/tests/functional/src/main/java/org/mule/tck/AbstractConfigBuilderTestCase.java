@@ -68,11 +68,6 @@ public abstract class AbstractConfigBuilderTestCase extends AbstractScriptConfig
         assertNotNull(c);
         assertNotNull(c.getExceptionListener());
         assertTrue(c.getExceptionListener() instanceof TestExceptionStrategy);
-        //TODO RM* Move to the endpoint
-        assertNotNull(c.getConnectionStrategy());
-//        assertTrue(c.getConnectionStrategy() instanceof SimpleRetryConnectionStrategy);
-//        assertEquals(4, ((SimpleRetryConnectionStrategy)c.getConnectionStrategy()).getRetryCount());
-//        assertEquals(3000, ((SimpleRetryConnectionStrategy)c.getConnectionStrategy()).getFrequency());
     }
 
     // @Override
