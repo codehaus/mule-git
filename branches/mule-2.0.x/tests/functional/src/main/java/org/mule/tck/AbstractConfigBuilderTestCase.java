@@ -26,6 +26,8 @@ import org.mule.api.routing.OutboundRouterCollection;
 import org.mule.api.routing.filter.Filter;
 import org.mule.api.service.Service;
 import org.mule.api.transformer.Transformer;
+import org.mule.component.PooledJavaComponent;
+import org.mule.config.PoolingProfile;
 import org.mule.model.seda.SedaService;
 import org.mule.routing.filters.MessagePropertyFilter;
 import org.mule.routing.filters.PayloadTypeFilter;
@@ -257,8 +259,8 @@ public abstract class AbstractConfigBuilderTestCase extends AbstractScriptConfig
         assertEquals(defaultThreadTTL, tp.getThreadTTL());
     }
 
-//    public void testPoolingConfig()
-//    {
+    public void testPoolingConfig()
+    {
 //        //TODO RM* test config
 //        PoolingProfile pp = RegistryContext.getConfiguration().getPoolingProfile();
 //        assertEquals(10, pp.getMaxActive());
@@ -269,16 +271,15 @@ public abstract class AbstractConfigBuilderTestCase extends AbstractScriptConfig
 //        assertTrue(pp.getPoolFactory() instanceof CommonsPoolFactory);
 
         // test per-descriptor overrides
-//        MuleDescriptor descriptor = (MuleDescriptor) muleContext.getRegistry().lookupService(
-//                "appleComponent2");
-//        PoolingProfile pp = descriptor.getPoolingProfile();
-//
-//        assertEquals(9, pp.getMaxActive());
-//        assertEquals(6, pp.getMaxIdle());
-//        assertEquals(4002, pp.getMaxWait());
-//        assertEquals(ObjectPool.WHEN_EXHAUSTED_FAIL, pp.getExhaustedAction());
-//        assertEquals(PoolingProfile.INITIALISE_ALL, pp.getInitialisationPolicy());
-//    }
+        Service service = muleContext.getRegistry().lookupService("appleComponent2");
+        PoolingProfile pp = ((PooledJavaComponent)service.getComponent()).getPoolingProfile();
+
+        assertEquals(9, pp.getMaxActive());
+        assertEquals(6, pp.getMaxIdle());
+        assertEquals(4002, pp.getMaxWait());
+        assertEquals(PoolingProfile.WHEN_EXHAUSTED_FAIL, pp.getExhaustedAction());
+        assertEquals(PoolingProfile.INITIALISE_ALL, pp.getInitialisationPolicy());
+    }
 //
 //    public void testQueueProfileConfig()
 //    {
