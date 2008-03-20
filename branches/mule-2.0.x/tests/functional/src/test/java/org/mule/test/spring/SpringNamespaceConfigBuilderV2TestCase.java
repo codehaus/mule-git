@@ -141,12 +141,6 @@ public class SpringNamespaceConfigBuilderV2TestCase extends AbstractConfigBuilde
         assertEquals(t.getReturnClass(), byte[].class);
     }
 
-    public void testSystemPropertyOverride()
-    {
-        // MULE-2183
-//        assertEquals("default", muleContext.getRegistry().lookupObject("system-prop2"));
-    }
-
 // no longer overrride - made both configs same (and agree with 1.x)
 //    /**
 //     * The MuleXmlConfiguration builder provides special support for overloading
