@@ -564,13 +564,6 @@ public abstract class AbstractService implements Service
 
     protected void handleException(Exception e)
     {
-        if (exceptionListener instanceof DefaultServiceExceptionStrategy)
-        {
-            if (((DefaultServiceExceptionStrategy) exceptionListener).getService() == null)
-            {
-                ((DefaultServiceExceptionStrategy) exceptionListener).setService(this);
-            }
-        }
         exceptionListener.exceptionThrown(e);
     }
 
