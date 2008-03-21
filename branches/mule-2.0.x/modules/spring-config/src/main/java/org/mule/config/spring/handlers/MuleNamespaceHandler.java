@@ -38,9 +38,9 @@ import org.mule.config.spring.parsers.specific.ComponentDelegatingDefinitionPars
 import org.mule.config.spring.parsers.specific.ConfigurationDefinitionParser;
 import org.mule.config.spring.parsers.specific.ConnectionStrategyDefinitionParser;
 import org.mule.config.spring.parsers.specific.DefaultThreadingProfileDefinitionParser;
-import org.mule.config.spring.parsers.specific.GlobalPropertyDefinitionParser;
 import org.mule.config.spring.parsers.specific.ExceptionTXFilterDefinitionParser;
 import org.mule.config.spring.parsers.specific.FilterDefinitionParser;
+import org.mule.config.spring.parsers.specific.GlobalPropertyDefinitionParser;
 import org.mule.config.spring.parsers.specific.IgnoreObjectMethodsDefinitionParser;
 import org.mule.config.spring.parsers.specific.ModelDefinitionParser;
 import org.mule.config.spring.parsers.specific.NotificationDefinitionParser;
@@ -73,7 +73,7 @@ import org.mule.model.seda.SedaModel;
 import org.mule.model.seda.SedaService;
 import org.mule.object.PrototypeObjectFactory;
 import org.mule.object.SingletonObjectFactory;
-import org.mule.routing.CorrelationPropertiesExpressionEvaluator;
+import org.mule.routing.ExpressionMessageInfoMapping;
 import org.mule.routing.ForwardingCatchAllStrategy;
 import org.mule.routing.LoggingCatchAllStrategy;
 import org.mule.routing.filters.EqualsFilter;
@@ -138,9 +138,6 @@ import org.mule.transformer.simple.ObjectToString;
 import org.mule.transformer.simple.SerializableToByteArray;
 import org.mule.transformer.simple.StringAppendTransformer;
 import org.mule.transport.SimpleRetryConnectionStrategy;
-import org.mule.util.expression.FunctionExpressionEvaluator;
-import org.mule.util.expression.MapPayloadExpressionEvaluator;
-import org.mule.util.expression.MessageHeadersExpressionEvaluator;
 
 /**
  * This is the core namespace handler for Mule and configures all Mule configuration elements under the
@@ -318,12 +315,9 @@ public class MuleNamespaceHandler extends AbstractMuleNamespaceHandler
         registerBeanDefinitionParser("custom-async-reply-router", new RouterDefinitionParser(null));
         registerBeanDefinitionParser("single-async-reply-router", new RouterDefinitionParser(SingleResponseRouter.class));
 
-        //Property Extractors
-        registerBeanDefinitionParser("function-property-extractor", new ChildDefinitionParser("propertyExtractor", FunctionExpressionEvaluator.class));
-        registerBeanDefinitionParser("correlation-property-extractor", new ChildDefinitionParser("propertyExtractor", CorrelationPropertiesExpressionEvaluator.class));
-        registerBeanDefinitionParser("custom-property-extractor", new ChildDefinitionParser("propertyExtractor"));
-        registerBeanDefinitionParser("map-property-extractor", new ChildDefinitionParser("propertyExtractor", MapPayloadExpressionEvaluator.class));
-        registerBeanDefinitionParser("message-property-extractor", new ChildDefinitionParser("propertyExtractor", MessageHeadersExpressionEvaluator.class));
+        //Message Info Mappings
+        registerBeanDefinitionParser("expression-message-info-mapping", new ChildDefinitionParser("messageInfoMapping", ExpressionMessageInfoMapping.class));
+        registerBeanDefinitionParser("custom-message-info-mapping", new ChildDefinitionParser("messageInfoMapping"));
 
         //Catch all Strategies
         registerBeanDefinitionParser("logging-catch-all-strategy", new ChildDefinitionParser("catchAllStrategy", LoggingCatchAllStrategy.class));

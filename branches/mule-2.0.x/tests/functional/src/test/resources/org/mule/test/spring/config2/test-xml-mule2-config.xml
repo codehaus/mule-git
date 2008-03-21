@@ -212,22 +212,24 @@
 
             </mule:service>
 
-            <mule:service name="propertyExtractorTestComponent">
+            <mule:service name="msgInfoMappingTestComponent">
                 <mule:inbound/>
                 <mule:component class="org.mule.tck.testmodels.fruit.Apple"/>
                 <mule:outbound>
                     <mule:filtering-router>
-                        <mule:correlation-property-extractor/>
+                        <mule:expression-message-info-mapping messageIdExpression="${header:id}"
+                                                              correlationIdExpression="${header:correlation}"/>
                     </mule:filtering-router>
                 </mule:outbound>
             </mule:service>
 
-            <mule:service name="propertyExtractorResponseRouterTestComponent">
+            <mule:service name="msgInfoMappingResponseRouterTestComponent">
                 <mule:inbound/>
                 <mule:component class="org.mule.tck.testmodels.fruit.Apple"/>
                 <mule:async-reply>
                     <mule:single-async-reply-router>
-                        <mule:custom-property-extractor class="org.mule.util.expression.FunctionExpressionEvaluator"/>
+                        <mule:expression-message-info-mapping messageIdExpression="${header:id}"
+                                                              correlationIdExpression="${header:correlation}"/>
                     </mule:single-async-reply-router>
                 </mule:async-reply>
             </mule:service>

@@ -2810,14 +2810,14 @@
             <xsd:extension base="abstractInboundRouterType">
                 <xsd:sequence>
                     <xsd:element ref="abstract-filter" minOccurs="0"/>
-                    <xsd:element ref="abstract-property-extractor" minOccurs="0"/>
+                    <!-- TODO this doesn't make sense here, need to re-visit <xsd:element ref="abstract-message-info-mapping" minOccurs="0"/>-->
                 </xsd:sequence>
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
 
-    <xsd:element name="abstract-property-extractor" abstract="true" type="abstractPropertyExtractorType"/>
-    <xsd:complexType name="abstractPropertyExtractorType"/>
+    <xsd:element name="abstract-message-info-mapping" abstract="true" type="abstractMessageInfoMappingType"/>
+    <xsd:complexType name="abstractMessageInfoMappingType"/>
 
     <xsd:element name="idempotent-receiver-router" type="filteredInboundRouterType"
                  substitutionGroup="abstract-inbound-router"/>
@@ -2894,7 +2894,7 @@
             <xsd:extension base="abstractAsyncReplyRouterType">
                 <xsd:sequence>
                     <xsd:element ref="abstract-inbound-endpoint" minOccurs="0" maxOccurs="unbounded"/>
-                    <xsd:element ref="abstract-property-extractor" minOccurs="0"/>
+                    <xsd:element ref="abstract-message-info-mapping" minOccurs="0"/>
                 </xsd:sequence>
             </xsd:extension>
         </xsd:complexContent>
@@ -2925,7 +2925,7 @@
                     <xsd:element ref="abstract-outbound-endpoint" minOccurs="0" maxOccurs="unbounded"/>
                     <xsd:element name="reply-to" type="replyToType" minOccurs="0"/>
                     <xsd:element ref="abstract-transaction" minOccurs="0"/>
-                    <xsd:element ref="abstract-property-extractor" minOccurs="0"/>
+                    <xsd:element ref="abstract-message-info-mapping" minOccurs="0"/>
                 </xsd:sequence>
                 <xsd:attribute name="enableCorrelation" default="IF_NOT_SET">
                     <xsd:simpleType>
@@ -3070,73 +3070,50 @@
         </xsd:complexContent>
     </xsd:complexType>
 
+    <!-- Message Info Mappers -->
 
-    <!-- property extractors -->
-
-    <xsd:element name="map-property-extractor" type="abstractPropertyExtractorType"
-                 substitutionGroup="abstract-property-extractor">
+    <xsd:element name="expression-message-info-mapping" type="expressionMessageInfoMappingType"
+                 substitutionGroup="abstract-message-info-mapping">
         <xsd:annotation>
             <xsd:documentation>
-                If the message payload is a map then the property is extracted from the
-                map using the property name as key.
+                Allows expressions to be configured to extract the message information.
             </xsd:documentation>
         </xsd:annotation>
     </xsd:element>
 
-    <xsd:element name="message-property-extractor" type="abstractPropertyExtractorType"
-                 substitutionGroup="abstract-property-extractor">
-        <xsd:annotation>
-            <xsd:documentation>
-                The property is extracted from the message headers using the header property
-                name as key. The special value "payload" retrieves the message payload.
-            </xsd:documentation>
-        </xsd:annotation>
-    </xsd:element>
-
-    <xsd:element name="correlation-property-extractor" type="abstractPropertyExtractorType"
-                 substitutionGroup="abstract-property-extractor">
-        <xsd:annotation>
-            <xsd:documentation>
-                A special extractor, this returns the correlation ID for various standard cases.
-            </xsd:documentation>
-        </xsd:annotation>
-    </xsd:element>
-
-    <xsd:element name="function-property-extractor" type="abstractPropertyExtractorType"
-                 substitutionGroup="abstract-property-extractor">
-        <xsd:annotation>
-            <xsd:documentation>
-                Rather than extract a value from the message, this supports the following
-                functions: "now", "date", "uuid", "hostname" and "ip".
-            </xsd:documentation>
-        </xsd:annotation>
-    </xsd:element>
-
-    <xsd:element name="custom-property-extractor" type="customPropertyExtractorType"
-                 substitutionGroup="abstract-property-extractor">
-        <xsd:annotation>
-            <xsd:documentation>
-                This allows an arbitrary class to be used as a property extractor.
-            </xsd:documentation>
-        </xsd:annotation>
-    </xsd:element>
-    <xsd:complexType name="customPropertyExtractorType">
+    <xsd:complexType name="expressionMessageInfoMappingType">
         <xsd:complexContent>
-            <xsd:extension base="abstractPropertyExtractorType">
+            <xsd:extension base="abstractMessageInfoMappingType">
+                <xsd:attribute name="messageIdExpression" type="xsd:string" use="required"/>
+                <xsd:attribute name="correlationIdExpression" type="xsd:string" use="required"/>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:element name="custom-message-info-mapping" type="customMessageInfoMappingType"
+                 substitutionGroup="abstract-message-info-mapping">
+        <xsd:annotation>
+            <xsd:documentation>
+                This allows configuraton of a custom implementation of MessageInfoMapping
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="customMessageInfoMappingType">
+        <xsd:complexContent>
+            <xsd:extension base="abstractMessageInfoMappingType">
                 <xsd:sequence>
                     <xsd:element ref="spring:property" minOccurs="0" maxOccurs="unbounded"/>
                 </xsd:sequence>
                 <xsd:attribute name="class" type="substitutableClass" use="required">
                     <xsd:annotation>
                         <xsd:documentation>
-                            An implementation of the PropertyExtractor interface.
+                            An implementation of the MessageInfoMapping interface.
                         </xsd:documentation>
                     </xsd:annotation>
                 </xsd:attribute>
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-
     <!--==============================================================-->
     <!--  Lifecycle Adapters                                            -->
     <!--==============================================================-->

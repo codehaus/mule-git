@@ -14,9 +14,10 @@ import org.mule.api.MuleMessage;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.lifecycle.LifecycleTransitionResult;
+import org.mule.api.routing.MessageInfoMapping;
 import org.mule.api.routing.ResponseRouter;
 import org.mule.routing.AbstractRouter;
-import org.mule.routing.CorrelationPropertiesExpressionEvaluator;
+import org.mule.routing.MuleMessageInfoMapping;
 import org.mule.util.ClassUtils;
 import org.mule.util.expression.ExpressionEvaluator;
 
@@ -35,7 +36,7 @@ public abstract class AbstractResponseRouter extends AbstractRouter implements R
     
     private boolean failOnTimeout = true;
 
-    protected ExpressionEvaluator propertyExtractor = new CorrelationPropertiesExpressionEvaluator();
+    protected MessageInfoMapping messageInfoMapping = new MuleMessageInfoMapping();
 
     //@Override
     public LifecycleTransitionResult initialise() throws InitialisationException
@@ -46,35 +47,15 @@ public abstract class AbstractResponseRouter extends AbstractRouter implements R
         }
         return super.initialise();
     }
-    
-    public ExpressionEvaluator getPropertyExtractor()
+
+    public MessageInfoMapping getMessageInfoMapping()
     {
-        return propertyExtractor;
+        return messageInfoMapping;
     }
 
-    public void setPropertyExtractor(ExpressionEvaluator propertyExtractor)
+    public void setMessageInfoMapping(MessageInfoMapping messageInfoMapping)
     {
-        this.propertyExtractor = propertyExtractor;
-    }
-
-    /**
-     * A digester callback to configure a custom correlation extractor.
-     * 
-     * @param className correlation extractor fully qualified class name
-     */
-    public void setPropertyExtractorAsString(String className)
-    {
-        try
-        {
-            this.propertyExtractor = (ExpressionEvaluator) ClassUtils.instanciateClass(className, null,
-                getClass());
-        }
-        catch (Exception ex)
-        {
-            throw (IllegalArgumentException) new IllegalArgumentException(
-                "Couldn't instanciate property extractor class " + className
-                ).initCause(ex);
-        }
+        this.messageInfoMapping = messageInfoMapping;
     }
 
     public int getTimeout()
@@ -97,7 +78,7 @@ public abstract class AbstractResponseRouter extends AbstractRouter implements R
      */
     protected Object getReplyAggregateIdentifier(MuleMessage message)
     {
-        return propertyExtractor.evaluate(MuleProperties.MULE_CORRELATION_ID_PROPERTY, message);
+        return messageInfoMapping.getCorrelationId(message);
     }
 
     /**
@@ -112,7 +93,7 @@ public abstract class AbstractResponseRouter extends AbstractRouter implements R
      */
     protected Object getCallResponseAggregateIdentifier(MuleMessage message)
     {
-        return propertyExtractor.evaluate(MuleProperties.MULE_MESSAGE_ID_PROPERTY, message);
+        return messageInfoMapping.getMessageId(message);
     }
 
     public boolean isFailOnTimeout()
