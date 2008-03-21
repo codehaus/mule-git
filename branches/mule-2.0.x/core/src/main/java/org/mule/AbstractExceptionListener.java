@@ -417,6 +417,10 @@ public abstract class AbstractExceptionListener implements ExceptionListener, In
         {
             muleContext.fireNotification(notification);
         }
+        else if (logger.isWarnEnabled())
+        {
+            logger.debug("MuleContext is not yet available for firing notifications, ignoring event: " + notification);
+        }
     }
 
     public WildcardFilter getCommitTxFilter()

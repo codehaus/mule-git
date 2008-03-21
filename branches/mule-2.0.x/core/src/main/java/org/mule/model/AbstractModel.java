@@ -10,9 +10,10 @@
 
 package org.mule.model;
 
-import org.mule.api.MuleException;
 import org.mule.api.MuleContext;
+import org.mule.api.MuleException;
 import org.mule.api.component.LifecycleAdapterFactory;
+import org.mule.api.context.MuleContextAware;
 import org.mule.api.context.notification.ServerNotification;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.lifecycle.LifecycleTransitionResult;
@@ -30,7 +31,6 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -211,7 +211,7 @@ public abstract class AbstractModel implements Model
         {
             muleContext.fireNotification(notification);
         }
-        else if (logger.isDebugEnabled())
+        else if (logger.isWarnEnabled())
         {
             logger.debug("MuleContext is not yet available for firing notifications, ignoring event: " + notification);
         }
@@ -220,6 +220,12 @@ public abstract class AbstractModel implements Model
     public void setMuleContext(MuleContext context)
     {
         this.muleContext = context;
+        //Because we allow a default Exception strategy for the model we need to inject the
+        //muleContext when we get it
+        if(exceptionListener instanceof MuleContextAware)
+        {
+            ((MuleContextAware)exceptionListener).setMuleContext(muleContext);
+        }
     }
 
 }
