@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.BeanCreationException;
+import org.springframework.beans.factory.config.RuntimeBeanReference;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.GenericBeanDefinition;
@@ -48,6 +49,7 @@ public class TestComponentDefinitionParser extends ComponentDefinitionParser
         addIgnored("enableMessageHistory");
         addIgnored("enableNotifications");
         addIgnored("throwException");
+        addIgnored("exceptionToThrow");
     }
 
     protected void parseChild(Element element, ParserContext parserContext, BeanDefinitionBuilder builder)
@@ -68,8 +70,7 @@ public class TestComponentDefinitionParser extends ComponentDefinitionParser
         for (int i = 0; i < element.getAttributes().getLength(); i++)
         {
             Node n = element.getAttributes().item(i);
-            props.put(n.getNodeName(), n.getNodeValue());
-
+                props.put(n.getLocalName(), n.getNodeValue());
         }
         String returnData = null;
 

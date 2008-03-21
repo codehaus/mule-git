@@ -12,8 +12,9 @@ package org.mule.test.integration.tck;
 import org.mule.api.MuleMessage;
 import org.mule.module.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
+import org.mule.tck.exceptions.FunctionalTestException;
 
-import java.net.URI;
+import java.io.FileNotFoundException;
 
 public class TestNamespaceFunctionalTestCase extends FunctionalTestCase
 {
@@ -56,6 +57,15 @@ public class TestNamespaceFunctionalTestCase extends FunctionalTestCase
         MuleMessage message = client.send("vm://service4", "foo", null);
         assertNotNull(message);
         assertNotNull(message.getExceptionPayload());
-        assertEquals("Functional Test Service Exception", message.getExceptionPayload().getMessage());
+        assertEquals(FunctionalTestException.EXCEPTION_MESSAGE, message.getExceptionPayload().getMessage());
+    }
+
+    public void testService5() throws Exception
+    {
+        MuleClient client = new MuleClient();
+        MuleMessage message = client.send("vm://service5", "foo", null);
+        assertNotNull(message);
+        assertNotNull(message.getExceptionPayload());
+        assertTrue(message.getExceptionPayload().getRootException() instanceof FileNotFoundException);
     }
 }

@@ -10,8 +10,9 @@
 package org.mule.test.tck;
 
 import org.mule.tck.FunctionalTestCase;
-import org.mule.tck.functional.FunctionalTestComponent;
 import org.mule.tck.functional.FunctionalTestComponent2;
+
+import java.io.IOException;
 
 public class TestNamespaceTestCase extends FunctionalTestCase
 {
@@ -43,6 +44,9 @@ public class TestNamespaceTestCase extends FunctionalTestCase
         FunctionalTestComponent2 ftc = (FunctionalTestComponent2) object;
 
         assertTrue(ftc.isThrowException());
+        assertNotNull(ftc.getExceptionToThrow());
+        assertTrue(ftc.getExceptionToThrow().isAssignableFrom(IOException.class));
+
         assertEquals(testData, ftc.getReturnData());
 
         assertTrue(ftc.isEnableMessageHistory());

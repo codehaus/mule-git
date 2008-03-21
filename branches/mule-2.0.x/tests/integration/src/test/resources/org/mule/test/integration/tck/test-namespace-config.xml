@@ -42,5 +42,12 @@
             </inbound>
             <test:component throwException="true" />
         </service>
+
+         <service name="testService5">
+            <inbound>
+                <inbound-endpoint address="vm://service5"/>
+            </inbound>
+            <test:component throwException="true" exceptionToThrow="java.io.FileNotFoundException"/>
+        </service>
     </model>
 </mule>

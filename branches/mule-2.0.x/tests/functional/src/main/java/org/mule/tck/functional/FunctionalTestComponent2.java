@@ -20,6 +20,7 @@ import org.mule.api.lifecycle.Disposable;
 import org.mule.api.lifecycle.Initialisable;
 import org.mule.api.lifecycle.LifecycleTransitionResult;
 import org.mule.tck.exceptions.FunctionalTestException;
+import org.mule.util.ClassUtils;
 import org.mule.util.NumberUtils;
 import org.mule.util.StringMessageUtils;
 import org.mule.util.expression.ExpressionEvaluatorManager;
@@ -52,11 +53,11 @@ public class FunctionalTestComponent2 implements Callable, Initialisable, Dispos
     public static final int STREAM_BUFFER_SIZE = 4096;
     private EventCallback eventCallback;
     private Object returnData = null;
-    private boolean appendComponentName = false;
     private boolean throwException = false;
     private boolean enableMessageHistory = true;
     private boolean enableNotifications = true;
     private String appendString;
+    private Class exceptionToThrow;
 
     /**
      * Keeps a list of any messages received on this service. Note that only references
@@ -92,14 +93,41 @@ public class FunctionalTestComponent2 implements Callable, Initialisable, Dispos
     }
 
     /**
+         * This method is used by some WebServices tests where you don' want to be introducing the {@link org.mule.api.MuleEventContext} as
+         * a complex type.
+         *
+         * @param data the event data received
+         * @return the processed message
+         * @throws Exception
+         */
+        public Object onReceive(Object data) throws Exception
+        {
+            MuleEventContext context = RequestContext.getEventContext();
+
+            if (isThrowException())
+            {
+                throwException();
+            }
+            return process(data, context);
+        }
+
+
+    /**
      * Always throws a {@link org.mule.tck.exceptions.FunctionalTestException}.  This methodis only called if
      * {@link #isThrowException()} is true.
      *
-     * @throws FunctionalTestException
+     * @throws FunctionalTestException or the exception specified in 'exceptionType
      */
-    protected void throwException() throws FunctionalTestException
+    protected void throwException() throws Exception
     {
-        throw new FunctionalTestException();
+        if (getExceptionToThrow() != null)
+        {
+            throw (Exception)getExceptionToThrow().newInstance();
+        }
+        else
+        {
+            throw new FunctionalTestException();
+        }
     }
 
     /**
@@ -108,7 +136,7 @@ public class FunctionalTestComponent2 implements Callable, Initialisable, Dispos
      * Note that the value of {@link #getAppendString()} can contain expressions.
      *
      * @param contents the string vlaue of the current message payload
-     * @param message the current message
+     * @param message  the current message
      * @return a concatenated string of the current payload and the appendString
      */
     protected String append(String contents, MuleMessage message)
@@ -119,7 +147,8 @@ public class FunctionalTestComponent2 implements Callable, Initialisable, Dispos
     /**
      * The service method that implements the test component logic.  This method can be called publically through
      * either {@link #onCall(org.mule.api.MuleEventContext)} or {@link #onReceive(Object)}
-     * @param data The message payload
+     *
+     * @param data    The message payload
      * @param context the current {@link org.mule.api.MuleEventContext}
      * @return a new message payload according to the configuration of the component
      * @throws Exception if there is a general failure or if {@link #isThrowException()} is true.
@@ -181,26 +210,6 @@ public class FunctionalTestComponent2 implements Callable, Initialisable, Dispos
 
         return replyMessage;
     }
-
-    /**
-     * This method is used by some WebServices tests where you don' want to be introducing the {@link org.mule.api.MuleEventContext} as
-     * a complex type.
-     *
-     * @param data the event data received
-     * @return the processed message
-     * @throws Exception
-     */
-    public Object onReceive(Object data) throws Exception
-    {
-        MuleEventContext context = RequestContext.getEventContext();
-
-        if (isThrowException())
-        {
-            throwException();
-        }
-        return process(data, context);
-    }
-
 
     /**
      * An event callback is called when a message is received by the service.
@@ -292,32 +301,6 @@ public class FunctionalTestComponent2 implements Callable, Initialisable, Dispos
         this.throwException = throwException;
     }
 
-    /**
-     * This will cause the service to append the compoent name to the end of the message
-     * returned from this service. This only works when processing String messages.
-     * This feature is useful when processing multiple messages using a pool of FunctionalTestComponents
-     * to determine who processed the resulting message
-     *
-     * @return true if the service name will be appended to the return message
-     */
-    public boolean isAppendComponentName()
-    {
-        return appendComponentName;
-    }
-
-    /**
-     * This will cause the service to append the compoent name to the end of the message
-     * returned from this service. This only works when processing String messages.
-     * This feature is useful when processing multiple messages using a pool of FunctionalTestComponents
-     * to determine who processed the resulting message
-     *
-     * @param appendComponentName true if the service name will be appended to the return message
-     */
-    public void setAppendComponentName(boolean appendComponentName)
-    {
-        this.appendComponentName = appendComponentName;
-    }
-
     public boolean isEnableMessageHistory()
     {
         return enableMessageHistory;
@@ -396,5 +379,13 @@ public class FunctionalTestComponent2 implements Callable, Initialisable, Dispos
         this.enableNotifications = enableNotifications;
     }
 
+    public Class getExceptionToThrow()
+    {
+        return exceptionToThrow;
+    }
 
+    public void setExceptionToThrow(Class exceptionToThrow)
+    {
+        this.exceptionToThrow = exceptionToThrow;
+    }
 }
