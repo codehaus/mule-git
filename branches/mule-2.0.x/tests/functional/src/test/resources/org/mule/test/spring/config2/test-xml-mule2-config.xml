@@ -10,10 +10,10 @@
 
     <mule:mule>
 
-        <mule:environment-property name="doCompression" value="true"/>
-        <mule:environment-property name="beanProperty1" value="this was set from the manager properties!"/>
-        <mule:environment-property name="OS_Version" value="${os.version}"/>
-        <mule:environment-property name="system-prop2" value="${system-prop2-cannot-loop}"/> <!-- defaultValue="default" -->
+        <mule:global-property name="doCompression" value="true"/>
+        <mule:global-property name="beanProperty1" value="this was set from the manager properties!"/>
+        <mule:global-property name="OS_Version" value="${os.version}"/>
+        <mule:global-property name="system-prop2" value="${system-prop2-cannot-loop}"/> <!-- defaultValue="default" -->
 
         <mule:configuration defaultSynchronousEndpoints="true" defaultRemoteSync="true">
             <mule:default-threading-profile maxBufferSize="42" maxThreadsActive="16"

@@ -38,7 +38,7 @@ import org.mule.config.spring.parsers.specific.ComponentDelegatingDefinitionPars
 import org.mule.config.spring.parsers.specific.ConfigurationDefinitionParser;
 import org.mule.config.spring.parsers.specific.ConnectionStrategyDefinitionParser;
 import org.mule.config.spring.parsers.specific.DefaultThreadingProfileDefinitionParser;
-import org.mule.config.spring.parsers.specific.EnvironmentPropertyDefinitionParser;
+import org.mule.config.spring.parsers.specific.GlobalPropertyDefinitionParser;
 import org.mule.config.spring.parsers.specific.FilterDefinitionParser;
 import org.mule.config.spring.parsers.specific.IgnoreObjectMethodsDefinitionParser;
 import org.mule.config.spring.parsers.specific.ModelDefinitionParser;
@@ -155,14 +155,13 @@ public class MuleNamespaceHandler extends AbstractMuleNamespaceHandler
 
         //Common elements
         registerBeanDefinitionParser("configuration", new ConfigurationDefinitionParser());
-        registerBeanDefinitionParser("environment-property", new EnvironmentPropertyDefinitionParser());
+        registerBeanDefinitionParser("global-property", new GlobalPropertyDefinitionParser());
         registerBeanDefinitionParser("default-threading-profile", new DefaultThreadingProfileDefinitionParser(MuleProperties.OBJECT_DEFAULT_THREADING_PROFILE));
         registerBeanDefinitionParser("default-dispatcher-threading-profile", new DefaultThreadingProfileDefinitionParser(MuleProperties.OBJECT_DEFAULT_MESSAGE_DISPATCHER_THREADING_PROFILE));
         registerBeanDefinitionParser("default-receiver-threading-profile", new DefaultThreadingProfileDefinitionParser(MuleProperties.OBJECT_DEFAULT_MESSAGE_RECEIVER_THREADING_PROFILE));
         registerBeanDefinitionParser("default-component-threading-profile", new DefaultThreadingProfileDefinitionParser(MuleProperties.OBJECT_DEFAULT_COMPONENT_THREADING_PROFILE));
         registerBeanDefinitionParser("default-dispatcher-connection-strategy", new ConnectionStrategyDefinitionParser());
         registerBeanDefinitionParser("default-receiver-connection-strategy", new ConnectionStrategyDefinitionParser());
-        //registerBeanDefinitionParser("mule-configuration", new MuleContextDefinitionParser());
         registerBeanDefinitionParser("component-threading-profile", new ThreadingProfileDefinitionParser("threadingProfile", MuleProperties.OBJECT_DEFAULT_COMPONENT_THREADING_PROFILE));
         registerBeanDefinitionParser("custom-exception-strategy", new ChildDefinitionParser("exceptionListener", null));
         registerBeanDefinitionParser("default-service-exception-strategy", new ChildDefinitionParser("exceptionListener", DefaultServiceExceptionStrategy.class));
@@ -184,8 +183,8 @@ public class MuleNamespaceHandler extends AbstractMuleNamespaceHandler
 
         //Transformer elements
         registerBeanDefinitionParser("transformers", new ParentDefinitionParser());
-        registerMuleBeanDefinitionParser("response-transformers", new ParentDefinitionParser());
 
+        registerMuleBeanDefinitionParser("response-transformers", new ParentDefinitionParser());
         registerBeanDefinitionParser("transformer", new TransformerRefDefinitionParser());
 
         registerBeanDefinitionParser("custom-transformer", new TransformerDefinitionParser());
@@ -235,7 +234,6 @@ public class MuleNamespaceHandler extends AbstractMuleNamespaceHandler
         // Models
         registerBeanDefinitionParser("model", new ModelDefinitionParser());
         registerBeanDefinitionParser("seda-model", new InheritDefinitionParser(new OrphanDefinitionParser(SedaModel.class, true), new NamedDefinitionParser()));
-        // registerBeanDefinitionParser("model-pipeline", new OrphanDefinitionParser(PipelineModel.class, true));
 
         registerBeanDefinitionParser("entry-point-resolver-set", new ChildDefinitionParser("entryPointResolverSet", DefaultEntryPointResolverSet.class));
         registerBeanDefinitionParser("legacy-entry-point-resolver-set", new ChildDefinitionParser("entryPointResolverSet", LegacyEntryPointResolverSet.class));
