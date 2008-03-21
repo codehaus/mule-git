@@ -74,7 +74,7 @@ public class TransientRegistry extends AbstractRegistry
     {
         registry = new HashMap(8);
 
-        getObjectTypeMap(ObjectProcessor.class).put("_mulePropertyExtractorProcessor",
+        getObjectTypeMap(ObjectProcessor.class).put("_muleExpressionEvaluatorProcessor",
                 new ExpressionEvaluatorProcessor());
 
         RegistryContext.setRegistry(this);
