@@ -194,10 +194,12 @@ public abstract class AbstractService implements Service
 
         if (exceptionListener == null)
         {
-            // TODO MULE-2102 This should be configured in the default template.
-            exceptionListener = new DefaultServiceExceptionStrategy(this);
-            ((MuleContextAware) exceptionListener).setMuleContext(muleContext);
-            ((Initialisable) exceptionListener).initialise();
+            //By default us the model Exception Listener
+            exceptionListener = getModel().getExceptionListener();
+//            // TODO MULE-2102 This should be configured in the default template.
+//            exceptionListener = new DefaultServiceExceptionStrategy(this);
+//            ((MuleContextAware) exceptionListener).setMuleContext(muleContext);
+//            ((Initialisable) exceptionListener).initialise();
         }
 
         doInitialise();
