@@ -53,6 +53,14 @@
                         </xsd:documentation>
                     </xsd:annotation>
                 </xsd:attribute>
+                <xsd:attribute name="exceptionToThrow" type="xsd:NMTOKEN">
+                    <xsd:annotation>
+                        <xsd:documentation>A fully qualified classname of the exception objct to throw. Used in conjunction with
+                            'throwException'. If this is not specified a FunctionalTestException will be thrown by
+                            default.
+                        </xsd:documentation>
+                    </xsd:annotation>
+                </xsd:attribute>
                 <xsd:attribute name="enableMessageHistory" type="xsd:boolean">
                     <xsd:annotation>
                         <xsd:documentation>Every messages that is received by the test component is stored and can be
