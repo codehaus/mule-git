@@ -1892,6 +1892,68 @@
             <xsd:extension base="patternFilterType"/>
         </xsd:complexContent>
     </xsd:complexType>
+
+    <xsd:element name="expression-filter" type="expressionFilterType" substitutionGroup="abstract-filter">
+        <xsd:annotation>
+            <xsd:documentation>
+                A filter that can evaluate a range of expressions. It supports some base expression types
+                such as 'header', 'payload' (payload type), 'regex' and 'wildcard'.
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="expressionFilterType">
+        <xsd:complexContent>
+            <xsd:extension base="abstractFilterType">
+                <xsd:attribute name="evaluator" use="required">
+                    <xsd:annotation>
+                        <xsd:documentation>The expression evaluator to use. The expression filter supports some types
+                            such as header, payload, exception, wildcard and regex, that are in-built filters not
+                            registered with the ExpressionEvaluatorManager. All others are registered with the
+                            ExpressionEvaluatorManager. Where XPath, bean and ongl are used, the expression should be a
+                            boolean expression.
+                        </xsd:documentation>
+                    </xsd:annotation>
+                    <xsd:simpleType>
+                        <xsd:restriction base="xsd:NMTOKEN">
+                            <xsd:enumeration value="header"/>
+                            <xsd:enumeration value="payload-type"/>
+                            <xsd:enumeration value="exception-type"/>
+                            <xsd:enumeration value="wildcard"/>
+                            <xsd:enumeration value="regex"/>
+                            <xsd:enumeration value="ognl"/>
+                            <xsd:enumeration value="xpath"/>
+                            <xsd:enumeration value="jxpath"/>
+                            <xsd:enumeration value="bean"/>
+                            <xsd:enumeration value="custom"/>
+                        </xsd:restriction>
+                    </xsd:simpleType>
+                </xsd:attribute>
+                <xsd:attribute name="expression" type="xsd:string" use="required">
+                    <xsd:annotation>
+                        <xsd:documentation>The expression that will be evaluated. This should always be a boolean
+                            expression.
+                        </xsd:documentation>
+                    </xsd:annotation>
+                </xsd:attribute>
+                <xsd:attribute name="customEvaluator" type="xsd:NMTOKEN">
+                    <xsd:annotation>
+                        <xsd:documentation>Must be set if the evaluator is set to 'custom'. Also the custom evaluator
+                            must be registered with the ExpressionEvaluatorManager if it is to be used here.
+                        </xsd:documentation>
+                    </xsd:annotation>
+                </xsd:attribute>
+                <xsd:attribute name="nullReturnsTrue" type="xsd:boolean">
+                    <xsd:annotation>
+                        <xsd:documentation>If the specified expression returns null should the filter return true or
+                            false.
+                        </xsd:documentation>
+                    </xsd:annotation>
+                </xsd:attribute>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+
     <xsd:element name="regex-filter" type="patternFilterType" substitutionGroup="abstract-filter">
         <xsd:annotation>
             <xsd:documentation>

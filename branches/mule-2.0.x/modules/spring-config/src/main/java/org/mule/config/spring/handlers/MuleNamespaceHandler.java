@@ -78,6 +78,7 @@ import org.mule.routing.ForwardingCatchAllStrategy;
 import org.mule.routing.LoggingCatchAllStrategy;
 import org.mule.routing.filters.EqualsFilter;
 import org.mule.routing.filters.ExceptionTypeFilter;
+import org.mule.routing.filters.ExpressionFilter;
 import org.mule.routing.filters.MessagePropertyFilter;
 import org.mule.routing.filters.PayloadTypeFilter;
 import org.mule.routing.filters.RegExFilter;
@@ -336,6 +337,7 @@ public class MuleNamespaceHandler extends AbstractMuleNamespaceHandler
         registerBeanDefinitionParser("payload-type-filter", new FilterDefinitionParser(PayloadTypeFilter.class));
         registerBeanDefinitionParser("wildcard-filter", new FilterDefinitionParser(WildcardFilter.class));
         registerBeanDefinitionParser("equals-filter", new FilterDefinitionParser(EqualsFilter.class));
+        registerBeanDefinitionParser("expression-filter", new FilterDefinitionParser(ExpressionFilter.class));
         registerBeanDefinitionParser("custom-filter", new FilterDefinitionParser());
 
         //Retry strategies
