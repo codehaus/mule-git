@@ -58,6 +58,7 @@ public class FunctionalTestComponent2 implements Callable, Initialisable, Dispos
     private boolean enableNotifications = true;
     private String appendString;
     private Class exceptionToThrow;
+    private long waitTime = 0;
 
     /**
      * Keeps a list of any messages received on this service. Note that only references
@@ -208,6 +209,18 @@ public class FunctionalTestComponent2 implements Callable, Initialisable, Dispos
                     new FunctionalTestNotification(context, replyMessage, FunctionalTestNotification.EVENT_RECEIVED));
         }
 
+        //Time to wait before returning
+        if(waitTime > 0)
+        {
+            try
+            {
+                Thread.sleep(waitTime);
+            }
+            catch (InterruptedException e)
+            {
+                logger.info("FunctionalTestComponent waitTime was interrupted");
+            }
+        }
         return replyMessage;
     }
 
@@ -387,5 +400,15 @@ public class FunctionalTestComponent2 implements Callable, Initialisable, Dispos
     public void setExceptionToThrow(Class exceptionToThrow)
     {
         this.exceptionToThrow = exceptionToThrow;
+    }
+
+    public long getWaitTime()
+    {
+        return waitTime;
+    }
+
+    public void setWaitTime(long waitTime)
+    {
+        this.waitTime = waitTime;
     }
 }

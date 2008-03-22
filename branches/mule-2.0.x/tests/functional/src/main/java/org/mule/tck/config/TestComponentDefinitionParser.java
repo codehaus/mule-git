@@ -50,6 +50,7 @@ public class TestComponentDefinitionParser extends ComponentDefinitionParser
         addIgnored("enableNotifications");
         addIgnored("throwException");
         addIgnored("exceptionToThrow");
+        addIgnored("waitTime");
     }
 
     protected void parseChild(Element element, ParserContext parserContext, BeanDefinitionBuilder builder)

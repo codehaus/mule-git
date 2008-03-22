@@ -53,9 +53,10 @@
                         </xsd:documentation>
                     </xsd:annotation>
                 </xsd:attribute>
-                <xsd:attribute name="exceptionToThrow" type="xsd:NMTOKEN">
+                <xsd:attribute name="exceptionToThrow" type="mule:substitutableName">
                     <xsd:annotation>
-                        <xsd:documentation>A fully qualified classname of the exception objct to throw. Used in conjunction with
+                        <xsd:documentation>A fully qualified classname of the exception objct to throw. Used in
+                            conjunction with
                             'throwException'. If this is not specified a FunctionalTestException will be thrown by
                             default.
                         </xsd:documentation>
@@ -83,6 +84,13 @@
                         <xsd:documentation>A string value that will get appened to every message payload that passes
                             through the component. Note that by setting this property you implicitly select that the
                             message payload will be converted to a String and that a string payload will be returned.
+                        </xsd:documentation>
+                    </xsd:annotation>
+                </xsd:attribute>
+                <xsd:attribute name="waitTime" type="mule:substitutableLong">
+                    <xsd:annotation>
+                        <xsd:documentation>A time in milliseconds to wait before returning a result. All processing
+                            happens in the component before the waiting happens.
                         </xsd:documentation>
                     </xsd:annotation>
                 </xsd:attribute>
