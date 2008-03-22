@@ -32,21 +32,8 @@ public abstract class AbstractResponseRouter extends AbstractRouter implements R
 {
     protected final Log logger = LogFactory.getLog(getClass());
 
-    private int timeout = -1; // undefined
-    
-    private boolean failOnTimeout = true;
-
     protected MessageInfoMapping messageInfoMapping = new MuleMessageInfoMapping();
 
-    //@Override
-    public LifecycleTransitionResult initialise() throws InitialisationException
-    {
-        if (timeout == -1) // undefined
-        {
-            setTimeout(muleContext.getConfiguration().getDefaultSynchronousEventTimeout());
-        }
-        return super.initialise();
-    }
 
     public MessageInfoMapping getMessageInfoMapping()
     {
@@ -58,15 +45,6 @@ public abstract class AbstractResponseRouter extends AbstractRouter implements R
         this.messageInfoMapping = messageInfoMapping;
     }
 
-    public int getTimeout()
-    {
-        return timeout;
-    }
-
-    public void setTimeout(int timeout)
-    {
-        this.timeout = timeout;
-    }
 
     /**
      * Extracts a 'Correlation Id' from a reply message. The correlation Id does not
@@ -94,15 +72,5 @@ public abstract class AbstractResponseRouter extends AbstractRouter implements R
     protected Object getCallResponseAggregateIdentifier(MuleMessage message)
     {
         return messageInfoMapping.getMessageId(message);
-    }
-
-    public boolean isFailOnTimeout()
-    {
-        return failOnTimeout;
-    }
-
-    public void setFailOnTimeout(boolean failOnTimeout)
-    {
-        this.failOnTimeout = failOnTimeout;
     }
 }

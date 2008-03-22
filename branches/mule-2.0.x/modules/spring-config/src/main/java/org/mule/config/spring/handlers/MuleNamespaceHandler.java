@@ -108,6 +108,7 @@ import org.mule.routing.outbound.OutboundPassThroughRouter;
 import org.mule.routing.outbound.StaticRecipientList;
 import org.mule.routing.outbound.TemplateEndpointRouter;
 import org.mule.routing.response.DefaultResponseRouterCollection;
+import org.mule.routing.response.SimpleCollectionResponseAggregator;
 import org.mule.routing.response.SingleResponseRouter;
 import org.mule.security.PasswordBasedEncryptionStrategy;
 import org.mule.security.SecretKeyEncryptionStrategy;
@@ -315,6 +316,7 @@ public class MuleNamespaceHandler extends AbstractMuleNamespaceHandler
         //Response Routers
         registerBeanDefinitionParser("custom-async-reply-router", new RouterDefinitionParser(null));
         registerBeanDefinitionParser("single-async-reply-router", new RouterDefinitionParser(SingleResponseRouter.class));
+        registerBeanDefinitionParser("collection-async-reply-router", new RouterDefinitionParser(SimpleCollectionResponseAggregator.class));
 
         //Message Info Mappings
         registerBeanDefinitionParser("expression-message-info-mapping", new ChildDefinitionParser("messageInfoMapping", ExpressionMessageInfoMapping.class));
