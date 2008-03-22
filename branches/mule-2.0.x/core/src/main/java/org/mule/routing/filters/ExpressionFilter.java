@@ -14,9 +14,6 @@ import org.mule.api.routing.filter.Filter;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.util.expression.ExpressionEvaluatorManager;
 
-import java.util.Map;
-
-import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -65,6 +62,7 @@ public class ExpressionFilter implements Filter
 
     public ExpressionFilter()
     {
+        super();
     }
 
     /**
@@ -136,7 +134,9 @@ public class ExpressionFilter implements Filter
                 }
                 catch (ClassNotFoundException e)
                 {
-                    throw new IllegalArgumentException(e);
+                    IllegalArgumentException iae = new IllegalArgumentException();
+                    iae.initCause(e);
+                    throw iae;
                 }
             }
             else if(evaluator.equals("exception-type"))
@@ -147,7 +147,9 @@ public class ExpressionFilter implements Filter
                 }
                 catch (ClassNotFoundException e)
                 {
-                    throw new IllegalArgumentException(e);
+                    IllegalArgumentException iae = new IllegalArgumentException();
+                    iae.initCause(e);
+                    throw iae;
                 }
             }
             else
