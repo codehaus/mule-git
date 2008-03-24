@@ -11,16 +11,16 @@
 package org.mule.service;
 
 import org.mule.OptimizedRequestContext;
+import org.mule.api.MessagingException;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.component.Component;
-import org.mule.api.context.MuleContextAware;
+import org.mule.api.config.MuleProperties;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.endpoint.InboundEndpoint;
 import org.mule.api.endpoint.OutboundEndpoint;
-import org.mule.api.lifecycle.Initialisable;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.lifecycle.LifecycleTransitionResult;
 import org.mule.api.model.Model;
@@ -33,6 +33,7 @@ import org.mule.api.service.Service;
 import org.mule.api.service.ServiceException;
 import org.mule.api.transport.DispatchException;
 import org.mule.api.transport.MessageReceiver;
+import org.mule.api.transport.ReplyToHandler;
 import org.mule.component.SimpleCallableJavaComponent;
 import org.mule.component.simple.PassThroughComponent;
 import org.mule.config.i18n.CoreMessages;
@@ -853,6 +854,85 @@ public abstract class AbstractService implements Service
     {
         this.component = component;
         this.component.setService(this);
+    }
+
+    protected void processReplyTo(MuleEvent event, MuleMessage result, ReplyToHandler replyToHandler, Object replyTo)
+        throws MuleException
+    {
+        if (result != null && replyToHandler != null)
+        {
+            String requestor = (String) result.getProperty(MuleProperties.MULE_REPLY_TO_REQUESTOR_PROPERTY);
+            if ((requestor != null && !requestor.equals(getName())) || requestor == null)
+            {
+                replyToHandler.processReplyTo(event, result, replyTo);
+            }
+        }
+    }
+
+    protected ReplyToHandler getReplyToHandler(MuleMessage message, InboundEndpoint endpoint)
+    {
+        Object replyTo = message.getReplyTo();
+        ReplyToHandler replyToHandler = null;
+        if (replyTo != null)
+        {
+            replyToHandler = ((AbstractConnector) endpoint.getConnector()).getReplyToHandler();
+            // Use the response transformer for the event if one is set
+            if (endpoint.getResponseTransformers() != null)
+            {
+                replyToHandler.setTransformers(endpoint.getResponseTransformers());
+            }
+        }
+        return replyToHandler;
+    }
+
+    protected void dispatchToOutboundRouter(MuleEvent event, MuleMessage result) throws MessagingException
+    {
+        if (event.isStopFurtherProcessing())
+        {
+            logger.debug("MuleEvent stop further processing has been set, no outbound routing will be performed.");
+        }
+        if (result != null && !event.isStopFurtherProcessing())
+        {
+            if (getOutboundRouter().hasEndpoints())
+            {
+                getOutboundRouter().route(result, event.getSession(), event.isSynchronous());
+            }
+        }
+    }
+
+    protected MuleMessage sendToOutboundRouter(MuleEvent event, MuleMessage result) throws MessagingException
+    {
+        if (event.isStopFurtherProcessing())
+        {
+            logger.debug("MuleEvent stop further processing has been set, no outbound routing will be performed.");
+        }
+        if (result != null && !event.isStopFurtherProcessing())
+        {
+            if (getOutboundRouter().hasEndpoints())
+            {
+                MuleMessage outboundReturnMessage = getOutboundRouter().route(result, event.getSession(),
+                    event.isSynchronous());
+                if (outboundReturnMessage != null)
+                {
+                    result = outboundReturnMessage;
+                }
+            }
+            else
+            {
+                logger.debug("Outbound router on service '" + getName() + "' doesn't have any endpoints configured.");
+            }
+        }
+        return result;
+    }
+
+    protected MuleMessage processAsyncReplyRouter(MuleMessage result) throws MuleException
+    {
+        if (result != null && getResponseRouter() != null)
+        {
+            logger.debug("Waiting for response router message");
+            result = getResponseRouter().getResponse(result);
+        }
+        return result;
     }
 
 }
