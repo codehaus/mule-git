@@ -30,5 +30,9 @@
             <artifactId>geronimo-servlet_2.4_spec</artifactId>
             <scope>provided</scope> 
         </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+        </dependency>
     </dependencies>
 </project>
