@@ -452,10 +452,10 @@ Assembly descriptor for the full Mule distribution.
         <exclude>org.mule.transports:mule-transport-xfire</exclude>
         <exclude>org.mule.transports:mule-transport-xmpp</exclude>
         <!-- Modules -->
+        <exclude>org.mule.modules:mule-module-acegi</exclude>
         <exclude>org.mule.modules:mule-modules-all</exclude>
         <exclude>org.mule.modules:mule-module-boot</exclude>
         <exclude>org.mule.modules:mule-module-builders</exclude>
-        <exclude>org.mule.modules:mule-module-acegi</exclude>
         <exclude>org.mule.modules:mule-module-client</exclude>
         <exclude>org.mule.modules:mule-module-jaas</exclude>
         <exclude>org.mule.modules:mule-module-jbossts</exclude>
@@ -464,8 +464,8 @@ Assembly descriptor for the full Mule distribution.
         <exclude>org.mule.modules:mule-module-ognl</exclude>
         <exclude>org.mule.modules:mule-module-pgp</exclude>
         <exclude>org.mule.modules:mule-module-scripting</exclude>
-        <exclude>org.mule.modules:mule-module-spring</exclude>
-        <!-- include>org.mule.modules:mule-module-wssecurity</include -->
+        <exclude>org.mule.modules:mule-module-spring-config</exclude>
+        <exclude>org.mule.modules:mule-module-spring-extras</exclude>
         <exclude>org.mule.modules:mule-module-xml</exclude>
         <!-- Examples -->
         <exclude>org.mule.examples:mule-examples-all</exclude>
@@ -480,7 +480,7 @@ Assembly descriptor for the full Mule distribution.
         <exclude>org.mule.examples:mule-example-scripting</exclude>
         <exclude>org.mule.examples:mule-example-stockquote</exclude>
         <!-- Workaround, see comment for "<packaging>jar</packaging>" in the pom.xml -->
-        <exclude>org.mule.distributions:mule-full</exclude>
+<!--         <exclude>org.mule.distributions:mule-full</exclude> -->
         <!-- TODO The following exclusions shouldn't be necessary here if they are kept 
         out in their originating POMs, need to do some transitive dependency debugging
         to figure out who is dragging them into the distro. -->
