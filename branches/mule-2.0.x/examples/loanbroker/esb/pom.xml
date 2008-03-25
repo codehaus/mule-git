@@ -110,9 +110,5 @@
             <artifactId>mule-module-spring-extras</artifactId>
             <version>${version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-aop</artifactId>
-        </dependency>
     </dependencies>
 </project>

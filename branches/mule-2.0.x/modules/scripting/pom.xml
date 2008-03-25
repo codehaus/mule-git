@@ -25,10 +25,6 @@
             <version>${version}</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-aop</artifactId>
-        </dependency>
         <!-- need to explicitly mark javax.activation as provided -->
         <dependency>
             <groupId>javax.activation</groupId>
