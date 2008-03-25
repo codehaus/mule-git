@@ -71,7 +71,7 @@ Assembly descriptor for the full Mule distribution.
           <include>mule-*-src.zip</include>
       </includes>
     </fileSet>
-    
+
     <!--
     ============================
         Examples
@@ -298,7 +298,6 @@ Assembly descriptor for the full Mule distribution.
       ============================
           Mule Tools: Visualizer
       ============================
-      -->
 
       <fileSet>
           <directory>../../../tools/visualizer/win32</directory>
@@ -323,6 +322,7 @@ Assembly descriptor for the full Mule distribution.
               <include>visualizer.groovy</include>
           </includes>
       </fileSet>
+      -->
 
   </fileSets>
 
@@ -343,8 +343,6 @@ Assembly descriptor for the full Mule distribution.
     <!-- Mule bootstrap -->
     <dependencySet>
       <outputDirectory>lib/boot</outputDirectory>
-      <!-- No version number  -->
-<!--       <outputFileNameMapping>${artifactId}.${extension}</outputFileNameMapping> -->
       <includes>
         <include>org.mule.modules:mule-module-boot</include>
         <include>commons-cli:commons-cli</include>
@@ -362,11 +360,6 @@ Assembly descriptor for the full Mule distribution.
     <!-- Mule libraries -->
     <dependencySet>
       <outputDirectory>lib/mule</outputDirectory>
-      <!--
-        Uncomment if you encounter startup failures as described in
-        http://mule.mulesource.org/jira/browse/MULE-1153
-      -->
-      <!-- outputFileNameMapping>${artifactId}.${extension}</outputFileNameMapping -->
       <scope>runtime</scope>
       <includes>
         <!-- Core -->
@@ -405,8 +398,6 @@ Assembly descriptor for the full Mule distribution.
         <include>org.mule.modules:mule-module-scripting</include>
         <include>org.mule.modules:mule-module-spring-config</include>
         <include>org.mule.modules:mule-module-spring-extras</include>
-        <!-- MULE-2917 -->
-        <!-- include>org.mule.modules:mule-module-wssecurity</include -->
         <include>org.mule.modules:mule-module-xml</include>
         <!-- Tools -->
         <include>org.mule.tools:mule-tools-visualizer</include>
@@ -479,8 +470,6 @@ Assembly descriptor for the full Mule distribution.
         <exclude>org.mule.examples:mule-example-loanbroker-credit-agency</exclude>
         <exclude>org.mule.examples:mule-example-scripting</exclude>
         <exclude>org.mule.examples:mule-example-stockquote</exclude>
-        <!-- Workaround, see comment for "<packaging>jar</packaging>" in the pom.xml -->
-<!--         <exclude>org.mule.distributions:mule-full</exclude> -->
         <!-- TODO The following exclusions shouldn't be necessary here if they are kept 
         out in their originating POMs, need to do some transitive dependency debugging
         to figure out who is dragging them into the distro. -->
