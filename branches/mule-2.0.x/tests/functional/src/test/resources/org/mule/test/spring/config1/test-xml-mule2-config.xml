@@ -126,7 +126,6 @@
     </spring:bean>
     
     <model name="main">
-
         <custom-exception-strategy class="org.mule.tck.testmodels.mule.TestExceptionStrategy">
             <outbound-endpoint address=" test://component.exceptions "/>
         </custom-exception-strategy>
@@ -135,7 +134,6 @@
 
         <service name="orangeComponent">
             <inbound>
-
                 <forwarding-catch-all-strategy>
                     <outbound-endpoint address="test://catch.all"/>
                 </forwarding-catch-all-strategy>
