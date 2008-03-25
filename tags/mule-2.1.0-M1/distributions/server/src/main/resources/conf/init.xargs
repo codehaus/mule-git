@@ -1,0 +1,126 @@
+# Remove any previously installed bundles
+-init
+
+# Set Start Level = User Application
+-startlevel 10
+
+#############################################################
+# Knopflerfish 
+#############################################################
+# Basic KF bundles
+-initlevel 1
+-install boot/osgi/log/log_all-2.0.0.jar
+-install boot/osgi/cm/cm_all-2.0.0.jar
+-install boot/osgi/console/console_all-2.0.0.jar
+-install boot/osgi/component/component_all-2.0.0.jar
+-install boot/osgi/event/event_all-2.0.0.jar
+
+# Some library bundles
+-initlevel 2
+-install boot/osgi/util/util-2.0.0.jar
+-install boot/osgi/crimson/crimson-2.0.0.jar
+-install boot/osgi/jsdk/jsdk-2.2.jar
+
+# The Bundle repo commands and desktop plugin
+-install boot/osgi/bundlerepository/bundlerepository_all-2.0.0.jar
+
+# More basic KF bundles
+-initlevel 3
+-install boot/osgi/device/device_all-2.0.0.jar
+-install boot/osgi/useradmin/useradmin_all-2.0.0.jar
+
+-initlevel 4
+-install boot/osgi/http/http_all-2.0.0.jar
+
+# Console command bundles
+-initlevel 5
+-install boot/osgi/frameworkcommands/frameworkcommands-2.0.0.jar
+-install boot/osgi/logcommands/logcommands-2.0.0.jar
+-install boot/osgi/cm_cmd/cm_cmd-2.0.0.jar
+-install boot/osgi/consoletty/consoletty-2.0.0.jar
+-install boot/osgi/consoletelnet/consoletelnet-2.0.1.jar
+
+-initlevel 6
+-install boot/osgi/remotefw/remotefw_api-2.0.0.jar
+-install boot/osgi/desktop/desktop_all-2.0.0.jar
+
+-initlevel 7
+-install boot/osgi/httproot/httproot-2.0.0.jar
+
+# Start of these bundles are delayed since this makes start order dependencies much easier
+-start boot/osgi/log/log_all-2.0.0.jar
+-start boot/osgi/crimson/crimson-2.0.0.jar
+-start boot/osgi/cm/cm_all-2.0.0.jar
+-start boot/osgi/console/console_all-2.0.0.jar
+-start boot/osgi/component/component_all-2.0.0.jar
+-start boot/osgi/event/event_all-2.0.0.jar
+-start boot/osgi/device/device_all-2.0.0.jar
+-start boot/osgi/useradmin/useradmin_all-2.0.0.jar
+-start boot/osgi/bundlerepository/bundlerepository_all-2.0.0.jar
+# Don't start KF console in the foreground
+#-start boot/osgi/consoletty/consoletty-2.0.0.jar
+-start boot/osgi/consoletelnet/consoletelnet-2.0.1.jar
+-start boot/osgi/frameworkcommands/frameworkcommands-2.0.0.jar
+-start boot/osgi/logcommands/logcommands-2.0.0.jar
+-start boot/osgi/cm_cmd/cm_cmd-2.0.0.jar
+# The GUI desktop will be started by Mule unless the "-nogui" argument is set.
+#-start boot/osgi/desktop/desktop_all-2.0.0.jar
+-start boot/osgi/http/http_all-2.0.0.jar
+-start boot/osgi/httproot/httproot-2.0.0.jar
+
+# Needed for javax.microedition.io (somehow used by org.mule.util.XMLEntityCodec)
+-istart boot/osgi/io/io_all-2.0.0.jar
+
+#############################################################
+# 3rd party libraries
+#############################################################
+-initlevel 8
+
+# When a new 3rd party library is added to the distro, it must be added in 3 places:
+#    1. distributions/osgi/all-bundles/pom.xml
+#    2. distributions/server/full/assembly.xml
+#    3. distributions/server/src/main/resources/conf/init.xargs
+
+# PAX Logging - supports log4j, commons-logging, and slf4j APIs
+-istart opt/pax-logging-api.jar
+-istart opt/pax-logging-service.jar
+
+# Spring 
+-istart opt/spring-core.jar
+-istart opt/spring-context.jar
+-istart opt/spring-beans.jar
+# Spring OSGi
+-istart opt/spring-osgi-core.jar
+-istart opt/spring-osgi-io.jar
+-istart opt/spring-aop.jar
+-istart opt/aopalliance.osgi.jar
+
+# Re-packaged by Mule for OSGi
+-istart opt/backport-util-concurrent.osgi.jar
+-istart opt/geronimo-j2ee-connector.osgi.jar
+-istart opt/geronimo-jta.osgi.jar
+
+#############################################################
+# Mule
+#############################################################
+-initlevel 9
+# Core
+-istart mule/mule-core.jar
+# Registers Mule bundle listener
+-istart mule/mule-module-osgi.jar
+# Modules
+-istart mule/mule-module-spring-config.jar
+# Transports
+-istart mule/mule-transport-vm.jar
+-istart mule/mule-transport-file.jar
+-istart mule/mule-transport-tcp.jar
+-istart mule/mule-transport-ssl.jar
+-istart mule/mule-transport-http.jar
+-istart mule/mule-transport-stdio.jar
+	      
+#############################################################
+# User Application
+#############################################################
+-initlevel 10
+# Install but don't start the examples
+-install user/mule-example-echo.jar-install user/mule-example-hello.jar
