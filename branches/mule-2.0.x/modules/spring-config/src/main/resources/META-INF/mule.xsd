@@ -399,13 +399,6 @@
                     </xsd:documentation>
                 </xsd:annotation>
             </xsd:element>
-            <xsd:element name="default-connection-strategy" type="connectionStrategyType" minOccurs="0">
-                <xsd:annotation>
-                    <xsd:documentation>
-                        The default connection strategy, used if no more specific configuration is given.
-                    </xsd:documentation>
-                </xsd:annotation>
-            </xsd:element>
         </xsd:sequence>
         <xsd:attribute name="defaultSynchronousEndpoints" type="substitutableBoolean" default="false">
             <xsd:annotation>
@@ -1604,7 +1597,6 @@
                 <xsd:element ref="abstract-transaction" minOccurs="0"/>
                 <xsd:element ref="abstract-filter" minOccurs="0"/>
                 <xsd:element ref="abstract-security-filter" minOccurs="0"/>
-                <xsd:element ref="abstract-connection-strategy" minOccurs="0"/>
                 <xsd:group ref="propertiesGroup"/>
             </xsd:sequence>
         </xsd:sequence>
@@ -1619,16 +1611,6 @@
         </xsd:annotation>
     </xsd:element>
     <xsd:complexType name="abstractSecurityFilterType"/>
-
-    <xsd:element name="abstract-connection-strategy" abstract="true" type="abstractConnectionStrategyType">
-        <xsd:annotation>
-            <xsd:documentation>
-                A placeholder for connection strategy elements.
-                Connection strategies control how the underlying transport handles connection errors.
-            </xsd:documentation>
-        </xsd:annotation>
-    </xsd:element>
-    <xsd:complexType name="abstractConnectionStrategyType"/>
 
     <xsd:attributeGroup name="defaultEndpointAttributes">
         <xsd:attributeGroup ref="restrictedEndpointAttributes"/>
@@ -2765,69 +2747,6 @@
                             A class that implements the ExceptionListener interface.
                             In addition, if an outbound-endpoint element is specified,
                             it is set as an "endpoint" bean property.
-                        </xsd:documentation>
-                    </xsd:annotation>
-                </xsd:attribute>
-            </xsd:extension>
-        </xsd:complexContent>
-    </xsd:complexType>
-
-
-    <!-- ConnectionStrategy implementations -->
-
-    <xsd:complexType name="connectionStrategyType">
-        <xsd:complexContent>
-            <xsd:extension base="abstractConnectionStrategyType"/>
-        </xsd:complexContent>
-    </xsd:complexType>
-
-    <xsd:element name="retry-connection-strategy" type="retryConnectionStrategyType"
-                 substitutionGroup="abstract-connection-strategy">
-        <xsd:annotation>
-            <xsd:documentation>
-                Retry making a connection on failure.
-            </xsd:documentation>
-        </xsd:annotation>
-    </xsd:element>
-    <xsd:complexType name="retryConnectionStrategyType">
-        <xsd:complexContent>
-            <xsd:extension base="connectionStrategyType">
-                <xsd:attribute name="retryFrequency" type="substitutableLong">
-                    <xsd:annotation>
-                        <xsd:documentation>
-                            How often to retry (pause time in ms).
-                        </xsd:documentation>
-                    </xsd:annotation>
-                </xsd:attribute>
-                <xsd:attribute name="retryCount" type="substitutableInt">
-                    <xsd:annotation>
-                        <xsd:documentation>
-                            Maximum number of retries.
-                        </xsd:documentation>
-                    </xsd:annotation>
-                </xsd:attribute>
-            </xsd:extension>
-        </xsd:complexContent>
-    </xsd:complexType>
-
-    <xsd:element name="custom-connection-strategy" type="customConnectionStrategyType"
-                 substitutionGroup="abstract-connection-strategy">
-        <xsd:annotation>
-            <xsd:documentation>
-                A user-defined connection strategy.
-            </xsd:documentation>
-        </xsd:annotation>
-    </xsd:element>
-    <xsd:complexType name="customConnectionStrategyType">
-        <xsd:complexContent>
-            <xsd:extension base="connectionStrategyType">
-                <xsd:sequence>
-                    <xsd:element ref="spring:property" minOccurs="0" maxOccurs="unbounded"/>
-                </xsd:sequence>
-                <xsd:attribute name="class" type="substitutableClass" use="required">
-                    <xsd:annotation>
-                        <xsd:documentation>
-                            A class that implements the ConnectionStrategy interface.
                         </xsd:documentation>
                     </xsd:annotation>
                 </xsd:attribute>

@@ -59,9 +59,7 @@
         <property key="beanProperty2" value="12"/>
         <property key="containerProperty" value="myString"/>
     </endpoint>
-    <endpoint name="testEPWithCS" address="test://test.queue2">
-        <retry-connection-strategy retryCount="4" retryFrequency="3000"/>
-    </endpoint>
+    <endpoint name="testEPWithCS" address="test://test.queue2"/>
     
     <endpoint name="endpointWithProps" address="test://endpointWithProps">
     	<properties>
