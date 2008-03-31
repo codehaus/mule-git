@@ -11,7 +11,7 @@
     <description>This example demonstrates how to invoke an ASPX web service from Mule and transform the result using XSLT and deserialise the result to a StockQuote javabean. The examples demonstrates invoking the service using REST and SOAP.</description>
 
     <properties>
-        <muleVersion>2.0.0-RC4-SNAPSHOT</muleVersion>
+        <muleVersion>2.0.0</muleVersion>
     </properties>
 
     <dependencies>
@@ -48,6 +48,26 @@
             <artifactId>mule-module-spring-extras</artifactId>
             <version>${muleVersion}</version>
         </dependency>
+        <!-- 
+             re-declare the spring dependency here as this pom is not under parent's
+             dependencyManagement
+        -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+            <version>2.5.1</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>aopalliance</groupId>
+                    <artifactId>aopalliance</artifactId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>commons-logging</artifactId>
+                    <groupId>commons-logging</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
         <dependency>
             <groupId>org.mule.tests</groupId>
             <artifactId>mule-tests-functional</artifactId>
