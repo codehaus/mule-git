@@ -214,7 +214,7 @@ public class TransientRegistry extends AbstractRegistry
         return sd;
     }
 
-    /** @deprecated ServiceDescriptors will be created upon bundle startup for OSGi. */
+    // TODO ServiceDescriptors will be created upon bundle startup for OSGi. 
     protected ServiceDescriptor createServiceDescriptor(String type, String name, Properties overrides) throws ServiceException
     {
         Properties props = SpiUtils.findServiceDescriptor(type, name);
