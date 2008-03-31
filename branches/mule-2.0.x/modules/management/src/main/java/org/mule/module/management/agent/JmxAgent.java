@@ -16,7 +16,6 @@ import org.mule.api.MuleRuntimeException;
 import org.mule.api.context.notification.MuleContextNotificationListener;
 import org.mule.api.context.notification.ServerNotification;
 import org.mule.api.lifecycle.InitialisationException;
-import org.mule.api.lifecycle.LifecycleTransitionResult;
 import org.mule.api.model.Model;
 import org.mule.api.service.Service;
 import org.mule.api.transport.Connector;
@@ -46,9 +45,9 @@ import org.mule.transport.AbstractConnector;
 import org.mule.util.ClassUtils;
 import org.mule.util.StringUtils;
 
-import java.io.IOException;
 import java.rmi.server.ExportException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -148,14 +147,22 @@ public class JmxAgent extends AbstractAgent
     }
 
     /**
+     * The JmxAgent needs a RmiRegistryAgent to be started before it can properly work.
+     */    
+    public List getDependentAgents()
+    {
+        return Arrays.asList(new Class[] { RmiRegistryAgent.class });
+    }
+
+    /**
      * {@inheritDoc}
      *
      */
-    public LifecycleTransitionResult initialise() throws InitialisationException
+    public void initialise() throws InitialisationException
     {
         if (initialized.get())
         {
-            return LifecycleTransitionResult.OK;
+            return;
         }
         if (mBeanServer == null && !locateServer && !createServer)
         {
@@ -219,7 +226,6 @@ public class JmxAgent extends AbstractAgent
             throw new InitialisationException(e, this);
         }
         initialized.compareAndSet(false, true);
-        return LifecycleTransitionResult.OK;
     }
 
     /**
@@ -227,7 +233,7 @@ public class JmxAgent extends AbstractAgent
      *
      * @see org.mule.api.lifecycle.Startable#start()
      */
-    public LifecycleTransitionResult start() throws MuleException
+    public void start() throws MuleException
     {
         try
         {
@@ -258,25 +264,13 @@ public class JmxAgent extends AbstractAgent
         {
             throw new JmxManagementException(CoreMessages.failedToStart("Jmx Agent"), e);
         }
-        catch (IOException e)
-        {
-            // this probably means that the RMI server isn't started so we request a
-            // retry
-            return LifecycleTransitionResult.retry(e, this);
-        }
         catch (Exception e)
         {
             throw new JmxManagementException(CoreMessages.failedToStart("Jmx Agent"), e);
         }
-        return LifecycleTransitionResult.OK;
     }
 
-    /**
-     * {@inheritDoc} (non-Javadoc)
-     * 
-     * @see org.mule.api.lifecycle.Stoppable#stop()
-     */
-    public LifecycleTransitionResult stop() throws MuleException
+    public void stop() throws MuleException
     {
         if (connectorServer != null)
         {
@@ -289,7 +283,6 @@ public class JmxAgent extends AbstractAgent
                 throw new JmxManagementException(CoreMessages.failedToStop("Jmx Connector"), e);
             }
         }
-        return LifecycleTransitionResult.OK;
     }
 
     /**

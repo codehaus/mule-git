@@ -18,9 +18,7 @@ import org.mule.api.MuleMessage;
 import org.mule.api.lifecycle.Callable;
 import org.mule.api.lifecycle.Disposable;
 import org.mule.api.lifecycle.Initialisable;
-import org.mule.api.lifecycle.LifecycleTransitionResult;
 import org.mule.tck.exceptions.FunctionalTestException;
-import org.mule.util.ClassUtils;
 import org.mule.util.NumberUtils;
 import org.mule.util.StringMessageUtils;
 import org.mule.util.expression.ExpressionEvaluatorManager;
@@ -28,6 +26,7 @@ import org.mule.util.expression.ExpressionEvaluatorManager;
 import java.util.List;
 
 import edu.emory.mathcs.backport.java.util.concurrent.CopyOnWriteArrayList;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -67,13 +66,12 @@ public class FunctionalTestComponent2 implements Callable, Initialisable, Dispos
      */
     private List messageHistory;
 
-    public LifecycleTransitionResult initialise()
+    public void initialise()
     {
         if (enableMessageHistory)
         {
             messageHistory = new CopyOnWriteArrayList();
         }
-        return LifecycleTransitionResult.OK;
     }
 
     public void dispose()

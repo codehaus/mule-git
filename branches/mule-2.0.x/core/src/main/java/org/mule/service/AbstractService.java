@@ -22,7 +22,6 @@ import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.endpoint.InboundEndpoint;
 import org.mule.api.endpoint.OutboundEndpoint;
 import org.mule.api.lifecycle.InitialisationException;
-import org.mule.api.lifecycle.LifecycleTransitionResult;
 import org.mule.api.model.Model;
 import org.mule.api.model.ModelException;
 import org.mule.api.routing.InboundRouterCollection;
@@ -161,7 +160,7 @@ public abstract class AbstractService implements Service
      *          if the service fails
      *          to initialise
      */
-    public final synchronized LifecycleTransitionResult initialise() throws InitialisationException
+    public final synchronized void initialise() throws InitialisationException
     {
         if (initialised.get())
         {
@@ -216,8 +215,6 @@ public abstract class AbstractService implements Service
 
         initialised.set(true);
         fireComponentNotification(ServiceNotification.SERVICE_INITIALISED);
-
-        return LifecycleTransitionResult.OK;
     }
 
     protected ServiceStatistics createStatistics()
@@ -244,7 +241,7 @@ public abstract class AbstractService implements Service
         }
     }
 
-    public LifecycleTransitionResult stop() throws MuleException
+    public void stop() throws MuleException
     {
         if (!stopped.get())
         {
@@ -262,13 +259,10 @@ public abstract class AbstractService implements Service
             fireComponentNotification(ServiceNotification.SERVICE_STOPPED);
             logger.info("Mule Service " + name + " has been stopped successfully");
         }
-        return LifecycleTransitionResult.OK;
     }
 
-    public LifecycleTransitionResult start() throws MuleException
+    public void start() throws MuleException
     {
-        LifecycleTransitionResult status = LifecycleTransitionResult.OK;
-
         // TODO If Service is uninitialised when start is called should we initialise
         // or throw an exception?
         if (!initialised.get())
@@ -291,17 +285,16 @@ public abstract class AbstractService implements Service
             }
             else if (!beyondInitialState.get() && initialState.equals(AbstractService.INITIAL_STATE_PAUSED))
             {
-                status = start(/*startPaused*/true);
+                start(/*startPaused*/true);
                 logger.info("Service " + name + " has been started and paused (initial state = 'paused')");
             }
             else
             {
-                status = start(/*startPaused*/false);
+                start(/*startPaused*/false);
                 logger.info("Service " + name + " has been started successfully");
             }
             beyondInitialState.set(true);
         }
-        return status;
     }
 
     /**
@@ -310,7 +303,7 @@ public abstract class AbstractService implements Service
      * @param startPaused - Start service in a "paused" state (messages are
      *                    received but not processed).
      */
-    protected LifecycleTransitionResult start(boolean startPaused) throws MuleException
+    protected void start(boolean startPaused) throws MuleException
     {
 
         // Ensure Component is started. If component was configured with spring and
@@ -347,7 +340,7 @@ public abstract class AbstractService implements Service
         // gets routed to the service before it is started,
         // org.mule.model.AbstractComponent.dispatchEvent() will throw a
         // ServiceException with message COMPONENT_X_IS_STOPPED (see MULE-526).
-        return startListeners();
+        startListeners();
     }
 
     /**
@@ -650,7 +643,7 @@ public abstract class AbstractService implements Service
         }
     }
 
-    protected LifecycleTransitionResult startListeners() throws MuleException
+    protected void startListeners() throws MuleException
     {
         InboundEndpoint endpoint;
         List endpoints = getIncomingEndpoints();
@@ -663,19 +656,13 @@ public abstract class AbstractService implements Service
             if (receiver != null && endpoint.getConnector().isStarted()
                     && endpoint.getInitialState().equals(ImmutableEndpoint.INITIAL_STATE_STARTED))
             {
-                LifecycleTransitionResult result = receiver.start();
-                if (! result.isOk())
-                {
-                    throw (InitialisationException) new InitialisationException(CoreMessages.nestedRetry(), receiver)
-                            .initCause(result.getThrowable());
-                }
+                receiver.start();
             }
         }
-        return LifecycleTransitionResult.OK;
     }
 
     // This is not called by anything?!
-    protected LifecycleTransitionResult stopListeners() throws MuleException
+    protected void stopListeners() throws MuleException
     {
         InboundEndpoint endpoint;
         List endpoints = getIncomingEndpoints();
@@ -687,15 +674,9 @@ public abstract class AbstractService implements Service
                     endpoint);
             if (receiver != null)
             {
-                LifecycleTransitionResult result = receiver.stop();
-                if (! result.isOk())
-                {
-                    throw (InitialisationException) new InitialisationException(CoreMessages.nestedRetry(), receiver)
-                            .initCause(result.getThrowable());
-                }
+                receiver.stop();
             }
         }
-        return LifecycleTransitionResult.OK;
     }
 
     protected void connectListeners() throws MuleException

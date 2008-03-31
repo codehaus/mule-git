@@ -26,7 +26,6 @@ import org.mule.api.lifecycle.Disposable;
 import org.mule.api.lifecycle.Initialisable;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.lifecycle.LifecycleException;
-import org.mule.api.lifecycle.LifecycleTransitionResult;
 import org.mule.api.routing.RoutingException;
 import org.mule.api.transaction.Transaction;
 import org.mule.api.transaction.TransactionException;
@@ -44,6 +43,7 @@ import java.util.List;
 
 import edu.emory.mathcs.backport.java.util.concurrent.CopyOnWriteArrayList;
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -188,14 +188,13 @@ public abstract class AbstractExceptionListener implements ExceptionListener, In
      *
      * @throws InitialisationException
      */
-    public final synchronized LifecycleTransitionResult initialise() throws InitialisationException
+    public final synchronized void initialise() throws InitialisationException
     {
         if (!initialised.get())
         {
             doInitialise(muleContext);
             initialised.set(true);
         }
-        return LifecycleTransitionResult.OK;
     }
 
     protected void doInitialise(MuleContext muleContext) throws InitialisationException

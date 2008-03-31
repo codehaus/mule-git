@@ -23,7 +23,6 @@ import org.mule.api.lifecycle.Disposable;
 import org.mule.api.lifecycle.Initialisable;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.lifecycle.LifecycleManager;
-import org.mule.api.lifecycle.LifecycleTransitionResult;
 import org.mule.api.model.Model;
 import org.mule.api.registry.RegistrationException;
 import org.mule.api.registry.Registry;
@@ -130,7 +129,7 @@ public abstract class AbstractRegistry implements Registry
 
     protected void doDispose()
     {
-
+        // hook for subclasses to do their disposal
     }
 
     public boolean isDisposed()
@@ -153,7 +152,7 @@ public abstract class AbstractRegistry implements Registry
         return Initialisable.PHASE_NAME.equals(lifecycleManager.getExecutingPhase());
     }
 
-    public final LifecycleTransitionResult initialise() throws InitialisationException
+    public final void initialise() throws InitialisationException
     {
         lifecycleManager.checkPhase(Initialisable.PHASE_NAME);
 
@@ -187,12 +186,11 @@ public abstract class AbstractRegistry implements Registry
         {
             throw new InitialisationException(e, this);
         }
-        return LifecycleTransitionResult.OK;
     }
 
     protected void doInitialise() throws InitialisationException
     {
-
+        // hook for subclasses do to their initialisation
     }
 
 

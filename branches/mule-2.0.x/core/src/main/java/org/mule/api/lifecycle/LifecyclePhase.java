@@ -9,8 +9,8 @@
  */
 package org.mule.api.lifecycle;
 
-import org.mule.api.MuleException;
 import org.mule.api.MuleContext;
+import org.mule.api.MuleException;
 import org.mule.lifecycle.LifecycleObject;
 
 import java.util.Set;
@@ -56,7 +56,7 @@ public interface LifecyclePhase
 
     boolean isPhaseSupported(String phase);
 
-    LifecycleTransitionResult applyLifecycle(Object o) throws LifecycleException;
+    void applyLifecycle(Object o) throws LifecycleException;
 
     public int getRegistryScope();
 

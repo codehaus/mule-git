@@ -11,7 +11,6 @@ package org.mule.routing.response;
 
 import org.mule.DefaultMessageCollection;
 import org.mule.api.MuleMessage;
-import org.mule.api.lifecycle.LifecycleTransitionResult;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.routing.RoutingException;
 import org.mule.routing.inbound.EventGroup;
@@ -25,15 +24,14 @@ import org.mule.routing.inbound.EventGroup;
 public class SimpleCollectionResponseAggregator extends ResponseCorrelationAggregator
 {
     //@Override
-    public LifecycleTransitionResult initialise() throws InitialisationException
+    public void initialise() throws InitialisationException
     {
-        LifecycleTransitionResult lctr =  super.initialise();
+        super.initialise();
 //        if(isFailOnTimeout())
 //        {
 //            logger.warn("FailOnTimeout cannot be set for the SimpleCollectionResponseAggregator.  Defaulting to false");
 //            setFailOnTimeout(false);
 //        }
-        return lctr;
     }
 
     /**

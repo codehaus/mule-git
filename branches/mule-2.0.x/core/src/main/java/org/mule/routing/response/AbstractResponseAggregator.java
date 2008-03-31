@@ -13,7 +13,6 @@ package org.mule.routing.response;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.lifecycle.InitialisationException;
-import org.mule.api.lifecycle.LifecycleTransitionResult;
 import org.mule.api.routing.ResponseTimeoutException;
 import org.mule.api.routing.RoutingException;
 import org.mule.config.i18n.CoreMessages;
@@ -26,6 +25,7 @@ import org.mule.util.concurrent.Latch;
 import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
 import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentMap;
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
+
 import org.apache.commons.collections.buffer.BoundedFifoBuffer;
 
 /**
@@ -66,13 +66,13 @@ public abstract class AbstractResponseAggregator extends AbstractResponseRouter
     private boolean failOnTimeout = true;
 
     //@Override
-    public LifecycleTransitionResult initialise() throws InitialisationException
+    public void initialise() throws InitialisationException
     {
         if (timeout == -1) // undefined
         {
             setTimeout(muleContext.getConfiguration().getDefaultSynchronousEventTimeout());
         }
-        return super.initialise();
+        super.initialise();
     }
 
     public void process(MuleEvent event) throws RoutingException

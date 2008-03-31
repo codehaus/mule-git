@@ -19,7 +19,6 @@ import org.mule.api.component.Component;
 import org.mule.api.endpoint.InboundEndpoint;
 import org.mule.api.lifecycle.DisposeException;
 import org.mule.api.lifecycle.InitialisationException;
-import org.mule.api.lifecycle.LifecycleTransitionResult;
 import org.mule.api.service.Service;
 import org.mule.api.service.ServiceException;
 import org.mule.config.i18n.CoreMessages;
@@ -130,7 +129,7 @@ public abstract class AbstractComponent implements Component
         return service;
     }
 
-    public LifecycleTransitionResult initialise() throws InitialisationException
+    public void initialise() throws InitialisationException
     {
         if (!initialised.get())
         {
@@ -147,7 +146,6 @@ public abstract class AbstractComponent implements Component
             doInitialise();
             initialised.set(true);
         }
-        return LifecycleTransitionResult.OK;
     }
 
     protected void doInitialise() throws InitialisationException
@@ -190,7 +188,7 @@ public abstract class AbstractComponent implements Component
         // Default implementation is no-op
     }
 
-    public LifecycleTransitionResult stop() throws MuleException
+    public void stop() throws MuleException
     {
         // If component is already disposed then ignore, don't fails, as stop() might
         // get called by service after spring has called disposed etc.
@@ -205,7 +203,6 @@ public abstract class AbstractComponent implements Component
             started.set(false);
             stopping.set(false);
         }
-        return LifecycleTransitionResult.OK;
     }
 
     protected void doStart() throws MuleException
@@ -213,7 +210,7 @@ public abstract class AbstractComponent implements Component
         // Default implementation is no-op
     }
 
-    public LifecycleTransitionResult start() throws MuleException
+    public void start() throws MuleException
     {
         checkDisposed();
         if (!started.get())
@@ -225,7 +222,6 @@ public abstract class AbstractComponent implements Component
             doStart();
             started.set(true);
         }
-        return LifecycleTransitionResult.OK;
     }
 
     protected void doStop() throws MuleException
