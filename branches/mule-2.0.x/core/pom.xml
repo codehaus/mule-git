@@ -47,7 +47,7 @@
         <dependency>
             <groupId>org.safehaus.jug</groupId>
             <artifactId>jug</artifactId>
-            <version>2.0.1-SNAPSHOT</version>
+            <version>2.0.0</version>
             <classifier>asl</classifier>
         </dependency>
         <!-- Needed for Log4jNotificationLoggerAgent -->
