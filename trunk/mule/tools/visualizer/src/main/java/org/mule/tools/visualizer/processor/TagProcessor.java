@@ -116,8 +116,8 @@ public abstract class TagProcessor
         Element queueProfile = descriptor.getChild(MuleTag.ELEMENT_QUEUE_PROFILE);
         if (queueProfile != null)
         {
-            appendAttribute(poolingProfile, "maxOutstandingMessages", caption);
-            appendAttribute(poolingProfile, "persistent", caption);
+            appendAttribute(queueProfile, "maxOutstandingMessages", caption);
+            appendAttribute(queueProfile, "persistent", caption);
         }
     }
 
