@@ -57,9 +57,14 @@
                 <enabled>false</enabled>
             </releases>
         </repository>
+        <repository>
+            <id>mule-deps</id>
+            <name>Mule Dependencies</name>
+            <url>http://dist.codehaus.org/mule/dependencies/maven2</url>
+        </repository>
         <!--
             This is actually from cxf's pom an shouldn't be necessary here.
-            -->
+        -->
         <repository>
             <id>java.net</id>
             <name>Java.net Repository</name>
