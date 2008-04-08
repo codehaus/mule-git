@@ -20,12 +20,11 @@ import org.mule.util.ClassUtils;
 import org.mule.util.StringMessageUtils;
 
 import java.lang.reflect.Method;
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -93,37 +92,14 @@ public class DefaultLifecyclePhase implements LifecyclePhase
         for (Iterator iterator = orderedLifecycleObjects.iterator(); iterator.hasNext();)
         {
             LifecycleObject lo = (LifecycleObject) iterator.next();
-            
-            // TODO dol: the following is incorrect as we explicitly order the elements from the registry
-            // list so that ordering is preserved on retry
-            List targets = new LinkedList(RegistryContext.getRegistry().lookupObjects(lo.getType(), getRegistryScope()));
-            if (targets.size() == 0)
+
+            Collection lifecycleInstances = RegistryContext.getRegistry().lookupObjects(lo.getType(), getRegistryScope());
+            if (lifecycleInstances.size() == 0)
             {
                 continue;
             }
-            
-            // TODO MULE-3180: get the comparator from somewhere (the registry?) and only do the comparison here
-            if (lo.getType().getName().indexOf("Agent") > -1)
-            {
-                Collections.sort(targets, new Comparator()
-                {
-                    public int compare(Object o1, Object o2)
-                    {
-                        String name1 = o1.getClass().getName();
-                        String name2 = o2.getClass().getName();
-                        if (name1.indexOf("RmiRegistryAgent") > -1)
-                        {
-                            return -1;
-                        }
-                        else if (name2.indexOf("RmiRegistryAgent") > -1)
-                        {
-                            return 1;
-                        }
-                        return 0;
-                    }                    
-                });
-            }
-
+            List targets = this.sortLifecycleInstances(lifecycleInstances, lo);
+                        
             lo.firePreNotification(muleContext);
 
             for (Iterator target = targets.iterator(); target.hasNext();)
@@ -148,6 +124,21 @@ public class DefaultLifecyclePhase implements LifecyclePhase
 
             lo.firePostNotification(muleContext);
         }
+    }
+
+    /**
+     * Subclasses can override this method to order <code>objects</code> before
+     * the lifecycle method is applied to them.
+     * 
+     * This method does not apply any special ordering to <code>objects</code>.
+     * 
+     * @param objects
+     * @param lo
+     * @return List with ordered objects
+     */
+    protected List sortLifecycleInstances(Collection objects, LifecycleObject lo)
+    {
+        return new ArrayList(objects);
     }
 
     public void addOrderedLifecycleObject(LifecycleObject lco)

@@ -286,9 +286,7 @@ public class JmxAgent extends AbstractAgent
     }
 
     /**
-     * {@inheritDoc} (non-Javadoc)
-     *
-     * @see org.mule.api.lifecycle.Disposable#dispose()
+     * {@inheritDoc}
      */
     public void dispose()
     {
@@ -316,20 +314,16 @@ public class JmxAgent extends AbstractAgent
         initialized.set(false);
     }
 
-    /** {@inheritDoc}
-     * (non-Javadoc)
-     *
-     * @see org.mule.api.agent.Agent#registered()
+    /** 
+     * {@inheritDoc}
      */
     public void registered()
     {
         // nothing to do
     }
 
-    /** {@inheritDoc}
-     * (non-Javadoc)
-     *
-     * @see org.mule.api.agent.Agent#unregistered()
+    /** 
+     * {@inheritDoc}
      */
     public void unregistered()
     {
