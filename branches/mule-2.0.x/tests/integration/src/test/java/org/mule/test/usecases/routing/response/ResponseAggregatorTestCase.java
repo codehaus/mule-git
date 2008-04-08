@@ -59,7 +59,7 @@ public class ResponseAggregatorTestCase extends FunctionalTestCase
     {
         public Map getResponseEvents()
         {
-            return this.responseMessages;
+            return this.getEventCorrelator().getResponseMessages();
         }
     }
 }

@@ -12,8 +12,9 @@ package org.mule.example.loanbroker.routers;
 
 import org.mule.api.MuleMessage;
 import org.mule.routing.AggregationException;
-import org.mule.routing.inbound.CorrelationAggregator;
 import org.mule.routing.inbound.EventGroup;
+import org.mule.routing.inbound.AbstractEventAggregator;
+import org.mule.routing.inbound.CorrelationAggregator;
 
 /**
  * <code>BankQuotesInboundAggregator</code> receives a number of quotes and selects the
@@ -42,19 +43,6 @@ public class BankQuotesInboundAggregator extends CorrelationAggregator
         {
             throw new AggregationException(events, null, e);
         }
-    }
-
-    /**
-     * Determines if the event group is ready to be aggregated; this is entirely up
-     * to the application. It could be determined by volume, last modified time or
-     * some other criteria based on the last event received.
-     * 
-     * @param events event group to examine
-     * @return true if the events are ready to be aggregated
-     */
-    protected boolean shouldAggregateEvents(EventGroup events)
-    {
-        return super.shouldAggregateEvents(events);
     }
 
 }

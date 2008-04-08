@@ -11,6 +11,11 @@
 package org.mule.routing.inbound;
 
 import org.mule.api.MuleEvent;
+import org.mule.api.MuleMessage;
+import org.mule.api.routing.RoutingException;
+import org.mule.routing.EventCorrelatorCallback;
+import org.mule.routing.CollectionCorrelatorCallback;
+import org.mule.routing.AggregationException;
 
 /**
  * <code>CorrelationAggregator</code> uses the CorrelationID and
@@ -20,39 +25,19 @@ import org.mule.api.MuleEvent;
 public abstract class CorrelationAggregator extends AbstractEventAggregator
 {
 
-    /**
-     * Creates a new EventGroup that will expect the number of events as returned by
-     * {@link org.mule.api.transport.MessageAdapter#getCorrelationGroupSize()}.
-     */
-    // //@Override
-    protected EventGroup createEventGroup(MuleEvent event, Object groupId)
+    protected EventCorrelatorCallback getCorrelatorCallback()
     {
-        return new EventGroup(groupId, event.getMessage().getCorrelationGroupSize());
+        return new DelegateCorrelatorCallback();
     }
 
-    /**
-     * @see AbstractEventAggregator#shouldAggregateEvents(EventGroup)
-     * @return <code>true</code> if the correlation size is not set or exactly the
-     *         expected size of the event group.
-     */
-    protected boolean shouldAggregateEvents(EventGroup events)
+    protected abstract MuleMessage aggregateEvents(EventGroup events) throws AggregationException;
+
+    private class DelegateCorrelatorCallback extends CollectionCorrelatorCallback
     {
-        int size = events.expectedSize();
-
-        if (size == -1)
+        public MuleMessage aggregateEvents(EventGroup events) throws AggregationException
         {
-            logger.warn("Correlation Group Size not set, but CorrelationAggregator is being used."
-                            + " Message is being forwarded");
-            return true;
+            return CorrelationAggregator.this.aggregateEvents(events);
         }
-
-        if (logger.isDebugEnabled())
-        {
-            logger.debug("Correlation size is " + size + ". Current event group size is " + events.size()
-                            + " for correlation " + events.getGroupId());
-        }
-
-        return size == events.size();
     }
 
 }
