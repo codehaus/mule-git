@@ -95,6 +95,7 @@ import org.mule.routing.inbound.InboundPassThroughRouter;
 import org.mule.routing.inbound.MessageChunkingAggregator;
 import org.mule.routing.inbound.SelectiveConsumer;
 import org.mule.routing.inbound.WireTap;
+import org.mule.routing.inbound.SimpleCollectionAggregator;
 import org.mule.routing.nested.DefaultNestedRouter;
 import org.mule.routing.outbound.ChainingRouter;
 import org.mule.routing.outbound.DefaultOutboundRouterCollection;
@@ -289,7 +290,8 @@ public class MuleNamespaceHandler extends AbstractMuleNamespaceHandler
         registerBeanDefinitionParser("idempotent-secure-hash-receiver-router", new RouterDefinitionParser(IdempotentSecureHashReceiver.class));
         registerBeanDefinitionParser("selective-consumer-router", new RouterDefinitionParser(SelectiveConsumer.class));
         registerBeanDefinitionParser("wire-tap-router", new RouterDefinitionParser(WireTap.class));
-        registerBeanDefinitionParser("correlation-aggregator-router", new RouterDefinitionParser());
+        registerBeanDefinitionParser("custom-correlation-aggregator-router", new RouterDefinitionParser());
+        registerBeanDefinitionParser("collection-aggregator-router", new RouterDefinitionParser(SimpleCollectionAggregator.class));
         registerBeanDefinitionParser("message-chunking-aggregator-router", new RouterDefinitionParser(MessageChunkingAggregator.class));
         registerBeanDefinitionParser("correlation-resequencer-router", new RouterDefinitionParser(CorrelationEventResequencer.class));
         registerBeanDefinitionParser("custom-inbound-router", new RouterDefinitionParser(null));

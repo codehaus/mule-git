@@ -981,6 +981,14 @@
         <xsd:complexContent>
             <xsd:extension base="abstractServiceType">
                 <xsd:sequence>
+                    <xsd:element name="description" type="descriptionType" minOccurs="0">
+                        <xsd:annotation>
+                            <xsd:documentation>
+                                This can hold any kind of documentation consistent with the overall XML format).
+                                It is intended to be "human readable" only and is not used by the system.
+                            </xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
                     <xsd:element name="inbound" type="inboundCollectionType" minOccurs="0">
                         <xsd:annotation>
                             <xsd:documentation>
@@ -2357,7 +2365,7 @@
     </xsd:element>
 
     <xsd:attributeGroup name="expressionAttributes">
-        <xsd:attribute name="evaluator" use="optional">
+        <xsd:attribute name="evaluator" use="required">
             <xsd:annotation>
                 <xsd:documentation>The expression evaluator to use. Expression Evaluators must be registered with the
                     ExpressionEvaluatrManager before thay can be used. Using the custom evaluator allows the developer
@@ -2819,10 +2827,13 @@
 
     <xsd:element name="forwarding-router" type="selectiveConsumerRouterType"
                  substitutionGroup="abstract-inbound-router"/>
+    
     <xsd:element name="selective-consumer-router" type="selectiveConsumerRouterType"
                  substitutionGroup="abstract-inbound-router"/>
-    <xsd:element name="correlation-resequencer-router" type="selectiveConsumerRouterType"
+
+    <xsd:element name="correlation-resequencer-router" type="baseAggregatorRouterType"
                  substitutionGroup="abstract-inbound-router"/>
+
     <xsd:complexType name="selectiveConsumerRouterType">
         <xsd:complexContent>
             <xsd:extension base="filteredInboundRouterType">
@@ -2839,7 +2850,7 @@
                  substitutionGroup="abstract-inbound-router"/>
     <xsd:complexType name="messageChunkingAggregatorRouterType">
         <xsd:complexContent>
-            <xsd:extension base="filteredInboundRouterType">
+            <xsd:extension base="baseAggregatorRouterType">
                 <xsd:attribute name="correlationExpression" type="xsd:string"/>
             </xsd:extension>
         </xsd:complexContent>
@@ -2855,8 +2866,12 @@
         </xsd:complexContent>
     </xsd:complexType>
 
+     <xsd:element name="collection-aggregator-router" type="baseAggregatorRouterType"
+                 substitutionGroup="abstract-inbound-router"/>
+
     <xsd:element name="custom-inbound-router" type="customInboundRouterType"
                  substitutionGroup="abstract-inbound-router"/>
+
     <xsd:complexType name="customInboundRouterType">
         <xsd:complexContent>
             <xsd:extension base="filteredInboundRouterType">
@@ -2865,6 +2880,14 @@
                     <xsd:element ref="abstract-inbound-endpoint" minOccurs="0" maxOccurs="unbounded"/>
                 </xsd:sequence>
                 <xsd:attribute name="class" type="substitutableClass" use="required"/>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="baseAggregatorRouterType">
+        <xsd:complexContent>
+            <xsd:extension base="filteredInboundRouterType">
+                <xsd:attribute name="timeout" type="substitutableInt"/>
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
@@ -3004,6 +3027,17 @@
                 </xsd:sequence>
                 <xsd:attribute name="recipientsProperty" type="xsd:string"/>
                 <xsd:attribute name="recipientsDelimiter" type="xsd:string"/>
+                <xsd:attribute name="synchronous" type="xsd:boolean"/>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:element name="recipient-list-router" type="recipientListRouterType"
+                 substitutionGroup="abstract-outbound-router"/>
+    <xsd:complexType name="recipientListRouterType">
+        <xsd:complexContent>
+            <xsd:extension base="filteringOutboundRouterType">
+                <xsd:attributeGroup ref="expressionAttributes"/>
                 <xsd:attribute name="synchronous" type="xsd:boolean"/>
             </xsd:extension>
         </xsd:complexContent>
