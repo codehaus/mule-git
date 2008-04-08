@@ -110,7 +110,7 @@ public abstract class AbstractResponseAggregator extends AbstractResponseRouter
     /**
      * @see AbstractEventAggregator#aggregateEvents(EventGroup)
      */
-    protected final MuleMessage aggregateEvents(EventGroup events) throws RoutingException
+    protected MuleMessage aggregateEvents(EventGroup events) throws RoutingException
     {
         return null;
     }

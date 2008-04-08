@@ -1080,4 +1080,10 @@ public class CoreMessages extends MessageFactory
     {
         return createMessage(BUNDLE_PATH, 264, property, expr);
     }
+
+    public static Message correlationTimedOut(Object groupId)
+    {
+        return createMessage(BUNDLE_PATH, 265);
+    }
+
 }
