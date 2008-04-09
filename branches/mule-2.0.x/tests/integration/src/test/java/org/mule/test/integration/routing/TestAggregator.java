@@ -13,20 +13,19 @@ package org.mule.test.integration.routing;
 import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
-import org.mule.api.routing.RoutingException;
 import org.mule.api.transformer.TransformerException;
+import org.mule.routing.AggregationException;
+import org.mule.routing.CollectionCorrelatorCallback;
+import org.mule.routing.EventCorrelatorCallback;
 import org.mule.routing.inbound.EventGroup;
 import org.mule.routing.response.ResponseCorrelationAggregator;
-import org.mule.routing.EventCorrelatorCallback;
-import org.mule.routing.CollectionCorrelatorCallback;
-import org.mule.routing.AggregationException;
 
 import java.util.Iterator;
 
 public class TestAggregator extends ResponseCorrelationAggregator
 {
 
-    @Override
+    // @Override
     protected EventCorrelatorCallback getCorrelatorCallback()
     {
         return new CollectionCorrelatorCallback()
