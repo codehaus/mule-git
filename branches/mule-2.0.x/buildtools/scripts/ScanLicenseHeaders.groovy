@@ -3,6 +3,12 @@
  */
 public class ScanLicenseHeaders
 {
+    /**
+     * These files are known to have invalid license headers and are the usual exception to the rule
+     */
+    static List exceptions = [ "BobberArchetype.java", "BobberArchetypeMojo.java",
+        "ProjectArchetypeMojo.java", "TransportArchetypeMojo.java" ];
+
     static void main(args)
     {
         if (args.length != 1)
@@ -43,8 +49,11 @@ public class ScanLicenseHeaders
 
                 if (line.indexOf(licenseLine) == -1)
                 {
-                    println("License suspect: $file")
-                    retValue = false
+                    if (exceptions.contains(file.name) == false)
+                    {
+                        println("License suspect: $file")
+                        retValue = false
+                    }
                 }
             }
         }
