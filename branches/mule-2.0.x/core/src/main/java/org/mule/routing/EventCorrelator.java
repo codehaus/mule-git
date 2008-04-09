@@ -461,12 +461,6 @@ public class EventCorrelator
 
         if (!resultAvailable)
         {
-            //If the timeout was overridden we can just return null since it was an interal call
-            //from the process method
-            if (timeout != getTimeout())
-            {
-                return null;
-            }
             if (isFailOnTimeout())
             {
                 if (logger.isTraceEnabled())

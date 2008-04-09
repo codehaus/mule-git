@@ -18,6 +18,7 @@ import org.mule.api.routing.RoutingException;
 import org.mule.routing.inbound.EventGroup;
 import org.mule.routing.EventCorrelatorCallback;
 import org.mule.routing.SingleCorrelatorCallback;
+import org.mule.routing.CollectionCorrelatorCallback;
 
 /**
  * A simple aggregator that will keep collecting events until a timeout is reached.  It will then return
@@ -29,6 +30,6 @@ public class SimpleCollectionResponseAggregator extends ResponseCorrelationAggre
 {
     protected EventCorrelatorCallback getCorrelatorCallback()
     {
-        return new SingleCorrelatorCallback();
+        return new CollectionCorrelatorCallback();
     }
 }
