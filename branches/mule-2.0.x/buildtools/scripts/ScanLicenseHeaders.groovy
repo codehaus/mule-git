@@ -11,7 +11,10 @@ public class ScanLicenseHeaders
             System.exit(1)
         }
 
-        scan(new File(args[0]))
+        if (scan(new File(args[0])) == false)
+        {
+            System.exit(1)
+        }
     }
 
     static boolean scan(File scanRoot)
