@@ -1,3 +1,0 @@
-org.mule.test.spring.GlobalPropertiesMule2458TestCase
-
-org.mule.test.firewall.FirewallTestCase
