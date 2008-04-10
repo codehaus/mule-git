@@ -597,6 +597,7 @@ public class FileConnector extends AbstractConnector
         {
             // TODO Shouldn't we have a way to specify MessageAdaptor for streaming
             // in service descriptor
+            // See MULE-3209, MULE-3199
             return new FileMessageAdapter(message);
         }
         else
