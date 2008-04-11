@@ -63,4 +63,15 @@ public class JBpmFunctionalTestCase extends AbstractAsynchronousLoanBrokerTestCa
         // See http://forum.springframework.org/archive/index.php/t-24800.html
         //assertEquals("loanApproved", bpms.getState(bpms.lookupProcess(new Long(PROCESS_ID))));
     }
+    
+    @Override
+    public void testLotsOfLoanRequests() throws Exception
+    {
+        super.testLotsOfLoanRequests();
+        
+        //without this sleep, the test still succeeds but throws a series of exceptions
+        //probably Spring would not have enough time to close db connections before
+        //database itself is shut down while jvm start disposing
+        Thread.sleep(100);
+    }
 }
