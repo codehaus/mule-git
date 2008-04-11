@@ -179,6 +179,10 @@
                         <artifactId>commons-logging</artifactId>
                         <groupId>commons-logging</groupId>
                     </exclusion>
+                    <exclusion>
+                        <groupId>org.springframework</groupId>
+                        <artifactId>spring-support</artifactId>
+                    </exclusion>
                 </exclusions>
             </dependency>
             <dependency>
@@ -664,11 +668,6 @@
             </releases>
         </repository>
         <repository>
-            <id>ops4j</id>
-            <name>OPS4J Repository</name>
-            <url>http://repository.ops4j.org/maven2/</url>
-        </repository>
-        <repository>
             <id>apache.incubating.releases</id>
             <name>Apache Incubating Release Distribution Repository</name>
             <url>http://people.apache.org/repo/m2-incubating-repository</url>
@@ -680,6 +679,11 @@
             <releases>
                 <enabled>false</enabled>
             </releases>
+        </repository>
+        <repository>
+            <id>jboss</id>
+            <name>JBoss Repository</name>
+            <url>http://repository.jboss.com/maven2</url>
         </repository>
     </repositories>
 
