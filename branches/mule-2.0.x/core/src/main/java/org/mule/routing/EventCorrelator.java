@@ -9,34 +9,32 @@
  */
 package org.mule.routing;
 
-import org.mule.api.lifecycle.LifecycleTransitionResult;
-import org.mule.api.lifecycle.InitialisationException;
+import org.mule.api.MuleContext;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
-import org.mule.api.MuleContext;
-import org.mule.api.routing.RoutingException;
-import org.mule.api.routing.ResponseTimeoutException;
 import org.mule.api.routing.MessageInfoMapping;
+import org.mule.api.routing.ResponseTimeoutException;
+import org.mule.api.routing.RoutingException;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.context.notification.RoutingNotification;
 import org.mule.routing.inbound.EventGroup;
-import org.mule.util.concurrent.Latch;
 import org.mule.util.MapUtils;
-import org.mule.DefaultMuleEvent;
+import org.mule.util.concurrent.Latch;
 
-import java.util.Map;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ArrayList;
+import java.util.Map;
 
 import javax.resource.spi.work.Work;
 import javax.resource.spi.work.WorkException;
 
-import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentMap;
 import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
+import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentMap;
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
+
 import org.apache.commons.collections.buffer.BoundedFifoBuffer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

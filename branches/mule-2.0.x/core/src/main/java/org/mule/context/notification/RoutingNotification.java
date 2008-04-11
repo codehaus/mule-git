@@ -12,8 +12,6 @@ package org.mule.context.notification;
 
 import org.mule.api.MuleMessage;
 import org.mule.api.context.notification.ServerNotification;
-import org.mule.api.transport.Connectable;
-import org.mule.routing.inbound.EventGroup;
 
 /**
  * Is fired by routers.  Currently only Async-Reply routers use this when an event is received for an

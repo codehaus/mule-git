@@ -10,12 +10,9 @@
 
 package org.mule.util.expression;
 
-import org.mule.api.transport.MessageAdapter;
-import org.mule.api.endpoint.EndpointBuilder;
-import org.mule.api.endpoint.OutboundEndpoint;
 import org.mule.MuleServer;
-import org.mule.endpoint.AbstractEndpointBuilder;
 import org.mule.config.i18n.CoreMessages;
+import org.mule.endpoint.AbstractEndpointBuilder;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

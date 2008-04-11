@@ -9,12 +9,11 @@
  */
 package org.mule.routing;
 
-import org.mule.api.MuleMessage;
-import org.mule.api.MuleEvent;
-import org.mule.api.MuleMessageCollection;
-import org.mule.api.routing.RoutingException;
-import org.mule.routing.inbound.EventGroup;
 import org.mule.DefaultMessageCollection;
+import org.mule.api.MuleEvent;
+import org.mule.api.MuleMessage;
+import org.mule.api.MuleMessageCollection;
+import org.mule.routing.inbound.EventGroup;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

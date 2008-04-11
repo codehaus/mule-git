@@ -9,10 +9,8 @@
  */
 package org.mule.routing;
 
-import org.mule.api.routing.RoutingException;
-import org.mule.api.MuleMessage;
 import org.mule.api.MessagingException;
-import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.api.MuleMessage;
 import org.mule.config.i18n.Message;
 
 /**

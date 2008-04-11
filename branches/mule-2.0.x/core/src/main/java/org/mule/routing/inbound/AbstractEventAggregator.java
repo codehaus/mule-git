@@ -11,28 +11,14 @@
 package org.mule.routing.inbound;
 
 import org.mule.DefaultMuleEvent;
-import org.mule.MuleServer;
 import org.mule.api.MessagingException;
-import org.mule.api.MuleContext;
 import org.mule.api.MuleEvent;
-import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
-import org.mule.api.routing.RoutingException;
-import org.mule.api.lifecycle.LifecycleTransitionResult;
 import org.mule.api.lifecycle.InitialisationException;
-import org.mule.api.endpoint.EndpointBuilder;
-import org.mule.api.endpoint.InboundEndpoint;
-import org.mule.endpoint.EndpointURIEndpointBuilder;
-import org.mule.routing.AggregationException;
 import org.mule.routing.EventCorrelator;
 import org.mule.routing.EventCorrelatorCallback;
 
-import java.util.LinkedList;
-
 import javax.resource.spi.work.WorkException;
-
-import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
-import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentMap;
 
 /**
  * <code>AbstractEventAggregator</code> will aggregate a set of messages into a
@@ -67,7 +53,7 @@ public abstract class AbstractEventAggregator extends SelectiveConsumer
     protected abstract EventCorrelatorCallback getCorrelatorCallback();
 
 
-    // //@Override
+    //@Override
     public MuleEvent[] process(MuleEvent event) throws MessagingException
     {
         MuleMessage msg = eventCorrelator.process(event);

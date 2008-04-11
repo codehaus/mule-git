@@ -10,18 +10,11 @@
 
 package org.mule.test.integration.routing;
 
-import org.mule.api.MuleMessage;
-import org.mule.api.MuleMessageCollection;
-import org.mule.api.routing.ResponseTimeoutException;
 import org.mule.api.context.notification.RoutingNotificationListener;
 import org.mule.api.context.notification.ServerNotification;
+import org.mule.context.notification.RoutingNotification;
 import org.mule.module.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.context.notification.RoutingNotification;
-import org.mule.util.concurrent.Latch;
-import org.mule.routing.CorrelationTimeoutException;
-
-import java.util.List;
 
 import edu.emory.mathcs.backport.java.util.concurrent.CountDownLatch;
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;

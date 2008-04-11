@@ -10,9 +10,6 @@
 
 package org.mule.tck.testmodels.mule;
 
-import org.mule.api.MuleMessage;
-import org.mule.api.routing.RoutingException;
-import org.mule.routing.inbound.EventGroup;
 import org.mule.routing.response.ResponseCorrelationAggregator;
 
 /**
@@ -22,5 +19,5 @@ import org.mule.routing.response.ResponseCorrelationAggregator;
  */
 public class TestResponseAggregator extends ResponseCorrelationAggregator
 {
-    
+   // nothing to do 
 }

@@ -12,9 +12,8 @@ package org.mule.example.loanbroker.routers;
 
 import org.mule.api.MuleMessage;
 import org.mule.routing.AggregationException;
-import org.mule.routing.inbound.EventGroup;
-import org.mule.routing.inbound.AbstractEventAggregator;
 import org.mule.routing.inbound.CorrelationAggregator;
+import org.mule.routing.inbound.EventGroup;
 
 /**
  * <code>BankQuotesInboundAggregator</code> receives a number of quotes and selects the

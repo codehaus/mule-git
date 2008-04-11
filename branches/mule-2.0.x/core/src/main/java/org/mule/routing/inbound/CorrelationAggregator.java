@@ -10,12 +10,10 @@
 
 package org.mule.routing.inbound;
 
-import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
-import org.mule.api.routing.RoutingException;
-import org.mule.routing.EventCorrelatorCallback;
-import org.mule.routing.CollectionCorrelatorCallback;
 import org.mule.routing.AggregationException;
+import org.mule.routing.CollectionCorrelatorCallback;
+import org.mule.routing.EventCorrelatorCallback;
 
 /**
  * <code>CorrelationAggregator</code> uses the CorrelationID and

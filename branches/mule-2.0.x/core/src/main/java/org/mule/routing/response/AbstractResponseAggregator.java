@@ -13,22 +13,11 @@ package org.mule.routing.response;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.lifecycle.InitialisationException;
-import org.mule.api.routing.ResponseTimeoutException;
 import org.mule.api.routing.RoutingException;
-import org.mule.config.i18n.CoreMessages;
-import org.mule.context.notification.RoutingNotification;
-import org.mule.routing.inbound.AbstractEventAggregator;
-import org.mule.routing.inbound.EventGroup;
 import org.mule.routing.EventCorrelator;
 import org.mule.routing.EventCorrelatorCallback;
-import org.mule.util.MapUtils;
-import org.mule.util.concurrent.Latch;
-
-import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
-import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentMap;
-import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
-
-import org.apache.commons.collections.buffer.BoundedFifoBuffer;
+import org.mule.routing.inbound.AbstractEventAggregator;
+import org.mule.routing.inbound.EventGroup;
 
 /**
  * <code>AbstractResponseAggregator</code> provides a base class for implementing

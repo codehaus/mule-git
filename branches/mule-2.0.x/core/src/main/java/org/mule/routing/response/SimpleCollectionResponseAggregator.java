@@ -9,16 +9,8 @@
  */
 package org.mule.routing.response;
 
-import org.mule.DefaultMessageCollection;
-import org.mule.api.MuleMessage;
-import org.mule.api.MuleMessageCollection;
-import org.mule.api.MuleEvent;
-import org.mule.api.lifecycle.InitialisationException;
-import org.mule.api.routing.RoutingException;
-import org.mule.routing.inbound.EventGroup;
-import org.mule.routing.EventCorrelatorCallback;
-import org.mule.routing.SingleCorrelatorCallback;
 import org.mule.routing.CollectionCorrelatorCallback;
+import org.mule.routing.EventCorrelatorCallback;
 
 /**
  * A simple aggregator that will keep collecting events until a timeout is reached.  It will then return
