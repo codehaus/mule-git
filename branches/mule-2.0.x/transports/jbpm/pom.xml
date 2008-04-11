@@ -26,6 +26,12 @@
             <groupId>org.jbpm</groupId>
             <artifactId>jbpm-jpdl</artifactId>
             <version>3.2.2</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <!-- Use the combined cglib-nodep instead of separate cglib and asm dependencies -->
         <dependency>
