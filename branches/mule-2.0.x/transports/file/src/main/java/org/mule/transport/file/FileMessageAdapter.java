@@ -60,7 +60,11 @@ public class FileMessageAdapter extends AbstractMessageAdapter
 
     public Object getPayload()
     {
-        return fileInputStream != null ? fileInputStream : file;
+        if (fileInputStream != null)
+        {
+            return fileInputStream;
+        }
+        return file;
     }
 
     protected void setFileMessage(File message) throws MessagingException
