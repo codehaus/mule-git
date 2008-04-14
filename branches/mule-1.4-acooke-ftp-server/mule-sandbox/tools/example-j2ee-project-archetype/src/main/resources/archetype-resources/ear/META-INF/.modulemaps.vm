@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<modulemap:EARProjectMap xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:application="application.xmi" xmlns:modulemap="modulemap.xmi" xmi:id="EARProjectMap_1153432572668">
-  <mappings xmi:id="ModuleMapping_1153432572668" projectName="${serviceName}ServiceEjb">
-    <module xmi:type="application:EjbModule" href="META-INF/application.xml#EjbModule_${serviceName}Service"/>
-  </mappings>
-  <utilityJARMappings xmi:id="UtilityJARMapping_${serviceName}Service" projectName="${serviceName}ServiceEjbClient" uri="${serviceName}ServiceEjbClient.jar"/>
-</modulemap:EARProjectMap>
