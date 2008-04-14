@@ -1,1 +1,0 @@
-call mvn com.javaforge.bobber:bobber-archetype:create -DarchetypeGroupId=com.javaforge.bobber -DarchetypeArtifactId=maven-archetype-jbi-component -DarchetypeVersion=1.0-SNAPSHOT -DgroupId=com.example.newproject -DartifactId=test
