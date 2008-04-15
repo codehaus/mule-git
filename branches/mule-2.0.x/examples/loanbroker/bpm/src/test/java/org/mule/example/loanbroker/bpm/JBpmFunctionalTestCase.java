@@ -72,6 +72,6 @@ public class JBpmFunctionalTestCase extends AbstractAsynchronousLoanBrokerTestCa
         //without this sleep, the test still succeeds but throws a series of exceptions
         //probably Spring would not have enough time to close db connections before
         //database itself is shut down while jvm start disposing
-        Thread.sleep(100);
+        Thread.sleep(1000);
     }
 }
