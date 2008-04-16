@@ -15,7 +15,6 @@ org.mule.test.integration.routing.replyto.ReplytoChainIntegration4TestCase
 
 # More testing on these: not recorded in Jira yet
 org.mule.test.usecases.axis.AxisClientWithComplexTypesTestCase
-org.mule.test.integration.VisualizerServiceTestCase
 
 org.mule.test.integration.transaction.OutboundTransactionsTestCase
 

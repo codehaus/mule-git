@@ -183,21 +183,6 @@
             <type>pom</type>
         </dependency>
 
-        <!-- <dependency>
-            <groupId>org.mule.tools</groupId>
-            <artifactId>mule-tools-visualizer</artifactId>
-            <version>${version}</version>
-            <exclusions> -->
-                <!--
-                    When m2 plugin is executed by a user, this
-                    library is guaranteed to be provided by m2.
-                -->
-                <!-- <exclusion>
-                    <groupId>org.apache.maven</groupId>
-                    <artifactId>maven-plugin-api</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency> -->
         <!--
             We need to register the endorsed XML jars as dependencies of the
             distribution, so that they can be referenced in the assembly as in/excludes.
