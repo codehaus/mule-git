@@ -966,6 +966,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>2.0.1</version>
                 <reportSets>
                     <reportSet>
                         <reports>
@@ -980,19 +981,14 @@
             <plugin>
                 <groupId>org.mule.tools</groupId>
                 <artifactId>mule-test-exclusions-report-plugin</artifactId>
+                <version>1.0</version>
             </plugin>
 
             <!-- Javadoc settings -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <!--
-                     see
-                        http://jira.codehaus.org/browse/MJAVADOC-145
-                        http://jira.codehaus.org/browse/MJAVADOC-157
-                     which are not yet fixed in a publicly available release.
-                -->
-                <version>2.4-MULE-597051</version>
+                <version>2.4</version>
                 <configuration>
                     <minmemory>128m</minmemory>
                     <maxmemory>512m</maxmemory>
@@ -1051,6 +1047,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jxr-plugin</artifactId>
+                <version>2.1</version>
                 <configuration>
                     <aggregate>true</aggregate>
                 </configuration>
@@ -1063,6 +1060,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-report-plugin</artifactId>
+                <version>2.4.2</version>
                 <configuration>
                     <!-- Display failed tests only -->
                     <showSuccess>false</showSuccess>
@@ -1073,6 +1071,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>2.1</version>
                 <configuration>
                     <configLocation>codecheck/checkstyle.xml</configLocation>
                     <headerLocation>codecheck/LicenseHeader.txt</headerLocation>
@@ -1114,11 +1113,6 @@
                 <module>transports</module>
                 <module>tests</module>
                 <module>examples</module>
-                <!-- see:
-                     http://mule.mulesource.org/jira/browse/MULETOOLS-2
-                     http://mule.mulesource.org/jira/browse/MULETOOLS-21
-                     http://mule.mulesource.org/jira/browse/MULETOOLS-22
-                     -->
                 <module>tools</module>
             </modules>
         </profile>
