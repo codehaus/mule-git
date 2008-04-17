@@ -135,7 +135,11 @@ public class ObjectToHttpClientMethodRequest extends AbstractEventAwareTransform
                     HttpConnector.DEFAULT_HTTP_GET_BODY_PARAM_PROPERTY);
                 paramName = URLEncoder.encode(paramName, encoding);
 
-				String query = URLEncoder.encode(uri.getQuery(), encoding);
+                String query = uri.getQuery();
+                if (query != null)
+                {
+                    query = URLEncoder.encode(query, encoding);
+                }
                 if (!(src instanceof NullPayload) && !StringUtils.EMPTY.equals(src))
                 {
                     if (query == null)
