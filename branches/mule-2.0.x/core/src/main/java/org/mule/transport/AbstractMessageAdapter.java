@@ -585,10 +585,14 @@ public abstract class AbstractMessageAdapter implements MessageAdapter, ThreadSa
     /** {@inheritDoc} */
     public synchronized void resetAccessControl()
     {
-        if (MuleServer.getMuleContext().getConfiguration().isAssertMessageAccess())
+        // just reset the internal state here as this method is explicitly intended not to
+        // be used from the outside
+        if (ownerThread != null)
         {
-            assertAccess(WRITE);
             ownerThread.set(null);
+        }
+        if (mutable != null)
+        {
             mutable.set(true);
         }
     }
