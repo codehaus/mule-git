@@ -81,7 +81,7 @@ public class DefaultMuleConfiguration implements MuleConfiguration
      * Should we fail when we detect "message scribbling"?  
      * @see AbstractMessageAdapter.checkMutable()
      */
-    private boolean failOnMessageScribbling = true;
+    private boolean failOnMessageScribbling = false;
     
     /** the unique id for this Mule instance */
     private String id;

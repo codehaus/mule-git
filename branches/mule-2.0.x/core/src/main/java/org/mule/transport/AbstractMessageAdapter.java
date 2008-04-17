@@ -510,8 +510,8 @@ public abstract class AbstractMessageAdapter implements MessageAdapter, ThreadSa
         // code - more than one thread is attempting to change the contents of a message.
         //
         // Having said that, you can disable these exceptions by defining
-        // MuleProperties.MULE_THREAD_UNSAFE_MESSAGES_PROPERTY (org.mule.disable.threadsafemessages)
-        // (ie by adding -Dorg.mule.disable.threadsafemessages=true to the java command line).
+        // MuleProperties.MULE_THREAD_UNSAFE_MESSAGES_PROPERTY (mule.disable.threadsafemessages)
+        // (ie by adding -Dmule.disable.threadsafemessages=true to the java command line).
         //
         // To remove the underlying cause, however, you probably need to do one of:
         //
