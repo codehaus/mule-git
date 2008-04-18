@@ -39,7 +39,6 @@ import javax.resource.spi.work.WorkException;
 
 import edu.emory.mathcs.backport.java.util.concurrent.BlockingDeque;
 import edu.emory.mathcs.backport.java.util.concurrent.LinkedBlockingDeque;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -54,8 +53,11 @@ import org.apache.commons.logging.LogFactory;
  */
 public class MultiConsumerJmsMessageReceiver extends AbstractMessageReceiver
 {
+    protected final BlockingDeque consumers;
+
+    protected volatile int receiversCount;
+
     private final JmsConnector jmsConnector;
-    private final BlockingDeque consumers;
 
     public MultiConsumerJmsMessageReceiver(Connector connector, Service service, InboundEndpoint endpoint)
             throws CreateException
@@ -64,13 +66,23 @@ public class MultiConsumerJmsMessageReceiver extends AbstractMessageReceiver
 
         jmsConnector = (JmsConnector) connector;
 
-        int numReceivers = jmsConnector.getNumberOfConcurrentTransactedReceivers();
+        final boolean isTopic = jmsConnector.getTopicResolver().isTopic(endpoint, true);
+        receiversCount = jmsConnector.getNumberOfConcurrentTransactedReceivers();
+        if (isTopic && receiversCount != 1)
+        {
+            if (logger.isInfoEnabled())
+            {
+                logger.info("Destination " + getEndpoint().getEndpointURI() + " is a topic, but " + receiversCount +
+                                " receivers have been configured. Will configure only 1.");
+            }
+            receiversCount = 1;
+        }
         if (logger.isDebugEnabled())
         {
-            logger.debug("Creating " + numReceivers + " sub-receivers for " + endpoint.getEndpointURI());
+            logger.debug("Creating " + receiversCount + " sub-receivers for " + endpoint.getEndpointURI());
         }
-        consumers = new LinkedBlockingDeque(numReceivers);
-        for (int i = 0; i < numReceivers; i++)
+        consumers = new LinkedBlockingDeque(receiversCount);
+        for (int i = 0; i < receiversCount; i++)
         {
             consumers.addLast(new SubReceiver());
         }
@@ -79,7 +91,7 @@ public class MultiConsumerJmsMessageReceiver extends AbstractMessageReceiver
     protected void doStart() throws MuleException
     {
         logger.debug("doStart()");
-        for (int i = 0; i < jmsConnector.getNumberOfConcurrentTransactedReceivers(); i++)
+        for (int i = 0; i < receiversCount; i++)
         {
             SubReceiver sub = (SubReceiver) consumers.removeFirst();
             sub.doStart();
@@ -90,7 +102,7 @@ public class MultiConsumerJmsMessageReceiver extends AbstractMessageReceiver
     protected void doStop() throws MuleException
     {
         logger.debug("doStop()");
-        for (int i = 0; i < jmsConnector.getNumberOfConcurrentTransactedReceivers(); i++)
+        for (int i = 0; i < receiversCount; i++)
         {
             SubReceiver sub = (SubReceiver) consumers.removeFirst();
             sub.doStop();
@@ -101,7 +113,7 @@ public class MultiConsumerJmsMessageReceiver extends AbstractMessageReceiver
     protected void doConnect() throws Exception
     {
         logger.debug("doConnect()");
-        for (int i = 0; i < jmsConnector.getNumberOfConcurrentTransactedReceivers(); i++)
+        for (int i = 0; i < receiversCount; i++)
         {
             SubReceiver sub = (SubReceiver) consumers.removeFirst();
             sub.doConnect();
@@ -112,7 +124,7 @@ public class MultiConsumerJmsMessageReceiver extends AbstractMessageReceiver
     protected void doDisconnect() throws Exception
     {
         logger.debug("doDisconnect()");
-        for (int i = 0; i < jmsConnector.getNumberOfConcurrentTransactedReceivers(); i++)
+        for (int i = 0; i < receiversCount; i++)
         {
             SubReceiver sub = (SubReceiver) consumers.removeFirst();
             sub.doDisconnect();
