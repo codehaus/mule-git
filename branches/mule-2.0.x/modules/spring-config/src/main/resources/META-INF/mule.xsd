@@ -2070,6 +2070,16 @@
         </xsd:complexContent>
     </xsd:complexType>
 
+    <xsd:element name="auto-transformer" type="abstractTransformerType" substitutionGroup="abstract-transformer">
+        <xsd:annotation>
+            <xsd:documentation>
+                A transformer that uses the transform discovery mechanism to convert the message payload. This
+                transformer works much better when transforming custom object types rather that java types since there
+                is less chance for ambiguity.
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+
     <xsd:element name="custom-transformer" type="customTransformerType" substitutionGroup="abstract-transformer">
         <xsd:annotation>
             <xsd:documentation>
@@ -2827,7 +2837,7 @@
 
     <xsd:element name="forwarding-router" type="selectiveConsumerRouterType"
                  substitutionGroup="abstract-inbound-router"/>
-    
+
     <xsd:element name="selective-consumer-router" type="selectiveConsumerRouterType"
                  substitutionGroup="abstract-inbound-router"/>
 
@@ -2866,7 +2876,7 @@
         </xsd:complexContent>
     </xsd:complexType>
 
-     <xsd:element name="collection-aggregator-router" type="baseAggregatorRouterType"
+    <xsd:element name="collection-aggregator-router" type="baseAggregatorRouterType"
                  substitutionGroup="abstract-inbound-router"/>
 
     <xsd:element name="custom-inbound-router" type="customInboundRouterType"
@@ -3752,6 +3762,12 @@
         </xsd:complexContent>
     </xsd:complexType>
 
+    <xsd:complexType name="dataReferenceType" mixed="true">
+        <xsd:attribute name="file" type="xsd:string"/>
+        <xsd:attribute name="ref" type="xsd:string"/>
+        <!--I don't like this flag, may be we could use content-type mappings... -->
+        <xsd:attribute name="binary" type="substitutableBoolean"/>
+    </xsd:complexType>
 
     <!-- these cannot be references (unless we use qualified attribute names, which are ugly),
          but serve as templates to cut+paste in individual transports
