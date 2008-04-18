@@ -295,7 +295,7 @@ public class MultiConsumerJmsMessageReceiver extends AbstractMessageReceiver
             if (m.getJMSRedelivered())
             {
                 // lazily create the redelivery handler
-                RedeliveryHandler redeliveryHandler = jmsConnector.getRedeliveryHandler();
+                RedeliveryHandler redeliveryHandler = jmsConnector.getRedeliveryHandlerFactory().create();
                 redeliveryHandler.setConnector(jmsConnector);
                 if (logger.isDebugEnabled())
                 {
