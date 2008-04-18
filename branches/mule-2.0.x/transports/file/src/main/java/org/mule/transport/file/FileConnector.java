@@ -132,7 +132,7 @@ public class FileConnector extends AbstractConnector
     // @Override
     protected Object getReceiverKey(Service service, InboundEndpoint endpoint)
     {
-        if (endpoint.getFilter() != null)
+        if (endpoint.getFilter() != null && endpoint.getFilter() instanceof FilenameWildcardFilter)
         {
             return endpoint.getEndpointURI().getAddress() + "/"
                    + ((FilenameWildcardFilter) endpoint.getFilter()).getPattern();
