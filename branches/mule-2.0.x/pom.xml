@@ -667,6 +667,7 @@
                 <enabled>false</enabled>
             </releases>
         </repository>
+        <!-- for activemq -->
         <repository>
             <id>apache.incubating.releases</id>
             <name>Apache Incubating Release Distribution Repository</name>
