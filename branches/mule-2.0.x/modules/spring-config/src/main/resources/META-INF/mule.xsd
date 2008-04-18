@@ -1850,7 +1850,7 @@
     </xsd:element>
     <xsd:complexType name="wildcardFilterType">
         <xsd:complexContent>
-            <xsd:extension base="patternFilterType"/>
+            <xsd:extension base="caseSensitivePatternFilterType"/>
         </xsd:complexContent>
     </xsd:complexType>
 

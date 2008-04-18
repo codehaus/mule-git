@@ -32,4 +32,13 @@
         <file:expression-filename-parser/>
     </file:connector>
 
+    <model>
+        <service name="Test" initialState="stopped">
+            <inbound>
+                <file:inbound-endpoint path="./target" connector-ref="secondConnector">
+                    <file:filename-regex-filter pattern="(^SemDirector_Report-\d)(.*)(tab$)" caseSensitive="false"/>
+                </file:inbound-endpoint>
+            </inbound>
+        </service>
+    </model>
 </mule>
