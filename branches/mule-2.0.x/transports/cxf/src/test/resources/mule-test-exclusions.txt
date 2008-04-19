@@ -23,5 +23,8 @@ org.mule.transport.cxf.jaxws.ClientTestCase
 # FunctionalTestComponent as the basis for a service...
 org.mule.transport.cxf.CxfCustomHttpHeaderTestCase
 
+# MULE-3255
+org.mule.transport.cxf.issues.InboundTransformerMule3255TestCase
+
 
 
