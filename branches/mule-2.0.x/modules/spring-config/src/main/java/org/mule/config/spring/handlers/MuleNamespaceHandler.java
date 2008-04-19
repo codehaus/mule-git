@@ -139,6 +139,7 @@ import org.mule.transformer.simple.ObjectToByteArray;
 import org.mule.transformer.simple.ObjectToString;
 import org.mule.transformer.simple.SerializableToByteArray;
 import org.mule.transformer.simple.StringAppendTransformer;
+import org.mule.transformer.simple.AutoTransformer;
 
 /**
  * This is the core namespace handler for Mule and configures all Mule configuration elements under the
@@ -186,6 +187,7 @@ public class MuleNamespaceHandler extends AbstractMuleNamespaceHandler
         registerBeanDefinitionParser("transformer", new TransformerRefDefinitionParser());
 
         registerBeanDefinitionParser("custom-transformer", new TransformerDefinitionParser());
+        registerBeanDefinitionParser("auto-transformer", new TransformerDefinitionParser(AutoTransformer.class));
         registerBeanDefinitionParser("no-action-transformer", new TransformerDefinitionParser(NoActionTransformer.class));
         registerBeanDefinitionParser("message-properties-transformer", new TransformerDefinitionParser(MessagePropertiesTransformer.class));
 
