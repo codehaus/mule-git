@@ -30,7 +30,7 @@ public class ExpressionEvaluatorManager
 
     private static TemplateParser parser = TemplateParser.createAntStyleParser();
 
-    private static Map evaluator = new HashMap(8);
+    private static Map evaluators = new HashMap(8);
 
     public static void registerEvaluator(ExpressionEvaluator extractor)
     {
@@ -38,11 +38,11 @@ public class ExpressionEvaluatorManager
         {
             throw new IllegalArgumentException(CoreMessages.objectIsNull("extractor").getMessage());
         }
-        if(evaluator.containsKey(extractor.getName()))
+        if(evaluators.containsKey(extractor.getName()))
         {
             throw new IllegalArgumentException(CoreMessages.objectAlreadyExists(extractor.getName()).getMessage());
         }
-        evaluator.put(extractor.getName(), extractor);
+        evaluators.put(extractor.getName(), extractor);
     }
 
     /**
@@ -52,7 +52,7 @@ public class ExpressionEvaluatorManager
      */
     public static boolean isEvaluatorRegistered(String name)
     {
-        return evaluator.get(name)!=null;
+        return evaluators.get(name)!=null;
     }
 
     /**
@@ -67,7 +67,7 @@ public class ExpressionEvaluatorManager
             return null;
         }
         
-        ExpressionEvaluator evaluator = (ExpressionEvaluator) ExpressionEvaluatorManager.evaluator.remove(name);
+        ExpressionEvaluator evaluator = (ExpressionEvaluator) ExpressionEvaluatorManager.evaluators.remove(name);
         if(evaluator instanceof Disposable)
         {
             ((Disposable) evaluator).dispose();
@@ -118,6 +118,36 @@ public class ExpressionEvaluatorManager
      * method should be used since it will iterate through all expressions in a string.
      *
      * @param expression a single expression i.e. xpath://foo
+     * @param evaluator the evaluator to use when executing the expression
+     * @param object The object (usually {@link org.mule.api.MuleMessage}) to evaluate the expression on.
+     * It is unlikely that users will want to change this execpt maybe to use "["  instead.
+     * @param failIfNull determines if an exception should be thrown if expression could not be evaluated or returns
+     * null.
+     * @return the result of the evaluation
+     * @throws ExpressionRuntimeException if the expression is invalid, or a null is found for the expression and
+     * 'failIfNull is set to true.
+     */
+    public static Object evaluate(String expression, String evaluator, Object object, boolean failIfNull) throws ExpressionRuntimeException
+    {
+        ExpressionEvaluator extractor = (ExpressionEvaluator) evaluators.get(evaluator);
+        if(extractor==null)
+        {
+            throw new IllegalArgumentException(CoreMessages.expressionEvaluatorNotRegistered(evaluator).getMessage());
+        }
+        Object result = extractor.evaluate(expression, object);
+        if(result==null && failIfNull)
+        {
+            throw new ExpressionRuntimeException(CoreMessages.expressionEvaluatorReturnedNull(evaluator, expression));
+        }
+        return result;
+    }
+    /**
+     * Evaluates the given expression.  The expression should be a single expression definition with or without
+     * enclosing braces. i.e. "mule:serviceName" and "${mule:serviceName}" are both valid. For situations where
+     * one or more expressions need to be parsed within a single text, the {@link #parse(String, Object, boolean)}
+     * method should be used since it will iterate through all expressions in a string.
+     *
+     * @param expression a single expression i.e. xpath://foo
      * @param object The object (usually {@link org.mule.api.MuleMessage}) to evaluate the expression on.
      * @param expressionPrefix the expression prefix to use. The default is "${" but any character is valid.
      * It is unlikely that users will want to change this execpt maybe to use "["  instead.
@@ -150,17 +180,9 @@ public class ExpressionEvaluatorManager
             name = expression;
             expression = null;
         }
-        ExpressionEvaluator extractor = (ExpressionEvaluator) evaluator.get(name);
-        if(extractor==null)
-        {
-            throw new IllegalArgumentException(CoreMessages.expressionEvaluatorNotRegistered(name).getMessage());
-        }
-        Object result = extractor.evaluate(expression, object);
-        if(result==null && failIfNull)
-        {
-            throw new ExpressionRuntimeException(CoreMessages.expressionEvaluatorReturnedNull(name, expression));
-        }
-        return result;
+        return evaluate(expression, name, object, failIfNull);
+
+
     }
 
     /**
@@ -206,7 +228,7 @@ public class ExpressionEvaluatorManager
      */
     public static synchronized void clearEvaluators()
     {
-        for (Iterator iterator = evaluator.values().iterator(); iterator.hasNext();)
+        for (Iterator iterator = evaluators.values().iterator(); iterator.hasNext();)
         {
             ExpressionEvaluator evaluator = (ExpressionEvaluator)iterator.next();
             if(evaluator instanceof Disposable)
@@ -214,7 +236,7 @@ public class ExpressionEvaluatorManager
                 ((Disposable) evaluator).dispose();
             }
         }
-        evaluator.clear();
+        evaluators.clear();
     }
 
     /**
