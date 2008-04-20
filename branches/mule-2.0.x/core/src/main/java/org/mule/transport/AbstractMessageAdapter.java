@@ -152,6 +152,7 @@ public abstract class AbstractMessageAdapter implements MessageAdapter, ThreadSa
     /** {@inheritDoc} */
     public void addProperties(Map props)
     {
+        addProperties(props, properties.getDefaultScope());
         assertAccess(WRITE);
         if (props != null)
         {
@@ -166,6 +167,22 @@ public abstract class AbstractMessageAdapter implements MessageAdapter, ThreadSa
         }
     }
 
+    /** {@inheritDoc} */
+    public void addProperties(Map props, PropertyScope scope)
+    {
+        assertAccess(WRITE);
+        if (props != null)
+        {
+            synchronized (props)
+            {
+                for (Iterator iter = props.entrySet().iterator(); iter.hasNext();)
+                {
+                    Map.Entry entry = (Map.Entry) iter.next();
+                    setProperty((String) entry.getKey(), entry.getValue(), scope);
+                }
+            }
+        }
+    }
     /**
      * A convenience method for extending classes to Set inbound scoped properties on the message
      * properties that arrive on the inbound message should be set as inbound-scoped properties. These are

@@ -467,6 +467,12 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess
     }
 
     /** {@inheritDoc} */
+    public void addProperties(Map properties, PropertyScope scope)
+    {
+        adapter.addProperties(properties, scope);
+    }
+
+    /** {@inheritDoc} */
     public void clearProperties()
     {
         adapter.clearProperties();
