@@ -11,6 +11,7 @@ package org.mule.config.spring.handlers;
 
 import org.mule.config.spring.factories.InboundEndpointFactoryBean;
 import org.mule.config.spring.factories.OutboundEndpointFactoryBean;
+import org.mule.config.spring.factories.GlobalEndpointFactoryBean;
 import org.mule.config.spring.parsers.MuleDefinitionParser;
 import org.mule.config.spring.parsers.MuleDefinitionParserConfiguration;
 import org.mule.config.spring.parsers.PostProcessor;
@@ -86,6 +87,22 @@ public abstract class AbstractMuleNamespaceHandler extends NamespaceHandlerSuppo
         }
     }
 
+    protected Class getInboundEndpointFactoryBeanClass()
+    {
+        return InboundEndpointFactoryBean.class;
+    }
+
+    protected Class getOutboundEndpointFactoryBeanClass()
+    {
+        return OutboundEndpointFactoryBean.class;
+    }
+
+    protected Class getGlobalEndpointFactoryBeanClass()
+    {
+        return GlobalEndpointFactoryBean.class;
+    }
+
+
     private class RegisteredMdps implements MuleDefinitionParserConfiguration
     {
 
@@ -93,9 +110,9 @@ public abstract class AbstractMuleNamespaceHandler extends NamespaceHandlerSuppo
 
         private RegisteredMdps(String protocol, boolean isMeta, String[] requiredAttributes)
         {
-            registerBeanDefinitionParser("endpoint", add(new TransportGlobalEndpointDefinitionParser(protocol, isMeta, requiredAttributes, new String[]{})));
-            registerBeanDefinitionParser("inbound-endpoint", add(new TransportEndpointDefinitionParser(protocol, isMeta, InboundEndpointFactoryBean.class, requiredAttributes, new String[]{})));
-            registerBeanDefinitionParser("outbound-endpoint", add(new TransportEndpointDefinitionParser(protocol, isMeta, OutboundEndpointFactoryBean.class, requiredAttributes, new String[]{})));
+            registerBeanDefinitionParser("endpoint", add(new TransportGlobalEndpointDefinitionParser(protocol, isMeta, AbstractMuleNamespaceHandler.this.getGlobalEndpointFactoryBeanClass(), requiredAttributes, new String[]{})));
+            registerBeanDefinitionParser("inbound-endpoint", add(new TransportEndpointDefinitionParser(protocol, isMeta, AbstractMuleNamespaceHandler.this.getInboundEndpointFactoryBeanClass(), requiredAttributes, new String[]{})));
+            registerBeanDefinitionParser("outbound-endpoint", add(new TransportEndpointDefinitionParser(protocol, isMeta, AbstractMuleNamespaceHandler.this.getOutboundEndpointFactoryBeanClass(), requiredAttributes, new String[]{})));
         }
 
         private MuleDefinitionParser add(MuleDefinitionParser bdp)

@@ -56,6 +56,7 @@ import org.mule.config.spring.parsers.specific.TransactionManagerDefinitionParse
 import org.mule.config.spring.parsers.specific.TransformerDefinitionParser;
 import org.mule.config.spring.parsers.specific.TransformerRefDefinitionParser;
 import org.mule.config.spring.parsers.specific.endpoint.GenericEndpointDefinitionParser;
+import org.mule.config.spring.parsers.specific.endpoint.EndpointRefParser;
 import org.mule.config.spring.parsers.specific.endpoint.support.OrphanEndpointDefinitionParser;
 import org.mule.config.spring.util.SpringBeanLookup;
 import org.mule.context.notification.ListenerSubscriptionPair;
@@ -309,7 +310,7 @@ public class MuleNamespaceHandler extends AbstractMuleNamespaceHandler
         registerBeanDefinitionParser("recipients", new ChildListDefinitionParser("recipients"));
         registerBeanDefinitionParser("template-endpoint-router", new RouterDefinitionParser(TemplateEndpointRouter.class));
         registerBeanDefinitionParser("custom-outbound-router", new RouterDefinitionParser(null));
-        registerMuleBeanDefinitionParser("reply-to", new ParentDefinitionParser()).addAlias("address", "replyTo");
+        registerBeanDefinitionParser("reply-to", new EndpointRefParser("replyTo"));
 
         //Response Routers
         registerBeanDefinitionParser("custom-async-reply-router", new RouterDefinitionParser(null));
