@@ -20,7 +20,7 @@
             <version>1.6.0</version>
         </dependency>
 
-        <!-- The Mule client is needed for MuleClientReceiveJob and MuleClientDispatchJob -->
+        <!-- The Mule client is needed for EndpointPollingJob and ScheduledDispatchJob -->
         <dependency>
             <groupId>org.mule.tests</groupId>
             <artifactId>mule-tests-functional</artifactId>

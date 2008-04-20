@@ -11,8 +11,8 @@
 package org.mule.transport.quartz.jobs;
 
 import org.mule.api.MuleException;
-import org.mule.api.MuleMessage;
 import org.mule.module.client.MuleClient;
+import org.mule.transport.NullPayload;
 import org.mule.transport.quartz.QuartzConnector;
 import org.mule.transport.quartz.i18n.QuartzMessages;
 
@@ -24,9 +24,10 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
 /**
- * Will receive on an endpoint and dispatch the result on another.
+ * Will dispatch the current message to a Mule endpoint at a leter time.
+ * This job can be used to fire timebased events.
  */
-public class MuleClientReceiveJob implements Job
+public class ScheduledDispatchJob implements Job
 {
     /**
      * The logger used for this class
@@ -36,38 +37,25 @@ public class MuleClientReceiveJob implements Job
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException
     {
         JobDataMap jobDataMap = jobExecutionContext.getJobDetail().getJobDataMap();
+        Object payload = jobDataMap.get(QuartzConnector.PROPERTY_PAYLOAD);
 
-        String dispatchEndpoint = jobDataMap.getString(QuartzConnector.PROPERTY_JOB_DISPATCH_ENDPOINT);
-        if (dispatchEndpoint == null)
+        if (payload == null)
+        {
+            payload = NullPayload.getInstance();
+        }
+
+        ScheduledDispatchJobConfig config = (ScheduledDispatchJobConfig)jobDataMap.get(QuartzConnector.PROPERTY_JOB_CONFIG);
+        if (config == null)
         {
             throw new JobExecutionException(
-                QuartzMessages.missingJobDetail(QuartzConnector.PROPERTY_JOB_DISPATCH_ENDPOINT).getMessage());
+                QuartzMessages.missingJobDetail(QuartzConnector.PROPERTY_JOB_CONFIG).getMessage());
         }
 
-        String receiveEndpoint = jobDataMap.getString(QuartzConnector.PROPERTY_JOB_RECEIVE_ENDPOINT);
-        if (receiveEndpoint == null)
-        {
-            throw new JobExecutionException(
-                QuartzMessages.missingJobDetail(QuartzConnector.PROPERTY_JOB_RECEIVE_ENDPOINT).getMessage());
-        }
-        long timeout = 5000;
-        String timeoutString = jobDataMap.getString(QuartzConnector.PROPERTY_JOB_RECEIVE_TIMEOUT);
-        if (timeoutString != null)
-        {
-            timeout = Long.parseLong(timeoutString);
-        }
         try
         {
             MuleClient client = new MuleClient();
-            logger.debug("Attempting to receive event on: " + receiveEndpoint);
-            MuleMessage result = client.request(receiveEndpoint, timeout);
-            if (result != null)
-            {
-                logger.debug("Received event on: " + receiveEndpoint);
-                logger.debug("Dispatching result on: " + dispatchEndpoint);
-                result.addProperties(jobDataMap);
-                client.dispatch(dispatchEndpoint, result);
-            }
+            logger.debug("Dispatching payload on: " + config.getEndpointRef());
+            client.dispatch(config.getEndpointRef(), payload, jobDataMap);
         }
         catch (MuleException e)
         {

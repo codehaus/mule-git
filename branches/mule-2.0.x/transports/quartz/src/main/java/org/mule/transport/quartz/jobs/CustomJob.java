@@ -28,7 +28,7 @@ import org.quartz.JobExecutionException;
  * 
  * @see org.mule.transport.NullPayload
  */
-public class DelegatingJob implements Job
+public class CustomJob implements Job
 {
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException
     {
