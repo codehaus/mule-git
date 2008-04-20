@@ -1708,11 +1708,20 @@
         </xsd:attribute>
     </xsd:attributeGroup>
 
-    <xsd:complexType name="replyToType">
-        <xsd:attribute name="address" type="xsd:string" use="required">
+    <xsd:complexType name="endpointRefType">
+        <xsd:attribute name="address" type="xsd:string">
             <xsd:annotation>
                 <xsd:documentation>
                     The destination address for a reply message.
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="ref" type="xsd:NMTOKEN">
+            <xsd:annotation>
+                <xsd:documentation>
+                    The reference name of a global endpoint to use. If this EndpointRef will be associated to a message
+                    such as a Reply-To address, this endpoint ref has to be available on the remote Mule instance that reads the
+                    Reply-To address.
                 </xsd:documentation>
             </xsd:annotation>
         </xsd:attribute>
@@ -2956,7 +2965,7 @@
             <xsd:extension base="abstractOutboundRouterType">
                 <xsd:sequence>
                     <xsd:element ref="abstract-outbound-endpoint" minOccurs="0" maxOccurs="unbounded"/>
-                    <xsd:element name="reply-to" type="replyToType" minOccurs="0"/>
+                    <xsd:element name="reply-to" type="endpointRefType" minOccurs="0"/>
                     <xsd:element ref="abstract-transaction" minOccurs="0"/>
                     <xsd:element ref="abstract-message-info-mapping" minOccurs="0"/>
                 </xsd:sequence>
