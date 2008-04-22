@@ -13,11 +13,10 @@ import org.mule.api.lifecycle.Disposable;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.util.TemplateParser;
 
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 
 import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
+import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentMap;
 
 /**
  * Provides universal access for evaluating expressions embedded in Mule configurations, such  as Xml, Java,
@@ -32,19 +31,19 @@ public class ExpressionEvaluatorManager
 
     private static TemplateParser parser = TemplateParser.createAntStyleParser();
 
-    private static Map evaluators = new ConcurrentHashMap(8);
+    private static ConcurrentMap evaluators = new ConcurrentHashMap(8);
 
     public static void registerEvaluator(ExpressionEvaluator extractor)
     {
-        if(extractor ==null)
+        if (extractor == null)
         {
             throw new IllegalArgumentException(CoreMessages.objectIsNull("extractor").getMessage());
         }
-        if(evaluators.containsKey(extractor.getName()))
+        Object previous = evaluators.putIfAbsent(extractor.getName(), extractor);
+        if (previous != null)
         {
             throw new IllegalArgumentException(CoreMessages.objectAlreadyExists(extractor.getName()).getMessage());
         }
-        evaluators.put(extractor.getName(), extractor);
     }
 
     /**
@@ -54,23 +53,22 @@ public class ExpressionEvaluatorManager
      */
     public static boolean isEvaluatorRegistered(String name)
     {
-        return evaluators.get(name)!=null;
+        return evaluators.containsKey(name);
     }
 
     /**
      * Removes the evaluator with the given name
      * @param name the name of the evaluator to remove
-     * @return
      */
     public static ExpressionEvaluator unregisterEvaluator(String name)
     {
-        if(name==null)
+        if (name==null)
         {
             return null;
         }
         
         ExpressionEvaluator evaluator = (ExpressionEvaluator) ExpressionEvaluatorManager.evaluators.remove(name);
-        if(evaluator instanceof Disposable)
+        if (evaluator instanceof Disposable)
         {
             ((Disposable) evaluator).dispose();
         }
@@ -132,12 +130,12 @@ public class ExpressionEvaluatorManager
     public static Object evaluate(String expression, String evaluator, Object object, boolean failIfNull) throws ExpressionRuntimeException
     {
         ExpressionEvaluator extractor = (ExpressionEvaluator) evaluators.get(evaluator);
-        if(extractor==null)
+        if (extractor == null)
         {
             throw new IllegalArgumentException(CoreMessages.expressionEvaluatorNotRegistered(evaluator).getMessage());
         }
         Object result = extractor.evaluate(expression, object);
-        if(result==null && failIfNull)
+        if (result == null && failIfNull)
         {
             throw new ExpressionRuntimeException(CoreMessages.expressionEvaluatorReturnedNull(evaluator, expression));
         }
@@ -163,16 +161,16 @@ public class ExpressionEvaluatorManager
     {
         String name;
 
-        if(expression==null)
+        if (expression == null)
         {
             throw new IllegalArgumentException(CoreMessages.objectIsNull("expression").getMessage());
         }
-        if(expression.startsWith(expressionPrefix))
+        if (expression.startsWith(expressionPrefix))
         {
             expression = expression.substring(2, expression.length()-1);
         }
         int i = expression.indexOf(":");
-        if(i>-1)
+        if (i >- 1)
         {
             name = expression.substring(0, i);
             expression = expression.substring(i+1);
