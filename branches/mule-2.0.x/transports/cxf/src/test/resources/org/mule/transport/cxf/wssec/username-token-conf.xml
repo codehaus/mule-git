@@ -13,6 +13,9 @@
 			<spring:entry key="repeatCount" value="0" />
 			<spring:entry key="startDelay" value="1000" />
 			<spring:entry key="payloadClassName" value="" />
+			<spring:entry key="jobConfig">
+				<spring:bean class="org.mule.transport.quartz.jobs.EventGeneratorJobConfig"/>
+			</spring:entry>
 		</properties>
 	</endpoint>
 
