@@ -164,7 +164,7 @@
                     <xsd:element name="selector" type="jmsSelectorFilter" minOccurs="0"/>
                 </xsd:choice>
                 <xsd:element ref="mule:abstract-security-filter" minOccurs="0"/>
-                <xsd:element ref="mule:properties" minOccurs="0"/>
+                <xsd:group ref="mule:propertiesGroup"/>
             </xsd:sequence>
         </xsd:sequence>
     </xsd:group>
