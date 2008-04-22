@@ -17,6 +17,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
+
 /**
  * Provides universal access for evaluating expressions embedded in Mule configurations, such  as Xml, Java,
  * scripting and annotations.
@@ -30,7 +32,7 @@ public class ExpressionEvaluatorManager
 
     private static TemplateParser parser = TemplateParser.createAntStyleParser();
 
-    private static Map evaluators = new HashMap(8);
+    private static Map evaluators = new ConcurrentHashMap(8);
 
     public static void registerEvaluator(ExpressionEvaluator extractor)
     {
