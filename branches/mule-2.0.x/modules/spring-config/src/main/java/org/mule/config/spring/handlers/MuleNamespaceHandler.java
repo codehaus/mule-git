@@ -34,6 +34,7 @@ import org.mule.config.spring.parsers.generic.OrphanDefinitionParser;
 import org.mule.config.spring.parsers.generic.ParentDefinitionParser;
 import org.mule.config.spring.parsers.processors.CheckExclusiveAttributes;
 import org.mule.config.spring.parsers.specific.BindingDefinitionParser;
+import org.mule.config.spring.parsers.specific.ComponentDefinitionParser;
 import org.mule.config.spring.parsers.specific.ComponentDelegatingDefinitionParser;
 import org.mule.config.spring.parsers.specific.ConfigurationDefinitionParser;
 import org.mule.config.spring.parsers.specific.DefaultThreadingProfileDefinitionParser;
@@ -130,6 +131,7 @@ import org.mule.transformer.compression.GZipCompressTransformer;
 import org.mule.transformer.compression.GZipUncompressTransformer;
 import org.mule.transformer.encryption.DecryptionTransformer;
 import org.mule.transformer.encryption.EncryptionTransformer;
+import org.mule.transformer.simple.AutoTransformer;
 import org.mule.transformer.simple.ByteArrayToHexString;
 import org.mule.transformer.simple.ByteArrayToObject;
 import org.mule.transformer.simple.ByteArrayToSerializable;
@@ -140,7 +142,6 @@ import org.mule.transformer.simple.ObjectToByteArray;
 import org.mule.transformer.simple.ObjectToString;
 import org.mule.transformer.simple.SerializableToByteArray;
 import org.mule.transformer.simple.StringAppendTransformer;
-import org.mule.transformer.simple.AutoTransformer;
 
 /**
  * This is the core namespace handler for Mule and configures all Mule configuration elements under the
@@ -263,8 +264,8 @@ public class MuleNamespaceHandler extends AbstractMuleNamespaceHandler
         registerMuleBeanDefinitionParser("binding", new BindingDefinitionParser("nestedRouter.routers", DefaultNestedRouter.class)).addCollection("nestedRouter.routers");
 
         // Simple Components
-        registerBeanDefinitionParser("bridge-component", new SimpleComponentDefinitionParser(SimpleCallableJavaComponent.class, PassThroughComponent.class));
-        registerBeanDefinitionParser("pass-through-component", new SimpleComponentDefinitionParser(SimpleCallableJavaComponent.class, PassThroughComponent.class));
+        registerBeanDefinitionParser("bridge-component", new ComponentDefinitionParser(PassThroughComponent.class));
+        registerBeanDefinitionParser("pass-through-component", new ComponentDefinitionParser(PassThroughComponent.class));
         registerBeanDefinitionParser("log-component", new SimpleComponentDefinitionParser(SimpleCallableJavaComponent.class, LogComponent.class));
         registerBeanDefinitionParser("null-component",new SimpleComponentDefinitionParser(SimpleCallableJavaComponent.class, NullComponent.class));
         
