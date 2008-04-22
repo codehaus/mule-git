@@ -77,7 +77,6 @@ public class URIBuilder
     private String host;
     private Integer port;
     private String path;
-    private String jobName;
     private Map queryMap;
 
     private AtomicReference cache = new AtomicReference();
@@ -157,18 +156,6 @@ public class URIBuilder
             throw new IllegalArgumentException("Unusual syntax in path: '" + path + "' contains " + DOTS_SLASHES);
         }
         this.path = path;
-    }
-
-    public String getJobName()
-    {
-        assertNotUsed();
-        return jobName;
-    }
-
-    public void setJobName(String jobName)
-    {
-        assertNotUsed();
-        this.jobName = jobName;
     }
 
     public void setQueryMap(Map queryMap)
@@ -290,14 +277,6 @@ public class URIBuilder
                 buffer.append("/");
             }
             buffer.append(path);
-        }
-        if (null != jobName)
-        {
-            if (! atStart)
-            {
-                buffer.append("/");
-            }
-            buffer.append(jobName);
         }
     }
 
