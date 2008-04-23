@@ -8,8 +8,11 @@
 # MULE-2164
 org.mule.endpoint.MuleCopiedEndpointURITestCase
 
-# MULE-2536
+# MULE-3280
 org.mule.util.queue.FilePersistenceTestCase
+
+# MULE-3281
+org.mule.util.queue.NoPersistenceTestCase
 
 # Duplicate registration doesn't currently produce an exception, should it?
 # See comment in TransientRegistry.doRegisterObject()

@@ -49,6 +49,8 @@ public abstract class AbstractTransactionQueueManagerTestCase extends AbstractMu
         assertEquals("Queue content", "String1", o);
         assertEquals("Queue size", 0, q.size());
 
+        consumeEntireQueue(q);
+        
         mgr.stop(AbstractResourceManager.SHUTDOWN_MODE_NORMAL);
     }
 
@@ -92,6 +94,8 @@ public abstract class AbstractTransactionQueueManagerTestCase extends AbstractMu
         assertEquals("Queue size", 0, q.size());
         assertTrue(t1 - t0 > 100);
 
+        consumeEntireQueue(q);
+        
         mgr.stop(AbstractResourceManager.SHUTDOWN_MODE_NORMAL);
     }
 
@@ -140,6 +144,8 @@ public abstract class AbstractTransactionQueueManagerTestCase extends AbstractMu
         assertEquals("Queue size", 0, q.size());
         assertTrue(t1 - t0 > 100);
 
+        consumeEntireQueue(q);
+        
         mgr.stop(AbstractResourceManager.SHUTDOWN_MODE_NORMAL);
     }
 
@@ -184,6 +190,8 @@ public abstract class AbstractTransactionQueueManagerTestCase extends AbstractMu
         assertEquals("Queue size", 2, q.size());
         assertTrue(t1 - t0 > 100);
 
+        consumeEntireQueue(q);
+        
         mgr.stop(AbstractResourceManager.SHUTDOWN_MODE_NORMAL);
     }
 
@@ -217,6 +225,8 @@ public abstract class AbstractTransactionQueueManagerTestCase extends AbstractMu
                 QueueSession s = mgr.getQueueSession();
                 Queue q = s.getQueue("queue1");
                 assertEquals("Queue size", 1, q.size());
+                
+                consumeEntireQueue(q);
             }
             finally
             {
@@ -258,6 +268,8 @@ public abstract class AbstractTransactionQueueManagerTestCase extends AbstractMu
                 s = mgr.getQueueSession();
                 q = s.getQueue("queue1");
                 assertEquals("Queue size", 1, q.size());
+
+                consumeEntireQueue(q);
             }
             finally
             {
@@ -300,6 +312,7 @@ public abstract class AbstractTransactionQueueManagerTestCase extends AbstractMu
                 q = s.getQueue("queue1");
                 assertEquals("Queue size", 0, q.size());
 
+                consumeEntireQueue(q);
             }
             finally
             {
@@ -376,7 +389,11 @@ public abstract class AbstractTransactionQueueManagerTestCase extends AbstractMu
             assertEquals("Queue size", 0, q1s2.size());
             assertEquals("Queue size", 1, q2s1.size());
             assertEquals("Queue size", 1, q2s2.size());
-
+            
+            consumeEntireQueue(q1s1);
+            consumeEntireQueue(q1s2);
+            consumeEntireQueue(q2s1);
+            consumeEntireQueue(q2s2);
         }
         finally
         {
@@ -429,7 +446,8 @@ public abstract class AbstractTransactionQueueManagerTestCase extends AbstractMu
             o = q.poll(1000);
             assertEquals("Queue size", q.size(), 0);
             assertEquals("Queue content", "String1", o);
-
+        
+            consumeEntireQueue(q);
         }
         finally
         {
@@ -458,6 +476,11 @@ public abstract class AbstractTransactionQueueManagerTestCase extends AbstractMu
             o = q.peek();
             assertEquals("Queue size", 1, q.size());
             assertEquals("Queue content", "String1", o);
+            o = q.take();
+            assertEquals("Queue size", 0, q.size());
+            assertEquals("Queue content", "String1", o);
+            
+            consumeEntireQueue(q);
         }
         finally
         {
@@ -502,6 +525,8 @@ public abstract class AbstractTransactionQueueManagerTestCase extends AbstractMu
             }).start();
             assertTrue(q.offer("String2", 1000));
             assertEquals("Queue size", 1, q.size());
+            
+            consumeEntireQueue(q);
         }
         finally
         {
@@ -539,12 +564,22 @@ public abstract class AbstractTransactionQueueManagerTestCase extends AbstractMu
             long t1 = System.currentTimeMillis();
 
             logger.info("Time: " + (t1 - t0) + " ms");
-
+            
+            consumeEntireQueue(q);
         }
         finally
         {
             mgr.stop(AbstractResourceManager.SHUTDOWN_MODE_NORMAL);
         }
+    }
+    
+    private void consumeEntireQueue(Queue queue) throws InterruptedException
+    {
+        while(queue.size() > 0)
+        {
+            queue.take();
+        }
+        assertEquals("Queue must be fully consumed after successful test run. Queue size:", 0, queue.size());
     }
 
 }
