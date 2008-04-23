@@ -40,8 +40,6 @@ public abstract class AbstractTransactionQueueManagerTestCase extends AbstractMu
         Queue q = s.getQueue("queue1");
 
         assertEquals("Queue size", 0, q.size());
-        // Object o = q.take();
-        // assertNull(o);
         q.put("String1");
         assertEquals("Queue size", 1, q.size());
         Object o = q.take();
@@ -476,7 +474,7 @@ public abstract class AbstractTransactionQueueManagerTestCase extends AbstractMu
             o = q.peek();
             assertEquals("Queue size", 1, q.size());
             assertEquals("Queue content", "String1", o);
-            o = q.take();
+            o = q.poll(1000);
             assertEquals("Queue size", 0, q.size());
             assertEquals("Queue content", "String1", o);
             
