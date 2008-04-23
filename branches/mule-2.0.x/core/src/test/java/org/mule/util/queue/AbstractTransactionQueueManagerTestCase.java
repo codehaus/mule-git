@@ -49,7 +49,7 @@ public abstract class AbstractTransactionQueueManagerTestCase extends AbstractMu
         assertEquals("Queue content", "String1", o);
         assertEquals("Queue size", 0, q.size());
 
-        consumeEntireQueue(q);
+        purgeQueue(q);
         
         mgr.stop(AbstractResourceManager.SHUTDOWN_MODE_NORMAL);
     }
@@ -94,7 +94,7 @@ public abstract class AbstractTransactionQueueManagerTestCase extends AbstractMu
         assertEquals("Queue size", 0, q.size());
         assertTrue(t1 - t0 > 100);
 
-        consumeEntireQueue(q);
+        purgeQueue(q);
         
         mgr.stop(AbstractResourceManager.SHUTDOWN_MODE_NORMAL);
     }
@@ -144,7 +144,7 @@ public abstract class AbstractTransactionQueueManagerTestCase extends AbstractMu
         assertEquals("Queue size", 0, q.size());
         assertTrue(t1 - t0 > 100);
 
-        consumeEntireQueue(q);
+        purgeQueue(q);
         
         mgr.stop(AbstractResourceManager.SHUTDOWN_MODE_NORMAL);
     }
@@ -190,7 +190,7 @@ public abstract class AbstractTransactionQueueManagerTestCase extends AbstractMu
         assertEquals("Queue size", 2, q.size());
         assertTrue(t1 - t0 > 100);
 
-        consumeEntireQueue(q);
+        purgeQueue(q);
         
         mgr.stop(AbstractResourceManager.SHUTDOWN_MODE_NORMAL);
     }
@@ -226,7 +226,7 @@ public abstract class AbstractTransactionQueueManagerTestCase extends AbstractMu
                 Queue q = s.getQueue("queue1");
                 assertEquals("Queue size", 1, q.size());
                 
-                consumeEntireQueue(q);
+                purgeQueue(q);
             }
             finally
             {
@@ -269,7 +269,7 @@ public abstract class AbstractTransactionQueueManagerTestCase extends AbstractMu
                 q = s.getQueue("queue1");
                 assertEquals("Queue size", 1, q.size());
 
-                consumeEntireQueue(q);
+                purgeQueue(q);
             }
             finally
             {
@@ -312,7 +312,7 @@ public abstract class AbstractTransactionQueueManagerTestCase extends AbstractMu
                 q = s.getQueue("queue1");
                 assertEquals("Queue size", 0, q.size());
 
-                consumeEntireQueue(q);
+                purgeQueue(q);
             }
             finally
             {
@@ -390,10 +390,10 @@ public abstract class AbstractTransactionQueueManagerTestCase extends AbstractMu
             assertEquals("Queue size", 1, q2s1.size());
             assertEquals("Queue size", 1, q2s2.size());
             
-            consumeEntireQueue(q1s1);
-            consumeEntireQueue(q1s2);
-            consumeEntireQueue(q2s1);
-            consumeEntireQueue(q2s2);
+            purgeQueue(q1s1);
+            purgeQueue(q1s2);
+            purgeQueue(q2s1);
+            purgeQueue(q2s2);
         }
         finally
         {
@@ -447,7 +447,7 @@ public abstract class AbstractTransactionQueueManagerTestCase extends AbstractMu
             assertEquals("Queue size", q.size(), 0);
             assertEquals("Queue content", "String1", o);
         
-            consumeEntireQueue(q);
+            purgeQueue(q);
         }
         finally
         {
@@ -480,7 +480,7 @@ public abstract class AbstractTransactionQueueManagerTestCase extends AbstractMu
             assertEquals("Queue size", 0, q.size());
             assertEquals("Queue content", "String1", o);
             
-            consumeEntireQueue(q);
+            purgeQueue(q);
         }
         finally
         {
@@ -526,7 +526,7 @@ public abstract class AbstractTransactionQueueManagerTestCase extends AbstractMu
             assertTrue(q.offer("String2", 1000));
             assertEquals("Queue size", 1, q.size());
             
-            consumeEntireQueue(q);
+            purgeQueue(q);
         }
         finally
         {
@@ -565,7 +565,7 @@ public abstract class AbstractTransactionQueueManagerTestCase extends AbstractMu
 
             logger.info("Time: " + (t1 - t0) + " ms");
             
-            consumeEntireQueue(q);
+            purgeQueue(q);
         }
         finally
         {
@@ -573,11 +573,11 @@ public abstract class AbstractTransactionQueueManagerTestCase extends AbstractMu
         }
     }
     
-    private void consumeEntireQueue(Queue queue) throws InterruptedException
+    protected void purgeQueue(Queue queue) throws InterruptedException
     {
         while(queue.size() > 0)
         {
-            queue.take();
+            queue.poll(1000);
         }
         assertEquals("Queue must be fully consumed after successful test run. Queue size:", 0, queue.size());
     }
