@@ -3009,7 +3009,7 @@
     <xsd:complexType name="endpointSelectorRouterType">
         <xsd:complexContent>
             <xsd:extension base="filteringOutboundRouterType">
-                <xsd:attribute name="selectorExpression" type="xsd:string" use="required"/>
+                <xsd:attributeGroup ref="expressionAttributes"/>
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>

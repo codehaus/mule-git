@@ -26,24 +26,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Sample config:
- * 
- * <pre>
- * &lt;outbound-router&gt;
- *      &lt;router className=&quot;org.mule.routing.outbound.EndpointSelector&quot;&gt;
- *          &lt;endpoint name=&quot;dest1&quot; address=&quot;jms://queue1&quot; /&gt;
- *          &lt;endpoint name=&quot;dest2&quot; address=&quot;jms://queue2&quot; /&gt;
- *          &lt;endpoint name=&quot;dest3&quot; address=&quot;jms://queue3&quot; /&gt;
- *          &lt;properties&gt;
- *              &lt;property name=&quot;selector&quot; value=&quot;endpoint&quot; /&gt;
- *          &lt;/properties&gt;
- *      &lt;/router&gt;
- * &lt;/outbound-router&gt;
- * </pre>
- * 
- * </pre>
- */
 public class EndpointSelectorTestCase extends AbstractMuleTestCase
 {
     Mock session;
@@ -88,7 +70,7 @@ public class EndpointSelectorTestCase extends AbstractMuleTestCase
     {
         // The "wayOut" property will determine which endpoint the message gets sent
         // to.
-        router.setSelectorExpression("header:wayOut");
+        router.setExpression("header:wayOut");
 
         Map props = new HashMap();
         props.put("apple", "red");
