@@ -70,7 +70,8 @@ public class EndpointSelectorTestCase extends AbstractMuleTestCase
     {
         // The "wayOut" property will determine which endpoint the message gets sent
         // to.
-        router.setExpression("header:wayOut");
+        router.setExpression("wayOut");
+        router.setEvaluator("header");
 
         Map props = new HashMap();
         props.put("apple", "red");
