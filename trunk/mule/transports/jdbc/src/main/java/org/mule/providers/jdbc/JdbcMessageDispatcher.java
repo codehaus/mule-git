@@ -323,6 +323,7 @@ public class JdbcMessageDispatcher extends AbstractMessageDispatcher
                 else
                 {
                     logger.debug("Timeout");
+                    JdbcUtils.rollbackAndClose(con);
                     return null;
                 }
             }
