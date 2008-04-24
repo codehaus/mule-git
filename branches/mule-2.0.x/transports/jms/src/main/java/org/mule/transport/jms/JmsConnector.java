@@ -391,6 +391,7 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
             }
             catch (TransactionException e)
             {
+                closeQuietly(session);
                 throw new RuntimeException("Could not bind session to current transaction", e);
             }
         }
