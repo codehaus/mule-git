@@ -10,6 +10,7 @@
 package org.mule.config.spring.parsers.specific.endpoint;
 
 import org.mule.config.spring.parsers.generic.ParentDefinitionParser;
+import org.mule.config.spring.parsers.processors.CheckExclusiveAttributes;
 import org.mule.util.StringUtils;
 
 import org.springframework.beans.factory.BeanCreationException;
@@ -32,17 +33,14 @@ public class EndpointRefParser extends ParentDefinitionParser
         addAlias("address", propertyName);
         addAlias("ref", propertyName);
         addAlias("reference", propertyName);
+        registerPreProcessor(new CheckExclusiveAttributes(new String[][]{new String[]{"ref"}, new String[]{"address"}}));
     }
+
+
 
     //@Override
     protected void preProcess(Element element)
     {
-        //TODO: I am sure ACo built in a way to validate mutex attributes but I can't figure it out
-        if(StringUtils.isEmpty(element.getAttribute("address")) && StringUtils.isEmpty(element.getAttribute("ref")))
-        {
-            throw new BeanCreationException("Either address or ref must be set for Endpoint Reference: " + element.getLocalName());
-        }
-
         //This causes the Bean framework to process the "ref" as a string rather than a ref to another object
         if(StringUtils.isNotEmpty(element.getAttribute("ref")))
         {
