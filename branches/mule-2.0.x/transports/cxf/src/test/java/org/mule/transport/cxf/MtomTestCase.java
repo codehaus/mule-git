@@ -45,7 +45,7 @@ public class MtomTestCase extends FunctionalTestCase
         
         BindingProvider bp = ((BindingProvider) port);
         bp.getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY,
-            "http://localhost:63080/services/mtom");
+            "http://localhost:63081/services/mtom");
         ((SOAPBinding) bp.getBinding()).setMTOMEnabled(true);
         Client client = ClientProxy.getClient(port);
 //        new LoggingFeature().initialize(client, null);
