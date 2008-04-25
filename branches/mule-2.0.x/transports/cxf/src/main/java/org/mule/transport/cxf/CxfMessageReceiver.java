@@ -24,11 +24,13 @@ import org.mule.api.transport.Connector;
 import org.mule.transport.AbstractMessageReceiver;
 import org.mule.transport.cxf.i18n.CxfMessages;
 import org.mule.transport.cxf.support.MuleHeadersInInterceptor;
+import org.mule.transport.cxf.support.MuleProtocolHeadersOutInterceptor;
 import org.mule.transport.cxf.support.ProviderService;
 import org.mule.util.ClassUtils;
 import org.mule.util.StringUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -72,7 +74,6 @@ public class CxfMessageReceiver extends AbstractMessageReceiver
     {
         try
         {
-            
             Map endpointProps = getEndpoint().getProperties();
             String wsdlUrl = (String) endpointProps.get(CxfConstants.WSDL_LOCATION);
             String databinding = (String) endpointProps.get(CxfConstants.DATA_BINDING);
@@ -80,6 +81,7 @@ public class CxfMessageReceiver extends AbstractMessageReceiver
             String frontend = (String) endpointProps.get(CxfConstants.FRONTEND);
             String bridge = (String) endpointProps.get(CxfConstants.BRIDGE);
             String serviceClassName = (String) endpointProps.get(CxfConstants.SERVICE_CLASS);
+            String mtomEnabled = (String) endpointProps.get(CxfConstants.MTOM_ENABLED);
             List<AbstractFeature> features = (List<AbstractFeature>) endpointProps.get(CxfConstants.FEATURES);
             
             Class<?> svcCls = null;
@@ -138,16 +140,40 @@ public class CxfMessageReceiver extends AbstractMessageReceiver
                 sfb.setFeatures(features);
             }
             
+            if (mtomEnabled != null)
+            {
+                Map<String, Object> properties = sfb.getProperties();
+                if (properties == null)
+                {
+                    properties = new HashMap<String, Object>();
+                    sfb.setProperties(properties);
+                }
+                properties.put("mtom-enabled", mtomEnabled);
+            }
+            
             sfb.setInInterceptors((List<Interceptor>) endpointProps.get("inInterceptors"));
             sfb.setInFaultInterceptors((List<Interceptor>) endpointProps.get("inFaultInterceptors"));
             sfb.setOutInterceptors((List<Interceptor>) endpointProps.get("outInterceptors"));
             sfb.setOutFaultInterceptors((List<Interceptor>) endpointProps.get("outFaultInterceptors"));
 
-            if (sfb.getInInterceptors() == null) {
+            if (sfb.getInInterceptors() == null)
+            {
                 sfb.setInInterceptors(new ArrayList<Interceptor>());
             }
             
             sfb.getInInterceptors().add(new MuleHeadersInInterceptor());
+            
+            if (sfb.getOutInterceptors() == null)
+            {
+                sfb.setOutInterceptors(new ArrayList<Interceptor>());
+            }
+            sfb.getOutInterceptors().add(new MuleProtocolHeadersOutInterceptor());
+            
+            if (sfb.getOutFaultInterceptors() == null)
+            {
+                sfb.setOutFaultInterceptors(new ArrayList<Interceptor>());
+            }
+            sfb.getOutInterceptors().add(new MuleProtocolHeadersOutInterceptor());
             
             // Aegis, JAXB, other?
             if (databinding != null)

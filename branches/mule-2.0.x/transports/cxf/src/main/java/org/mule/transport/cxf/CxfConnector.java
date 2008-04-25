@@ -36,6 +36,7 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.apache.cxf.Bus;
+import org.apache.cxf.BusFactory;
 import org.apache.cxf.bus.spring.SpringBusFactory;
 import org.apache.cxf.endpoint.Server;
 import org.apache.cxf.transport.ConduitInitiatorManager;
@@ -89,6 +90,7 @@ public class CxfConnector extends AbstractConnector implements MuleContextNotifi
         {
             bus = new SpringBusFactory().createBus();
         }
+        BusFactory.setDefaultBus(null);
 
         MuleUniversalTransport transport = new MuleUniversalTransport(this);
         DestinationFactoryManager dfm = bus.getExtension(DestinationFactoryManager.class);

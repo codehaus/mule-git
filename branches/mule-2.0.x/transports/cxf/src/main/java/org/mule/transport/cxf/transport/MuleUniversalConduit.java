@@ -31,7 +31,6 @@ import org.mule.transport.cxf.CxfConnector;
 import org.mule.transport.http.HttpConnector;
 import org.mule.transport.http.HttpConstants;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -206,7 +205,7 @@ public class MuleUniversalConduit extends AbstractConduit
             {
                 String propertyName = (String) i.next();
                 
-             // But, don't copy mule message properties that should be on message but not on soap request
+                // But, don't copy mule message properties that should be on message but not on soap request
                 // (MULE-2721)
                 // Also see AxisMessageDispatcher.setCustomProperties()
                 if (!(propertyName.startsWith(MuleProperties.PROPERTY_PREFIX)))
@@ -215,7 +214,7 @@ public class MuleUniversalConduit extends AbstractConduit
                 }
             }
         }
-     
+        
         MuleMessage result = null;
 
         String uri = setupURL(m);
@@ -235,7 +234,7 @@ public class MuleUniversalConduit extends AbstractConduit
 
                 inMessage.put(Message.ENCODING, result.getEncoding());
                 inMessage.put(Message.CONTENT_TYPE, contentType);
-                inMessage.setContent(InputStream.class, new ByteArrayInputStream(result.getPayloadAsBytes()));
+                inMessage.setContent(InputStream.class, result.getPayload(InputStream.class));
                 // inMessage.setContent(InputStream.class,
                 // result.getPayload(InputStream.class));
                 inMessage.setExchange(m.getExchange());

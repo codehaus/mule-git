@@ -32,5 +32,6 @@ public interface CxfConstants
     String IN_FAULT_INTERCEPTORS = "inFaultInterceptors";
     String OUT_INTERCEPTORS = "outInterceptors";
     String OUT_FAULT_INTERCEPTORS = "outFaultInterceptors";
-    
+    String MTOM_ENABLED = "mtomEnabled";
+    String MULE_MESSAGE = "mule.message";
 }
