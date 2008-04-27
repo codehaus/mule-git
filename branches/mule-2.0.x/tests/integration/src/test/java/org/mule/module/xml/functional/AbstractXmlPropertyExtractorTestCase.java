@@ -17,7 +17,7 @@ import org.mule.transport.NullPayload;
 
 public abstract class AbstractXmlPropertyExtractorTestCase extends FunctionalTestCase
 {
-    public static long WAIT_PERIOD = 5000L;
+    public static long WAIT_PERIOD = 7000L;
 
     private boolean matchSingle = true;
 
