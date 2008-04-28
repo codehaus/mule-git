@@ -61,8 +61,8 @@ org.mule.test.integration.transaction.XABridgeJmsJdbcTestCase
 org.mule.test.integration.util.ObjectNameHelperTestCase
 
 # MULE-2620
-#org.mule.module.xml.functional.BeanPropertyExtractorMultipleEndpointsTestCase
-#org.mule.module.xml.functional.BeanPropertyExtractorTestCase
+org.mule.module.xml.functional.BeanPropertyExtractorMultipleEndpointsTestCase
+org.mule.module.xml.functional.BeanPropertyExtractorTestCase
 
 ##########################################################################
 # Low priority
