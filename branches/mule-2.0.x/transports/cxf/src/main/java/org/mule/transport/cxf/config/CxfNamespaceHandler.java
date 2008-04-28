@@ -25,6 +25,9 @@ public class CxfNamespaceHandler extends AbstractMuleNamespaceHandler
 
         registerBeanDefinitionParser("features", new EndpointChildDefinitionParser("features"));
 
+        registerBeanDefinitionParser(CxfConstants.DATA_BINDING, new EndpointChildDefinitionParser(
+            CxfConstants.DATA_BINDING));
+        
         registerBeanDefinitionParser(CxfConstants.IN_INTERCEPTORS, new EndpointChildDefinitionParser(
             CxfConstants.IN_INTERCEPTORS));
 
