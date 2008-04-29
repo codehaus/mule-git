@@ -16,7 +16,7 @@
                 <map name="axisOptions">
                     <property name="wsdlServiceElement" value="testService"/>
                 </map>
-               </properties>
+            </properties>
         </mule-descriptor>
     </model>
 </mule-configuration>
