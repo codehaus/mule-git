@@ -13,7 +13,7 @@ package org.mule.tools.visualizer.maven;
 public class MuleVisualizerPluginTestCase extends AbstractBaseVisualizerXmlTestCase
 {
     
-    String getXmlConfig()
+    public String getXmlConfig()
     {
         return "echo-config.xml";
     }
