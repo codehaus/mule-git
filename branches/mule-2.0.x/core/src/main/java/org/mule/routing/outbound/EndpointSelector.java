@@ -44,16 +44,13 @@ import java.util.List;
  */
 public class EndpointSelector extends FilteringOutboundRouter implements MuleContextAware
 {
-    public static final String DEFAULT_SELECTOR_PROPERTY = "endpoint";
     public static final String DEFAULT_SELECTOR_EVALUATOR = "header";
-    public static final String DEFAULT_SELECTOR_EXPRESSION = DEFAULT_SELECTOR_PROPERTY;
+    public static final String DEFAULT_SELECTOR_EXPRESSION = "endpoint";
 
     private String expression = DEFAULT_SELECTOR_EXPRESSION;
     private String evaluator = DEFAULT_SELECTOR_EVALUATOR;
     private String customEvaluator;
     private String fullExpression;
-
-
 
     public MuleMessage route(MuleMessage message, MuleSession session, boolean synchronous)
         throws RoutingException

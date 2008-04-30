@@ -56,7 +56,7 @@ public class EndpointSelectorTestCase extends AbstractMuleTestCase
     {
         Map props = new HashMap();
         props.put("apple", "red");
-        props.put(router.DEFAULT_SELECTOR_PROPERTY, "dest3");
+        props.put(router.DEFAULT_SELECTOR_EXPRESSION, "dest3");
         props.put("banana", "yellow");
         MuleMessage message = new DefaultMuleMessage("test event", props);
 
@@ -88,7 +88,7 @@ public class EndpointSelectorTestCase extends AbstractMuleTestCase
     public void testSelectEndpointNoMatch() throws Exception
     {
         Map props = new HashMap();
-        props.put(router.DEFAULT_SELECTOR_PROPERTY, "dest5");
+        props.put(router.DEFAULT_SELECTOR_EXPRESSION, "dest5");
 
         try
         {

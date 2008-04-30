@@ -37,7 +37,7 @@ public class BpmNamespaceHandler extends AbstractMuleNamespaceHandler
 
     /**
      * This is merely a shortcut for:
-     *   <endpoint-selector-router selectorExpression="header:MULE_BPM_ENDPOINT"> 
+     *   <endpoint-selector-router evaluator="header" expression="MULE_BPM_ENDPOINT"> 
      */
     class BpmOutboundRouterDefinitionParser extends RouterDefinitionParser
     {
@@ -48,7 +48,8 @@ public class BpmNamespaceHandler extends AbstractMuleNamespaceHandler
 
         protected void parseChild(Element element, ParserContext parserContext, BeanDefinitionBuilder builder)
         {
-            builder.addPropertyValue("selectorExpression", "header:" + ProcessConnector.PROPERTY_ENDPOINT);
+            builder.addPropertyValue("evaluator", "header");
+            builder.addPropertyValue("expression", ProcessConnector.PROPERTY_ENDPOINT);
             super.parseChild(element, parserContext, builder);
         }
         
