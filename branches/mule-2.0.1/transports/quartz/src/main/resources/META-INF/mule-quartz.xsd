@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema xmlns="http://www.mulesource.org/schema/mule/quartz/2.0"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:spring="http://www.springframework.org/schema/beans"
+            xmlns:mule="http://www.mulesource.org/schema/mule/core/2.0"
+            targetNamespace="http://www.mulesource.org/schema/mule/quartz/2.0"
+            elementFormDefault="qualified"
+            attributeFormDefault="unqualified">
+
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:import namespace="http://www.springframework.org/schema/beans"
+                schemaLocation="http://www.springframework.org/schema/beans/spring-beans-2.0.xsd"/>
+    <xsd:import namespace="http://www.mulesource.org/schema/mule/core/2.0" 
+                schemaLocation="http://www.mulesource.org/schema/mule/core/2.0/mule.xsd" />
+
+    <xsd:element name="connector" type="quartzConnectorType" substitutionGroup="mule:abstract-connector"/>
+
+    <xsd:complexType name="quartzConnectorType">
+        <xsd:complexContent>
+            <xsd:extension base="mule:connectorType">
+                <xsd:sequence>
+                    <xsd:element name="factory-property" type="mule:keyValueType" minOccurs="0" maxOccurs="unbounded">
+                        <xsd:annotation>
+                            <xsd:documentation>
+                                Set a property on the factory (see scheduler-ref).
+                            </xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element name="factory-properties" type="spring:mapType" minOccurs="0">
+                        <xsd:annotation>
+                            <xsd:documentation>
+                                Set a collection of properties on the factory (see scheduler-ref).
+                            </xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
+                </xsd:sequence>
+                <xsd:attribute name="scheduler-ref" type="xsd:NMTOKEN">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                            Provide an implementation of the Quartz Scheduler interface.
+                            If no value is given here a scheduler is retrieved from the StdSchedulerFactory:
+                            if no properties are given the getDefaultScheduler method is called,
+                            otherwise a new factory instance is created using the given properties and
+                            a scheduler retrieved using the getScheduler method.
+                        </xsd:documentation>
+                    </xsd:annotation>
+                </xsd:attribute>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:element name="outbound-endpoint" type="outboundEndpointType" substitutionGroup="mule:abstract-outbound-endpoint"/>
+    <xsd:complexType name="outboundEndpointType">
+        <xsd:complexContent>
+            <xsd:extension base="mule:outboundEndpointType">
+                <xsd:sequence>
+                    <xsd:element ref="abstract-job" minOccurs="1" maxOccurs="1" />
+                </xsd:sequence>
+                <xsd:attributeGroup ref="addressAttributes"/>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:element name="inbound-endpoint" type="inboundEndpointType" substitutionGroup="mule:abstract-inbound-endpoint"/>
+    <xsd:complexType name="inboundEndpointType">
+        <xsd:complexContent>
+            <xsd:extension base="mule:inboundEndpointType">
+                <xsd:sequence>
+                    <xsd:element ref="abstract-job" minOccurs="1" maxOccurs="1" />
+                </xsd:sequence>
+                <xsd:attributeGroup ref="addressAttributes"/>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:element name="endpoint" type="globalEndpointType" substitutionGroup="mule:abstract-global-endpoint"/>
+    <xsd:complexType name="globalEndpointType">
+        <xsd:complexContent>
+            <xsd:extension base="mule:globalEndpointType">
+                <xsd:sequence>
+                    <xsd:element ref="abstract-job" minOccurs="1" maxOccurs="1" />
+                </xsd:sequence>
+                <xsd:attributeGroup ref="addressAttributes"/>
+            </xsd:extension>
+
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:element name="abstract-job" abstract="true" type="abstractJobType">
+        <xsd:annotation>
+            <xsd:documentation>
+                A placeholder for quartz jobs that can be set on the endpoint.
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+
+    <xsd:element name="event-generator-job" type="eventGenerateJobType" substitutionGroup="abstract-job"/>
+    <xsd:complexType name="eventGenerateJobType">
+        <xsd:complexContent>
+            <xsd:extension base="abstractJobType">
+                <xsd:sequence>
+                    <xsd:element name="payload" type="mule:dataReferenceType" minOccurs="0" maxOccurs="1"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:element name="endpoint-polling-job" type="endpointPollingJobType" substitutionGroup="abstract-job"/>
+    <xsd:complexType name="endpointPollingJobType">
+        <xsd:complexContent>
+            <xsd:extension base="abstractJobType">
+                <xsd:sequence  minOccurs="1" maxOccurs="1">
+                    <xsd:element name="job-endpoint" type="endpointRefType"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:element name="scheduled-dispatch-job" type="scheduledDispatchJobType" substitutionGroup="abstract-job"/>
+    <xsd:complexType name="scheduledDispatchJobType">
+        <xsd:complexContent>
+            <xsd:extension base="abstractJobType">
+                <xsd:sequence minOccurs="1" maxOccurs="1">
+                    <xsd:element name="job-endpoint" type="endpointRefType"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:element name="custom-job" type="customJobType" substitutionGroup="abstract-job"/>
+    <xsd:complexType name="customJobType">
+        <xsd:complexContent>
+            <xsd:extension base="abstractJobType">
+                <xsd:attribute name="job-ref" type="xsd:string" use="required"/>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:element name="custom-job-from-message" type="customFromMessageJobType" substitutionGroup="abstract-job"/>
+    <xsd:complexType name="customFromMessageJobType">
+        <xsd:complexContent>
+            <xsd:extension base="abstractJobType">
+                <xsd:attributeGroup ref="mule:expressionAttributes"/>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="abstractJobType">
+        <xsd:annotation>
+            <xsd:documentation>The base element type for all quartz jobs</xsd:documentation>
+        </xsd:annotation>
+        <xsd:attribute name="groupName" type="xsd:string">
+            <xsd:annotation>
+                <xsd:documentation>
+                    The group name of the scheduled job
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="jobGroupName" type="xsd:string">
+            <xsd:annotation>
+                <xsd:documentation>
+                    The job group name of the scheduled job.
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+    </xsd:complexType>
+
+
+    <xsd:attributeGroup name="addressAttributes">
+        <xsd:attribute name="jobName" type="xsd:string">
+            <xsd:annotation>
+                <xsd:documentation>
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="cronExpression" type="xsd:string">
+            <xsd:annotation>
+                <xsd:documentation>
+                    The cron expression to schedule events at specified dates / times.
+                    This or repeatInterval is required.
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="repeatInterval" type="mule:substitutableLong">
+            <xsd:annotation>
+                <xsd:documentation>
+                    The number of milliseconds between two events.
+                    This or cronExpression is required.
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="repeatCount" type="mule:substitutableInt">
+            <xsd:annotation>
+                <xsd:documentation>
+                    The number of events to be scheduled. 
+                    This value defaults to -1 which means that the events will be scheduled indefinitely.                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="startDelay" type="mule:substitutableLong">
+            <xsd:annotation>
+                <xsd:documentation>
+                    The number of milliseconds that will elapse before the first event is fired.
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+    </xsd:attributeGroup>
+
+    <xsd:complexType name="endpointRefType">
+            <xsd:attribute name="ref" type="xsd:NMTOKEN"/>
+            <xsd:attribute name="address" type="xsd:string"/>
+            <xsd:attribute name="timeout" type="mule:substitutableInt"/>
+    </xsd:complexType>
+
+</xsd:schema>
