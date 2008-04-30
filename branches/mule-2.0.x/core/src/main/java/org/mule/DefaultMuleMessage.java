@@ -623,6 +623,10 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess
         {
             ((AbstractMessageAdapter) adapter).resetAccessControl();
         }
+        if (originalAdapter instanceof AbstractMessageAdapter)
+        {
+            ((AbstractMessageAdapter) originalAdapter).resetAccessControl();
+        }
     }
 
     /** {@inheritDoc} */
