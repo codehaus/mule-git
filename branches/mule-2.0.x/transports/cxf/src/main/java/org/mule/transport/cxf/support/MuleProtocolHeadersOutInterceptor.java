@@ -10,8 +10,9 @@
 
 package org.mule.transport.cxf.support;
 
-import org.mule.api.MuleMessage;
+import org.mule.api.transport.MessageAdapter;
 import org.mule.transport.cxf.CxfConstants;
+import org.mule.transport.http.HttpConnector;
 import org.mule.transport.http.HttpConstants;
 
 import java.util.List;
@@ -36,29 +37,44 @@ public class MuleProtocolHeadersOutInterceptor
 
     public void handleMessage(Message message) throws Fault
     {
-        MuleMessage muleMsg = (MuleMessage) message.getExchange().get(CxfConstants.MULE_MESSAGE);
+        MessageAdapter muleMsg = (MessageAdapter) message.getExchange().get(CxfConstants.MULE_MESSAGE);
 
         if (muleMsg == null)
         {
             return;
         }
+        extractAndSet(message, muleMsg, Message.CONTENT_TYPE, HttpConstants.HEADER_CONTENT_TYPE);
+
+        String method = (String) message.get(Message.HTTP_REQUEST_METHOD);
+        if (method == null) method = HttpConstants.METHOD_POST;
         
-        String ct = (String) message.get(Message.CONTENT_TYPE);
-        if (ct != null)
-        {
-            muleMsg.setProperty(HttpConstants.HEADER_CONTENT_TYPE, ct);
-        }
+        muleMsg.setProperty(HttpConnector.HTTP_METHOD_PROPERTY, method);
         
         Map<String, List<String>> reqHeaders = CastUtils.cast((Map<?, ?>) message.get(Message.PROTOCOL_HEADERS));
         if (reqHeaders != null)
         {
             for (Map.Entry<String, List<String>> e : reqHeaders.entrySet())
             {
+                String key = e.getKey();
                 String val = format(e.getValue());
-                muleMsg.setProperty(e.getKey(), val);
+                
+                muleMsg.setProperty(key, val);
             }
         }   
-        message.getInterceptorChain().pause();
+        
+        if (!Boolean.TRUE.equals(message.containsKey(Message.REQUESTOR_ROLE)))
+        {
+            message.getInterceptorChain().pause();
+        }
+    }
+
+    private void extractAndSet(Message message, MessageAdapter muleMsg, String cxfHeader, String muleHeader)
+    {
+        String ct = (String) message.get(cxfHeader);
+        if (ct != null)
+        {
+            muleMsg.setProperty(muleHeader, ct);
+        }
     }
 
     private String format(List<String> value)
