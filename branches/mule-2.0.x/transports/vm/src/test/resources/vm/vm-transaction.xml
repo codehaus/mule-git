@@ -17,9 +17,7 @@
         <service name="testService">
             <inbound>
                 <vm:inbound-endpoint address="vm://in" connector-ref="vm">
-                    <transaction action="BEGIN_OR_JOIN">
-                        <transaction-factory ref="txFactory"/>
-                    </transaction>
+                    <custom-transaction action="BEGIN_OR_JOIN" factory-ref="txFactory"/>
                 </vm:inbound-endpoint>
             </inbound>
 
@@ -35,9 +33,7 @@
         <service name="testService2">
             <inbound>
                 <vm:inbound-endpoint address="vm://sync" connector-ref="vm">
-                    <transaction action="BEGIN_OR_JOIN">
-                        <transaction-factory ref="txFactory"/>
-                    </transaction>
+                    <custom-transaction action="BEGIN_OR_JOIN" factory-ref="txFactory"/>
                 </vm:inbound-endpoint>
             </inbound>
 
@@ -45,7 +41,7 @@
 
             <outbound>
                 <outbound-pass-through-router>
-                    <outbound-endpoint address="vm://out"/>
+                    <outbound-endpoint address="vm://out" connector-ref="vm"/>
                 </outbound-pass-through-router>
             </outbound>
         </service>
@@ -53,9 +49,7 @@
         <service name="testService3">
             <inbound>
                 <vm:inbound-endpoint address="vm://in3" connector-ref="vmOnFly">
-                    <transaction action="BEGIN_OR_JOIN">
-                        <transaction-factory ref="txFactory"/>
-                    </transaction>
+                    <custom-transaction action="BEGIN_OR_JOIN" factory-ref="txFactory"/>
                 </vm:inbound-endpoint>
             </inbound>
 
