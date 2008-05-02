@@ -177,6 +177,14 @@
            <artifactId>mule-core</artifactId>
            <version>${mule.version}</version>
        </dependency>
+
+       <dependency>
+           <groupId>org.mule</groupId>
+           <artifactId>mule-core</artifactId>
+           <version>${mule.version}</version>
+           <type>test-jar</type>
+           <scope>test</scope>
+       </dependency>
        <dependency>
            <groupId>org.mule.tests</groupId>
            <artifactId>mule-tests-functional</artifactId>
@@ -190,6 +198,4 @@
            <scope>test</scope>
        </dependency>
    </dependencies>
-
-
 </project>

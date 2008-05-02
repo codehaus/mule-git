@@ -18,6 +18,9 @@ if (existingProjectDir.exists())
     FileUtils.forceDelete(existingProjectDir)
 }
 
+// make sure that the output dir is created before the actual Maven run that follows now
+existingProjectDir.mkdirs()
+
 /*
  * run Maven archetype
  */
@@ -46,7 +49,13 @@ log.info("***** commandline: '" + cmdline + "'")
 // null means inherit parent's env ...
 def process = cmdline.execute(null, buildDir)
 
-// consume all output of the forked process. Otherwise it won't run.
-def input = new BufferedReader(new InputStreamReader(process.inputStream))
-input.eachLine { log.info(it) }
+// consume all output of the forked process. Otherwise it may lock up
+process.in.eachLine { log.info(it) }
+process.err.eachLine { log.error(it) }
+
 process.waitFor()
+def exitCode = process.exitValue()
+if (exitCode != 0)
+{
+    fail("command did not execute properly: " + exitCode)
+}

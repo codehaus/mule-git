@@ -50,13 +50,15 @@
                     <version>1.0</version>
                     <executions>
                         <execution>
+                            <id>add-source</id>
                             <phase>generate-test-sources</phase>
                             <goals>
-                                <goal>add-test-source</goal>
+                                <goal>add-source</goal>
                             </goals>
                             <configuration>
                                 <sources>
                                     <source>${project.build.directory}/${outputDir}/src/main/java</source>
+                                    <source>${project.build.directory}/${outputDir}/src/test/java</source>
                                 </sources>
                             </configuration>
                         </execution>
