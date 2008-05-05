@@ -47,7 +47,7 @@ jaxb-xjc-2.0
 jaxen-1.1.1
 jaxws-api-2.0
 jbpm-jpdl-3.2.2
-jcl104-over-slf4j-1.4.3
+jcl104-over-slf4j-1.5.0
 jcr-1.0
 jdom-1.0
 jug-2.0.0-asl
@@ -102,8 +102,8 @@ retrotranslator-runtime-1.2.1
 saaj-api-1.3
 saaj-impl-1.3
 script-api-1.0-jdk14
-slf4j-api-1.4.3
-slf4j-log4j12-1.4.3
+slf4j-api-1.5.0
+slf4j-log4j12-1.5.0
 smack-2.2.1
 spring-aop-2.5.3
 spring-beans-2.5.3
