@@ -30,7 +30,7 @@ public class ${TransportName}ConnectorFactoryTestCase extends AbstractMuleTestCa
         assertTrue(endpoint.getConnector() instanceof ${TransportName}Connector);
         assertEquals(getEndpointURI(), endpoint.getEndpointURI().getAddress());
     }
-    
+
     public String getEndpointURI() 
     {
         // TODO return a valid endpoint URI string for your transport

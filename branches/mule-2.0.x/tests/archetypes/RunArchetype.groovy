@@ -1,3 +1,8 @@
+/*
+ * Run an archetype and compile it using maven
+ *
+ * $Id$
+ */
 
 import org.apache.commons.io.FileUtils
 
@@ -43,19 +48,28 @@ if (project.properties.archetypeParams != null)
 }
 cmdline += " -DmuleVersion=" + project.version
 cmdline += " -Dinteractive=false"
+runCommand(cmdline, buildDir)
 
-log.info("***** commandline: '" + cmdline + "'")
+// now that the source is generated, compile it using Maven
+// Do not run "mvn test" here since the generated source is not testable as is
+cmdline = "mvn test-compile"
+runCommand(cmdline, existingProjectDir)
 
-// null means inherit parent's env ...
-def process = cmdline.execute(null, buildDir)
-
-// consume all output of the forked process. Otherwise it may lock up
-process.in.eachLine { log.info(it) }
-process.err.eachLine { log.error(it) }
-
-process.waitFor()
-def exitCode = process.exitValue()
-if (exitCode != 0)
+def runCommand(String commandline, File directory)
 {
-    fail("command did not execute properly: " + exitCode)
+    log.info("***** commandline: '" + commandline + "'")
+
+    // null means inherit parent's env ...
+    def process = commandline.execute(null, directory)
+
+    // consume all output of the forked process. Otherwise it may lock up
+    process.in.eachLine { log.info(it) }
+    process.err.eachLine { log.error(it) }
+
+    process.waitFor()
+    def exitCode = process.exitValue()
+    if (exitCode != 0)
+    {
+        fail("command did not execute properly: " + exitCode)
+    }
 }

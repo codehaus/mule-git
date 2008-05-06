@@ -25,6 +25,7 @@ import org.mule.api.transport.Connector;
  * <code>${TransportName}MessageReceiver</code> TODO document
  */
 public class ${TransportName}MessageReceiver extends #if( $isPollingReceiver == "y") AbstractPollingMessageReceiver #else AbstractMessageReceiver #end
+
 {
 
     /* For general guidelines on writing transports see
