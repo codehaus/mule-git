@@ -26,6 +26,7 @@ import org.mule.util.StringUtils;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
+import java.net.URLEncoder;
 import java.util.Iterator;
 
 import org.apache.commons.httpclient.HttpMethod;
@@ -130,22 +131,24 @@ public class ObjectToHttpClientMethodRequest extends AbstractEventAwareTransform
             {
                 httpMethod = new GetMethod(uri.toString());
                 
-                String paramName = msg.getStringProperty(HttpConnector.HTTP_GET_BODY_PARAM_PROPERTY,
-                    HttpConnector.DEFAULT_HTTP_GET_BODY_PARAM_PROPERTY);
-                String query = uri.getQuery();
+				String paramName = URLEncoder.encode(msg.getStringProperty(
+				    HttpConnector.HTTP_GET_BODY_PARAM_PROPERTY,
+				    HttpConnector.DEFAULT_HTTP_GET_BODY_PARAM_PROPERTY), encoding);
+				String paramValue = URLEncoder.encode(src.toString(), encoding);
+
+				String query = URLEncoder.encode(uri.getQuery(), encoding);
                 if (!(src instanceof NullPayload) && !StringUtils.EMPTY.equals(src))
                 {
                     if (query == null)
                     {
-                        query = paramName + "=" + src.toString();
+                        query = paramName + "=" + paramValue;
                     }
                     else
                     {
-                        query += "&" + paramName + "=" + src.toString();
+                        query += "&" + paramName + "=" + paramValue;
                     }
                 }
                 httpMethod.setQueryString(query);
-
             }
             else if (HttpConstants.METHOD_POST.equalsIgnoreCase(method))
             {
