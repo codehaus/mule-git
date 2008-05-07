@@ -20,6 +20,7 @@ import org.mule.util.PropertiesUtils;
 import org.mule.util.StringMessageUtils;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
@@ -66,6 +67,14 @@ public class HttpRequestToSoapRequest extends AbstractEventAwareTransformer
 
         int i = request.indexOf('?');
         String query = request.substring(i + 1);
+        try
+        {
+            query = URLDecoder.decode(query, encoding);
+        }
+        catch (UnsupportedEncodingException uee)
+        {
+            throw new TransformerException(this, uee);
+        }
         Properties p = PropertiesUtils.getPropertiesFromQueryString(query);
 
         String method = (String)p.remove(MuleProperties.MULE_METHOD_PROPERTY);

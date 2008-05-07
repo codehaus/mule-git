@@ -117,8 +117,8 @@ public class ObjectToHttpClientMethodRequest extends AbstractEventAwareTransform
         if (endpoint == null)
         {
             throw new TransformerException(
-                HttpMessages.eventPropertyNotSetCannotProcessRequest(
-                    MuleProperties.MULE_ENDPOINT_PROPERTY), this);
+                HttpMessages.eventPropertyNotSetCannotProcessRequest(MuleProperties.MULE_ENDPOINT_PROPERTY),
+                this);
         }
 
         String method = msg.getStringProperty(HttpConnector.HTTP_METHOD_PROPERTY, "POST");
@@ -130,22 +130,26 @@ public class ObjectToHttpClientMethodRequest extends AbstractEventAwareTransform
             if (HttpConstants.METHOD_GET.equals(method))
             {
                 httpMethod = new GetMethod(uri.toString());
-                
-				String paramName = URLEncoder.encode(msg.getStringProperty(
-				    HttpConnector.HTTP_GET_BODY_PARAM_PROPERTY,
-				    HttpConnector.DEFAULT_HTTP_GET_BODY_PARAM_PROPERTY), encoding);
-				String paramValue = URLEncoder.encode(src.toString(), encoding);
 
-				String query = URLEncoder.encode(uri.getQuery(), encoding);
+                String paramName = URLEncoder.encode(msg.getStringProperty(
+                    HttpConnector.HTTP_GET_BODY_PARAM_PROPERTY,
+                    HttpConnector.DEFAULT_HTTP_GET_BODY_PARAM_PROPERTY), encoding);
+                String paramValue = URLEncoder.encode(src.toString(), encoding);
+
+                String query = uri.getQuery();
+                if (query != null)
+                {
+                    query = URLEncoder.encode(query, encoding);
+                }
                 if (!(src instanceof NullPayload) && !StringUtils.EMPTY.equals(src))
                 {
                     if (query == null)
                     {
-                        query = paramName + "=" + paramValue;
+                        query = paramName + "%3D" + paramValue;
                     }
                     else
                     {
-                        query += "&" + paramName + "=" + paramValue;
+                        query += "%26" + paramName + "%3D" + paramValue;
                     }
                 }
                 httpMethod.setQueryString(query);
@@ -153,9 +157,9 @@ public class ObjectToHttpClientMethodRequest extends AbstractEventAwareTransform
             else if (HttpConstants.METHOD_POST.equalsIgnoreCase(method))
             {
                 PostMethod postMethod = new PostMethod(uri.toString());
-                
+
                 String paramName = msg.getStringProperty(HttpConnector.HTTP_POST_BODY_PARAM_PROPERTY, null);
-                
+
                 if (paramName == null)
                 {
                     // Call method to manage the parameter array
@@ -166,7 +170,7 @@ public class ObjectToHttpClientMethodRequest extends AbstractEventAwareTransform
                 {
                     postMethod.addParameter(paramName, src.toString());
                 }
-                
+
                 httpMethod = postMethod;
             }
             else if (HttpConstants.METHOD_PUT.equalsIgnoreCase(method))
@@ -174,7 +178,7 @@ public class ObjectToHttpClientMethodRequest extends AbstractEventAwareTransform
                 PutMethod putMethod = new PutMethod(uri.toString());
 
                 setupEntityMethod(src, encoding, context, msg, uri, putMethod);
-                
+
                 httpMethod = putMethod;
             }
             else if (HttpConstants.METHOD_DELETE.equalsIgnoreCase(method))
@@ -199,7 +203,7 @@ public class ObjectToHttpClientMethodRequest extends AbstractEventAwareTransform
             }
 
             // Allow the user to set HttpMethodParams as an object on the message
-            HttpMethodParams params = (HttpMethodParams)msg.removeProperty(HttpConnector.HTTP_PARAMS_PROPERTY);
+            HttpMethodParams params = (HttpMethodParams) msg.removeProperty(HttpConnector.HTTP_PARAMS_PROPERTY);
             if (params != null)
             {
                 httpMethod.setParams(params);
@@ -219,7 +223,7 @@ public class ObjectToHttpClientMethodRequest extends AbstractEventAwareTransform
                 }
             }
             setHeaders(httpMethod, context);
-            
+
             return httpMethod;
         }
         catch (Exception e)
@@ -228,10 +232,14 @@ public class ObjectToHttpClientMethodRequest extends AbstractEventAwareTransform
         }
     }
 
-    private void setupEntityMethod(Object src, String encoding,
-            UMOEventContext context, UMOMessage msg, URI uri,
-            EntityEnclosingMethod postMethod) throws UnsupportedEncodingException,
-            TransformerException {
+    private void setupEntityMethod(Object src,
+                                   String encoding,
+                                   UMOEventContext context,
+                                   UMOMessage msg,
+                                   URI uri,
+                                   EntityEnclosingMethod postMethod)
+        throws UnsupportedEncodingException, TransformerException
+    {
         // Dont set a POST payload if the body is a Null Payload.
         // This way client calls
         // can control if a POST body is posted explicitly
@@ -254,23 +262,21 @@ public class ObjectToHttpClientMethodRequest extends AbstractEventAwareTransform
                 }
                 if (mimeType == null) mimeType = HttpConstants.DEFAULT_CONTENT_TYPE;
                 if (encoding == null) encoding = MuleManager.getConfiguration().getEncoding();
-                postMethod.setRequestEntity(new StringRequestEntity(src.toString(), mimeType,
-                    encoding));
+                postMethod.setRequestEntity(new StringRequestEntity(src.toString(), mimeType, encoding));
             }
             else if (src instanceof InputStream)
             {
                 // TODO Danger here! We don't know if the content is
                 // really text or not
                 if (mimeType == null) mimeType = HttpConstants.DEFAULT_CONTENT_TYPE;
-                postMethod.setRequestEntity(new InputStreamRequestEntity((InputStream)src,
-                    mimeType));
+                postMethod.setRequestEntity(new InputStreamRequestEntity((InputStream) src, mimeType));
             }
             else
             {
                 // TODO Danger here! We don't know if the content is
                 // really text or not
                 if (mimeType == null) mimeType = HttpConstants.DEFAULT_CONTENT_TYPE;
-                byte[] buffer = (byte[])serializableToByteArray.doTransform(src, encoding);
+                byte[] buffer = (byte[]) serializableToByteArray.doTransform(src, encoding);
                 postMethod.setRequestEntity(new ByteArrayRequestEntity(buffer, mimeType));
             }
         }
@@ -284,7 +290,7 @@ public class ObjectToHttpClientMethodRequest extends AbstractEventAwareTransform
         UMOMessage msg = context.getMessage();
         for (Iterator iterator = msg.getPropertyNames().iterator(); iterator.hasNext();)
         {
-            headerName = (String)iterator.next();
+            headerName = (String) iterator.next();
 
             headerValue = msg.getStringProperty(headerName, null);
             if (HttpConstants.REQUEST_HEADER_NAMES.get(headerName) == null)
@@ -297,7 +303,6 @@ public class ObjectToHttpClientMethodRequest extends AbstractEventAwareTransform
                 httpMethod.addRequestHeader(headerName, headerValue);
             }
         }
-
 
         if (context.getMessage().getPayload() instanceof InputStream)
         {
