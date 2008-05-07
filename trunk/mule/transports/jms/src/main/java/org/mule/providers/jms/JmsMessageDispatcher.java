@@ -37,7 +37,6 @@ import javax.jms.MessageProducer;
 import javax.jms.Session;
 import javax.jms.TemporaryQueue;
 import javax.jms.TemporaryTopic;
-import javax.jms.Topic;
 
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 
@@ -351,8 +350,7 @@ public class JmsMessageDispatcher extends AbstractMessageDispatcher
 
         try
         {
-            String resourceInfo = endpoint.getEndpointURI().getResourceInfo();
-            boolean topic = (resourceInfo != null && JmsConstants.TOPIC_PROPERTY.equalsIgnoreCase(resourceInfo));
+            final boolean topic = connector.getTopicResolver().isTopic(endpoint);
 
             JmsSupport support = connector.getJmsSupport();
             session = connector.getSession(false, topic);
@@ -380,7 +378,7 @@ public class JmsMessageDispatcher extends AbstractMessageDispatcher
 
             // Get the durable subscriber name if there is one
             String durableName = (String) endpoint.getProperties().get(JmsConstants.DURABLE_NAME_PROPERTY);
-            if (durableName == null && durable && dest instanceof Topic)
+            if (durableName == null && durable && topic)
             {
                 durableName = "mule." + connector.getName() + "." + endpoint.getEndpointURI().getAddress();
                 if (logger.isDebugEnabled())
