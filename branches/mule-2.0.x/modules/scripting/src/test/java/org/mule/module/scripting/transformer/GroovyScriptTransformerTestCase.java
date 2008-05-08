@@ -8,9 +8,10 @@
  * LICENSE.txt file.
  */
 
-package org.mule.transformers.script;
+package org.mule.module.scripting.transformer;
 
 import org.mule.api.transformer.Transformer;
+import org.mule.module.scripting.component.Scriptable;
 import org.mule.module.scripting.transformer.ScriptTransformer;
 import org.mule.transformer.AbstractTransformerTestCase;
 
@@ -19,22 +20,29 @@ import java.util.List;
 
 public class GroovyScriptTransformerTestCase extends AbstractTransformerTestCase
 {
-
     public Transformer getTransformer() throws Exception
     {
+        Scriptable script = new Scriptable();
+        script.setScriptEngineName("groovy");
+        script.setScriptFile("StringToList.groovy");
+        script.initialise();
+        
         ScriptTransformer transformer = new ScriptTransformer();
-        transformer.setScriptEngineName("groovy");
         transformer.setName("StringToList");
-        transformer.setScriptFile("StringToList2.groovy");
+        transformer.setScript(script);
         transformer.initialise();
         return transformer;
     }
 
     public Transformer getRoundTripTransformer() throws Exception
     {
+        Scriptable script = new Scriptable();
+        script.setScriptFile("ListToString.groovy");
+        script.initialise();
+        
         ScriptTransformer transformer = new ScriptTransformer();
-        transformer.setName("ListToStringTransformer");
-        transformer.setScriptFile("ListToString2.groovy");
+        transformer.setName("ListToString");
+        transformer.setScript(script);
         transformer.initialise();
         return transformer;
     }
@@ -52,5 +60,4 @@ public class GroovyScriptTransformerTestCase extends AbstractTransformerTestCase
         list.add("groovy!");
         return list;
     }
-
 }

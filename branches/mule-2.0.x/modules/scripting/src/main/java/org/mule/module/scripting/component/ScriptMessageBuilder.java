@@ -10,17 +10,14 @@
 
 package org.mule.module.scripting.component;
 
-import org.mule.api.MuleEventContext;
 import org.mule.api.MuleMessage;
 import org.mule.api.lifecycle.Initialisable;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.component.builder.AbstractMessageBuilder;
 import org.mule.component.builder.MessageBuilderException;
+import org.mule.config.i18n.MessageFactory;
 
 import javax.script.Bindings;
-import javax.script.Compilable;
-import javax.script.CompiledScript;
-import javax.script.ScriptEngine;
 import javax.script.ScriptException;
 
 /**
@@ -28,23 +25,28 @@ import javax.script.ScriptException;
  */
 public class ScriptMessageBuilder extends AbstractMessageBuilder implements Initialisable
 {
+    private Scriptable script;
+    private Bindings bindings;
 
-    /** Delegating script service that actually does the work */
-    protected Scriptable scriptable;
-
-    public ScriptMessageBuilder()
+    public void initialise() throws InitialisationException
     {
-        this.scriptable = new Scriptable();
+        if (script != null && script.getScriptEngine() != null)
+        {
+            bindings = script.getScriptEngine().createBindings();
+        }
+        else
+        {
+            throw new InitialisationException(MessageFactory.createStaticMessage("Script has not been initialized"), this);
+        }
     }
 
     public Object buildMessage(MuleMessage request, MuleMessage response) throws MessageBuilderException
     {
-        Bindings bindings = scriptable.getScriptEngine().createBindings();
         populateBindings(bindings, request, response);
-        Object result = null;
+        Object result;
         try
         {
-            result = runScript(bindings);
+            result = script.runScript(bindings);
         }
         catch (ScriptException e)
         {
@@ -52,14 +54,13 @@ public class ScriptMessageBuilder extends AbstractMessageBuilder implements Init
         }
         if (result == null)
         {
+            result = bindings.get("result");
+        }
+        if (result == null)
+        {
             throw new IllegalArgumentException("A result payload must be returned from the groovy script");
         }
         return result;
-    }
-
-    public void initialise() throws InitialisationException
-    {
-        scriptable.initialise();
     }
 
     protected void populateBindings(Bindings namespace, MuleMessage request, MuleMessage response)
@@ -71,79 +72,13 @@ public class ScriptMessageBuilder extends AbstractMessageBuilder implements Init
         namespace.put("log", logger);
     }
 
-    public ScriptEngine getScriptEngine()
+    public Scriptable getScript()
     {
-        return scriptable.getScriptEngine();
+        return script;
     }
 
-    public void setScriptEngine(ScriptEngine scriptEngine)
+    public void setScript(Scriptable script)
     {
-        scriptable.setScriptEngine(scriptEngine);
+        this.script = script;
     }
-
-    public CompiledScript getCompiledScript()
-    {
-        return scriptable.getCompiledScript();
-    }
-
-    public void setCompiledScript(CompiledScript compiledScript)
-    {
-        scriptable.setCompiledScript(compiledScript);
-    }
-
-    public String getScriptText()
-    {
-        return scriptable.getScriptText();
-    }
-
-    public void setScriptText(String scriptText)
-    {
-        scriptable.setScriptText(scriptText);
-    }
-
-    public String getScriptFile()
-    {
-        return scriptable.getScriptFile();
-    }
-
-    public void setScriptFile(String scriptFile)
-    {
-        scriptable.setScriptFile(scriptFile);
-    }
-
-    public void setScriptEngineName(String scriptEngineName)
-    {
-        scriptable.setScriptEngineName(scriptEngineName);
-    }
-
-    protected void populateBindings(Bindings namespace, MuleEventContext context)
-    {
-        namespace.put("context", context);
-        namespace.put("message", context.getMessage());
-        namespace.put("descriptor", context.getService());
-        namespace.put("componentNamespace", namespace);
-        namespace.put("log", logger);
-        namespace.put("result", new Object());
-    }
-
-    protected void compileScript(Compilable compilable) throws ScriptException
-    {
-        scriptable.compileScript(compilable);
-    }
-
-    protected Object evaluteScript(Bindings namespace) throws ScriptException
-    {
-        return scriptable.evaluteScript(namespace);
-    }
-
-    protected Object runScript(Bindings namespace) throws ScriptException
-    {
-        return scriptable.runScript(namespace);
-    }
-
-    protected ScriptEngine createScriptEngine()
-    {
-        return scriptable.createScriptEngineByName(scriptable.getScriptEngineName());
-    }
-
 }

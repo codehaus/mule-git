@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.config.builders;
+package org.mule.module.scripting.builders;
 
 import org.mule.api.MuleException;
 import org.mule.api.config.ConfigurationBuilder;

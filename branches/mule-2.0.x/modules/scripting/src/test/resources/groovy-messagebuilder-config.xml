@@ -2,35 +2,25 @@
 <mule xmlns="http://www.mulesource.org/schema/mule/core/2.0"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:spring="http://www.springframework.org/schema/beans"
-       xmlns:scripting="http://www.mulesource.org/schema/mule/scripting/2.0"
+       xmlns:script="http://www.mulesource.org/schema/mule/scripting/2.0"
     xsi:schemaLocation="
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
        http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
        http://www.mulesource.org/schema/mule/scripting/2.0 http://www.mulesource.org/schema/mule/scripting/2.0/mule-scripting.xsd">
 
-
-    <scripting:script name="scriptText1">
+    <script:script name="myScript" engine="groovy">
         return "$request.payload $response.payload Received"
-    </scripting:script>
-
-    <scripting:script name="scriptText2">
-        return "A"
-    </scripting:script>
-
-    <scripting:script name="scriptText3">
-        return "B"
-    </scripting:script>
+    </script:script>
 
     <model name="main">
 
-        <service name="GroovyUMO1">
+        <service name="MessageBuilder">
             <inbound>
                 <inbound-endpoint address="vm://groovy.1"/>
             </inbound>
             <pooled-component>
                 <prototype-object class="org.mule.module.scripting.component.ScriptMessageBuilder">
-                    <property key="scriptEngineName" value="groovy"/>
-                    <property key="scriptText" value-ref="scriptText1"/>
+                    <property key="script" value-ref="myScript"/>
                 </prototype-object>
             </pooled-component>
             <outbound>
@@ -41,30 +31,26 @@
             </outbound>
         </service>
 
-        <service name="GroovyUMO2">
+        <service name="ScriptA">
             <inbound>
                 <inbound-endpoint address="vm://groovy.2"/>
             </inbound>
-            <pooled-component>
-                <prototype-object class="org.mule.module.scripting.component.ScriptComponent">
-                    <property key="scriptEngineName" value="groovy"/>
-                    <property key="scriptText" value-ref="scriptText2"/>
-                </prototype-object>
-            </pooled-component>
+            <script:component>
+			    <script:script engine="groovy">
+			        return "A"
+			    </script:script>
+            </script:component>
         </service>
 
-        <service name="GroovyUMO3">
+        <service name="ScriptB">
             <inbound>
                 <inbound-endpoint address="vm://groovy.3"/>
             </inbound>
-            <pooled-component>
-                <prototype-object class="org.mule.module.scripting.component.ScriptComponent">
-                    <property key="scriptEngineName" value="groovy"/>
-                    <property key="scriptText" value-ref="scriptText3"/>
-                </prototype-object>
-            </pooled-component>
+            <script:component>
+			    <script:script engine="groovy">
+			        return "B"
+			    </script:script>
+            </script:component>
         </service>
-
     </model>
-
 </mule>

@@ -7,7 +7,7 @@
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
-package org.mule.script.expression;
+package org.mule.module.scripting.expression;
 
 import org.mule.DefaultMuleMessage;
 import org.mule.module.scripting.expression.GroovyExpressionEvaluator;

@@ -11,14 +11,12 @@
 package org.mule.module.scripting.transformer;
 
 import org.mule.api.MuleMessage;
-import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.transformer.TransformerException;
+import org.mule.config.i18n.MessageFactory;
 import org.mule.module.scripting.component.Scriptable;
 import org.mule.transformer.AbstractMessageAwareTransformer;
 
 import javax.script.Bindings;
-import javax.script.CompiledScript;
-import javax.script.ScriptEngine;
 import javax.script.ScriptException;
 
 /**
@@ -26,21 +24,28 @@ import javax.script.ScriptException;
  */
 public class ScriptTransformer extends AbstractMessageAwareTransformer
 {
-    protected final Scriptable scriptable = new Scriptable();
-
-    public ScriptTransformer()
-    {
-        super();
-    }
+    private Scriptable script;
 
     public Object transform(MuleMessage message, String outputEncoding) throws TransformerException
     {
-        Bindings bindings = this.getScriptEngine().createBindings();
-        this.populateBindings(bindings, message);
-
+        Bindings bindings;
+        if (script != null && script.getScriptEngine() != null)
+        {
+            bindings = script.getScriptEngine().createBindings();
+        }
+        else
+        {
+            throw new TransformerException(MessageFactory.createStaticMessage("Script has not been initialized"), this);
+        }
+        populateBindings(bindings, message);
         try
         {
-            return scriptable.runScript(bindings);
+            Object result = script.runScript(bindings);
+            if (result == null)
+            {
+                result = bindings.get("result");
+            }
+            return result;
         }
         catch (ScriptException e)
         {
@@ -52,70 +57,19 @@ public class ScriptTransformer extends AbstractMessageAwareTransformer
     {
         namespace.put("message", message);
         namespace.put("src", message.getPayload());
+        namespace.put("correlationId", message.getCorrelationId());
         namespace.put("transformerNamespace", namespace);
         namespace.put("log", logger);
+        namespace.put("result", new Object());
     }
 
-    /**
-     * Template method were deriving classes can do any initialisation after the
-     * properties have been set on this transformer
-     * 
-     * @throws org.mule.api.lifecycle.InitialisationException
-     */
-    public void initialise() throws InitialisationException
+    public Scriptable getScript()
     {
-        super.initialise();
-        scriptable.initialise();
+        return script;
     }
 
-    public ScriptEngine getScriptEngine()
+    public void setScript(Scriptable script)
     {
-        return scriptable.getScriptEngine();
+        this.script = script;
     }
-
-    public void setScriptEngine(ScriptEngine scriptEngine)
-    {
-        scriptable.setScriptEngine(scriptEngine);
-    }
-
-    public CompiledScript getCompiledScript()
-    {
-        return scriptable.getCompiledScript();
-    }
-
-    public void setCompiledScript(CompiledScript compiledScript)
-    {
-        scriptable.setCompiledScript(compiledScript);
-    }
-
-    public String getScriptText()
-    {
-        return scriptable.getScriptText();
-    }
-
-    public void setScriptText(String scriptText)
-    {
-        scriptable.setScriptText(scriptText);
-    }
-
-    public String getScriptFile()
-    {
-        return scriptable.getScriptFile();
-    }
-
-    public void setScriptFile(String scriptFile)
-    {
-        scriptable.setScriptFile(scriptFile);
-    }
-
-    public void setScriptEngineName(String scriptEngineName)
-    {
-        scriptable.setScriptEngineName(scriptEngineName);
-    }
-
-    public String getScriptEngineName()
-    {
-        return scriptable.getScriptEngineName();
-    }
-
 }

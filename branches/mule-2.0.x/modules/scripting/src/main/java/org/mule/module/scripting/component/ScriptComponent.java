@@ -10,53 +10,75 @@
 
 package org.mule.module.scripting.component;
 
-import org.mule.api.MuleEventContext;
-import org.mule.api.lifecycle.Callable;
+import org.mule.DefaultMuleMessage;
+import org.mule.api.MuleEvent;
+import org.mule.api.MuleMessage;
 import org.mule.api.lifecycle.InitialisationException;
+import org.mule.api.transformer.TransformerException;
+import org.mule.component.AbstractComponent;
+import org.mule.config.i18n.MessageFactory;
 import org.mule.util.MuleLogger;
 
 import javax.script.Bindings;
 
 /**
- * A JSR 223 Script service. Allows any JSR 223 compliant script engines such as
- * JavaScript, Groovy or Rhino to be embedded as Mule components.
+ * A Script service backed by a JSR-223 compliant script engine such as
+ * Groovy, JavaScript, or Rhino.
  */
-public class ScriptComponent extends Scriptable implements Callable
+public class ScriptComponent extends AbstractComponent 
 {
+    private Scriptable script;
     private Bindings bindings;
 
-    // @Override
     public void initialise() throws InitialisationException
     {
         super.initialise();
-        bindings = getScriptEngine().createBindings();
+        if (script != null && script.getScriptEngine() != null)
+        {
+            bindings = script.getScriptEngine().createBindings();
+        }
+        else
+        {
+            throw new InitialisationException(MessageFactory.createStaticMessage("Script has not been initialized"), this);
+        }
     }
 
-    public Object onCall(MuleEventContext eventContext) throws Exception
+    //@Override
+    protected MuleMessage doOnCall(MuleEvent event) throws Exception
     {
-        populateBindings(bindings, eventContext);
-        Object result = runScript(bindings);
+        populateBindings(bindings, event);
+        Object result = script.runScript(bindings);
         if (result == null)
         {
             result = bindings.get("result");
         }
-        return result;
+        return new DefaultMuleMessage(result);
     }
 
-    protected void populateBindings(Bindings namespace, MuleEventContext context)
+    protected void populateBindings(Bindings namespace, MuleEvent event)
     {
-        namespace.put("eventContext", context);
-        namespace.put("muleContext", context.getMuleContext());
-        namespace.put("message", context.getMessage());
-        namespace.put("descriptor", context.getService());
-        namespace.put("componentNamespace", this.bindings);
+        namespace.put("muleContext", event.getMuleContext());
+        try
+        {
+            namespace.put("message", event.transformMessage());
+        }
+        catch (TransformerException e)
+        {
+            logger.warn(e);
+        }
+        namespace.put("id", event.getId());
+        namespace.put("service", event.getService());
         namespace.put("log", new MuleLogger(logger));
         namespace.put("result", new Object());
     }
 
-    public Bindings getBindings()
+    public Scriptable getScript()
     {
-        return bindings;
+        return script;
     }
 
+    public void setScript(Scriptable script)
+    {
+        this.script = script;
+    }
 }

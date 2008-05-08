@@ -14,6 +14,7 @@ import org.mule.api.lifecycle.Initialisable;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.util.IOUtils;
+import org.mule.util.StringUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -91,7 +92,7 @@ public class Scriptable implements Initialisable
         {
             if (script == null)
             {
-                if (scriptText == null && scriptFile == null)
+                if (StringUtils.isBlank(scriptText) && scriptFile == null)
                 {
                     throw new InitialisationException(
                         CoreMessages.propertiesNotSet("scriptText, scriptFile"), this);
@@ -106,13 +107,16 @@ public class Scriptable implements Initialisable
                     try
                     {
                         is = IOUtils.getResourceAsStream(scriptFile, getClass());
-                        script = new InputStreamReader(is);
                     }
                     catch (IOException e)
                     {
-                        throw new InitialisationException(
-                            CoreMessages.cannotLoadFromClasspath(scriptFile), e, this);
+                        throw new InitialisationException(CoreMessages.cannotLoadFromClasspath(scriptFile), e, this);
                     }
+                    if (is == null)
+                    {
+                        throw new InitialisationException(CoreMessages.cannotLoadFromClasspath(scriptFile), this);
+                    }
+                    script = new InputStreamReader(is);
                 }
             }
             try

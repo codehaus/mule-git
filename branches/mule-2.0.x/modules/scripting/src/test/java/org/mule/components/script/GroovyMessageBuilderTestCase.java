@@ -19,7 +19,7 @@ public class GroovyMessageBuilderTestCase extends FunctionalTestCase
 
     protected String getConfigResources()
     {
-        return "groovy-builder-config.xml";
+        return "groovy-messagebuilder-config.xml";
     }
 
     public void testFunctionBehaviour() throws Exception
