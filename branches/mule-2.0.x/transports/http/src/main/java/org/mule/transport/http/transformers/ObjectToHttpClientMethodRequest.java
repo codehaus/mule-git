@@ -28,6 +28,7 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
+import java.net.URLEncoder;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -137,18 +138,24 @@ public class ObjectToHttpClientMethodRequest extends AbstractMessageAwareTransfo
             if (HttpConstants.METHOD_GET.equals(method))
             {
                 httpMethod = new GetMethod(uri.toString());
-                String paramName = msg.getStringProperty(HttpConnector.HTTP_GET_BODY_PARAM_PROPERTY,
-                        HttpConnector.DEFAULT_HTTP_GET_BODY_PARAM_PROPERTY);
+                String paramName = URLEncoder.encode(msg.getStringProperty(HttpConnector.HTTP_GET_BODY_PARAM_PROPERTY,
+                        HttpConnector.DEFAULT_HTTP_GET_BODY_PARAM_PROPERTY), outputEncoding);
+                String paramValue = URLEncoder.encode(src.toString(), outputEncoding);
+                
                 String query = uri.getQuery();
+                if (query != null)
+                {
+                    query = URLEncoder.encode(query, outputEncoding);
+                }
                 if (!(src instanceof NullPayload) && !StringUtils.EMPTY.equals(src))
                 {
                     if (query == null)
                     {
-                        query = paramName + "=" + src.toString();
+                        query = paramName + "%3D" + paramValue;
                     }
                     else
                     {
-                        query += "&" + paramName + "=" + src.toString();
+                        query += "%26" + paramName + "%3D" + paramValue;
                     }
                 }
                 httpMethod.setQueryString(query);
