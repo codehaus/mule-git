@@ -57,8 +57,7 @@ public class VMConnector extends AbstractConnector
         {
             if (queueManager == null)
             {
-                queueManager = new TransactionalQueueManager();
-                queueManager.setPersistenceStrategy(new MemoryPersistenceStrategy());
+                queueManager = getMuleContext().getQueueManager();
             }
             if (queueProfile == null)
             {

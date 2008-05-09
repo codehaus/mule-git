@@ -56,6 +56,8 @@ public class SedaService extends AbstractService implements Work, WorkListener
      * Serial version/
      */
     private static final long serialVersionUID = 7711976708670893015L;
+    
+    private static final String QUEUE_NAME_SUFFIX = ".component";
 
     protected WorkManager workManager;
 
@@ -123,7 +125,7 @@ public class SedaService extends AbstractService implements Work, WorkListener
             }
             // Setup event Queue (used for VM execution).  The queue has the same name as the service.
             queueProfile.configureQueue(name, muleContext.getQueueManager());
-            queue = muleContext.getQueueManager().getQueueSession().getQueue(name);
+            queue = muleContext.getQueueManager().getQueueSession().getQueue(name + QUEUE_NAME_SUFFIX);
             if (queue == null)
             {
                 throw new InitialisationException(MessageFactory.createStaticMessage("Queue " + queue.getName() + " not created for service " + name), this);
