@@ -2,7 +2,7 @@
 # Test cases listed in this file are not run.
 #
 
-# MULE-2905
+# MULE-3318
 org.mule.transport.vm.functional.VmTransactionTestCase
 
 # MULE-3300
