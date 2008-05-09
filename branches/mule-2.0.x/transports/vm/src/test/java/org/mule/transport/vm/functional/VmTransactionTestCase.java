@@ -31,7 +31,7 @@ public class VmTransactionTestCase extends FunctionalTestCase
     {
         serviceComponentAck = false;
         MuleClient client = new MuleClient();
-        client.dispatch("vm://inQueue?connector=vmQueue", "TEST", null);
+        client.dispatch("vm://dispatchInQueue?connector=vmQueue", "TEST", null);
         MuleMessage message = client.request("vm://out?connector=vmQueue", 10000);
         assertNotNull("Message", message);
         assertTrue("Service component acknowledgement", serviceComponentAck);
@@ -41,7 +41,7 @@ public class VmTransactionTestCase extends FunctionalTestCase
     {
         serviceComponentAck = false;
         MuleClient client = new MuleClient();
-        client.dispatch("vm://inNoQueue?connector=vmNoQueue", "TEST", null);
+        client.dispatch("vm://dispatchInNoQueue?connector=vmNoQueue", "TEST", null);
         MuleMessage message = client.request("vm://out?connector=vmQueue", 10000);
         assertNotNull("Message", message);
         assertTrue("Service component acknowledgement", serviceComponentAck);
@@ -51,7 +51,7 @@ public class VmTransactionTestCase extends FunctionalTestCase
     {
         serviceComponentAck = false;
         MuleClient client = new MuleClient();
-        MuleMessage message = client.send("vm://inQueue?connector=vmQueue", "TEST", null);
+        MuleMessage message = client.send("vm://sendRequestInQueue?connector=vmQueue", "TEST", null);
         assertNotNull("Message", message);
         assertTrue("Service component acknowledgement", serviceComponentAck);
     }
@@ -60,7 +60,7 @@ public class VmTransactionTestCase extends FunctionalTestCase
     {
         serviceComponentAck = false;
         MuleClient client = new MuleClient();
-        MuleMessage message = client.send("vm://inNoQueue?connector=vmNoQueue", "TEST", null);
+        MuleMessage message = client.send("vm://sendRequestInNoQueue?connector=vmNoQueue", "TEST", null);
         assertNotNull("Message", message);
         assertTrue("Service component acknowledgement", serviceComponentAck);
     }
