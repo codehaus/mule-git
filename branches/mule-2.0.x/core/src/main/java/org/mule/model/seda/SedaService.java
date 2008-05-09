@@ -126,7 +126,7 @@ public class SedaService extends AbstractService implements Work, WorkListener
             queue = muleContext.getQueueManager().getQueueSession().getQueue(name);
             if (queue == null)
             {
-                throw new InitialisationException(MessageFactory.createStaticMessage("Queue " + name + " not created for service " + name), this);
+                throw new InitialisationException(MessageFactory.createStaticMessage("Queue " + queue.getName() + " not created for service " + name), this);
             }
         }
         catch (InitialisationException e)
@@ -147,7 +147,7 @@ public class SedaService extends AbstractService implements Work, WorkListener
 
     protected void doStop() throws MuleException
     {
-        if (muleContext.getQueueManager().getQueueSession().getQueue(name).size() > 0)
+        if (queue != null && queue.size() > 0)
         {
             try
             {
@@ -178,6 +178,7 @@ public class SedaService extends AbstractService implements Work, WorkListener
 
     protected void doDispose()
     {
+        queue = null;
         // threadPool.awaitTerminationAfterShutdown();
         if (workManager != null)
         {
@@ -272,11 +273,9 @@ public class SedaService extends AbstractService implements Work, WorkListener
 
     public int getQueueSize()
     {
-        QueueSession session = muleContext.getQueueManager().getQueueSession();
-        Queue queue = session.getQueue(name);
         if (queue == null)
         {
-            logger.warn(new InitialisationException(MessageFactory.createStaticMessage("Queue " + name + " not created for service " + name), this));
+            logger.warn(new InitialisationException(MessageFactory.createStaticMessage("Queue " + queue.getName() + " not created for service " + name), this));
             return -1;
         }
         return queue.size();
@@ -375,24 +374,26 @@ public class SedaService extends AbstractService implements Work, WorkListener
 
     protected void enqueue(MuleEvent event) throws Exception
     {
-        QueueSession session = muleContext.getQueueManager().getQueueSession();
-        Queue queue = session.getQueue(name);
         if (queue == null)
         {
-            throw new InitialisationException(MessageFactory.createStaticMessage("Queue " + name + " not created for service " + name), this);
+            throw new InitialisationException(MessageFactory.createStaticMessage("Queue not created for service " + name), this);
         }
         if (logger.isDebugEnabled())
         {
-            logger.debug("Service " + name + " putting event on queue " + name + ": " + event);
+            logger.debug("Service " + name + " putting event on queue " + queue.getName() + ": " + event);
         }
         queue.put(event);
     }
 
     protected MuleEvent dequeue() throws Exception
     {
+        if (queue == null)
+        {
+            throw new InitialisationException(MessageFactory.createStaticMessage("Queue not created for service " + name), this);
+        }
         if (logger.isDebugEnabled())
         {
-            //logger.debug("Service " + name + " polling queue " + name + ", timeout = " + queueTimeout);
+            logger.debug("Service " + name + " polling queue " + queue.getName() + ", timeout = " + queueTimeout);
         }
         if (getQueueTimeout() == null)
         {
