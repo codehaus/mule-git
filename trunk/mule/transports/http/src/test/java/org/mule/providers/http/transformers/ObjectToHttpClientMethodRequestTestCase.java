@@ -10,15 +10,13 @@
 
 package org.mule.providers.http.transformers;
 
-import org.mule.config.MuleConfiguration;
 import org.mule.config.MuleProperties;
 import org.mule.impl.RequestContext;
+import org.mule.providers.NullPayload;
 import org.mule.providers.http.HttpConnector;
 import org.mule.providers.http.HttpConstants;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.umo.UMOEvent;
-
-import java.net.URLEncoder;
 
 import org.apache.commons.httpclient.HttpMethod;
 
@@ -44,14 +42,13 @@ public class ObjectToHttpClientMethodRequestTestCase extends AbstractMuleTestCas
         setupRequestContext("http://localhost:8080/services");
 
         ObjectToHttpClientMethodRequest transformer = new ObjectToHttpClientMethodRequest();
-        Object response = transformer.transform("payload");
+        // transforming NullPayload will make sure that no body=xxx query is added
+        Object response = transformer.transform(NullPayload.getInstance());
         
         assertTrue(response instanceof HttpMethod);
         HttpMethod httpMethod = (HttpMethod) response;
         
-        // the transformer sets the payload as query parameter with key 'body'
-        String expected = URLEncoder.encode("body=payload", MuleConfiguration.DEFAULT_ENCODING);
-        assertEquals(expected, httpMethod.getQueryString());
+        assertEquals(null, httpMethod.getQueryString());
     }
     
     public void testUrlWithQuery() throws Exception
@@ -59,13 +56,13 @@ public class ObjectToHttpClientMethodRequestTestCase extends AbstractMuleTestCas
         setupRequestContext("http://localhost:8080/services?method=echo");
         
         ObjectToHttpClientMethodRequest transformer = new ObjectToHttpClientMethodRequest();
-        Object response = transformer.transform("payload");
+        // transforming NullPayload will make sure that no body=xxx query is added
+        Object response = transformer.transform(NullPayload.getInstance());
         
         assertTrue(response instanceof HttpMethod);
         HttpMethod httpMethod = (HttpMethod) response;
         
-        String expected = URLEncoder.encode("method=echo&body=payload", MuleConfiguration.DEFAULT_ENCODING);
-        assertEquals(expected, httpMethod.getQueryString());
+        assertEquals("method=echo", httpMethod.getQueryString());
     }
 
     public void testUrlWithUnescapedQuery() throws Exception
@@ -73,13 +70,27 @@ public class ObjectToHttpClientMethodRequestTestCase extends AbstractMuleTestCas
         setupRequestContext("http://mycompany.com/test?fruits=apple%20orange");
         
         ObjectToHttpClientMethodRequest transformer = new ObjectToHttpClientMethodRequest();
-        Object response = transformer.transform("payload");
+        // transforming NullPayload will make sure that no body=xxx query is added
+        Object response = transformer.transform(NullPayload.getInstance());
         
         assertTrue(response instanceof HttpMethod);
         HttpMethod httpMethod = (HttpMethod) response;
         
-        String expected = URLEncoder.encode("fruits=apple orange&body=payload", MuleConfiguration.DEFAULT_ENCODING);
-        assertEquals(expected, httpMethod.getQueryString());
+        assertEquals("fruits=apple%20orange", httpMethod.getQueryString());
+    }
+    
+    public void testAppendedUrl() throws Exception
+    {
+        setupRequestContext("http://mycompany.com/test?fruits=apple%20orange");
+        
+        ObjectToHttpClientMethodRequest transformer = new ObjectToHttpClientMethodRequest();
+        // transforming a payload here will add it as body=xxx query parameter
+        Object response = transformer.transform("test");
+        
+        assertTrue(response instanceof HttpMethod);
+        HttpMethod httpMethod = (HttpMethod) response;
+        
+        assertEquals("fruits=apple%20orange&body=test", httpMethod.getQueryString());
     }
 }
 
