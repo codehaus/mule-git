@@ -11,6 +11,7 @@
 package org.mule.config.i18n;
 
 import org.mule.config.MuleManifest;
+import org.mule.umo.UMOComponent;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.endpoint.UMOEndpointURI;
 import org.mule.umo.endpoint.UMOImmutableEndpoint;
@@ -287,9 +288,14 @@ public class CoreMessages extends MessageFactory
         return createMessage(BUNDLE_PATH, 70, type);
     }
 
-    public static Message routingFailedOnEndpoint(String name, Object endpointURI)
+    public static Message routingFailedOnEndpoint(UMOComponent component, UMOImmutableEndpoint endpoint)
     {
-        return createMessage(BUNDLE_PATH, 72, name, endpointURI);
+        UMOEndpointURI endpointUri = null;
+        if (endpoint != null)
+        {
+            endpointUri = endpoint.getEndpointURI();
+        }
+        return createMessage(BUNDLE_PATH, 72, component.getDescriptor().getName(), endpointUri);
     }
 
     public static Message cannotInstanciateFinder(String serviceFinder)

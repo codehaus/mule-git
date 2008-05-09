@@ -24,6 +24,7 @@ import org.mule.umo.UMOMessage;
 import org.mule.umo.UMOSession;
 import org.mule.umo.endpoint.UMOEndpoint;
 import org.mule.umo.provider.UMOMessageDispatcher;
+import org.mule.umo.routing.ComponentRoutingException;
 import org.mule.umo.transformer.TransformerException;
 
 import com.mockobjects.constraint.Constraint;
@@ -76,14 +77,30 @@ public class CatchAllStrategiesTestCase extends AbstractMuleTestCase
 
         assertNotNull(strategy.getEndpoint());
     }
+    
+    /**
+     * Test for MULE-3034
+     */
+    public void testForwardingStrategyNullEndpoint() throws Exception
+    {
+        ForwardingCatchAllStrategy strategy = new ForwardingCatchAllStrategy();
+        strategy.setEndpoint(null);
+        UMOEvent event = getTestEvent("UncaughtEvent");
+        UMOSession session = getTestSession(getTestComponent(getTestDescriptor("test", "test")));
+
+        try
+        {
+            strategy.catchMessage(event.getMessage(), session, false);
+            fail();
+        }
+        catch (ComponentRoutingException cre)
+        {
+            // we expected this exception
+        }
+    }
 
     private class TestEventTransformer extends AbstractTransformer
     {
-        /*
-         * (non-Javadoc)
-         * 
-         * @see org.mule.transformers.AbstractTransformer#doTransform(java.lang.Object)
-         */
         public Object doTransform(Object src, String encoding) throws TransformerException
         {
             return "Transformed Test Data";
