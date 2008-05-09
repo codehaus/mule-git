@@ -22,7 +22,7 @@
 	    <xsd:complexContent mixed="true">
 	        <xsd:extension base="mule:abstractExtensionType">
 	            <xsd:attribute name="name" type="xsd:string"/>
-                <xsd:attribute name="engine" type="xsd:string" use="required"/>
+                <xsd:attribute name="engine" type="xsd:string"/>
                 <xsd:attribute name="file" type="xsd:string"/>
 	        </xsd:extension>
 	    </xsd:complexContent>

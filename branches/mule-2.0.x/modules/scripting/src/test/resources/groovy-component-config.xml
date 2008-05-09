@@ -38,7 +38,7 @@
                 <inbound-endpoint address="vm://in2"/>
             </inbound>
             <script:component>
-			    <script:script engine="groovy" file="simple-script.groovy"/>
+			    <script:script file="simple-script.groovy"/>
 			</script:component>
             <outbound>
             	<outbound-pass-through-router>

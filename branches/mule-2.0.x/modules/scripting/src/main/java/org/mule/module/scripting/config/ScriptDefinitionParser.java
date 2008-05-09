@@ -12,6 +12,7 @@ package org.mule.module.scripting.config;
 
 import org.mule.config.spring.parsers.assembly.BeanAssembler;
 import org.mule.config.spring.parsers.generic.OptionalChildDefinitionParser;
+import org.mule.config.spring.parsers.processors.CheckRequiredAttributes;
 import org.mule.module.scripting.component.Scriptable;
 import org.mule.util.StringUtils;
 
@@ -27,6 +28,13 @@ public class ScriptDefinitionParser extends OptionalChildDefinitionParser
         addIgnored("name");
         addAlias("engine", "scriptEngineName");
         addAlias("file", "scriptFile");        
+
+        // The "engine" attribute is required unless "file" is specified, in which case the 
+        // file extension will be used to determine the appropriate script engine.
+        String[][] requiredAttributeSets = new String[2][];
+        requiredAttributeSets[0] = new String[]{"engine"};
+        requiredAttributeSets[1] = new String[]{"file"};
+        registerPreProcessor(new CheckRequiredAttributes(requiredAttributeSets));
     }
 
     protected void postProcess(ParserContext context, BeanAssembler assembler, Element element)
