@@ -142,20 +142,16 @@ public class ObjectToHttpClientMethodRequest extends AbstractMessageAwareTransfo
                         HttpConnector.DEFAULT_HTTP_GET_BODY_PARAM_PROPERTY), outputEncoding);
                 String paramValue = URLEncoder.encode(src.toString(), outputEncoding);
                 
-                String query = uri.getQuery();
-                if (query != null)
-                {
-                    query = URLEncoder.encode(query, outputEncoding);
-                }
+                String query = uri.getRawQuery();
                 if (!(src instanceof NullPayload) && !StringUtils.EMPTY.equals(src))
                 {
                     if (query == null)
                     {
-                        query = paramName + "%3D" + paramValue;
+                        query = paramName + "=" + paramValue;
                     }
                     else
                     {
-                        query += "%26" + paramName + "%3D" + paramValue;
+                        query += "&" + paramName + "=" + paramValue;
                     }
                 }
                 httpMethod.setQueryString(query);
