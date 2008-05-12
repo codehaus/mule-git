@@ -13,6 +13,8 @@ package org.mule.module.scripting.component;
 import org.mule.api.lifecycle.Initialisable;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.config.i18n.CoreMessages;
+import org.mule.config.i18n.MessageFactory;
+import org.mule.util.CollectionUtils;
 import org.mule.util.IOUtils;
 import org.mule.util.StringUtils;
 
@@ -51,9 +53,12 @@ public class Scriptable implements Initialisable
     private CompiledScript compiledScript;
     private ScriptEngine scriptEngine;
     private String scriptEngineName;
-
+    private ScriptEngineManager scriptEngineManager;
+    
     public void initialise() throws InitialisationException
     {
+        scriptEngineManager = new ScriptEngineManager();
+        
         if (scriptEngine == null)
         {
             if (compiledScript == null)
@@ -61,6 +66,10 @@ public class Scriptable implements Initialisable
                 if (scriptEngineName != null)
                 {
                     scriptEngine = createScriptEngineByName(scriptEngineName);
+                    if (scriptEngine == null)
+                    {
+                        throw new InitialisationException(MessageFactory.createStaticMessage("Scripting engine '" + scriptEngineName + "' not found.  Available engines are: " + listAvailableEngines()), this);
+                    }
                 }
                 else if (scriptFile != null)
                 {
@@ -68,8 +77,13 @@ public class Scriptable implements Initialisable
                     if (i > -1)
                     {
                         logger.info("Script Engine name not set. Guessing by file extension.");
-                        scriptEngine = createScriptEngineByExtension(scriptFile.substring(i + 1));
-                        if(scriptEngine != null)
+                        String ext = scriptFile.substring(i + 1);
+                        scriptEngine = createScriptEngineByExtension(ext);
+                        if (scriptEngine == null)
+                        {
+                            throw new InitialisationException(MessageFactory.createStaticMessage("File extension '" + ext + "' does not map to a scripting engine.  Available engines are: " + listAvailableEngines()), this);
+                        }
+                        else
                         {
                             setScriptEngineName(scriptEngine.getFactory().getEngineName());
                         }
@@ -231,11 +245,16 @@ public class Scriptable implements Initialisable
 
     protected ScriptEngine createScriptEngineByName(String name)
     {
-        return new ScriptEngineManager().getEngineByName(name);
+        return scriptEngineManager.getEngineByName(name);
     }
 
     protected ScriptEngine createScriptEngineByExtension(String ext)
     {
-        return new ScriptEngineManager().getEngineByExtension(ext);
+        return scriptEngineManager.getEngineByExtension(ext);
+    }
+
+    protected String listAvailableEngines()
+    {
+        return CollectionUtils.toString(scriptEngineManager.getEngineFactories(), false);
     }
 }
