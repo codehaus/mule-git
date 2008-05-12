@@ -16,13 +16,28 @@
     <property name="dir.classes" value="${dir.build}/classes"/>
 
     <property name="url.maven.repo" value="http://repo1.maven.org/maven2"/>
-
+    <property name="url.maven.repo2" value="http://dist.codehaus.org/mule/dependencies/maven2"/>
+	
     <target name="clean"
             description="Clean the output directory (start from scratch).">
         <delete dir="${dir.build}"/>
     </target>
 
-    <target name="init">
+    <!-- Download any additional libraries needed to run the application -->
+    <target name="get.libraries">
+
+        <!-- Jython (Python for Java) -->            
+        <get src="${url.maven.repo2}/javax/script/jython-engine/1.0/jython-engine-1.0-jdk14.jar"
+             dest="${dir.user.lib}/jython-engine-1.0-jdk14.jar"
+             verbose="true"
+             usetimestamp="true"/>
+        <get src="${url.maven.repo}/org/python/jython/2.2.1/jython-2.2.1.jar"
+             dest="${dir.user.lib}/jython-2.2.1.jar"
+             verbose="true"
+             usetimestamp="true"/>
+    </target>
+
+    <target name="init" depends="get.libraries">
 
         <!-- Create the build directory if it doesn't exist -->
         <mkdir dir="${dir.classes}"/>
