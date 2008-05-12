@@ -1328,6 +1328,14 @@
         </xsd:annotation>
     </xsd:element>
 
+    <xsd:element name="accumulator-component" type="defaultComponentType" substitutionGroup="abstract-component">
+        <xsd:annotation>
+            <xsd:documentation>
+				Component which accumulates successive integers by adding them together.  
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+
 
     <!--==============================================================-->
     <!--   Transactions                                               -->
@@ -2314,6 +2322,55 @@
                         <xsd:annotation>
                             <xsd:documentation>
                                 The string to append.
+                            </xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:attribute>
+                </xsd:extension>
+            </xsd:complexContent>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="string-to-number-transformer" substitutionGroup="abstract-transformer">
+        <xsd:annotation>
+            <xsd:documentation>
+                Converts a string to a number.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:complexContent>
+                <xsd:extension base="abstractTransformerType">
+                    <xsd:attribute name="integer" type="substitutableBoolean" use="optional">
+                        <xsd:annotation>
+                            <xsd:documentation>
+                                Convert the string to an integer (by default it will convert it to a double).
+                            </xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:attribute>
+                </xsd:extension>
+            </xsd:complexContent>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="math-transformer" substitutionGroup="abstract-transformer">
+        <xsd:annotation>
+            <xsd:documentation>
+                A simple transformer which adds/subtracts/multiplies/divides a constant factor to integer messages.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:complexContent>
+                <xsd:extension base="abstractTransformerType">
+                    <xsd:attribute name="operation" type="mathematicalOperation" use="required">
+                        <xsd:annotation>
+                            <xsd:documentation>
+                                The mathematical operation.
+                            </xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:attribute>
+                    <xsd:attribute name="factor" type="xsd:integer" use="required">
+                        <xsd:annotation>
+                            <xsd:documentation>
+                                Integer factor to be applied to each message.
                             </xsd:documentation>
                         </xsd:annotation>
                     </xsd:attribute>
@@ -3669,6 +3726,14 @@
         </xsd:complexContent>
     </xsd:complexType>
 
+    <xsd:simpleType name="mathematicalOperation">
+        <xsd:restriction base="xsd:NMTOKEN">
+            <xsd:enumeration value="add"/>
+            <xsd:enumeration value="subtract"/>
+            <xsd:enumeration value="multiply"/>
+            <xsd:enumeration value="divide"/>
+        </xsd:restriction>
+    </xsd:simpleType>
 
     <!--==============================================================-->
     <!--   Connector support                                          -->
