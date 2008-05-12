@@ -16,7 +16,7 @@ import org.mule.transformer.AbstractTransformer;
 import org.mule.util.NumberUtils;
 
 /** 
- * A simple transformer which adds/subtracts/multiplies/divides a constant factor to integer messages. 
+ * A simple transformer which adds/subtracts/multiplies/divides a constant factor to numeric messages. 
  */
 public class SimpleMathTransformer extends AbstractTransformer 
 {
@@ -24,7 +24,7 @@ public class SimpleMathTransformer extends AbstractTransformer
     private String operation = "add";
     
     /** Factor to be applied */
-    private int factor;
+    private double factor;
     
     public SimpleMathTransformer()
     {
@@ -72,12 +72,12 @@ public class SimpleMathTransformer extends AbstractTransformer
         this.operation = operation;
     }
 
-    public int getFactor()
+    public double getFactor()
     {
         return factor;
     }
 
-    public void setFactor(int factor)
+    public void setFactor(double factor)
     {
         this.factor = factor;
     }
