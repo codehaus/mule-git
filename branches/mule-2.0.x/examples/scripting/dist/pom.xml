@@ -149,16 +149,16 @@
                                     <destFileName>${artifactId}.jar</destFileName>
                                 </artifactItem>
                                 <artifactItem>
-						            <groupId>javax.script</groupId>
-						            <artifactId>jython-engine</artifactId>
-						            <version>1.0</version>
-						            <!-- we use our own retrotranslated version -->
-						            <classifier>jdk14</classifier>
+                                    <groupId>javax.script</groupId>
+                                    <artifactId>jython-engine</artifactId>
+                                    <version>1.0</version>
+                                    <!-- we use our own retrotranslated version -->
+                                    <classifier>jdk14</classifier>
                                 </artifactItem>
                                 <artifactItem>
-						            <groupId>org.python</groupId>
-						            <artifactId>jython</artifactId>
-						            <version>2.2.1</version>
+                                    <groupId>org.python</groupId>
+                                    <artifactId>jython</artifactId>
+                                    <version>2.2.1</version>
                                 </artifactItem>
                             </artifactItems>
                         </configuration>

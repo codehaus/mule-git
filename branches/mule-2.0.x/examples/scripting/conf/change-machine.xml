@@ -31,7 +31,7 @@
             <accumulator-component/>
             <outbound>
                 <chaining-router>
-	                <outbound-endpoint address="vm://script"/>
+                    <outbound-endpoint address="vm://script"/>
                     <stdio:outbound-endpoint system="OUT"/>
                 </chaining-router>
             </outbound>
@@ -42,7 +42,7 @@
                 <inbound-endpoint address="vm://script"/>
             </inbound>
             <script:component>
-			    <script:script file="${scriptfile}"/>
+                <script:script file="${scriptfile}"/>
             </script:component>
         </service>
     </model>
