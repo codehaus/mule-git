@@ -1,15 +1,18 @@
 /*
  * $Id$
  * --------------------------------------------------------------------------------------
- * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
  *
- * The software in this package is published under the terms of the CPAL v1.0
- * license, a copy of which has been included with this distribution in the
- * LICENSE.txt file.
+ * (c) 2003-2008 MuleSource, Inc. This software is protected under international copyright
+ * law. All use of this software is subject to MuleSource's Master Subscription Agreement
+ * (or other master license agreement) separately entered into in writing between you and
+ * MuleSource. If such an agreement is not in place, you may not use the software.
  */
 
 package org.mule.impl.endpoint;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.mule.impl.DefaultLifecycleAdapter;
 import org.mule.umo.endpoint.MalformedEndpointException;
 import org.mule.util.StringUtils;
 
@@ -23,37 +26,57 @@ import java.util.Properties;
  */
 public class ResourceNameEndpointBuilder extends AbstractEndpointBuilder
 {
+    protected static final Log logger = LogFactory.getLog(ResourceNameEndpointBuilder.class);
+	
     public static final String RESOURCE_INFO_PROPERTY = "resourceInfo";
 
     protected void setEndpoint(URI uri, Properties props) throws MalformedEndpointException
     {
         address = StringUtils.EMPTY;
-        if (uri.getHost() != null && !"localhost".equals(uri.getHost()))
+        String host = uri.getHost();
+        if (host != null && !"localhost".equals(host))
         {
-            address = uri.getHost();
+            address = host;
         }
 
-        if (uri.getPath() != null && uri.getPath().length() != 0)
+        String path = uri.getPath();
+        String authority = uri.getAuthority();
+        
+        if (path != null && path.length() != 0)
         {
             if (address.length() > 0)
             {
                 address += "/";
             }
-            address += uri.getPath().substring(1);
+            address += path.substring(1);
         }
-        else if (uri.getAuthority() != null && !uri.getAuthority().equals(address))
-        {
-            address += uri.getAuthority();
+        else if (authority != null && !authority.equals(address))
+        {        	
+            address += authority;
+            
+            int atCharIndex = -1;
+            if (address != null && address.length() != 0 && ((atCharIndex = address.indexOf("@")) > -1))
+            {
+            	address = address.substring(atCharIndex + 1);
+            }
+
         }
+        
         // is user info specified?
         int y = address.indexOf("@");
         if (y > -1)
         {
-            this.userInfo = address.substring(0, y);
+            userInfo = address.substring(0, y);
         }
         // increment to 0 or one char past the @
         y++;
 
+        String credentials = uri.getUserInfo();
+        if (credentials != null && credentials.length() != 0)
+        {
+        	userInfo = credentials;
+        }
+        
         int x = address.indexOf(":", y);
         if (x > -1)
         {
