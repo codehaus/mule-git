@@ -65,6 +65,7 @@ public class ObjectToHttpClientMethodRequest extends AbstractMessageAwareTransfo
         registerSourceType(String.class);
         registerSourceType(InputStream.class);
         registerSourceType(OutputHandler.class);
+        registerSourceType(NullPayload.class);
     }
 
     protected int addParameters(String queryString, PostMethod postMethod)
