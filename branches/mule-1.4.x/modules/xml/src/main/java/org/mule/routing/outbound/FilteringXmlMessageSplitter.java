@@ -169,6 +169,10 @@ public class FilteringXmlMessageSplitter extends AbstractMessageSplitter
                     }
 
                     List foundNodes = xpath.selectNodes(dom4jDoc);
+                    if (enableCorrelation != ENABLE_CORRELATION_NEVER)
+                    {
+                        message.setCorrelationGroupSize(foundNodes.size());
+                    }
                     if (logger.isDebugEnabled())
                     {
                         logger.debug("Split into " + foundNodes.size());

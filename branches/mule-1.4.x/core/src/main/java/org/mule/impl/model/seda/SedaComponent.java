@@ -241,7 +241,7 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
         try
         {
             Object component = lookupComponent();
-            MuleProxy componentProxy = new DefaultMuleProxy(component, descriptor, model, null);
+            MuleProxy componentProxy = new DefaultMuleProxy(component, descriptor, model);
             ((SedaComponentStatistics) getStatistics()).setComponentPoolSize(-1);
             componentProxy.setStatistics(getStatistics());
             componentProxy.start();
@@ -413,32 +413,10 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
         {
             throw new ComponentException(event.getMessage(), this, e);
         }
+        // Ensure that any proxy used for this request is released.
         finally
         {
-            try
-            {
-                if (proxy != null)
-                {
-                    if (proxyPool != null)
-                    {
-                        proxyPool.returnObject(proxy);
-                    }
-                    else if (componentPerRequest)
-                    {
-                        proxy.dispose();
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                // noinspection ThrowFromFinallyBlock
-                throw new ComponentException(event.getMessage(), this, e);
-            }
-
-            if (proxyPool != null)
-            {
-                ((SedaComponentStatistics) getStatistics()).setComponentPoolSize(proxyPool.getSize());
-            }
+            releaseProxy(proxy);
         }
         return result;
     }
@@ -507,18 +485,9 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
             }
             catch (Exception e)
             {
-                if (proxy != null && proxyPool != null)
-                {
-                    try
-                    {
-                        proxyPool.returnObject(proxy);
-                    }
-                    catch (Exception e2)
-                    {
-                        // TODO MULE-863: What should we do here? Die?
-                        logger.info("Failed to return proxy to pool", e2);
-                    }
-                }
+                // The proxy did not get created and/or schedule, so ensure it gets
+                // released.
+                releaseProxy(proxy);
 
                 if (e instanceof InterruptedException)
                 {
@@ -552,10 +521,14 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
             finally
             {
                 stopping.set(false);
+                
+                /* Removed: Since a componentPerRequest proxy is scheduled, it will be disposed by
+                 * {@link #workCompleted(WorkEvent)} or {@link #workRejected(WorkEvent)}}.
                 if (proxy != null && componentPerRequest)
                 {
                     proxy.dispose();
                 }
+                */
             }
         }
     }
@@ -606,9 +579,20 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
         handleWorkException(event, "workAccepted");
     }
 
+    /**
+     * This method ensures that any component proxy associated with this rejected
+     * work is released.
+     *  
+     * @see #workCompleted(WorkEvent)
+     */
     public void workRejected(WorkEvent event)
     {
         handleWorkException(event, "workRejected");
+
+        if (event.getWork() instanceof MuleProxy) 
+        {
+            releaseProxy((MuleProxy) event.getWork());
+        }
     }
 
     public void workStarted(WorkEvent event)
@@ -616,9 +600,29 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
         handleWorkException(event, "workStarted");
     }
 
+    /**
+     * There are two units of work that call this method when they complete
+     * (regardless of whether or not they incurred an exception):
+     * 1) This component's queue listener that processes asynchronous events by
+     *    scheduling a component proxy
+     * 2) Each scheduled component proxy
+     * <p>
+     * Generally, #1 occurs each time the component stops and #2 occurs
+     * at the end of each asynchronous event.
+     * <p>
+     * This method is responsible for handling any exceptions that occur for both
+     * #1 and #2 and releasing the proxy from #2. 
+     *    
+     * @see WorkListener#workCompleted(WorkEvent)
+     */
     public void workCompleted(WorkEvent event)
     {
         handleWorkException(event, "workCompleted");
+
+        if (event.getWork() instanceof MuleProxy) 
+        {
+            releaseProxy((MuleProxy) event.getWork());
+        }
     }
 
     protected void handleWorkException(WorkEvent event, String type)
@@ -671,5 +675,65 @@ public class SedaComponent extends AbstractComponent implements Work, WorkListen
     public void setQueueProfile(QueueProfile queueProfile)
     {
         this.queueProfile = queueProfile;
+    }
+
+    /**
+     * This is a helper method that catches any exceptions that occur while
+     * releasing a component proxy and reports them to the component for
+     * handling.
+     * 
+     * @param proxy -
+     *            the proxy that has completed; may be null in which case
+     *            nothing occurs
+     * 
+     * @see #doReleaseProxy(MuleProxy)
+     */
+    private void releaseProxy(MuleProxy proxy) 
+    {
+        if (proxy == null) 
+        {
+            return;
+        }
+        
+        try 
+        {
+            doReleaseProxy(proxy);
+        } 
+        catch (Exception ex)
+        {
+            handleException(ex);
+        }
+        // else, keep the singleton proxy for future use.
+    }
+    
+    /**
+     * This method is called once when a proxy has finished processing a request
+     * (regardless of success). For every call to
+     * {@link #getProxy()), there will be a corresponding call to this method. 
+     * The default behavior is to return the proxy to the pool, dispose of it,
+     * or reuse it, depending on the configuration.
+     * <p>
+     * <b>NOTE:</b> The implementation of this method must be thread-safe.
+     * 
+     * @param proxy -
+     *            the proxy that has completed; must be non-null.
+     * 
+     * @throws Exception -
+     *             the proxy cannot be released.
+     */
+    protected void doReleaseProxy(MuleProxy proxy) throws Exception
+    {
+        assert (proxy != null);
+
+        if (proxyPool != null) 
+        {
+            proxyPool.returnObject(proxy);
+            ((SedaComponentStatistics) getStatistics()).setComponentPoolSize(proxyPool.getSize());
+        } 
+        else if (componentPerRequest) 
+        {
+            proxy.dispose();
+        }
+        // else, keep the singleton proxy for future use.
     }
 }

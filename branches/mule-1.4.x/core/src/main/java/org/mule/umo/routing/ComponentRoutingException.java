@@ -71,9 +71,7 @@ public class ComponentRoutingException extends RoutingException
                                            UMOImmutableEndpoint endpoint,
                                            UMOComponent component)
     {
-
-        Message m = CoreMessages.routingFailedOnEndpoint(component.getDescriptor().getName(), 
-            endpoint.getEndpointURI());
+        Message m = CoreMessages.routingFailedOnEndpoint(component, endpoint);
         if (message != null)
         {
             message.setNextMessage(m);

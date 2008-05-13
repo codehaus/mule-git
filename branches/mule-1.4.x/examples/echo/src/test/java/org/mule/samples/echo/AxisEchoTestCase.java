@@ -91,7 +91,7 @@ public class AxisEchoTestCase extends FunctionalTestCase
         UMOMessage result = client.send("http://localhost:65081/services/EchoUMO?method=echo", "hello", props);
         assertNotNull(result);
         // TODO: MULE-1113
-        if ((this instanceof XFireEchoTestCase))
+        if (this instanceof XFireEchoTestCase)
         {
             assertNull(result.getExceptionPayload());
         }

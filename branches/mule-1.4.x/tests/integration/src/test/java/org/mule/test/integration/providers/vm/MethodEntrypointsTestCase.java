@@ -16,7 +16,10 @@ import org.mule.extras.client.MuleClient;
 import org.mule.impl.TooManySatisfiableMethodsException;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.tck.services.MatchingMethodsComponent;
+import org.mule.umo.UMODescriptor;
 import org.mule.umo.UMOMessage;
+
+import java.beans.ExceptionListener;
 
 public class MethodEntrypointsTestCase extends FunctionalTestCase
 {
@@ -29,8 +32,12 @@ public class MethodEntrypointsTestCase extends FunctionalTestCase
     protected ConfigurationBuilder getBuilder() throws Exception
     {
         QuickConfigurationBuilder builder = new QuickConfigurationBuilder();
-        builder.registerComponent(MatchingMethodsComponent.class.getName(), "service", "vm://service", null,
+        
+        UMODescriptor descriptor = builder.createDescriptor(MatchingMethodsComponent.class.getName(), "service", "vm://service", null,
             null);
+        descriptor.setExceptionListener(new ShutUpExceptionListener());
+        builder.registerComponent(descriptor);
+
         return builder;
     }
 
@@ -64,5 +71,13 @@ public class MethodEntrypointsTestCase extends FunctionalTestCase
         UMOMessage message = client.send("vm://service?method=upperCaseString", "hello", null);
         assertNotNull(message);
         assertEquals(message.getPayloadAsString(), "HELLO");
+    }
+    
+    private class ShutUpExceptionListener implements ExceptionListener
+    {
+        public void exceptionThrown(Exception e)
+        {
+            // just swallow the exception, it's not relevant for the test case
+        }
     }
 }

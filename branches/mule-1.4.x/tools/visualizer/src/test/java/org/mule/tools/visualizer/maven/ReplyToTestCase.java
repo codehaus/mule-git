@@ -13,9 +13,10 @@ package org.mule.tools.visualizer.maven;
 /**
  * Test for MULETOOLS-29
  */
-public class ReplyToTestCase extends AbstractBaseVisualizerXmlTestCase {
+public class ReplyToTestCase extends AbstractBaseVisualizerXmlTestCase
+{
 
-    String getXmlConfig()
+    public String getXmlConfig()
     {
         return "reply-to.xml";
     }

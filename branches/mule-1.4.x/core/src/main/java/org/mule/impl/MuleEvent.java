@@ -15,7 +15,9 @@ import org.mule.MuleManager;
 import org.mule.config.MuleProperties;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.impl.endpoint.MuleEndpoint;
+import org.mule.impl.model.ModelHelper;
 import org.mule.impl.security.MuleCredentials;
+import org.mule.umo.MessagingException;
 import org.mule.umo.UMOComponent;
 import org.mule.umo.UMOEvent;
 import org.mule.umo.UMOException;
@@ -31,7 +33,6 @@ import org.mule.util.UUID;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OptionalDataException;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
@@ -78,7 +79,7 @@ public class MuleEvent extends EventObject implements UMOEvent, ThreadSafeAccess
      */
     private UMOMessage message = null;
 
-    private transient UMOSession session;
+    private UMOSession session;
 
     private boolean stopFurtherProcessing = false;
 
@@ -636,47 +637,105 @@ public class MuleEvent extends EventObject implements UMOEvent, ThreadSafeAccess
         return outputStream;
     }
 
-    private void marshallTransformers(UMOTransformer trans, ObjectOutputStream out) throws IOException
+    private void marshallTransformers(UMOTransformer firstTransformer, ObjectOutputStream out) throws IOException
     {
-        if (trans != null)
+        UMOTransformer cursor = firstTransformer;
+
+        // first count the number of transformers
+        int num = 0;
+        while (cursor != null)
         {
-            out.writeObject(trans.getName());
-            marshallTransformers(trans.getNextTransformer(), out);
+            num++;
+            cursor = cursor.getNextTransformer();
+        }
+
+        // write number
+        out.writeInt(num);
+
+        // write transformer names if necessary
+        if (num > 0)
+        {
+            cursor = firstTransformer;
+            while (cursor != null)
+            {
+                out.writeObject(cursor.getName());            
+                cursor = cursor.getNextTransformer();
+            }
         }
     }
 
     private UMOTransformer unmarshallTransformers(ObjectInputStream in) throws IOException, ClassNotFoundException
     {
-        UMOTransformer trans = null;
-        try {
-            String transformerName = (String) in.readObject();
-            trans = MuleManager.getInstance().lookupTransformer(transformerName);
-            trans.setNextTransformer(unmarshallTransformers(in));
-        } catch (OptionalDataException e) {
-            if (logger.isDebugEnabled())
+        UMOTransformer first = null;
+        int count = in.readInt();
+
+        if (count > 0)
+        {
+            String firstName = (String) in.readObject();
+            first = MuleManager.getInstance().lookupTransformer(firstName);
+
+            if (first == null)
             {
-                logger.debug("Failed to load transformers from stream", e);
+                throw new IllegalStateException(CoreMessages.objectNotFound(firstName).toString());
+            }
+
+            UMOTransformer cursor = first;
+            while (--count > 0)
+            {
+                String nextName = (String)in.readObject();
+                UMOTransformer next = MuleManager.getInstance().lookupTransformer(nextName);
+                if (next == null)
+                {
+                    throw new IllegalStateException(CoreMessages.objectNotFound(nextName).toString());
+                }
+                else
+                {
+                    cursor.setNextTransformer(next);
+                    cursor = next;
+                }
             }
         }
-        return trans;
+
+        return first;
     }
 
     private void writeObject(ObjectOutputStream out) throws IOException
     {
         out.defaultWriteObject();
         out.writeObject(endpoint.getEndpointURI().toString());
+        out.writeObject(endpoint.getType());
+        if ((session.getComponent() == null) || 
+            (session.getComponent().getDescriptor() == null)) 
+        {
+            out.writeObject("");
+        } 
+        else
+        {
+            out.writeObject(session.getComponent().getDescriptor().getName());
+        }
         marshallTransformers(endpoint.getTransformer(), out);
     }
 
-    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException, MessagingException
     {
         logger = LogFactory.getLog(getClass());
         in.defaultReadObject();
         String uri = (String) in.readObject();
+        String type = (String) in.readObject();
+        String componentName = (String) in.readObject();
+        if ((componentName.length()!=0) && (session != null)) 
+        {
+            if (!ModelHelper.isComponentRegistered(componentName)) {
+                throw new MessagingException(
+                        CoreMessages.objectNotRegisteredWithManager("Component '" + componentName + "'"), 
+                        message, null);
+            }
+            ((MuleSession)session).setComponent(ModelHelper.getComponent(componentName));
+        }
         UMOTransformer trans = unmarshallTransformers(in);
         try
         {
-            endpoint = MuleEndpoint.getOrCreateEndpointForUri(uri, UMOEndpoint.ENDPOINT_TYPE_SENDER);
+            endpoint = MuleEndpoint.getOrCreateEndpointForUri(uri,type);
 
             if (endpoint.getTransformer() == null)
             {

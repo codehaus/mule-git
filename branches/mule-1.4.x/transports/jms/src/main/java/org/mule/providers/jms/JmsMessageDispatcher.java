@@ -12,6 +12,7 @@ package org.mule.providers.jms;
 
 import org.mule.impl.MuleMessage;
 import org.mule.providers.AbstractMessageDispatcher;
+import org.mule.providers.jms.filters.JmsSelectorFilter;
 import org.mule.providers.jms.i18n.JmsMessages;
 import org.mule.transaction.IllegalTransactionStateException;
 import org.mule.umo.UMOEvent;
@@ -27,8 +28,6 @@ import org.mule.util.StringUtils;
 import org.mule.util.concurrent.Latch;
 import org.mule.util.concurrent.WaitableBoolean;
 
-import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
-
 import javax.jms.DeliveryMode;
 import javax.jms.Destination;
 import javax.jms.Message;
@@ -38,6 +37,8 @@ import javax.jms.MessageProducer;
 import javax.jms.Session;
 import javax.jms.TemporaryQueue;
 import javax.jms.TemporaryTopic;
+
+import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang.BooleanUtils;
 
@@ -56,7 +57,7 @@ public class JmsMessageDispatcher extends AbstractMessageDispatcher
     public JmsMessageDispatcher(UMOImmutableEndpoint endpoint)
     {
         super(endpoint);
-        this.connector = (JmsConnector)endpoint.getConnector();
+        this.connector = (JmsConnector) endpoint.getConnector();
     }
 
     protected void doDispatch(UMOEvent event) throws Exception
@@ -146,7 +147,7 @@ public class JmsMessageDispatcher extends AbstractMessageDispatcher
                     event.getMessage(), event.getEndpoint());
             }
 
-            Message msg = (Message)message;
+            Message msg = (Message) message;
             if (event.getMessage().getCorrelationId() != null)
             {
                 msg.setJMSCorrelationID(event.getMessage().getCorrelationId());
@@ -162,7 +163,7 @@ public class JmsMessageDispatcher extends AbstractMessageDispatcher
                 {
                     if (tempReplyTo instanceof Destination)
                     {
-                        replyTo = (Destination)tempReplyTo;
+                        replyTo = (Destination) tempReplyTo;
                     }
                     else
                     {
@@ -202,9 +203,9 @@ public class JmsMessageDispatcher extends AbstractMessageDispatcher
             }
 
             // QoS support
-            String ttlString = (String)eventMsg.removeProperty(JmsConstants.TIME_TO_LIVE_PROPERTY);
-            String priorityString = (String)eventMsg.removeProperty(JmsConstants.PRIORITY_PROPERTY);
-            String persistentDeliveryString = (String)eventMsg.removeProperty(JmsConstants.PERSISTENT_DELIVERY_PROPERTY);
+            String ttlString = (String) eventMsg.removeProperty(JmsConstants.TIME_TO_LIVE_PROPERTY);
+            String priorityString = (String) eventMsg.removeProperty(JmsConstants.PRIORITY_PROPERTY);
+            String persistentDeliveryString = (String) eventMsg.removeProperty(JmsConstants.PERSISTENT_DELIVERY_PROPERTY);
 
             long ttl = StringUtils.isNotBlank(ttlString)
                                 ? NumberUtils.toLong(ttlString)
@@ -306,13 +307,13 @@ public class JmsMessageDispatcher extends AbstractMessageDispatcher
             {
                 if (replyTo instanceof TemporaryQueue)
                 {
-                    connector.closeQuietly((TemporaryQueue)replyTo);
+                    connector.closeQuietly((TemporaryQueue) replyTo);
                 }
                 else
                 {
                     // hope there are no more non-standard tricks from JMS vendors
                     // here ;)
-                    connector.closeQuietly((TemporaryTopic)replyTo);
+                    connector.closeQuietly((TemporaryTopic) replyTo);
                 }
             }
 
@@ -355,7 +356,41 @@ public class JmsMessageDispatcher extends AbstractMessageDispatcher
             session = connector.getSession(false, topic);
             Destination dest = support.createDestination(session, endpoint.getEndpointURI().getAddress(),
                 topic);
-            consumer = support.createConsumer(session, dest, topic);
+
+            // Extract jms selector
+            String selector = null;
+            if (endpoint.getFilter() != null && endpoint.getFilter() instanceof JmsSelectorFilter)
+            {
+                selector = ((JmsSelectorFilter) endpoint.getFilter()).getExpression();
+            }
+            else if (endpoint.getProperties() != null)
+            {
+                // still allow the selector to be set as a property on the endpoint
+                // to be backward compatable
+                selector = (String) endpoint.getProperties().get(JmsConstants.JMS_SELECTOR_PROPERTY);
+            }
+            String tempDurable = (String) endpoint.getProperties().get(JmsConstants.DURABLE_PROPERTY);
+            boolean durable = connector.isDurable();
+            if (tempDurable != null)
+            {
+                durable = Boolean.valueOf(tempDurable).booleanValue();
+            }
+
+            // Get the durable subscriber name if there is one
+            String durableName = (String) endpoint.getProperties().get(JmsConstants.DURABLE_NAME_PROPERTY);
+            if (durableName == null && durable && topic)
+            {
+                durableName = "mule." + connector.getName() + "." + endpoint.getEndpointURI().getAddress();
+                if (logger.isDebugEnabled())
+                {
+                    logger.debug("Jms Connector for this receiver is durable but no durable name has been specified. Defaulting to: "
+                             + durableName);
+                }
+            }
+
+            // Create consumer
+            consumer = support.createConsumer(session, dest, selector, connector.isNoLocal(), durableName,
+                topic);
 
             try
             {

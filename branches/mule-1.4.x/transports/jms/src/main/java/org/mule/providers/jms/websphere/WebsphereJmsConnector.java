@@ -26,7 +26,7 @@ public class WebsphereJmsConnector extends JmsConnector
     /** Constructs a new WebsphereJmsConnector. */
     public WebsphereJmsConnector()
     {
-        setRecoverJmsConnections(false);
+        setRecoverJmsConnections(isRecoverJmsConnections());
         if (serviceOverrides == null || serviceOverrides.isEmpty())
         {
             Map overrides = Collections.singletonMap(MuleProperties.CONNECTOR_XA_TRANSACTED_MESSAGE_RECEIVER_CLASS,

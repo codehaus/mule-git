@@ -573,7 +573,11 @@ public abstract class AbstractMessageReceiver implements UMOMessageReceiver
                 // This is a replyTo event for a current request
                 if (UMOEndpoint.ENDPOINT_TYPE_RESPONSE.equals(endpoint.getType()))
                 {
-                    component.getDescriptor().getResponseRouter().route(muleEvent);
+                    // Transform response message before it is processed by response router(s)
+                    UMOEvent responseEvent = new MuleEvent(new MuleMessage(muleEvent.getTransformedMessage(),
+                        muleEvent.getMessage()), muleEvent);
+                    OptimizedRequestContext.unsafeSetEvent(responseEvent);
+                    component.getDescriptor().getResponseRouter().route(responseEvent);
                     return null;
                 }
                 else

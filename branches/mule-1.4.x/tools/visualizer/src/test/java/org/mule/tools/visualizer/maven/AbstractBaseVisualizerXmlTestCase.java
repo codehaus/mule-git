@@ -19,7 +19,7 @@ import junit.framework.TestCase;
 public abstract class AbstractBaseVisualizerXmlTestCase extends TestCase 
 {
 
-    abstract String getXmlConfig();
+    public abstract String getXmlConfig();
 
     public void testConfig() throws Exception
     {

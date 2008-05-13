@@ -5,3 +5,6 @@
 # MULE-2164
 org.mule.impl.endpoint.MuleCopiedEndpointURITestCase
 
+# MULE-2964: MuleMessage does not serialize attachments
+org.mule.impl.MuleMessageTestCase
+

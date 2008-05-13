@@ -37,7 +37,7 @@
         <mule-descriptor name="TcpReceiver"
                          implementation="org.mule.components.simple.EchoComponent">
             <inbound-router>
-                <endpoint address="tcp://localhost:4444" remoteSync="true" responseTransformers="jmsmessagetoobject"/>
+                <endpoint address="tcp://localhost:4444" remoteSync="true"/>
             </inbound-router>
             <outbound-router>
                 <router className="org.mule.routing.outbound.OutboundPassThroughRouter">

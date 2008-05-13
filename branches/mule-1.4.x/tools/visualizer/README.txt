@@ -81,7 +81,7 @@ This generates the jar file in the target drectory
 > mvn package 
 
 This builds a classpath in the file cp.txt
-> mvn dependency:build-classpath -Dmavenxtep.cpFile=cp.txt
+> mvn dependency:build-classpath -Dmdep.outputFile=cp.txt
 
 > java -cp `cat cp.txt`:target/mule-tools-visualizer-1.0.jar \
     org.mule.tools.visualizer.MuleVisualizer \

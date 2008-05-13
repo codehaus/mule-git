@@ -112,10 +112,7 @@ public class DefaultComponentExceptionStrategy extends DefaultExceptionStrategy
         this.component = component;
         if (component instanceof AbstractComponent)
         {
-            if (statistics != null)
-            {
-                this.statistics = ((AbstractComponent) component).getStatistics();
-            }
+            this.statistics = ((AbstractComponent) component).getStatistics();
         }
     }
 }
