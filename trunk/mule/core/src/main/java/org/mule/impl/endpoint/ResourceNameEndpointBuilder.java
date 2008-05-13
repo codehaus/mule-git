@@ -57,7 +57,8 @@ public class ResourceNameEndpointBuilder extends AbstractEndpointBuilder
             int atCharIndex = -1;
             if (address != null && address.length() != 0 && ((atCharIndex = address.indexOf("@")) > -1))
             {
-            	address = address.substring(atCharIndex + 1);
+            	userInfo = address.substring(0, atCharIndex);
+            	address = address.substring(atCharIndex + 1);           	
             }
 
         }
