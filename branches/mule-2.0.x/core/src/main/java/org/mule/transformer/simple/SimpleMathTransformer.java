@@ -42,19 +42,19 @@ public class SimpleMathTransformer extends AbstractTransformer
         
         if (operation.equalsIgnoreCase("add"))
         {
-            return data + factor;
+            return new Double(data + factor);
         }
         else if (operation.equalsIgnoreCase("subtract"))
         {
-            return data - factor;
+            return new Double(data - factor);
         }
         else if (operation.equalsIgnoreCase("multiply"))
         {
-            return data * factor;
+            return new Double(data * factor);
         }
         else if (operation.equalsIgnoreCase("divide"))
         {
-            return data / factor;
+            return new Double(data / factor);
         }
         else 
         {
