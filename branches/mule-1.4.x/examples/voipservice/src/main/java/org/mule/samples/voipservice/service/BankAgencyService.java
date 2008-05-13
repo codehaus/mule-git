@@ -23,8 +23,6 @@ public class BankAgencyService implements BankAgency
 
     public CreditProfileTO getAuthorisedStatus(CreditProfileTO creditProfileTO)
     {
-
-        logger.info("Inside BankAgencyService.getAuthorisedStatus() ***************");
         creditProfileTO.setCreditAuthorisedStatus(CreditProfileTO.CREDIT_AUTHORISED);
         return creditProfileTO;
     }

@@ -12,7 +12,6 @@ package org.mule.examples.loanbroker;
 
 import org.mule.config.i18n.MessageFactory;
 import org.mule.examples.loanbroker.messages.LoanQuote;
-import org.mule.util.StringMessageUtils;
 
 public class LocaleMessage extends MessageFactory
 {
@@ -20,12 +19,12 @@ public class LocaleMessage extends MessageFactory
 
     public static String receivedRequest(String[] params)
     {
-        return getString(BUNDLE_PATH, 1, StringMessageUtils.toString(params));
+        return getString(BUNDLE_PATH, 1, params);
     }
 
     public static String receivedQuote(String[] params)
     {
-        return getString(BUNDLE_PATH, 2, StringMessageUtils.toString(params));
+        return getString(BUNDLE_PATH, 2, params);
     }
 
     public static String receivedRate(LoanQuote quote)
@@ -50,7 +49,7 @@ public class LocaleMessage extends MessageFactory
 
     public static String receivedProfile(String[] params)
     {
-        return getString(BUNDLE_PATH, 7, StringMessageUtils.toString(params));
+        return getString(BUNDLE_PATH, 7, params);
     }
 
     public static String responseNumQuotes(int i)
