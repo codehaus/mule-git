@@ -11,34 +11,39 @@
 
     <jms:activemq-connector name="jmsConnector"/>
 
+    <gzip-compress-transformer name="Compress"/>
+    <gzip-uncompress-transformer name="Uncompress"/>
+    <jms:jmsmessage-to-object-transformer name="JmsToObject"/>
+    <jms:object-to-jmsmessage-transformer name="ObjectToJms"/>
+
     <model name="test">
         <service name="InputPart">
             <inbound>
-                <jms:inbound-endpoint queue="in"/>
+                <jms:inbound-endpoint queue="in" />
             </inbound>
             <test:component/>
             <outbound>
                 <outbound-pass-through-router>
-                    <jms:outbound-endpoint queue="q1"/>
+                    <jms:outbound-endpoint queue="q1" transformer-refs="Compress ObjectToJms"/>
                 </outbound-pass-through-router>
             </outbound>
         </service>
 
         <service name="MiddlePart">
             <inbound>
-                <jms:inbound-endpoint queue="q1"/>
+                <jms:inbound-endpoint queue="q1" transformer-refs="JmsToObject Uncompress"/>
             </inbound>
             <test:component/>
             <outbound>
                 <outbound-pass-through-router>
-                    <jms:outbound-endpoint queue="q2"/>
+                    <jms:outbound-endpoint queue="q2" transformer-refs="Compress ObjectToJms"/>
                 </outbound-pass-through-router>
             </outbound>
         </service>
 
         <service name="OutputPart">
             <inbound>
-                <jms:inbound-endpoint queue="q2"/>
+                <jms:inbound-endpoint queue="q2" transformer-refs="JmsToObject Uncompress"/>
             </inbound>
             <test:component>
                 <test:return-data>OUTPUT MESSAGE</test:return-data>
