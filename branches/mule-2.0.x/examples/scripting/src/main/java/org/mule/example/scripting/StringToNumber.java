@@ -23,11 +23,11 @@ public class StringToNumber extends AbstractTransformer
     {         
         if (integer)
         {
-            return NumberUtils.toInt(src);
+            return new Integer(NumberUtils.toInt(src));
         }
         else
         {
-            return NumberUtils.toDouble(src);
+            return new Double(NumberUtils.toDouble(src));
         }
     }
 

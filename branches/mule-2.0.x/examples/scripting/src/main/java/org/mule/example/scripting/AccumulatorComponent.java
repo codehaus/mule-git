@@ -48,7 +48,8 @@ public class AccumulatorComponent implements Callable
             throw new TransformerException(MessageFactory.createStaticMessage("Operation " + operation + " not recognized"));
         }
 
-        return accumulatedValue;
+        // no auto-boxing
+        return new Double(accumulatedValue);
     }
 
     public String getOperation()

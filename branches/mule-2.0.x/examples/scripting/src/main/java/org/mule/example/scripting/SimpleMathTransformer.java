@@ -31,26 +31,30 @@ public class SimpleMathTransformer extends AbstractTransformer
             throw new TransformerException(MessageFactory.createStaticMessage("Unable to convert message to double: " + src));
         }
         
+        double result;
         if (operation.equalsIgnoreCase("add"))
         {
-            return data + factor;
+            result = data + factor;
         }
         else if (operation.equalsIgnoreCase("subtract"))
         {
-            return data - factor;
+            result = data - factor;
         }
         else if (operation.equalsIgnoreCase("multiply"))
         {
-            return data * factor;
+            result = data * factor;
         }
         else if (operation.equalsIgnoreCase("divide"))
         {
-            return data / factor;
+            result = data / factor;
         }
         else 
         {
             throw new TransformerException(MessageFactory.createStaticMessage("Operation " + operation + " not recognized"));
         }
+        
+        // no auto-boxing
+        return new Double(result);
     }
 
     public String getOperation()
