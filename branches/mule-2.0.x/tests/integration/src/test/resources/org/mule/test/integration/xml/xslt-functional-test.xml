@@ -48,6 +48,7 @@
     </mulexml:xslt-transformer>
     <!--// END SNIPPET: transformer-config -->
 
+    <!--// START SNIPPET: service-config -->
     <model name="main">
         <service name="Echo">
             <inbound>
@@ -62,4 +63,5 @@
             </outbound>
         </service>
     </model>
+    <!--// END SNIPPET: service-config -->
 </mule>
