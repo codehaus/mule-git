@@ -17,10 +17,12 @@ def change(currency, amount) {
   currency.values().inject([]){ list, coin ->
      int count = amount / coin.value
      amount = amount % coin.value
-     list += "$count ${coin}"
+     list += "$count $coin"
   }
 }
 
-if (currency == "USD") return change(USD, message)
-else if (currency == "GBP") return change(GBP, message)
-// else throw exception?
+switch (currency) {
+    case "USD": return change(USD, message)
+    case "GBP": return change(GBP, message)
+    default: throw new AssertionError("Unsupported currency: $currency")
+}
