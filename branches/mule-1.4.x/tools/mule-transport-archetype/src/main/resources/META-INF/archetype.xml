@@ -4,7 +4,7 @@
         <variable>
             <name>MuleVersion</name>
             <description>Which version of Mule are you working with?</description>
-            <defvalue>1.4</defvalue>
+            <defvalue>1.4.4</defvalue>
         </variable>
         <variable>
             <name>TransportName</name>
@@ -46,7 +46,7 @@
 
         <variable>
             <name>Dispatcher</name>
-            <description>Can the transport dispatch outbound requests?</description>
+            <description>Can the transport dispatch outbound requests? [y] or [n]</description>
             <defvalue>y</defvalue>
 
             <variables>
