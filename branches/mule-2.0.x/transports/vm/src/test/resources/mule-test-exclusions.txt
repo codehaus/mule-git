@@ -2,9 +2,6 @@
 # Test cases listed in this file are not run.
 #
 
-# MULE-3318
-org.mule.transport.vm.functional.VmTransactionTestCase
-
 # MULE-3300
 org.mule.transport.vm.functional.VMRequestorTestCase
 
