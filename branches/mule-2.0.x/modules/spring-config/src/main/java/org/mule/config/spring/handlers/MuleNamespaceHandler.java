@@ -14,7 +14,6 @@ import org.mule.api.config.MuleProperties;
 import org.mule.component.DefaultJavaComponent;
 import org.mule.component.PooledJavaComponent;
 import org.mule.component.SimpleCallableJavaComponent;
-import org.mule.component.simple.AccumulatorComponent;
 import org.mule.component.simple.EchoComponent;
 import org.mule.component.simple.LogComponent;
 import org.mule.component.simple.NullComponent;
@@ -142,9 +141,7 @@ import org.mule.transformer.simple.MessagePropertiesTransformer;
 import org.mule.transformer.simple.ObjectToByteArray;
 import org.mule.transformer.simple.ObjectToString;
 import org.mule.transformer.simple.SerializableToByteArray;
-import org.mule.transformer.simple.SimpleMathTransformer;
 import org.mule.transformer.simple.StringAppendTransformer;
-import org.mule.transformer.simple.StringToNumber;
 
 /**
  * This is the core namespace handler for Mule and configures all Mule configuration elements under the
@@ -218,10 +215,8 @@ public class MuleNamespaceHandler extends AbstractMuleNamespaceHandler
         registerBeanDefinitionParser("serializable-to-byte-array-transformer", new TransformerDefinitionParser(SerializableToByteArray.class));
         registerBeanDefinitionParser("byte-array-to-string-transformer", new TransformerDefinitionParser(ObjectToString.class));
         registerBeanDefinitionParser("string-to-byte-array-transformer", new TransformerDefinitionParser(ObjectToByteArray.class));
-        registerBeanDefinitionParser("string-to-number-transformer", new TransformerDefinitionParser(StringToNumber.class));
 
         registerBeanDefinitionParser("append-string-transformer", new TransformerDefinitionParser(StringAppendTransformer.class));
-        registerBeanDefinitionParser("math-transformer", new TransformerDefinitionParser(SimpleMathTransformer.class));
 
         //Transaction Managers
         registerBeanDefinitionParser("custom-transaction-manager", new TransactionManagerDefinitionParser());
@@ -273,7 +268,6 @@ public class MuleNamespaceHandler extends AbstractMuleNamespaceHandler
         registerBeanDefinitionParser("pass-through-component", new ComponentDefinitionParser(PassThroughComponent.class));
         registerBeanDefinitionParser("log-component", new SimpleComponentDefinitionParser(SimpleCallableJavaComponent.class, LogComponent.class));
         registerBeanDefinitionParser("null-component",new SimpleComponentDefinitionParser(SimpleCallableJavaComponent.class, NullComponent.class));
-        registerBeanDefinitionParser("accumulator-component",new SimpleComponentDefinitionParser(SimpleCallableJavaComponent.class, AccumulatorComponent.class));
         
         // We need to use DefaultJavaComponent for the echo comonent because some tests invoke EchoComponent with method name and therefore we need an entry point resolver
         registerBeanDefinitionParser("echo-component", new SimpleComponentDefinitionParser(DefaultJavaComponent.class, EchoComponent.class));

@@ -18,8 +18,12 @@
                      promptMessage="How much more change do you need? (enter an amount such as 2.37)"
                      messageDelayTime="1000"/>
 
-	<string-to-number-transformer name="StringToNumber"/>
-	<math-transformer name="DollarsToCents" operation="multiply" factor="100"/>
+	<custom-transformer name="StringToNumber" class="org.mule.example.scripting.StringToNumber"/>
+
+	<custom-transformer name="DollarsToCents" class="org.mule.example.scripting.SimpleMathTransformer">
+        <spring:property name="operation" value="multiply"/>
+        <spring:property name="factor" value="100"/>
+    </custom-transformer>
                 	
     <model name="main">
         <service name="Accumulator">
@@ -28,7 +32,9 @@
                 <!-- For unit testing -->
                 <inbound-endpoint address="vm://input" transformer-refs="DollarsToCents"/>
             </inbound>
-            <accumulator-component/>
+            <component>
+                <singleton-object class="org.mule.example.scripting.AccumulatorComponent"/>
+            </component>
             <outbound>
                 <chaining-router>
                     <outbound-endpoint address="vm://script"/>
