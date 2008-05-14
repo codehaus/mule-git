@@ -122,7 +122,7 @@ public class VMMessageDispatcher extends AbstractMessageDispatcher
         {
             public Object doInTransaction() throws Exception
             {
-                return receiver.onCall(event.getMessage(), event.isSynchronous());
+                return receiver.onCall(event.getMessage(), true);
             }
         };
         retMessage = (MuleMessage) tt.execute(cb);
