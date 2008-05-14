@@ -39,7 +39,8 @@
         <xsd:complexContent>
             <xsd:extension base="mule:abstractComponentType">
             	<xsd:sequence>
-				    <xsd:element name="script" type="scriptType" minOccurs="0"/>
+                    <xsd:element name="script" type="scriptType" minOccurs="0"/>
+                    <xsd:group ref="mule:propertiesGroup"/>
             	</xsd:sequence>
                 <xsd:attribute name="script-ref" type="xsd:NMTOKEN"/>
             </xsd:extension>

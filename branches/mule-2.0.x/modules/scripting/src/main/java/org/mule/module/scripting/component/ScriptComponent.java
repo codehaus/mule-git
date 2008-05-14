@@ -19,6 +19,11 @@ import org.mule.component.AbstractComponent;
 import org.mule.config.i18n.MessageFactory;
 import org.mule.util.MuleLogger;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Properties;
+
 import javax.script.Bindings;
 
 /**
@@ -29,6 +34,7 @@ public class ScriptComponent extends AbstractComponent
 {
     private Scriptable script;
     private Bindings bindings;
+    private Properties properties;
 
     public void initialise() throws InitialisationException
     {
@@ -40,6 +46,10 @@ public class ScriptComponent extends AbstractComponent
         else
         {
             throw new InitialisationException(MessageFactory.createStaticMessage("Script has not been initialized"), this);
+        }
+        if (properties != null)
+        {
+            bindings.putAll((Map) properties);
         }
     }
 
@@ -57,7 +67,9 @@ public class ScriptComponent extends AbstractComponent
 
     protected void populateBindings(Bindings namespace, MuleEvent event)
     {
-        namespace.put("muleContext", event.getMuleContext());
+        // Set the most important script variables: 
+        //   "message" = incoming message
+        //   "result" = outgoing result
         try
         {
             namespace.put("message", event.transformMessage());
@@ -66,10 +78,21 @@ public class ScriptComponent extends AbstractComponent
         {
             logger.warn(e);
         }
+        namespace.put("result", new Object());
+
+        // Set any message properties as variables for the script.
+        String propertyName;
+        for (Iterator iterator = event.getMessage().getPropertyNames().iterator(); iterator.hasNext();)
+        {
+            propertyName = (String)iterator.next();
+            namespace.put(propertyName, event.getMessage().getProperty(propertyName));
+        }
+
+        // Set a few other misc. variables for the script.
+        namespace.put("muleContext", event.getMuleContext());
         namespace.put("id", event.getId());
         namespace.put("service", event.getService());
         namespace.put("log", new MuleLogger(logger));
-        namespace.put("result", new Object());
     }
 
     public Scriptable getScript()
@@ -80,5 +103,15 @@ public class ScriptComponent extends AbstractComponent
     public void setScript(Scriptable script)
     {
         this.script = script;
+    }
+
+    public Properties getProperties()
+    {
+        return properties;
+    }
+
+    public void setProperties(Properties properties)
+    {
+        this.properties = properties;
     }
 }

@@ -48,6 +48,15 @@ public class GroovyScriptFunctionalTestCase extends FunctionalTestCase
         assertNotNull(response);
         assertEquals("Important Message Received", response.getPayloadAsString());
     }    
+
+    public void testScriptVariables() throws Exception
+    {
+        MuleClient client = new MuleClient();
+        client.send("vm://in4", "Important Message", null);
+        MuleMessage response = client.request("vm://out4", 1000);
+        assertNotNull(response);
+        assertEquals("Important Message Received A-OK", response.getPayloadAsString());
+    }    
 }
 
 
