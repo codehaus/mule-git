@@ -11,12 +11,12 @@
 package org.mule.example.scripting;
 
 
-public class GroovyScriptingExampleTestCase extends AbstractScriptingExampleTestCase
+public class PythonDollarsScriptingExampleTestCase extends AbstractDollarsScriptingExampleTestCase
 {   
     //@Override
     protected String getScriptFile()
     {
-        return "greedy.groovy";
+        return "greedy.py";
     }    
 }
 

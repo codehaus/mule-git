@@ -25,15 +25,15 @@ IF '%Choice%'=='1' SET SCRIPTFILE="greedy.groovy"
 IF '%Choice%'=='2' SET SCRIPTFILE="greedy.py"
 if "%SCRIPTFILE%" == "" goto :run
 
-REM ECHO Welcome to the JSR 223-powered Change Machine.  This machine will give you
-REM ECHO change for the amount you request.  The amount of change is cumulative, so you
-REM ECHO can keep asking for more and more change until you've had enough.
-REM ECHO To get started, select a currency:
-REM ECHO   1. U.S. Dollars
-REM ECHO   2. U.K. Pounds Sterling
-REM SET /P Choice=
-REM IF '%Choice%'=='1' SET CURRENCY="USD"
-REM IF '%Choice%'=='2' SET CURRENCY="GBP"
-REM if "%CURRENCY%" == "" goto :run
+ECHO Welcome to the JSR 223-powered Change Machine.  This machine will give you
+ECHO change for the amount you request.  The amount of change is cumulative, so you
+ECHO can keep asking for more and more change until you've had enough.
+ECHO To get started, select a currency:
+ECHO   1. U.S. Dollars
+ECHO   2. U.K. Pounds Sterling
+SET /P Choice=
+IF '%Choice%'=='1' SET CURRENCY="USD"
+IF '%Choice%'=='2' SET CURRENCY="GBP"
+if "%CURRENCY%" == "" goto :run
 
 call "%MULE_BASE%\bin\mule.bat" -config change-machine.xml -M-Dscriptfile=%SCRIPTFILE% -M-Dcurrency=%CURRENCY%

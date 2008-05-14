@@ -10,8 +10,6 @@
 
 package org.mule.example.scripting;
 
-import org.mule.api.MuleMessage;
-import org.mule.module.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 
 import java.util.Properties;
@@ -26,33 +24,14 @@ public abstract class AbstractScriptingExampleTestCase extends FunctionalTestCas
 
     abstract protected String getScriptFile();
     
+    abstract protected String getCurrency();
+    
     //@Override
     protected Properties getStartUpProperties()
     {
         Properties props = new Properties();
         props.put("scriptfile", getScriptFile());
+        props.put("currency", getCurrency());
         return props;
-    }
-
-    public void testChangeAlgorithm() throws Exception
-    {
-        MuleClient client = new MuleClient();
-        MuleMessage reply = client.send("vm://input", new Double(1.18), null);
-        
-        assertNotNull(reply);
-        assertNotNull(reply.getPayload());
-        assertEquals("[4 quarters, 1 dimes, 1 nickels, 3 pennies]", reply.getPayloadAsString()); 
-    }
-
-    public void testAccumulator() throws Exception
-    {
-        MuleClient client = new MuleClient();
-        client.send("vm://input", new Double(0.09), null);
-        client.send("vm://input", new Double(0.09), null);
-        MuleMessage reply = client.send("vm://input", new Double(1.00), null);
-        
-        assertNotNull(reply);
-        assertNotNull(reply.getPayload());
-        assertEquals("[4 quarters, 1 dimes, 1 nickels, 3 pennies]", reply.getPayloadAsString()); 
     }
 }

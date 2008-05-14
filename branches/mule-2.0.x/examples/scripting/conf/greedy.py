@@ -11,7 +11,7 @@ class Change:
             self.coin_lookup = {25: "quarters", 10: "dimes", 5: "nickels", 1: "pennies"}
         elif currency == "GBP":
             self.coins = [1,2,5,10,20,50,100,200]
-            self.coin_lookup = {200: "two_pounds", 100: "one_pound", 50: "fifty_pence", 20: "twenty_pence", 10: "ten_pence", 5: "five_pence", 2: "two_pence", 1: "one_penny"}
+            self.coin_lookup = {200: "two_pounds", 100: "pounds", 50: "fifty_pence", 20: "twenty_pence", 10: "ten_pence", 5: "five_pence", 2: "two_pence", 1: "pennies"}
         #else:
         #	print "Currency $currency not recognized"
         #	exit 1
@@ -33,6 +33,6 @@ class Change:
         self.printer(num,coin)
         return self.recursive_change(new_rem) + [num]
 
-c = Change("USD", message)
+c = Change(currency, message)
 c.recursive_change(c.amount)
 result = "[" + c.result + "]"

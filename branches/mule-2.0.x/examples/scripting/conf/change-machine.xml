@@ -49,6 +49,7 @@
             </inbound>
             <script:component>
                 <script:script file="${scriptfile}"/>
+                <property key="currency" value="${currency}"/>
             </script:component>
         </service>
     </model>

@@ -8,7 +8,7 @@ enum USD {
 }
 
 enum GBP {
-    two_pounds (200), one_pound (100), fifty_pence(50), twenty_pence(20), ten_pence(10), five_pence(5), two_pence(2), one_penny(1)
+    two_pounds (200), pounds (100), fifty_pence(50), twenty_pence(20), ten_pence(10), five_pence(5), two_pence(2), pennies(1)
     GBP(v) { value = v }
     final value
 }
@@ -21,5 +21,6 @@ def change(currency, amount) {
   }
 }
 
-return change(USD, message)
-
+if (currency == "USD") return change(USD, message)
+else if (currency == "GBP") return change(GBP, message)
+// else throw exception?
