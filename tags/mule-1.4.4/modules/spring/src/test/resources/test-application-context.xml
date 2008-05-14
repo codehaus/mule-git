@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+    <bean id="fruitBowl" class="org.mule.tck.testmodels.fruit.FruitBowl">
+        <property name="fruit">
+            <list>
+                <ref local="apple"/>
+                <ref local="banana"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="string" class="java.lang.String" />
+
+    <bean id="apple" class="org.mule.tck.testmodels.fruit.Apple" />
+
+    <bean id="banana" class="org.mule.tck.testmodels.fruit.Banana" />
+
+    <bean id="orange" class="org.mule.tck.testmodels.fruit.Orange" />
+</beans>

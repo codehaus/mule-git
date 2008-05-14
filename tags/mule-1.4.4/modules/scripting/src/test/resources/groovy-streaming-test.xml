@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mule-configuration PUBLIC "-//MuleSource //DTD mule-configuration XML V1.0//EN"
+                                "http://mule.mulesource.org/dtds/mule-configuration.dtd">
+<mule-configuration id="groovy_streaming_test" version="1.0">
+
+    <mule-environment-properties serverUrl="" synchronous="false" />
+
+    <connector name="default" className="org.mule.providers.tcp.TcpConnector">
+        <properties>
+            <property name="validateConnections" value="false" />
+        </properties>
+    </connector>
+
+    <model name="streaming-model" type="streaming">
+        <mule-descriptor name="groovyStreamer" implementation="org.mule.components.script.jsr223.StreamingScriptComponent">
+            <inbound-router>
+                <endpoint address="tcp://localhost:65432" streaming="true" />
+            </inbound-router>
+            <outbound-router>
+                <router className="org.mule.routing.outbound.OutboundPassThroughRouter">
+                    <endpoint address="tcp://localhost:65433" streaming="true" />
+                </router>
+            </outbound-router>
+            <properties>
+                <text-property name="scriptText"><![CDATA[
+                    def wtr= new OutputStreamWriter(outputStream)
+                    def rdr= new InputStreamReader(inputStream)
+                    wtr<< 'Hello '
+                    wtr<< rdr.readLine()
+                    rdr.close()
+                    wtr.close()
+                    // eventContext.setStopFurtherProcessing(true)
+            ]]></text-property>
+                <property name="scriptEngineName" value="groovy" />
+            </properties>
+        </mule-descriptor>
+
+        <mule-descriptor name="testComponent" singleton="true" implementation="org.mule.tck.functional.FunctionalStreamingTestComponent">
+            <inbound-router>
+                <endpoint address="tcp://localhost:65433" streaming="true" />
+            </inbound-router>
+        </mule-descriptor>
+    </model>
+</mule-configuration>

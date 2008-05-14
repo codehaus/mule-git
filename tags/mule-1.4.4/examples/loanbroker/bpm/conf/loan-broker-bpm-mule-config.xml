@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mule-configuration PUBLIC "-//MuleSource //DTD mule-configuration XML V1.0//EN"
+                                "http://mule.mulesource.org/dtds/mule-spring-configuration.dtd">
+
+<mule-configuration id="Mule_Loan_broker_BPM" version="1.0">
+
+    <description>
+    Loan Broker example which uses a BPMS (a.k.a. Process Engine) for managing process flow and decision making.
+    See http://mule.mulesource.org/wiki/display/MULE/LoanBroker+BPM for details.
+    </description>
+
+    <mule-environment-properties serverUrl=""/>
+    
+    <connector name="jBpmConnector" className="org.mule.providers.bpm.ProcessConnector">
+        <properties>
+            <!-- This field in LoanQuoteRequest holds the unique process ID. -->
+            <property name="processIdField" value="requestId" />
+            <!-- jBpm itself is configured by a series of Spring beans at the end of
+                 this file. -->
+            <spring-property name="bpms"><ref local="jbpm" /></spring-property>
+        </properties>
+    </connector>
+
+    <connector name="syncVm" className="org.mule.providers.vm.VMConnector" />
+    
+    <connector name="asyncVm" className="org.mule.providers.vm.VMConnector">
+        <properties>
+            <!-- Queue up events for asynchronous communication. -->
+            <property name="queueEvents" value="true"/>
+        </properties>
+    </connector>
+    
+    <!-- We could use JMS instead of VM to make the example more realistic.
+    <connector name="jmsConnector" className="org.mule.providers.jms.JmsConnector">
+        <properties>
+            <property name="connectionFactoryJndiName" value="ConnectionFactory"/>
+            <property name="jndiInitialFactory" value="org.activemq.jndi.ActiveMQInitialContextFactory"/>
+            <property name="specification" value="1.1"/>
+            <map name="connectionFactoryProperties">
+                <property name="useEmbeddedBroker" value="true"/>
+            </map>
+        </properties>
+    </connector>
+    -->
+
+    <global-endpoints>
+        <!-- The Loan Broker is driven by a Process Engine -->
+        <endpoint name="ProcessEngine" address="bpm://LoanBroker"/>
+
+        <!-- Customer loan requests to the Loan Broker -->
+        <endpoint name="CustomerRequests" address="vm://customer.requests" connector="syncVm"/>
+        <!-- Requests to the credit agency -->
+        <endpoint name="CreditAgency" address="vm://credit.agency" connector="syncVm"/>
+        <!-- Customer credit profiles from the credit agency -->
+        <endpoint name="CreditProfiles" address="vm://credit.profiles" connector="syncVm"/>
+        <!-- Final loan quote to the customer -->
+        <endpoint name="CustomerResponses" address="vm://customer.responses" connector="asyncVm"/>
+
+        <!-- Bigger banks handle bigger loans.  -->
+        <endpoint name="BigBank" address="vm://big.bank" connector="syncVm"/>
+        <endpoint name="MediumBank" address="vm://medium.bank" connector="syncVm"/>
+        <endpoint name="SmallBank" address="vm://small.bank" connector="syncVm"/>
+    </global-endpoints>
+    
+    <model name="loan-broker">
+        <!-- ***************************************************
+             Process Engine
+             *************************************************** -->
+
+        <!-- Messages sent to the process engine -->
+        <mule-descriptor name="ToBPMS" implementation="org.mule.examples.loanbroker.DefaultLoanBroker">
+            <inbound-router>
+                <!-- Incoming message = CustomerRequest -->
+                <global-endpoint name="CustomerRequests"/>
+                <!-- Incoming message = CreditProfile -->
+                <global-endpoint name="CreditProfiles"/>
+            </inbound-router>
+            <outbound-router>
+                <router className="org.mule.routing.outbound.FilteringOutboundRouter">
+                    <global-endpoint name="ProcessEngine" synchronous="false" />
+                </router>
+            </outbound-router>
+        </mule-descriptor>
+
+        <!-- Messages generated from the process engine -->
+        <mule-descriptor name="FromBPMS" implementation="org.mule.examples.loanbroker.DefaultLoanBroker">
+            <inbound-router>
+                <global-endpoint name="ProcessEngine" />
+            </inbound-router>
+            <outbound-router>
+                <router className="org.mule.routing.outbound.EndpointSelector">
+                    <!-- Outgoing message = Customer -->
+                    <global-endpoint name="CreditAgency"/>
+
+                    <!-- Outgoing message = LoanQuote -->
+                    <global-endpoint name="CustomerResponses"/>
+
+                    <!-- Outgoing message = LoanQuoteRequest -->
+                    <global-endpoint name="BigBank" synchronous="true">
+                        <properties><property name="method" value="getLoanQuote"/></properties>
+                    </global-endpoint>
+                    <global-endpoint name="MediumBank" synchronous="true">
+                        <properties><property name="method" value="getLoanQuote"/></properties>
+                    </global-endpoint>
+                    <global-endpoint name="SmallBank" synchronous="true">
+                        <properties><property name="method" value="getLoanQuote"/></properties>
+                    </global-endpoint>
+                </router>
+            </outbound-router>
+        </mule-descriptor>
+
+        <!-- ***************************************************
+             Services
+             *************************************************** -->
+        <!-- The credit agency service will get the credit profile for a customer -->
+        <mule-descriptor name="ACreditAgency"
+            implementation="org.mule.examples.loanbroker.credit.DefaultCreditAgency">
+            <inbound-router>
+                <global-endpoint name="CreditAgency" />
+            </inbound-router>
+            <outbound-router>
+                <router className="org.mule.routing.outbound.FilteringOutboundRouter">
+                    <global-endpoint name="CreditProfiles" />
+                </router>
+            </outbound-router>
+        </mule-descriptor>
+
+        <!-- These are mock bank services that represent remote bank loan services -->
+        <mule-descriptor name="ABigBank" implementation="org.mule.examples.loanbroker.bank.Bank">
+            <inbound-router>
+                <global-endpoint name="BigBank" />
+            </inbound-router>
+        </mule-descriptor>
+        <mule-descriptor name="AMediumBank" implementation="org.mule.examples.loanbroker.bank.Bank">
+            <inbound-router>
+                <global-endpoint name="MediumBank" />
+            </inbound-router>
+        </mule-descriptor>
+        <mule-descriptor name="ASmallBank" implementation="org.mule.examples.loanbroker.bank.Bank">
+            <inbound-router>
+                <global-endpoint name="SmallBank" />
+            </inbound-router>
+        </mule-descriptor>
+    </model>
+
+    <!-- ***************************************************
+         BPMS Configuration
+         *************************************************** -->
+    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+	    <spring-property name="location">
+            <value>classpath:derby.properties</value>
+        </spring-property>
+    </bean>
+    <!-- BPMS object for Mule's BPM Connector -->
+    <bean id="jbpm" class="org.mule.providers.bpm.jbpm.Jbpm" destroy-method="destroy">
+        <spring-property name="jbpmConfiguration">
+            <ref local="jbpmConfig" />
+        </spring-property>
+    </bean>
+
+    <!-- jBPM Configuration -->
+    <bean id="jbpmConfig" class="org.springmodules.workflow.jbpm31.LocalJbpmConfigurationFactoryBeanWorkaround">
+        <spring-property name="sessionFactory">
+            <ref local="jbpmSessionFactory"/>
+        </spring-property>
+        <spring-property name="configuration">
+            <value>jbpm.cfg.xml</value>
+        </spring-property>
+        <spring-property name="processDefinitions">
+            <spring-list>
+                <bean id="loanBroker" class="org.springmodules.workflow.jbpm31.definition.ProcessDefinitionFactoryBean">
+                    <spring-property name="definitionLocation">
+                        <value>loan-broker-process.xml</value>
+                    </spring-property>
+                </bean>
+            </spring-list>
+        </spring-property>
+        <spring-property name="createSchema"><value>false</value></spring-property>
+    </bean>
+
+    <!-- JBPM Hibernate SessionFactory -->
+    <bean id="jbpmSessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+        <spring-property name="dataSource">
+            <ref local="jbpmDataSource" />
+        </spring-property>
+        <spring-property name="mappingLocations">
+            <value>classpath*:/org/jbpm/**/*.hbm.xml</value>
+        </spring-property>
+        <spring-property name="typeDefinitions">
+            <ref local="jbpmTypes" />
+        </spring-property>
+        <spring-property name="hibernateProperties">
+            <props>
+                <!-- These properties may depend on your database -->
+                <prop key="hibernate.dialect">org.hibernate.dialect.DerbyDialect</prop>
+                <prop key="hibernate.query.substitutions">true 1, false 0</prop>
+                <prop key="hibernate.jdbc.batch_size">0</prop>
+                <!-- Create/update the database tables automatically when the JVM starts up -->
+                <prop key="hibernate.hbm2ddl.auto">update</prop>
+                <!-- EhCache is no longer the default cache provider as of Hibernate 3.2 
+                  Refer to http://www.hibernate.org/hib_docs/v3/reference/en/html/performance.html
+                  for Hibernate's different cache providers. -->
+                <prop key="hibernate.cache.provider_class">org.hibernate.cache.HashtableCacheProvider</prop>
+                <!-- C3P0 (connection pooling) properties -->
+                <prop key="hibernate.c3p0.min_size">1</prop>
+                <prop key="hibernate.c3p0.max_size">3</prop>
+                <!-- Write SQL statements to log -->
+                <prop key="hibernate.show_sql">false</prop>
+            </props>
+        </spring-property>
+    </bean>
+
+    <!-- JBPM Datasource -->
+    <bean id="jbpmDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <spring-property name="driverClassName"><value>org.apache.derby.jdbc.EmbeddedDriver</value></spring-property>
+        <spring-property name="url"><value>${database.connection}</value></spring-property>
+        <!--spring-property name="username"><value>sa</value></spring-property>
+        <spring-property name="password"><value></value></spring-property-->
+    </bean>
+
+    <!-- JBPM data types -->
+    <bean id="jbpmTypes" class="org.springframework.orm.hibernate3.TypeDefinitionBean">
+        <spring-property name="typeName"><value>string_max</value></spring-property>
+        <spring-property name="typeClass"><value>org.jbpm.db.hibernate.StringMax</value></spring-property>
+    </bean>
+</mule-configuration>
