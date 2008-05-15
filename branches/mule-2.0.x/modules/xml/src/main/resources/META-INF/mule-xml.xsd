@@ -95,7 +95,8 @@
         <xsd:annotation>
             <xsd:documentation>A transformer used to perform XSLT transforms on the current message payload. Transform
                 objects are pooled for better performance. Transform context properties can be set on the transformer,
-                these can be pulled from the current message youing Expression evaluators (see documentation).
+                these can be pulled from the current message using Expression Evaluators. This works in a very similar
+                way to the [XQuery Transformer|EXTENDEDXML:XQuery] on [MuleForge|http://muleforge.org].
             </xsd:documentation>
         </xsd:annotation>
     </xsd:element>
