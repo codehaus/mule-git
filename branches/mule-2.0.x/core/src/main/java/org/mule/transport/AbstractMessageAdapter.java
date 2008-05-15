@@ -10,9 +10,7 @@
 
 package org.mule.transport;
 
-import org.mule.MuleServer;
 import org.mule.api.ExceptionPayload;
-import org.mule.api.MuleContext;
 import org.mule.api.MuleRuntimeException;
 import org.mule.api.ThreadSafeAccess;
 import org.mule.api.config.MuleProperties;
@@ -128,6 +126,7 @@ public abstract class AbstractMessageAdapter implements MessageAdapter, ThreadSa
         }
     }
 
+    //@Override
     public String toString()
     {
         assertAccess(READ);
@@ -501,8 +500,7 @@ public abstract class AbstractMessageAdapter implements MessageAdapter, ThreadSa
     /** {@inheritDoc} */
     public void assertAccess(boolean write)
     {
-        MuleContext context = MuleServer.getMuleContext();
-        if (context !=null && context.getConfiguration().isAssertMessageAccess())
+        if (AccessControl.isAssertMessageAccess())
         {
             initAccessControl();
             setOwner();
@@ -586,7 +584,7 @@ public abstract class AbstractMessageAdapter implements MessageAdapter, ThreadSa
 
     protected boolean isDisabled()
     {
-        return !MuleServer.getMuleContext().getConfiguration().isFailOnMessageScribbling();
+        return !AccessControl.isFailOnMessageScribbling();
     }
 
     private synchronized void initAccessControl()
