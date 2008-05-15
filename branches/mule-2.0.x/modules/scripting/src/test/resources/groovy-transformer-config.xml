@@ -14,7 +14,7 @@
 	
     <script:transformer name="stringReplace">
 	    <script:script engine="groovy">
-	        return src.toString().replace("l", "x")
+	        return src.toString().replaceAll("l", "x")
 	    </script:script>
     </script:transformer>
     
@@ -29,7 +29,7 @@
             		<outbound-endpoint address="vm://out1">
 					    <script:transformer>
 						    <script:script engine="groovy">
-						        return src.toString().replace("l", "x")
+						        return src.toString().replaceAll("l", "x")
 						    </script:script>
 					    </script:transformer>    
             		</outbound-endpoint>

@@ -1,1 +1,1 @@
-return src.toString().replace("l", "x")
+return src.toString().replaceAll("l", "x")
