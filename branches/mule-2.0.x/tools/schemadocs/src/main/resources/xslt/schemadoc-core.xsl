@@ -250,14 +250,14 @@
                     <xsl:when test="@minOccurs"><xsl:value-of select="@minOccurs"/></xsl:when>
                     <xsl:otherwise><xsl:text>1</xsl:text></xsl:otherwise>
                 </xsl:choose>
-`           </xsl:variable>
+           </xsl:variable>
             <xsl:variable name="max">
                 <xsl:choose>
                     <xsl:when test="@maxOccurs='unbounded'"><xsl:text>*</xsl:text></xsl:when>
                     <xsl:when test="@maxOccurs"><xsl:value-of select="@maxOccurs"/></xsl:when>
                     <xsl:otherwise><xsl:text>1</xsl:text></xsl:otherwise>
                 </xsl:choose>
-`           </xsl:variable>
+           </xsl:variable>
             <td class="confluenceTd">
                 <xsl:value-of select="$min"/>..<xsl:value-of select="$max"/>
             </td>
@@ -353,14 +353,14 @@
                     <xsl:when test="@minOccurs"><xsl:value-of select="@minOccurs"/></xsl:when>
                     <xsl:otherwise>1</xsl:otherwise>
                 </xsl:choose>
-`           </xsl:variable>
+            </xsl:variable>
             <xsl:variable name="max">
                 <xsl:choose>
                     <xsl:when test="@maxOccurs='unbounded'">*</xsl:when>
                     <xsl:when test="@maxOccurs"><xsl:value-of select="@maxOccurs"/></xsl:when>
                     <xsl:otherwise>1</xsl:otherwise>
                 </xsl:choose>
-`           </xsl:variable>
+           </xsl:variable>
             <td class="confluenceTd">
                 <xsl:value-of select="$min"/>..<xsl:value-of select="$max"/>
             </td>
