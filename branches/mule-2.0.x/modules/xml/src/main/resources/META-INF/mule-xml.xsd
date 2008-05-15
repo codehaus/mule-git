@@ -96,7 +96,9 @@
             <xsd:documentation>A transformer used to perform XSLT transforms on the current message payload. Transform
                 objects are pooled for better performance. Transform context properties can be set on the transformer,
                 these can be pulled from the current message using Expression Evaluators. This works in a very similar
-                way to the <a href="http://mule.mulesource.org/display/EXTENDEDXML/XQuery">XQuery Transformer</a> on <a href="http://muleforge.org">MuleForge</a>.
+                way to the
+                <a href="http://mule.mulesource.org/display/EXTENDEDXML/XQuery" target="_blank">XQuery Transformer</a>
+                on<a href="http://muleforge.org" target="_blank">MuleForge</a>.
             </xsd:documentation>
         </xsd:annotation>
     </xsd:element>
@@ -137,7 +139,8 @@
                 <xsd:attribute name="xsl-file" type="xsd:string">
                     <xsd:annotation>
                         <xsd:documentation>The full path to the XSL template file to use when performing the transform.
-                            This can be a path on the local file system or on the classpath.
+                            This can be a path on the local file system or on the classpath. This attribute is not
+                            required if the &lt;xslt-text&gt; element has been set.
                         </xsd:documentation>
                     </xsd:annotation>
                 </xsd:attribute>
