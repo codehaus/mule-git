@@ -48,6 +48,34 @@
         </xsd:complexContent>
     </xsd:complexType>
 
+    <xsd:element name="round-robin-splitter" type="roundRobinSplitterType" substitutionGroup="mule:abstract-outbound-router"/>
+    <xsd:complexType name="roundRobinSplitterType">
+        <xsd:complexContent>
+            <xsd:extension base="messageSplitterType">
+                <xsd:attribute name="endpointFiltering" type="mule:substitutableBoolean">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                            If true then the message part is sent to the first endpoint whose
+                            filter accepts the part.  The default is false.
+                        </xsd:documentation>
+                    </xsd:annotation>
+                </xsd:attribute>
+                <xsd:attribute name="deterministic" type="mule:substitutableBoolean">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                            If endpointFiltering is false and this option is true (the default)
+                            then the first message part if routed to the first endpoint, the
+                            second part to the second endpoint, etc, with the nth part going to
+                            the (n modulo number of endpoints) endpoint.
+                            If false then the messages will be distributed equally amongst all
+                            endpoints.
+                        </xsd:documentation>
+                    </xsd:annotation>
+                </xsd:attribute>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
     <!-- xml transformers -->
     <!-- these just appear at the top level, there's no extended group -->
 
