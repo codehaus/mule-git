@@ -98,7 +98,7 @@
                 these can be pulled from the current message using Expression Evaluators. This works in a very similar
                 way to the
                 <a href="http://mule.mulesource.org/display/EXTENDEDXML/XQuery" target="_blank">XQuery Transformer</a>
-                on<a href="http://muleforge.org" target="_blank">MuleForge</a>.
+                on <a href="http://muleforge.org" target="_blank">MuleForge</a>.
             </xsd:documentation>
         </xsd:annotation>
     </xsd:element>
@@ -146,16 +146,16 @@
                 </xsd:attribute>
                 <xsd:attribute name="uriResolver" type="xsd:NMTOKEN">
                     <xsd:annotation>
-                        <xsd:documentation>The URI resolver to use when validating the XSL output. IF not set a default
+                        <xsd:documentation>The URI resolver to use when validating the XSL output. If not set a default
                             one will be used that checks for resources on the local file system and classpath.
                         </xsd:documentation>
                     </xsd:annotation>
                 </xsd:attribute>
                 <xsd:attribute name="transformerFactoryClass" type="xsd:NMTOKEN">
                     <xsd:annotation>
-                        <xsd:documentation>he fully qualified class name of the {{javax.xml.TransformerFactory}}
+                        <xsd:documentation>he fully qualified class name of the <i>javax.xml.TransformerFactory</i>
                             instance to use. If not specified the default JDK factory
-                            {{TransformerFactory.newInstance()}} will be used.
+                            <i>TransformerFactory.newInstance()</i> will be used.
                         </xsd:documentation>
                     </xsd:annotation>
                 </xsd:attribute>
