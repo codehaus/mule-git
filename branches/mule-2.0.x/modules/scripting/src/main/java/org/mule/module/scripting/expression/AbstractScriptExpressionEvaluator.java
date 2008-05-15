@@ -9,10 +9,10 @@
  */
 package org.mule.module.scripting.expression;
 
+import org.mule.api.MuleMessage;
 import org.mule.api.MuleRuntimeException;
 import org.mule.api.lifecycle.Disposable;
 import org.mule.api.lifecycle.InitialisationException;
-import org.mule.api.transport.MessageAdapter;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.module.scripting.component.Scriptable;
 import org.mule.util.expression.ExpressionEvaluator;
@@ -20,7 +20,6 @@ import org.mule.util.expression.ExpressionEvaluator;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-import javax.script.Bindings;
 import javax.script.ScriptException;
 
 /**
@@ -43,29 +42,22 @@ public abstract class AbstractScriptExpressionEvaluator implements ExpressionEva
     public Object evaluate(String expression, Object message)
     {
         Scriptable script = getScript(expression);
-        Bindings bindings = script.getScriptEngine().createBindings();
-        populateBindings(bindings, message);
+        if (message instanceof MuleMessage)
+        {
+            script.populateBindings((MuleMessage) message);
+        }
+        else 
+        {
+            script.populateBindings(message);
+        }
 
         try
         {
-            return script.runScript(bindings);
+            return script.runScript();
         }
         catch (ScriptException e)
         {
             return null;
-        }
-    }
-
-    protected void populateBindings(Bindings namespace, Object message)
-    {
-        if(message instanceof MessageAdapter)
-        {
-            namespace.put("message", message);
-            namespace.put("payload", ((MessageAdapter)message).getPayload());
-        }
-        else
-        {
-            namespace.put("payload", message);
         }
     }
 

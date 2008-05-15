@@ -48,4 +48,13 @@ public class GroovyScriptTransformerFunctionalTestCase extends FunctionalTestCas
         assertNotNull(response);
         assertEquals("hexxo", response.getPayload());
     }
+
+    public void testReferencedTransformerWithParameters() throws Exception
+    {
+        MuleClient client = new MuleClient();
+        client.send("vm://in4", "hello", null);
+        MuleMessage response = client.request("vm://out4", 1000);
+        assertNotNull(response);
+        assertEquals("hexxo", response.getPayload());
+    }
 }

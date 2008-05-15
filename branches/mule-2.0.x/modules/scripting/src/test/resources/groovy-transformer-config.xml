@@ -18,6 +18,16 @@
 	    </script:script>
     </script:transformer>
     
+    <script:transformer name="stringReplaceWithParams">
+        <script:script engine="groovy">
+            <property key="oldStr" value="l"/>
+            <property key="newStr" value="x"/>
+            <script:text>
+	           return src.toString().replace("$oldStr", "$newStr")
+            </script:text>
+        </script:script>
+    </script:transformer>
+    
     <model>
         <service name="inlineScript">
             <inbound>
@@ -62,6 +72,18 @@
             	<outbound-pass-through-router>
             		<outbound-endpoint address="vm://out3" transformer-refs="stringReplace" />
             	</outbound-pass-through-router>
+            </outbound>
+        </service>
+
+        <service name="referencedTransformerWithParameters">
+            <inbound>
+                <inbound-endpoint address="vm://in4"/>
+            </inbound>
+            <echo-component/>
+            <outbound>
+                <outbound-pass-through-router>
+            		<outbound-endpoint address="vm://out4" transformer-refs="stringReplaceWithParams" />
+                </outbound-pass-through-router>
             </outbound>
         </service>
     </model>

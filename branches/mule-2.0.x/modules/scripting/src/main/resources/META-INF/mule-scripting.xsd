@@ -21,6 +21,10 @@
     <xsd:complexType name="scriptType">
 	    <xsd:complexContent mixed="true">
 	        <xsd:extension base="mule:abstractExtensionType">
+                <xsd:sequence>
+                    <xsd:group ref="mule:propertiesGroup" minOccurs="0"/>
+                    <xsd:element name="text" type="xsd:string" minOccurs="0"/>
+                </xsd:sequence>
 	            <xsd:attribute name="name" type="xsd:string"/>
                 <xsd:attribute name="engine" type="xsd:string"/>
                 <xsd:attribute name="file" type="xsd:string"/>
@@ -40,7 +44,6 @@
             <xsd:extension base="mule:abstractComponentType">
             	<xsd:sequence>
                     <xsd:element name="script" type="scriptType" minOccurs="0"/>
-                    <xsd:group ref="mule:propertiesGroup"/>
             	</xsd:sequence>
                 <xsd:attribute name="script-ref" type="xsd:NMTOKEN"/>
             </xsd:extension>

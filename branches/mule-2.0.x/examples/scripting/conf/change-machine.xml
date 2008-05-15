@@ -48,8 +48,9 @@
                 <inbound-endpoint address="vm://script"/>
             </inbound>
             <script:component>
-                <script:script file="${scriptfile}"/>
-                <property key="currency" value="${currency}"/>
+                <script:script file="${scriptfile}">
+                    <property key="currency" value="${currency}"/>
+                </script:script>
             </script:component>
         </service>
     </model>

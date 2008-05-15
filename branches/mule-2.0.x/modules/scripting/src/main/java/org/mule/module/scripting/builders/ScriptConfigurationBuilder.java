@@ -70,9 +70,8 @@ public class ScriptConfigurationBuilder extends AbstractResourceConfigurationBui
             ConfigResource configResource = configResources[i];
             scriptComponent.setScriptFile(configResource.getResourceName());
             scriptComponent.initialise();
-            Bindings ns = scriptComponent.getScriptEngine().createBindings();
-            populateBindings(ns);
-            scriptComponent.runScript(ns);
+            scriptComponent.populateBindings();
+            scriptComponent.runScript();
         }
     }
 
