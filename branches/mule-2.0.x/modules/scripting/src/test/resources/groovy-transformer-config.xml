@@ -23,7 +23,7 @@
             <property key="oldStr" value="l"/>
             <property key="newStr" value="x"/>
             <script:text>
-	           return src.toString().replace("$oldStr", "$newStr")
+	           return src.toString().replaceAll("$oldStr", "$newStr")
             </script:text>
         </script:script>
     </script:transformer>
