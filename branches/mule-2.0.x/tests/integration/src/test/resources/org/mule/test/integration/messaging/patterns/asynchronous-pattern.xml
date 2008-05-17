@@ -13,16 +13,12 @@
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 
     <model name="Asynchronous_Message_Pattern">
-
         <service name="AsynchronousService">
             <inbound>
                 <jms:inbound-endpoint queue="test.in" synchronous="false"/>
             </inbound>
-            
             <test:component/>
         </service>
-
     </model>
-
 </mule>
 <!--// END SNIPPET: full-config -->

@@ -13,17 +13,12 @@
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 
     <model name="Request-Response_Message_Pattern">
-
         <service name="SynchronousService">
             <inbound>
                 <http:inbound-endpoint host="localhost" port="8080" path="/mule/services" synchronous="true"/>
             </inbound>
-
             <test:component/>
-            
         </service>
-
     </model>
-
 </mule>
 <!--// END SNIPPET: full-config -->

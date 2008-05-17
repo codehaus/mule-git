@@ -17,7 +17,6 @@
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 
     <model name="Async_Request-Response_Message_Pattern">
-
         <service name="AsyncRequestResponseService">
             <inbound>
                 <http:inbound-endpoint host="localhost" port="8080" path="/mule/services" synchronous="true"/>
@@ -38,8 +37,6 @@
                 </multicasting-router>
             </outbound>
         </service>
-       
     </model>
-
 </mule>
 <!--// END SNIPPET: full-config -->
