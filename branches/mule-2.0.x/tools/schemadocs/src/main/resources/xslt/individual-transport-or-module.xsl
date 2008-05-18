@@ -36,8 +36,7 @@
         @name!='endpoint' and
         @name!='inbound-endpoint' and
         @name!='outbound-endpoint' and
-        starts-with(@name, $prefix) and
-        not(starts-with(@name, $abstract))]" mode="wiki-menu"/>
+        not(starts-with(@name, 'abstract'))]" mode="wiki-menu"/>
                 </ul>
 
                 <xsl:apply-templates select="//xsd:element[@name='connector']" mode="single-element"/>
