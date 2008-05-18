@@ -21,11 +21,10 @@
             Apache CXF is an open source services framework. CXF helps you build and develop services
             using frontend programming APIs, like JAX-WS. These services can speak a variety of protocols such as SOAP,
             XML/HTTP, RESTful HTTP, or CORBA and work over a variety of transports such as HTTP, JMS or JBI.
-
+            <p/>
             The Mule CXF Transport is an evolution of Mule's XFire Transport which provides support for the use of web
-            service integration via Apache CXF.
-
-            The Mule CXF connector also provides support for WS-Security, WS-Addressing and WS-Reliable-Messaging.
+            service integration via Apache CXF. The Mule CXF connector also provides support for WS-Security,
+            WS-Addressing and WS-Reliable-Messaging.
         </xsd:documentation>
     </xsd:annotation>
 
