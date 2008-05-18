@@ -44,10 +44,10 @@
                 <xsl:apply-templates select="//xsd:element[@name='outbound-endpoint']" mode="single-element"/>
                 <xsl:apply-templates select="//xsd:element[@name='endpoint']" mode="single-element"/>
                 <xsl:apply-templates select="//xsd:element[
-        @name!=concat($prefix, 'connector') and
-        @name!=concat($prefix, 'endpoint') and
-        @name!=concat($prefix, 'inbound-endpoint') and
-        @name!=concat($prefix, 'outbound-endpoint') and
+        @name!='connector' and
+        @name!='endpoint' and
+        @name!='inbound-endpoint' and
+        @name!='outbound-endpoint' and
         not(starts-with(@name, 'abstract'))]" mode="single-element"/>
         <xsl:text>
 
