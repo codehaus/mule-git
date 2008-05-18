@@ -25,7 +25,11 @@
     <xsl:template match="/">
         <html>
             <body>
-                <h2>Detailed Configuration Information</h2>
+
+                <xsl:template match="/xsd:schema/xsd:annotation/xsd:documentation">
+                    <xsl:value-of select="."/>
+                </xsl:template>
+               <!-- <h2>Detailed Configuration Information</h2>
                 <ul>
                     <xsl:apply-templates select="//xsd:element[@name='connector']" mode="wiki-menu"/>
                     <xsl:apply-templates select="//xsd:element[@name='inbound-endpoint']" mode="wiki-menu"/>
@@ -38,17 +42,17 @@
         @name!='outbound-endpoint' and
         not(starts-with(@name, 'abstract'))]" mode="wiki-menu"/>
                 </ul>
-
+       -->
                 <xsl:apply-templates select="//xsd:element[@name='connector']" mode="single-element"/>
                 <xsl:apply-templates select="//xsd:element[@name='inbound-endpoint']" mode="single-element"/>
                 <xsl:apply-templates select="//xsd:element[@name='outbound-endpoint']" mode="single-element"/>
                 <xsl:apply-templates select="//xsd:element[@name='endpoint']" mode="single-element"/>
-                <xsl:apply-templates select="//xsd:element[
+                <!--<xsl:apply-templates select="//xsd:element[
         @name!='connector' and
         @name!='endpoint' and
         @name!='inbound-endpoint' and
         @name!='outbound-endpoint' and
-        not(starts-with(@name, 'abstract'))]" mode="single-element"/>
+        not(starts-with(@name, 'abstract'))]" mode="single-element"/>-->
         <xsl:text>
 
 </xsl:text>
