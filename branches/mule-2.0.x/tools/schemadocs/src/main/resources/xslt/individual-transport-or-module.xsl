@@ -25,9 +25,8 @@
     <xsl:template match="/">
         <html>
             <body>
-
-                <xsl:template match="/xsd:schema/xsd:annotation/xsd:documentation">
-                    <xsl:value-of select="."/>
+                <xsl:template match="/xsd:schema/xsd:annotation">
+                    <xsl:value-of select="/xsd:documentation"/>
                 </xsl:template>
                <!-- <h2>Detailed Configuration Information</h2>
                 <ul>
