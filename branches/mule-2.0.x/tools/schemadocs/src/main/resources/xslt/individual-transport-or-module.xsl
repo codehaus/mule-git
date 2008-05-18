@@ -25,11 +25,9 @@
     <xsl:template match="/">
         <html>
             <body>
+                <p>
                 <xsl:apply-templates select="/xsd:schema" mode="documentation"/>
-
-                <!--<xsl:template match="/xsd:schema/xsd:annotation">-->
-                    <!--<xsl:value-of select="xsd:documentation"/>-->
-                <!--</xsl:template>-->
+                </p>
                <!-- <h2>Detailed Configuration Information</h2>
                 <ul>
                     <xsl:apply-templates select="//xsd:element[@name='connector']" mode="wiki-menu"/>
