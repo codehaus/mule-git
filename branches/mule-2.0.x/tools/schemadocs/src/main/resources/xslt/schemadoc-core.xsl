@@ -33,11 +33,9 @@
 
             <xsl:variable name="t" select="translate(@name, '-', ' ')"/>
             <xsl:variable name="t" select="concat( translate( substring( $t, 1, 1 ),'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' ), substring( $t, 2, string-length( $t )))"/>
-            {anchor:<xsl:value-of select="$t"/>}
-            <h2><xsl:value-of select="$t"/>
-                <!--<xsl:value-of select="concat( translate( substring( $t, 1, 1 ),'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' ), substring( $t, 2, string-length( $t )))"/>-->
 
-            </h2>
+            <h2><a name="$t"></a><xsl:value-of select="$t"/></h2>
+                <!--<xsl:value-of select="concat( translate( substring( $t, 1, 1 ),'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' ), substring( $t, 2, string-length( $t )))"/>-->
 
         <!--</a>-->
 
