@@ -106,13 +106,18 @@
         </xsd:complexContent>
     </xsd:complexType>
 
-    <xsd:element name="endpoint" type="globalEndpointType" substitutionGroup="mule:abstract-global-endpoint"/>
+    <xsd:element name="endpoint" type="globalEndpointType" substitutionGroup="mule:abstract-global-endpoint">
+        <xsd:annotation>
+            <xsd:documentation>A global endpoint that can be used a 'template' to create inbound and outbound Quartz
+                endpoints. Common configuration can be set on a global endpoint and then referenced using the @ref
+                attribute on the local endpoint. Not that since Jobs sometime will only work on inbound or outbound
+                endpoints they have to be set on the local endpoint.
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
     <xsd:complexType name="globalEndpointType">
         <xsd:complexContent>
             <xsd:extension base="mule:globalEndpointType">
-                <xsd:sequence>
-                    <xsd:element ref="abstract-job" minOccurs="1" maxOccurs="1"/>
-                </xsd:sequence>
                 <xsd:attributeGroup ref="addressAttributes"/>
             </xsd:extension>
 
@@ -137,7 +142,9 @@
 
     <xsd:element name="event-generator-job" type="eventGenerateJobType" substitutionGroup="abstract-job">
         <xsd:annotation>
-            <xsd:documentation>An inbound job that will trigger a new event according to the schedule on the endpoint.
+            <xsd:documentation>An inbound endpoint job that will trigger a new event for the service according to the
+                schedule on the endpoint. This is useful for periodically triggering a service without the need for an
+                external event to occur.
             </xsd:documentation>
         </xsd:annotation>
     </xsd:element>
@@ -330,7 +337,8 @@
         </xsd:attribute>
         <xsd:attribute name="timeout" type="mule:substitutableInt">
             <xsd:annotation>
-                <xsd:documentation>An arbitrary time out value associated with the endpoint that can be used by jobs that
+                <xsd:documentation>An arbitrary time out value associated with the endpoint that can be used by jobs
+                    that
                     block waiting to receive events.
                 </xsd:documentation>
             </xsd:annotation>
