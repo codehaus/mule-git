@@ -26,7 +26,7 @@
         <html>
             <body>
                 <p>
-                <xsl:apply-templates select="/xsd:schema" mode="documentation"/>
+                <xsl:call-template name="topdescription"/>
                 </p>
                <!-- <h2>Detailed Configuration Information</h2>
                 <ul>
@@ -67,6 +67,10 @@
                 </xsl:with-param>
             </xsl:call-template>
         </li>
+    </xsl:template>
+
+    <xsl:template name="topDescription">
+        <xsl:value-of select="/xsd:schema/xsd:annotation/xsd:documentation"/>
     </xsl:template>
 
 </xsl:stylesheet>
