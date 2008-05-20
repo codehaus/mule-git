@@ -2,13 +2,25 @@
         version="2.0"
         xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
         xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+       
         >
 
     <!-- the table of pages for linking -->
     <xsl:key name="item-to-page" match="link" use="item"/>
-    <xsl:variable name="items-to-pages" select="document('http://svn.codehaus.org/mule/branches/mule-2.0.x/tools/schemadocs/src/main/resources/links.xml')/links"/>
+    <xsl:variable name="items-to-pages"
+                  select="document('http://svn.codehaus.org/mule/branches/mule-2.0.x/tools/schemadocs/src/main/resources/links.xml')/links"/>
 
     <xsl:template match="xsd:element" mode="single-element">
+
+        <!-- p>
+            <em>This documentation is automatically generated from the XML schema.
+            We are still extending the documentation and improving the presentation;
+            please bear with us.
+            To add similar documentation to other pages, examine the source of this
+            page and copy the {cache ....} section that contains {xslt ...}.
+            Change the "elementName" parameter to select the element you want displayed.</em>
+        </p -->
+
         <a>
             <!-- define a tag we can link to -->
             <xsl:attribute name="id">
@@ -18,17 +30,27 @@
                     </xsl:with-param>
                 </xsl:call-template>
             </xsl:attribute>
-            <h2>&lt;<xsl:value-of select="@name"/> ...&gt;</h2>
+
+            <xsl:variable name="t" select="translate(@name, '-', ' ')"/>
+            <h2>
+                <xsl:value-of
+                        select="concat( translate( substring( $t, 1, 1 ),'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' ), substring( $t, 2, string-length( $t )))"/>
+                <!--<xsl:call-template name="str:">-->
+                <!--<xsl:with-param name="text" select="translate(@name, '\+-:', ' ')"/>-->
+                <!--<xsl:with-param name="all">true</xsl:with-param>-->
+                <!--</xsl:call-template> foo-->
+                <!--<xsl:value-of select="translate(@name, '\+-:', ' ')"/>-->
+            </h2>
+
         </a>
-        <!-- p>
-            <em>This documentation is automatically generated from the XML schema.
-            We are still extending the documentation and improving the presentation;
-            please bear with us.
-            To add similar documentation to other pages, examine the source of this
-            page and copy the {cache ....} section that contains {xslt ...}.
-            Change the "elementName" parameter to select the element you want displayed.</em>
-        </p -->
+
         <xsl:apply-templates select="." mode="documentation"/>
+
+        <h3>&lt;
+            <xsl:value-of select="@name"/>
+            ...&gt;
+        </h3>
+
         <h3>Attributes</h3>
         <table class="confluenceTable">
             <th class="confluenceTh" style="width:10%">Name</th>
@@ -65,10 +87,11 @@
     <xsl:template match="xsd:element[@ref]" mode="documentation">
         <xsl:if test="xsd:annotation/xsd:documentation/text()|xsd:annotation/xsd:documentation/*">
             <p>
-                <xsl:apply-templates select="xsd:annotation/xsd:documentation/*|xsd:annotation/xsd:documentation/text()" mode="copy"/>
+                <xsl:apply-templates select="xsd:annotation/xsd:documentation/*|xsd:annotation/xsd:documentation/text()"
+                                     mode="copy"/>
                 <xsl:call-template name="attribution">
                     <xsl:with-param name="text">
-                        From reference for element <xsl:value-of select="@ref"/>.
+                        From reference for element<xsl:value-of select="@ref"/>.
                     </xsl:with-param>
                 </xsl:call-template>
             </p>
@@ -81,10 +104,11 @@
     <xsl:template match="xsd:element[@name]" mode="documentation">
         <xsl:if test="xsd:annotation/xsd:documentation/text()|xsd:annotation/xsd:documentation/*">
             <p>
-                <xsl:apply-templates select="xsd:annotation/xsd:documentation/*|xsd:annotation/xsd:documentation/text()" mode="copy"/>
+                <xsl:apply-templates select="xsd:annotation/xsd:documentation/*|xsd:annotation/xsd:documentation/text()"
+                                     mode="copy"/>
                 <xsl:call-template name="attribution">
                     <xsl:with-param name="text">
-                        From declaration of element <xsl:value-of select="@name"/>.
+                        From declaration of element<xsl:value-of select="@name"/>.
                     </xsl:with-param>
                 </xsl:call-template>
             </p>
@@ -105,12 +129,13 @@
     <xsl:template match="xsd:complexType" mode="documentation">
         <xsl:if test="xsd:annotation/xsd:documentation/text()|xsd:annotation/xsd:documentation/*">
             <p>
-                <xsl:apply-templates select="xsd:annotation/xsd:documentation/*|xsd:annotation/xsd:documentation/text()" mode="copy"/>
+                <xsl:apply-templates select="xsd:annotation/xsd:documentation/*|xsd:annotation/xsd:documentation/text()"
+                                     mode="copy"/>
                 <xsl:call-template name="attribution">
                     <xsl:with-param name="text">
                         <xsl:choose>
                             <xsl:when test="@name">
-                                From declaration of type <xsl:value-of select="@name"/>.
+                                From declaration of type<xsl:value-of select="@name"/>.
                             </xsl:when>
                             <xsl:otherwise>
                                 From type declaration.
@@ -140,8 +165,10 @@
                     <xsl:when test="xsd:simpleType/xsd:restriction/xsd:enumeration">
                         <xsl:for-each select="xsd:simpleType/xsd:restriction/xsd:enumeration">
                             <xsl:if test="@value">
-                                <b><xsl:value-of select="@value"/></b>
-                                <xsl:if test="position()!=last()"> / </xsl:if>
+                                <b>
+                                    <xsl:value-of select="@value"/>
+                                </b>
+                                <xsl:if test="position()!=last()">/</xsl:if>
                             </xsl:if>
                         </xsl:for-each>
                     </xsl:when>
@@ -154,12 +181,16 @@
                 </xsl:choose>
             </td>
             <td class="confluenceTd" style="text-align: center">
-                <xsl:if test="@default"><xsl:value-of select="@default"/></xsl:if>
+                <xsl:if test="@default">
+                    <xsl:value-of select="@default"/>
+                </xsl:if>
             </td>
             <td class="confluenceTd">
                 <xsl:if test="xsd:annotation/xsd:documentation/text()|xsd:annotation/xsd:documentation/*">
                     <p>
-                        <xsl:apply-templates select="xsd:annotation/xsd:documentation/*|xsd:annotation/xsd:documentation/text()" mode="copy"/>
+                        <xsl:apply-templates
+                                select="xsd:annotation/xsd:documentation/*|xsd:annotation/xsd:documentation/text()"
+                                mode="copy"/>
                     </p>
                 </xsl:if>
             </td>
@@ -233,7 +264,9 @@
                 <xsl:choose>
                     <xsl:when test="contains(@ref, ':abstract-')">
                         <xsl:variable name="name" select="substring-after(@ref, ':abstract-')"/>
-                        A <xsl:value-of select="$name"/> element
+                        A
+                        <xsl:value-of select="$name"/>
+                        element
                     </xsl:when>
                     <xsl:otherwise>
                         <xsl:call-template name="link">
@@ -247,19 +280,30 @@
             <!-- cardinality i.e. minoccurs/maxoccurs -->
             <xsl:variable name="min">
                 <xsl:choose>
-                    <xsl:when test="@minOccurs"><xsl:value-of select="@minOccurs"/></xsl:when>
-                    <xsl:otherwise><xsl:text>0</xsl:text></xsl:otherwise>
+                    <xsl:when test="@minOccurs">
+                        <xsl:value-of select="@minOccurs"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:text>0</xsl:text>
+                    </xsl:otherwise>
                 </xsl:choose>
-           </xsl:variable>
+            </xsl:variable>
             <xsl:variable name="max">
                 <xsl:choose>
-                    <xsl:when test="@maxOccurs='unbounded'"><xsl:text>*</xsl:text></xsl:when>
-                    <xsl:when test="@maxOccurs"><xsl:value-of select="@maxOccurs"/></xsl:when>
-                    <xsl:otherwise><xsl:text>1</xsl:text></xsl:otherwise>
+                    <xsl:when test="@maxOccurs='unbounded'">
+                        <xsl:text>*</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="@maxOccurs">
+                        <xsl:value-of select="@maxOccurs"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:text>1</xsl:text>
+                    </xsl:otherwise>
                 </xsl:choose>
-           </xsl:variable>
+            </xsl:variable>
             <td class="confluenceTd">
-                <xsl:value-of select="$min"/>..<xsl:value-of select="$max"/>
+                <xsl:value-of select="$min"/>..
+                <xsl:value-of select="$max"/>
             </td>
             <td class="confluenceTd">
                 <!-- include both ref and element doc -->
@@ -290,7 +334,7 @@
                 </xsl:when>
                 <xsl:otherwise>
                     This is an abstract element; another element with a compatible
-                    type must be used in its place.  However, no replacements were
+                    type must be used in its place. However, no replacements were
                     found when generating this documentation.
                 </xsl:otherwise>
             </xsl:choose>
@@ -318,7 +362,8 @@
         <!--element (doc) <xsl:value-of select="@name"/>-->
         <xsl:if test="xsd:annotation/xsd:documentation/text()|xsd:annotation/xsd:documentation/*">
             <p>
-                <xsl:apply-templates select="xsd:annotation/xsd:documentation/*|xsd:annotation/xsd:documentation/text()" mode="copy"/>
+                <xsl:apply-templates select="xsd:annotation/xsd:documentation/*|xsd:annotation/xsd:documentation/text()"
+                                     mode="copy"/>
             </p>
         </xsl:if>
         <!--element (doc) done-->
@@ -350,19 +395,24 @@
             <!-- cardinality i.e. minoccurs/maxoccurs -->
             <xsl:variable name="min">
                 <xsl:choose>
-                    <xsl:when test="@minOccurs"><xsl:value-of select="@minOccurs"/></xsl:when>
+                    <xsl:when test="@minOccurs">
+                        <xsl:value-of select="@minOccurs"/>
+                    </xsl:when>
                     <xsl:otherwise>0</xsl:otherwise>
                 </xsl:choose>
             </xsl:variable>
             <xsl:variable name="max">
                 <xsl:choose>
                     <xsl:when test="@maxOccurs='unbounded'">*</xsl:when>
-                    <xsl:when test="@maxOccurs"><xsl:value-of select="@maxOccurs"/></xsl:when>
+                    <xsl:when test="@maxOccurs">
+                        <xsl:value-of select="@maxOccurs"/>
+                    </xsl:when>
                     <xsl:otherwise>1</xsl:otherwise>
                 </xsl:choose>
-           </xsl:variable>
+            </xsl:variable>
             <td class="confluenceTd">
-                <xsl:value-of select="$min"/>..<xsl:value-of select="$max"/>
+                <xsl:value-of select="$min"/>..
+                <xsl:value-of select="$max"/>
             </td>
 
             <td class="confluenceTd">
@@ -423,7 +473,9 @@
         <xsl:variable name="sub" select="@substitutionGroup"/>
         <p>
             This element can be used as a substitute for
-            &lt;<xsl:value-of select="$sub"/> ...&gt;
+            &lt;
+            <xsl:value-of select="$sub"/>
+            ...&gt;
         </p>
         <xsl:apply-templates
                 select="/xsd:schema/xsd:element[@name=$sub]" mode="documentation"/>
@@ -436,9 +488,15 @@
         <xsl:param name="type"/>
         <xsl:variable name="simpleType">
             <xsl:choose>
-                <xsl:when test="starts-with($type, 'mule:')"><xsl:value-of select="substring($type, 6)"/></xsl:when>
-                <xsl:when test="starts-with($type, 'xsd:')"><xsl:value-of select="substring($type, 5)"/></xsl:when>
-                <xsl:otherwise><xsl:value-of select="$type"/></xsl:otherwise>
+                <xsl:when test="starts-with($type, 'mule:')">
+                    <xsl:value-of select="substring($type, 6)"/>
+                </xsl:when>
+                <xsl:when test="starts-with($type, 'xsd:')">
+                    <xsl:value-of select="substring($type, 5)"/>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:value-of select="$type"/>
+                </xsl:otherwise>
             </xsl:choose>
         </xsl:variable>
         <xsl:choose>
@@ -447,10 +505,14 @@
             <xsl:when test="$simpleType='substitutableLong'">long</xsl:when>
             <xsl:when test="$simpleType='substitutablePortNumber'">port number</xsl:when>
             <xsl:when test="$simpleType='substitutableClass'">class name</xsl:when>
-            <xsl:when test="$simpleType='substitutableName' or $simpleType='NMTOKEN' or $simpleType='IDREF'">name (no spaces)</xsl:when>
+            <xsl:when test="$simpleType='substitutableName' or $simpleType='NMTOKEN' or $simpleType='IDREF'">name (no
+                spaces)
+            </xsl:when>
             <xsl:when test="$simpleType='nonBlankString'">name</xsl:when>
             <xsl:when test="$simpleType='NMTOKENS'">list of names</xsl:when>
-            <xsl:otherwise><xsl:value-of select="$simpleType"/></xsl:otherwise>
+            <xsl:otherwise>
+                <xsl:value-of select="$simpleType"/>
+            </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
 
@@ -479,7 +541,8 @@
                 <xsl:variable name="itemClean" select="translate($item, '\+-:', '')"/>
                 <a>
                     <xsl:attribute name="href">
-                        <xsl:value-of select="$page"/>#<xsl:value-of select="$pageClean"/>-<xsl:value-of select="$itemClean"/>
+                        <xsl:value-of select="$page"/>#<xsl:value-of select="$pageClean"/>-
+                        <xsl:value-of select="$itemClean"/>
                     </xsl:attribute>
                     <xsl:value-of select="$item"/>
                 </a>
@@ -501,7 +564,8 @@
             <xsl:when test="string-length($page) > 0">
                 <xsl:variable name="pageClean" select="translate($page, '\+-:', '')"/>
                 <xsl:variable name="itemClean" select="translate($item, '\+-:', '')"/>
-                <xsl:value-of select="$pageClean"/>-<xsl:value-of select="$itemClean"/>
+                <xsl:value-of select="$pageClean"/>-
+                <xsl:value-of select="$itemClean"/>
             </xsl:when>
             <xsl:otherwise>
                 <xsl:value-of select="$item"/>
