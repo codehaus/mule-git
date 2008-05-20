@@ -36,7 +36,7 @@
             <xsl:variable name="t" select="translate(@name, '-', ' ')"/>
             <xsl:variable name="t" select="concat( translate( substring( $t, 1, 1 ),'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' ), substring( $t, 2, string-length( $t )))"/>
 
-            <h2><a name="$linkbase-$t"></a><xsl:value-of select="$t"/></h2>
+            <h2><a name="{$linkbase}-{$t}"></a><xsl:value-of select="$t"/></h2>
                 <!--<xsl:value-of select="concat( translate( substring( $t, 1, 1 ),'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' ), substring( $t, 2, string-length( $t )))"/>-->
 
         <!--</a>-->
