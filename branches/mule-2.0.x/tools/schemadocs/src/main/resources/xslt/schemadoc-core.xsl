@@ -21,37 +21,29 @@
             Change the "elementName" parameter to select the element you want displayed.</em>
         </p -->
 
-        <a>
+        <!--<a>-->
             <!-- define a tag we can link to -->
-            <xsl:attribute name="id">
-                <xsl:call-template name="anchor">
-                    <xsl:with-param name="item">
-                        <xsl:value-of select="@name"/>
-                    </xsl:with-param>
-                </xsl:call-template>
-            </xsl:attribute>
+            <!--<xsl:attribute name="id">-->
+                <!--<xsl:call-template name="anchor">-->
+                    <!--<xsl:with-param name="item">-->
+                        <!--<xsl:value-of select="@name"/>-->
+                    <!--</xsl:with-param>-->
+                <!--</xsl:call-template>-->
+            <!--</xsl:attribute>-->
 
             <xsl:variable name="t" select="translate(@name, '-', ' ')"/>
-            <h2>
-                <xsl:value-of
-                        select="concat( translate( substring( $t, 1, 1 ),'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' ), substring( $t, 2, string-length( $t )))"/>
-                <!--<xsl:call-template name="str:">-->
-                <!--<xsl:with-param name="text" select="translate(@name, '\+-:', ' ')"/>-->
-                <!--<xsl:with-param name="all">true</xsl:with-param>-->
-                <!--</xsl:call-template> foo-->
-                <!--<xsl:value-of select="translate(@name, '\+-:', ' ')"/>-->
+            <xsl:variable name="t" select="concat( translate( substring( $t, 1, 1 ),'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' ), substring( $t, 2, string-length( $t )))"/>
+            {anchor:<xsl:value-of select="$t"/>}
+            <h2><xsl:value-of select="$t"/>
+                <!--<xsl:value-of select="concat( translate( substring( $t, 1, 1 ),'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' ), substring( $t, 2, string-length( $t )))"/>-->
+
             </h2>
 
-        </a>
+        <!--</a>-->
 
         <xsl:apply-templates select="." mode="documentation"/>
 
-        <h3>&lt;
-            <xsl:value-of select="@name"/>
-            ...&gt;
-        </h3>
-
-        <h3>Attributes</h3>
+        <h3>Attributes of &lt;<xsl:value-of select="@name"/>...&gt;</h3>
         <table class="confluenceTable">
             <th class="confluenceTh" style="width:10%">Name</th>
             <th class="confluenceTh" style="width:10%">Type</th>
@@ -60,7 +52,7 @@
             <th class="confluenceTh">Description</th>
             <xsl:apply-templates select="." mode="attributes"/>
         </table>
-        <h3>Child Elements</h3>
+        <h3>Child Elements of &lt;<xsl:value-of select="@name"/>...&gt;</h3>
         <table class="confluenceTable">
             <tr>
                 <th class="confluenceTh" style="width:20%">Name</th>
