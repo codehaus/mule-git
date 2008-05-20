@@ -146,6 +146,12 @@
                 schedule on the endpoint. This is useful for periodically triggering a service without the need for an
                 external event to occur.
             </xsd:documentation>
+            <xsd:appinfo xmlns:docext="http://www.mulesource.org/doc/extentions">
+                <docext:snippet lang="xml" id="example-1"
+                         url="transports/quartz/src/test/resources/src/test/resources/quartz-namespace-config.xml"/>
+                <docext:snippet lang="xml" id="example-2"
+                         url="transports/quartz/src/test/resources/src/test/resources/quartz-namespace-config.xml"/>
+            </xsd:appinfo>
         </xsd:annotation>
     </xsd:element>
     <xsd:complexType name="eventGenerateJobType">
