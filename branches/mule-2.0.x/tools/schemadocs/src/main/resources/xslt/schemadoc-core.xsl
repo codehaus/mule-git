@@ -248,7 +248,7 @@
             <xsl:variable name="min">
                 <xsl:choose>
                     <xsl:when test="@minOccurs"><xsl:value-of select="@minOccurs"/></xsl:when>
-                    <xsl:otherwise><xsl:text>1</xsl:text></xsl:otherwise>
+                    <xsl:otherwise><xsl:text>0</xsl:text></xsl:otherwise>
                 </xsl:choose>
            </xsl:variable>
             <xsl:variable name="max">
@@ -351,7 +351,7 @@
             <xsl:variable name="min">
                 <xsl:choose>
                     <xsl:when test="@minOccurs"><xsl:value-of select="@minOccurs"/></xsl:when>
-                    <xsl:otherwise>1</xsl:otherwise>
+                    <xsl:otherwise>0</xsl:otherwise>
                 </xsl:choose>
             </xsl:variable>
             <xsl:variable name="max">
