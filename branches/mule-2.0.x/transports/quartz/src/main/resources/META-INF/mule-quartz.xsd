@@ -3,6 +3,7 @@
             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
             xmlns:spring="http://www.springframework.org/schema/beans"
             xmlns:mule="http://www.mulesource.org/schema/mule/core/2.0"
+            xmlns:schemadoc="http://www.mulesource.org/schema/mule/schemadoc/2.0"
             targetNamespace="http://www.mulesource.org/schema/mule/quartz/2.0"
             elementFormDefault="qualified"
             attributeFormDefault="unqualified">
@@ -13,12 +14,26 @@
     <xsd:import namespace="http://www.mulesource.org/schema/mule/core/2.0"
                 schemaLocation="http://www.mulesource.org/schema/mule/core/2.0/mule.xsd"/>
 
+    <!--<xsd:import namespace="http://www.mulesource.org/schema/mule/schemadoc/2.0"-->
+    <!--schemaLocation="http://www.mulesource.org/schema/mule/schemadoc/2.0/mule-schemadoc.xsd"/>-->
+
     <xsd:annotation>
         <xsd:documentation>The Quartz transport provides support for scheduling events and for triggering new events. An
             inbound quartz endpoint can be used to trigger inbound events that can be repeated i.e. every second.
             Outbound quartz endpoints can be used to schedule an existing event to fire at a later date. Users can
             create schedules using cron expressions and events can be persisted in a database.
+
+            This transport makes use of the [Quartz Project|http://www.opensymphony.com/quartz/] at [Open
+            Symphony|http://www.opensymphony.com/]. The Quartz site has more generic information about how to work with
+            Quartz.
+
+            This transport becomes very powerful when using cron expressions to trigger events and some of the examples
+            below provide examples of cron expressions. If you are not familiar with cron syntax, there is a [good
+            tutorial|http://www.opensymphony.com/quartz/wikidocs/CronTriggers%20Tutorial.html].
         </xsd:documentation>
+        <xsd:appinfo>
+            <schemadoc:page-title>Quartz Transport</schemadoc:page-title>
+        </xsd:appinfo>
     </xsd:annotation>
 
     <xsd:element name="connector" type="quartzConnectorType" substitutionGroup="mule:abstract-connector">
@@ -38,13 +53,6 @@
                         <xsd:annotation>
                             <xsd:documentation>
                                 Set a property on the factory (see scheduler-ref).
-                            </xsd:documentation>
-                        </xsd:annotation>
-                    </xsd:element>
-                    <xsd:element name="factory-properties" type="spring:mapType" minOccurs="0">
-                        <xsd:annotation>
-                            <xsd:documentation>
-                                Set a collection of properties on the factory (see scheduler-ref).
                             </xsd:documentation>
                         </xsd:annotation>
                     </xsd:element>
@@ -69,10 +77,8 @@
         <xsd:annotation>
             <xsd:documentation>A outbound quartz endpoint allows existing events to be stored and fired at a later
                 time/date. not if you are using a persistent event store, the payload of the event must implement
-                <i>java.io.Serializable</i>. You will need to configure a
-                <i>Job</i>
-                on the endpoint to tell it what action to take. Mule has some default Jobs but you can
-                also write your own.
+                {{java.io.Serializable}}. You will need to configure a {{org.quartz.Job}} implementation on the endpoint
+                to tell it what action to take. Mule has some default Jobs but you can also write your own.
             </xsd:documentation>
         </xsd:annotation>
     </xsd:element>
@@ -118,6 +124,9 @@
     <xsd:complexType name="globalEndpointType">
         <xsd:complexContent>
             <xsd:extension base="mule:globalEndpointType">
+                <xsd:sequence>
+                    <xsd:element ref="abstract-job" minOccurs="0" maxOccurs="1"/>
+                </xsd:sequence>
                 <xsd:attributeGroup ref="addressAttributes"/>
             </xsd:extension>
 
@@ -146,11 +155,11 @@
                 schedule on the endpoint. This is useful for periodically triggering a service without the need for an
                 external event to occur.
             </xsd:documentation>
-            <xsd:appinfo xmlns:docext="http://www.mulesource.org/doc/extentions">
-                <docext:snippet lang="xml" id="example-1"
-                         url="transports/quartz/src/test/resources/src/test/resources/quartz-namespace-config.xml"/>
-                <docext:snippet lang="xml" id="example-2"
-                         url="transports/quartz/src/test/resources/src/test/resources/quartz-namespace-config.xml"/>
+            <xsd:appinfo>
+                <schemadoc:snippet lang="xml" id="example-1"
+                                   sourcePath="transports/quartz/src/test/resources/quartz-namespace-config.xml"/>
+                <schemadoc:snippet lang="xml" id="example-2"
+                                   sourcePath="transports/quartz/src/test/resources/quartz-namespace-config.xml"/>
             </xsd:appinfo>
         </xsd:annotation>
     </xsd:element>
@@ -162,9 +171,7 @@
                         <xsd:annotation>
                             <xsd:documentation>The payload of the newly created event. The payload can be a reference to
                                 a file, fixed string or object configured as a spring bean. If this value is not set an
-                                event will be generated with a
-                                <i>NullPayload</i>
-                                instance.
+                                event will be generated with a {{org.mule.transport.NullPayload}} instance.
                             </xsd:documentation>
                         </xsd:annotation>
                     </xsd:element>
@@ -179,6 +186,10 @@
                 (via another endpoint). This can be useful for triggering time-based events from sources that do not
                 support polling or simply controlling the rate in which events are received from the source.
             </xsd:documentation>
+            <xsd:appinfo>
+                <schemadoc:snippet lang="xml" id="example-5"
+                                   sourcePath="transports/quartz/src/test/resources/quartz-namespace-config.xml"/>
+            </xsd:appinfo>
         </xsd:annotation>
     </xsd:element>
     <xsd:complexType name="endpointPollingJobType">
@@ -202,6 +213,10 @@
             <xsd:documentation>An outbound job that will schedule a job for dispatch at a later time/date. The event
                 will get dispatched using the configured endpoint reference.
             </xsd:documentation>
+            <xsd:appinfo>
+                <schemadoc:snippet lang="xml" id="example-6"
+                                   sourcePath="transports/quartz/src/test/resources/quartz-namespace-config.xml"/>
+            </xsd:appinfo>
         </xsd:annotation>
     </xsd:element>
     <xsd:complexType name="scheduledDispatchJobType">
@@ -224,6 +239,11 @@
                 create and configure their own job implementation and use it on a Quartz endpoint. A custom job can be
                 configured as a bean in the XML configuration and referenced using this Job.
             </xsd:documentation>
+            <xsd:appinfo>
+                <schemadoc:snippet lang="xml" id="example-4"
+                                   sourcePath="transports/quartz/src/test/resources/quartz-namespace-config.xml"/>
+
+            </xsd:appinfo>
         </xsd:annotation>
     </xsd:element>
     <xsd:complexType name="customJobType">
@@ -248,6 +268,10 @@
                 application-specific logic. Any of Mule's supported Expressions can be used to read the Job from the
                 message. Typically, user add the job as a header, but an attachment could also be used.
             </xsd:documentation>
+            <xsd:appinfo>
+                <schemadoc:snippet lang="xml" id="example-3"
+                                   sourcePath="transports/quartz/src/test/resources/quartz-namespace-config.xml"/>
+            </xsd:appinfo>
         </xsd:annotation>
     </xsd:element>
     <xsd:complexType name="customFromMessageJobType">
