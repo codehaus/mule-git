@@ -12,6 +12,9 @@
             To stick to convention and to ensure that XSLs will work this schema should be included in other mule
             schemas using the 'schemadoc' prefix namespace.
         </xsd:documentation>
+        <xsd:appinfo>
+            <page-title>SchemaDoc Reference</page-title>
+        </xsd:appinfo>
     </xsd:annotation>
 
     <xsd:element name="snippet" type="snippetType">
@@ -47,12 +50,36 @@
             </xsd:annotation>
             <xsd:simpleType>
                 <xsd:restriction base="xsd:NMTOKEN">
-                    <xsd:enumeration value="before-common-elements"/>
-                    <xsd:enumeration value="after-common-elements"/>
-                    <xsd:enumeration value="before-specific-elements"/>
-                    <xsd:enumeration value="after-specific-elements"/>
-                    <xsd:enumeration value="before-single-element"/>
-                    <xsd:enumeration value="after-single-element"/>
+                    <xsd:enumeration value="before-common-elements">
+                        <xsd:annotation>
+                            <xsd:documentation>The documentation will appear after any title text but before any of the common elements are rendered.</xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:enumeration>
+                    <xsd:enumeration value="after-common-elements">
+                        <xsd:annotation>
+                            <xsd:documentation>The documentation will appear right after common elements are rendered. </xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:enumeration>
+                    <xsd:enumeration value="before-specific-elements">
+                        <xsd:annotation>
+                            <xsd:documentation>The documentation will appear right before the elements specific to the schema are rendered. </xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:enumeration>
+                    <xsd:enumeration value="after-specific-elements">
+                        <xsd:annotation>
+                            <xsd:documentation>The documentation will appear right after the elements specific to the schema are rendered. </xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:enumeration>
+                    <xsd:enumeration value="before-single-element">
+                        <xsd:annotation>
+                            <xsd:documentation>If a specific element was named, this documentation will appear directly before the element.  The mode is less useful but supported for completeness.</xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:enumeration>
+                    <xsd:enumeration value="after-single-element">
+                        <xsd:annotation>
+                            <xsd:documentation>If a specific element was named, this documentation will appear directly after the element.  The mode is less useful but supported for completeness.</xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:enumeration>
                 </xsd:restriction>
             </xsd:simpleType>
         </xsd:attribute>
@@ -84,13 +111,6 @@
             <xsd:annotation>
                 <xsd:documentation>This is the path to the source file. Note this should be relative to the project root
                     directory i.e. transport/jms/src/main/resources/etc...
-                </xsd:documentation>
-            </xsd:annotation>
-        </xsd:attribute>
-        <xsd:attribute name="useExpand" type="xsd:boolean" default="true">
-            <xsd:annotation>
-                <xsd:documentation>Determines whether the code snippet will be wrapped in an {{expand}} macro so the
-                    code will be hidden until expanded.
                 </xsd:documentation>
             </xsd:annotation>
         </xsd:attribute>
