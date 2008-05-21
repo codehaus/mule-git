@@ -147,7 +147,7 @@
     <!-- attributes -->
 
     <xsl:template match="xsd:attribute[@name]" mode="attributes">
-            <xsl:variable name="type">
+        <xsl:variable name="type">
                 <xsl:choose>
                     <xsl:when test="string-length(@type)">
                         <xsl:call-template name="rewrite-type">
@@ -157,13 +157,14 @@
                     <xsl:when test="xsd:simpleType/xsd:restriction/xsd:enumeration">
                         <xsl:for-each select="xsd:simpleType/xsd:restriction/xsd:enumeration">
                             <xsl:if test="@value">
-                                *<xsl:value-of select="@value"/>*
+                                <xsl:value-of select="@value"/>
                                 <xsl:if test="position()!=last()">/</xsl:if>
                             </xsl:if>
                         </xsl:for-each>
                     </xsl:when>
                 </xsl:choose>
             </xsl:variable>
+
             <xsl:variable name="required">
                 <xsl:choose>
                     <xsl:when test="@required">yes</xsl:when>
@@ -182,7 +183,7 @@
                                 mode="copy"/>
                 </xsl:if>
             <!-- leave this line as-is -->
-        </xsl:variable>|<xsl:value-of select="@name"/> |<xsl:value-of select="type"/> |<xsl:value-of select="$required"/> |<xsl:value-of select="$default"/> |<xsl:value-of select="normalize-space($doc)"/>|
+        </xsl:variable>|<xsl:value-of select="@name"/> |<xsl:value-of select="$type"/> |<xsl:value-of select="$required"/> |<xsl:value-of select="$default"/> |<xsl:value-of select="normalize-space($doc)"/>|
         </xsl:template>
 
 
@@ -429,6 +430,7 @@
     <!-- convert common types to nicer text -->
 
     <xsl:template name="rewrite-type">
+
         <xsl:param name="type"/>
         <xsl:variable name="simpleType">
             <xsl:choose>
