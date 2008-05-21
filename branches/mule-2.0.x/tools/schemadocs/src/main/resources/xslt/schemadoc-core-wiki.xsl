@@ -158,7 +158,7 @@
                         <xsl:for-each select="xsd:simpleType/xsd:restriction/xsd:enumeration">
                             <xsl:if test="@value">
                                 <xsl:value-of select="@value"/>
-                                <xsl:if test="position()!=last()">/</xsl:if>
+                                <xsl:if test="position()!=last()"> / </xsl:if>
                             </xsl:if>
                         </xsl:for-each>
                     </xsl:when>
