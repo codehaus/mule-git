@@ -14,7 +14,6 @@
     <name>Mule Examples</name>
     <description>Mule Example Applications</description>
 
-    <!-- Note: osgi examples are in the osgi profile section, below -->
     <modules>
         <module>all-examples</module>
         <module>errorhandler</module>
@@ -47,25 +46,6 @@
                 <module>stockquote</module>
                 <module>webapp</module>
             </modules>
-        </profile>
-        <profile>
-            <id>osgi</id>
-            <modules>
-                <module>hello-osgi</module>
-            </modules>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.felix</groupId>
-                        <artifactId>maven-bundle-plugin</artifactId>
-                        <configuration>
-                            <instructions>
-                                <Include-Resource>conf, src/main/resources</Include-Resource>
-                            </instructions>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
         </profile>
     </profiles>
 </project>
