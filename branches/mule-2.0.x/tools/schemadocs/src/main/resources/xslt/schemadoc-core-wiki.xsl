@@ -182,7 +182,7 @@
                                 mode="copy"/>
                 </xsl:if>
             <!-- leave this line as-is -->
-        </xsl:variable>|<xsl:value-of select="@name"/> |<xsl:value-of select="$required"/> |<xsl:value-of select="$default"/> |<xsl:value-of select="normalize-space($doc)"/>|
+        </xsl:variable>|<xsl:value-of select="@name"/> |<xsl:value-of select="type"/> |<xsl:value-of select="$required"/> |<xsl:value-of select="$default"/> |<xsl:value-of select="normalize-space($doc)"/>|
         </xsl:template>
 
 
