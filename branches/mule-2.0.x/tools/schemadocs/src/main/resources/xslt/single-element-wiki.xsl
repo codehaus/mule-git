@@ -214,4 +214,59 @@
         <!--extension done-->
     </xsl:template>
 
+    <xsl:template match="xsd:element" mode="attributesWiki">
+            <xsl:call-template name="attribute-childrenWiki"/>
+            <xsl:if test="@ref">
+                <xsl:variable name="ref" select="@ref"/>
+                <xsl:apply-templates
+                        select="/xsd:schema/xsd:element[@name=$ref]" mode="attributesWiki"/>
+            </xsl:if>
+            <xsl:if test="@type">
+                <xsl:variable name="type" select="@type"/>
+                <xsl:apply-templates
+                        select="/xsd:schema/xsd:complexType[@name=$type]" mode="attributesWiki"/>
+            </xsl:if>
+        </xsl:template>
+
+        <xsl:template name="attribute-childrenWiki">
+            <xsl:apply-templates select="xsd:attribute" mode="attributesWiki"/>
+            <xsl:apply-templates select="xsd:attributeGroup" mode="attributesWiki"/>
+            <xsl:apply-templates select="xsd:sequence" mode="attributesWiki"/>
+            <xsl:apply-templates select="xsd:choice" mode="attributesWiki"/>
+            <xsl:apply-templates select="xsd:complexType" mode="attributesWiki"/>
+            <xsl:apply-templates select="xsd:complexContent" mode="attributesWiki"/>
+            <xsl:apply-templates select="xsd:extension" mode="attributesWiki"/>
+        </xsl:template>
+
+        <xsl:template match="xsd:attributeGroup" mode="attributesWiki">
+            <xsl:if test="@ref">
+                <xsl:variable name="ref" select="@ref"/>
+                <xsl:apply-templates
+                        select="/xsd:schema/xsd:attributeGroup[@name=$ref]" mode="attributesWiki"/>
+            </xsl:if>
+            <xsl:call-template name="attribute-childrenWiki"/>
+        </xsl:template>
+
+        <xsl:template match="xsd:sequence" mode="attributesWiki">
+            <xsl:call-template name="attribute-childrenWiki"/>
+        </xsl:template>
+
+        <xsl:template match="xsd:choice" mode="attributesWiki">
+            <xsl:call-template name="attribute-childrenWiki"/>
+        </xsl:template>
+
+        <xsl:template match="xsd:complexType" mode="attributesWiki">
+            <xsl:call-template name="attribute-childrenWiki"/>
+        </xsl:template>
+
+        <xsl:template match="xsd:complexContent" mode="attributesWiki">
+            <xsl:call-template name="attribute-childrenWiki"/>
+        </xsl:template>
+
+        <xsl:template match="xsd:extension" mode="attributesWiki">
+            <xsl:variable name="base" select="@base"/>
+            <xsl:apply-templates select="/xsd:schema/xsd:complexType[@name=$base]" mode="attributesWiki"/>
+            <xsl:call-template name="attribute-childrenWiki"/>
+        </xsl:template>
+
 </xsl:stylesheet>

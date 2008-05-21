@@ -23,6 +23,12 @@
         </xsd:annotation>
     </xsd:element>
 
+    <xsd:element name="page-title" type="xsd:string">
+        <xsd:annotation>
+            <xsd:documentation>The page title to use when rendering this schema.</xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    
     <xsd:complexType name="snippetType">
         <xsd:attribute name="id" type="xsd:NMTOKEN" use="required">
             <xsd:annotation>
