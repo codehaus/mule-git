@@ -22,17 +22,22 @@
             inbound quartz endpoint can be used to trigger inbound events that can be repeated i.e. every second.
             Outbound quartz endpoints can be used to schedule an existing event to fire at a later date. Users can
             create schedules using cron expressions and events can be persisted in a database.
-
+            \\
             This transport makes use of the [Quartz Project|http://www.opensymphony.com/quartz/] at [Open
             Symphony|http://www.opensymphony.com/]. The Quartz site has more generic information about how to work with
             Quartz.
-
+            \\
             This transport becomes very powerful when using cron expressions to trigger events and some of the examples
             below provide examples of cron expressions. If you are not familiar with cron syntax, there is a [good
             tutorial|http://www.opensymphony.com/quartz/wikidocs/CronTriggers%20Tutorial.html].
         </xsd:documentation>
         <xsd:appinfo>
             <schemadoc:page-title>Quartz Transport</schemadoc:page-title>
+            <schemadoc:additional-documentation where="before-specific-elements">
+                h1. Jobs
+                
+                Jobs are used to perform an action when a time trigger occurs from the Quartz transport. Mule provides a number of Jobs for generating and scheduling events.  These are detailed below.  Users can also write their own jobs and hook them in using the custom-job type that ships with Mule.
+            </schemadoc:additional-documentation>
         </xsd:appinfo>
     </xsd:annotation>
 
