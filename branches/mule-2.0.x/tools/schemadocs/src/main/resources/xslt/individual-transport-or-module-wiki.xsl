@@ -23,7 +23,7 @@
     <xsl:output method="text"/>
     <!-- TODO REPLACE -->
     <!--<xsl:include href="schemadoc-core-wiki.xsl"/>-->
-    <!--href="http://www.mulesource.org/xsl/mule/2.0/single-element-wiki.xsl"/>-->
+    <!--<xsl:include href="http://www.mulesource.org/xslt/mule/schemadoc/2.0/single-element-wiki.xsl"/>-->
     <xsl:include href="http://svn.codehaus.org/mule/branches/mule-2.0.x/tools/schemadocs/src/main/resources/xslt/schemadoc-core-wiki.xsl"/>
     <xsl:template match="/">
 
@@ -47,22 +47,47 @@
             \\
             <xsl:value-of select="normalize-space(/xsd:schema/xsd:annotation/xsd:documentation)"/>
 
+            <xsl:if test="/xsd:schema/xsd:annotation/xsd:appinfo/schemadoc:additional-documentation[@where='before-common-elements']">
+                <xsl:value-of select="/xsd:schema/xsd:annotation/xsd:appinfo/schemadoc:additional-documentation[@where='before-common-elements']"/>
+            </xsl:if>
+
             <xsl:apply-templates select="/xsd:schema/xsd:element[@name='connector']" mode="single-element"/>
             <xsl:apply-templates select="/xsd:schema/xsd:element[@name='inbound-endpoint']" mode="single-element"/>
             <xsl:apply-templates select="/xsd:schema/xsd:element[@name='outbound-endpoint']" mode="single-element"/>
             <xsl:apply-templates select="/xsd:schema/xsd:element[@name='endpoint']" mode="single-element"/>
+
+            <xsl:if test="/xsd:schema/xsd:annotation/xsd:appinfo/schemadoc:additional-documentation[@where='after-common-elements']">
+                <xsl:value-of select="/xsd:schema/xsd:annotation/xsd:appinfo/schemadoc:additional-documentation[@where='after-common-elements']"/>
+            </xsl:if>
         </xsl:if>
         <xsl:if test="$display = 'specific' or $display = 'all'">
+
+            <xsl:if test="/xsd:schema/xsd:annotation/xsd:appinfo/schemadoc:additional-documentation[@where='before-specific-elements']">
+                <xsl:value-of select="/xsd:schema/xsd:annotation/xsd:appinfo/schemadoc:additional-documentation[@where='before-specific-elements']"/>
+            </xsl:if>
+
             <xsl:apply-templates select="/xsd:schema/xsd:element[
                     @name!='connector' and
                     @name!='endpoint' and
                     @name!='inbound-endpoint' and
                     @name!='outbound-endpoint' and
                     not(starts-with(@name, 'abstract'))]" mode="single-element"/>
+
+            <xsl:if test="/xsd:schema/xsd:annotation/xsd:appinfo/schemadoc:additional-documentation[@where='after-specific-elements']">
+                <xsl:value-of select="/xsd:schema/xsd:annotation/xsd:appinfo/schemadoc:additional-documentation[@where='after-specific-elements']"/>
+            </xsl:if>
         </xsl:if>
 
         <xsl:if test="$display != 'specific' and $display != 'all' and $display != 'common'">
+            <xsl:if test="/xsd:schema/xsd:annotation/xsd:appinfo/schemadoc:additional-documentation[@where='before-single-element']">
+                <xsl:value-of select="/xsd:schema/xsd:annotation/xsd:appinfo/schemadoc:additional-documentation[@where='before-common-element']"/>
+            </xsl:if>
+
             <xsl:apply-templates select="/xsd:schema/xsd:element[@name=$display]" mode="single-element"/>
+
+            <xsl:if test="/xsd:schema/xsd:annotation/xsd:appinfo/schemadoc:additional-documentation[@where='after-single-element']">
+                <xsl:value-of select="/xsd:schema/xsd:annotation/xsd:appinfo/schemadoc:additional-documentation[@where='after-single-element']"/>
+            </xsl:if>
         </xsl:if>
     </xsl:template>
 
