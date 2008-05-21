@@ -68,14 +68,11 @@
                 </xsl:otherwise>
             </xsl:choose>
         </xsl:variable>
-        <xsl:if test="@useExpand != 'false'">
+        <!-- TODO @useExpand -->
         {expand}
-        </xsl:if>
         {snippet:lang=<xsl:value-of select="@lang"/>|id=<xsl:value-of select="@id"/>|url=<xsl:value-of
             select="$snippet"/>/<xsl:value-of select="@sourcePath"/>}
-        <xsl:if test="@useExpand != 'false'">
         {expand}
-        </xsl:if>
     </xsl:template>
 
     <!-- end AppInfo processng -->
