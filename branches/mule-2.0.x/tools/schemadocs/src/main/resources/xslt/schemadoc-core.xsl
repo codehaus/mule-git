@@ -33,8 +33,8 @@
                 <!--</xsl:call-template>-->
             <!--</xsl:attribute>-->
 
-            <xsl:variable name="t" select="translate(@name, '-', ' ')"/>
-            <xsl:variable name="t" select="concat( translate( substring( $t, 1, 1 ),'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' ), substring( $t, 2, string-length( $t )))"/>
+            <xsl:variable name="temp" select="translate(@name, '-', ' ')"/>
+            <xsl:variable name="t" select="concat( translate( substring( $temp, 1, 1 ),'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' ), substring( $temp, 2, string-length( $temp )))"/>
 
             <h2>
                 <xsl:element name="a">

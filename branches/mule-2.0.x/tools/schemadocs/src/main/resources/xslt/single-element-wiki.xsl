@@ -2,14 +2,14 @@
         version="2.0"
         xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
         xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-        xmlns:docext="http://www.mulesource.org/doc/extentions"
+        xmlns:schemadoc="http://www.mulesource.org/schema/mule/schemadoc/2.0"
         >
 
     <!-- $Id$ -->
 
     <!-- PLEASE DO NOT FORMAT THIS STYLE SHEET. CONFLUENCE IS VERY PARTICULAR -->
 
-    <!-- this generates html documentation for a particular, named element
+    <!-- this generates wiki documentation for a particular, named element
          using the information within a single schema.
 
          a lot of information is available and comments can be found in
@@ -29,103 +29,109 @@
     <!-- this is the element we will generate documentation for -->
     <xsl:param name="elementName"/>
 
+    <!-- the base path mapping for snippet URLS.  These are configured in the Confluence Snippet macro -->
     <xsl:param name="snippetBase"/>
 
     <xsl:variable name="defaultSnippetBase">mule-2-current</xsl:variable>
 
     <xsl:output method="text"/>
-    <!-- xsl:include href="schemadoc-core.xsl"/ -->
+    <!--<xsl:include href="schemadoc-core.xsl"/>-->
+    <!-- TODO replace -->
     <xsl:include href="http://svn.codehaus.org/mule/branches/mule-2.0.x/tools/schemadocs/src/main/resources/xslt/schemadoc-core.xsl"/>
 
     <xsl:template match="/">
+        <xsl:apply-templates select="/xsd:schema/xsd:element[@name=$elementName]" mode="single-element-wiki"/>
+    </xsl:template>
 
-                <xsl:apply-templates select="//xsd:element[@name=$elementName]" mode="single-element-wiki"/>
-                <xsl:apply-templates select="//xsd:element[@name=$elementName]/xsd:annotation/xsd:appinfo"/>
+    <xsl:template match="xsd:element" mode="single-element-wiki">
+        <xsl:variable name="temp1" select="translate(@name, '-', ' ')"/>
+        <xsl:variable name="t1" select="concat( translate( substring( $temp1, 1, 1 ),'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' ), substring( $temp1, 2, string-length( $temp1 )))"/>
 
+        h2. <xsl:element name="a">
+            <xsl:attribute name="name">
+                <xsl:value-of select="$linkbase"/>-
+                <xsl:value-of select="translate($t1, ' ', '')"/>
+            </xsl:attribute>
+        </xsl:element>
+        <xsl:value-of select="$t1"/>
+        \\
+        <xsl:value-of select="xsd:annotation/xsd:documentation"/>
+
+        h3.Attributes of &lt;<xsl:value-of select="@name"/>...&gt;
+        ||Name||Type||Required||Default||Description||
+        <xsl:apply-templates select="." mode="attributesWiki"/>
+
+        h3. Child Elements of &lt;<xsl:value-of select="@name"/>...&gt;
+        ||Name||Cardinality||Description||<xsl:call-template name="element-childrenWiki"/>
+        <xsl:if test="@type">
+            <xsl:variable name="type" select="@type"/>
+            <xsl:apply-templates select="/xsd:schema/xsd:complexType[@name=$type]" mode="elementsWiki"/>
+        </xsl:if>
+
+        <!-- Render Example configurations -->
+        <xsl:apply-templates select="xsd:annotation/xsd:appinfo"/>
     </xsl:template>
 
     <xsl:template match="xsd:appinfo">
         h3. Example Configurations
-        
-        <xsl:apply-templates select="docext:snippet"/>
+
+        Note that the documentation for each on the configurations is embedded within the example code.
+
+        <xsl:apply-templates select="schemadoc:snippet"/>
     </xsl:template>
 
-    <xsl:template match="docext:snippet">
+    <xsl:template match="schemadoc:snippet">
 
-         <xsl:variable name="snippet">
+        <xsl:variable name="snippet">
             <xsl:choose>
-                <xsl:when test="$snippetBase"><xsl:value-of select="$snippetBase"/></xsl:when>
-                <xsl:otherwise><xsl:value-of select="$defaultSnippetBase"/></xsl:otherwise>
+                <xsl:when test="$snippetBase">
+                    <xsl:value-of select="$snippetBase"/>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:value-of select="$defaultSnippetBase"/>
+                </xsl:otherwise>
             </xsl:choose>
         </xsl:variable>
         {expand}
-        {snippet:lang=<xsl:value-of select="@lang"/>|id=<xsl:value-of select="@id"/>|url=<xsl:value-of select="$snippet"/>/<xsl:value-of select="@url"/>}
+        {snippet:lang=<xsl:value-of select="@lang"/>|id=<xsl:value-of select="@id"/>|url=<xsl:value-of
+            select="$snippet"/>/<xsl:value-of select="@sourcePath"/>}
         {expand}
-    </xsl:template>
-    <xsl:template match="xsd:element" mode="single-element-wiki">
-
-
-
-            <xsl:variable name="t" select="translate(@name, '-', ' ')"/>
-            <xsl:variable name="t" select="concat( translate( substring( $t, 1, 1 ),'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' ), substring( $t, 2, string-length( $t )))"/>
-
-            h2.<xsl:element name="a">
-                            <xsl:attribute name="name">
-                                <xsl:value-of select="$linkbase"/>-<xsl:value-of select="translate($t, ' ', '')"/>
-                            </xsl:attribute>
-                </xsl:element>
-                <xsl:value-of select="$t"/>
-        \\
-        <xsl:value-of select="/xsd:schema/xsd:annotation/xsd:documentation"/>
-
-        h3.Attributes of &lt;<xsl:value-of select="@name"/>...&gt;
-        <xsd:choice>
-        <xsl:when test="xsd:attribute|xsd:attribute-group">
-            ||Name||Type||Required||Default||Description||
-            <xsl:apply-templates select="." mode="attributesWiki"/>
-            </xsl:when>
-            <xsl:otherwise>There are no attributes for this element.</xsl:otherwise>
-        </xsd:choice>
-        h3. Child Elements of &lt;<xsl:value-of select="@name"/>...&gt;
-        ||Name||Cardinality||Description|| <xsl:call-template name="element-childrenWiki"/>
-            <xsl:if test="@type">
-                <xsl:variable name="type" select="@type"/>
-                <xsl:apply-templates select="/xsd:schema/xsd:complexType[@name=$type]" mode="elementsWiki"/>
-            </xsl:if>
     </xsl:template>
 
     <xsl:template match="xsd:attribute[@name]" mode="attributesWiki">
+
         <xsl:variable name="type">
             <xsl:choose>
-                    <xsl:when test="string-length(@type)">
-                        <xsl:call-template name="rewrite-type">
-                            <xsl:with-param name="type" select="@type"/>
-                        </xsl:call-template>
-                    </xsl:when>
-                    <xsl:when test="xsd:simpleType/xsd:restriction/xsd:enumeration">
-                        <xsl:for-each select="xsd:simpleType/xsd:restriction/xsd:enumeration">
-                            <xsl:if test="@value">
-                                <b>
-                                    <xsl:value-of select="@value"/>
-                                </b>
-                                <xsl:if test="position()!=last()">/</xsl:if>
-                            </xsl:if>
-                        </xsl:for-each>
-                    </xsl:when>
-                </xsl:choose>
+                <xsl:when test="string-length(@type)">
+                    <xsl:call-template name="rewrite-type">
+                        <xsl:with-param name="type" select="@type"/>
+                    </xsl:call-template>
+                </xsl:when>
+                <xsl:when test="xsd:simpleType/xsd:restriction/xsd:enumeration">
+                    <xsl:for-each select="xsd:simpleType/xsd:restriction/xsd:enumeration">
+                        <xsl:if test="@value">
+                            <b>
+                                <xsl:value-of select="@value"/>
+                            </b>
+                            <xsl:if test="position()!=last()">/</xsl:if>
+                        </xsl:if>
+                    </xsl:for-each>
+                </xsl:when>
+            </xsl:choose>
         </xsl:variable>
 
         <xsl:variable name="required">
             <xsl:choose>
-                    <xsl:when test="@required">yes</xsl:when>
-                    <xsl:otherwise>no</xsl:otherwise>
-                </xsl:choose>
+                <xsl:when test="@required">yes</xsl:when>
+                <xsl:otherwise>no</xsl:otherwise>
+            </xsl:choose>
         </xsl:variable>
         <xsl:variable name="default">
             <xsl:if test="@default">
-                    <xsl:value-of select="@default"/>
-                </xsl:if>
+                <xsl:value-of select="@default"/>
+            </xsl:if>
         </xsl:variable>
+ 
 |<xsl:value-of select="@name"/>|<xsl:value-of select="$required"/>|<xsl:value-of select="$default"/>|<xsl:value-of select="xsd:annotation/xsd:documentation"/>|
 
     </xsl:template>
@@ -144,31 +150,28 @@
     </xsl:template>
 
     <xsl:template match="xsd:element[@name]" mode="elementsWiki">
-            <!-- cardinality i.e. minoccurs/maxoccurs -->
-            <xsl:variable name="min">
-                <xsl:choose>
-                    <xsl:when test="@minOccurs">
-                        <xsl:value-of select="@minOccurs"/>
-                    </xsl:when>
-                    <xsl:otherwise>0</xsl:otherwise>
-                </xsl:choose>
-            </xsl:variable>
-            <xsl:variable name="max">
-                <xsl:choose>
-                    <xsl:when test="@maxOccurs='unbounded'">*</xsl:when>
-                    <xsl:when test="@maxOccurs">
-                        <xsl:value-of select="@maxOccurs"/>
-                    </xsl:when>
-                    <xsl:otherwise>1</xsl:otherwise>
-                </xsl:choose>
-            </xsl:variable>
-|<xsl:value-of select="@name"/> | <xsl:value-of select="$min"/>..<xsl:value-of select="$max"/>|<xsl:value-of select="xsd:annotation/xsd:documentation"/>|
-
-        <!--element done-->
+        <!-- cardinality i.e. minoccurs/maxoccurs -->
+        <xsl:variable name="min">
+            <xsl:choose>
+                <xsl:when test="@minOccurs">
+                    <xsl:value-of select="@minOccurs"/>
+                </xsl:when>
+                <xsl:otherwise>0</xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>
+        <xsl:variable name="max">
+            <xsl:choose>
+                <xsl:when test="@maxOccurs='unbounded'">*</xsl:when>
+                <xsl:when test="@maxOccurs">
+                    <xsl:value-of select="@maxOccurs"/>
+                </xsl:when>
+                <xsl:otherwise>1</xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>
+        |<xsl:value-of select="@name"/>|<xsl:value-of select="$min"/>..<xsl:value-of select="$max"/>|<xsl:value-of select="xsd:annotation/xsd:documentation"/>|
     </xsl:template>
 
     <xsl:template match="xsd:group" mode="elementsWiki">
-        <!--group <xsl:value-of select="@name"/>-->
         <xsl:if test="@ref">
             <xsl:variable name="ref" select="@ref"/>
             <xsl:apply-templates
