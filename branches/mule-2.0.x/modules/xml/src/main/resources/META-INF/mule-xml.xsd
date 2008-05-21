@@ -125,8 +125,8 @@
                 objects are pooled for better performance. Transform context properties can be set on the transformer,
                 these can be pulled from the current message using Expression Evaluators. This works in a very similar
                 way to the
-                <a href="http://mule.mulesource.org/display/EXTENDEDXML/XQuery" target="_blank">XQuery Transformer</a>
-                on <a href="http://muleforge.org" target="_blank">MuleForge</a>.
+                <a href="http://www.muleforge.org/display/EXTENDEDXML/XQuery" target="_blank">XQuery Transformer</a>
+                on <a href="http://www.muleforge.org" target="_blank">MuleForge</a>.
             </xsd:documentation>
         </xsd:annotation>
     </xsd:element>
