@@ -16,9 +16,10 @@ import org.mule.api.MuleMessage;
 // START SNIPPET: documentation
 /**
  * The Quartz transport can be used to trigger an event to be received by the component based on the endpoint
- * configuration. Usually in Mule, an event is expected, however in this example we have a service component who's
- * service method does nt take any parameters. The {@link org.mule.transport.quartz.jobs.EventGeneratorJob} can be used to trigger a service method,
- * and by not specifying a 'payload' element there is no data to try and match to the service method.
+ * configuration.  In Mule an event is usually expected, however in this example we have a service component who's
+ * service method doesn't take any parameters. The {@link org.mule.transport.quartz.jobs.EventGeneratorJob} can be used to trigger a service method,
+ * and by not specifying a 'payload' element there is no data to try and match to the service method, so Mule will
+ * match a method with no arguments.
  */
 // END SNIPPET: documentation
 // START SNIPPET: full-class
