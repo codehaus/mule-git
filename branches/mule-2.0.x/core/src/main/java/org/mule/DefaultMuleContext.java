@@ -205,11 +205,14 @@ public class DefaultMuleContext implements MuleContext
 
         notificationManager.fireNotification(new MuleContextNotification(this, MuleContextNotification.CONTEXT_DISPOSED));
 
+        notificationManager.dispose();
+        workManager.dispose();
+
         if ((getStartDate() > 0) && logger.isInfoEnabled())
         {
             logger.info(getEndSplash());
         }
-        //lifecycleManager.reset();
+
     }
 
 
