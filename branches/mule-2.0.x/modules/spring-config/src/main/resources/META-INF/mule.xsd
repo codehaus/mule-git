@@ -3694,7 +3694,6 @@
                     <xsd:element ref="abstract-exception-strategy" minOccurs="0"/>
                     <xsd:element name="service-overrides" type="serviceOverridesType" minOccurs="0"/>
                 </xsd:sequence>
-                <xsd:attribute name="createDispatcherPerRequest" type="substitutableBoolean"/>
                 <xsd:attribute name="createMultipleTransactedReceivers" type="substitutableBoolean"/>
                 <xsd:attribute name="numberOfConcurrentTransactedReceivers" type="substitutableInt"/>
                 <xsd:attribute name="dynamicNotification" type="substitutableBoolean"/>
