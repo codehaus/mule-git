@@ -20,11 +20,14 @@
       -->
     <xsl:param name="show"/>
 
+    <!-- We're rendering Wiki test -->
     <xsl:output method="text"/>
-    <!-- TODO REPLACE -->
-    <!--<xsl:include href="schemadoc-core-wiki.xsl"/>-->
-    <!--<xsl:include href="http://www.mulesource.org/xslt/mule/schemadoc/2.0/single-element-wiki.xsl"/>-->
-    <xsl:include href="http://svn.codehaus.org/mule/branches/mule-2.0.x/tools/schemadocs/src/main/resources/xslt/schemadoc-core-wiki.xsl"/>
+
+    <xsl:include href="http://www.mulesource.org/xslt/mule/schemadoc/2.0/schemadoc-core-wiki.xsl"/>
+    <!--Use this if testing locally
+    <xsl:include href="schemadoc-core-wiki.xsl"/>
+    -->
+
     <xsl:template match="/">
 
         <xsl:variable name="display">
