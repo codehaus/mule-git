@@ -17,6 +17,7 @@ import org.mule.module.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.tck.functional.EventCallback;
 import org.mule.tck.functional.FunctionalTestComponent;
+import org.mule.tck.functional.FunctionalTestComponent2;
 
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
 
@@ -30,8 +31,8 @@ public class ChainingRouterPropertyPropagationTestCase extends FunctionalTestCas
 
     public void testPropertiesPropagation() throws Exception
     {
-        FunctionalTestComponent hop1 = (FunctionalTestComponent) getComponent(muleContext.getRegistry().lookupService("hop1Service"));
-        FunctionalTestComponent hop2 = (FunctionalTestComponent) getComponent(muleContext.getRegistry().lookupService("hop2Service"));
+        FunctionalTestComponent2 hop1 = (FunctionalTestComponent2) getComponent(muleContext.getRegistry().lookupService("hop1Service"));
+        FunctionalTestComponent2 hop2 = (FunctionalTestComponent2) getComponent(muleContext.getRegistry().lookupService("hop2Service"));
         assertNotNull(hop1);
 
         final AtomicBoolean hop1made = new AtomicBoolean(false);
@@ -41,8 +42,8 @@ public class ChainingRouterPropertyPropagationTestCase extends FunctionalTestCas
             {
                 MuleMessage msg = context.getMessage();
                 assertTrue(hop1made.compareAndSet(false, true));
-                FunctionalTestComponent ftc = (FunctionalTestComponent) component;
-                ftc.setReturnMessage("Hop1 ACK");
+                FunctionalTestComponent2 ftc = (FunctionalTestComponent2) component;
+                ftc.setReturnData("Hop1 ACK");
             }
         };
 
@@ -54,8 +55,8 @@ public class ChainingRouterPropertyPropagationTestCase extends FunctionalTestCas
                 MuleMessage msg = context.getMessage();
                 assertTrue(hop2made.compareAndSet(false, true));
                 assertEquals("Property not propagated from the first hop.", "hop1", msg.getProperty("TICKET"));
-                FunctionalTestComponent ftc = (FunctionalTestComponent) component;
-                ftc.setReturnMessage(msg.getPayload() + " Hop2 ACK");
+                FunctionalTestComponent2 ftc = (FunctionalTestComponent2) component;
+                ftc.setReturnData(msg.getPayload() + " Hop2 ACK");
             }
         };
 
