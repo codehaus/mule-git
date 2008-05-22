@@ -1085,10 +1085,11 @@
     </xsd:complexType>
 
     <xsd:complexType name="asyncReplyCollectionType">
-        <xsd:sequence>
+        <xsd:sequence minOccurs="1" maxOccurs="1">
             <xsd:element ref="abstract-inbound-endpoint" minOccurs="0" maxOccurs="unbounded"/>
             <xsd:element ref="abstract-async-reply-router" minOccurs="0" maxOccurs="unbounded"/>
-            <xsd:element ref="abstract-transformer" minOccurs="0" maxOccurs="unbounded"/>
+            <!-- TODO leaving this commented here, but I don't think there should be a transformer here -->
+            <!--<xsd:element ref="abstract-transformer" minOccurs="0" maxOccurs="unbounded"/>-->
         </xsd:sequence>
         <xsd:attribute name="timeout" type="substitutableInt">
             <xsd:annotation>
@@ -2378,6 +2379,13 @@
                             </xsd:complexType>
                         </xsd:element>
                     </xsd:sequence>
+                    <xsd:attribute name="returnSourceIfNull" type="xsd:boolean" use="optional">
+                        <xsd:annotation>
+                            <xsd:documentation>If all expressions return null on this transformer, this flag will cause
+                                the source payload to be returned without modification.
+                            </xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:attribute>
                 </xsd:extension>
             </xsd:complexContent>
         </xsd:complexType>
@@ -2402,6 +2410,7 @@
                     <xsd:enumeration value="attachment"/>
                     <xsd:enumeration value="attachments"/>
                     <xsd:enumeration value="attachments-list"/>
+                    <xsd:enumeration value="map-payload"/>
                     <xsd:enumeration value="payload"/>
                     <xsd:enumeration value="xpath"/>
                     <xsd:enumeration value="jxpath"/>
