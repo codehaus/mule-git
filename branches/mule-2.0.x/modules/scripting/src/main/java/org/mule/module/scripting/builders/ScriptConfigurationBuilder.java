@@ -17,17 +17,12 @@ import org.mule.config.builders.AbstractResourceConfigurationBuilder;
 import org.mule.config.builders.i18n.BuildersMessages;
 import org.mule.module.scripting.component.Scriptable;
 
-import javax.script.Bindings;
-
 /** Configures Mule from one or more script files. */
 public class ScriptConfigurationBuilder extends AbstractResourceConfigurationBuilder
 {
     public static final String SCRIPT_ENGINE_NAME_PROPERTY = "org.mule.script.engine";
 
     private Scriptable scriptComponent = new Scriptable();
-
-    protected MuleContext muleContext = null;
-    protected boolean initialised = false;
 
     public ScriptConfigurationBuilder(String configResource) throws MuleException
     {
@@ -63,8 +58,6 @@ public class ScriptConfigurationBuilder extends AbstractResourceConfigurationBui
 
     protected void doConfigure(MuleContext muleContext) throws Exception
     {
-        this.muleContext = muleContext;
-        
         for (int i = 0; i < configResources.length; i++)
         {
             ConfigResource configResource = configResources[i];
@@ -74,10 +67,4 @@ public class ScriptConfigurationBuilder extends AbstractResourceConfigurationBui
             scriptComponent.runScript();
         }
     }
-
-    protected void populateBindings(Bindings bindings)
-    {
-        bindings.put("muleContext", muleContext);
-    }
-
 }
