@@ -55,8 +55,7 @@
             </description>
 
             <inbound>
-                <quartz:inbound-endpoint name="qEP1" cronExpression="0 0 12 * * ?" jobName="job1"
-                                         connector-ref="quartzConnector1">
+                <quartz:inbound-endpoint name="qEP1" cronExpression="0 0 12 * * ?" jobName="job1" connector-ref="quartzConnector1">
                     <quartz:event-generator-job>
                         <quartz:payload>foo</quartz:payload>
                     </quartz:event-generator-job>
