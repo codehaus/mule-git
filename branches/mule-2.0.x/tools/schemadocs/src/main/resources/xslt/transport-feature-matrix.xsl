@@ -21,8 +21,8 @@
 
     <xsl:template match="/xsd:schema/xsd:annotation/xsd:appinfo/schemadoc:transport-features">
         <xsl:variable name="heading">
-            ||Transport||Receive Events||Send Events||Request Events||Request/Response||Transactions||Streaming||Inbound
-            MEPs||Outbound MEPs||
+            {tr}{th}Transport{th}{th}Receive Events{th}{th}Send Events{th}{th}Request Events{th}{th}Request/Response{th}{th}Transactions{th}{th}Streaming{th}{th}Inbound
+            MEPs{th}{th}Outbound MEPs{th}
         </xsl:variable>
         <xsl:variable name="transport">[<xsl:value-of
                 select="/xsd:schema/xsd:annotation/xsd:appinfo/schemadoc:short-name"/>|<xsl:value-of
@@ -88,9 +88,9 @@
         </xsl:variable>
 
         <xsl:variable name="line">
-            |<xsl:value-of select="normalize-space($transport)"/>|<xsl:value-of select="$receive"/>|<xsl:value-of select="$send"/>|
-            <xsl:value-of select="$request"/>|<xsl:value-of select="$response"/>|<xsl:value-of select="$trans"/>|
-            <xsl:value-of select="$stream"/>|<xsl:value-of select="$inmeps"/>|<xsl:value-of select="$outmeps"/>|
+            {tr}{td}<xsl:value-of select="normalize-space($transport)"/>{td}{td}<xsl:value-of select="$receive"/>{td}{td}<xsl:value-of select="$send"/>{td}{td}
+            <xsl:value-of select="$request"/>{td}{td}<xsl:value-of select="$response"/>{td}{td}<xsl:value-of select="$trans"/>{td}{td}
+            <xsl:value-of select="$stream"/>{td}{td}<xsl:value-of select="$inmeps"/>{td}{td}<xsl:value-of select="$outmeps"/>{td}{tr}
         </xsl:variable>
 
         <xsl:if test="$header = 'true'">
