@@ -90,7 +90,6 @@
            <xsl:with-param name="outmeps" select="$outmeps"/> 
         </xsl:call-template>
     </xsl:template>
-
     <xsl:template name="matrix-entry">
         <xsl:param name="transport"/>
         <xsl:param name="receive"/>
@@ -101,6 +100,5 @@
         <xsl:param name="trans"/>
         <xsl:param name="inmeps"/>
         <xsl:param name="outmeps"/>
-        |<xsl:value-of select="$transport"/>|<xsl:value-of select="$receive"/>|<xsl:value-of select="$send"/>|<xsl:value-of select="$request"/>|<xsl:value-of select="$response"/>|<xsl:value-of select="$trans"/>|<xsl:value-of select="$stream"/>|<xsl:value-of select="$inmeps"/>|<xsl:value-of select="$outmeps"/>|
-    </xsl:template>
+        |<xsl:value-of select="$transport"/>|<xsl:value-of select="$receive"/>|<xsl:value-of select="$send"/>|<xsl:value-of select="$request"/>|<xsl:value-of select="$response"/>|<xsl:value-of select="$trans"/>|<xsl:value-of select="$stream"/>|<xsl:value-of select="$inmeps"/>|<xsl:value-of select="$outmeps"/>|</xsl:template>
 </xsl:stylesheet>
