@@ -78,6 +78,5 @@
         </xsl:choose>
         </xsl:variable>
         <xsl:if test="$header = 'true'">||Transport||Receive Events||Send Events||Request Events||Request/Response||Transactions||Streaming||Inbound MEPs||Outbound MEPs|| </xsl:if>
-        |<xsl:value-of select="$transport"/>|<xsl:value-of select="$receive"/>|<xsl:value-of select="$send"/>|<xsl:value-of select="$request"/>|<xsl:value-of select="$response"/>|<xsl:value-of select="$trans"/>|<xsl:value-of select="$stream"/>|<xsl:value-of select="$inmeps"/>|<xsl:value-of select="$outmeps"/>|
- </xsl:template>
+        |<xsl:value-of select="$transport"/>|<xsl:value-of select="$receive"/>|<xsl:value-of select="$send"/>|<xsl:value-of select="$request"/>|<xsl:value-of select="$response"/>|<xsl:value-of select="$trans"/>|<xsl:value-of select="$stream"/>|<xsl:value-of select="$inmeps"/>|<xsl:value-of select="$outmeps"/>|</xsl:template>
 </xsl:stylesheet>
