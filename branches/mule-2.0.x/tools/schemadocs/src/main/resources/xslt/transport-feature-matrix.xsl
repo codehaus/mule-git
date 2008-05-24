@@ -20,7 +20,14 @@
     </xsl:template>
 
     <xsl:template match="/xsd:schema/xsd:annotation/xsd:appinfo/schemadoc:transport-features">
-        <xsl:variable name="transport"> [<xsl:value-of select="/xsd:schema/xsd:annotation/xsd:appinfo/schemadoc:short-name"/>|<xsl:value-of select="/xsd:schema/xsd:annotation/xsd:appinfo/schemadoc:page-title"/>] </xsl:variable>
+        <xsl:variable name="heading">
+            ||Transport||Receive Events||Send Events||Request Events||Request/Response||Transactions||Streaming||Inbound
+            MEPs||Outbound MEPs||\\
+        </xsl:variable>
+        <xsl:variable name="transport">[<xsl:value-of
+                select="/xsd:schema/xsd:annotation/xsd:appinfo/schemadoc:short-name"/>|<xsl:value-of
+                select="/xsd:schema/xsd:annotation/xsd:appinfo/schemadoc:page-title"/>]
+        </xsl:variable>
         <xsl:variable name="receive">
             <xsl:choose>
                 <xsl:when test="@receiveEvents = 'true'">(/)</xsl:when>
@@ -47,7 +54,9 @@
         </xsl:variable>
         <xsl:variable name="trans">
             <xsl:choose>
-                <xsl:when test="@transactions = 'true'">(/) <xsl:value-of select="@transaction-types"/></xsl:when>
+                <xsl:when test="@transactions = 'true'">(/)
+                    <xsl:value-of select="@transaction-types"/>
+                </xsl:when>
                 <xsl:otherwise>(x)</xsl:otherwise>
             </xsl:choose>
         </xsl:variable>
@@ -58,31 +67,36 @@
             </xsl:choose>
         </xsl:variable>
         <xsl:variable name="inmeps">
-        <xsl:choose>
-            <xsl:when test="schemadoc:inboundMEPs/@none = 'true'">None</xsl:when>
-            <xsl:otherwise>
-                <xsl:if test="schemadoc:inboundMEPs/@in-only = 'true'">In-Only </xsl:if>
-                <xsl:if test="schemadoc:inboundMEPs/@in-out = 'true'">In-Out </xsl:if>
-                <xsl:if test="schemadoc:inboundMEPs/@in-optional-out = 'true'">In-Optional-Out</xsl:if>
-            </xsl:otherwise>
-        </xsl:choose>
+            <xsl:choose>
+                <xsl:when test="schemadoc:inboundMEPs/@none = 'true'">None</xsl:when>
+                <xsl:otherwise>
+                    <xsl:if test="schemadoc:inboundMEPs/@in-only = 'true'">In-Only</xsl:if>
+                    <xsl:if test="schemadoc:inboundMEPs/@in-out = 'true'">In-Out</xsl:if>
+                    <xsl:if test="schemadoc:inboundMEPs/@in-optional-out = 'true'">In-Optional-Out</xsl:if>
+                </xsl:otherwise>
+            </xsl:choose>
         </xsl:variable>
         <xsl:variable name="outmeps">
-        <xsl:choose>
-            <xsl:when test="schemadoc:outboundMEPs/@none = 'true'">None</xsl:when>
-            <xsl:otherwise>
-                <xsl:if test="schemadoc:outboundMEPs/@out-only = 'true'">Out-Only </xsl:if>
-                <xsl:if test="schemadoc:outboundMEPs/@out-in = 'true'">Out-In </xsl:if>
-                <xsl:if test="schemadoc:outboundMEPs/@out-optional-in = 'true'">Out-Optional-In</xsl:if>
-            </xsl:otherwise>
-        </xsl:choose>
+            <xsl:choose>
+                <xsl:when test="schemadoc:outboundMEPs/@none = 'true'">None</xsl:when>
+                <xsl:otherwise>
+                    <xsl:if test="schemadoc:outboundMEPs/@out-only = 'true'">Out-Only</xsl:if>
+                    <xsl:if test="schemadoc:outboundMEPs/@out-in = 'true'">Out-In</xsl:if>
+                    <xsl:if test="schemadoc:outboundMEPs/@out-optional-in = 'true'">Out-Optional-In</xsl:if>
+                </xsl:otherwise>
+            </xsl:choose>
         </xsl:variable>
+
         <xsl:variable name="line">
-            |<xsl:value-of select="$transport"/>|<xsl:value-of select="$receive"/>|<xsl:value-of select="$send"/>|<xsl:value-of select="$request"/>|<xsl:value-of select="$response"/>|<xsl:value-of select="$trans"/>|<xsl:value-of select="$stream"/>|<xsl:value-of select="$inmeps"/>|<xsl:value-of select="$outmeps"/>|
+            |<xsl:value-of select="$transport"/>|<xsl:value-of select="$receive"/>|<xsl:value-of select="$send"/>|
+            <xsl:value-of select="$request"/>|<xsl:value-of select="$response"/>|<xsl:value-of select="$trans"/>|
+            <xsl:value-of select="$stream"/>|<xsl:value-of select="$inmeps"/>|<xsl:value-of select="$outmeps"/>|
         </xsl:variable>
+
         <xsl:if test="$header = 'true'">
-            ||Transport||Receive Events||Send Events||Request Events||Request/Response||Transactions||Streaming||Inbound MEPs||Outbound MEPs||
+            <xsl:value-of select="normalize-space($heading)"/>
         </xsl:if>
+
         <xsl:value-of select="normalize-space($line)"/>
-</xsl:template>
+    </xsl:template>
 </xsl:stylesheet>
