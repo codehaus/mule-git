@@ -22,11 +22,11 @@
     <xsl:template match="/xsd:schema/xsd:annotation/xsd:appinfo/schemadoc:transport-features">
 
         <xsl:variable name="yes">
-            <img class="emoticon" src="/images/icons/emoticons/check.gif" height="16" width="16" align="absmiddle" alt="" border="0"/>
+            &lt;img class="emoticon" src="/images/icons/emoticons/check.gif" height="16" width="16" align="absmiddle" alt="" border="0"/&gt;
         </xsl:variable>
 
-        <xsl:variable name="no">
-            <img class="emoticon" src="/images/icons/emoticons/error.gif" height="16" width="16" align="absmiddle" alt="" border="0"/>
+        <xsl:variable name="no" >
+            &lt;img class="emoticon" src="/images/icons/emoticons/error.gif" height="16" width="16" align="absmiddle" alt="" border="0"/&gt;
         </xsl:variable>
 
         <xsl:variable name="page" select="/xsd:schema/xsd:annotation/xsd:appinfo/schemadoc:page-title"/>
