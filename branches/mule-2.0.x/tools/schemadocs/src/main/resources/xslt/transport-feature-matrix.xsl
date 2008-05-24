@@ -12,18 +12,15 @@
     <!-- Should a table header be generated -->
     <xsl:param name="header"/>
 
-    <!-- We're rendering Wiki test -->
-    <xsl:output method="text"/>
+    <!-- We're rendering Html -->
+    <xsl:output method="html"/>
 
     <xsl:template match="/">
         <xsl:apply-templates select="/xsd:schema/xsd:annotation/xsd:appinfo/schemadoc:transport-features"/>
     </xsl:template>
 
     <xsl:template match="/xsd:schema/xsd:annotation/xsd:appinfo/schemadoc:transport-features">
-        <xsl:variable name="heading">
-            {tr}{th}Transport{th}{th}Receive Events{th}{th}Send Events{th}{th}Request Events{th}{th}Request/Response{th}{th}Transactions{th}{th}Streaming{th}{th}Inbound
-            MEPs{th}{th}Outbound MEPs{th}
-        </xsl:variable>
+
         <xsl:variable name="transport">[<xsl:value-of
                 select="/xsd:schema/xsd:annotation/xsd:appinfo/schemadoc:short-name"/>|<xsl:value-of
                 select="/xsd:schema/xsd:annotation/xsd:appinfo/schemadoc:page-title"/>]
@@ -87,25 +84,30 @@
             </xsl:choose>
         </xsl:variable>
 
-        <xsl:variable name="line">
-            {tr}{td}<xsl:value-of select="normalize-space($transport)"/>{td}{td}<xsl:value-of select="$receive"/>{td}{td}<xsl:value-of select="$send"/>{td}{td}
-            <xsl:value-of select="$request"/>{td}{td}<xsl:value-of select="$response"/>{td}{td}<xsl:value-of select="$trans"/>{td}{td}
-            <xsl:value-of select="$stream"/>{td}{td}<xsl:value-of select="$inmeps"/>{td}{td}<xsl:value-of select="$outmeps"/>{td}{tr}
-        </xsl:variable>
 
         <xsl:if test="$header = 'true'">
-            <xsl:value-of select="normalize-space($heading)"/>
-            <xsl:text>
-            </xsl:text>
+            <tr><th class="confluenceTh" style="width:10%">Transport</th>
+            <th class="confluenceTh" style="width:10%">Receive Events</th>
+            <th class="confluenceTh" style="width:10%">Send Events</th>
+            <th class="confluenceTh" style="width:10%">Request Events</th>
+            <th class="confluenceTh" style="width:10%">Request/Response</th>
+            <th class="confluenceTh" style="width:10%">Transactions</th>
+            <th class="confluenceTh" style="width:10%">Streaming</th>
+            <th class="confluenceTh" style="width:10%">Inbound MEPs</th>
+            <th class="confluenceTh" style="width:10%">Outbound MEPs</th></tr>
         </xsl:if>
 
-        <xsl:call-template name="test">
-            <xsl:with-param name="line" select="$line"/>
-        </xsl:call-template>
+        <tr>
+            <td class="confluenceTd" rowspan="1"><xsl:value-of select="normalize-space($transport)"/></td>
+            <td class="confluenceTd" rowspan="1"><xsl:value-of select="$receive"/></td>
+            <td class="confluenceTd" rowspan="1"><xsl:value-of select="$send"/></td>
+            <td class="confluenceTd" rowspan="1"><xsl:value-of select="$request"/></td>
+            <td class="confluenceTd" rowspan="1"><xsl:value-of select="$response"/></td>
+            <td class="confluenceTd" rowspan="1"><xsl:value-of select="$trans"/></td>
+            <td class="confluenceTd" rowspan="1"><xsl:value-of select="$stream"/></td>
+            <td class="confluenceTd" rowspan="1"><xsl:value-of select="$inmeps"/></td>
+            <td class="confluenceTd" rowspan="1"><xsl:value-of select="$outmeps"/></td>
+            </tr>
     </xsl:template>
 
-    <xsl:template name="test">
-        <xsl:param name="line"/>
-        <xsl:value-of select="normalize-space($line)"/>
-    </xsl:template>
 </xsl:stylesheet>
