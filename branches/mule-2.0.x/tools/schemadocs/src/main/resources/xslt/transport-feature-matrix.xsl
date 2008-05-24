@@ -77,28 +77,12 @@
             </xsl:otherwise>
         </xsl:choose>
         </xsl:variable>
-        <xsl:if test="$header = 'true'">||Transport||Receive Events||Send Events||Request Events||Request/Response||Transactions||Streaming||Inbound MEPs||Outbound MEPs|| </xsl:if>
-        <xsl:call-template name="matrix-entry">
-           <xsl:with-param name="transport" select="$transport"/>
-           <xsl:with-param name="receive" select="$receive"/> 
-           <xsl:with-param name="send" select="$send"/>
-           <xsl:with-param name="request" select="$request"/>
-           <xsl:with-param name="response" select="$response"/>
-           <xsl:with-param name="stream" select="$stream"/>
-           <xsl:with-param name="trans" select="$trans"/>
-           <xsl:with-param name="inmeps" select="$inmeps"/>
-           <xsl:with-param name="outmeps" select="$outmeps"/> 
-        </xsl:call-template>
-    </xsl:template>
-    <xsl:template name="matrix-entry">
-        <xsl:param name="transport"/>
-        <xsl:param name="receive"/>
-        <xsl:param name="send"/>
-        <xsl:param name="request"/>
-        <xsl:param name="response"/>
-        <xsl:param name="stream"/>
-        <xsl:param name="trans"/>
-        <xsl:param name="inmeps"/>
-        <xsl:param name="outmeps"/>
-        |<xsl:value-of select="$transport"/>|<xsl:value-of select="$receive"/>|<xsl:value-of select="$send"/>|<xsl:value-of select="$request"/>|<xsl:value-of select="$response"/>|<xsl:value-of select="$trans"/>|<xsl:value-of select="$stream"/>|<xsl:value-of select="$inmeps"/>|<xsl:value-of select="$outmeps"/>|</xsl:template>
+        <xsl:variable name="line">
+            |<xsl:value-of select="$transport"/>|<xsl:value-of select="$receive"/>|<xsl:value-of select="$send"/>|<xsl:value-of select="$request"/>|<xsl:value-of select="$response"/>|<xsl:value-of select="$trans"/>|<xsl:value-of select="$stream"/>|<xsl:value-of select="$inmeps"/>|<xsl:value-of select="$outmeps"/>|
+        </xsl:variable>
+        <xsl:if test="$header = 'true'">
+            ||Transport||Receive Events||Send Events||Request Events||Request/Response||Transactions||Streaming||Inbound MEPs||Outbound MEPs||
+        </xsl:if>
+        <xsl:value-of select="normalize-space($line)"/>
+</xsl:template>
 </xsl:stylesheet>
