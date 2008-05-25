@@ -22,51 +22,76 @@
     <xsl:template match="/xsd:schema/xsd:annotation/xsd:appinfo/schemadoc:transport-features">
 
         <xsl:variable name="yes">
-            &lt;img class="emoticon" src="/images/icons/emoticons/check.gif" height="16" width="16" align="absmiddle" alt="" border="0"/&gt;
+            <img class="emoticon" src="/images/icons/emoticons/check.gif" height="16" width="16" align="absmiddle"
+                 alt="" border="0"/>
         </xsl:variable>
 
-        <xsl:variable name="no" >
-            &lt;img class="emoticon" src="/images/icons/emoticons/error.gif" height="16" width="16" align="absmiddle" alt="" border="0"/&gt;
+        <xsl:variable name="no">
+            <img class="emoticon" src="/images/icons/emoticons/error.gif" height="16" width="16" align="absmiddle"
+                 alt="" border="0"/>
         </xsl:variable>
 
         <xsl:variable name="page" select="/xsd:schema/xsd:annotation/xsd:appinfo/schemadoc:page-title"/>
 
         <xsl:variable name="receive">
             <xsl:choose>
-                <xsl:when test="@receiveEvents = 'true'"><xsl:value-of select="$yes"/> </xsl:when>
-                <xsl:otherwise><xsl:value-of select="$no"/></xsl:otherwise>
+                <xsl:when test="@receiveEvents = 'true'">
+                    <xsl:value-of select="$yes"/>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:value-of select="$no"/>
+                </xsl:otherwise>
             </xsl:choose>
         </xsl:variable>
         <xsl:variable name="send">
             <xsl:choose>
-                <xsl:when test="@dispatchEvents = 'true'"><xsl:value-of select="$yes"/></xsl:when>
-                <xsl:otherwise><xsl:value-of select="$no"/></xsl:otherwise>
+                <xsl:when test="@dispatchEvents = 'true'">
+                    <xsl:value-of select="$yes"/>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:value-of select="$no"/>
+                </xsl:otherwise>
             </xsl:choose>
         </xsl:variable>
         <xsl:variable name="request">
             <xsl:choose>
-                <xsl:when test="@requestEvents = 'true'"><xsl:value-of select="$yes"/></xsl:when>
-                <xsl:otherwise><xsl:value-of select="$no"/></xsl:otherwise>
+                <xsl:when test="@requestEvents = 'true'">
+                    <xsl:value-of select="$yes"/>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:value-of select="$no"/>
+                </xsl:otherwise>
             </xsl:choose>
         </xsl:variable>
         <xsl:variable name="response">
             <xsl:choose>
-                <xsl:when test="@responseEvents = 'true'"><xsl:value-of select="$yes"/></xsl:when>
-                <xsl:otherwise><xsl:value-of select="$no"/></xsl:otherwise>
+                <xsl:when test="@responseEvents = 'true'">
+                    <xsl:value-of select="$yes"/>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:value-of select="$no"/>
+                </xsl:otherwise>
             </xsl:choose>
         </xsl:variable>
         <xsl:variable name="trans">
             <xsl:choose>
-                <xsl:when test="@transactions = 'true'"><xsl:value-of select="$yes"/>
+                <xsl:when test="@transactions = 'true'">
+                    <xsl:value-of select="$yes"/>
                     <xsl:value-of select="@transaction-types"/>
                 </xsl:when>
-                <xsl:otherwise><xsl:value-of select="$no"/></xsl:otherwise>
+                <xsl:otherwise>
+                    <xsl:value-of select="$no"/>
+                </xsl:otherwise>
             </xsl:choose>
         </xsl:variable>
         <xsl:variable name="stream">
             <xsl:choose>
-                <xsl:when test="@streaming = 'true'"><xsl:value-of select="$yes"/></xsl:when>
-                <xsl:otherwise><xsl:value-of select="$no"/></xsl:otherwise>
+                <xsl:when test="@streaming = 'true'">
+                    <xsl:value-of select="$yes"/>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:value-of select="$no"/>
+                </xsl:otherwise>
             </xsl:choose>
         </xsl:variable>
         <xsl:variable name="inmeps">
@@ -93,30 +118,41 @@
 
         <xsl:if test="$header = 'true'">
             <tr>
-            <th class="confluenceTh" style="width:10%">Transport</th>
-            <th class="confluenceTh" style="width:10%">Receive Events</th>
-            <th class="confluenceTh" style="width:10%">Send Events</th>
-            <th class="confluenceTh" style="width:10%">Request Events</th>
-            <th class="confluenceTh" style="width:10%">Request/Response</th>
-            <th class="confluenceTh" style="width:10%">Transactions</th>
-            <th class="confluenceTh" style="width:10%">Streaming</th>
-            <th class="confluenceTh" style="width:10%">Inbound MEPs</th>
-            <th class="confluenceTh" style="width:10%">Outbound MEPs</th>
+                <th class="confluenceTh" style="width:10%">Transport</th>
+                <th class="confluenceTh" style="width:10%">Receive Events</th>
+                <th class="confluenceTh" style="width:10%">Send Events</th>
+                <th class="confluenceTh" style="width:10%">Request Events</th>
+                <th class="confluenceTh" style="width:10%">Request/Response</th>
+                <th class="confluenceTh" style="width:10%">Transactions</th>
+                <th class="confluenceTh" style="width:10%">Streaming</th>
+                <th class="confluenceTh" style="width:10%">Inbound MEPs</th>
+                <th class="confluenceTh" style="width:10%">Outbound MEPs</th>
             </tr>
         </xsl:if>
 
         <tr>
-            <td class="confluenceTd" rowspan="1"><a href="http://mule.mulesource.org/display/MULE2USER/{$page}"><xsl:value-of
-                select="/xsd:schema/xsd:annotation/xsd:appinfo/schemadoc:short-name"/></a></td>
-            <td class="confluenceTd" rowspan="1"><xsl:value-of select="$receive"/></td>
-            <td class="confluenceTd" rowspan="1"><xsl:value-of select="$send"/></td>
-            <td class="confluenceTd" rowspan="1"><xsl:value-of select="$request"/></td>
-            <td class="confluenceTd" rowspan="1"><xsl:value-of select="$response"/></td>
-            <td class="confluenceTd" rowspan="1"><xsl:value-of select="$trans"/></td>
-            <td class="confluenceTd" rowspan="1"><xsl:value-of select="$stream"/></td>
-            <td class="confluenceTd" rowspan="1"><xsl:value-of select="$inmeps"/></td>
-            <td class="confluenceTd" rowspan="1"><xsl:value-of select="$outmeps"/></td>
+            <xsl:apply-templates select="@*"/>
+            <td class="confluenceTd" rowspan="1">
+                <xsl:value-of select="$inmeps"/>
+            </td>
+            <td class="confluenceTd" rowspan="1">
+                <xsl:value-of select="$outmeps"/>
+            </td>
         </tr>
     </xsl:template>
 
+    <xsl:template match="@*">
+        <td class="confluenceTd" rowspan="1">
+                <xsl:choose>
+                    <xsl:when test=". = 'true'">
+                        <img class="emoticon" src="/images/icons/emoticons/check.gif" height="16" width="16"
+                             align="absmiddle" alt="" border="0"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <img class="emoticon" src="/images/icons/emoticons/error.gif" height="16" width="16"
+                             align="absmiddle" alt="" border="0"/>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </td>
+    </xsl:template>
 </xsl:stylesheet>
