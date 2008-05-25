@@ -131,6 +131,8 @@
         </xsl:if>
 
         <tr>
+            <td class="confluenceTd" rowspan="1"><a href="http://mule.mulesource.org/display/MULE2USER/{$page}"><xsl:value-of
+                select="/xsd:schema/xsd:annotation/xsd:appinfo/schemadoc:short-name"/></a></td>
             <xsl:apply-templates select="@*"/>
             <td class="confluenceTd" rowspan="1">
                 <xsl:value-of select="$inmeps"/>
