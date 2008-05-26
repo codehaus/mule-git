@@ -18,7 +18,6 @@
         <module>all-examples</module>
         <module>errorhandler</module>
         <module>hello</module>
-        <module>scripting</module>
     </modules>
 
     <build>
