@@ -55,7 +55,7 @@ public class JaasAutenticationWithJaasConfigFileTestCase extends FunctionalTestC
 
         assertNotNull(m);
         assertTrue(m.getPayload() instanceof String);
-        assertEquals("Test Received", m.getPayloadAsString());        ;
+        assertEquals("Test Received", m.getPayloadAsString());
     }
 
     public void testCaseWrongCombinationOfCorrectUsernameAndPassword() throws Exception

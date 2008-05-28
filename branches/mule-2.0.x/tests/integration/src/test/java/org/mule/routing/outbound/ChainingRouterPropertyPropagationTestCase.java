@@ -16,7 +16,6 @@ import org.mule.api.MuleMessage;
 import org.mule.module.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.tck.functional.EventCallback;
-import org.mule.tck.functional.FunctionalTestComponent;
 import org.mule.tck.functional.FunctionalTestComponent2;
 
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
@@ -40,7 +39,6 @@ public class ChainingRouterPropertyPropagationTestCase extends FunctionalTestCas
         {
             public void eventReceived(final MuleEventContext context, final Object component) throws Exception
             {
-                MuleMessage msg = context.getMessage();
                 assertTrue(hop1made.compareAndSet(false, true));
                 FunctionalTestComponent2 ftc = (FunctionalTestComponent2) component;
                 ftc.setReturnData("Hop1 ACK");
