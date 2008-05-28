@@ -12,7 +12,6 @@ package org.mule.transport.file;
 import org.mule.api.MuleEventContext;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.tck.functional.EventCallback;
-import org.mule.tck.functional.FunctionalTestComponent;
 import org.mule.tck.functional.FunctionalTestComponent2;
 import org.mule.util.FileUtils;
 
