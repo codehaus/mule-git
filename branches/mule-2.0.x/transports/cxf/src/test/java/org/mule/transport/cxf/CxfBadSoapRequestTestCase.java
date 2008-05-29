@@ -61,7 +61,7 @@ public class CxfBadSoapRequestTestCase extends FunctionalTestCase
         fault = document.selectNodes("//soap:Envelope/soap:Body/soap:Fault/faultstring");
         assertEquals(1, fault.size());
         Element faultStringElement = (Element) fault.get(0);
-        assertEquals("Message part {http://www.muleumo.org}ssss was not recognized.",
+        assertEquals("Message part {http://www.muleumo.org}ssss was not recognized.  (Does it exist in service WSDL?)",
             faultStringElement.getStringValue());
     }
 
