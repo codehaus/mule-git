@@ -29,6 +29,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.script.Bindings;
@@ -153,7 +154,7 @@ public class Scriptable implements Initialisable
         bindings = scriptEngine.createBindings();
         if (properties != null)
         {
-            bindings.putAll(properties);
+            bindings.putAll((Map) properties);
         }
     }
 
