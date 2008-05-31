@@ -25,10 +25,10 @@ import org.apache.commons.logging.LogFactory;
  * following the concept of header, body, and footer. Header and footer are
  * reserved internally to Mule but body can be used to customize splash-screen
  * output. External code can e.g. hook into the start-up splash-screen as follows:
- * <block><code>
+ * <pre><code>
  *   SplashScreen splashScreen = SplashScreen.getInstance(ServerStartupSplashScreen.class);
  *   splashScreen.addBody("Some extra text");
- * </code></block>
+ * </code></pre>
  */
 public abstract class SplashScreen
 {
