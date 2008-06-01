@@ -32,12 +32,20 @@
             tutorial|http://www.opensymphony.com/quartz/wikidocs/CronTriggers%20Tutorial.html].
         </xsd:documentation>
         <xsd:appinfo>
+            <schemadoc:short-name>quartz</schemadoc:short-name>
             <schemadoc:page-title>Quartz Transport</schemadoc:page-title>
             <schemadoc:additional-documentation where="before-specific-elements">
                 h1. Jobs
-                
-                Jobs are used to perform an action when a time trigger occurs from the Quartz transport. Mule provides a number of Jobs for generating and scheduling events.  These are detailed below.  Users can also write their own jobs and hook them in using the custom-job type that ships with Mule.
+
+                Jobs are used to perform an action when a time trigger occurs from the Quartz transport. Mule provides a
+                number of Jobs for generating and scheduling events. These are detailed below. Users can also write
+                their own jobs and hook them in using the custom-job type that ships with Mule.
             </schemadoc:additional-documentation>
+            <schemadoc:transport-features receiveEvents="true" dispatchEvents="true" responseEvents="false" requestEvents="false"
+                                          transactions="false" streaming="false">
+                <schemadoc:inboundMEPs in-only="true"/>
+                <schemadoc:outboundMEPs out-only="true"/>
+            </schemadoc:transport-features>
         </xsd:appinfo>
     </xsd:annotation>
 
