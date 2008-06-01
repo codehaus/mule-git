@@ -1902,7 +1902,7 @@
                 <xsd:attribute name="expression" type="xsd:string" use="required">
                     <xsd:annotation>
                         <xsd:documentation>The expression that will be evaluated. This should always be a boolean
-                            expression.
+                            expression. The syntax of the exprsssion will be determined by the exprsssion langage being used.
                         </xsd:documentation>
                     </xsd:annotation>
                 </xsd:attribute>
@@ -2423,7 +2423,7 @@
         </xsd:attribute>
         <xsd:attribute name="expression" type="xsd:string" use="required">
             <xsd:annotation>
-                <xsd:documentation>The expression to evaluate. The syntax of this will change depeneding on the
+                <xsd:documentation>The expression to evaluate. The syntax of this attribute will change depending on the
                     evaluator being used.
                 </xsd:documentation>
             </xsd:annotation>
