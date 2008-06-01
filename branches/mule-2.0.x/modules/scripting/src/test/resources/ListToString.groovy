@@ -1,3 +1,3 @@
 def result = ""
-src.each { result += " $it" }
+payload.each { result += " $it" }
 return result.substring(1) // cut the leading space

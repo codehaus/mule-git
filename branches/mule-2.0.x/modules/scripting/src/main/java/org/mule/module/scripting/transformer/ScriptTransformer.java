@@ -16,6 +16,7 @@ import org.mule.module.scripting.component.Scriptable;
 import org.mule.transformer.AbstractMessageAwareTransformer;
 
 import javax.script.ScriptException;
+import javax.script.Bindings;
 
 /**
  * Runs a script to perform transformation on an object.
@@ -26,10 +27,11 @@ public class ScriptTransformer extends AbstractMessageAwareTransformer
 
     public Object transform(MuleMessage message, String outputEncoding) throws TransformerException
     {
-        script.populateBindings(message);
+        Bindings bindings = script.getScriptEngine().createBindings();
+        script.populateBindings(bindings, message);
         try
         {
-            return script.runScript();
+            return script.runScript(bindings);
         }
         catch (ScriptException e)
         {

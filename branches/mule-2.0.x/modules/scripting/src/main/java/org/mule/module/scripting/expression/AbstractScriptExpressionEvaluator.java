@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.WeakHashMap;
 
 import javax.script.ScriptException;
+import javax.script.Bindings;
 
 /**
  * An abstract {@link org.mule.util.expression.ExpressionEvaluator} that can be used for any JSR-233 script engine.
@@ -42,18 +43,19 @@ public abstract class AbstractScriptExpressionEvaluator implements ExpressionEva
     public Object evaluate(String expression, Object message)
     {
         Scriptable script = getScript(expression);
+        Bindings bindings = script.getScriptEngine().createBindings();
         if (message instanceof MuleMessage)
         {
-            script.populateBindings((MuleMessage) message);
+            script.populateBindings(bindings, (MuleMessage) message);
         }
         else 
         {
-            script.populateBindings(message);
+            script.populateBindings(bindings, message);
         }
 
         try
         {
-            return script.runScript();
+            return script.runScript(bindings);
         }
         catch (ScriptException e)
         {

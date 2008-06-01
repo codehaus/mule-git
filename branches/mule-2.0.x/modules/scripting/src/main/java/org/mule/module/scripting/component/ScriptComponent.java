@@ -15,6 +15,9 @@ import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.component.AbstractComponent;
 
+import javax.script.Bindings;
+import javax.script.ScriptEngine;
+
 /**
  * A Script service backed by a JSR-223 compliant script engine such as
  * Groovy, JavaScript, or Rhino.
@@ -26,8 +29,10 @@ public class ScriptComponent extends AbstractComponent
     //@Override
     protected MuleMessage doOnCall(MuleEvent event) throws Exception
     {
-        script.populateBindings(event);
-        return new DefaultMuleMessage(script.runScript());
+        // Set up initial script variables.
+        Bindings bindings = script.getScriptEngine().createBindings();
+        script.populateBindings(bindings, event);
+        return new DefaultMuleMessage(script.runScript(bindings));
     }
 
     public Scriptable getScript()

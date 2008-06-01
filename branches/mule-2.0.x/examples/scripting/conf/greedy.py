@@ -33,6 +33,6 @@ class Change:
         self.printer(num,coin)
         return self.recursive_change(new_rem) + [num]
 
-c = Change(currency, message)
+c = Change(currency, payload)
 c.recursive_change(c.amount)
 result = "[" + c.result + "]"

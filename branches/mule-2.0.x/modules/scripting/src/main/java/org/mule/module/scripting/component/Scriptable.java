@@ -11,8 +11,8 @@
 package org.mule.module.scripting.component;
 
 import org.mule.MuleServer;
+import org.mule.DefaultMuleEventContext;
 import org.mule.api.MuleEvent;
-import org.mule.api.MuleMessage;
 import org.mule.api.lifecycle.Initialisable;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.transformer.TransformerException;
@@ -66,9 +66,6 @@ public class Scriptable implements Initialisable
 
     /** A compiled version of the script, if the scripting engine supports it */
     private CompiledScript compiledScript;
-    
-    /** Script variables */
-    private Bindings bindings;
     
     private ScriptEngine scriptEngine;
     private ScriptEngineManager scriptEngineManager;
@@ -150,33 +147,37 @@ public class Scriptable implements Initialisable
             }
         }
 
-        // Set up initial script variables.
-        bindings = scriptEngine.createBindings();
+
+    }
+
+    public void populateDefaultBindings(Bindings bindings)
+    {
         if (properties != null)
         {
             bindings.putAll((Map) properties);
         }
-    }
-
-    public void populateBindings()
-    {
         bindings.put("log", logger);
         bindings.put("result", new Object());
         bindings.put("muleContext", MuleServer.getMuleContext());
     }
 
-    public void populateBindings(Object payload)
+    public void populateBindings(Bindings bindings, Object payload)
     {
-        populateBindings();
+        populateDefaultBindings(bindings);
         bindings.put("payload", payload);
+        //For backward compatability
         bindings.put("src", payload);
     }
-
-    public void populateBindings(MessageAdapter message)
+    
+    public void populateBindings(Bindings bindings, MessageAdapter message)
     {
-        populateBindings(message.getPayload());
+        populateDefaultBindings(bindings);
         bindings.put("message", message);
-        bindings.put("correlationId", message.getCorrelationId());
+        //This will get overwritten if populateBindings(Bindings bindings, MuleEvent event) is called
+        //and not this method directly.
+        bindings.put("payload", message.getPayload());
+        //For backward compatability
+        bindings.put("src", message.getPayload());
 
         // Set any message properties as variables for the script.
         String propertyName;
@@ -187,31 +188,26 @@ public class Scriptable implements Initialisable
         }
     }
 
-    public void populateBindings(MuleMessage request, MuleMessage response)
+    public void populateBindings(Bindings bindings, MuleEvent event)
     {
-        populateBindings(request);
-        bindings.put("request", request);
-        bindings.put("response", response);
-    }
+        populateBindings(bindings, event.getMessage());
+        bindings.put("originalPayload", event.getMessage().getPayload());
 
-    public void populateBindings(MuleEvent event)
-    {
-        populateBindings(event.getMessage());
         try
         {
-            bindings.put("message", event.transformMessage());
+            bindings.put("payload", event.transformMessage());
         }
         catch (TransformerException e)
         {
             logger.warn(e);
         }
         
-        bindings.put("muleContext", event.getMuleContext());
+        bindings.put("eventContext", new DefaultMuleEventContext(event));
         bindings.put("id", event.getId());
         bindings.put("service", event.getService());
     }
     
-    public Object runScript() throws ScriptException
+    public Object runScript(Bindings bindings) throws ScriptException
     {
         Object result;
         if (compiledScript != null)
@@ -291,7 +287,7 @@ public class Scriptable implements Initialisable
         this.properties = properties;
     }
     
-    protected ScriptEngine getScriptEngine()
+    public ScriptEngine getScriptEngine()
     {
         return scriptEngine;
     }

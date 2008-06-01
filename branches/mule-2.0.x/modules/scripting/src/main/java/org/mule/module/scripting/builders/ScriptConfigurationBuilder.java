@@ -17,6 +17,8 @@ import org.mule.config.builders.AbstractResourceConfigurationBuilder;
 import org.mule.config.builders.i18n.BuildersMessages;
 import org.mule.module.scripting.component.Scriptable;
 
+import javax.script.Bindings;
+
 /** Configures Mule from one or more script files. */
 public class ScriptConfigurationBuilder extends AbstractResourceConfigurationBuilder
 {
@@ -63,8 +65,10 @@ public class ScriptConfigurationBuilder extends AbstractResourceConfigurationBui
             ConfigResource configResource = configResources[i];
             scriptComponent.setScriptFile(configResource.getResourceName());
             scriptComponent.initialise();
-            scriptComponent.populateBindings();
-            scriptComponent.runScript();
+            // Set up initial script variables.
+            Bindings bindings = scriptComponent.getScriptEngine().createBindings();
+            scriptComponent.populateDefaultBindings(bindings);
+            scriptComponent.runScript(bindings);
         }
     }
 }
