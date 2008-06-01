@@ -8,32 +8,35 @@
        http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
        http://www.mulesource.org/schema/mule/scripting/2.0 http://www.mulesource.org/schema/mule/scripting/2.0/mule-scripting.xsd">
 
+    <endpoint name="groovy1.endpoint" address="vm://groovy.1"/>
+    <endpoint name="groovy2.endpoint" address="vm://groovy.2"/>
+    <endpoint name="groovy3.endpoint" address="vm://groovy.3"/>
+
     <script:script name="myScript" engine="groovy">
-        return "$request.payload $response.payload Received"
+        import org.mule.api.MuleMessage
+        import org.mule.DefaultMuleMessage
+
+        MuleMessage result1 = eventContext.sendEvent(message, "groovy2.endpoint")
+        MuleMessage result2 = eventContext.sendEvent(message, "groovy3.endpoint")
+        return "$payload $result1.payload $result2.payload Received"
     </script:script>
 
     <model name="main">
 
         <service name="MessageBuilder">
+            <description>
+                This service used to use the ScriptMessageBuilder which has since been removed.
+            </description>
             <inbound>
-                <inbound-endpoint address="vm://groovy.1"/>
+                <inbound-endpoint ref="groovy1.endpoint"/>
             </inbound>
-            <pooled-component>
-                <prototype-object class="org.mule.module.scripting.component.ScriptMessageBuilder">
-                    <property key="script" value-ref="myScript"/>
-                </prototype-object>
-            </pooled-component>
-            <outbound>
-                <filtering-router>
-                    <outbound-endpoint address="vm://groovy.2"/>
-                    <outbound-endpoint address="vm://groovy.3"/>
-                </filtering-router>
-            </outbound>
+            <script:component script-ref="myScript"/>
+            
         </service>
 
         <service name="ScriptA">
             <inbound>
-                <inbound-endpoint address="vm://groovy.2"/>
+                <inbound-endpoint ref="groovy2.endpoint"/>
             </inbound>
             <script:component>
 			    <script:script engine="groovy">
@@ -44,7 +47,7 @@
 
         <service name="ScriptB">
             <inbound>
-                <inbound-endpoint address="vm://groovy.3"/>
+                <inbound-endpoint ref="groovy3.endpoint"/>
             </inbound>
             <script:component>
 			    <script:script engine="groovy">
