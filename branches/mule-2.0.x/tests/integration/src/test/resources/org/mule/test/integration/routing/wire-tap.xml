@@ -13,15 +13,25 @@
             <inbound>
                 <inbound-endpoint address="vm://inbound.channel"/>
                 <wire-tap-router>
-                    <outbound-endpoint address="vm://tapped.channel"/>
+                    <outbound-endpoint address="vm://tapped.channel1"/>
+                </wire-tap-router>
+                <wire-tap-router>
+                    <outbound-endpoint address="vm://tapped.channel2"/>
                 </wire-tap-router>
             </inbound>
             <test:component/>
         </service>
 
-        <service name="TappedReceiver">
+        <service name="TappedReceiver1">
             <inbound>
-                <inbound-endpoint address="vm://tapped.channel"/>
+                <inbound-endpoint address="vm://tapped.channel1"/>
+            </inbound>
+            <test:component/>
+        </service>
+
+        <service name="TappedReceiver2">
+            <inbound>
+                <inbound-endpoint address="vm://tapped.channel2"/>
             </inbound>
             <test:component/>
         </service>

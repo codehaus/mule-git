@@ -280,6 +280,14 @@
             <xsd:element ref="abstract-inbound-endpoint" minOccurs="0" maxOccurs="unbounded"/>
             <xsd:element ref="abstract-inbound-router" minOccurs="0" maxOccurs="unbounded"/>
         </xsd:sequence>
+        <xsd:attribute name="matchAll" type="substitutableBoolean" default="true">
+            <xsd:annotation>
+                <xsd:documentation>
+                    If true, the input message will be passed through inbound routers, otherwise only
+                    the first matching router is used.
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
     </xsd:complexType>
 
     <xsd:element name="abstract-catch-all-strategy" abstract="true" type="abstractCatchAllStrategyType">
