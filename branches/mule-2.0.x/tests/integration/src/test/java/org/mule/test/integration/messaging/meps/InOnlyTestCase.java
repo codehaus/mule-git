@@ -41,17 +41,7 @@ public class InOnlyTestCase extends FunctionalTestCase
         });
 
         client.dispatch("inboundEndpoint", "some data", null);
-
         assertTrue(latch.await(TIMEOUT, TimeUnit.MILLISECONDS));
-
-//        MuleExchange exchange = client.createExchange();
-//        exchange.setEnableHistory(true);
-//        MuleExchange exchange = client.invoke("jms://topic:in", "some data", null);
-//        MuleMessage result = exchange.getNextResultMessage();
-//
-//        exchange.getSourceMessage();
-//        exchange.getMessage("foo");
-
     }
 }
 // END SNIPPET: full-class
