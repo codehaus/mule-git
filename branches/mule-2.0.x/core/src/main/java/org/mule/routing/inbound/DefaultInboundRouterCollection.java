@@ -258,8 +258,8 @@ public class DefaultInboundRouterCollection extends AbstractRouterCollection imp
         if (endpoints != null)
         {
             this.endpoints.clear();
-            // Ensure all endpoints are response endpoints
-            // This will go when we start dropping suport for 1.4 and start using 1.5
+            // Ensure all endpoints are inbound endpoints
+            // This will go when we start dropping support for 1.4 and start using 1.5
             for (Iterator it = endpoints.iterator(); it.hasNext();)
             {
                 ImmutableEndpoint endpoint = (ImmutableEndpoint) it.next();
