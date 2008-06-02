@@ -30,8 +30,6 @@ import org.mule.transport.cxf.transport.MuleUniversalTransport;
 import org.mule.transport.http.HttpConnector;
 import org.mule.transport.http.HttpConstants;
 
-import com.sun.corba.se.impl.activation.ServerTool;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
