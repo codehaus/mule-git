@@ -11,9 +11,13 @@
 package org.mule.module.scripting.component;
 
 import org.mule.DefaultMuleMessage;
+import org.mule.transport.NullPayload;
+import org.mule.transformer.TransformerTemplate;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.component.AbstractComponent;
+
+import java.util.Collections;
 
 import javax.script.Bindings;
 import javax.script.ScriptEngine;
@@ -32,7 +36,25 @@ public class ScriptComponent extends AbstractComponent
         // Set up initial script variables.
         Bindings bindings = script.getScriptEngine().createBindings();
         script.populateBindings(bindings, event);
-        return new DefaultMuleMessage(script.runScript(bindings));
+        Object result = script.runScript(bindings);
+
+        if (result != null)
+        {
+            if (result instanceof MuleMessage)
+            {
+                return (MuleMessage) result;
+            }
+            else
+            {
+                event.getMessage().applyTransformers(Collections.singletonList(new TransformerTemplate(
+                        new TransformerTemplate.OverwitePayloadCallback(result))));
+                return event.getMessage();
+            }
+        }
+        else
+        {
+            return new DefaultMuleMessage(NullPayload.getInstance());
+        }
     }
 
     public Scriptable getScript()
