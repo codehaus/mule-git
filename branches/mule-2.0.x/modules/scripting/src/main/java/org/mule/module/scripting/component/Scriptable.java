@@ -12,6 +12,7 @@ package org.mule.module.scripting.component;
 
 import org.mule.MuleServer;
 import org.mule.DefaultMuleEventContext;
+import org.mule.transport.NullPayload;
 import org.mule.api.MuleEvent;
 import org.mule.api.lifecycle.Initialisable;
 import org.mule.api.lifecycle.InitialisationException;
@@ -157,7 +158,9 @@ public class Scriptable implements Initialisable
             bindings.putAll((Map) properties);
         }
         bindings.put("log", logger);
-        bindings.put("result", new Object());
+        //A place holder for a retuen result if the script doesn't return a result.
+        //The script can overwrite this binding
+        bindings.put("result", NullPayload.getInstance());
         bindings.put("muleContext", MuleServer.getMuleContext());
     }
 
@@ -165,7 +168,8 @@ public class Scriptable implements Initialisable
     {
         populateDefaultBindings(bindings);
         bindings.put("payload", payload);
-        //For backward compatability
+        //For backward compatability. Usually used by the script transformer since
+        //src maps with the argument passed into the transformer
         bindings.put("src", payload);
     }
     
