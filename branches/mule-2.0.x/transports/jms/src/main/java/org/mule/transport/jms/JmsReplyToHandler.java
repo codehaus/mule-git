@@ -33,7 +33,13 @@ import javax.jms.Topic;
 
 /**
  * <code>JmsReplyToHandler</code> will process a JMS replyTo or hand off to the
- * default replyTo handler if the replyTo is a URL
+ * default replyTo handler if the replyTo is a URL.
+ * The purpose of this class is to send a result on a ReplyTo destination if one
+ * has been set.
+ * Note that the {@link JmsMessageDispatcher} also contains logic for handling ReplyTo. However,
+ * the dispatcher is responsible attaching the replyTo information to the message and also
+ * receiving on the same replyTo if 'remoteSync' is set. The {@link JmsMessageDispatcher} never
+ * writes to the 'replyTo' destination.
  */
 public class JmsReplyToHandler extends DefaultReplyToHandler
 {
