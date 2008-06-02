@@ -18,8 +18,6 @@ import org.mule.util.StringUtils;
 import java.util.HashMap;
 import java.util.Map;
 
-// END SNIPPET: full-class
-
 // START SNIPPET: full-class
 public class InOptionalOutTestCase extends FunctionalTestCase
 {
@@ -45,3 +43,4 @@ public class InOptionalOutTestCase extends FunctionalTestCase
         assertEquals("foo header received", result.getPayloadAsString());
     }
 }
+// END SNIPPET: full-class
