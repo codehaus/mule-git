@@ -247,16 +247,13 @@
         <xsd:annotation>
             <xsd:documentation>
                 The file connector uses this as a default implementation, it understands the following patterns:
-                <ul>
-                    <li>$\{DATE\} - the current date in the format dd-MM-yy_HH-mm-ss.SS;</li>
-                    <li>$\{DATE:yy-MM-dd\} - the current date using the specified format;</li>
-                    <li>$\{SYSTIME\} - The current system time milliseconds;</li>
-                    <li>$\{UUID\} - A generated Universally unique id;</li>
-                    <li>$\{ORIGINALNAME\} - The original file name if the file being written was read from another
-                        location;
-                    </li>
-                    <li>$\{COUNT\} - An incremental counter.</li>
-                </ul>
+
+                * $\{DATE\} - the current date in the format dd-MM-yy_HH-mm-ss.SS
+                * $\{DATE:yy-MM-dd\} - the current date using the specified format
+                * $\{SYSTIME\} - The current system time milliseconds
+                * $\{UUID\} - A generated Universally unique id
+                * $\{ORIGINALNAME\} - The original file name if the file being written was read from another location
+                * $\{COUNT\} - An incremental counter.
             </xsd:documentation>
         </xsd:annotation>
     </xsd:element>
@@ -272,29 +269,25 @@
             <xsd:documentation>
                 ExpressionFilenameParser can use any expression language supported by Mule
                 to construct a file name for the current message. Expressions can be xpath, xquery, ognl, mvel, header,
-                function and more. For more information see [Expressions].
-                //
-                For example an xpath expression can be defined to pull a message id out of an xml message and use that
+                function and more. For more information see [Expressions]. For example an xpath expression can be defined to pull a message id out of an xml message and use that
                 as the file name -
-                //
+
                 {noformat}
                 ${xpath:/message/header/@id}
                 {noformat}
-                //
+
                 This parser superseeds the legacy-filename-parser which has been kept in
                 Mule 2 for compatibility. The following demonstrates how to achieve the same results when using the
                 expression-filename-parser over the legacy-filename-parser.
-                <ul>
-                    <li>$\{DATE\} : $\{function:dateStamp\}</li>
-                    <li>$\{DATE:yy-MM-dd\} : $\{function:dateStamp(yy-MM-dd)\}</li>
-                    <li>$\{SYSTIME\} : $\{function:systime\}</li>
-                    <li>$\{UUID\} : $\{function:uuid\}</li>
-                    <li>$\{ORIGINALNAME\} : $\{header:originalFilename\}</li>
-                    <li>$\{COUNT\} : $\{function:counter\} - note that this is a global counter. If you want a local counter
-                        per file connector then you should use the legacy-filename-parser.
-                    </li>
-                    <li>$\{[Message Property Name]\} : $\{header:[Message Property Name]\}</li>
-                </ul>
+
+                * $\{DATE\} : $\{function:dateStamp\}
+                * $\{DATE:yy-MM-dd\} : $\{function:dateStamp(yy-MM-dd)\}
+                * $\{SYSTIME\} : $\{function:systime\}
+                * $\{UUID\} : $\{function:uuid\}
+                * $\{ORIGINALNAME\} : $\{header:originalFilename\}
+                * $\{COUNT\} : $\{function:counter\} - note that this is a global counter. If you want a local counter per file connector then you should use the legacy-filename-parser.
+                * $\{\[Message Property Name\]\} : $\{header:\[Message Property Name\]\}
+
             </xsd:documentation>
         </xsd:annotation>
     </xsd:element>
