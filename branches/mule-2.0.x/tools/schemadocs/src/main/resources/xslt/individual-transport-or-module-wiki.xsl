@@ -43,8 +43,7 @@
 
             <xsl:choose>
                 <xsl:when test="/xsd:schema/xsd:annotation/xsd:appinfo/schemadoc:page-title">
-                    h1.
-                    <xsl:value-of select="/xsd:schema/xsd:annotation/xsd:appinfo/schemadoc:page-title"/>
+                    h1. <xsl:value-of select="/xsd:schema/xsd:annotation/xsd:appinfo/schemadoc:page-title"/>
                 </xsl:when>
                 <xsl:otherwise>h1. Transport (schemadoc:page-title not set)</xsl:otherwise>
             </xsl:choose>
@@ -52,8 +51,7 @@
             <xsl:value-of select="normalize-space(/xsd:schema/xsd:annotation/xsd:documentation)"/>
 
             <xsl:if test="/xsd:schema/xsd:annotation/xsd:appinfo/schemadoc:additional-documentation[@where='before-common-elements']">
-                <xsl:value-of
-                        select="/xsd:schema/xsd:annotation/xsd:appinfo/schemadoc:additional-documentation[@where='before-common-elements']"/>
+                <xsl:value-of select="/xsd:schema/xsd:annotation/xsd:appinfo/schemadoc:additional-documentation[@where='before-common-elements']"/>
             </xsl:if>
 
             <xsl:apply-templates select="/xsd:schema/xsd:element[@name='connector']" mode="single-element"/>
