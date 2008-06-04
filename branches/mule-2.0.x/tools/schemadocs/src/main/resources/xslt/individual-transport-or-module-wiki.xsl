@@ -46,6 +46,7 @@
                 </xsl:when>
                 <xsl:otherwise>h1. Transport (schemadoc:page-title not set)</xsl:otherwise>
             </xsl:choose>
+            \\
             <xsl:value-of select="normalize-space(/xsd:schema/xsd:annotation/xsd:documentation)"/>
 
             <xsl:if test="/xsd:schema/xsd:annotation/xsd:appinfo/schemadoc:additional-documentation[@where='before-common-elements']">
