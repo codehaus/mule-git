@@ -98,8 +98,6 @@ public class MuleBootstrap
         
         setSystemMuleVersion();
         requestLicenseAcceptance();        
-
-        MuleBootstrapUtils.addExternalJarFilesToClasspath(muleHome, null);
     }
     
     private static File lookupMuleHome() throws Exception

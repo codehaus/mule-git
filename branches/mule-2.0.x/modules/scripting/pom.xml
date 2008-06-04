@@ -30,12 +30,6 @@
             <version>${version}</version>
             <scope>provided</scope>
         </dependency>
-        <!-- need to explicitly mark javax.activation as provided -->
-        <dependency>
-            <groupId>javax.activation</groupId>
-            <artifactId>activation</artifactId>
-            <scope>provided</scope>
-        </dependency>
         <!-- Used by ScriptConfigurationBuilder -->
         <dependency>
             <groupId>org.mule.modules</groupId>

@@ -1,4 +1,5 @@
 acegi-security-1.0.1
+activation-1.1
 ant-1.6.5
 antlr-2.7.6
 aopalliance-1.0
@@ -52,6 +53,7 @@ jcr-1.0
 jdom-1.0
 jug-2.0.0-asl
 junit-3.8.2
+mail-1.4
 mockobjects-core-0.09
 mule-core
 mule-module-acegi
