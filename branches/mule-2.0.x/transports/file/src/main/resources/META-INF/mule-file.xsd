@@ -12,13 +12,18 @@
                 schemaLocation="http://www.mulesource.org/schema/mule/core/2.0/mule.xsd"/>
 
     <xsd:annotation>
-        <xsd:documentation>The file transport allows files to be read and written to and from directories on the local
+        <xsd:documentation>The File transport allows files to be read and written to and from directories on the local
             file system. The connector can be configured to filter the file it reads and the way files are written, such
             as whether binary output is used or the file is appended to.
         </xsd:documentation>
         <xsd:appinfo>
             <schemadoc:short-name>flie</schemadoc:short-name>
             <schemadoc:page-title>File Transport</schemadoc:page-title>
+            <schemadoc:additional-documentation where="before-specific-elements">
+                h2. Filename Parsers
+
+                The {{filenameParser}} is set on the connector used when writing files to a directory. The parser will convert the _outputPattern_ attribute to a string using the parser and the current message.
+            </schemadoc:additional-documentation>
             <schemadoc:transport-features receiveEvents="true" dispatchEvents="true" responseEvents="false"
                                           requestEvents="true"
                                           transactions="false" streaming="true">
@@ -28,7 +33,15 @@
         </xsd:appinfo>
     </xsd:annotation>
 
-    <xsd:element name="connector" type="fileConnectorType" substitutionGroup="mule:abstract-connector"/>
+    <xsd:element name="connector" type="fileConnectorType" substitutionGroup="mule:abstract-connector">
+        <xsd:annotation>
+            <xsd:documentation>The File connector is used to configure the default behaviour for File endpoints that
+                reference the connector. Note if there is only one File connector configured, all File endpoints
+                will use that connector.
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+
     <xsd:complexType name="fileConnectorType">
         <xsd:complexContent>
             <xsd:extension base="mule:connectorType">
