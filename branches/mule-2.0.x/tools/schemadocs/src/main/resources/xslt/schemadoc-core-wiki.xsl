@@ -24,7 +24,7 @@
 
         h2. <xsl:value-of select="$t"/>
         \\
-        <xsl:value-of select="normalize-space(xsd:annotation/xsd:documentation)"/>
+        <xsl:value-of select="xsd:annotation/xsd:documentation"/>
 
         <xsl:variable name="type"><xsl:value-of select="@type"/> </xsl:variable>
 
