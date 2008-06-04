@@ -2,7 +2,7 @@
         version="2.0"
         xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
         xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-        xmlns:schemadoc="http://www.mulesource.org/schema/mule/schemadoc/2.0"        
+        xmlns:schemadoc="http://www.mulesource.org/schema/mule/schemadoc/2.0"
         >
 
     <!-- the base path mapping for snippet URLS.  These are configured in the Confluence Snippet macro -->
@@ -16,7 +16,7 @@
                   select="document('http://svn.codehaus.org/mule/branches/mule-2.0.x/tools/schemadocs/src/main/resources/links.xml')/links"/>
 
     <xsl:output method="text" standalone="yes" indent="no"/>
-    
+
     <xsl:template match="xsd:element" mode="single-element">
 
         <xsl:variable name="temp" select="translate(@name, '-', ' ')"/>
@@ -28,15 +28,9 @@
 
         <xsl:variable name="type"><xsl:value-of select="@type"/> </xsl:variable>
 
-        <!--<xsl:if test="count(/xsd:schema/xsd:complexType[@name=$type]/xsd:attribute) > 0">-->
-
-        h3.Attributes of &lt;<xsl:value-of select="@name"/>...&gt;
-        ||Name||Type||Required||Default||Description||
-        <xsl:apply-templates select="." mode="attributes"/>
-
-        h3. Child Elements of &lt;<xsl:value-of select="@name"/>...&gt;
-        ||Name||Cardinality||Description||
-        <xsl:call-template name="element-children"/>
+        <xsl:apply-templates select="//xsd:complexType[@name=$type]" mode="table">
+            <xsl:with-param name="name"><xsl:value-of select="@name"/> </xsl:with-param>
+        </xsl:apply-templates>
 
         <xsl:if test="@type">
             <xsl:variable name="type" select="@type"/>
@@ -46,6 +40,45 @@
         <!-- Render Example configurations -->
         <xsl:apply-templates select="xsd:annotation/xsd:appinfo"/>
     </xsl:template>
+
+    <xsl:template match="xsd:complexType" mode="table">
+        <xsl:param name="name"/>
+        <xsl:if test="(count(.//xsd:attribute) +  count(.//xsd:attributeGroup)) > 0">
+        h3.Attributes of &lt;<xsl:value-of select="$name"/>...&gt;
+        ||Name||Type||Required||Default||Description||
+        <xsl:apply-templates select="." mode="attributes"/>
+        </xsl:if>
+
+        <xsl:if test="(count(.//xsd:element) + count(.//xsd:sequence) + count(.//xsd:group) + count(.//xsd:choice)) > 0 ">
+        h3. Child Elements of &lt;<xsl:value-of select="$name"/>...&gt;
+        ||Name||Cardinality||Description||
+        <xsl:call-template name="element-children"/>
+        </xsl:if>
+    </xsl:template>
+
+    <!-- TRANSFORMERS -->
+    <xsl:template name="transformers">
+
+        h2. Transformers
+        These are transformers specific to this transport.  Note that these are added automatically to the Mule registry at start up. When doing automatic transformations these will be included when searching for the correct transformers.
+
+        ||Name||Description||<xsl:apply-templates select="//xsd:element[contains(@substitutionGroup,'abstract-transformer')]" mode="transformer"/>
+    </xsl:template>
+
+    <xsl:template match="xsd:element" mode="transformer">
+        | <xsl:value-of select="@name"/>| <xsl:value-of select="normalize-space(xsd:annotation/xsd:documentation)"/>|</xsl:template>
+
+    <!-- FILTERS -->
+    <xsl:template name="filters">
+
+        h2. Filters
+        Filters can be used on inbound endpoints to control which data is received by a service.
+
+        ||Name||Description||<xsl:apply-templates select="//xsd:element[contains(@substitutionGroup,'abstract-filter')]" mode="filter"/>
+    </xsl:template>
+
+    <xsl:template match="xsd:element" mode="filter">
+        | <xsl:value-of select="@name"/>| <xsl:value-of select="normalize-space(xsd:annotation/xsd:documentation)"/>|</xsl:template>
 
     <!-- App Info extension processing -->
     <xsl:template match="xsd:appinfo">
