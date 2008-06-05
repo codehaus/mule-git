@@ -82,7 +82,7 @@ public abstract class AbstractMessageDispatcher extends AbstractConnectable impl
             Transaction tx = TransactionCoordination.getInstance().getTransaction();
             if (isDoThreading() && !event.isSynchronous() && tx == null)
             {
-                workManager.scheduleWork(new Worker(event), WorkManager.INDEFINITE, null, connector);
+                connector.getDispatcherWorkManager().scheduleWork(new Worker(event), WorkManager.INDEFINITE, null, connector);
             }
             else
             {
