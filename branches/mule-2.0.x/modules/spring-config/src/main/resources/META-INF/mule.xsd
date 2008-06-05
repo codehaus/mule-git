@@ -1095,7 +1095,7 @@
     <xsd:complexType name="asyncReplyCollectionType">
         <xsd:sequence>
             <xsd:element ref="abstract-inbound-endpoint" minOccurs="1" maxOccurs="unbounded"/>
-            <xsd:element ref="abstract-async-reply-router" minOccurs="1" maxOccurs="1"/>
+            <xsd:element ref="abstract-async-reply-router" minOccurs="0" maxOccurs="1"/>
             <!-- TODO leaving this commented here, but I don't think there should be a transformer here -->
             <!--<xsd:element ref="abstract-transformer" minOccurs="0" maxOccurs="unbounded"/>-->
         </xsd:sequence>
