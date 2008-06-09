@@ -33,4 +33,13 @@ INSTALL.txt, you can run the example from the command line as follows:
 +----------------------+
 | Building the example |
 +----------------------+
-This example has no custom classes so there's not much point in building it.
+The only custom classes in here are used by CXF. These must be built using 
+Java 1.5 because they use annotations.
+
+First, make sure you have set the MULE_HOME environment variable as recommended 
+in mule README.txt
+
+Depending on the build tool you are using (Ant or Maven), you can build the example 
+by simply running "ant" or "mvn".  This will compile the example classes, produce a 
+jar file, and copy everything to $MULE_HOME/lib/user, which is where your custom classes 
+and configuration files should go.
