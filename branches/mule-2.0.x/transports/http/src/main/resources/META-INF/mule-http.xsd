@@ -155,7 +155,7 @@
         <xsd:complexContent>
             <xsd:extension base="mule:defaultComponentType">
                 <xsd:sequence>
-                    <xsd:element name="error-filter">
+                    <xsd:element name="error-filter" maxOccurs="1" minOccurs="0">
                         <xsd:annotation>
                             <xsd:documentation>An error filter can be used to detect whether the response from the
                                 remote service resulted in an error.
