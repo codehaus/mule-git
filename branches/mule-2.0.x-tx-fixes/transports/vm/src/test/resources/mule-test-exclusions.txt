@@ -1,0 +1,7 @@
+#
+# Test cases listed in this file are not run.
+#
+
+# MULE-3300
+org.mule.transport.vm.functional.VMRequestorTestCase
+
