@@ -88,6 +88,11 @@ public class HttpMessages extends MessageFactory
     {
         return createMessage(BUNDLE_PATH, 18, line);
     }
+
+    public static Message pollingReciverCannotbeUsed()
+    {
+        return createMessage(BUNDLE_PATH, 19);
+    }
 }
 
 
