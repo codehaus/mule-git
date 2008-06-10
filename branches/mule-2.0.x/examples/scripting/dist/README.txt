@@ -8,8 +8,8 @@ For more information, refer to http://mule.mulesource.org/display/MULEINTRO/Exam
 +----------------------+
 | Building the example |
 +----------------------+
-First, make sure you have set the MULE_HOME environment variable as recommended 
-in INSTALL.txt
+First, make sure you have set the MULE_HOME environment variable as recommended
+in Mule's README.txt
 
 Depending on the build tool you are using (Ant or Maven), you can build the 
 example by simply running "ant" or "mvn".  This will download any additional 
@@ -26,5 +26,5 @@ refer to the following information.)
 +---------------------+
 | Running the example |
 +---------------------+
-Simply use the shell script (Unix/Linux) or batch file (Windows) provided in 
+Simply use the shell script (Unix/Linux) or batch file (Windows) provided in
 this directory to run the example.

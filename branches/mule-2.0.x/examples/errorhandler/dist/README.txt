@@ -11,8 +11,8 @@ For more information, refer to http://mule.mulesource.org/display/MULEINTRO/Exam
 +----------------------+
 | Building the example |
 +----------------------+
-First, make sure you have set the MULE_HOME environment variable as recommended 
-in INSTALL.txt
+First, make sure you have set the MULE_HOME environment variable as recommended
+in Mule's README.txt
 
 Depending on the build tool you are using (Ant or Maven), you can build the 
 example by simply running "ant" or "mvn".  This will download any additional 

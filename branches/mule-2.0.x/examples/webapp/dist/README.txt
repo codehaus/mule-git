@@ -11,8 +11,8 @@ For more information, refer to http://mule.mulesource.org/display/MULEINTRO/Exam
 +---------------------+
 | Running the example |
 +---------------------+
-First, make sure you have set the MULE_HOME environment variable as recommended 
-in INSTALL.txt
+First, make sure you have set the MULE_HOME environment variable as recommended
+in Mule's README.txt
 
 NOTE: The echo (mule-example-echo), hello (mule-example-hello),
 stockquote (mule-example-stockquote) and loanbroker (mule-example-loanbroker-esn)
