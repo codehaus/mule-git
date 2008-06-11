@@ -16,12 +16,15 @@ import org.mule.config.spring.parsers.specific.ComponentDefinitionParser;
 import org.mule.object.AbstractObjectFactory;
 import org.mule.object.SingletonObjectFactory;
 import org.mule.tck.functional.FunctionalTestComponent2;
+import org.mule.tck.functional.EventCallback;
 import org.mule.util.IOUtils;
 import org.mule.util.StringUtils;
+import org.mule.util.ClassUtils;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.lang.reflect.InvocationTargetException;
 
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
@@ -97,7 +100,21 @@ public class TestComponentDefinitionParser extends ComponentDefinitionParser
                 {
                     returnData = rData.getTextContent();
                 }
-                break;
+            }
+            else if ("callback".equals(list.item(i).getLocalName()))
+            {
+                Element ele = (Element) list.item(i);
+                String c = ele.getAttribute("class");
+                try
+                {
+                    EventCallback cb = (EventCallback)ClassUtils.instanciateClass(c, ClassUtils.NO_ARGS);
+                    props.put("eventCallback", cb);
+
+                }
+                catch (Exception e)
+                {
+                    throw new BeanCreationException("Failed to load event-callback: " + c, e);
+                }
             }
 
         }
