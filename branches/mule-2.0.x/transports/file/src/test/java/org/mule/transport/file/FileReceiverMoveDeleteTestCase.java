@@ -22,6 +22,7 @@ import org.mule.model.seda.SedaService;
 import org.mule.object.SingletonObjectFactory;
 import org.mule.tck.functional.EventCallback;
 import org.mule.tck.functional.FunctionalTestComponent;
+import org.mule.tck.functional.FunctionalTestComponent2;
 import org.mule.transformer.AbstractMessageAwareTransformer;
 import org.mule.transformer.NoActionTransformer;
 import org.mule.util.concurrent.Latch;
@@ -205,7 +206,7 @@ public class FileReceiverMoveDeleteTestCase extends AbstractFileMoveDeleteTestCa
         s.getInboundRouter().addEndpoint(
             muleContext.getRegistry().lookupEndpointFactory().getInboundEndpoint(endpointBuilder));
         final Latch latch = new Latch();
-        FunctionalTestComponent component = new FunctionalTestComponent();
+        FunctionalTestComponent2 component = new FunctionalTestComponent2();
         component.setEventCallback(new EventCallback()
         {
             public void eventReceived(final MuleEventContext context, final Object message) throws Exception

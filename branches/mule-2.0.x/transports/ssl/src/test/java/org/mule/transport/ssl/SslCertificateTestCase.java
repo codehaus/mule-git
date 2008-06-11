@@ -14,6 +14,7 @@ import org.mule.api.MuleMessage;
 import org.mule.module.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.tck.functional.FunctionalTestComponent;
+import org.mule.tck.functional.FunctionalTestComponent2;
 
 public class SslCertificateTestCase extends FunctionalTestCase
 {
@@ -38,7 +39,13 @@ public class SslCertificateTestCase extends FunctionalTestCase
 
     protected void doTests(int n) throws Exception
     {
-        SaveCertificateCallback callback = (SaveCertificateCallback) muleContext.getRegistry().lookupObject("certificates");
+        FunctionalTestComponent2 ftc = (FunctionalTestComponent2) getComponent("service");
+        assertNotNull(ftc);
+        assertNotNull(ftc.getEventCallback());
+
+        SaveCertificateCallback callback = (SaveCertificateCallback) ftc.getEventCallback();
+        callback.clear();
+
         MuleClient client = new MuleClient();
         for (int i = 0; i < n; ++i)
         {
