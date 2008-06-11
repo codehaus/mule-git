@@ -117,7 +117,7 @@
                 </configuration>
             </plugin>
 
-            <!-- When we build an IDEA project make sure we attach sources for convenience -->
+            <!-- When we build an Eclipse project make sure we attach sources for convenience -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-eclipse-plugin</artifactId>
