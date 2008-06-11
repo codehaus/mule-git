@@ -92,4 +92,6 @@ public interface TransactionConfig
     boolean isEnabled(); 
 
     void setEnabled(boolean enabled);
+
+    boolean isConfigured();
 }

@@ -55,6 +55,7 @@ public class JmsSingleTransactionAlwaysBeginConfigurationTestCase extends Abstra
         receive(scenarioNotReceive);
     }
 
+    /*
     public void testConfigrationC() throws Exception
     {
         scenarioCommit.setInputQueue(JMS_QUEUE_INPUT_CONF_C);
@@ -69,6 +70,7 @@ public class JmsSingleTransactionAlwaysBeginConfigurationTestCase extends Abstra
         receive(scenarioCommit);
         receive(scenarioNotReceive);
     }
+    */
 
 }
 

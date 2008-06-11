@@ -52,6 +52,7 @@
             </outbound>
         </service>
 
+<!-- 
         <service name="ConfigurationC">
             <inbound>
                 <inbound-endpoint address="jms://in3" connector-ref="jmsConnector1">
@@ -71,5 +72,6 @@
                 </outbound-pass-through-router>
             </outbound>
         </service>
+-->
     </model>    
 </mule>
