@@ -26,18 +26,18 @@
             The Mule CXF Transport is an evolution of Mule's XFire Transport which provides support for the use of web
             service integration via Apache CXF. The Mule CXF connector also provides support for WS-Security,
             WS-Addressing and WS-Reliable-Messaging.
-
-            <xsd:appinfo>
-                <schemadoc:short-name>cxf</schemadoc:short-name>
-                <schemadoc:page-title>CXF Transport</schemadoc:page-title>
-
-                <schemadoc:transport-features receiveEvents="true" dispatchEvents="true" responseEvents="true" requestEvents="true"
-                                              transactions="false" streaming="true">
-                    <schemadoc:inboundMEPs in-only="true" in-out="true" in-optional-out="true"/>
-                    <schemadoc:outboundMEPs out-only="true" out-in="true" out-optional-in="true"/>
-                </schemadoc:transport-features>
-            </xsd:appinfo>
         </xsd:documentation>
+        <xsd:appinfo>
+            <schemadoc:short-name>cxf</schemadoc:short-name>
+            <schemadoc:page-title>CXF Transport</schemadoc:page-title>
+
+            <schemadoc:transport-features receiveEvents="true" dispatchEvents="true" responseEvents="true"
+                                          requestEvents="true"
+                                          transactions="false" streaming="true">
+                <schemadoc:inboundMEPs in-only="true" in-out="true" in-optional-out="true"/>
+                <schemadoc:outboundMEPs out-only="true" out-in="true" out-optional-in="true"/>
+            </schemadoc:transport-features>
+        </xsd:appinfo>
     </xsd:annotation>
 
     <xsd:element name="connector" type="cxfConnectorType" substitutionGroup="mule:abstract-connector"/>
