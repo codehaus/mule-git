@@ -12,7 +12,7 @@
     </global-endpoints>
 
     <model name="main">
-        <mule-descriptor name="testComponent" implementation="org.mule.tck.functional.FunctionalTestComponent2">
+        <mule-descriptor name="testComponent" implementation="org.mule.tck.functional.FunctionalTestComponent">
             <inbound-router>
                 <global-endpoint name="clientEndpoint"/>
             </inbound-router>
