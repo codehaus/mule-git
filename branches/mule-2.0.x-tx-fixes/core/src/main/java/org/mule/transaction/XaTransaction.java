@@ -377,16 +377,17 @@ public class XaTransaction extends AbstractTransaction
         while (i.hasNext())
         {
             Map.Entry entry = (Map.Entry) i.next();
-            if (entry.getValue() instanceof MuleXaObject)
+            final Object xaObject = entry.getValue();
+            if (xaObject instanceof MuleXaObject)
             {
                 //there is need for reuse object
                 try
                 {
-                    ((MuleXaObject) entry.getValue()).delist();
+                    ((MuleXaObject) xaObject).delist();
                 }
                 catch (Exception e)
                 {
-                    logger.error("Cann't delist resource " + entry.getValue() + " " + e);
+                    logger.error("Failed to delist resource " + xaObject, e);
                 }
             }
         }
@@ -399,9 +400,10 @@ public class XaTransaction extends AbstractTransaction
         while (i.hasNext())
         {
             Map.Entry entry = (Map.Entry) i.next();
-            if (entry.getValue() instanceof MuleXaObject)
+            final Object value = entry.getValue();
+            if (value instanceof MuleXaObject)
             {
-                MuleXaObject xaObject = (MuleXaObject) entry.getValue();
+                MuleXaObject xaObject = (MuleXaObject) value;
                 if (!xaObject.isReuseObject())
                 {
                     try
@@ -410,7 +412,7 @@ public class XaTransaction extends AbstractTransaction
                     }
                     catch (Exception e)
                     {
-                        logger.error("Cann't close resource " + xaObject);
+                        logger.error("Failed to close resource " + xaObject, e);
                     }
                 }
             }
