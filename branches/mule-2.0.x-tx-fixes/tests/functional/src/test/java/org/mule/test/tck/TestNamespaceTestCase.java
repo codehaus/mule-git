@@ -11,6 +11,8 @@ package org.mule.test.tck;
 
 import org.mule.tck.FunctionalTestCase;
 import org.mule.tck.functional.FunctionalTestComponent2;
+import org.mule.tck.functional.CounterCallback;
+import org.mule.tck.functional.ResponseWriterCallback;
 
 import java.io.IOException;
 
@@ -32,6 +34,8 @@ public class TestNamespaceTestCase extends FunctionalTestCase
         assertFalse(ftc.isEnableNotifications());
         assertNull(ftc.getAppendString());
         assertEquals("Foo Bar Car Jar", ftc.getReturnData());
+        assertNotNull(ftc.getEventCallback());
+        assertTrue(ftc.getEventCallback() instanceof CounterCallback);
     }
 
     public void testComponent2Config() throws Exception
@@ -51,6 +55,9 @@ public class TestNamespaceTestCase extends FunctionalTestCase
         assertTrue(ftc.isEnableMessageHistory());
         assertTrue(ftc.isEnableNotifications());
         assertNull(ftc.getAppendString());
+        assertNotNull(ftc.getEventCallback());
+        assertTrue(ftc.getEventCallback() instanceof ResponseWriterCallback);
+
     }
 
     public void testComponent3Config() throws Exception
@@ -64,6 +71,7 @@ public class TestNamespaceTestCase extends FunctionalTestCase
         assertTrue(ftc.isEnableNotifications());
         assertEquals(" ${mule:serviceName}", ftc.getAppendString());
         assertNull(ftc.getReturnData());
+        assertNull(ftc.getEventCallback());
     }
 
 }

@@ -329,7 +329,14 @@ public class TcpMessageReceiver extends AbstractMessageReceiver implements Work
 
         protected void shutdownSocket() throws IOException
         {
-            socket.shutdownOutput();
+            try
+            {
+                socket.shutdownOutput();
+            }
+            catch (UnsupportedOperationException e)
+            {
+                //Ignore, not supported by ssl sockets
+            }
         }
 
         protected void bindTransaction(Transaction tx) throws TransactionException

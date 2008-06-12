@@ -17,6 +17,7 @@ import org.mule.tck.FunctionalTestCase;
 import org.mule.tck.functional.CounterCallback;
 import org.mule.tck.functional.EventCallback;
 import org.mule.tck.functional.FunctionalTestComponent;
+import org.mule.tck.functional.FunctionalTestComponent2;
 import org.mule.tck.testmodels.mule.TestSedaService;
 
 import java.util.HashMap;
@@ -36,18 +37,16 @@ public class SslFunctionalTestCase extends FunctionalTestCase
     public void testSend() throws Exception
     {
         MuleClient client = new MuleClient();
-        Map props = new HashMap();
-        MuleMessage result = client.send("sendEndpoint", TEST_MESSAGE, props);
+        MuleMessage result = client.send("sendEndpoint", TEST_MESSAGE, null);
         assertEquals(TEST_MESSAGE + " Received", result.getPayloadAsString());
     }
 
     public void testSendMany() throws Exception
     {
         MuleClient client = new MuleClient();
-        Map props = new HashMap();
         for (int i = 0; i < NUM_MESSAGES; ++i)
         {
-            MuleMessage result = client.send("sendManyEndpoint", TEST_MESSAGE, props);
+            MuleMessage result = client.send("sendManyEndpoint", TEST_MESSAGE, null);
             assertEquals(TEST_MESSAGE + " Received", result.getPayloadAsString());
         }
 
@@ -55,9 +54,9 @@ public class SslFunctionalTestCase extends FunctionalTestCase
         assertTrue("Service should be a TestSedaService", c instanceof TestSedaService);
         Object ftc = getComponent(c);
         assertNotNull("Functional Test Service not found in the model.", ftc);
-        assertTrue("Service should be a FunctionalTestComponent", ftc instanceof FunctionalTestComponent);
+        assertTrue("Service should be a FunctionalTestComponent", ftc instanceof FunctionalTestComponent2);
 
-        EventCallback cc = ((FunctionalTestComponent) ftc).getEventCallback();
+        EventCallback cc = ((FunctionalTestComponent2) ftc).getEventCallback();
         assertNotNull("EventCallback is null", cc);
         assertTrue("EventCallback should be a CounterCallback", cc instanceof CounterCallback);
         assertEquals(NUM_MESSAGES, ((CounterCallback) cc).getCallbackCount());

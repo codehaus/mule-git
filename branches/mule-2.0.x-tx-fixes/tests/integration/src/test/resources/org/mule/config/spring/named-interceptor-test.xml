@@ -12,7 +12,7 @@
          http://www.javalobby.org/java/forums/t45333.html for a very nice, simple intro to
          spring aop -->
 
-    <spring:bean name="target" class="org.mule.tck.functional.FunctionalTestComponent">
+    <spring:bean name="target" class="org.mule.tck.functional.FunctionalTestComponent2">
         <spring:property name="enableMessageHistory" value="false"/>
     </spring:bean>
     

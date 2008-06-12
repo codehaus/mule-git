@@ -16,6 +16,7 @@ import org.mule.module.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.tck.functional.EventCallback;
 import org.mule.tck.functional.FunctionalTestComponent;
+import org.mule.tck.functional.FunctionalTestComponent2;
 
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
 
@@ -30,9 +31,9 @@ public class MulticastRouterMule2112TestCase  extends FunctionalTestCase
     public void testMulticastRoutingOverTwoEndpoints() throws Exception
     {
         Object hop1 = getComponent("hop1");
-        assertTrue("FunctionalTestComponent expected", hop1 instanceof FunctionalTestComponent);
+        assertTrue("FunctionalTestComponent expected", hop1 instanceof FunctionalTestComponent2);
         Object hop2 = getComponent("hop2");
-        assertTrue("FunctionalTestComponent expected", hop2 instanceof FunctionalTestComponent);
+        assertTrue("FunctionalTestComponent expected", hop2 instanceof FunctionalTestComponent2);
         assertNotNull(hop1);
         assertNotNull(hop2);
 
@@ -54,8 +55,8 @@ public class MulticastRouterMule2112TestCase  extends FunctionalTestCase
             }
         };
 
-        ((FunctionalTestComponent) hop1).setEventCallback(callback1);
-        ((FunctionalTestComponent) hop2).setEventCallback(callback2);
+        ((FunctionalTestComponent2) hop1).setEventCallback(callback1);
+        ((FunctionalTestComponent2) hop2).setEventCallback(callback2);
 
         MuleClient client = new MuleClient();
         DefaultMuleMessage request = new DefaultMuleMessage("payload");
