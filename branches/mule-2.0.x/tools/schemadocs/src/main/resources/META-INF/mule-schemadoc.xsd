@@ -135,7 +135,7 @@
 
     <xsd:element name="transport-features" type="transportFeaturesType">
         <xsd:annotation>
-            <xsd:documentation>This element defines meta information about transports such as whether they can send or receive events and if they supprt transactions.</xsd:documentation>
+            <xsd:documentation>Defines meta information about transports such as whether they can send or receive events and if they supprt transactions.</xsd:documentation>
         </xsd:annotation>
     </xsd:element>
 
