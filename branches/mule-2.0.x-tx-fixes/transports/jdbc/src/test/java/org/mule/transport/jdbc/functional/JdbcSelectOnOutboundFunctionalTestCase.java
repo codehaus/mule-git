@@ -26,10 +26,10 @@ public class JdbcSelectOnOutboundFunctionalTestCase extends AbstractJdbcFunction
         return super.getConfigResources() + ",jdbc-select-outbound.xml";
     }
 
-//    public void testSelectOnOutbound() throws Exception
-//    {
-//        doSelectOnOutbound("vm://jdbc.test");
-//    }
+    public void testSelectOnOutbound() throws Exception
+    {
+        doSelectOnOutbound("vm://jdbc.test");
+    }
 
 //    public void testSelectOnOutboundByExpression() throws Exception
 //    {
@@ -51,10 +51,10 @@ public class JdbcSelectOnOutboundFunctionalTestCase extends AbstractJdbcFunction
         doSelectOnOutbound("vm://chain.always.begin"); 
     } 
 
-//    public void testChain2SelectBeginOrJoin() throws Exception 
-//    { 
-//        doSelectOnOutbound("vm://chain.begin.or.join"); 
-//    }
+    public void testChain2SelectBeginOrJoin() throws Exception 
+    { 
+        doSelectOnOutbound("vm://chain.begin.or.join"); 
+    }
     
     private void doSelectOnOutbound(String endpoint) throws Exception
     {

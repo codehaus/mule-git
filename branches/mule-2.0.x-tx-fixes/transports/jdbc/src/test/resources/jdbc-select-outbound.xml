@@ -52,5 +52,19 @@
                 </chaining-router>
             </outbound>
         </service>
+        
+        <service name="chain2Select">
+            <inbound>
+                <inbound-endpoint address="vm://chain.begin.or.join"/>
+            </inbound>
+            <outbound>
+                <chaining-router>
+                    <jdbc:outbound-endpoint queryKey="selectCount"/>                    
+                    <jdbc:outbound-endpoint address="jdbc://getTest?type=1"/>
+                    
+                    <jdbc:transaction action="BEGIN_OR_JOIN"/>
+                </chaining-router>
+            </outbound>
+        </service>
     </model>
 </mule>
