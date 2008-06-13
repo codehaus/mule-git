@@ -32,11 +32,11 @@
                 Transaction Manager. You can configure arbitrary properties on the transaction manager that will be
                 passed on to the underlying transaction manager. For example:
 
-                {code:xml}
-                 &lt;jbossts:transaction-manager&gt;
-                    &lt;property key="test" value="TEST"/&gt;
-                 &lt;/jbossts:transaction-manager&gt;
-                {code}
+{code:xml}
+&lt;jbossts:transaction-manager&gt;
+   &lt;property key="test" value="TEST"/&gt;
+&lt;/jbossts:transaction-manager&gt;
+{code}
             </xsd:documentation>
         </xsd:annotation>
     </xsd:element>
