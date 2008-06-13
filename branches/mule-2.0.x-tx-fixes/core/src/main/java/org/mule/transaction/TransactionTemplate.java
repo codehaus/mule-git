@@ -110,7 +110,11 @@ public class TransactionTemplate
             try
             {
                 Object result = callback.doInTransaction();
-                if (tx != null && TransactionCoordination.getInstance().getTransaction() != null)
+                if (tx != null)
+                {
+                    tx = TransactionCoordination.getInstance().getTransaction();
+                }
+                if (tx != null)
                 {
                     resolveTransaction(tx);
                     if (suspendedXATx != null)
