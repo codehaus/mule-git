@@ -17,7 +17,7 @@
     </spring:bean>
 
     <spring:bean name="pointcut" class="org.springframework.aop.support.JdkRegexpMethodPointcut">
-        <!-- we must name the correct interface below, FunctionalTestComponent2 itself does not work -->
+        <!-- we must name the correct interface below, FunctionalTestComponent itself does not work -->
         <spring:property name="pattern" value="org.mule.api.lifecycle.Callable.onCall"/>
     </spring:bean>
     

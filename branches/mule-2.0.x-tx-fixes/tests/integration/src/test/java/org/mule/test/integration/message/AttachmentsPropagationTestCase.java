@@ -16,7 +16,6 @@ import org.mule.module.client.MuleClient;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.tck.functional.EventCallback;
 import org.mule.tck.functional.FunctionalTestComponent;
-import org.mule.tck.functional.FunctionalTestComponent2;
 import org.mule.transport.email.transformers.PlainTextDataSource;
 
 import javax.activation.DataHandler;
@@ -63,7 +62,7 @@ public class AttachmentsPropagationTestCase extends AbstractMuleTestCase impleme
             new PlainTextDataSource("text/plain", "<content>")));
 
         // return the list of attachment names
-        FunctionalTestComponent2 fc = (FunctionalTestComponent2) component;
+        FunctionalTestComponent fc = (FunctionalTestComponent) component;
         fc.setReturnData(message.getAttachmentNames().toString());
     }
 

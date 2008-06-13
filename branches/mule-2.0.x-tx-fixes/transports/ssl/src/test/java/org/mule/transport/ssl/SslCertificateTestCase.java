@@ -14,7 +14,6 @@ import org.mule.api.MuleMessage;
 import org.mule.module.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.tck.functional.FunctionalTestComponent;
-import org.mule.tck.functional.FunctionalTestComponent2;
 
 public class SslCertificateTestCase extends FunctionalTestCase
 {
@@ -39,7 +38,7 @@ public class SslCertificateTestCase extends FunctionalTestCase
 
     protected void doTests(int n) throws Exception
     {
-        FunctionalTestComponent2 ftc = (FunctionalTestComponent2) getComponent("service");
+        FunctionalTestComponent ftc = (FunctionalTestComponent) getComponent("service");
         assertNotNull(ftc);
         assertNotNull(ftc.getEventCallback());
 
@@ -54,7 +53,7 @@ public class SslCertificateTestCase extends FunctionalTestCase
             MuleMessage result = client.send("in", msg, null);
             assertTrue(callback.isCalled());
             assertNotNull("Null certificates", callback.getCertificates());
-            assertEquals(FunctionalTestComponent.received(msg), result.getPayloadAsString());
+            assertEquals(msg + " Received", result.getPayloadAsString());
         }
     }
 

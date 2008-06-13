@@ -8,7 +8,7 @@
             <inbound>
                     <inbound-endpoint address="test://test-in" />
             </inbound>
-            <component class="org.mule.tck.functional.FunctionalTestComponent2">
+            <component class="org.mule.tck.functional.FunctionalTestComponent">
                 <singleton-object class="org.mule.component.simple.StaticComponent" />
                 <binding interface="java.lang.String" method="setPrefix">
                     <outbound-endpoint address="test://test" />

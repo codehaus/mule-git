@@ -17,11 +17,7 @@ import org.mule.tck.FunctionalTestCase;
 import org.mule.tck.functional.CounterCallback;
 import org.mule.tck.functional.EventCallback;
 import org.mule.tck.functional.FunctionalTestComponent;
-import org.mule.tck.functional.FunctionalTestComponent2;
 import org.mule.tck.testmodels.mule.TestSedaService;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class SslFunctionalTestCase extends FunctionalTestCase 
 {
@@ -54,9 +50,9 @@ public class SslFunctionalTestCase extends FunctionalTestCase
         assertTrue("Service should be a TestSedaService", c instanceof TestSedaService);
         Object ftc = getComponent(c);
         assertNotNull("Functional Test Service not found in the model.", ftc);
-        assertTrue("Service should be a FunctionalTestComponent", ftc instanceof FunctionalTestComponent2);
+        assertTrue("Service should be a FunctionalTestComponent", ftc instanceof FunctionalTestComponent);
 
-        EventCallback cc = ((FunctionalTestComponent2) ftc).getEventCallback();
+        EventCallback cc = ((FunctionalTestComponent) ftc).getEventCallback();
         assertNotNull("EventCallback is null", cc);
         assertTrue("EventCallback should be a CounterCallback", cc instanceof CounterCallback);
         assertEquals(NUM_MESSAGES, ((CounterCallback) cc).getCallbackCount());

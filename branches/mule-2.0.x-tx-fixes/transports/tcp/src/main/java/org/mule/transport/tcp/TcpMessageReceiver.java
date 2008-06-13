@@ -11,7 +11,6 @@ package org.mule.transport.tcp;
 
 import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleException;
-import org.mule.api.MuleMessage;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.endpoint.InboundEndpoint;
 import org.mule.api.lifecycle.CreateException;
@@ -21,7 +20,6 @@ import org.mule.api.service.Service;
 import org.mule.api.transaction.Transaction;
 import org.mule.api.transaction.TransactionException;
 import org.mule.api.transport.Connector;
-import org.mule.api.transport.MessageAdapter;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.transport.AbstractMessageReceiver;
 import org.mule.transport.AbstractReceiverResourceWorker;
@@ -397,21 +395,6 @@ public class TcpMessageReceiver extends AbstractMessageReceiver implements Work
                     protocol.write(dataOut, o);
                     dataOut.flush();
                 }
-            }
-        }
-
-        protected Object processData(Object data) throws Exception
-        {
-            MessageAdapter adapter = connector.getMessageAdapter(data);
-            OutputStream os = ((TcpConnector) connector).getTcpProtocol().createResponse(socket);
-            MuleMessage returnMessage = routeMessage(new DefaultMuleMessage(adapter), endpoint.isSynchronous(), os);
-            if (returnMessage != null)
-            {
-                return returnMessage;
-            }
-            else
-            {
-                return null;
             }
         }
 

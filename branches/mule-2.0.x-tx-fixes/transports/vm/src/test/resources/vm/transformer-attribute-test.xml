@@ -17,7 +17,7 @@
                     <transformer ref="appendString"/>
                 </vm:inbound-endpoint>
             </inbound>
-            <component class="org.mule.tck.functional.FunctionalTestComponent"/>
+            <test:component appendString=" Received"/>
         </service>
     </model>
 

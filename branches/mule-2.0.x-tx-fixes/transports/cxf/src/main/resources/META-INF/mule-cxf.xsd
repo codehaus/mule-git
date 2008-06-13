@@ -3,6 +3,7 @@
             xmlns:cxf="http://cxf.apache.org/core"
             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
             xmlns:mule="http://www.mulesource.org/schema/mule/core/2.0"
+            xmlns:schemadoc="http://www.mulesource.org/schema/mule/schemadoc/2.0"
             xmlns:beans="http://www.springframework.org/schema/beans"
             targetNamespace="http://www.mulesource.org/schema/mule/cxf/2.0"
             elementFormDefault="qualified"
@@ -18,15 +19,25 @@
 
     <xsd:annotation>
         <xsd:documentation>
-            <p>Apache CXF is an open source services framework. CXF helps you build and develop services
+            Apache CXF is an open source services framework. CXF helps you build and develop services
             using frontend programming APIs, like JAX-WS. These services can speak a variety of protocols such as SOAP,
             XML/HTTP, RESTful HTTP, or CORBA and work over a variety of transports such as HTTP, JMS or JBI.
-            </p>
-            <p>
+            \\
             The Mule CXF Transport is an evolution of Mule's XFire Transport which provides support for the use of web
             service integration via Apache CXF. The Mule CXF connector also provides support for WS-Security,
-            WS-Addressing and WS-Reliable-Messaging.</p>
+            WS-Addressing and WS-Reliable-Messaging.
         </xsd:documentation>
+        <xsd:appinfo>
+            <schemadoc:short-name>cxf</schemadoc:short-name>
+            <schemadoc:page-title>CXF Transport</schemadoc:page-title>
+
+            <schemadoc:transport-features receiveEvents="true" dispatchEvents="true" responseEvents="true"
+                                          requestEvents="true"
+                                          transactions="false" streaming="true">
+                <schemadoc:inboundMEPs in-only="true" in-out="true" in-optional-out="true"/>
+                <schemadoc:outboundMEPs out-only="true" out-in="true" out-optional-in="true"/>
+            </schemadoc:transport-features>
+        </xsd:appinfo>
     </xsd:annotation>
 
     <xsd:element name="connector" type="cxfConnectorType" substitutionGroup="mule:abstract-connector"/>

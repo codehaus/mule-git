@@ -11,8 +11,6 @@
 package org.mule.tck.config;
 
 import org.mule.config.spring.handlers.AbstractMuleNamespaceHandler;
-import org.mule.config.spring.parsers.generic.ChildDefinitionParser;
-import org.mule.tck.testmodels.mule.TestConnector;
 
 public class TestNamespaceHandler extends AbstractMuleNamespaceHandler
 {

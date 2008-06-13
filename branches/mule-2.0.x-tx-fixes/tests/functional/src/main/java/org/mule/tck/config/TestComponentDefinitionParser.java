@@ -15,16 +15,15 @@ import org.mule.component.DefaultJavaComponent;
 import org.mule.config.spring.parsers.specific.ComponentDefinitionParser;
 import org.mule.object.AbstractObjectFactory;
 import org.mule.object.SingletonObjectFactory;
-import org.mule.tck.functional.FunctionalTestComponent2;
 import org.mule.tck.functional.EventCallback;
+import org.mule.tck.functional.FunctionalTestComponent;
+import org.mule.util.ClassUtils;
 import org.mule.util.IOUtils;
 import org.mule.util.StringUtils;
-import org.mule.util.ClassUtils;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.lang.reflect.InvocationTargetException;
 
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
@@ -42,7 +41,7 @@ import org.w3c.dom.NodeList;
 public class TestComponentDefinitionParser extends ComponentDefinitionParser
 {
     private static Class OBJECT_FACTORY_TYPE = SingletonObjectFactory.class;
-    private Class componentInstanceClass = FunctionalTestComponent2.class;
+    private Class componentInstanceClass = FunctionalTestComponent.class;
 
     public TestComponentDefinitionParser()
     {
