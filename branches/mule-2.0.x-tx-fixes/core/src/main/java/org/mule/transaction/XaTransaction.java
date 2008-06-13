@@ -268,6 +268,16 @@ public class XaTransaction extends AbstractTransaction
         }
 
         resources.put(key, resource);
+        
+        if (resource instanceof MuleXaObject)
+        {
+            MuleXaObject xaObject = (MuleXaObject) resource;
+            xaObject.enlist();
+        }
+        else
+        {
+            logger.error("Binded resource " + resource + " is not MuleXaObject ");
+        }
     }
 
 
@@ -393,7 +403,6 @@ public class XaTransaction extends AbstractTransaction
         }
     }
 
-
     protected void closeResources()
     {
         Iterator i = resources.entrySet().iterator();
@@ -428,8 +437,8 @@ public class XaTransaction extends AbstractTransaction
 
         boolean isReuseObject();
 
-        //enlist is called indirectly
-
+        boolean enlist() throws TransactionException;
+        
         boolean delist() throws Exception;
 
         /**
@@ -442,9 +451,9 @@ public class XaTransaction extends AbstractTransaction
         String SET_REUSE_OBJECT_METHOD_NAME = "setReuseObject";
         String IS_REUSE_OBJECT_METHOD_NAME = "isReuseObject";
         String DELIST_METHOD_NAME = "delist";
+        String ENLIST_METHOD_NAME = "enlist";
         String GET_TARGET_OBJECT_METHOD_NAME = "getTargetObject";
         String CLOSE_METHOD_NAME = "close";
     }
-
 
 }

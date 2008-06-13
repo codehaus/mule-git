@@ -13,13 +13,15 @@ package org.mule.routing.outbound;
 import org.mule.api.MessagingException;
 import org.mule.api.MuleMessage;
 import org.mule.api.MuleSession;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.routing.OutboundRouter;
 import org.mule.api.routing.OutboundRouterCollection;
 import org.mule.api.routing.RoutingException;
-import org.mule.api.service.Service;
 import org.mule.api.transaction.TransactionCallback;
+import org.mule.api.transaction.TransactionConfig;
 import org.mule.management.stats.RouterStatistics;
 import org.mule.routing.AbstractRouterCollection;
+import org.mule.transaction.MuleTransactionConfig;
 import org.mule.transaction.TransactionTemplate;
 
 import java.util.Iterator;
@@ -42,7 +44,6 @@ public class DefaultOutboundRouterCollection extends AbstractRouterCollection im
     public MuleMessage route(final MuleMessage message, final MuleSession session, final boolean synchronous)
             throws MessagingException
     {
-
         MuleMessage result;
         boolean matchfound = false;
 
@@ -54,10 +55,44 @@ public class DefaultOutboundRouterCollection extends AbstractRouterCollection im
                 matchfound = true;
                 // Manage outbound only transactions here
                 final OutboundRouter router = umoOutboundRouter;
-                Service service = session.getService();
-                TransactionTemplate tt = new TransactionTemplate(umoOutboundRouter.getTransactionConfig(),
-                        service.getExceptionListener(), muleContext);
 
+                TransactionConfig routerConfig = umoOutboundRouter.getTransactionConfig();
+                
+                //if tx is not declared on router may be it's declared on endpoint
+                if (routerConfig == null)
+                {
+                    Iterator i = router.getEndpoints().iterator();
+                    while (i.hasNext())
+                    {
+                        ImmutableEndpoint endpoint = (ImmutableEndpoint) i.next();
+                        if (endpoint.getTransactionConfig() != null)
+                        {
+                            //In this case TT for router should be disabled
+                            routerConfig = new MuleTransactionConfig();
+                            routerConfig.setEnabled(false);
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    Iterator i = router.getEndpoints().iterator();
+                    while (i.hasNext())
+                    {
+                        ImmutableEndpoint endpoint = (ImmutableEndpoint) i.next();
+                        if (endpoint.getTransactionConfig() == null)
+                        {
+                            //In this case TT for router should be disabled
+                            TransactionConfig config = new MuleTransactionConfig();
+                            config.setEnabled(false);
+                            break;
+                        }
+                    }
+                }
+                
+                TransactionTemplate tt = new TransactionTemplate(routerConfig, 
+                    session.getService().getExceptionListener(), muleContext);
+                
                 TransactionCallback cb = new TransactionCallback()
                 {
                     public Object doInTransaction() throws Exception

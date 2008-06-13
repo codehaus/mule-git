@@ -39,7 +39,7 @@ public class MuleTransactionConfig implements TransactionConfig
 
     private TransactionFactory factory;
 
-    private byte action = ACTION_NONE;
+    private byte action = ACTION_DEFAULT;
 
     private ConstraintFilter constraint = null;
 
@@ -99,6 +99,10 @@ public class MuleTransactionConfig implements TransactionConfig
         {
             this.action = ACTION_NONE;
         }
+        else if (ACTION_NEVER_STRING.equals(action))
+        {
+            this.action = ACTION_NEVER;
+        }
         else
         {
             throw new IllegalArgumentException("Action " + action + " is not recognised as a begin action.");
@@ -109,16 +113,18 @@ public class MuleTransactionConfig implements TransactionConfig
     {
         switch (action)
         {
-            case ACTION_ALWAYS_BEGIN :
+            case ACTION_ALWAYS_BEGIN:
                 return ACTION_ALWAYS_BEGIN_STRING;
-            case ACTION_BEGIN_OR_JOIN :
+            case ACTION_BEGIN_OR_JOIN:
                 return ACTION_BEGIN_OR_JOIN_STRING; 
-            case ACTION_ALWAYS_JOIN :
+            case ACTION_ALWAYS_JOIN:
                 return ACTION_ALWAYS_JOIN_STRING;
-            case ACTION_JOIN_IF_POSSIBLE :
+            case ACTION_JOIN_IF_POSSIBLE:
                 return ACTION_JOIN_IF_POSSIBLE_STRING;
-            default :
+            case ACTION_NONE:
                 return ACTION_NONE_STRING;
+            default :
+                return ACTION_NEVER_STRING;
         }
     }
 
@@ -207,4 +213,5 @@ public class MuleTransactionConfig implements TransactionConfig
     { 
         this.enabled = enabled; 
     }
+    
 }

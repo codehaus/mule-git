@@ -45,7 +45,7 @@ public abstract class TransactedPollingMessageReceiver extends AbstractPollingMe
                                             final InboundEndpoint endpoint) throws CreateException
     {
         super(connector, service, endpoint);
-        this.setReceiveMessagesInTransaction(endpoint.getTransactionConfig().isConfigured());
+        this.setReceiveMessagesInTransaction(endpoint.getTransactionConfig().isTransacted());
     }
 
     /**
