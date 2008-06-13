@@ -61,7 +61,7 @@ public class JmsTransaction extends AbstractSingleResourceTransaction
     {
         if (resource == null)
         {
-            logger.warn("There is no resource binding to current transaction");
+            logger.warn(CoreMessages.noBindingResource());
             return;
         }
         
@@ -79,7 +79,7 @@ public class JmsTransaction extends AbstractSingleResourceTransaction
     {
         if (resource == null)
         {
-            logger.warn("There is no resource binding to current transaction");
+            logger.warn(CoreMessages.noBindingResource());
             return;
         }
 

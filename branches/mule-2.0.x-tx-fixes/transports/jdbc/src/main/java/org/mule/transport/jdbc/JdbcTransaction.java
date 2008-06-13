@@ -64,7 +64,7 @@ public class JdbcTransaction extends AbstractSingleResourceTransaction
     {
         if (resource == null)
         {
-            logger.warn("There is no resource binding to current transaction");
+            logger.warn(CoreMessages.noBindingResource());
             return;
         }
         
@@ -83,7 +83,7 @@ public class JdbcTransaction extends AbstractSingleResourceTransaction
     {
         if (resource == null)
         {
-            logger.warn("There is no resource binding to current transaction");
+            logger.warn(CoreMessages.noBindingResource());
             return;
         }
 
