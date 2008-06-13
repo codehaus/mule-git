@@ -46,9 +46,11 @@ public class JdbcMessageReceiver extends TransactedPollingMessageReceiver
     {
         super(connector, service, endpoint);
         this.setFrequency(((JdbcConnector) connector).getPollingFrequency());
-        this.setReceiveMessagesInTransaction(false);
 
         this.connector = (JdbcConnector) connector;
+        this.setReceiveMessagesInTransaction(endpoint.getTransactionConfig().isTransacted()
+            && !this.connector.isTransactionPerMessage());
+        
         this.readParams = new ArrayList();
         this.readStmt = this.connector.parseStatement(readStmt, this.readParams);
         this.ackParams = new ArrayList();
@@ -162,7 +164,10 @@ public class JdbcMessageReceiver extends TransactedPollingMessageReceiver
         }
         finally
         {
-            JdbcUtils.close(con);
+            if (TransactionCoordination.getInstance().getTransaction() == null)
+            {
+                JdbcUtils.close(con);
+            }
         }
     }
 
