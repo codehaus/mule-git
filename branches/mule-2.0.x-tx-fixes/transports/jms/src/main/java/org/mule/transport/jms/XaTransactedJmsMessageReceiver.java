@@ -148,7 +148,8 @@ public class XaTransactedJmsMessageReceiver extends TransactedPollingMessageRece
     {
         if (connector.isConnected())
         {
-            closeConsumer(null, true);
+            // TODO All resource will be close by transaction or by connection close
+            // closeConsumer(null, true);
         }
     }
 
@@ -163,17 +164,32 @@ public class XaTransactedJmsMessageReceiver extends TransactedPollingMessageRece
         {
             public Object doInTransaction() throws Exception
             {
-                List messages = getMessages();
-                
-                if (messages != null && messages.size() > 0)
+                try
                 {
-                    for (Iterator it = messages.iterator(); it.hasNext();)
+                    List messages = getMessages();
+                    if (messages != null && messages.size() > 0)
                     {
-                        processMessage(it.next());
+                        for (Iterator it = messages.iterator(); it.hasNext();)
+                        {
+                            processMessage(it.next());
+                        }
                     }
+                    return null;
                 }
-                
-                return null;
+                catch (Exception e)
+                {
+                    // There is not a need to close resources here,
+                    // they will be close by XaTransaction,  
+                    JmsThreadContext ctx = context.getContext();
+                    ctx.consumer = null;
+                    Transaction tx = TransactionCoordination.getInstance().getTransaction();
+                    if (ctx.session != null && tx instanceof XaTransaction.MuleXaObject)
+                    {
+                        ((XaTransaction.MuleXaObject) ctx.session).setReuseObject(false);
+                    }
+                    ctx.session = null;
+                    throw e;
+                }
             }
         };
         
@@ -184,27 +200,8 @@ public class XaTransactedJmsMessageReceiver extends TransactedPollingMessageRece
     {
         Session session = this.connector.getSessionFromTransaction();
         Transaction tx = TransactionCoordination.getInstance().getTransaction();
-//        XaTransaction.Closable closable = ((XaTransaction) tx).getAdditionalResource(session);
-//        if (closable == null)
-//        {
-            final MessageConsumer consumer = createConsumer();
-//            closable = new XaTransaction.Closable()
-//            {
-//                public Object getUnderlying()
-//                {
-//                    return consumer;
-//                }
-//                
-//                public void close()
-//                {
-//                    connector.closeQuietly(consumer);
-//                }
-//            };
-//            ((XaTransaction) tx).addAdditionalResource(session, closable);
-//        }
-//        
-//        MessageConsumer consumer = (MessageConsumer) closable.getUnderlying();
-            
+        MessageConsumer consumer = createConsumer();
+
         // Retrieve message
         Message message = null;
         try
@@ -272,27 +269,31 @@ public class XaTransactedJmsMessageReceiver extends TransactedPollingMessageRece
         // message is processed when received
     }
 
-    protected void closeConsumer(MessageConsumer consumer, boolean force)
+    /**
+     * Close Sesison and consumer
+     */
+    protected void closeResource(boolean force)
     {
-        // Close consumer
-//TODO temporary disable        
-//        if (force)
-//        {
-//            if (consumer != null && (force || !reuseSession || !reuseConsumer))
-//            {
-//                connector.closeQuietly(consumer);
-//            }
-//        }
+        JmsThreadContext ctx = context.getContext();
+        if (ctx == null)
+        {
+            return;
+        }
         
+        // Close consumer
+        if (force || !reuseSession || !reuseConsumer)
+        {
+            connector.closeQuietly(ctx.consumer);
+            ctx.consumer = null;
+        }
+            
         // Do not close session if a transaction is in progress
         // the session will be closed by the transaction
-//        if (force || !reuseSession)
-//        {
-//            if (force)
-//            {
-//                connector.closeQuietly(this.connector.getSessionFromTransaction());
-//            }
-//        }        
+        if (force || !reuseSession)
+        {
+            connector.closeQuietly(ctx.session);
+            ctx.session = null;
+        }        
     }
 
     /**
@@ -308,17 +309,25 @@ public class XaTransactedJmsMessageReceiver extends TransactedPollingMessageRece
             JmsSupport jmsSupport = this.connector.getJmsSupport();
 
             JmsThreadContext ctx = context.getContext();
+            if (ctx == null)
+            {
+                ctx = new JmsThreadContext();
+            }
+            
             Session session;
+            Transaction tx = TransactionCoordination.getInstance().getTransaction();
             if (this.reuseSession && ctx.session != null)
             {
                 session = ctx.session;
-                Transaction tx = TransactionCoordination.getInstance().getTransaction();
                 tx.bindResource(this.connector.getConnection(), session);
             }
             else
             {
                 session = this.connector.getSession(endpoint);
-                ((XaTransaction.MuleXaObject) session).setReuseObject(reuseSession);
+                if (tx != null)
+                {
+                    ((XaTransaction.MuleXaObject) session).setReuseObject(reuseSession);
+                }
             }
             
             if (reuseSession)
@@ -326,7 +335,7 @@ public class XaTransactedJmsMessageReceiver extends TransactedPollingMessageRece
                 ctx.session = session;
             }
             
-            //TODO How can I verify that consumer is active?
+            // TODO How can I verify that the consumer is active?
             if (this.reuseConsumer && ctx.consumer != null)
             {
                 return ctx.consumer;
