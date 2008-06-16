@@ -63,6 +63,8 @@ public class JdbcConnector extends AbstractConnector
     
     protected void doInitialise() throws InitialisationException
     {
+        createMultipleTransactedReceivers = false;
+        
         if (dataSource == null)
         {
             throw new InitialisationException(MessageFactory.createStaticMessage("Missing data source"), this);
