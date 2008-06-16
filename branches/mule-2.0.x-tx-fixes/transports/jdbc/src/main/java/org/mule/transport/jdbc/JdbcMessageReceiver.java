@@ -32,13 +32,19 @@ import java.util.List;
 /** TODO */
 public class JdbcMessageReceiver extends TransactedPollingMessageReceiver
 {
-
+    public static final String MESSAGE_PER_TRANSACTION_PROPERTY = "messagePerTransaction";
+    
     protected JdbcConnector connector;
     protected String readStmt;
     protected String ackStmt;
     protected List readParams;
     protected List ackParams;
-
+    
+    /**
+     * determines whether transaction will be begun, before or after
+     */
+    private boolean messagePerTransaction = true;
+    
     public JdbcMessageReceiver(Connector connector,
                                Service service,
                                InboundEndpoint endpoint,
@@ -48,10 +54,10 @@ public class JdbcMessageReceiver extends TransactedPollingMessageReceiver
         super(connector, service, endpoint);
         this.setFrequency(((JdbcConnector) connector).getPollingFrequency());
 
-        this.connector = (JdbcConnector) connector;
-        this.setReceiveMessagesInTransaction(endpoint.getTransactionConfig().isTransacted()
-            && !this.connector.isTransactionPerMessage());
+        this.messagePerTransaction = "true".equals(endpoint.getProperties().get(MESSAGE_PER_TRANSACTION_PROPERTY));
+        this.setReceiveMessagesInTransaction(isReceiveMessagesInTransaction() && !this.messagePerTransaction);
         
+        this.connector = (JdbcConnector) connector;
         this.readParams = new ArrayList();
         this.readStmt = this.connector.parseStatement(readStmt, this.readParams);
         this.ackParams = new ArrayList();
@@ -180,4 +186,14 @@ public class JdbcMessageReceiver extends TransactedPollingMessageReceiver
         }
     }
 
+    public boolean isMessagePerTransaction()
+    {
+        return messagePerTransaction;
+    }
+    
+    public void setMessagePerTransaction(boolean messagePerTransaction)
+    {
+        this.messagePerTransaction = messagePerTransaction;
+    }
+    
 }
