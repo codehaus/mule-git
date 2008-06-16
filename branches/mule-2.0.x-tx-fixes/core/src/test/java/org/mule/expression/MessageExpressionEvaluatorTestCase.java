@@ -48,8 +48,8 @@ public class MessageExpressionEvaluatorTestCase extends AbstractMuleTestCase
 
         assertEquals(message.getUniqueId(), eval.evaluate("id", message));
         assertEquals(message.getUniqueId(), eval.evaluate("correlationId", message));
-        assertEquals(1, eval.evaluate("correlationSequence", message));
-        assertEquals(2, eval.evaluate("correlationGroupSize", message));
+        assertEquals(new Integer(1), eval.evaluate("correlationSequence", message));
+        assertEquals(new Integer(2), eval.evaluate("correlationGroupSize", message));
         assertEquals("foo", eval.evaluate("replyTo", message));
         assertEquals(e, eval.evaluate("exception", message));
         assertEquals("UTF-8", eval.evaluate("encoding", message));
@@ -85,8 +85,8 @@ public class MessageExpressionEvaluatorTestCase extends AbstractMuleTestCase
 
         assertEquals(message.getUniqueId(), ExpressionEvaluatorManager.evaluate("${message:id}", message));
         assertEquals(message.getUniqueId(), ExpressionEvaluatorManager.evaluate("${message:correlationId}", message));
-        assertEquals(1, ExpressionEvaluatorManager.evaluate("${message:correlationSequence}", message));
-        assertEquals(2, ExpressionEvaluatorManager.evaluate("${message:correlationGroupSize}", message));
+        assertEquals(new Integer(1), ExpressionEvaluatorManager.evaluate("${message:correlationSequence}", message));
+        assertEquals(new Integer(2), ExpressionEvaluatorManager.evaluate("${message:correlationGroupSize}", message));
         assertEquals("foo", ExpressionEvaluatorManager.evaluate("${message:replyTo}", message));
         assertEquals(e, ExpressionEvaluatorManager.evaluate("${message:exception}", message));
         assertEquals("UTF-8", ExpressionEvaluatorManager.evaluate("${message:encoding}", message));
