@@ -148,8 +148,8 @@ public class XaTransactedJmsMessageReceiver extends TransactedPollingMessageRece
     {
         if (connector.isConnected())
         {
-            // TODO All resource will be close by transaction or by connection close
-            // closeConsumer(null, true);
+            // TODO All resources will be close by transaction or by connection close
+            closeResource(true);
         }
     }
 
@@ -220,6 +220,7 @@ public class XaTransactedJmsMessageReceiver extends TransactedPollingMessageRece
                 throw e;
             }
         }
+        
         if (message == null)
         {
             if (tx != null)
@@ -340,7 +341,7 @@ public class XaTransactedJmsMessageReceiver extends TransactedPollingMessageRece
             {
                 return ctx.consumer;
             }
-            
+
             // Create destination
             final boolean topic = connector.getTopicResolver().isTopic(endpoint);
             Destination dest = jmsSupport.createDestination(session, endpoint.getEndpointURI()
