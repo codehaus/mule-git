@@ -25,7 +25,9 @@
             </component>
             <outbound>
                 <outbound-pass-through-router>
-                    <outbound-endpoint address="jms://out" connector-ref="jmsConnector"/>
+                    <outbound-endpoint address="jms://out" connector-ref="jmsConnector">
+                        <jms:transaction action="ALWAYS_JOIN"/>
+                    </outbound-endpoint>
                 </outbound-pass-through-router>
             </outbound>
         </service>
