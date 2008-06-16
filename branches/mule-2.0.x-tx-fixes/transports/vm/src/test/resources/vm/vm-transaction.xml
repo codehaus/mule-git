@@ -30,7 +30,10 @@
 
             <outbound>
                 <outbound-pass-through-router>
-                    <outbound-endpoint address="vm://out" connector-ref="vmQueue"/>
+                    <outbound-endpoint address="vm://out" connector-ref="vmQueue">
+                        <!-- TODO MULE-3340: translate this into a transport specific tx element -->
+                        <custom-transaction action="NONE" factory-ref="txFactory"/>
+                    </outbound-endpoint>
                 </outbound-pass-through-router>
             </outbound>
         </service>
@@ -38,17 +41,17 @@
         <service name="sendRequestService">
             <inbound>
                 <vm:inbound-endpoint address="vm://sendRequestInQueue" connector-ref="vmQueue">
+                    <!-- TODO MULE-3340: translate this into a transport specific tx element -->
                     <custom-transaction action="BEGIN_OR_JOIN" factory-ref="txFactory"/>
                 </vm:inbound-endpoint>
 
                 <vm:inbound-endpoint address="vm://sendRequestInNoQueue" connector-ref="vmNoQueue">
+                    <!-- TODO MULE-3340: translate this into a transport specific tx element -->
                     <custom-transaction action="BEGIN_OR_JOIN" factory-ref="txFactory"/>
                 </vm:inbound-endpoint>
             </inbound>
 
             <component class="org.mule.transport.vm.functional.VmTransactionTestCase$TestComponent"/>
         </service>
-        
     </model>
-
 </mule>
