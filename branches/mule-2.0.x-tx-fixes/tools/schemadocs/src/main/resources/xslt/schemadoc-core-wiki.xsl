@@ -49,7 +49,7 @@
         <xsl:apply-templates select="." mode="attributes"/>
         </xsl:if>
 
-        <xsl:if test="(count(.//xsd:element) + count(.//xsd:sequence) + count(.//xsd:choice)) > 0 ">
+        <xsl:if test="(count(.//xsd:element) + count(.//xsd:choice)) > 0 ">
         h3. Child Elements of &lt;<xsl:value-of select="$name"/>...&gt;
         ||Name||Cardinality||Description||
         <xsl:call-template name="element-children"/>
