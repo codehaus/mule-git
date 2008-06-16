@@ -82,8 +82,7 @@ public abstract class AbstractOutboundRouter extends AbstractRouter implements O
             }
         }
 
-        TransactionTemplate tt = new TransactionTemplate(endpoint.getTransactionConfig(),
-            session.getService().getExceptionListener(), muleContext);
+        TransactionTemplate tt = createTransactionTemplate(session, endpoint);
         TransactionCallback cb = new TransactionCallback()
         {
             public Object doInTransaction() throws Exception
@@ -141,8 +140,7 @@ public abstract class AbstractOutboundRouter extends AbstractRouter implements O
             }
         }
 
-        TransactionTemplate tt = new TransactionTemplate(endpoint.getTransactionConfig(),
-            session.getService().getExceptionListener(), muleContext);
+        TransactionTemplate tt = createTransactionTemplate(session, endpoint);
         TransactionCallback cb = new TransactionCallback()
         {
             public Object doInTransaction() throws Exception
@@ -188,6 +186,12 @@ public abstract class AbstractOutboundRouter extends AbstractRouter implements O
         }
 
         return result;
+    }
+    
+    protected TransactionTemplate createTransactionTemplate(MuleSession session, ImmutableEndpoint endpoint)
+    {
+        return new TransactionTemplate(endpoint.getTransactionConfig(),
+            session.getService().getExceptionListener(), muleContext);
     }
 
     protected void setMessageProperties(MuleSession session, MuleMessage message, OutboundEndpoint endpoint)
