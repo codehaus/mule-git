@@ -47,8 +47,34 @@ public class XaTransactedJmsMessageReceiver extends TransactedPollingMessageRece
     protected final JmsConnector connector;
     protected boolean reuseConsumer;
     protected boolean reuseSession;
+    protected final ThreadContextLocal context = new ThreadContextLocal();
     protected final long timeout;
     protected final RedeliveryHandler redeliveryHandler;
+
+    /**
+     * Holder receiving the session and consumer for this thread.
+     */
+    protected static class JmsThreadContext
+    {
+        public Session session;
+        public MessageConsumer consumer;
+    }
+
+    /**
+     * Strongly typed ThreadLocal for ThreadContext.
+     */
+    protected static class ThreadContextLocal extends ThreadLocal
+    {
+        public JmsThreadContext getContext()
+        {
+            return (JmsThreadContext)get();
+        }
+
+        protected Object initialValue()
+        {
+            return new JmsThreadContext();
+        }
+    }
 
     public XaTransactedJmsMessageReceiver(Connector umoConnector, Service service, InboundEndpoint endpoint)
         throws CreateException
@@ -158,26 +184,26 @@ public class XaTransactedJmsMessageReceiver extends TransactedPollingMessageRece
     {
         Session session = this.connector.getSessionFromTransaction();
         Transaction tx = TransactionCoordination.getInstance().getTransaction();
-        XaTransaction.Closable closable = ((XaTransaction) tx).getAdditionalResource(session);
-        if (closable == null)
-        {
+//        XaTransaction.Closable closable = ((XaTransaction) tx).getAdditionalResource(session);
+//        if (closable == null)
+//        {
             final MessageConsumer consumer = createConsumer();
-            closable = new XaTransaction.Closable()
-            {
-                public Object getUnderlying()
-                {
-                    return consumer;
-                }
-                
-                public void close()
-                {
-                    connector.closeQuietly(consumer);
-                }
-            };
-            ((XaTransaction) tx).addAdditionalResource(session, closable);
-        }
-        
-        MessageConsumer consumer = (MessageConsumer) closable.getUnderlying();
+//            closable = new XaTransaction.Closable()
+//            {
+//                public Object getUnderlying()
+//                {
+//                    return consumer;
+//                }
+//                
+//                public void close()
+//                {
+//                    connector.closeQuietly(consumer);
+//                }
+//            };
+//            ((XaTransaction) tx).addAdditionalResource(session, closable);
+//        }
+//        
+//        MessageConsumer consumer = (MessageConsumer) closable.getUnderlying();
             
         // Retrieve message
         Message message = null;
@@ -281,8 +307,30 @@ public class XaTransactedJmsMessageReceiver extends TransactedPollingMessageRece
         {
             JmsSupport jmsSupport = this.connector.getJmsSupport();
 
-            Session session = this.connector.getSession(endpoint);
-            ((XaTransaction.MuleXaObject) session).setReuseObject(reuseSession);
+            JmsThreadContext ctx = context.getContext();
+            Session session;
+            if (this.reuseSession && ctx.session != null)
+            {
+                session = ctx.session;
+                Transaction tx = TransactionCoordination.getInstance().getTransaction();
+                tx.bindResource(this.connector.getConnection(), session);
+            }
+            else
+            {
+                session = this.connector.getSession(endpoint);
+                ((XaTransaction.MuleXaObject) session).setReuseObject(reuseSession);
+            }
+            
+            if (reuseSession)
+            {
+                ctx.session = session;
+            }
+            
+            //TODO How can I verify that consumer is active?
+            if (this.reuseConsumer && ctx.consumer != null)
+            {
+                return ctx.consumer;
+            }
             
             // Create destination
             final boolean topic = connector.getTopicResolver().isTopic(endpoint);
@@ -318,8 +366,13 @@ public class XaTransactedJmsMessageReceiver extends TransactedPollingMessageRece
             }
 
             // Create consumer
-            return jmsSupport.createConsumer(session, dest, selector, connector.isNoLocal(),
+            MessageConsumer consumer = jmsSupport.createConsumer(session, dest, selector, connector.isNoLocal(),
                 durableName, topic);
+            if (reuseConsumer)
+            {
+                ctx.consumer = consumer;
+            }
+            return consumer;
         }
         catch (JMSException e)
         {

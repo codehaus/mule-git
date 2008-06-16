@@ -42,11 +42,6 @@ public class XaTransaction extends AbstractTransaction
      */
     private Map resources = new HashMap();
 
-    /**
-     * Map of additional resources
-     */
-    private Map additionalResources = new HashMap();
-    
     private TransactionManager txManager;
 
     public XaTransaction(TransactionManager txManager)
@@ -54,17 +49,6 @@ public class XaTransaction extends AbstractTransaction
         this.txManager = txManager;
     }
     
-    //TODO crutch
-    public void addAdditionalResource(Object key, Closable ar)
-    {
-        additionalResources.put(key, ar);
-    }
-    
-    public Closable getAdditionalResource(Object key)
-    {
-        return (Closable) additionalResources.get(key);
-    }
-
     protected void doBegin() throws TransactionException
     {
         if (txManager == null)
@@ -434,16 +418,10 @@ public class XaTransaction extends AbstractTransaction
             if (value instanceof MuleXaObject)
             {
                 MuleXaObject xaObject = (MuleXaObject) value;
-//                if (!xaObject.isReuseObject())
-//                {
+                if (!xaObject.isReuseObject())
+                {
                     try
                     {
-                        //TODO temporary
-                        Closable closable = getAdditionalResource(value);
-                        if (closable != null)
-                        {
-                            closable.close();
-                        }
                         xaObject.close();
                         i.remove();
                     }
@@ -451,7 +429,7 @@ public class XaTransaction extends AbstractTransaction
                     {
                         logger.error("Failed to close resource " + xaObject, e);
                     }
-//                }
+                }
             }
         }
     }
@@ -484,11 +462,4 @@ public class XaTransaction extends AbstractTransaction
         String CLOSE_METHOD_NAME = "close";
     }
 
-    public static interface Closable
-    {
-        Object getUnderlying();
-        
-        void close();
-    }
-    
 }
