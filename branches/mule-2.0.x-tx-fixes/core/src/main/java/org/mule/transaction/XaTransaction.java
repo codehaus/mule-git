@@ -42,11 +42,27 @@ public class XaTransaction extends AbstractTransaction
      */
     private Map resources = new HashMap();
 
+    /**
+     * Map of additional resources
+     */
+    private Map additionalResources = new HashMap();
+    
     private TransactionManager txManager;
 
     public XaTransaction(TransactionManager txManager)
     {
         this.txManager = txManager;
+    }
+    
+    //TODO crutch
+    public void addAdditionalResource(Object key, Closable ar)
+    {
+        additionalResources.put(key, ar);
+    }
+    
+    public Closable getAdditionalResource(Object key)
+    {
+        return (Closable) additionalResources.get(key);
     }
 
     protected void doBegin() throws TransactionException
@@ -185,7 +201,7 @@ public class XaTransaction extends AbstractTransaction
            recovery process. Instead TransactionManager or UserTransaction must be used.
             */
             TransactionManager txManager = MuleServer.getMuleContext().getTransactionManager();
-            delistResources();
+//            delistResources();
             txManager.rollback();
         }
         catch (SystemException e)
@@ -268,6 +284,11 @@ public class XaTransaction extends AbstractTransaction
         }
 
         resources.put(key, resource);
+        
+        if (key == null)
+        {
+            logger.error("Key for binded resource " + resource + " is null");
+        }
         
         if (resource instanceof MuleXaObject)
         {
@@ -413,17 +434,24 @@ public class XaTransaction extends AbstractTransaction
             if (value instanceof MuleXaObject)
             {
                 MuleXaObject xaObject = (MuleXaObject) value;
-                if (!xaObject.isReuseObject())
-                {
+//                if (!xaObject.isReuseObject())
+//                {
                     try
                     {
+                        //TODO temporary
+                        Closable closable = getAdditionalResource(value);
+                        if (closable != null)
+                        {
+                            closable.close();
+                        }
                         xaObject.close();
+                        i.remove();
                     }
                     catch (Exception e)
                     {
                         logger.error("Failed to close resource " + xaObject, e);
                     }
-                }
+//                }
             }
         }
     }
@@ -456,4 +484,11 @@ public class XaTransaction extends AbstractTransaction
         String CLOSE_METHOD_NAME = "close";
     }
 
+    public static interface Closable
+    {
+        Object getUnderlying();
+        
+        void close();
+    }
+    
 }

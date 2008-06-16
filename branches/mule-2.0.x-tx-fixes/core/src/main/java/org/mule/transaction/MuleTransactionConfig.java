@@ -44,8 +44,6 @@ public class MuleTransactionConfig implements TransactionConfig
     private ConstraintFilter constraint = null;
 
     private int timeout;
-
-    private boolean enabled = true;
     
     public MuleTransactionConfig()
     {
@@ -202,16 +200,6 @@ public class MuleTransactionConfig implements TransactionConfig
                && ClassUtils.equal(constraint, other.constraint)
                && ClassUtils.equal(new Integer(timeout), new Integer(other.timeout));
 
-    }
-    
-    public boolean isEnabled() 
-    { 
-        return enabled; 
-    } 
-
-    public void setEnabled(boolean enabled) 
-    { 
-        this.enabled = enabled; 
     }
     
 }

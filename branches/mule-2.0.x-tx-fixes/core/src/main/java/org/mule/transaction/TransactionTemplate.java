@@ -40,15 +40,9 @@ public class TransactionTemplate
     public Object execute(TransactionCallback callback) throws Exception
     {
         //if we want to skip TT
-        if (config != null && !config.isEnabled())
-        {
-            return callback.doInTransaction();
-        }
-
         if (config == null)
         {
-            logger.warn("TransactionConfig is not specified, Transaction Action set to "
-                + TransactionConfig.ACTION_DEFAULT);
+            return callback.doInTransaction();
         }
 
         byte action = (config != null) ? config.getAction() : TransactionConfig.ACTION_DEFAULT;
