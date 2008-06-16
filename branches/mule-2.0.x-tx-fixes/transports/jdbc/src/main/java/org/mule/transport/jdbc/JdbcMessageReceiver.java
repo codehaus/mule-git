@@ -21,6 +21,7 @@ import org.mule.api.transport.MessageAdapter;
 import org.mule.transaction.TransactionCoordination;
 import org.mule.transport.ConnectException;
 import org.mule.transport.TransactedPollingMessageReceiver;
+import org.mule.transport.jdbc.i18n.JdbcMessages;
 import org.mule.util.ArrayUtils;
 
 import java.sql.Connection;
@@ -160,7 +161,15 @@ public class JdbcMessageReceiver extends TransactedPollingMessageReceiver
             }
             Object results = connector.getQueryRunner().query(con, this.readStmt, readParams,
                     connector.getResultSetHandler());
-            return (List) results;
+
+            List resultList = (List) results;
+            if (resultList.size() > 1)
+            {
+                logger.warn(JdbcMessages.moreThanOneMessageInTransaction(this.connector.getName()));
+                this.setReceiveMessagesInTransaction(false);
+            }
+            
+            return resultList;
         }
         finally
         {

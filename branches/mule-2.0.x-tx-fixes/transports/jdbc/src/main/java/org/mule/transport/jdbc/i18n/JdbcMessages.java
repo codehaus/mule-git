@@ -15,6 +15,7 @@ import org.mule.config.i18n.MessageFactory;
 
 public class JdbcMessages extends MessageFactory
 {
+    
     private static final String BUNDLE_PATH = getBundlePath("jdbc");
 
     public static Message transactionSetAutoCommitFailed()
@@ -26,6 +27,10 @@ public class JdbcMessages extends MessageFactory
     {
         return createMessage(BUNDLE_PATH, 2, name);
     }
+    
+    public static Message moreThanOneMessageInTransaction(String jdbcConnectorName)
+    {
+        return createMessage(BUNDLE_PATH, 3, jdbcConnectorName);
+    }
+    
 }
-
-
