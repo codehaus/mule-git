@@ -11,7 +11,6 @@
 package org.mule.transport.vm;
 
 import org.mule.DefaultMuleMessage;
-import org.mule.api.MuleEvent;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.InboundEndpoint;
@@ -115,14 +114,14 @@ public class VMMessageReceiver extends TransactedPollingMessageReceiver
     {
         if (isReceiveMessagesInTransaction())
         {
-            MuleEvent event = getFirstMessage();
-            if (event == null)
+            MuleMessage message = getFirstMessage();
+            if (message == null)
             {
                 return null;
             }
             
             List messages = new ArrayList(1);
-            messages.add(event);
+            messages.add(message);
             return messages;
         }
         else
@@ -173,13 +172,13 @@ public class VMMessageReceiver extends TransactedPollingMessageReceiver
         return messages;
     }
     
-    protected MuleEvent getFirstMessage() throws Exception
+    protected MuleMessage getFirstMessage() throws Exception
     {
         // The queue from which to pull events
         QueueSession qs = connector.getQueueSession();
         Queue queue = qs.getQueue(endpoint.getEndpointURI().getAddress());
         // try to get the first event off the queue
-        return (MuleEvent) queue.poll(connector.getQueueTimeout());
+        return (MuleMessage) queue.poll(connector.getQueueTimeout());
     }
 
     protected void processMessage(Object msg) throws Exception
