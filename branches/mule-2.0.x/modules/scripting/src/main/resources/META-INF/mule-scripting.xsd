@@ -15,10 +15,10 @@
         <xsd:documentation>
             The scripting module provides facilities for using scripting languages in Mule. Any scripting languages that
             supports [JSR-223|http://www.jcp.org/en/jsr/detail?id=223] can be used inside Mule. Scripts can be used as
-            implementations of service components or transfromers. Also, scripts can be used for expression evaluations
-            meaning message routing can be controled using script evaluations on the current message. You can even
+            implementations of service components or transformers. Also, scripts can be used for expression evaluations
+            meaning message routing can be controlled using script evaluations on the current message. You can even
             configure Mule instances from scripts.
-
+            \\
             h2. Script Configuration Builder
 
             The {javadoc:mule-module-scripting-builders}ScriptConfigurationBuilder{javadoc} allows developers to create
@@ -49,10 +49,12 @@
             <xsd:documentation>
                 Defines a script component backed by a JSR-223 compliant script engine such as Groovy, JavaScript, or
                 Ruby. Scripting allows you to either directly embed your script inside the XML config or reference a
-                script using Spring's [dynamic language support |
-                http://static.springframework.org/spring/docs/2.5.x/reference/dynamic-language.html].
-                <schemadoc:snippet id="component-config" sourcePath="src/test/resources/groovy-component-config.xml"
-                                   lang="xml"/>
+                script using Spring's [dynamic language
+                support|http://static.springframework.org/spring/docs/2.5.x/reference/dynamic-language.html].
+                <xsd:appinfo>
+                    <schemadoc:snippet id="component-config" sourcePath="src/test/resources/groovy-component-config.xml"
+                                       lang="xml"/>
+                </xsd:appinfo>
             </xsd:documentation>
         </xsd:annotation>
     </xsd:element>
@@ -117,10 +119,11 @@
                                 method on the bean a message is sent to an endpoint). Script bindings will only work
                                 with Java-based scripting languages. Right now there is no validation on when languages
                                 support java bindinngs since there are so many scripting languages.
-
-                                <schemadoc:snippet id="binding-config"
-                                                   sourcePath="src/test/resources-groovy-binding-config.xml"
-                                                   lang="xml"/>
+                                <xsd:appinfo>
+                                    <schemadoc:snippet id="binding-config"
+                                                       sourcePath="src/test/resources-groovy-binding-config.xml"
+                                                       lang="xml"/>
+                                </xsd:appinfo>
                             </xsd:documentation>
                         </xsd:annotation>
                     </xsd:element>
@@ -193,9 +196,11 @@
             <xsd:documentation>
                 Runs a script to perform transformation on the current message. To use Groovy as an example, the
                 configuration for a transformer that converts a comma-separated string of values to a _java.util.List_
-                would look like -
-                <schemadoc:snippet id="transformer-config" sourcePath="src/test/resources/groovy-transformer-config.xml"
-                                   lang="xml"/>
+                would look like the following:
+                <xsd:appinfo>
+                    <schemadoc:snippet id="transformer-config"
+                                       sourcePath="src/test/resources/groovy-transformer-config.xml" lang="xml"/>
+                </xsd:appinfo>
             </xsd:documentation>
         </xsd:annotation>
     </xsd:element>
