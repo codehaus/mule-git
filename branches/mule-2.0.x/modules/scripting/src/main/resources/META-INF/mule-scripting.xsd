@@ -62,8 +62,7 @@
                 -config ../conf/mule-config.groovy
                 {code}
 
-                For more information about configuring a Mule instance from code or script see [Configuring Mule
-                Programmatically].
+                For more information about configuring a Mule instance from code or script see [Configuring Mule Programmatically].
             </schemadoc:additional-documentation>
         </xsd:appinfo>
     </xsd:annotation>
@@ -79,6 +78,12 @@
                                    lang="xml">
                     This example demonstrates how to configure a Groovy Script component with an in-line script.
                 </schemadoc:snippet>
+                <xsd:appinfo>
+                    <schemadoc:snippet id="binding-config"
+                                       sourcePath="modules/scripting/src/test/resources-groovy-binding-config.xml" lang="xml">
+                        This example demonstrates how to orchestrate message flows using bindings. The example calls out to two different services and passes the results on to the outbound router.
+                    </schemadoc:snippet>
+                </xsd:appinfo>
             </xsd:appinfo>
         </xsd:annotation>
     </xsd:element>
@@ -101,11 +106,6 @@
                                 with Java-based scripting languages. Right now there is no validation on when languages
                                 support java bindinngs since there are so many scripting languages.
                             </xsd:documentation>
-                            <xsd:appinfo>
-                                <schemadoc:snippet id="binding-config"
-                                                   sourcePath="modules/scripting/src/test/resources-groovy-binding-config.xml"
-                                                   lang="xml"/>
-                            </xsd:appinfo>
                         </xsd:annotation>
                     </xsd:element>
                 </xsd:sequence>

@@ -20,6 +20,10 @@
     <model>
         <!--// START SNIPPET: binding-config -->
         <service name="scriptWithBindings">
+            <description>
+                This example demonstrates how to orchestrate message flows using bindings. The example calls out to two
+                different services and passes the results on to the outbound router.
+            </description>
             <inbound>
                 <inbound-endpoint ref="client_request"/>
             </inbound>
