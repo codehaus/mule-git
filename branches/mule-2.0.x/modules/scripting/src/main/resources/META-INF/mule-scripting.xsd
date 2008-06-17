@@ -109,6 +109,21 @@
                             </xsd:documentation>
                         </xsd:annotation>
                     </xsd:element>
+                    <xsd:element name="binding" type="mule:pojoBindingType" minOccurs="0" maxOccurs="unbounded">
+                        <xsd:annotation>
+                            <xsd:documentation>
+                                A binding associates a Mule endpoint with an injected Java interface
+                                (this is like using Spring to inject a bean, but instead of calling a
+                                method on the bean a message is sent to an endpoint). Script bindings will only work
+                                with Java-based scripting languages. Right now there is no validation on when languages
+                                support java bindinngs since there are so many scripting languages.
+
+                                <schemadoc:snippet id="binding-config"
+                                                   sourcePath="src/test/resources-groovy-binding-config.xml"
+                                                   lang="xml"/>
+                            </xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
                 </xsd:sequence>
                 <xsd:attribute name="script-ref" type="xsd:NMTOKEN">
                     <xsd:annotation>
