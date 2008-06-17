@@ -18,12 +18,11 @@
             implementations of service components or transformers. Also, scripts can be used for expression evaluations
             meaning message routing can be controlled using script evaluations on the current message. You can even
             configure Mule instances from scripts.
-
         </xsd:documentation>
+
         <xsd:appinfo>
             <schemadoc:short-name>scripting</schemadoc:short-name>
             <schemadoc:page-title>Scripting Module</schemadoc:page-title>
-
 
             <schemadoc:additional-documentation where="after-common-elements">
                 h2. Script Context Bindings
@@ -72,10 +71,7 @@
     <xsd:element name="component" type="scriptComponentType" substitutionGroup="mule:abstract-component">
         <xsd:annotation>
             <xsd:documentation>
-                Defines a script component backed by a JSR-223 compliant script engine such as Groovy, JavaScript, or
-                Ruby. Scripting allows you to either directly embed your script inside the XML config or reference a
-                script using Spring's dynamic language support:
-                http://static.springframework.org/spring/docs/2.5.x/reference/dynamic-language.html.
+                Defines a script component backed by a JSR-223 compliant script engine such as Groovy, JavaScript, or Ruby. Scripting allows you to either directly embed your script inside the XML config or reference a script using Spring's dynamic language support: http://static.springframework.org/spring/docs/2.5.x/reference/dynamic-language.html.
             </xsd:documentation>
             <xsd:appinfo>
                 <schemadoc:snippet id="component-example"
@@ -91,7 +87,10 @@
             <xsd:extension base="mule:abstractComponentType">
                 <xsd:sequence>
                     <xsd:element name="script" type="scriptType" minOccurs="0">
-
+                        <xsd:annotation>
+                            <xsd:documentation>A script to be executed by a JSR-223 compliant script engine such as
+                                Groovy, JavaScript(Rhino), Python, Ruby or Beanshell (etc).</xsd:documentation>
+                        </xsd:annotation>
                     </xsd:element>
                     <xsd:element name="binding" type="mule:pojoBindingType" minOccurs="0" maxOccurs="unbounded">
                         <xsd:annotation>
@@ -112,8 +111,7 @@
                 </xsd:sequence>
                 <xsd:attribute name="script-ref" type="xsd:NMTOKEN">
                     <xsd:annotation>
-                        <xsd:documentation>A reference to a script object bean. i.e. a &lt;script:script ...&gt;
-                            definition.
+                        <xsd:documentation>A reference to a script object bean. i.e. a &lt;script:script ...&gt; definition.
                         </xsd:documentation>
                     </xsd:annotation>
                 </xsd:attribute>
@@ -124,10 +122,7 @@
     <xsd:element name="script" type="scriptType" substitutionGroup="mule:abstract-extension">
         <xsd:annotation>
             <xsd:documentation>
-                Represents a script that can be used as a component for a service or a transformer. The script text can
-                be pulled in from a script file or be embedded inside this element. A script to be executed by any
-                JSR-223
-                compliant script engine such as Groovy, JavaScript(Rhino), Python, Ruby or Beanshell (etc).
+                Represents a script that can be used as a component for a service or a transformer. The script text can be pulled in from a script file or be embedded inside this element. A script to be executed by any JSR-223 compliant script engine such as Groovy, JavaScript(Rhino), Python, Ruby or Beanshell (etc).
             </xsd:documentation>
         </xsd:annotation>
     </xsd:element>
@@ -222,9 +217,7 @@
     <xsd:element name="transformer" type="scriptTransformerType" substitutionGroup="mule:abstract-transformer">
         <xsd:annotation>
             <xsd:documentation>
-                Runs a script to perform transformation on the current message. To use Groovy as an example, the
-                following
-                transformer configuration will converts a comma-separated string of values to a _java.util.List_.
+                Runs a script to perform transformation on the current message. To use Groovy as an example, the following transformer configuration will converts a comma-separated string of values to a _java.util.List_.
             </xsd:documentation>
             <xsd:appinfo>
                 <schemadoc:snippet id="transformer-config"
@@ -239,8 +232,7 @@
                 <xsd:sequence>
                     <xsd:element name="script" type="scriptType">
                         <xsd:annotation>
-                            <xsd:documentation>A script to be executed by a JSR-223 compliant script engine such as
-                                Groovy, JavaScript(Rhino), Python, Ruby or Beanshell (etc).
+                            <xsd:documentation>A script to be executed by a JSR-223 compliant script engine such as Groovy, JavaScript(Rhino), Python, Ruby or Beanshell (etc).
                             </xsd:documentation>
                         </xsd:annotation>
                     </xsd:element>
@@ -251,8 +243,7 @@
 
     <xsd:element name="groovy-refreshable" type="groovyRefreshableType" substitutionGroup="mule:abstract-extension">
         <xsd:annotation>
-            <xsd:documentation>A wrapper for a component object that allows the underlying object to be reloaded at
-                runtime. This makes it possible to hot-deploy new component logic without restarting.
+            <xsd:documentation>A wrapper for a component object that allows the underlying object to be reloaded at runtime. This makes it possible to hot-deploy new component logic without restarting.
             </xsd:documentation>
         </xsd:annotation>
     </xsd:element>
@@ -284,8 +275,7 @@
     <xsd:element name="lang" type="langType" substitutionGroup="mule:abstract-extension">
         <xsd:annotation>
             <xsd:documentation>
-                This element allows the http://www.springframework.org/schema/lang namespace
-                to be embedded. Within this element developers can include the spring _lang_ namespace.
+                This element allows the http://www.springframework.org/schema/lang namespace to be embedded. Within this element developers can include the spring _lang_ namespace.
             </xsd:documentation>
         </xsd:annotation>
     </xsd:element>
