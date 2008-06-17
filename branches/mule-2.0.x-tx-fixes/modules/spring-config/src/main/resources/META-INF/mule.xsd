@@ -1267,7 +1267,7 @@
 
     <xsd:complexType name="pojoBindingType">
         <xsd:sequence>
-            <xsd:element ref="abstract-outbound-endpoint" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:element ref="abstract-outbound-endpoint" minOccurs="1" maxOccurs="unbounded"/>
         </xsd:sequence>
         <xsd:attribute name="interface" use="required" type="substitutableClass">
             <xsd:annotation>
