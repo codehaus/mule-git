@@ -320,7 +320,10 @@ public class XaTransactedJmsMessageReceiver extends TransactedPollingMessageRece
             if (this.reuseSession && ctx.session != null)
             {
                 session = ctx.session;
-                tx.bindResource(this.connector.getConnection(), session);
+                if (tx != null)
+                {
+                    tx.bindResource(this.connector.getConnection(), session);
+                }
             }
             else
             {
