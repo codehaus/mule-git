@@ -18,29 +18,54 @@
             implementations of service components or transformers. Also, scripts can be used for expression evaluations
             meaning message routing can be controlled using script evaluations on the current message. You can even
             configure Mule instances from scripts.
-            \\
-            h2. Script Configuration Builder
 
-            The {javadoc:mule-module-scripting-builders}ScriptConfigurationBuilder{javadoc} allows developers to create
-            a mule instance from a JSR-223 compliant script. To load the manager from Groovy -
-            {code:java}
-            ConfigurationBuilder builder = new ScriptConfigurationBuilder("groovy", "../conf/mule-config.groovy");
-            MuleContext muleContext = new DefaultMuleContextFactory().createMuleContext(builder);
-            {code}
-            Or to start the server from the command line -
-            {code}
-            mule -M-Dorg.mule.script.engine=groovy
-            -builder org.mule.module.scripting.builders.ScriptConfigurationBuilder
-            -config ../conf/mule-config.groovy
-            {code}
-
-            For more information about configuring a Mule instance from code or script see [Configuring Mule
-            Programmatically].
         </xsd:documentation>
         <xsd:appinfo>
             <schemadoc:short-name>scripting</schemadoc:short-name>
             <schemadoc:page-title>Scripting Module</schemadoc:page-title>
 
+
+            <schemadoc:additional-documentation where="after-common-elements">
+                h2. Script Context Bindings
+
+                When run inside Mule, scripts have a number of objects available to them in the script context. These
+                are:
+
+                ||Name||Description||
+                |log|a logger that can be used to write to Mule's log file.|
+                |muleContext|a reference to the MuleContext object.|
+                |message|the current message.|
+                |originalPayload|the payload of the current message before any transforms.|
+                |payload|the transformed payload of the current message if a transformer is configured on the service.
+                Otherwise this is the same value as _originalPayload_.|
+                |src|same as _payload_, kept for backward compatability.|
+                |service|a reference to the current service object.|
+                |id|the current event id.|
+                |result|a placeholder object where the result of the script can be written to. Usually it's better to
+                just return a value from the script unless the script method doesn't have a return value.|
+            </schemadoc:additional-documentation>
+
+            <schemadoc:additional-documentation where="after-specific-elements">
+                h2. Script Configuration Builder
+
+                The {javadoc:mule-module-scripting-builders}ScriptConfigurationBuilder{javadoc} allows developers to
+                create a mule instance from a JSR-223 compliant script. To load the manager from Groovy:
+
+                {code:java}
+                ConfigurationBuilder builder = new ScriptConfigurationBuilder("groovy", "../conf/mule-config.groovy");
+                MuleContext muleContext = new DefaultMuleContextFactory().createMuleContext(builder);
+                {code}
+
+                Or to start the server from the command line -
+                {code}
+                mule -M-Dorg.mule.script.engine=groovy
+                -builder org.mule.module.scripting.builders.ScriptConfigurationBuilder
+                -config ../conf/mule-config.groovy
+                {code}
+
+                For more information about configuring a Mule instance from code or script see [Configuring Mule
+                Programmatically].
+            </schemadoc:additional-documentation>
         </xsd:appinfo>
     </xsd:annotation>
 
@@ -49,13 +74,16 @@
             <xsd:documentation>
                 Defines a script component backed by a JSR-223 compliant script engine such as Groovy, JavaScript, or
                 Ruby. Scripting allows you to either directly embed your script inside the XML config or reference a
-                script using Spring's [dynamic language
-                support|http://static.springframework.org/spring/docs/2.5.x/reference/dynamic-language.html].
-                <xsd:appinfo>
-                    <schemadoc:snippet id="component-config" sourcePath="src/test/resources/groovy-component-config.xml"
-                                       lang="xml"/>
-                </xsd:appinfo>
+                script using Spring's dynamic language support:
+                http://static.springframework.org/spring/docs/2.5.x/reference/dynamic-language.html.
             </xsd:documentation>
+            <xsd:appinfo>
+                <schemadoc:snippet id="component-example"
+                                   sourcePath="modules/scripting/src/test/resources/groovy-component-config.xml"
+                                   lang="xml">
+                    This example demonstrates how to configure a Groovy Script component with an in-line script.
+                </schemadoc:snippet>
+            </xsd:appinfo>
         </xsd:annotation>
     </xsd:element>
     <xsd:complexType name="scriptComponentType">
@@ -63,53 +91,7 @@
             <xsd:extension base="mule:abstractComponentType">
                 <xsd:sequence>
                     <xsd:element name="script" type="scriptType" minOccurs="0">
-                        <xsd:annotation>
-                            <xsd:documentation>The script to execute as a service. When run inside Mule, scripts have a
-                                number of objects available to them in the script context. These are:
-                                {html}
-                                <table>
-                                    <tr>
-                                        <td>log</td>
-                                        <td>a logger that can be used to write to Mule's log file.</td>
-                                    </tr>
-                                    <tr>
-                                        <td>muleContext</td>
-                                        <td>a reference to the MuleContext object.</td>
-                                    </tr>
-                                    <tr>
-                                        <td>message</td>
-                                        <td>the current message.</td>
-                                    </tr>
-                                    <tr>
-                                        <td>originalPayload</td>
-                                        <td>the payload of the current message before any transforms.</td>
-                                    </tr>
-                                    <tr>
-                                        <td>payload</td>
-                                        <td>the transformed payload of the current message if a transformer is
-                                            configured on the service. Otherwise this is the same value as
-                                            _originalPayload_.
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>service</td>
-                                        <td>a reference to the current service object.</td>
-                                    </tr>
-                                    <tr>
-                                        <td>id</td>
-                                        <td>the current event id.</td>
-                                    </tr>
-                                    <tr>
-                                        <td>result</td>
-                                        <td>a placeholder object where the result of the script can be written to.
-                                            Usually it's better to just return a value from the script unless the script
-                                            method doesn't have a return value.
-                                        </td>
-                                    </tr>
-                                </table>
-                                {html}
-                            </xsd:documentation>
-                        </xsd:annotation>
+
                     </xsd:element>
                     <xsd:element name="binding" type="mule:pojoBindingType" minOccurs="0" maxOccurs="unbounded">
                         <xsd:annotation>
@@ -119,12 +101,12 @@
                                 method on the bean a message is sent to an endpoint). Script bindings will only work
                                 with Java-based scripting languages. Right now there is no validation on when languages
                                 support java bindinngs since there are so many scripting languages.
-                                <xsd:appinfo>
-                                    <schemadoc:snippet id="binding-config"
-                                                       sourcePath="src/test/resources-groovy-binding-config.xml"
-                                                       lang="xml"/>
-                                </xsd:appinfo>
                             </xsd:documentation>
+                            <xsd:appinfo>
+                                <schemadoc:snippet id="binding-config"
+                                                   sourcePath="modules/scripting/src/test/resources-groovy-binding-config.xml"
+                                                   lang="xml"/>
+                            </xsd:appinfo>
                         </xsd:annotation>
                     </xsd:element>
                 </xsd:sequence>
@@ -151,7 +133,53 @@
     </xsd:element>
 
     <xsd:complexType name="scriptType">
-
+        <xsd:annotation>
+            <xsd:documentation>The script to execute as a service. When run inside Mule, scripts have a
+                number of objects available to them in the script context. These are:
+                {html}
+                <table>
+                    <tr>
+                        <td>log</td>
+                        <td>a logger that can be used to write to Mule's log file.</td>
+                    </tr>
+                    <tr>
+                        <td>muleContext</td>
+                        <td>a reference to the MuleContext object.</td>
+                    </tr>
+                    <tr>
+                        <td>message</td>
+                        <td>the current message.</td>
+                    </tr>
+                    <tr>
+                        <td>originalPayload</td>
+                        <td>the payload of the current message before any transforms.</td>
+                    </tr>
+                    <tr>
+                        <td>payload</td>
+                        <td>the transformed payload of the current message if a transformer is
+                            configured on the service. Otherwise this is the same value as
+                            _originalPayload_.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>service</td>
+                        <td>a reference to the current service object.</td>
+                    </tr>
+                    <tr>
+                        <td>id</td>
+                        <td>the current event id.</td>
+                    </tr>
+                    <tr>
+                        <td>result</td>
+                        <td>a placeholder object where the result of the script can be written to.
+                            Usually it's better to just return a value from the script unless the script
+                            method doesn't have a return value.
+                        </td>
+                    </tr>
+                </table>
+                {html}
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:complexContent mixed="true">
             <xsd:extension base="mule:abstractExtensionType">
                 <xsd:sequence>
@@ -195,13 +223,14 @@
         <xsd:annotation>
             <xsd:documentation>
                 Runs a script to perform transformation on the current message. To use Groovy as an example, the
-                configuration for a transformer that converts a comma-separated string of values to a _java.util.List_
-                would look like the following:
-                <xsd:appinfo>
-                    <schemadoc:snippet id="transformer-config"
-                                       sourcePath="src/test/resources/groovy-transformer-config.xml" lang="xml"/>
-                </xsd:appinfo>
+                following
+                transformer configuration will converts a comma-separated string of values to a _java.util.List_.
             </xsd:documentation>
+            <xsd:appinfo>
+                <schemadoc:snippet id="transformer-config"
+                                   sourcePath="modules/scripting/src/test/resources/groovy-transformer-config.xml"
+                                   lang="xml"/>
+            </xsd:appinfo>
         </xsd:annotation>
     </xsd:element>
     <xsd:complexType name="scriptTransformerType">
@@ -211,55 +240,7 @@
                     <xsd:element name="script" type="scriptType">
                         <xsd:annotation>
                             <xsd:documentation>A script to be executed by a JSR-223 compliant script engine such as
-                                Groovy, JavaScript(Rhino), Python, Ruby or Beanshell (etc). When run inside Mule,
-                                scripts have a
-                                number of objects available to them in the script context. These are:
-                                {html}
-                                <table>
-                                    <tr>
-                                        <td>log</td>
-                                        <td>a logger that can be used to write to Mule's log file.</td>
-                                    </tr>
-                                    <tr>
-                                        <td>muleContext</td>
-                                        <td>a reference to the MuleContext object.</td>
-                                    </tr>
-                                    <tr>
-                                        <td>message</td>
-                                        <td>the current message.</td>
-                                    </tr>
-                                    <tr>
-                                        <td>originalPayload</td>
-                                        <td>the payload of the current message before any transforms.</td>
-                                    </tr>
-                                    <tr>
-                                        <td>payload</td>
-                                        <td>the transformed payload of the current message if a transformer is
-                                            configured on the service. Otherwise this is the same value as
-                                            _originalPayload_.
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>src</td>
-                                        <td>same as _payload_, kept for backward compatability.</td>
-                                    </tr>
-                                    <tr>
-                                        <td>service</td>
-                                        <td>a reference to the current service object.</td>
-                                    </tr>
-                                    <tr>
-                                        <td>id</td>
-                                        <td>the current event id.</td>
-                                    </tr>
-                                    <tr>
-                                        <td>result</td>
-                                        <td>a placeholder object where the result of the script can be written to.
-                                            Usually it's better to just return a value from the script unless the script
-                                            method doesn't have a return value.
-                                        </td>
-                                    </tr>
-                                </table>
-                                {html}
+                                Groovy, JavaScript(Rhino), Python, Ruby or Beanshell (etc).
                             </xsd:documentation>
                         </xsd:annotation>
                     </xsd:element>
@@ -304,7 +285,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 This element allows the http://www.springframework.org/schema/lang namespace
-                to be embedded.
+                to be embedded. Within this element developers can include the spring _lang_ namespace.
             </xsd:documentation>
         </xsd:annotation>
     </xsd:element>

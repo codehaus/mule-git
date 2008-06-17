@@ -18,6 +18,9 @@
 
     <model>
         <service name="inlineScript">
+            <description>
+                This example demonstrates how to configure a Groovy Script component with an in-line script.
+            </description>
             <inbound>
                 <inbound-endpoint address="vm://in1"/>
             </inbound>
