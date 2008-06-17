@@ -13,6 +13,7 @@ package org.mule.transaction;
 import org.mule.api.transaction.Transaction;
 import org.mule.api.transaction.TransactionConfig;
 import org.mule.api.transaction.TransactionFactory;
+import org.mule.config.i18n.CoreMessages;
 import org.mule.transaction.constraints.ConstraintFilter;
 import org.mule.util.ClassUtils;
 
@@ -130,8 +131,12 @@ public class MuleTransactionConfig implements TransactionConfig
     {
         Transaction tx = TransactionCoordination.getInstance().getTransaction(); 
         boolean joinPossible = (action != ACTION_JOIN_IF_POSSIBLE || (action == ACTION_JOIN_IF_POSSIBLE && tx != null));
-        return action != ACTION_NEVER && action != ACTION_NONE && isConfigured() &&
-            factory.isTransacted() && joinPossible;
+        if (action != ACTION_NEVER && action != ACTION_NONE && factory == null)
+        {
+            // TODO use TransactionException here? This causes API changes as TE is a checked exception ...
+            throw new RuntimeException(CoreMessages.transactionFactoryIsMandatory(getActionAsString()).getMessage());
+        }
+        return action != ACTION_NEVER && action != ACTION_NONE && factory.isTransacted() && joinPossible;
     }
     
     public boolean isConfigured()
