@@ -20,22 +20,16 @@
     <xsl:template match="xsd:element" mode="single-element">
 
         <xsl:variable name="temp" select="translate(@name, '-', ' ')"/>
-        <xsl:variable name="t"
-                      select="concat( translate( substring( $temp, 1, 1 ),'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' ), substring( $temp, 2, string-length( $temp )))"/>
+        <xsl:variable name="t" select="concat( translate( substring( $temp, 1, 1 ),'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' ), substring( $temp, 2, string-length( $temp )))"/>
 
-        h2.
-        <xsl:value-of select="$t"/>
+        h2. <xsl:value-of select="$t"/>
         \\
         <xsl:value-of select="xsd:annotation/xsd:documentation"/>
 
-        <xsl:variable name="type">
-            <xsl:value-of select="@type"/>
-        </xsl:variable>
+        <xsl:variable name="type"><xsl:value-of select="@type"/> </xsl:variable>
 
         <xsl:apply-templates select="//xsd:complexType[@name=$type]" mode="table">
-            <xsl:with-param name="name">
-                <xsl:value-of select="@name"/>
-            </xsl:with-param>
+            <xsl:with-param name="name"><xsl:value-of select="@name"/> </xsl:with-param>
         </xsl:apply-templates>
 
         <xsl:if test="@type">
@@ -50,15 +44,15 @@
     <xsl:template match="xsd:complexType" mode="table">
         <xsl:param name="name"/>
         <xsl:if test="(count(.//xsd:attribute) +  count(.//xsd:attributeGroup)) > 0">
-            h3.Attributes of &lt;<xsl:value-of select="$name"/>...&gt;
-            ||Name||Type||Required||Default||Description||
-            <xsl:apply-templates select="." mode="attributes"/>
+        h3.Attributes of &lt;<xsl:value-of select="$name"/>...&gt;
+        ||Name||Type||Required||Default||Description||
+        <xsl:apply-templates select="." mode="attributes"/>
         </xsl:if>
 
         <xsl:if test="(count(.//xsd:element) + count(.//xsd:choice)) > 0 ">
-            h3. Child Elements of &lt;<xsl:value-of select="$name"/>...&gt;
-            ||Name||Cardinality||Description||
-            <xsl:call-template name="element-children"/>
+        h3. Child Elements of &lt;<xsl:value-of select="$name"/>...&gt;
+        ||Name||Cardinality||Description||
+        <xsl:call-template name="element-children"/>
         </xsl:if>
     </xsl:template>
 
@@ -225,22 +219,13 @@
         </xsl:variable>
         <xsl:variable name="doc">
             <xsl:if test="xsd:annotation/xsd:documentation/text()|xsd:annotation/xsd:documentation/*">
-                <xsl:apply-templates
-                        select="xsd:annotation/xsd:documentation/*|xsd:annotation/xsd:documentation/text()"
-                        mode="copy"/>
-            </xsl:if>
+                        <xsl:apply-templates
+                                select="xsd:annotation/xsd:documentation/*|xsd:annotation/xsd:documentation/text()"
+                                mode="copy"/>
+                </xsl:if>
             <!-- leave this line as-is -->
-        </xsl:variable>
-        |
-        <xsl:value-of select="@name"/>
-        |
-        <xsl:value-of select="$type"/>
-        |
-        <xsl:value-of select="$required"/>
-        |
-        <xsl:value-of select="$default"/>
-        |<xsl:value-of select="normalize-space($doc)"/>|
-    </xsl:template>
+        </xsl:variable>|<xsl:value-of select="@name"/> |<xsl:value-of select="$type"/> |<xsl:value-of select="$required"/> |<xsl:value-of select="$default"/> |<xsl:value-of select="normalize-space($doc)"/>|
+        </xsl:template>
 
 
     <xsl:template match="xsd:element" mode="attributes">
@@ -325,18 +310,11 @@
         <xsl:variable name="ref" select="@ref"/>
         <xsl:variable name="doc">
             <xsl:apply-templates select="." mode="elements-doc"/>
-            <xsl:apply-templates
-                    select="/xsd:schema/xsd:element[@name=$ref]" mode="elements-doc"/>
-            <xsl:apply-templates
-                    select="/xsd:schema/xsd:element[@name=$ref]" mode="elements-abstract"/>
-        </xsl:variable>
-        |
-        <xsl:value-of select="@ref"/>
-        |<xsl:value-of select="$min"/>..
-        <xsl:value-of select="$max"/>
-        |
-        <xsl:value-of select="normalize-space($doc)"/>
-        |
+                <xsl:apply-templates
+                        select="/xsd:schema/xsd:element[@name=$ref]" mode="elements-doc"/>
+                <xsl:apply-templates
+                        select="/xsd:schema/xsd:element[@name=$ref]" mode="elements-abstract"/>
+        </xsl:variable>|<xsl:value-of select="@ref"/> |<xsl:value-of select="$min"/>..<xsl:value-of select="$max"/> |<xsl:value-of select="normalize-space($doc)"/> |
     </xsl:template>
 
     <xsl:template match="xsd:element[contains(@name, ':abstract-')]"
@@ -368,8 +346,7 @@
 
     <xsl:template match="xsd:element[@name]" mode="elements-list">
         <!--element (list) <xsl:value-of select="@name"/>-->
-        *
-        <xsl:call-template name="link">
+          * <xsl:call-template name="link">
             <xsl:with-param name="item">
                 <xsl:value-of select="@name"/>
             </xsl:with-param>
@@ -430,9 +407,7 @@
         <xsl:variable name="ref" select="@ref"/>
         <xsl:variable name="doc">
             <xsl:apply-templates select="." mode="elements-doc"/>
-        </xsl:variable>
-        |<xsl:value-of select="@name"/>|<xsl:value-of select="$min"/>..<xsl:value-of select="$max"/>|<xsl:value-of
-            select="normalize-space($doc)"/>|
+        </xsl:variable>| <xsl:value-of select="@name"/>| <xsl:value-of select="$min"/>..<xsl:value-of select="$max"/>| <xsl:value-of select="normalize-space($doc)"/>|
     </xsl:template>
 
     <xsl:template match="xsd:group" mode="elements">
@@ -484,10 +459,10 @@
 
     <xsl:template match="xsd:element[@substitutionGroup]" mode="substitution">
         <xsl:variable name="sub" select="@substitutionGroup"/>
-        This element can be used as a substitute for
-        &lt;
-        <xsl:value-of select="$sub"/>
-        ...&gt;
+            This element can be used as a substitute for
+            &lt;
+            <xsl:value-of select="$sub"/>
+            ...&gt;
         <xsl:apply-templates
                 select="/xsd:schema/xsd:element[@name=$sub]" mode="documentation"/>
     </xsl:template>
@@ -517,9 +492,7 @@
             <xsl:when test="$simpleType='substitutableLong'">long</xsl:when>
             <xsl:when test="$simpleType='substitutablePortNumber'">port number</xsl:when>
             <xsl:when test="$simpleType='substitutableClass'">class name</xsl:when>
-            <xsl:when test="$simpleType='substitutableName' or $simpleType='NMTOKEN' or $simpleType='IDREF'">name (no
-                spaces)
-            </xsl:when>
+            <xsl:when test="$simpleType='substitutableName' or $simpleType='NMTOKEN' or $simpleType='IDREF'">name (no spaces)</xsl:when>
             <xsl:when test="$simpleType='nonBlankString'">name</xsl:when>
             <xsl:when test="$simpleType='NMTOKENS'">list of names</xsl:when>
             <xsl:otherwise>
