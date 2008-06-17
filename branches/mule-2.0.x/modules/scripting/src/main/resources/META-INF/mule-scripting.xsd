@@ -78,12 +78,11 @@
                                    lang="xml">
                     This example demonstrates how to configure a Groovy Script component with an in-line script.
                 </schemadoc:snippet>
-                <xsd:appinfo>
-                    <schemadoc:snippet id="binding-config"
-                                       sourcePath="modules/scripting/src/test/resources-groovy-binding-config.xml" lang="xml">
-                        This example demonstrates how to orchestrate message flows using bindings. The example calls out to two different services and passes the results on to the outbound router.
-                    </schemadoc:snippet>
-                </xsd:appinfo>
+
+                <schemadoc:snippet id="binding-config"
+                                   sourcePath="modules/scripting/src/test/resources-groovy-binding-config.xml" lang="xml">
+                    This example demonstrates how to orchestrate message flows using bindings. The example calls out to two different services and passes the results on to the outbound router.
+                </schemadoc:snippet>
             </xsd:appinfo>
         </xsd:annotation>
     </xsd:element>
