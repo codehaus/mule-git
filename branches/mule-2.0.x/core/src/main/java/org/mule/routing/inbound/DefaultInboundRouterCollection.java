@@ -50,8 +50,6 @@ public class DefaultInboundRouterCollection extends AbstractRouterCollection imp
     public DefaultInboundRouterCollection()
     {
         super(RouterStatistics.TYPE_INBOUND);
-        //default for inbound routing
-        setMatchAll(true);
     }
 
     // @Override
