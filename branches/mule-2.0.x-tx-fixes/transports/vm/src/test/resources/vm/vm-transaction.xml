@@ -28,8 +28,7 @@
             <outbound>
                 <outbound-pass-through-router>
                     <outbound-endpoint address="vm://out" connector-ref="vmQueue">
-                        <!-- TODO MULE-3340: translate this into a transport specific tx element -->
-                        <custom-transaction action="NONE" factory-ref="txFactory"/>
+                        <vm:transaction action="NONE"/>
                     </outbound-endpoint>
                 </outbound-pass-through-router>
             </outbound>
