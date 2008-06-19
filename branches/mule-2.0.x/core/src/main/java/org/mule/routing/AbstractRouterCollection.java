@@ -126,7 +126,7 @@ public abstract class AbstractRouterCollection implements RouterCollection, Init
 
     public void setMatchAll(boolean matchAll)
     {
-        this.matchAll = matchAll;
+        this.matchAll = Boolean.valueOf(matchAll);
     }
 
     public RouterStatistics getStatistics()
