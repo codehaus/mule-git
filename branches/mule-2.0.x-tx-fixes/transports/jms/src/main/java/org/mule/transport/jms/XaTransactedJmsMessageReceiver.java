@@ -131,7 +131,6 @@ public class XaTransactedJmsMessageReceiver extends TransactedPollingMessageRece
         {
             throw new CreateException(e, this);
         }
-
     }
 
     protected void doDispose()
@@ -320,10 +319,7 @@ public class XaTransactedJmsMessageReceiver extends TransactedPollingMessageRece
             if (this.reuseSession && ctx.session != null)
             {
                 session = ctx.session;
-                if (tx != null)
-                {
-                    tx.bindResource(this.connector.getConnection(), session);
-                }
+                tx.bindResource(this.connector.getConnection(), session);
             }
             else
             {
