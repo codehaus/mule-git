@@ -20,7 +20,6 @@
         <service name="test">
             <inbound>
                 <vm:inbound-endpoint path="in">
-                    <!-- MULE-3449 -->
                     <vm:transaction action="BEGIN_OR_JOIN"/>
                 </vm:inbound-endpoint>
             </inbound>
