@@ -61,7 +61,7 @@ public abstract class AbstractRouterCollection implements RouterCollection, Init
         // If matchAll has not been specified use false as default.
         if (matchAll == null)
         {
-            matchAll = new Boolean(false);
+            matchAll = Boolean.valueOf(false);
         }
     }
 
