@@ -152,7 +152,6 @@ public class CatchAllStrategiesTestCase extends AbstractMuleTestCase
         final int[] catchAllCount = new int[]{0};
 
         DefaultOutboundRouterCollection messageRouter = new DefaultOutboundRouterCollection();
-        messageRouter.initialise();
 
         FilteringOutboundRouter filterRouter1 = new FilteringOutboundRouter()
         {

@@ -37,7 +37,6 @@ public class IdempotentReceiverTestCase extends AbstractMuleTestCase
         Service testService = getTestService("test", Apple.class);
 
         InboundRouterCollection messageRouter = new DefaultInboundRouterCollection();
-        messageRouter.initialise();
 
         messageRouter.addRouter(router);
         messageRouter.setCatchAllStrategy(new LoggingCatchAllStrategy());

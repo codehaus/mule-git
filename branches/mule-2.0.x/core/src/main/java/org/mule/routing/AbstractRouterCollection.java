@@ -40,7 +40,7 @@ public abstract class AbstractRouterCollection implements RouterCollection, Init
      */
     protected final transient Log logger = LogFactory.getLog(getClass());
 
-    protected Boolean matchAll;
+    protected boolean matchAll = false;
 
     protected List routers = new CopyOnWriteArrayList();
 
@@ -58,11 +58,6 @@ public abstract class AbstractRouterCollection implements RouterCollection, Init
     public void initialise() throws InitialisationException
     {
         LifecycleTransitionResult.initialiseAll(routers.iterator());
-        // If matchAll has not been specified use false as default.
-        if (matchAll == null)
-        {
-            matchAll = Boolean.valueOf(false);
-        }
     }
 
     public void dispose()
@@ -121,12 +116,12 @@ public abstract class AbstractRouterCollection implements RouterCollection, Init
 
     public boolean isMatchAll()
     {
-        return matchAll.booleanValue();
+        return matchAll;
     }
 
     public void setMatchAll(boolean matchAll)
     {
-        this.matchAll = Boolean.valueOf(matchAll);
+        this.matchAll = matchAll;
     }
 
     public RouterStatistics getStatistics()

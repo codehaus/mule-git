@@ -18,8 +18,6 @@ import org.mule.api.config.MuleProperties;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.endpoint.InboundEndpoint;
 import org.mule.api.endpoint.InvalidEndpointTypeException;
-import org.mule.api.lifecycle.InitialisationException;
-import org.mule.api.lifecycle.LifecycleTransitionResult;
 import org.mule.api.routing.InboundRouter;
 import org.mule.api.routing.InboundRouterCollection;
 import org.mule.api.routing.RoutingException;
@@ -32,9 +30,9 @@ import org.mule.util.StringUtils;
 import java.util.Iterator;
 import java.util.List;
 
+import edu.emory.mathcs.backport.java.util.concurrent.CopyOnWriteArrayList;
 import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
 import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentMap;
-import edu.emory.mathcs.backport.java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * <code>DefaultInboundRouterCollection</code> is a collection of routers that will be
@@ -50,19 +48,10 @@ public class DefaultInboundRouterCollection extends AbstractRouterCollection imp
     public DefaultInboundRouterCollection()
     {
         super(RouterStatistics.TYPE_INBOUND);
+        //default for inbound routing
+        setMatchAll(true);
     }
 
-    // @Override
-    public void initialise() throws InitialisationException
-    {
-        LifecycleTransitionResult.initialiseAll(routers.iterator());
-        // If matchAll has not been specified use true as default.
-        if (matchAll == null)
-        {
-            matchAll = new Boolean(true);
-        }
-    }
-    
     public MuleMessage route(MuleEvent event) throws MessagingException
     {
         // If the endpoint has a logical name, use it, otherwise use the URI.
@@ -306,5 +295,4 @@ public class DefaultInboundRouterCollection extends AbstractRouterCollection imp
         }
         return null;
     }
-
 }
