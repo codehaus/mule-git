@@ -38,6 +38,8 @@ public class SelectiveConsumerTestCase extends AbstractMuleTestCase
         Service testService = getTestService("test", Apple.class);
 
         InboundRouterCollection messageRouter = new DefaultInboundRouterCollection();
+        messageRouter.initialise();
+        
         SelectiveConsumer router = new SelectiveConsumer();
         messageRouter.addRouter(router);
         messageRouter.setCatchAllStrategy(new LoggingCatchAllStrategy());
@@ -83,6 +85,8 @@ public class SelectiveConsumerTestCase extends AbstractMuleTestCase
         Service testService = getTestService("test", Apple.class);
 
         InboundRouterCollection messageRouter = new DefaultInboundRouterCollection();
+        messageRouter.initialise();
+        
         SelectiveConsumer router = new SelectiveConsumer();
         messageRouter.addRouter(router);
         messageRouter.setCatchAllStrategy(new LoggingCatchAllStrategy());

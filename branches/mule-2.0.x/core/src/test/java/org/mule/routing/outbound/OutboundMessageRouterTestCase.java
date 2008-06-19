@@ -34,7 +34,9 @@ public class OutboundMessageRouterTestCase extends AbstractMuleTestCase
     {
         Mock session = MuleTestUtils.getMockSession();
         session.expectAndReturn("getService", getTestService());
+        
         DefaultOutboundRouterCollection messageRouter = new DefaultOutboundRouterCollection();
+        messageRouter.initialise();
         messageRouter.setCatchAllStrategy(new LoggingCatchAllStrategy());
         assertNotNull(messageRouter.getCatchAllStrategy());
 
@@ -107,6 +109,7 @@ public class OutboundMessageRouterTestCase extends AbstractMuleTestCase
         final int[] catchAllCount = new int[]{0};
 
         DefaultOutboundRouterCollection messageRouter = new DefaultOutboundRouterCollection();
+        messageRouter.initialise();
 
         FilteringOutboundRouter filterRouter1 = new FilteringOutboundRouter()
         {
@@ -166,6 +169,8 @@ public class OutboundMessageRouterTestCase extends AbstractMuleTestCase
     public void testCorrelation() throws Exception
     {
         FilteringOutboundRouter filterRouter = new FilteringOutboundRouter();
+        filterRouter.initialise();
+        
         MuleSession session = getTestSession(getTestService(), muleContext);
         MuleMessage message = new DefaultMuleMessage(new DefaultMessageAdapter(new StringBuffer()));
         OutboundEndpoint endpoint = getTestOutboundEndpoint("test");
