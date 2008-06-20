@@ -150,6 +150,12 @@ public class TextFileObjectStore extends InMemoryObjectStore
                 logger.error(e.getMessage(), e);
             }
         }
+        else 
+        {
+            IOUtils.closeQuietly(output);
+        }
+        
+        
         super.dispose();
     }
 }
