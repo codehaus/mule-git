@@ -23,5 +23,5 @@ org.mule.transport.cxf.jaxws.ClientTestCase
 # FunctionalTestComponent as the basis for a service...
 org.mule.transport.cxf.CxfCustomHttpHeaderTestCase
 
-# fails to compile WSDL
-org.mule.transport.cxf.WSProxyTestCase
+# MULE-3475
+#org.mule.transport.cxf.WSProxyTestCase
