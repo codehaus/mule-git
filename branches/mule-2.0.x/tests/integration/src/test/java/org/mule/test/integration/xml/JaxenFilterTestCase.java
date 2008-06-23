@@ -35,7 +35,6 @@ public class JaxenFilterTestCase extends FunctionalTestCase
         assertTrue(payload instanceof Document);
     }
     
-    @Override
     protected String getConfigResources()
     {
         return "org/mule/test/integration/xml/jaxen-routing-conf.xml";
