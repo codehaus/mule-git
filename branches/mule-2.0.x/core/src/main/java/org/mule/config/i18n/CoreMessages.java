@@ -1100,4 +1100,15 @@ public class CoreMessages extends MessageFactory
     {
         return createMessage(BUNDLE_PATH, 267, clazz, transformerName);
     }
+    
+    public static Message noBindingResource()
+    {
+        return createMessage(BUNDLE_PATH, 268);
+    }
+    
+    public static Message transactionFactoryIsMandatory(String action)
+    {
+        return createMessage(BUNDLE_PATH, 269, action);
+    }
+    
 }
