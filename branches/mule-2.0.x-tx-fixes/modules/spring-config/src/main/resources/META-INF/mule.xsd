@@ -3053,7 +3053,9 @@
     <xsd:complexType name="messageChunkingAggregatorRouterType">
         <xsd:complexContent>
             <xsd:extension base="baseAggregatorRouterType">
-                <xsd:attribute name="correlationExpression" type="xsd:string"/>
+                <xsd:sequence>
+                    <xsd:element ref="abstract-message-info-mapping" minOccurs="0"/>
+                </xsd:sequence>
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
