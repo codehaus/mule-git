@@ -89,7 +89,7 @@ public class CxfWsdlMessageDispatcher extends CxfMessageDispatcher
         }
     }
 
-    protected Client createClient(Bus bus, String wsdlUrl, String serviceName, String portName) throws Exception
+    protected static synchronized Client createClient(Bus bus, String wsdlUrl, String serviceName, String portName) throws Exception
     {
         DynamicClientFactory cf = DynamicClientFactory.newInstance(bus);
         return cf.createClient(wsdlUrl, 
