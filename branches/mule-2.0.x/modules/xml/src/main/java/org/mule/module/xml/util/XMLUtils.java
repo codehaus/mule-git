@@ -25,20 +25,6 @@ public class XMLUtils
 {
     public static final String TRANSFORMER_FACTORY_JDK5 = "com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl";
 
-    private static TransformerFactory transformerFactory;
-    
-    static 
-    {
-    	try
-        {
-    		transformerFactory = TransformerFactory.newInstance();
-        }
-        catch (TransformerFactoryConfigurationError e)
-        {
-            System.setProperty("javax.xml.transform.TransformerFactory", TRANSFORMER_FACTORY_JDK5);
-            transformerFactory = TransformerFactory.newInstance();
-        }
-    }
     /**
      * Converts a DOM to an XML string.
      */
@@ -53,10 +39,20 @@ public class XMLUtils
      * runtime environment.
      */
     public static Transformer getTransformer() throws TransformerConfigurationException
-    {       
-        if (transformerFactory != null)
+    {
+        TransformerFactory tf;
+        try
         {
-            return transformerFactory.newTransformer();
+            tf = TransformerFactory.newInstance();
+        }
+        catch (TransformerFactoryConfigurationError e)
+        {
+            System.setProperty("javax.xml.transform.TransformerFactory", TRANSFORMER_FACTORY_JDK5);
+            tf = TransformerFactory.newInstance();
+        }
+        if (tf != null)
+        {
+            return tf.newTransformer();
         }
         else
         {
