@@ -3319,7 +3319,8 @@
         </xsd:annotation>
     </xsd:element>
 
-    <xsd:element name="filtering-router" type="filteringOutboundRouterType" substitutionGroup="abstract-outbound-router">
+    <!--  FilteringOutboundRouter only uses a single endpoint. For now this needs to support multiple endpoints for MessageBuilderComponent usage only. -->
+    <xsd:element name="filtering-router" type="multipleEndpointFilteringOutboundRouterType" substitutionGroup="abstract-outbound-router">
         <xsd:annotation>
             <xsd:documentation>
                 This router uses filters to determine whether the message matches a particular criteria and if so will route the message to the endpoint configured on the router
