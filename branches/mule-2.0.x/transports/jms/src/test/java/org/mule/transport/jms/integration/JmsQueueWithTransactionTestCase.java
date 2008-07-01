@@ -19,7 +19,7 @@ public class JmsQueueWithTransactionTestCase extends AbstractJmsFunctionalTestCa
     
     protected String getConfigResources()
     {
-        return "providers/activemq/MULE-3342-config.xml";
+        return "providers/activemq/jms-queue-with-transaction.xml";
     }
 
     public void testOutboundJmsTransaction() throws Exception
