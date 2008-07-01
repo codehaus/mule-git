@@ -293,8 +293,28 @@ Assembly descriptor for the full Mule distribution.
             <include>stockquote-rest-config.xml</include>
         </includes>
     </fileSet>
-  </fileSets>
 
+    <!--
+    ============================
+      Mule Examples: Bookstore
+    ============================
+    -->
+
+    <fileSet>
+        <directory>../../../examples/bookstore/dist</directory>
+        <outputDirectory>examples/bookstore</outputDirectory>
+    </fileSet>
+    <fileSet>
+        <directory>../../../examples/bookstore/dist</directory>
+        <outputDirectory>examples/bookstore</outputDirectory>
+        <fileMode>755</fileMode>
+        <includes>
+            <include>bookstore</include>
+            <include>bookstore.bat</include>
+        </includes>
+    </fileSet>
+
+  </fileSets>
     <!--
     ============================
         Libraries
@@ -437,6 +457,7 @@ Assembly descriptor for the full Mule distribution.
         <exclude>org.mule.examples:mule-example-loanbroker-credit-agency</exclude>
         <exclude>org.mule.examples:mule-example-scripting</exclude>
         <exclude>org.mule.examples:mule-example-stockquote</exclude>
+        <exclude>org.mule.examples:mule-example-bookstore</exclude>
         <!-- TODO The following exclusions shouldn't be necessary here if they are kept 
         out in their originating POMs, need to do some transitive dependency debugging
         to figure out who is dragging them into the distro. -->
@@ -480,6 +501,7 @@ Assembly descriptor for the full Mule distribution.
         <include>org.mule.examples:mule-example-loanbroker-credit-agency</include>
         <include>org.mule.examples:mule-example-scripting</include>
         <include>org.mule.examples:mule-example-stockquote</include>
+        <include>org.mule.examples:mule-example-bookstore</include>
       </includes>
       <!-- no XML -->
       <excludes>
