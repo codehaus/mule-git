@@ -20,7 +20,6 @@ import org.mule.transport.cxf.i18n.CxfMessages;
 import org.mule.transport.cxf.support.MuleHeadersInInterceptor;
 import org.mule.transport.cxf.support.MuleHeadersOutInterceptor;
 import org.mule.transport.cxf.support.MuleProtocolHeadersOutInterceptor;
-import org.mule.transport.cxf.support.NoDatabinding;
 import org.mule.transport.cxf.support.ProxyService;
 import org.mule.transport.soap.i18n.SoapMessages;
 
@@ -40,7 +39,6 @@ import org.apache.commons.lang.BooleanUtils;
 import org.apache.cxf.Bus;
 import org.apache.cxf.binding.Binding;
 import org.apache.cxf.common.classloader.ClassLoaderUtils;
-import org.apache.cxf.databinding.DataBinding;
 import org.apache.cxf.databinding.stax.StaxDataBinding;
 import org.apache.cxf.databinding.stax.StaxDataBindingFeature;
 import org.apache.cxf.endpoint.Client;
