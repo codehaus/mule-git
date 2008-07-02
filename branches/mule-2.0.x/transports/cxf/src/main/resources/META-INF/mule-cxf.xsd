@@ -120,7 +120,6 @@
     </xsd:attributeGroup>
 
     <xsd:attributeGroup name="inboundEndpointAttributes">
-        <xsd:attribute name="bridge" type="xsd:boolean"/>
         <xsd:attribute name="frontend" type="xsd:string">
             <xsd:annotation>
     			<xsd:documentation>
@@ -215,6 +214,14 @@
     </xsd:group>
 
     <xsd:attributeGroup name="outboundEndpointAttributes">
+        <xsd:attribute name="proxy" type="xsd:boolean">
+            <xsd:annotation>
+    			<xsd:documentation>
+    				Whether or not this outbound endpoint is acting as a web service proxy. If so,
+    				it will expect raw xml as the input parameter and return an XML stream as the output.
+    			</xsd:documentation>
+    		</xsd:annotation>
+        </xsd:attribute>
         <xsd:attribute name="wsdlPort" type="xsd:string">
             <xsd:annotation>
     			<xsd:documentation>

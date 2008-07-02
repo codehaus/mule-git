@@ -8,29 +8,42 @@
  * LICENSE.txt file.
  */
 
-package org.mule.transport.cxf.bridge;
+package org.mule.transport.cxf;
 
 import org.mule.api.MuleMessage;
 import org.mule.module.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 
-public class BridgeTest extends FunctionalTestCase
+public class ProxyTestCase extends FunctionalTestCase
 {
-    public void testEchoService() throws Exception
+    String msg = "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
+        + "<soap:Body><test xmlns=\"http://foo\"> foo </test>" + "</soap:Body>" + "</soap:Envelope>";
+
+    
+    public void testServerWithEcho() throws Exception
+    {
+        MuleClient client = new MuleClient();
+        MuleMessage result = client.send("http://localhost:63081/services/Echo", msg, null);
+        String resString = result.getPayloadAsString();
+//        System.out.println(resString);
+        assertTrue(resString.indexOf("<test xmlns=\"http://foo\"> foo </test>") != -1);
+    }
+    
+    public void testServerClientProxy() throws Exception
     {
         String msg = "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
                      + "<soap:Body><test xmlns=\"http://foo\"> foo </test>" + "</soap:Body>" + "</soap:Envelope>";
 
         MuleClient client = new MuleClient();
-        MuleMessage result = client.send("http://localhost:63081/services/Echo", msg, null);
+        MuleMessage result = client.send("http://localhost:63081/services/proxy", msg, null);
         String resString = result.getPayloadAsString();
-
+        System.out.println(resString);
         assertTrue(resString.indexOf("<test xmlns=\"http://foo\"> foo </test>") != -1);
     }
 
     protected String getConfigResources()
     {
-        return "bridge-conf.xml";
+        return "proxy-conf.xml";
     }
 
 }

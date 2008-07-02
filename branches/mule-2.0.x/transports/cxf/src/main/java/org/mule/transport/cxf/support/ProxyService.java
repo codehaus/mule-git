@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: ProviderService.java 11549 2008-04-09 05:12:30Z dirk.olmes $
  * --------------------------------------------------------------------------------------
  * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
  *
@@ -11,16 +11,10 @@
 package org.mule.transport.cxf.support;
 
 import javax.xml.transform.Source;
-import javax.xml.ws.Provider;
-import javax.xml.ws.WebServiceProvider;
 
-@WebServiceProvider
-public class ProviderService implements Provider<Source>
+public interface ProxyService
 {
 
-    public Source invoke(Source arg0)
-    {
-        return null;
-    }
+    Source invoke(Source arg0);
 
 }
