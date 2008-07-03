@@ -329,7 +329,7 @@
         <xsd:attribute name="not" type="substitutableBoolean">
             <xsd:annotation>
                 <xsd:documentation>
-                    Inverts the filter's condition.
+                    Inverts the filter condition.
                 </xsd:documentation>
             </xsd:annotation>
         </xsd:attribute>
@@ -479,7 +479,7 @@
                     <xsd:attribute name="subscription" type="xsd:string">
                         <xsd:annotation>
                             <xsd:documentation>
-                                An optional string that is compared with the event's resource identifier.
+                                An optional string that is compared with the event resource identifier.
                                 Only events with matching identifiers will be sent.
                                 If no value is given, all events are sent.
                             </xsd:documentation>
@@ -1096,7 +1096,7 @@
         <xsd:sequence>
             <xsd:element ref="abstract-inbound-endpoint" minOccurs="1" maxOccurs="unbounded"/>
             <xsd:element ref="abstract-async-reply-router" minOccurs="0" maxOccurs="1"/>
-            <!-- TODO leaving this commented here, but I don't think there should be a transformer here -->
+            <!-- TODO leaving this commented here, but I do not think there should be a transformer here -->
             <!--<xsd:element ref="abstract-transformer" minOccurs="0" maxOccurs="unbounded"/>-->
         </xsd:sequence>
         <xsd:attribute name="timeout" type="substitutableInt">
@@ -1552,7 +1552,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 An endpoint "template" which can be used to construct an inbound or outbound endpoint
-                elsewhere in the configuration by referencing the endpoint's name.
+                elsewhere in the configuration by referencing the endpoint name.
                 Each transport implements its own endpoint element, with a more friendly syntax,
                 but this generic element can be used with any transport by supplying the correct
                 address URI. For example, "vm://foo" describes a VM transport endpoint.
@@ -1640,7 +1640,7 @@
                     A reference to a global endpoint.
                     If this attribute is used then the endpoint is used as a template to construct this endpoint.
                     A template fixes the address (protocol, path, host, etc), and may specify initial values for
-                    various properties, but further properties can be defined locally (as long as they don't
+                    various properties, but further properties can be defined locally (as long as they do not
                     change the address in any way).
                 </xsd:documentation>
             </xsd:annotation>
@@ -1877,7 +1877,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 A filter that can evaluate a range of expressions. It supports some base expression types
-                such as 'header', 'payload' (payload type), 'regex' and 'wildcard'.
+                such as header, payload (payload type), regex, and wildcard.
             </xsd:documentation>
         </xsd:annotation>
     </xsd:element>
@@ -1918,7 +1918,7 @@
                 </xsd:attribute>
                 <xsd:attribute name="customEvaluator" type="substitutableName">
                     <xsd:annotation>
-                        <xsd:documentation>Must be set if the evaluator is set to 'custom'. Also the custom evaluator
+                        <xsd:documentation>Must be set if the evaluator is set to custom. Also the custom evaluator
                             must be registered with the ExpressionEvaluatorManager if it is to be used here.
                         </xsd:documentation>
                     </xsd:annotation>
@@ -2442,7 +2442,7 @@
         <xsd:attribute name="custom-evaluator" type="substitutableName" use="optional">
             <xsd:annotation>
                 <xsd:documentation>The name of the custom evaluator to use. This attribute is only used when the
-                    evaluator attribute is set to 'custom'. Users can plug in their own expression evaluators by
+                    evaluator attribute is set to custom. Users can plug in their own expression evaluators by
                     registering them with the ExpressionEvaluatorManager.
                 </xsd:documentation>
             </xsd:annotation>
@@ -2486,7 +2486,7 @@
             <xsd:documentation>
                 A security manager is a container for security providers. More than one
                 security manager may be configured; each contains providers from a particular
-                module and has that module's type. This element is abstract - a security
+                module and has that module type. This element is abstract - a security
                 related module or transport will provide a suitable implementation.
             </xsd:documentation>
         </xsd:annotation>
@@ -2948,7 +2948,7 @@
             <xsd:extension base="abstractInboundRouterType">
                 <xsd:sequence>
                     <xsd:element ref="abstract-filter" minOccurs="0"/>
-                    <!-- TODO this doesn't make sense here, need to re-visit <xsd:element ref="abstract-message-info-mapping" minOccurs="0"/>-->
+                    <!-- TODO this does not make sense here, need to re-visit <xsd:element ref="abstract-message-info-mapping" minOccurs="0"/>-->
                 </xsd:sequence>
             </xsd:extension>
         </xsd:complexContent>
@@ -3396,7 +3396,7 @@
     <xsd:complexType name="messageSplitterOutboundRouterType">
         <xsd:complexContent>
             <xsd:extension base="multipleEndpointFilteringOutboundRouterType">
-                <!-- this isn't exposed to the user afaict? -->
+                <!-- this is not exposed to the user afaict? -->
                 <!-- xsd:attribute name="multimatch" type="substitutableBoolean"/ -->
                 <xsd:attribute name="honorSynchronicity" type="substitutableBoolean"/>
             </xsd:extension>
@@ -4041,7 +4041,7 @@
         </xsd:union>
     </xsd:simpleType>
 
-    <!-- i found this a bit confusing, so here's some background...
+    <!-- i found this a bit confusing, so here is some background...
          this type is typically called from something like
            <xsd:element name="properties" type="mapType/>
          and the "properties" element generates a ChildMapDefinitionParser that
