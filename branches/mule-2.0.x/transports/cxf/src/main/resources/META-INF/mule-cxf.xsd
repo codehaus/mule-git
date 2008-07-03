@@ -286,5 +286,48 @@
         </xsd:sequence>
     </xsd:complexType>
 
+    <xsd:element name="wrapper-component" type="wrapperComponentType" substitutionGroup="mule:abstract-component">
+        <xsd:annotation>
+            <xsd:documentation>
+                The WebServiceWrapperComponent class allows you to send 
+                the result of a web service call to another endpoint. 
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
 
+    <xsd:complexType name="wrapperComponentType">
+        <xsd:complexContent>
+            <xsd:extension base="mule:abstractComponentType">
+                <xsd:attribute name="address" type="xsd:string">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                            TODO
+                        </xsd:documentation>
+                    </xsd:annotation>
+                </xsd:attribute>
+                <xsd:attribute name="addressFromMessage" type="mule:substitutableBoolean">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                            Specifies that the URL of the web service will be obtained from the message itself.
+                        </xsd:documentation>
+                    </xsd:annotation>
+                </xsd:attribute>
+                <xsd:attribute name="wsdlPort" type="xsd:string">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                            The WSDL port you wish to use to communicate to the service.
+                 	    </xsd:documentation>
+                    </xsd:annotation>
+                </xsd:attribute>
+                <xsd:attribute name="operation" type="xsd:string">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                            The operation you wish to invoke on the outbound endpoint.
+                        </xsd:documentation>
+                    </xsd:annotation>
+                </xsd:attribute>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
 </xsd:schema>

@@ -16,102 +16,33 @@
     
     <vm:connector name="VMQueue" queueEvents="true"/>
     
-    <spring:bean id="Wrapper1" class="org.mule.transport.soap.WebServiceWrapperComponent">
-        <spring:property name="webServiceUrl" value="axis:http://localhost:65081/services/TestUMO?method=receive"/>
-        <spring:property name="wrapperProperties">
-            <spring:map>
-                <spring:entry key="style" value="wrapped"/>
-                <spring:entry key="use" value="Literal"/>
-            </spring:map>
-        </spring:property>
-    </spring:bean>   
-
-    <spring:bean id="Wrapper2" class="org.mule.transport.soap.WebServiceWrapperComponent">
-        <spring:property name="urlFromMessage" value="true"/>
-        <spring:property name="wrapperProperties">
-            <spring:map>
-                <spring:entry key="style" value="wrapped"/>
-                <spring:entry key="use" value="Literal"/>
-            </spring:map>
-        </spring:property>
-    </spring:bean>  
-
-    <spring:bean id="Wrapper3" class="org.mule.transport.soap.WebServiceWrapperComponent">
-        <spring:property name="webServiceUrl" value="axis:http://localhost:62088/axis/Calculator?method=add"/>
-        <spring:property name="wrapperProperties">
-            <spring:map>
-                <spring:entry key="style" value="wrapped"/>
-                <spring:entry key="use" value="Literal"/>
-            </spring:map>
-        </spring:property>
-         <properties>
-             <spring:entry key="soapMethods">
-                 <spring:list>
-                     <spring:bean class="org.mule.transport.soap.SoapMethod">
-                         <!-- the strange qname syntax here will generate a QName instance via a property editor -->
-                         <spring:constructor-arg value="qname{add:http://muleumo.org/Calc}"/>
-                         <spring:constructor-arg>
-                             <spring:list>
-                                 <spring:value>Number1;int;in</spring:value>
-                                 <spring:value>Number2;int;in</spring:value>
-                                 <spring:value>return;int</spring:value>
-                             </spring:list>
-                         </spring:constructor-arg>
-                     </spring:bean>
-                 </spring:list>
-             </spring:entry>
-         </properties>
-    </spring:bean> 
-            
-    <spring:bean id="CalculatorBean" class="org.mule.transport.soap.axis.Calculator">
-         <properties>
-             <spring:entry key="style" value="document"/>
-             <spring:entry key="use" value="literal"/>
-             <spring:entry key="soapMethods">
-                 <spring:list>
-                     <spring:bean class="org.mule.transport.soap.SoapMethod">
-                         <!-- the strange qname syntax here will generate a QName instance via a property editor -->
-                         <spring:constructor-arg value="qname{add:http://muleumo.org/Calc}"/>
-                         <spring:constructor-arg>
-                             <spring:list>
-                                 <spring:value>Number1;int;in</spring:value>
-                                 <spring:value>Number2;int;in</spring:value>
-                                 <spring:value>return;int</spring:value>
-                             </spring:list>
-                         </spring:constructor-arg>
-                     </spring:bean>
-                 </spring:list>
-             </spring:entry>
-         </properties>
-    </spring:bean> 
-
     <model name="Sample">
 
         <service name="WebServiceSample1">
             <inbound>
                 <vm:inbound-endpoint path="testin" connector-ref="VMConnector"/>
             </inbound>
-            <component>
-                <spring-object bean="Wrapper1"/>
-            </component>
+            <axis:wrapper-component address="http://localhost:65081/services/TestUMO?method=receive" style="WRAPPED" use="LITERAL"/>
         </service>
         
         <service name="WebServiceSample2">
             <inbound>
                 <vm:inbound-endpoint path="testin2" connector-ref="VMConnector"/>
             </inbound>
-            <component>
-                <spring-object bean="Wrapper2"/>
-            </component>
+            <axis:wrapper-component addressFromMessage="true" style="WRAPPED" use="LITERAL"/>
         </service>
         
         <service name="WebServiceSample3">
             <inbound>
                 <vm:inbound-endpoint path="queue.in" connector-ref="VMQueue"/>
             </inbound>
-            <component>
-                <spring-object bean="Wrapper3"/>
-            </component>
+            <axis:wrapper-component address="http://localhost:62088/axis/Calculator?method=add" style="WRAPPED" use="LITERAL">
+                <axis:soap-method method="qname{add:http://muleumo.org/Calc}">
+                    <axis:soap-parameter parameter="Number1" type="int" mode="IN"/>
+                    <axis:soap-parameter parameter="Number2" type="int" mode="IN"/>
+                    <axis:soap-return type="int"/>
+                </axis:soap-method>
+            </axis:wrapper-component>
             <outbound>
                 <outbound-pass-through-router>
                     <vm:outbound-endpoint path="queue.out" connector-ref="VMQueue"/>
@@ -121,18 +52,22 @@
         
         <service name="TestUMO">
             <inbound>
-                <axis:inbound-endpoint address="http://localhost:65081/services"/>
+                <axis:inbound-endpoint address="http://localhost:65081/services" style="WRAPPED" use="LITERAL"/>
             </inbound>
             <component class="org.mule.tck.testmodels.services.TestComponent"/>
         </service>
 
         <service name="Calculator">
             <inbound>
-                <axis:inbound-endpoint address="http://localhost:62088/axis"/>
+                <axis:inbound-endpoint address="http://localhost:62088/axis" style="WRAPPED" use="LITERAL">
+                    <axis:soap-method method="qname{add:http://muleumo.org/Calc}">
+                        <axis:soap-parameter parameter="Number1" type="any" mode="IN"/>
+                        <axis:soap-parameter parameter="Number2" type="any" mode="IN"/>
+                        <axis:soap-return type="any"/>
+                    </axis:soap-method>
+                </axis:inbound-endpoint>
             </inbound>
-            <component>
-                <spring-object bean="CalculatorBean"/>
-            </component>
+            <component class="org.mule.transport.soap.axis.Calculator"/>
         </service>
         
     </model>

@@ -33,7 +33,7 @@ public class WebServiceWrapperWithCxfTestCase extends FunctionalTestCase
     {
         MuleClient client = new MuleClient();
         Properties props = new Properties();
-        props.setProperty("ws.service.url", "cxf:http://localhost:65081/services/TestUMO?method=onReceive");
+        props.setProperty("ws.service.url", "http://localhost:65081/services/TestUMO?method=onReceive");
         MuleMessage result = client.send("vm://testin2", testString, props);
         assertNotNull(result.getPayload());
         assertEquals("Payload", testString, result.getPayloadAsString());

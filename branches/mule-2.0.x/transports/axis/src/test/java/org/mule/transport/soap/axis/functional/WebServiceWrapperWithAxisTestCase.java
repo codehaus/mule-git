@@ -16,7 +16,6 @@ import org.mule.api.MuleMessage;
 import org.mule.module.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 
-
 import java.util.Properties;
 
 public class WebServiceWrapperWithAxisTestCase extends FunctionalTestCase
@@ -35,7 +34,7 @@ public class WebServiceWrapperWithAxisTestCase extends FunctionalTestCase
     {
         MuleClient client = new MuleClient();
         Properties props = new Properties();
-        props.setProperty("ws.service.url", "axis:http://localhost:65081/services/TestUMO?method=receive");
+        props.setProperty("ws.service.url", "http://localhost:65081/services/TestUMO?method=receive");
         MuleMessage result = client.send("vm://testin2?connector=VMConnector", testString, props);
         assertNotNull(result.getPayload());
         assertEquals("Payload", "Received: "+ testString, result.getPayloadAsString());
