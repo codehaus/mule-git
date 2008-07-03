@@ -3716,6 +3716,9 @@
                     </xsd:annotation>
                 </xsd:attribute>
                 <xsd:attribute name="initialisationPolicy" default="INITIALISE_ONE">
+                    <xsd:annotation>
+                        <xsd:documentation>Determines how components in a pool should be initialized. The possible values are: INITIALISE_NONE (will not load any components into the pool on startup), INITIALISE_ONE (will load one initial component into the pool on startup), or INITIALISE_ALL (will load all components in the pool on startup)</xsd:documentation>
+                    </xsd:annotation>
                     <xsd:simpleType>
                         <xsd:restriction base="xsd:NMTOKEN">
                             <xsd:enumeration value="INITIALISE_NONE"/>
@@ -3723,12 +3726,11 @@
                             <xsd:enumeration value="INITIALISE_ALL"/>
                         </xsd:restriction>
                     </xsd:simpleType>
-                    <xsd:annotation>
-                        <xsd:documentation>Determines how components in a pool should be initialized. The possible values are: INITIALISE_NONE (will not load any components into the pool on startup), INITIALISE_ONE (will load one initial component into the pool on startup), or INITIALISE_ALL (will load all components in the pool on startup)
-                        </xsd:documentation>
-                    </xsd:annotation>
                 </xsd:attribute>
                 <xsd:attribute name="exhaustedAction" default="WHEN_EXHAUSTED_GROW">
+                    <xsd:annotation>
+                        <xsd:documentation>Specifies the behavior of the Mule component pool when the pool is exhausted. Possible values are: "WHEN_EXHAUSTED_FAIL", which will throw a NoSuchElementException, "WHEN_EXHAUSTED_WAIT", which will block (invoke Object.wait(long)) until a new or idle object is available, or WHEN_EXHAUSTED_GROW, which will create a new Mule and return it, essentially making maxActive meaningless. If a positive maxWait value is supplied, it will block for at most that many milliseconds, after which a NoSuchElementException will be thrown. If maxThreadWait is a negative value, it will block indefinitely.</xsd:documentation>
+                    </xsd:annotation>
                     <xsd:simpleType>
                         <xsd:restriction base="xsd:NMTOKEN">
                             <xsd:enumeration value="WHEN_EXHAUSTED_GROW"/>
@@ -3736,10 +3738,6 @@
                             <xsd:enumeration value="WHEN_EXHAUSTED_FAIL"/>
                         </xsd:restriction>
                     </xsd:simpleType>
-                    <xsd:annotation>
-                        <xsd:documentation>Specifies the behavior of the Mule component pool when the pool is exhausted. Possible values are: "WHEN_EXHAUSTED_FAIL", which will throw a NoSuchElementException, "WHEN_EXHAUSTED_WAIT", which will block (invoke Object.wait(long)) until a new or idle object is available, or WHEN_EXHAUSTED_GROW, which will create a new Mule and return it, essentially making maxActive meaningless. If a positive maxWait value is supplied, it will block for at most that many milliseconds, after which a NoSuchElementException will be thrown. If maxThreadWait is a negative value, it will block indefinitely.
-                        </xsd:documentation>
-                    </xsd:annotation>
                 </xsd:attribute>
                 <xsd:attribute name="maxWait" type="xsd:string">
                     <xsd:annotation>
