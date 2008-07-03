@@ -2456,7 +2456,7 @@
     <xsd:element name="queue-profile" type="queueProfileType" substitutionGroup="abstract-queue-profile">
         <xsd:annotation>
             <xsd:documentation>
-                Configure the queue used on a component.
+                A Queue Profile is used to describe the properties of an internal Mule queue. Internal queues are used to queue events for each component managed by Mule.
             </xsd:documentation>
         </xsd:annotation>
     </xsd:element>
@@ -2466,14 +2466,14 @@
                 <xsd:attribute name="maxOutstandingMessages" type="substitutableInt">
                     <xsd:annotation>
                         <xsd:documentation>
-                            The maximum size of the queue.
+                            Defines the maximum number of messages that can be queued.
                         </xsd:documentation>
                     </xsd:annotation>
                 </xsd:attribute>
                 <xsd:attribute name="persistent" type="substitutableBoolean" default="false">
                     <xsd:annotation>
                         <xsd:documentation>
-                            Whether the queue is persistent.
+                            Whether Mule messages are persisted to a store. Primarily, this is used for persisting queued messages to disk so that the internal state of the server is mirrored on disk in case the server fails and needs to be restarted. Default is false.
                         </xsd:documentation>
                     </xsd:annotation>
                 </xsd:attribute>
@@ -2692,21 +2692,21 @@
                 <xsd:attribute name="maxThreadsIdle" type="substitutableInt">
                     <xsd:annotation>
                         <xsd:documentation>
-                            The maximum number of idle threads stored in the pool.
+                            The maximum number of idle or inactive threads that can be in the pool before they are destroyed.
                         </xsd:documentation>
                     </xsd:annotation>
                 </xsd:attribute>
                 <xsd:attribute name="threadTTL" type="substitutableInt">
                     <xsd:annotation>
                         <xsd:documentation>
-                            The time excess threads in the pool live before being discarded.
+                            Detemines how long an inactive thread is kept in the pool before being discarded.
                         </xsd:documentation>
                     </xsd:annotation>
                 </xsd:attribute>
                 <xsd:attribute name="poolExhaustedAction">
                     <xsd:annotation>
                         <xsd:documentation>
-                            How tasks should be handled when no more threads are available.
+                            When the maximum pool size or queue size is bounded, this value determines how to handle incoming tasks. Possible values are: WAIT (wait until a thread becomes available. This policy should, in general, not be used if the minimum number of threads is zero, in which case a thread may never become available.), DISCARD (throw away the current request and return), DISCARD_OLDEST (throw away the oldest request and return), ABORT (throw a RuntimeException), and RUN (the thread making the execute request runs the task itself. This policy helps guard against lockup.)
                         </xsd:documentation>
                     </xsd:annotation>
                     <xsd:simpleType>
@@ -2722,21 +2722,21 @@
                 <xsd:attribute name="threadWaitTimeout" type="substitutableInt">
                     <xsd:annotation>
                         <xsd:documentation>
-                            How long to wait (when the pool exhausted action is WAIT).
+                            How long to wait in milliseconds when the pool exhausted action is WAIT. If the value is negative, it will wait indefinitely.
                         </xsd:documentation>
                     </xsd:annotation>
                 </xsd:attribute>
                 <xsd:attribute name="doThreading" type="substitutableBoolean" default="true">
                     <xsd:annotation>
                         <xsd:documentation>
-                            Whether threading should be used at all (default is true).
+                            Whether threading should be used (default is true).
                         </xsd:documentation>
                     </xsd:annotation>
                 </xsd:attribute>
                 <xsd:attribute name="maxBufferSize" type="substitutableInt">
                     <xsd:annotation>
                         <xsd:documentation>
-                            The size of the queue used (when the pool exhausted action is WAIT).
+                            Determines how many requests are queued when the pool is at maximum usage capacity and the pool exhausted action is WAIT. The buffer is used as an overflow.
                         </xsd:documentation>
                     </xsd:annotation>
                 </xsd:attribute>
@@ -3698,10 +3698,23 @@
 
     <xsd:element name="pooling-profile" type="poolingProfileType" substitutionGroup="abstract-pooling-profile"/>
     <xsd:complexType name="poolingProfileType">
+        <xsd:annotation>
+            <xsd:documentation>
+                A pooling profile is used to configure the pooling behaviour of Mule components. Each service sets its own pooling profile. The org.mule.config.PoolingProfile class contains all the necessary values to create a pool of component proxies.
+            </xsd:documentation>
+        </xsd:annotation>
         <xsd:complexContent>
             <xsd:extension base="abstractPoolingProfileType">
-                <xsd:attribute name="maxActive" type="xsd:string"/>
-                <xsd:attribute name="maxIdle" type="xsd:string"/>
+                <xsd:attribute name="maxActive" type="xsd:string">
+                    <xsd:annotation>
+                        <xsd:documentation>Controls the maximum number of Mule components that can be borrowed from a session at one time. When set to a negative value, there is no limit to the number of components that may be active at one time. When maxActive is exceeded, the pool is said to be exhausted.</xsd:documentation>
+                    </xsd:annotation>
+                </xsd:attribute>
+                <xsd:attribute name="maxIdle" type="xsd:string">
+                    <xsd:annotation>
+                        <xsd:documentation>Controls the maximum number of Mule components that can sit idle in the pool at any time. When set to a negative value, there is no limit to the number of Mule components that may be idle at one time.</xsd:documentation>
+                    </xsd:annotation>
+                </xsd:attribute>
                 <xsd:attribute name="initialisationPolicy" default="INITIALISE_ONE">
                     <xsd:simpleType>
                         <xsd:restriction base="xsd:NMTOKEN">
@@ -3710,6 +3723,10 @@
                             <xsd:enumeration value="INITIALISE_ALL"/>
                         </xsd:restriction>
                     </xsd:simpleType>
+                    <xsd:annotation>
+                        <xsd:documentation>Determines how components in a pool should be initialized. The possible values are: INITIALISE_NONE (will not load any components into the pool on startup), INITIALISE_ONE (will load one initial component into the pool on startup), or INITIALISE_ALL (will load all components in the pool on startup)
+                        </xsd:documentation>
+                    </xsd:annotation>
                 </xsd:attribute>
                 <xsd:attribute name="exhaustedAction" default="WHEN_EXHAUSTED_GROW">
                     <xsd:simpleType>
@@ -3719,8 +3736,16 @@
                             <xsd:enumeration value="WHEN_EXHAUSTED_FAIL"/>
                         </xsd:restriction>
                     </xsd:simpleType>
+                    <xsd:annotation>
+                        <xsd:documentation>Specifies the behavior of the Mule component pool when the pool is exhausted. Possible values are: "WHEN_EXHAUSTED_FAIL", which will throw a NoSuchElementException, "WHEN_EXHAUSTED_WAIT", which will block (invoke Object.wait(long)) until a new or idle object is available, or WHEN_EXHAUSTED_GROW, which will create a new Mule and return it, essentially making maxActive meaningless. If a positive maxWait value is supplied, it will block for at most that many milliseconds, after which a NoSuchElementException will be thrown. If maxThreadWait is a negative value, it will block indefinitely.
+                        </xsd:documentation>
+                    </xsd:annotation>
                 </xsd:attribute>
-                <xsd:attribute name="maxWait" type="xsd:string"/>
+                <xsd:attribute name="maxWait" type="xsd:string">
+                    <xsd:annotation>
+                        <xsd:documentation>Specifies the number of milliseconds to wait for a pooled component to become available when the pool is exhausted and the exhaustedAction is set to WHEN_EXHAUSTED_BLOCK.</xsd:documentation>
+                    </xsd:annotation>
+                </xsd:attribute>
                 <!-- <xsd:attribute name="factory" type="xsd:string" default="org.mule.config.pool.CommonsPoolFactory"/> -->
             </xsd:extension>
         </xsd:complexContent>
