@@ -39,15 +39,6 @@ public class HttpMessages extends MessageFactory
         return createMessage(BUNDLE_PATH, 8, string);
     }
 
-    public static Message noConnectorForProtocolServlet()
-    {
-        return createMessage(BUNDLE_PATH, 9);
-    }
-
-    public static Message noServletConnectorFound(String name)
-    {
-        return createMessage(BUNDLE_PATH, 10, name);
-    }
 
     public static Message malformedSyntax()
     {
