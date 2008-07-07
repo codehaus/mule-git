@@ -52,8 +52,6 @@ jbpm-jpdl-3.2.2
 jcl104-over-slf4j-1.5.0
 jcr-1.0
 jdom-1.0
-jetty-6.1.9
-jetty-util-6.1.9
 jug-2.0.0-asl
 junit-3.8.2
 mail-1.4
@@ -86,6 +84,7 @@ mule-transport-jms
 mule-transport-multicast
 mule-transport-quartz
 mule-transport-rmi
+mule-transport-servlet
 mule-transport-soap
 mule-transport-ssl
 mule-transport-stdio
