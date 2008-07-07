@@ -77,6 +77,11 @@ public class ExplicitMethodEntryPointResolver extends AbstractEntryPointResolver
                     // we found a matching method, let's invoke it
                     break;
                 }
+                else
+                {
+                    // zero out the reference to the method, it doesn't match
+                    method = null;
+                }
             }
         }
 
