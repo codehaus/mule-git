@@ -9,7 +9,7 @@ org.mule.transport.cxf.testmodels.testxfirecomponent
 # tests with external dependencies
 org.mule.transport.cxf.CxfWsdlTestCase
 
-# Cyclic dependency with axis ... hold for now
+# Cyclic dependency with axis ... hold for nowcd ../.
 org.mule.transport.cxf.ServiceUsingAxisEndpointTestCase
 
 # Not working yet...

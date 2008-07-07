@@ -32,15 +32,30 @@ public class ProxyTestCase extends FunctionalTestCase
     public void testServerClientProxy() throws Exception
     {
         String msg = "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
-                     + "<soap:Body><test xmlns=\"http://foo\"> foo </test>" + "</soap:Body>" + "</soap:Envelope>";
+                     + "<soap:Body> <test xmlns=\"http://foo\"></test>" + "</soap:Body>" + "</soap:Envelope>";
 
         MuleClient client = new MuleClient();
         MuleMessage result = client.send("http://localhost:63081/services/proxy", msg, null);
         String resString = result.getPayloadAsString();
+        System.out.println("RESPONSE");
         System.out.println(resString);
-        assertTrue(resString.indexOf("<test xmlns=\"http://foo\"> foo </test>") != -1);
+        assertTrue(resString.indexOf("<transformed xmlns=\"http://foo\">") != -1);
     }
 
+    public void testProxyWithDatabinding() throws Exception 
+    {
+        String msg = "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
+            + "<soap:Body><greetMe xmlns=\"http://apache.org/hello_world_soap_http/types\"><requestType>Dan</requestType></greetMe>" +
+            		"</soap:Body>" + "</soap:Envelope>";
+
+        MuleClient client = new MuleClient();
+        MuleMessage result = client.send("http://localhost:63081/services/greeterProxy", msg, null);
+        String resString = result.getPayloadAsString();
+        System.out.println("RESPONSE");
+        System.out.println(resString);
+        assertTrue(resString.indexOf("greetMeResponse") != -1);
+    }
+    
     protected String getConfigResources()
     {
         return "proxy-conf.xml";
