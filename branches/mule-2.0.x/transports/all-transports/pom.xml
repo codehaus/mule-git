@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.mule.transports</groupId>
         <artifactId>mule-transports</artifactId>
- <version>2.0.2-SNAPSHOT</version>
+        <version>2.0.2-SNAPSHOT</version>
     </parent>
     <artifactId>mule-transports-all</artifactId>
     <packaging>pom</packaging>
@@ -85,6 +85,11 @@
         <dependency>
             <groupId>org.mule.transports</groupId>
             <artifactId>mule-transport-rmi</artifactId>
+            <version>${version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mule.transports</groupId>
+            <artifactId>mule-transport-servlet</artifactId>
             <version>${version}</version>
         </dependency>
         <dependency>
