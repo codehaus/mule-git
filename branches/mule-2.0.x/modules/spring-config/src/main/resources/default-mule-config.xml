@@ -55,7 +55,7 @@
         <mule:configuration/>
 
         <mule:notifications>
-            <mule:notification event="MANAGER"/>
+            <mule:notification event="CONTEXT"/>
             <mule:notification event="MODEL"/>
             <mule:notification event="SERVICE"/>
             <mule:notification event="SECURITY"/>
@@ -63,7 +63,6 @@
             <mule:notification event="CONNECTION"/>
             <mule:notification event="REGISTRY"/>
             <mule:notification event="CUSTOM"/>
-            <mule:notification event="MESSAGE"/>
             <mule:notification event="EXCEPTION"/>
             <mule:notification event="TRANSACTION"/>
         </mule:notifications>
