@@ -77,6 +77,19 @@
                 <outbound-pass-through-router>
                 	<cxf:outbound-endpoint address="http://localhost:63081/services/Echo" 
                 		proxy="true"
+                		remoteSync="true"/>
+                </outbound-pass-through-router>
+            </outbound>
+        </service>
+        
+        <service name="serverClientProxyWithTransform">
+            <inbound>
+                <cxf:inbound-endpoint address="http://localhost:63081/services/proxyWithTransform" proxy="true"/>
+            </inbound>
+            <outbound>
+                <outbound-pass-through-router>
+                	<cxf:outbound-endpoint address="http://localhost:63081/services/Echo" 
+                		proxy="true"
                 		remoteSync="true">
                 	 	<response-transformers>
                 	 		<transformer ref="TestXslt"/>
