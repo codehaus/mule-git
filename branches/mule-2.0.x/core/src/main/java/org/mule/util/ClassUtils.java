@@ -311,7 +311,9 @@ public class ClassUtils extends org.apache.commons.lang.ClassUtils
         }
         catch (ClassNotFoundException e)
         {
-            throw new IllegalStateException(e);
+            IllegalStateException ise = new IllegalStateException();
+            ise.initCause(e);
+            throw ise;
         }
     }
 
