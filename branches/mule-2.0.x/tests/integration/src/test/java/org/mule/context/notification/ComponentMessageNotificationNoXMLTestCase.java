@@ -10,7 +10,7 @@
 
 package org.mule.context.notification;
 
-import org.mule.api.component.Component;
+import org.mule.api.MuleMessage;
 import org.mule.api.context.MuleContextBuilder;
 import org.mule.api.context.notification.ComponentMessageNotificationListener;
 import org.mule.api.context.notification.ServerNotification;
@@ -86,23 +86,17 @@ public class ComponentMessageNotificationNoXMLTestCase extends AbstractMuleTestC
         public void onNotification(ServerNotification notification)
         {
             this.notification = notification;
+            assertEquals(ComponentMessageNotification.class, notification.getClass());
+            assertTrue(notification.getSource() instanceof MuleMessage);
+            assertNotNull(((ComponentMessageNotification) notification).getComponent());
 
-            Object source = notification.getSource();
             if (notification.getAction() == ComponentMessageNotification.COMPONENT_PRE_INVOKE)
             {
-
-                if (source instanceof Component)
-                {
-                    before = true;
-
-                }
+                before = true;
             }
             else if (notification.getAction() == ComponentMessageNotification.COMPONENT_POST_INVOKE)
             {
-                if (source instanceof Component)
-                {
-                    after = true;
-                }
+                after = true;
             }
         }
 
