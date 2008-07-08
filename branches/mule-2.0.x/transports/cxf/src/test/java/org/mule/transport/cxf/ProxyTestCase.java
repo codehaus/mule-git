@@ -13,6 +13,10 @@ package org.mule.transport.cxf;
 import org.mule.api.MuleMessage;
 import org.mule.module.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
+import org.mule.transport.http.HttpConnector;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class ProxyTestCase extends FunctionalTestCase
 {
@@ -61,6 +65,24 @@ public class ProxyTestCase extends FunctionalTestCase
         MuleMessage result = client.send("http://localhost:63081/services/greeterProxy", msg, null);
         String resString = result.getPayloadAsString();
         assertTrue(resString.indexOf("greetMeResponse") != -1);
+    }
+
+    public void testSoapActionRouting() throws Exception 
+    {
+        String msg = "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
+            + "<soap:Body> <test xmlns=\"http://foo\"></test>" + "</soap:Body>" + "</soap:Envelope>";
+
+        Map<String, Object> httpHeaders = new HashMap<String, Object>();
+        
+        Map<String, Object> props = new HashMap<String, Object>();
+        props.put(HttpConnector.HTTP_CUSTOM_HEADERS_MAP_PROPERTY, httpHeaders);
+        props.put("SOAPAction", "http://acme.com/transform");
+              
+        MuleClient client = new MuleClient();
+        MuleMessage result = client.send("http://localhost:63081/services/routeBasedOnSoapAction", msg, props);
+        String resString = result.getPayloadAsString();
+        System.out.println(resString);
+        assertTrue(resString.indexOf("<transformed xmlns=\"http://foo\">") != -1);
     }
     
     protected String getConfigResources()
