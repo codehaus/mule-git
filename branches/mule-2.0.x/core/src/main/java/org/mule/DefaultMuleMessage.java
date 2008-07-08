@@ -223,7 +223,10 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess
         {
             Class c = (Class) itr.next();
         
-            return c.isAssignableFrom(inputCls);
+            if (c.isAssignableFrom(inputCls))
+            {
+                return true;
+            }
         }
         return false;
     }
