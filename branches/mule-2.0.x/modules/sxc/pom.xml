@@ -89,9 +89,8 @@
     	    <!-- Without this the compilation aspect of SXC doesn't work so hot -->
     		<plugin>
         		<artifactId>maven-surefire-plugin</artifactId>
-        		<version>2.3</version>
         		<configuration>
-        			<forkMode>once</forkMode>
+        			<forkMode>none</forkMode>
         		</configuration>
         	</plugin>
         </plugins>
