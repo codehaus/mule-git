@@ -20,6 +20,7 @@ import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.service.Service;
 import org.mule.api.transport.MessageReceiver;
 import org.mule.component.DefaultJavaComponent;
+import org.mule.config.spring.SpringRegistry;
 import org.mule.context.notification.MuleContextNotification;
 import org.mule.endpoint.EndpointURIEndpointBuilder;
 import org.mule.model.seda.SedaService;
@@ -64,7 +65,6 @@ public class CxfConnector extends AbstractConnector implements MuleContextNotifi
     private List<SedaService> services = new ArrayList<SedaService>();
     private Map<String, Server> uriToServer = new HashMap<String, Server>();
     private boolean initializeStaticBusInstance = false;
-    private ApplicationContext context;
     
     public CxfConnector()
     {
@@ -88,13 +88,15 @@ public class CxfConnector extends AbstractConnector implements MuleContextNotifi
 
     protected void doInitialise() throws InitialisationException
     {
+        ApplicationContext context = (ApplicationContext) muleContext.getRegistry().lookupObject(SpringRegistry.SPRING_APPLICATION_CONTEXT);
+        
         if (configurationLocation != null)
         {
-            bus = new SpringBusFactory(context).createBus(configurationLocation);
+            bus = new SpringBusFactory(context).createBus(configurationLocation, true);
         }
         else
         {
-            bus = new SpringBusFactory(context).createBus();
+            bus = new SpringBusFactory(context).createBus((String)null, true);
         }
         
         if (!initializeStaticBusInstance)

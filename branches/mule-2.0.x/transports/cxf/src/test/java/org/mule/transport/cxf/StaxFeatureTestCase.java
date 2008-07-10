@@ -18,7 +18,6 @@ import org.apache.cxf.Bus;
 
 public class StaxFeatureTestCase extends FunctionalTestCase
 {
-
     public void testEchoService() throws Exception
     {
         CxfConnector cxfCon = (CxfConnector)muleContext.getRegistry().lookupConnector("connector.cxf.0");
@@ -26,8 +25,7 @@ public class StaxFeatureTestCase extends FunctionalTestCase
 
         Bus cxfBus = cxfCon.getCxfBus();
         
-        // doesn't work quite yet
-//        // ensure that our interceptor is there
+        // ensure that our interceptor is there
 //        assertEquals(2, cxfBus.getInInterceptors().size());
 //        
 //        MuleClient client = new MuleClient();
