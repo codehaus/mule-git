@@ -47,6 +47,12 @@ public class SpringRegistry extends AbstractRegistry
 {
     public static final String REGISTRY_ID = "org.mule.Registry.Spring";
 
+    /**
+     * Key used to lookup Spring Application Context from SpringRegistry via Mule's
+     * Registry interface.
+     **/
+    public static final String SPRING_APPLICATION_CONTEXT = "springApplicationContext";
+    
     protected ConfigurableApplicationContext applicationContext;
 
     public SpringRegistry()
@@ -91,14 +97,21 @@ public class SpringRegistry extends AbstractRegistry
             return null;
         }
 
-        try
+        if (key.equals(SPRING_APPLICATION_CONTEXT) && applicationContext != null)
         {
-            return applicationContext.getBean(key);
+            return applicationContext;
         }
-        catch (NoSuchBeanDefinitionException e)
+        else
         {
-            logger.debug(e);
-            return null;
+            try
+            {
+                return applicationContext.getBean(key);
+            }
+            catch (NoSuchBeanDefinitionException e)
+            {
+                logger.debug(e);
+                return null;
+            }
         }
     }
 
