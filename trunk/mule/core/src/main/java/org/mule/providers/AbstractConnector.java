@@ -74,6 +74,7 @@ import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
 import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentMap;
 import edu.emory.mathcs.backport.java.util.concurrent.ScheduledExecutorService;
 import edu.emory.mathcs.backport.java.util.concurrent.ScheduledThreadPoolExecutor;
+import edu.emory.mathcs.backport.java.util.concurrent.Semaphore;
 import edu.emory.mathcs.backport.java.util.concurrent.ThreadFactory;
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
@@ -210,9 +211,15 @@ public abstract class AbstractConnector
 
     protected volatile ConnectionStrategy connectionStrategy;
 
-    protected final WaitableBoolean connected = new WaitableBoolean(false);
+    /**
+     * If doThreading is used in ReconnectingStrategy receivers must wait for 
+     * connector to connect before they connect.
+     */
+    protected final Semaphore connectedSemaphore = new Semaphore(0);
 
-    protected final WaitableBoolean connecting = new WaitableBoolean(false);
+    protected final WaitableBoolean connected = new WaitableBoolean(false);
+    
+    protected final WaitableBoolean connecting = new WaitableBoolean(false);   
 
     /**
      * If the connect method was called via the start method, this will be set so
@@ -1158,6 +1165,7 @@ public abstract class AbstractConnector
             //this.doConnect();
             connected.set(true);
             connecting.set(false);
+            connectedSemaphore.release(getNumberOfConcurrentTransactedReceivers()+1);
 
             this.fireNotification(new ConnectionNotification(this, getConnectEventId(),
                 ConnectionNotification.CONNECTION_CONNECTED));
@@ -1209,7 +1217,8 @@ public abstract class AbstractConnector
             ConnectionNotification.CONNECTION_DISCONNECTED));
 
         connected.set(false);
-
+        connectedSemaphore.drainPermits();
+        
         try
         {
             this.doDisconnect();
@@ -1860,5 +1869,10 @@ public abstract class AbstractConnector
         sb.append(", serviceOverrides=").append(serviceOverrides);
         sb.append('}');
         return sb.toString();
+    }
+
+    public Semaphore getConnectedSemaphore()
+    {
+        return connectedSemaphore;
     }
 }

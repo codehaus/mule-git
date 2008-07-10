@@ -35,12 +35,15 @@ import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.lifecycle.LifecycleException;
 import org.mule.umo.manager.UMOServerNotification;
 import org.mule.umo.provider.UMOMessageAdapter;
+import org.mule.umo.provider.UMOMessageReceiver;
 import org.mule.util.BeanUtils;
 import org.mule.util.ClassUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.Map;
 
 import javax.jms.Connection;
@@ -293,7 +296,18 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
                     try
                     {
                         connectionStrategy.connect(jmsConnector);
+                        //keep the receivers in memory so we can register them after initialisation
+                        Map receivers = new HashMap(jmsConnector.getReceivers());
                         jmsConnector.initialise();
+                        // register the receivers
+                        for (Iterator itReceivers = receivers.values().iterator();itReceivers.hasNext();) {
+                        	UMOMessageReceiver receiver = (UMOMessageReceiver)itReceivers.next();
+                        	try {
+                        		jmsConnector.registerListener(receiver.getComponent(),receiver.getEndpoint());
+                        	} catch (Exception ex) {
+                        		throw new FatalConnectException(ex,receiver.getComponent());
+                        	}
+                        }
                         jmsConnector.startConnector();
                     }
                     catch (FatalConnectException fcex)
@@ -315,7 +329,7 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
     {
         try
         {
-            // have to instanciate it here, and not earlier in
+            // have to instantiate it here, and not earlier in
             // MuleXmlConfigurationBuilder, as
             // native factory may initiate immediate connections, and that is not
             // what we
