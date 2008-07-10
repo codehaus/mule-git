@@ -1,0 +1,44 @@
+/*
+ * $Id: StaxFeatureTestCase.java 6659 2007-05-23 04:05:51Z hasari $
+ * --------------------------------------------------------------------------------------
+ * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
+ *
+ * The software in this package is published under the terms of the MuleSource MPL
+ * license, a copy of which has been included with this distribution in the
+ * LICENSE.txt file.
+ */
+
+package org.mule.transport.cxf;
+
+import org.mule.api.MuleMessage;
+import org.mule.module.client.MuleClient;
+import org.mule.tck.FunctionalTestCase;
+
+import org.apache.cxf.Bus;
+
+public class StaxFeatureTestCase extends FunctionalTestCase
+{
+
+    public void testEchoService() throws Exception
+    {
+        CxfConnector cxfCon = (CxfConnector)muleContext.getRegistry().lookupConnector("connector.cxf.0");
+        assertNotNull(cxfCon);
+
+        Bus cxfBus = cxfCon.getCxfBus();
+        
+        // doesn't work quite yet
+//        // ensure that our interceptor is there
+//        assertEquals(2, cxfBus.getInInterceptors().size());
+//        
+//        MuleClient client = new MuleClient();
+//        MuleMessage result = client.send("cxf:http://localhost:63081/services/Echo?method=echo", "Hello!", null);
+//        assertEquals("Hello!", result.getPayload());
+    }
+
+    @Override
+    protected String getConfigResources() 
+    {
+        return "stax-feature-conf.xml";
+    }
+}
+
