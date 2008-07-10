@@ -20,3 +20,6 @@ org.mule.transport.cxf.jaxws.ClientTestCase
 
 # MULE-3475
 org.mule.transport.cxf.WSProxyTestCase
+
+
+org.mule.transport.cxf.MtomTestCase
