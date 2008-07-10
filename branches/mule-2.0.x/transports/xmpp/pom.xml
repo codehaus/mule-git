@@ -13,27 +13,6 @@
     <name>XMPP Transport</name>
     <description>A Mule transport that enables event sending and receiving over XMPP (Jabber).</description>
 
-    <profiles>
-        <profile>
-            <id>osgi</id>
-            <build>
-                    <plugins>
-                        <plugin>
-                        <groupId>org.apache.felix</groupId>
-                        <artifactId>maven-bundle-plugin</artifactId>
-                        <configuration>
-                            <instructions>
-                                <Export-Package>
-                                    org.mule.transport.xmpp.*
-                                </Export-Package>
-                            </instructions>
-                        </configuration>
-                    </plugin>
-                    </plugins>
-            </build>
-        </profile>
-    </profiles>
-
     <dependencies>
         <dependency>
             <groupId>jivesoftware</groupId>

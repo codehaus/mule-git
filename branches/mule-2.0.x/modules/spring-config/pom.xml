@@ -33,30 +33,6 @@
         </plugins>
     </build>
 
-    <profiles>
-        <profile>
-            <id>osgi</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.felix</groupId>
-                        <artifactId>maven-bundle-plugin</artifactId>
-                        <configuration>
-                            <instructions>
-                                <Export-Package>
-                                    org.mule.module.spring.config,
-                                    org.mule.module.spring.events,
-                                    org.mule.module.spring.remoting,
-                                    org.mule.module.spring.transaction
-                                </Export-Package>
-                            </instructions>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
-
     <dependencies>
         <!-- do not include the org.springframework:spring depencency kitchen sink
             but rather include each spring module individually. This allows for

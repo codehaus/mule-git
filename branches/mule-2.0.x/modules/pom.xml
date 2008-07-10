@@ -56,11 +56,5 @@
                 <module>sxc</module>
             </modules>
         </profile>
-        <profile>
-            <id>osgi</id>
-            <modules>
-                <module>osgi</module>
-            </modules>
-        </profile>
     </profiles>
 </project>
