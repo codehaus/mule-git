@@ -169,7 +169,11 @@ public class XMLUtils extends org.mule.util.XMLUtils
      */
     public static XMLStreamReader toXMLStreamReader(XMLInputFactory factory, Object obj) throws XMLStreamException
     {
-        if (obj instanceof StaxSource)
+        if (obj instanceof XMLStreamReader)
+        {
+            return (XMLStreamReader) obj;
+        }
+        else if (obj instanceof StaxSource)
         {
             return ((StaxSource) obj).getXMLStreamReader();
         }

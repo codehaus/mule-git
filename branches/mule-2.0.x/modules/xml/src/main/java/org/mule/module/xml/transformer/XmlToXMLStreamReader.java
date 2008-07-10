@@ -51,7 +51,7 @@ public class XmlToXMLStreamReader extends AbstractXmlTransformer
                     .createStaticMessage("Unable to convert " + payload.getClass() + " to XMLStreamReader."));
             }
         
-            if (reversible)
+            if (reversible && !(xsr instanceof ReversibleXMLStreamReader))
             {
                 return new ReversibleXMLStreamReader(xsr);
             }
