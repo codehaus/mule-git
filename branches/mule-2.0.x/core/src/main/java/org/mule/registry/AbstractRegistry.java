@@ -13,6 +13,7 @@ package org.mule.registry;
 import org.mule.MuleServer;
 import org.mule.RegistryContext;
 import org.mule.api.MuleException;
+import org.mule.api.MuleRuntimeException;
 import org.mule.api.agent.Agent;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.context.MuleContextAware;
@@ -74,7 +75,7 @@ public abstract class AbstractRegistry implements Registry
     {
         if (id == null)
         {
-            throw new NullPointerException(CoreMessages.objectIsNull("RegistryID").getMessage());
+            throw new MuleRuntimeException(CoreMessages.objectIsNull("RegistryID"));
         }
         this.id = id;
         lifecycleManager = createLifecycleManager();

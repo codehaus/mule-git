@@ -461,6 +461,7 @@ public class TransientRegistry extends AbstractRegistry
             }
             catch (Exception e)
             {
+                //TODO MULE-3532
                 e.printStackTrace();
             }
         }

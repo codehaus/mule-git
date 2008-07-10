@@ -40,7 +40,7 @@ public class RegistryContext
 
     public static Registry getOrCreateRegistry()
     {
-        if(registry==null || registry.isDisposed())
+        if (registry == null || registry.isDisposed())
         {
             registry = new TransientRegistry();
         }

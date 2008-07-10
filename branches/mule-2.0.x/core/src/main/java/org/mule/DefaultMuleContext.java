@@ -29,7 +29,6 @@ import org.mule.api.registry.Registry;
 import org.mule.api.security.SecurityManager;
 import org.mule.api.transaction.TransactionManagerFactory;
 import org.mule.api.transport.ConnectionStrategy;
-import org.mule.config.DefaultMuleConfiguration;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.context.notification.MuleContextNotification;
 import org.mule.context.notification.NotificationException;
@@ -93,12 +92,12 @@ public class DefaultMuleContext implements MuleContext
 
         if (getNotificationManager() == null)
         {
-            throw new NullPointerException(CoreMessages.objectIsNull(
-                MuleProperties.OBJECT_NOTIFICATION_MANAGER).getMessage());
+            throw new MuleRuntimeException(
+                CoreMessages.objectIsNull(MuleProperties.OBJECT_NOTIFICATION_MANAGER));
         }
         if (workManager == null)
         {
-            throw new NullPointerException(CoreMessages.objectIsNull("workManager").getMessage());
+            throw new MuleRuntimeException(CoreMessages.objectIsNull("workManager"));
         }
 
         try
@@ -126,11 +125,11 @@ public class DefaultMuleContext implements MuleContext
         {
             if (getSecurityManager() == null)
             {
-                throw new NullPointerException(CoreMessages.objectIsNull("securityManager").getMessage());
+                throw new MuleRuntimeException(CoreMessages.objectIsNull("securityManager"));
             }
             if (getQueueManager() == null)
             {
-                throw new NullPointerException(CoreMessages.objectIsNull("queueManager").getMessage());
+                throw new MuleRuntimeException(CoreMessages.objectIsNull("queueManager"));
             }
 
             fireNotification(new MuleContextNotification(this, MuleContextNotification.CONTEXT_STARTING));
@@ -461,9 +460,7 @@ public class DefaultMuleContext implements MuleContext
                 }
                 catch (Exception e)
                 {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                    throw new MuleRuntimeException(CoreMessages.createStaticMessage("Unable to create transaction manager"));
+                    throw new MuleRuntimeException(CoreMessages.failedToCreate("transaction manager"), e);
                 }
             }
             else

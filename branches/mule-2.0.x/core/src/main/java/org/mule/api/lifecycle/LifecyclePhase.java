@@ -58,10 +58,10 @@ public interface LifecyclePhase
 
     void applyLifecycle(Object o) throws LifecycleException;
 
-    public int getRegistryScope();
+    int getRegistryScope();
 
-    public void setRegistryScope(int registryScope);
+    void setRegistryScope(int registryScope);
 
-    public String getOppositeLifecyclePhase();
+    String getOppositeLifecyclePhase();
 
 }

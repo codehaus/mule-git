@@ -30,11 +30,11 @@ import java.util.Properties;
 
 public interface Registry extends Initialisable, Disposable
 {
-    public static final int SCOPE_IMMEDIATE = 0;
-    public static final int SCOPE_LOCAL = 1;
-    public static final int SCOPE_REMOTE = 2;
+    int SCOPE_IMMEDIATE = 0;
+    int SCOPE_LOCAL = 1;
+    int SCOPE_REMOTE = 2;
 
-    public static final int DEFAULT_SCOPE = SCOPE_REMOTE;
+    int DEFAULT_SCOPE = SCOPE_REMOTE;
 
     // /////////////////////////////////////////////////////////////////////////
     // Lookup methods - these should NOT create a new object, only return existing ones
@@ -145,7 +145,7 @@ public interface Registry extends Initialisable, Disposable
     //TODO MULE-2494
     void unregisterEndpoint(String endpointName) throws MuleException;
 
-    public void registerEndpointBuilder(String name, EndpointBuilder builder) throws MuleException;
+    void registerEndpointBuilder(String name, EndpointBuilder builder) throws MuleException;
     
     void registerTransformer(Transformer transformer) throws MuleException;
 
