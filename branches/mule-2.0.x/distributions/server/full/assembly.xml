@@ -12,12 +12,6 @@ Assembly descriptor for the full Mule distribution.
     <fileSet>
       <directory>../src/main/resources</directory>
       <outputDirectory></outputDirectory>
-      <excludes>
-          <!-- A separate assembly-osgi.xml is used for OSGi -->
-          <exclude>**/osgi/**</exclude>
-          <!-- also exclude the Knopflerfish config files -->
-          <exclude>**/*.xargs</exclude>
-      </excludes>
     </fileSet>
 
     <!-- Make binary directories executable. -->
@@ -89,7 +83,6 @@ Assembly descriptor for the full Mule distribution.
         <excludes>
             <exclude>pom.xml</exclude>
             <exclude>all-examples/**</exclude>
-            <exclude>hello-osgi/**</exclude>
             <exclude>**/target/**</exclude> 
             <exclude>**/dist/**</exclude>
             <exclude>**/.*/**</exclude>
