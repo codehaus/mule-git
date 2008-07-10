@@ -27,8 +27,7 @@ import org.tanukisoftware.wrapper.WrapperSimpleApp;
 
 /**
  * Determine which is the main class to run and delegate control to the Java Service
- * Wrapper.  If OSGi is not being used to boot with, configure the classpath based on
- * the libraries in $MULE_HOME/lib/*
+ * Wrapper.  Configure the classpath based on the libraries in $MULE_HOME/lib/*
  * <p/>
  * Note: this class is intentionally kept free of any external library dependencies and
  * therefore repeats a few utility methods.
@@ -38,12 +37,9 @@ public class MuleBootstrap
     private static final String MULE_MODULE_BOOT_POM_FILE_PATH = "META-INF/maven/org.mule.module/mule-module-boot/pom.properties";
 
     public static final String MAIN_CLASS_MULE_SERVER = "org.mule.module.boot.MuleServerWrapper";
-    public static final String MAIN_CLASS_OSGI_FRAMEWORK = "org.mule.module.osgi.OsgiFrameworkWrapper";
 
     public static final String CLI_OPTIONS[][] = {
             {"main", "true", "Main Class"},
-            {"osgi", "false", "Run in an OSGi framework"},
-            {"nogui", "false", "Suppress graphical console"},
             {"version", "false", "Show product and version information"}
     };
 
@@ -59,12 +55,6 @@ public class MuleBootstrap
         {
             prepareBootstrapPhase();
             WrapperManager.start(new VersionWrapper(), remainingArgs);
-        }
-        else if (commandLine.hasOption("osgi"))
-        {
-            boolean startGui = !commandLine.hasOption("nogui");
-            System.out.println("Starting the OSGi Framework...");
-            WrapperManager.start(new OsgiFrameworkWrapper(startGui), remainingArgs);
         }
         else if (mainClassName == null || mainClassName.equals(MAIN_CLASS_MULE_SERVER))
         {

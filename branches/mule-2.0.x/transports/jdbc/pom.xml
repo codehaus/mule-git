@@ -9,7 +9,6 @@
         <version>2.0.2-SNAPSHOT</version>
     </parent>
     <artifactId>mule-transport-jdbc</artifactId>
-    <!--<packaging>bundle</packaging>-->
     <name>JDBC Transport</name>
     <description>A Mule transport for JDBC connectivity.</description>
 

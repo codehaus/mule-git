@@ -9,7 +9,6 @@
         <version>2.0.2-SNAPSHOT</version>
     </parent>
     <artifactId>mule-module-scripting</artifactId>
-    <!--<packaging>bundle</packaging>-->
     <name>JSR-223 Scripting</name>
     <description>Support for Scripting Mule Services and embedding Mule inside scripts</description>
 

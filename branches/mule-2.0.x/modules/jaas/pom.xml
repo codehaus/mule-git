@@ -9,7 +9,6 @@
  <version>2.0.2-SNAPSHOT</version>
     </parent>
     <artifactId>mule-module-jaas</artifactId>
-    <!--<packaging>bundle</packaging>-->
     <name>Jaas Security</name>
     <description>Mule Jaas Support exposes Jaas Authentication providers and Method interceptors to authentication event traffic via endpoints.</description>   
 

@@ -9,7 +9,6 @@
         <version>2.0.2-SNAPSHOT</version>
     </parent>
     <artifactId>mule-transport-ftp</artifactId>
-    <!--<packaging>bundle</packaging>-->
     <name>FTP Transport</name>
     <description>A Mule transport for Ftp Connectivity.</description>
 

@@ -8,7 +8,6 @@
         <version>2.0.2-SNAPSHOT</version>
     </parent>
     <artifactId>mule-module-management</artifactId>
-    <!--<packaging>bundle</packaging>-->
     <name>Management Extensions</name>
     <description>Management Extensions for Mule</description>
 

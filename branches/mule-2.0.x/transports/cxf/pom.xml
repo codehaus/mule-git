@@ -8,7 +8,6 @@
         <version>2.0.2-SNAPSHOT</version>
     </parent>
     <artifactId>mule-transport-cxf</artifactId>
-    <!--<packaging>bundle</packaging>-->
     <name>SOAP Transport: CXF</name>
     <description>A Mule transport for web service connectivity using CXF.</description>
 

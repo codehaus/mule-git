@@ -9,7 +9,6 @@
         <version>2.0.2-SNAPSHOT</version>
     </parent>
     <artifactId>mule-transport-vm</artifactId>
-    <!--<packaging>bundle</packaging>-->
     <name>VM Transport</name>
     <description>A Mule transport that enables event sending and receiving over VM or embedded memory queues. These
         queues can be persistent or transient.

@@ -9,7 +9,6 @@
         <version>2.0.2-SNAPSHOT</version>
     </parent>
     <artifactId>mule-module-spring-config</artifactId>
-    <!--<packaging>bundle</packaging>-->
     <name>Spring Config</name>
     <description>
         Mule Builder for use with Spring 2.X Namespace based XML

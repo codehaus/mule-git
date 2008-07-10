@@ -8,7 +8,6 @@
         <version>2.0.2-SNAPSHOT</version>
     </parent>
     <artifactId>mule-module-spring-extras</artifactId>
-    <!--<packaging>bundle</packaging>-->
     <name>Spring Extras</name>
     <description>
         Non-core functionality provided by Spring such as transactions, remoting, data sources, etc.

@@ -8,7 +8,6 @@
         <version>2.0.2-SNAPSHOT</version>
     </parent>
     <artifactId>mule-transport-jms</artifactId>
-    <!--<packaging>bundle</packaging>-->
     <name>JMS Transport</name>
     <description>A Mule transport for Jms Connectivity.</description>
 

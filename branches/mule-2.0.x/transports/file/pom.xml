@@ -8,7 +8,6 @@
  <version>2.0.2-SNAPSHOT</version>
     </parent>
     <artifactId>mule-transport-file</artifactId>
-    <!--<packaging>bundle</packaging>-->
     <name>File Transport</name>
     <description>
         A Mule transport for File Connectivity. This transport allows files to be read and written to

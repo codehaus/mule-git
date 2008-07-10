@@ -9,7 +9,6 @@
         <version>2.0.2-SNAPSHOT</version>
     </parent>
     <artifactId>mule-core</artifactId>
-    <!--<packaging>bundle</packaging>-->
     <name>Mule Core</name>
     <description>Mule server and core classes</description>
 

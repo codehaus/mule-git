@@ -9,7 +9,6 @@
  <version>2.0.2-SNAPSHOT</version>
     </parent>
     <artifactId>mule-transport-ejb</artifactId>
-    <!--<packaging>bundle</packaging>-->
     <name>EJB Transport</name>
     <description>A Mule transport for Ejb Connectivity that allows you to invoke an ejb object using an endpoint.</description>
 

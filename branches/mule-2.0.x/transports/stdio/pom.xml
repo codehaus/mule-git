@@ -9,7 +9,6 @@
  <version>2.0.2-SNAPSHOT</version>
     </parent>
     <artifactId>mule-transport-stdio</artifactId>
-    <!--<packaging>bundle</packaging>-->
     <name>System I/O Transport</name>
     <description>A Mule transport used as the interface to Java's System.out and System.in objects, typically for testing purposes.</description>
 
