@@ -51,11 +51,6 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
      */
     protected transient Log logger = LogFactory.getLog(getClass());
 
-    /**
-     * Thread pool of Connector sessions
-     */
-    protected UMOWorkManager workManager = null;
-
     protected final UMOImmutableEndpoint endpoint;
     protected final AbstractConnector connector;
 
@@ -92,7 +87,7 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
         {
             try
             {
-                workManager = connector.getDispatcherWorkManager();
+                connector.getDispatcherWorkManager();
             }
             catch (UMOException e)
             {
@@ -146,7 +141,8 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
             UMOTransaction tx = TransactionCoordination.getInstance().getTransaction();
             if (isDoThreading() && !event.isSynchronous() && tx == null)
             {
-                workManager.scheduleWork(new Worker(event), WorkManager.INDEFINITE, null, connector);
+
+                connector.getDispatcherWorkManager().scheduleWork(new Worker(event), WorkManager.INDEFINITE, null, connector);
             }
             else
             {
@@ -343,11 +339,6 @@ public abstract class AbstractMessageDispatcher implements UMOMessageDispatcher,
                 }
 
                 this.doDispose();
-
-                if (workManager != null)
-                {
-                    workManager.dispose();
-                }
             }
             finally
             {
