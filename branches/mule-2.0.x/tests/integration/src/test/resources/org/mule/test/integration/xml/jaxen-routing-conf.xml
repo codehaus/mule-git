@@ -34,7 +34,7 @@
       <inbound>
         <inbound-endpoint address="vm://echo"/>
       </inbound>
-      <component class="org.mule.component.simple.EchoComponent" />
+      <echo-component/>
     </service>
     
     <service name="nullService">

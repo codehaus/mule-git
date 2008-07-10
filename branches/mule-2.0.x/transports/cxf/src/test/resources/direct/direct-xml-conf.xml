@@ -24,7 +24,7 @@
         <cxf:inbound-endpoint
           address="vm://echo" frontend="simple" synchronous="true"/>
       </inbound>
-      <component class="org.mule.component.simple.EchoComponent" />
+      <echo-component/>
     </service>
     
     <service name="echoWithTransform">
