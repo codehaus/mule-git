@@ -10,7 +10,9 @@
 
 package org.mule.module.xml.transformer;
 
+import org.mule.RequestContext;
 import org.mule.api.transformer.TransformerException;
+import org.mule.api.transport.OutputHandler;
 import org.mule.module.xml.stax.StaxSource;
 import org.mule.module.xml.util.XMLUtils;
 import org.mule.transformer.AbstractTransformer;
@@ -59,6 +61,7 @@ public abstract class AbstractXmlTransformer extends AbstractTransformer
         registerSourceType(org.w3c.dom.Document.class);
         registerSourceType(org.w3c.dom.Element.class);
         registerSourceType(InputStream.class);
+        registerSourceType(OutputHandler.class);
         registerSourceType(XMLStreamReader.class);
         setReturnClass(byte[].class);
         
@@ -115,6 +118,22 @@ public abstract class AbstractXmlTransformer extends AbstractTransformer
             {
                 return new DOMSource((org.w3c.dom.Node) src);
             }
+            else if (src instanceof DelayedResult) 
+            {
+                DelayedResult result = ((DelayedResult) src);
+                DOMResult domResult = new DOMResult();
+                result.write(domResult);
+                return new DOMSource(domResult.getNode());
+            }
+            else if (src instanceof OutputHandler) 
+            {
+                OutputHandler handler = ((OutputHandler) src);
+                ByteArrayOutputStream output = new ByteArrayOutputStream();
+                
+                handler.write(RequestContext.getEvent(), output);
+                
+                return createStreamSource(new ByteArrayInputStream(output.toByteArray()));
+            }
             else
             {
                 return null;
@@ -122,6 +141,15 @@ public abstract class AbstractXmlTransformer extends AbstractTransformer
         }
         catch (XMLStreamException e)
         {
+            throw new TransformerException(this, e);
+        }
+        catch (Exception e)
+        {
+            if (e instanceof TransformerException)
+            {
+                throw (TransformerException) e;
+            }
+            
             throw new TransformerException(this, e);
         }
     }
