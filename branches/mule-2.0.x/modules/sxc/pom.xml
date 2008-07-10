@@ -68,6 +68,9 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <forkMode>none</forkMode>
+                    <excludes>
+			            <exclude>**/SxcFilterTestCase.java</exclude>
+			        </excludes>
                 </configuration>
             </plugin>
         </plugins>
