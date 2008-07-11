@@ -24,10 +24,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.mortbay.http.HttpContext;
-import org.mortbay.http.HttpListener;
-import org.mortbay.http.nio.SocketChannelListener;
 import org.mortbay.jetty.Server;
+import org.mortbay.jetty.nio.SelectChannelConnector;
 import org.mortbay.jetty.servlet.ServletHandler;
 import org.mortbay.jetty.servlet.ServletHolder;
 import org.mortbay.xml.XmlConfiguration;
@@ -72,19 +70,12 @@ public class JettyHttpConnector extends AbstractConnector
     protected void doInitialise() throws InitialisationException
     {
         httpServer = new Server();
-
-         HttpContext context = new HttpContext();
-         context.setContextPath("/");
-         context.setRequestLog(null);
-
-
+        
         ServletHandler handler = new ServletHandler();
-        holder = handler.addServlet("/*", getServletClass().getName());
-        //handler.addServletHolder(holder);
-        context.addHandler(handler);
-
-        httpServer.addContext(context);
-
+        holder = handler.addServletWithMapping(getServletClass(), "/*");
+        
+        httpServer.addHandler(handler);
+        
         if (configFile != null)
         {
             try
@@ -198,11 +189,11 @@ public class JettyHttpConnector extends AbstractConnector
 //        //TODO exhaust action
 //          httpServer.setThreadPool(threadPool);
 
-        HttpListener cnn = createJettyConnector();
+        org.mortbay.jetty.AbstractConnector cnn = createJettyConnector();
 
         cnn.setPort(uri.getPort());
 
-        httpServer.addListener(cnn);
+        httpServer.addConnector(cnn);
 
         serverPorts.put(new Integer(uri.getPort()), null);
         receiverServlet.addReceiver(receiver);
@@ -219,11 +210,9 @@ public class JettyHttpConnector extends AbstractConnector
         }
     }
 
-    protected HttpListener createJettyConnector()
+    protected org.mortbay.jetty.AbstractConnector createJettyConnector()
     {
-        SocketChannelListener c = new SocketChannelListener();
-        c.setMaxIdleTimeMs(30000);
-        return c;
+        return new SelectChannelConnector();
     }
 
     public boolean unregisterListener(MessageReceiver receiver)
