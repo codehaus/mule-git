@@ -81,6 +81,7 @@ mule-transport-ftp
 mule-transport-http
 mule-transport-jbpm
 mule-transport-jdbc
+mule-transport-jetty
 mule-transport-jms
 mule-transport-multicast
 mule-transport-quartz
