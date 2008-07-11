@@ -286,7 +286,7 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
                     try
                     {
                         jmsConnector.stopConnector();
-                        jmsConnector.initialised.set(false);
+                        jmsConnector.initialised.set(true);
                     }
                     catch (UMOException e)
                     {
@@ -295,19 +295,6 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
 
                     try
                     {
-                        connectionStrategy.connect(jmsConnector);
-                        //keep the receivers in memory so we can register them after initialisation
-                        Map receivers = new HashMap(jmsConnector.getReceivers());
-                        jmsConnector.initialise();
-                        // register the receivers
-                        for (Iterator itReceivers = receivers.values().iterator();itReceivers.hasNext();) {
-                        	UMOMessageReceiver receiver = (UMOMessageReceiver)itReceivers.next();
-                        	try {
-                        		jmsConnector.registerListener(receiver.getComponent(),receiver.getEndpoint());
-                        	} catch (Exception ex) {
-                        		throw new FatalConnectException(ex,receiver.getComponent());
-                        	}
-                        }
                         jmsConnector.startConnector();
                     }
                     catch (FatalConnectException fcex)
