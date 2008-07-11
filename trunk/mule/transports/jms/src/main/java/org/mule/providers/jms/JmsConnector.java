@@ -35,15 +35,12 @@ import org.mule.umo.lifecycle.InitialisationException;
 import org.mule.umo.lifecycle.LifecycleException;
 import org.mule.umo.manager.UMOServerNotification;
 import org.mule.umo.provider.UMOMessageAdapter;
-import org.mule.umo.provider.UMOMessageReceiver;
 import org.mule.util.BeanUtils;
 import org.mule.util.ClassUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
-import java.util.HashMap;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.Map;
 
 import javax.jms.Connection;
