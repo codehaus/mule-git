@@ -48,6 +48,12 @@
             <artifactId>mule-transport-servlet</artifactId>
             <version>${version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.mule.transports</groupId>
+            <artifactId>mule-transport-jetty</artifactId>
+            <version>${version}</version>
+            <scope>test</scope>
+        </dependency>
 
         <!-- Needed for common SOAP test classes -->
         <dependency>
