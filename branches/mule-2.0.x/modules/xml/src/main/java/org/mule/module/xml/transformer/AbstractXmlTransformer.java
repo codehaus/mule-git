@@ -19,10 +19,12 @@ import org.mule.transformer.AbstractTransformer;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
 
 import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
@@ -50,6 +52,7 @@ public abstract class AbstractXmlTransformer extends AbstractTransformer
 {
     private String outputEncoding;
     private XMLInputFactory xmlInputFactory;
+    private XMLOutputFactory xmlOutputFactory;
     private boolean useStaxSource = false;
     
     public AbstractXmlTransformer()
@@ -63,9 +66,11 @@ public abstract class AbstractXmlTransformer extends AbstractTransformer
         registerSourceType(InputStream.class);
         registerSourceType(OutputHandler.class);
         registerSourceType(XMLStreamReader.class);
+        registerSourceType(DelayedResult.class);
         setReturnClass(byte[].class);
         
         xmlInputFactory = XMLInputFactory.newInstance();
+        xmlOutputFactory = XMLOutputFactory.newInstance();
     }
 
     public Source getXmlSource(Object src) throws TransformerException
@@ -379,7 +384,25 @@ public abstract class AbstractXmlTransformer extends AbstractTransformer
         idTransformer.transform(src, result);
         return writer.getBuffer().toString();
     }
+    
+    protected void writeToStream(Object obj, String outputEncoding, OutputStream output)
+        throws TransformerFactoryConfigurationError, javax.xml.transform.TransformerException,
+        TransformerException
+    {
+        // Always use the transformer, even for byte[] (to get the encoding right!)
+        Source src = getXmlSource(obj);
+        if (src == null)
+        {
+            return;
+        }
 
+        StreamResult result = new StreamResult(output);
+
+        Transformer idTransformer = XMLUtils.getTransformer();
+        idTransformer.setOutputProperty(OutputKeys.ENCODING, outputEncoding);
+        idTransformer.transform(src, result);
+    }
+    
     /** @return the outputEncoding */
     public String getOutputEncoding()
     {
@@ -410,6 +433,16 @@ public abstract class AbstractXmlTransformer extends AbstractTransformer
     public void setXMLInputFactory(XMLInputFactory xmlInputFactory)
     {
         this.xmlInputFactory = xmlInputFactory;
+    }
+
+    public XMLOutputFactory getXMLOutputFactory()
+    {
+        return xmlOutputFactory;
+    }
+
+    public void setXMLOutputFactory(XMLOutputFactory xmlOutputFactory)
+    {
+        this.xmlOutputFactory = xmlOutputFactory;
     }
     
 }

@@ -68,6 +68,7 @@ public class ReversibleXMLStreamReader extends DelegateXMLStreamReader
     {
         replay = true;
         replayIndex = 0;
+        current = null;
     }
 
     public boolean isTracking()
@@ -364,6 +365,10 @@ public class ReversibleXMLStreamReader extends DelegateXMLStreamReader
     {
         if (replay)
         {
+            if (current == null)
+            {
+                return START_DOCUMENT;
+            }
             return current.getEventType();
         }
         else

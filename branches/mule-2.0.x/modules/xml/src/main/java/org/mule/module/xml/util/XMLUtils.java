@@ -20,8 +20,10 @@ import java.io.InputStream;
 import java.io.StringReader;
 
 import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
+import javax.xml.stream.XMLStreamWriter;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
@@ -29,6 +31,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 
+import org.apache.commons.lang.StringUtils;
 import org.dom4j.DocumentException;
 import org.dom4j.io.DOMReader;
 import org.dom4j.io.SAXReader;
@@ -201,6 +204,133 @@ public class XMLUtils extends org.mule.util.XMLUtils
         else
         {
             return null;
+        }
+    }
+    
+    /**
+     * Copies the reader to the writer. The start and end document methods must
+     * be handled on the writer manually. TODO: if the namespace on the reader
+     * has been declared previously to where we are in the stream, this probably
+     * won't work.
+     * 
+     * @param reader
+     * @param writer
+     * @throws XMLStreamException
+     */
+    public static void copy(XMLStreamReader reader, XMLStreamWriter writer) throws XMLStreamException {
+        copy(reader, writer, false);
+    }
+    public static void copy(XMLStreamReader reader, XMLStreamWriter writer,
+                            boolean fragment) throws XMLStreamException {
+        // number of elements read in
+        int read = 0;
+        int event = reader.getEventType();
+
+        while (reader.hasNext()) {
+            switch (event) {
+            case XMLStreamConstants.START_ELEMENT:
+                read++;
+                writeStartElement(reader, writer);
+                break;
+            case XMLStreamConstants.END_ELEMENT:
+                writer.writeEndElement();
+                read--;
+                if (read <= 0 && !fragment) {
+                    return;
+                }
+                break;
+            case XMLStreamConstants.CHARACTERS:
+                writer.writeCharacters(reader.getText());
+                break;
+            case XMLStreamConstants.START_DOCUMENT:
+            case XMLStreamConstants.END_DOCUMENT:
+            case XMLStreamConstants.ATTRIBUTE:
+            case XMLStreamConstants.NAMESPACE:
+                break;
+            default:
+                break;
+            }
+            event = reader.next();
+        }
+    }
+
+    private static void writeStartElement(XMLStreamReader reader, XMLStreamWriter writer)
+        throws XMLStreamException {
+        String local = reader.getLocalName();
+        String uri = reader.getNamespaceURI();
+        String prefix = reader.getPrefix();
+        if (prefix == null) {
+            prefix = "";
+        }
+
+        
+//        System.out.println("STAXUTILS:writeStartElement : node name : " + local +  " namespace URI" + uri);
+        boolean writeElementNS = false;
+        if (uri != null) {
+            String boundPrefix = writer.getPrefix(uri);
+            if (boundPrefix == null || !prefix.equals(boundPrefix)) {
+                writeElementNS = true;
+            }
+        }
+
+        // Write out the element name
+        if (uri != null) {
+            if (prefix.length() == 0 && StringUtils.isEmpty(uri)) {
+                writer.writeStartElement(local);
+                writer.setDefaultNamespace(uri);
+
+            } else {
+                writer.writeStartElement(prefix, local, uri);
+                writer.setPrefix(prefix, uri);
+            }
+        } else {
+            writer.writeStartElement(local);
+        }
+
+        // Write out the namespaces
+        for (int i = 0; i < reader.getNamespaceCount(); i++) {
+            String nsURI = reader.getNamespaceURI(i);
+            String nsPrefix = reader.getNamespacePrefix(i);
+            if (nsPrefix == null) {
+                nsPrefix = "";
+            }
+
+            if (nsPrefix.length() == 0) {
+                writer.writeDefaultNamespace(nsURI);
+            } else {
+                writer.writeNamespace(nsPrefix, nsURI);
+            }
+
+            if (nsURI.equals(uri) && nsPrefix.equals(prefix)) {
+                writeElementNS = false;
+            }
+        }
+
+        // Check if the namespace still needs to be written.
+        // We need this check because namespace writing works
+        // different on Woodstox and the RI.
+        if (writeElementNS) {
+            if (prefix == null || prefix.length() == 0) {
+                writer.writeDefaultNamespace(uri);
+            } else {
+                writer.writeNamespace(prefix, uri);
+            }
+        }        
+        
+        // Write out attributes
+        for (int i = 0; i < reader.getAttributeCount(); i++) {
+            String ns = reader.getAttributeNamespace(i);
+            String nsPrefix = reader.getAttributePrefix(i);
+            if (ns == null || ns.length() == 0) {
+                writer.writeAttribute(reader.getAttributeLocalName(i), reader.getAttributeValue(i));
+            } else if (nsPrefix == null || nsPrefix.length() == 0) {
+                writer.writeAttribute(reader.getAttributeNamespace(i), reader.getAttributeLocalName(i),
+                                      reader.getAttributeValue(i));
+            } else {
+                writer.writeAttribute(reader.getAttributePrefix(i), reader.getAttributeNamespace(i), reader
+                    .getAttributeLocalName(i), reader.getAttributeValue(i));
+            }
+
         }
     }
 }
