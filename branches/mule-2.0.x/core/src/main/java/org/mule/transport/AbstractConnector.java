@@ -345,6 +345,8 @@ public abstract class AbstractConnector
         // Initialise the structure of this connector
         this.initFromServiceDescriptor();
 
+        setMaxDispatchersActive(getDispatcherThreadingProfile().getMaxThreadsActive());
+        
         this.doInitialise();
 
         // We do the management context injection here just in case we're using a default ExceptionStrategy
@@ -364,9 +366,6 @@ public abstract class AbstractConnector
         {
             throw new InitialisationException(e, this);
         }
-
-        setMaxDispatchersActive(getDispatcherThreadingProfile().getMaxThreadsActive());
-        
         initialised.set(true);
     }
 
