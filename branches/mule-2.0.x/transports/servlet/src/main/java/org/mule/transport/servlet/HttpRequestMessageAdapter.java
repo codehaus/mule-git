@@ -199,7 +199,7 @@ public class HttpRequestMessageAdapter extends AbstractMessageAdapter
         {
             // We wrap this call as on some App Servers (Websfear) it can cause an
             // NPE
-            session = getRequest().getSession();
+            session = getRequest().getSession(false);
         }
         catch (Exception e)
         {
@@ -208,7 +208,8 @@ public class HttpRequestMessageAdapter extends AbstractMessageAdapter
         }
         if (session == null)
         {
-            throw new UniqueIdNotSupportedException(this, CoreMessages.objectIsNull("Http session"));
+            //throw new UniqueIdNotSupportedException(this, CoreMessages.objectIsNull("Http session"));
+            return UUID.getUUID();
         }
         return session.getId();
     }
