@@ -365,6 +365,8 @@ public abstract class AbstractConnector
             throw new InitialisationException(e, this);
         }
 
+        setMaxDispatchersActive(getDispatcherThreadingProfile().getMaxThreadsActive());
+        
         initialised.set(true);
     }
 
