@@ -664,17 +664,6 @@
                 <enabled>false</enabled>
             </releases>
         </repository>
-        <repository>
-            <id>spring</id>
-            <name>Spring Snapshots</name>
-            <url>http://static.springframework.org/maven2-snapshots</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-        </repository>
         <!-- for activemq -->
         <repository>
             <id>apache.incubating.releases</id>
