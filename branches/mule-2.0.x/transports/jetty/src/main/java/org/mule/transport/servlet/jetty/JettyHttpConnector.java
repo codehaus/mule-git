@@ -15,6 +15,7 @@ import org.mule.api.endpoint.EndpointURI;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.lifecycle.LifecycleException;
 import org.mule.api.transport.MessageReceiver;
+import org.mule.api.transport.ReplyToHandler;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.transport.AbstractConnector;
 import org.mule.util.IOUtils;
@@ -49,9 +50,11 @@ public class JettyHttpConnector extends AbstractConnector
 
     private JettyReceiverServlet receiverServlet;
 
-    private Class servletClass = JettyReceiverServlet.class;
+    private Class servletClass;
 
     private ServletHolder holder;
+
+    private boolean useContinuations = false;
 
     public JettyHttpConnector()
     {
@@ -70,6 +73,12 @@ public class JettyHttpConnector extends AbstractConnector
     protected void doInitialise() throws InitialisationException
     {
         httpServer = new Server();
+
+        if(getReceiverServlet()==null)
+        {
+            setServletClass((useContinuations ? JettyContinuationsReceiverServlet.class :
+                    JettyReceiverServlet.class));
+        }
         
         ServletHandler handler = new ServletHandler();
         holder = handler.addServletWithMapping(getServletClass(), "/*");
@@ -259,5 +268,30 @@ public class JettyHttpConnector extends AbstractConnector
     public void setServletClass(Class servletClass)
     {
         this.servletClass = servletClass;
+    }
+
+    /**
+     * Getter for property 'replyToHandler'.
+     *
+     * @return Value for property 'replyToHandler'.
+     */
+    //@Override
+    public ReplyToHandler getReplyToHandler()
+    {
+        if(isUseContinuations())
+        {
+            return new JettyContinuationsReplyToHandler(getDefaultResponseTransformers());
+        }
+        return super.getReplyToHandler();
+    }
+
+    public boolean isUseContinuations()
+    {
+        return useContinuations;
+    }
+
+    public void setUseContinuations(boolean useContinuations)
+    {
+        this.useContinuations = useContinuations;
     }
 }

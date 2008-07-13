@@ -12,7 +12,6 @@ package org.mule.transport.servlet;
 
 import org.mule.DefaultMuleMessage;
 import org.mule.RegistryContext;
-import org.mule.api.MessagingException;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.EndpointException;
@@ -106,13 +105,17 @@ public class MuleReceiverServlet extends AbstractReceiverServlet
             MuleMessage responseMessage = doMethod(request, "GET");
             writeResponse(response, responseMessage);
         }
+        catch (RuntimeException e)
+        {
+            throw e;
+        }
         catch (Exception e)
         {
             handleException(e, e.getMessage(), response);
         }
     }
 
-    private void setupRequestMessage(HttpServletRequest request, MuleMessage requestMessage)
+    protected void setupRequestMessage(HttpServletRequest request, MuleMessage requestMessage)
     {
         requestMessage.setProperty(HttpConnector.HTTP_REQUEST_PROPERTY, request.getRequestURI());
     }
@@ -128,6 +131,10 @@ public class MuleReceiverServlet extends AbstractReceiverServlet
                 writeResponse(response, responseMessage);
             }
         }
+        catch (RuntimeException e)
+        {
+            throw e;
+        }
         catch (Exception e)
         {
             handleException(e, e.getMessage(), response);
@@ -135,7 +142,7 @@ public class MuleReceiverServlet extends AbstractReceiverServlet
     }
 
     protected MuleMessage doMethod(HttpServletRequest request, String method)
-        throws EndpointException, MessagingException, MuleException
+        throws MuleException
     {
         MessageReceiver receiver = getReceiverForURI(request);
         
@@ -181,6 +188,7 @@ public class MuleReceiverServlet extends AbstractReceiverServlet
                 writeResponse(response, responseMessage);
             }
         }
+
         catch (Exception e)
         {
             handleException(e, e.getMessage(), response);

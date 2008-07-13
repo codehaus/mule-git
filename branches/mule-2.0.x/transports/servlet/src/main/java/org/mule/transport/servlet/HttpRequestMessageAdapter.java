@@ -14,8 +14,6 @@ import org.mule.api.MessagingException;
 import org.mule.api.ThreadSafeAccess;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.transport.MessageTypeNotSupportedException;
-import org.mule.api.transport.UniqueIdNotSupportedException;
-import org.mule.config.i18n.CoreMessages;
 import org.mule.transport.AbstractMessageAdapter;
 import org.mule.transport.http.HttpConstants;
 import org.mule.util.UUID;
@@ -228,7 +226,7 @@ public class HttpRequestMessageAdapter extends AbstractMessageAdapter
         {
             setProperty(HttpConstants.HEADER_LOCATION, replyTo);
         }
-        setProperty(MuleProperties.MULE_CORRELATION_ID_PROPERTY, replyTo);
+        setProperty(MuleProperties.MULE_REPLY_TO_PROPERTY, replyTo);
     }
 
     /**
@@ -241,10 +239,10 @@ public class HttpRequestMessageAdapter extends AbstractMessageAdapter
      */
     public Object getReplyTo()
     {
-        String replyto = (String)getProperty(MuleProperties.MULE_REPLY_TO_PROPERTY);
+        Object replyto = getProperty(MuleProperties.MULE_REPLY_TO_PROPERTY);
         if (replyto == null)
         {
-            replyto = (String)getProperty(HttpConstants.HEADER_LOCATION);
+            replyto = getProperty(HttpConstants.HEADER_LOCATION);
         }
         return replyto;
     }
