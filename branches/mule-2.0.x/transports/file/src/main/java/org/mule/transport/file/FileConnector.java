@@ -27,7 +27,6 @@ import org.mule.transformer.simple.SerializableToByteArray;
 import org.mule.transport.AbstractConnector;
 import org.mule.transport.file.filters.FilenameWildcardFilter;
 import org.mule.util.FileUtils;
-import org.mule.util.MapUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -102,7 +101,7 @@ public class FileConnector extends AbstractConnector
     private boolean serialiseObjects = false;
 
     private boolean streaming = true;
-    
+
     public FilenameParser filenameParser;
 
     /*
@@ -116,22 +115,27 @@ public class FileConnector extends AbstractConnector
         filenameParser = new SimpleFilenameParser();
     }
 
+
     // @Override
-//    public void setMaxDispatchersActive(int value)
-//    {
-//        if (value != 1)
-//        {
-//            throw new IllegalArgumentException("MULE-1773: cannot configure maxDispatchersActive");
-//        }
-//    }
-    
+    public void setMaxDispatchersActive(int value)
+    {
+        if (isOutputAppend() && value != 1)
+        {
+            logger.warn("MULE-1773: cannot configure maxDispatchersActive when using outputAppend.  New value not set");
+        }
+        else
+        {
+            super.setMaxDispatchersActive(value);
+        }
+    }
+
     // @Override
     protected Object getReceiverKey(Service service, InboundEndpoint endpoint)
     {
         if (endpoint.getFilter() != null && endpoint.getFilter() instanceof FilenameWildcardFilter)
         {
             return endpoint.getEndpointURI().getAddress() + "/"
-                   + ((FilenameWildcardFilter) endpoint.getFilter()).getPattern();
+                    + ((FilenameWildcardFilter) endpoint.getFilter()).getPattern();
         }
         return endpoint.getEndpointURI().getAddress();
     }
@@ -230,14 +234,14 @@ public class FileConnector extends AbstractConnector
         try
         {
             return serviceDescriptor.createMessageReceiver(this, service, endpoint, new Object[]{readDir,
-                moveTo, moveToPattern, new Long(polling)});
+                    moveTo, moveToPattern, new Long(polling)});
 
         }
         catch (Exception e)
         {
             throw new InitialisationException(
-                CoreMessages.failedToCreateObjectWith("Message Receiver",
-                    serviceDescriptor), e, this);
+                    CoreMessages.failedToCreateObjectWith("Message Receiver",
+                            serviceDescriptor), e, this);
         }
     }
 
@@ -274,7 +278,10 @@ public class FileConnector extends AbstractConnector
         // MULE-1773: limit the number of dispatchers per endpoint to 1 until
         // there is a proper (Distributed)LockManager in place (MULE-2402).
         // We also override the setter to prevent "wrong" configuration for now.
-        super.setMaxDispatchersActive(1);
+        if (isOutputAppend())
+        {
+            super.setMaxDispatchersActive(1);
+        }
     }
 
     protected void doConnect() throws Exception
@@ -429,7 +436,7 @@ public class FileConnector extends AbstractConnector
             if (!(writeToDirectory.canRead()) || !writeToDirectory.canWrite())
             {
                 throw new IOException(
-                    "Error on initialization, Write To directory does not exist or is not read/write");
+                        "Error on initialization, Write To directory does not exist or is not read/write");
             }
         }
     }
@@ -454,7 +461,7 @@ public class FileConnector extends AbstractConnector
             if (!readFromDirectory.canRead())
             {
                 throw new IOException(
-                    "Error on initialization, read from directory does not exist or is not readable");
+                        "Error on initialization, read from directory does not exist or is not readable");
             }
         }
     }
@@ -474,9 +481,9 @@ public class FileConnector extends AbstractConnector
                 serviceOverrides = new Properties();
             }
             serviceOverrides.setProperty(MuleProperties.CONNECTOR_INBOUND_TRANSFORMER,
-                ByteArrayToSerializable.class.getName());
+                    ByteArrayToSerializable.class.getName());
             serviceOverrides.setProperty(MuleProperties.CONNECTOR_OUTBOUND_TRANSFORMER,
-                SerializableToByteArray.class.getName());
+                    SerializableToByteArray.class.getName());
         }
 
         this.serialiseObjects = serialiseObjects;
@@ -507,13 +514,13 @@ public class FileConnector extends AbstractConnector
      * will be called only when Streaming is being used on an outbound endpoint
      *
      * @param endpoint the endpoint that releates to this Dispatcher
-     * @param message the current message being processed
+     * @param message  the current message being processed
      * @return the output stream to use for this request or null if the transport
      *         does not support streaming
      * @throws org.mule.api.MuleException
      */
     public OutputStream getOutputStream(ImmutableEndpoint endpoint, MuleMessage message)
-        throws MuleException
+            throws MuleException
     {
         String address = endpoint.getEndpointURI().getAddress();
         String writeToDirectory = message.getStringProperty(FileConnector.PROPERTY_WRITE_TO_DIRECTORY, null);
@@ -561,13 +568,12 @@ public class FileConnector extends AbstractConnector
                 logger.info("Writing file to: " + file.getAbsolutePath());
             }
 
-            return new FileOutputStream(file, MapUtils.getBooleanValue(endpoint.getProperties(),
-                "outputAppend", isOutputAppend()));
+            return new FileOutputStream(file, isOutputAppend());
         }
         catch (IOException e)
         {
             throw new DispatchException(CoreMessages.streamingFailedNoStream(), message,
-                endpoint, e);
+                    endpoint, e);
         }
     }
 
