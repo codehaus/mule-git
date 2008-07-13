@@ -18,7 +18,7 @@ public class JettyContinuationsHttpFunctionalTestCase extends HttpFunctionalTest
     //@Override
     protected String getConfigResources()
     {
-        return "jetty-http-functional-test.xml";
+        return "jetty-continuations-http-functional-test.xml";
     }
 
 }

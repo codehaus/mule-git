@@ -23,7 +23,7 @@ public class JettyContinuationsTwoEndpointsSinglePortTestCase extends Functional
 
     protected String getConfigResources()
     {
-        return "jetty-two-endpoints-single-port.xml";
+        return "jetty-continuations-two-endpoints-single-port.xml";
     }
 
     public void testSendToEach() throws Exception
