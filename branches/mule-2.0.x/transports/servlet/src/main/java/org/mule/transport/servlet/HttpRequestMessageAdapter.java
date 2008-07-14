@@ -95,20 +95,22 @@ public class HttpRequestMessageAdapter extends AbstractMessageAdapter
     protected void setContentEncoding(HttpServletRequest request)
     {
         String contentType = request.getContentType();
-        int i = contentType.indexOf("charset");
-        if(i > -1)
+        if (contentType != null)
         {
-            int x = contentType.lastIndexOf(";");
-            if(x > i)
+            int i = contentType.indexOf("charset");
+            if (i > -1)
             {
-                setEncoding(contentType.substring(i+8, x));
-            }
-            else
-            {
-                setEncoding(contentType.substring(i+8));
+                int x = contentType.lastIndexOf(";");
+                if (x > i)
+                {
+                    setEncoding(contentType.substring(i + 8, x));
+                }
+                else
+                {
+                    setEncoding(contentType.substring(i + 8));
+                }
             }
         }
-
     }
 
     protected HttpRequestMessageAdapter(HttpRequestMessageAdapter template)
