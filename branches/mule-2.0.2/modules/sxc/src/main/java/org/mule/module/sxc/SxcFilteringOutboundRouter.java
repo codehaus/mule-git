@@ -93,7 +93,15 @@ public class SxcFilteringOutboundRouter extends FilteringOutboundRouter
         }
     }
 
-    protected synchronized void initialize() throws Exception
+    protected void initialize() throws Exception
+    {
+        if (evaluator == null)
+        {
+            doInitialize();
+        }
+    }
+
+    private synchronized void doInitialize()
     {
         if (evaluator == null)
         {
