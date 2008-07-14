@@ -28,7 +28,7 @@ public class BindingInOnlyInOutOutOnlyTestCase extends FunctionalTestCase
         MuleClient client = new MuleClient();
 
 
-        client.dispatch("inboundEndpoint", new Integer[]{1,2,3,4,5}, null);
+        client.dispatch("inboundEndpoint", new int[]{1,2,3,4,5}, null);
 
         MuleMessage result = client.request("receivedEndpoint", TIMEOUT);
         assertNotNull(result);
