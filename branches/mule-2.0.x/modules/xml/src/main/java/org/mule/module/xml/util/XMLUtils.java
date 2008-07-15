@@ -210,7 +210,6 @@ public class XMLUtils extends org.mule.util.XMLUtils
             XMLStreamReader xsr = factory.createXMLStreamReader(is);
             return new DelegateXMLStreamReader(xsr) {
 
-                @Override
                 public void close() throws XMLStreamException
                 {
                     super.close();
