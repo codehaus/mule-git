@@ -13,7 +13,15 @@ package org.mule.transformers.xml;
 import org.mule.api.transformer.Transformer;
 import org.mule.module.xml.transformer.DomDocumentToXml;
 import org.mule.module.xml.transformer.XmlToDomDocument;
+import org.mule.module.xml.util.XMLTestUtils;
+import org.mule.module.xml.util.XMLUtils;
 import org.mule.util.IOUtils;
+
+import java.io.InputStream;
+import java.util.Iterator;
+import java.util.List;
+
+import javax.xml.stream.XMLStreamReader;
 
 import org.dom4j.DocumentHelper;
 import org.dom4j.io.DOMWriter;
@@ -55,6 +63,44 @@ public class DomXmlTransformersTestCase extends AbstractXmlTransformerTestCase
     public Object getResultData()
     {
         return resultData;
+    }
+
+// TODO MULE-3555
+//    public void testTransformXMLStreamReader() throws Exception
+//    {
+//        Object expectedResult = getResultData();
+//        assertNotNull(expectedResult);
+//        
+//        XmlToDomDocument transformer = (XmlToDomDocument) getTransformer();
+//        
+//        InputStream is = IOUtils.getResourceAsStream("cdcatalog.xml", XMLTestUtils.class);
+//        XMLStreamReader sr = XMLUtils.toXMLStreamReader(transformer.getXMLInputFactory(), is);
+//
+//        Object result = transformer.transform(sr);
+//        assertNotNull(result);
+//        assertTrue("expected: " + expectedResult + "\nresult: " + result, compareResults(expectedResult, result));
+//    }
+    
+    public void testAllXmlMessageTypes() throws Exception
+    {
+        List list = XMLTestUtils.getXmlMessageVariants("cdcatalog.xml");
+        Iterator it = list.iterator();
+        
+        Object expectedResult = getResultData();
+        assertNotNull(expectedResult);
+        
+        Object msg, result;
+        while (it.hasNext())
+        {
+            msg = it.next();
+            // TODO MULE-3555 Not working for XMLStreamReader, see testTransformXMLStreamReader()
+            if (!(msg instanceof javax.xml.stream.XMLStreamReader))
+            {
+                result = getTransformer().transform(msg);
+                assertNotNull(result);
+                assertTrue("Test failed for message type: " + msg.getClass(), compareResults(expectedResult, result));
+            }
+        }        
     }
 
 }
