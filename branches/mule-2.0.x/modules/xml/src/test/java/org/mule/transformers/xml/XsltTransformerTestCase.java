@@ -85,13 +85,9 @@ public class XsltTransformerTestCase extends AbstractXmlTransformerTestCase
         while (it.hasNext())
         {
             msg = it.next();
-            // TODO MULE-3555 Not working for XMLStreamReader, see testTransformXMLStreamReader()
-            if (!(msg instanceof javax.xml.stream.XMLStreamReader))
-            {
-                result = getTransformer().transform(msg);
-                assertNotNull(result);
-                assertTrue("Test failed for message type: " + msg.getClass(), compareResults(expectedResult, result));
-            }
+            result = getTransformer().transform(msg);
+            assertNotNull(result);
+            assertTrue("Test failed for message type: " + msg.getClass(), compareResults(expectedResult, result));
         }        
     }
 

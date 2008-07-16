@@ -72,7 +72,6 @@ public class DomXmlTransformersTestCase extends AbstractXmlTransformerTestCase
         return resultData;
     }
 
-// TODO MULE-3555
     public void testTransformXMLStreamReader() throws Exception
     {
         Object expectedResult = getResultData();
@@ -88,6 +87,7 @@ public class DomXmlTransformersTestCase extends AbstractXmlTransformerTestCase
         assertNotNull(result);
         assertTrue("expected: " + expectedResult + "\nresult: " + result, compareResults(expectedResult, result));
     }
+
     public static void writeXml(Node n, OutputStream os) throws TransformerException {
         TransformerFactory tf = TransformerFactory.newInstance();
         // identity
@@ -95,6 +95,7 @@ public class DomXmlTransformersTestCase extends AbstractXmlTransformerTestCase
         t.setOutputProperty(OutputKeys.INDENT, "yes");
         t.transform(new DOMSource(n), new StreamResult(os));
     }
+    
     public void testAllXmlMessageTypes() throws Exception
     {
         List list = XMLTestUtils.getXmlMessageVariants("cdcatalog.xml");
@@ -107,13 +108,9 @@ public class DomXmlTransformersTestCase extends AbstractXmlTransformerTestCase
         while (it.hasNext())
         {
             msg = it.next();
-            // TODO MULE-3555 Not working for XMLStreamReader, see testTransformXMLStreamReader()
-            if (!(msg instanceof javax.xml.stream.XMLStreamReader))
-            {
-                result = getTransformer().transform(msg);
-                assertNotNull(result);
-                assertTrue("Test failed for message type: " + msg.getClass(), compareResults(expectedResult, result));
-            }
+            result = getTransformer().transform(msg);
+            assertNotNull(result);
+            assertTrue("Test failed for message type: " + msg.getClass(), compareResults(expectedResult, result));
         }        
     }
 
