@@ -12,6 +12,7 @@ package org.mule.module.xml.util;
 
 import org.mule.RequestContext;
 import org.mule.api.transport.OutputHandler;
+import org.mule.module.xml.stax.DelegateXMLStreamReader;
 import org.mule.module.xml.stax.StaxSource;
 import org.mule.module.xml.transformer.DelayedResult;
 import org.mule.module.xml.transformer.XmlToDomDocument;
@@ -19,6 +20,7 @@ import org.mule.util.IOUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
 
@@ -203,7 +205,26 @@ public class XMLUtils extends org.mule.util.XMLUtils
         }
         else if (obj instanceof java.io.InputStream)
         {
-            return factory.createXMLStreamReader((java.io.InputStream) obj);
+            final InputStream is = (java.io.InputStream) obj;
+            
+            XMLStreamReader xsr = factory.createXMLStreamReader(is);
+            return new DelegateXMLStreamReader(xsr) {
+
+                public void close() throws XMLStreamException
+                {
+                    super.close();
+                    
+                    try
+                    {
+                        is.close();
+                    }
+                    catch (IOException e)
+                    {
+                        throw new XMLStreamException(e);
+                    }
+                }
+                
+            };
         }
         else if (obj instanceof String)
         {
