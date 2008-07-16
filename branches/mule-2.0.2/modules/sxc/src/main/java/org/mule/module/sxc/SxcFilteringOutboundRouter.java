@@ -105,7 +105,6 @@ public class SxcFilteringOutboundRouter extends FilteringOutboundRouter
     {
         if (evaluator == null)
         {
-            System.setProperty("com.envoisolutions.sxc.output.directory", "target/tmp-xpath");
             builder = new XPathBuilder();
 
             addEventHandlers(builder, getFilter());
