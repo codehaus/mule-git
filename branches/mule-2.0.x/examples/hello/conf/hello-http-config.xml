@@ -2,7 +2,7 @@
 <mule xmlns="http://www.mulesource.org/schema/mule/core/2.0"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:spring="http://www.springframework.org/schema/beans"
-       xmlns:http="http://www.mulesource.org/schema/mule/http/2.0"
+       xmlns:jetty="http://www.mulesource.org/schema/mule/jetty/2.0"
        xmlns:vm="http://www.mulesource.org/schema/mule/vm/2.0"
        xmlns:stdio="http://www.mulesource.org/schema/mule/stdio/2.0"
        xsi:schemaLocation="
@@ -65,7 +65,7 @@
                 </inbound-endpoint>
                 
                 <!-- Incoming Servlet requests -->
-                <inbound-endpoint address="servlet://rest" transformer-refs="ObjectToString StringToNameString" responseTransformer-refs="PlainTextResponseTransformer" synchronous="true"/>
+                <inbound-endpoint address="servlet://rest" transformer-refs="HttpRequestToParameter StringToNameString" responseTransformer-refs="PlainTextResponseTransformer" synchronous="true"/>
 
                 <!-- Incoming VM requests -->
                 <vm:inbound-endpoint path="greeter" transformer-refs="StringToNameString" synchronous="true"/>
