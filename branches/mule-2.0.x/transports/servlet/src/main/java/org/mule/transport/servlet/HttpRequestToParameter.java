@@ -31,7 +31,6 @@ public class HttpRequestToParameter extends AbstractMessageAwareTransformer
         setReturnClass(String.class);
     }
 
-    @Override
     public Object transform(MuleMessage message, String outputEncoding) throws TransformerException
     {
         HttpServletRequest request = ((HttpRequestMessageAdapter) message.getAdapter()).getRequest();
