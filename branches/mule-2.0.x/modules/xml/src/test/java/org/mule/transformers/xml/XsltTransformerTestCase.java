@@ -95,21 +95,20 @@ public class XsltTransformerTestCase extends AbstractXmlTransformerTestCase
         }        
     }
 
-// TODO MULE-3555
-//    public void testTransformXMLStreamReader() throws Exception
-//    {
-//        Object expectedResult = getResultData();
-//        assertNotNull(expectedResult);
-//        
-//        XsltTransformer transformer = (XsltTransformer) getTransformer();
-//        
-//        InputStream is = IOUtils.getResourceAsStream("cdcatalog.xml", XMLTestUtils.class);
-//        XMLStreamReader sr = XMLUtils.toXMLStreamReader(transformer.getXMLInputFactory(), is);
-//
-//        Object result = transformer.transform(sr);
-//        assertNotNull(result);
-//        assertTrue("expected: " + expectedResult + "\nresult: " + result, compareResults(expectedResult, result));
-//    }
+    public void testTransformXMLStreamReader() throws Exception
+    {
+        Object expectedResult = getResultData();
+        assertNotNull(expectedResult);
+        
+        XsltTransformer transformer = (XsltTransformer) getTransformer();
+        
+        InputStream is = IOUtils.getResourceAsStream("cdcatalog.xml", XMLTestUtils.class);
+        XMLStreamReader sr = XMLUtils.toXMLStreamReader(transformer.getXMLInputFactory(), is);
+
+        Object result = transformer.transform(sr);
+        assertNotNull(result);
+        assertTrue("expected: " + expectedResult + "\nresult: " + result, compareResults(expectedResult, result));
+    }
     
     public void testCustomTransformerFactoryClass() throws InitialisationException
     {
