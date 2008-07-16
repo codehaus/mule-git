@@ -30,8 +30,8 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.ext.LexicalHandler;
 
 /**
- * A StaxSource which gives us access to the underlying XMLStreamReader if we
- * are StaxCapable down the line.
+ * A StaxSource which gives us access to the underlying XMLStreamReader if we are
+ * StaxCapable down the line.
  */
 public class StaxSource extends StAXSource
 {
@@ -41,27 +41,22 @@ public class StaxSource extends StAXSource
     // StAX to SAX converter that will read from StAX and produce SAX
     // this object will be wrapped by the XMLReader exposed to the client
     protected final StAXReaderToContentHandler handler;
-    
+
     // SAX allows ContentHandler to be changed during the parsing,
     // but JAXB doesn't. So this repeater will sit between those
     // two components.
     protected XMLFilterImplEx repeater = new XMLFilterImplEx();
-    
+
     protected final XMLReader pseudoParser = new PseudoReader();
-    
+
     public StaxSource(XMLStreamReader reader)
     {
         super(reader);
 
         this.reader = reader;
-        
-        this.handler =
-            new XMLStreamReaderToContentHandler(
-            reader,
-            repeater) {
-            
-        };
-    
+
+        this.handler = new XMLStreamReaderToContentHandler(reader, repeater);
+
         super.setXMLReader(pseudoParser);
         // pass a dummy InputSource. We don't care
         super.setInputSource(new InputSource());
@@ -79,124 +74,154 @@ public class StaxSource extends StAXSource
         private DTDHandler dtdHandler;
         private ErrorHandler errorHandler;
 
-        public boolean getFeature(String name) throws SAXNotRecognizedException {
-            if ("http://xml.org/sax/features/namespaces".equals(name)) {
-                return true;
-            } else if ("http://xml.org/sax/features/namespace-prefixes".equals(name)) {
-                return repeater.getNamespacePrefixes();
-            } else if ("http://xml.org/sax/features/external-general-entities".equals(name)) {
-                return true;
-            } else if ("http://xml.org/sax/features/external-parameter-entities".equals(name)) {
+        public boolean getFeature(String name) throws SAXNotRecognizedException
+        {
+            if ("http://xml.org/sax/features/namespaces".equals(name))
+            {
                 return true;
             }
-            
+            else if ("http://xml.org/sax/features/namespace-prefixes".equals(name))
+            {
+                return repeater.getNamespacePrefixes();
+            }
+            else if ("http://xml.org/sax/features/external-general-entities".equals(name))
+            {
+                return true;
+            }
+            else if ("http://xml.org/sax/features/external-parameter-entities".equals(name))
+            {
+                return true;
+            }
+
             throw new SAXNotRecognizedException(name);
         }
 
         public void setFeature(String name, boolean value)
-                throws SAXNotRecognizedException, SAXNotSupportedException {
-            if ("http://xml.org/sax/features/namespaces".equals(name)) {
-                // Presently we only support namespaces==true.  [Issue 9] 
-                if (!value) {
+            throws SAXNotRecognizedException, SAXNotSupportedException
+        {
+            if ("http://xml.org/sax/features/namespaces".equals(name))
+            {
+                // Presently we only support namespaces==true. [Issue 9]
+                if (!value)
+                {
                     throw new SAXNotSupportedException(name);
                 }
-            } else if ("http://xml.org/sax/features/namespace-prefixes".equals(name)) {
+            }
+            else if ("http://xml.org/sax/features/namespace-prefixes".equals(name))
+            {
                 repeater.setNamespacePrefixes(value);
-            } else if ("http://xml.org/sax/features/external-general-entities".equals(name)) {
+            }
+            else if ("http://xml.org/sax/features/external-general-entities".equals(name))
+            {
                 // Pass over, XOM likes to get this feature
-            } else if ("http://xml.org/sax/features/external-parameter-entities".equals(name)) {
+            }
+            else if ("http://xml.org/sax/features/external-parameter-entities".equals(name))
+            {
                 // Pass over, XOM likes to get this feature
-            } else {
+            }
+            else
+            {
                 throw new SAXNotRecognizedException(name);
             }
         }
 
-        public Object getProperty(String name) throws SAXNotRecognizedException {
-            if( "http://xml.org/sax/properties/lexical-handler".equals(name) ) {
+        public Object getProperty(String name) throws SAXNotRecognizedException
+        {
+            if ("http://xml.org/sax/properties/lexical-handler".equals(name))
+            {
                 return repeater.getLexicalHandler();
             }
-            
+
             throw new SAXNotRecognizedException(name);
         }
 
-        public void setProperty(String name, Object value) throws SAXNotRecognizedException {
-            if( "http://xml.org/sax/properties/lexical-handler".equals(name) ) {
-                repeater.setLexicalHandler((LexicalHandler)value);
-            } else {
+        public void setProperty(String name, Object value) throws SAXNotRecognizedException
+        {
+            if ("http://xml.org/sax/properties/lexical-handler".equals(name))
+            {
+                repeater.setLexicalHandler((LexicalHandler) value);
+            }
+            else
+            {
                 throw new SAXNotRecognizedException(name);
             }
         }
 
-        public void setEntityResolver(EntityResolver resolver) {
+        public void setEntityResolver(EntityResolver resolver)
+        {
             this.entityResolver = resolver;
         }
 
-        public EntityResolver getEntityResolver() {
+        public EntityResolver getEntityResolver()
+        {
             return entityResolver;
         }
 
-        public void setDTDHandler(DTDHandler handler) {
+        public void setDTDHandler(DTDHandler handler)
+        {
             this.dtdHandler = handler;
         }
 
-        public DTDHandler getDTDHandler() {
+        public DTDHandler getDTDHandler()
+        {
             return dtdHandler;
         }
 
-        public void setContentHandler(ContentHandler handler) {
+        public void setContentHandler(ContentHandler handler)
+        {
             repeater.setContentHandler(handler);
         }
 
-        public ContentHandler getContentHandler() {
+        public ContentHandler getContentHandler()
+        {
             return repeater.getContentHandler();
         }
 
-        public void setErrorHandler(ErrorHandler handler) {
+        public void setErrorHandler(ErrorHandler handler)
+        {
             this.errorHandler = handler;
         }
 
-        public ErrorHandler getErrorHandler() {
+        public ErrorHandler getErrorHandler()
+        {
             return errorHandler;
         }
 
-        public void parse(InputSource input) throws SAXException {
+        public void parse(InputSource input) throws SAXException
+        {
             parse();
         }
 
-        public void parse(String systemId) throws SAXException {
+        public void parse(String systemId) throws SAXException
+        {
             parse();
         }
 
-        public void parse() throws SAXException {
+        public void parse() throws SAXException
+        {
             // parses from a StAX reader and generates SAX events which
             // go through the repeater and are forwarded to the appropriate
             // component
-            try {
+            try
+            {
                 handler.bridge();
-            } catch( XMLStreamException e ) {
+            }
+            catch (XMLStreamException e)
+            {
                 // wrap it in a SAXException
-                SAXParseException se =
-                        new SAXParseException(
-                        e.getMessage(),
-                        null,
-                        null,
-                        e.getLocation().getLineNumber(),
-                        e.getLocation().getColumnNumber(),
-                        e);
-                
+                SAXParseException se = new SAXParseException(e.getMessage(), null, null, e.getLocation()
+                    .getLineNumber(), e.getLocation().getColumnNumber(), e);
+
                 // if the consumer sets an error handler, it is our responsibility
                 // to notify it.
-                if(errorHandler!=null)
-                    errorHandler.fatalError(se);
-                
+                if (errorHandler != null) errorHandler.fatalError(se);
+
                 // this is a fatal error. Even if the error handler
                 // returns, we will abort anyway.
                 throw se;
-                
+
             }
         }
     }
-    
+
 }
-
-
