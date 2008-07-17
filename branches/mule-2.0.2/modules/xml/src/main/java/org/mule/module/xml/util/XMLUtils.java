@@ -35,6 +35,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.io.output.ByteArrayOutputStream;
@@ -43,6 +44,7 @@ import org.dom4j.DocumentException;
 import org.dom4j.io.DOMReader;
 import org.dom4j.io.DocumentSource;
 import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
 
 /**
  * General utility methods for working with XML.
@@ -144,8 +146,9 @@ public class XMLUtils extends org.mule.util.XMLUtils
         {                
             return reader.read((org.xml.sax.InputSource) obj);
         }
-        else if (obj instanceof javax.xml.transform.Source || obj instanceof XMLStreamReader)
+        else if (obj instanceof javax.xml.transform.Source || obj instanceof javax.xml.stream.XMLStreamReader)
         {                
+            // TODO Find a more direct way to do this
             XmlToDomDocument tr = new XmlToDomDocument();
             tr.setReturnClass(org.dom4j.Document.class);
             return (org.dom4j.Document) tr.transform(obj);
@@ -246,7 +249,7 @@ public class XMLUtils extends org.mule.util.XMLUtils
      */ 
     public static javax.xml.transform.Source toXmlSource(javax.xml.stream.XMLInputFactory xmlInputFactory, boolean useStaxSource, Object src) throws Exception
     {
-        if (src instanceof Source)
+        if (src instanceof javax.xml.transform.Source)
         {
             return (Source) src;
         }
@@ -274,6 +277,11 @@ public class XMLUtils extends org.mule.util.XMLUtils
         {
             return new DocumentSource((org.dom4j.Document) src);
         }
+        else if (src instanceof org.xml.sax.InputSource)
+        {
+            return new SAXSource((InputSource) src);
+        }
+        // TODO MULE-3555
         else if (src instanceof XMLStreamReader)
         {
             XMLStreamReader xsr = (XMLStreamReader) src;
