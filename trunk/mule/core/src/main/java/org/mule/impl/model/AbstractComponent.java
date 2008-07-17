@@ -39,7 +39,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.commons.logging.Log;
@@ -611,24 +610,10 @@ public abstract class AbstractComponent implements UMOComponent
             endpoint = (UMOEndpoint) it.next();
             AbstractConnector connector = (AbstractConnector) endpoint.getConnector();
             UMOMessageReceiver receiver = connector.getReceiver(this,endpoint);
-            if (receiver != null)
+            if (receiver != null && connector.isConnected())
             {
                 try
                 {        
-                    if (!connector.isConnected())
-                    {
-                        logger.debug("Listener is waiting for connector to connect");
-                        //Wait for 10 seconds - only for race conditions when Connection Strategy doThreding=true
-                        if (connector.getConnectedSemaphore().tryAcquire(10,TimeUnit.SECONDS))
-                        {
-                            connector.getConnectedSemaphore().release();
-                            logger.debug("Connector connected - Listener will now connect");
-                        }
-                        else
-                        {
-                            logger.debug("Connector still not connected - Listener may have trouble connecting.");
-                        }
-                    }
                     receiver.connect();
                 }
                 catch (Exception e)

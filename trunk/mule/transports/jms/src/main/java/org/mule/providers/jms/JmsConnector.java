@@ -18,6 +18,7 @@ import org.mule.impl.internal.notifications.ConnectionNotificationListener;
 import org.mule.impl.internal.notifications.NotificationException;
 import org.mule.providers.AbstractConnector;
 import org.mule.providers.ConnectException;
+import org.mule.providers.ConnectionStrategy;
 import org.mule.providers.FatalConnectException;
 import org.mule.providers.ReplyToHandler;
 import org.mule.providers.jms.i18n.JmsMessages;
@@ -57,6 +58,8 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
+import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicInteger;
+
 import org.apache.commons.lang.UnhandledException;
 
 /**
@@ -73,6 +76,8 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
         ExceptionHelper.registerExceptionReader(new JmsExceptionReader());
     }
 
+    private AtomicInteger receiverReportedExceptionCount = new AtomicInteger();
+    
     private String connectionFactoryJndiName;
 
     private ConnectionFactory connectionFactory;
@@ -278,29 +283,42 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
             {
                 public void onException(JMSException jmsException)
                 {
-                    logger.debug("About to recycle myself due to remote JMS connection shutdown.");
                     final JmsConnector jmsConnector = JmsConnector.this;
-                    try
+                    int expectedReceiverCount = jmsConnector.getReceivers().size() * jmsConnector.getNumberOfConcurrentTransactedReceivers();
+                    
+                    if (logger.isDebugEnabled())
                     {
-                        jmsConnector.stopConnector();
-                        jmsConnector.initialised.set(true);
+                        logger.debug("About to recycle myself due to remote JMS connection shutdown but need "
+                            + "to wait for all active receivers to report connection loss. Receiver count: " 
+                            + (receiverReportedExceptionCount.get() + 1) + '/' + expectedReceiverCount);
                     }
-                    catch (UMOException e)
+                    
+                    if (receiverReportedExceptionCount.incrementAndGet() == expectedReceiverCount)
                     {
-                        logger.warn(e.getMessage(), e);
-                    }
-
-                    try
-                    {
-                        jmsConnector.startConnector();
-                    }
-                    catch (FatalConnectException fcex)
-                    {
-                        logger.fatal("Failed to reconnect to JMS server. I'm giving up.");
-                    }
-                    catch (UMOException umoex)
-                    {
-                        throw new UnhandledException("Failed to recover a connector.", umoex);
+                        receiverReportedExceptionCount.set(0);
+                    
+                        try
+                        {
+                            jmsConnector.stopConnector();
+                            jmsConnector.initialised.set(true);
+                        }
+                        catch (UMOException e)
+                        {
+                            logger.warn(e.getMessage(), e);
+                        }
+    
+                        try
+                        {
+                            jmsConnector.startConnector();
+                        }
+                        catch (FatalConnectException fcex)
+                        {
+                            logger.fatal("Failed to reconnect to JMS server. I'm giving up.");
+                        }
+                        catch (UMOException umoex)
+                        {
+                            throw new UnhandledException("Failed to recover a connector.", umoex);
+                        }
                     }
                 }
             });
@@ -818,7 +836,7 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
     {
         this.maxRedelivery = maxRedelivery;
     }
-
+    
     public String getRedeliveryHandler()
     {
         return redeliveryHandler;
@@ -1120,5 +1138,10 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
                 logger.error("Faled to delete a temporary topic " + topicName, e);
             }
         }
+    }
+    
+    public ConnectionStrategy getConnectionStrategy()
+    {
+        return connectionStrategy;
     }
 }
