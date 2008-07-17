@@ -90,7 +90,7 @@ public abstract class AbstractConnectionStrategy implements ConnectionStrategy
         }
     }
     
-    private void connectAfterServerStartup(final UMOConnectable connectable) throws FatalConnectException
+    protected void connectAfterServerStartup(final UMOConnectable connectable) throws FatalConnectException
     {
         isConnecting = true;
         doThreading = false;
@@ -170,7 +170,7 @@ public abstract class AbstractConnectionStrategy implements ConnectionStrategy
         }
     }
     
-    private void connectImmediately(UMOConnectable connectable) throws FatalConnectException
+    protected void connectImmediately(UMOConnectable connectable) throws FatalConnectException
     {
         try
         {
