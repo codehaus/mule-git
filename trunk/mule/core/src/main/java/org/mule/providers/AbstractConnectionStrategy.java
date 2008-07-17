@@ -25,21 +25,13 @@ import javax.resource.spi.work.WorkException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-/**
- * TODO document
- */
 public abstract class AbstractConnectionStrategy implements ConnectionStrategy
 {
-    /**
-     * logger used by this class
-     */
     protected transient Log logger = LogFactory.getLog(getClass());
 
-    private volatile boolean doThreading = false;
-    
-    private volatile boolean isConnecting = false;
-  
-    private ThreadLocal isInitialThread = new ThreadLocal()
+    protected final Object reconnectLock = new Object();
+
+    protected ThreadLocal isInitialThread = new ThreadLocal()
     {
       protected synchronized Object initialValue()
       {
@@ -47,28 +39,40 @@ public abstract class AbstractConnectionStrategy implements ConnectionStrategy
       }
     };
     
-    private final Object reconnectLock = new Object();
-
+    private volatile boolean doThreading = false;
+    
+    private volatile boolean isConnecting = false;
+  
     public final void connect(UMOConnectable connectable) throws FatalConnectException
     {
         if (doThreading && !isConnecting)
         {
             connectAfterServerStartup(connectable);
         }
-        else if (!((Boolean) isInitialThread.get()).booleanValue() || !isConnecting)
+        else if (!isInitialThread() || !isConnecting)
         {
             connectImmediately(connectable);
         }
     }
 
+    public void setDoThreading(boolean doThreading)
+    {
+        this.doThreading = doThreading;
+    }
+    
     public boolean isDoThreading()
     {
         return doThreading;
     }
 
-    public void setDoThreading(boolean doThreading)
+    public boolean isConnecting()
     {
-        this.doThreading = doThreading;
+        return isConnecting;
+    }
+
+    public boolean isInitialThread()
+    {
+        return ((Boolean) isInitialThread.get()).booleanValue();
     }
 
     protected abstract void doConnect(UMOConnectable connectable) throws FatalConnectException;
@@ -77,7 +81,7 @@ public abstract class AbstractConnectionStrategy implements ConnectionStrategy
      * Resets any state stored in the retry strategy
      */
     public abstract void resetState();
-
+    
     protected String getDescription(UMOConnectable connectable)
     {
         if (connectable instanceof UMOMessageReceiver)
