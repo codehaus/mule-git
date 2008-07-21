@@ -42,7 +42,6 @@
                             <goal>attached</goal>
                         </goals>
                         <configuration>
-                            <finalName>${pom.artifactId}</finalName>
                             <descriptors>
                                 <descriptor>assembly.xml</descriptor>
                             </descriptors>
@@ -66,7 +65,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <projectOutputFile>${pom.artifactId}.zip</projectOutputFile>
+                    <projectOutputFile>${pom.artifactId}-${pom.version}.zip</projectOutputFile>
                     <whitelist>assembly-whitelist.txt</whitelist>
                 </configuration>
             </plugin>
