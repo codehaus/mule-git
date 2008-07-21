@@ -1,0 +1,8 @@
+#
+# Test cases listed in this file are not run.
+#
+
+# Andrew C local
+#org.mule.transport.udp.functional.UdpConnectorFunctionalTestCase
+
+org.mule.transport.udp.functional.UdpRoundTripTestCase
