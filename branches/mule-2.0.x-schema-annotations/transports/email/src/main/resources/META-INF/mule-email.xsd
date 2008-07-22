@@ -11,6 +11,17 @@
     <xsd:import namespace="http://www.mulesource.org/schema/mule/core/2.0" 
                 schemaLocation="http://www.mulesource.org/schema/mule/core/2.0/mule.xsd" />
 
+    <xsd:annotation>
+            <xsd:documentation>The email transport supplies various email connectivity options.   
+            </xsd:documentation>
+            <xsd:appinfo>
+                <schemadoc:page-title>Email Transport</schemadoc:page-title>
+                <schemadoc:transport-features receiveEvents="true" dispatchEvents="true" responseEvents="true"
+	requestEvents="true" transactions="false" streaming="false">
+                </schemadoc:transport-features>
+            </xsd:appinfo>
+	</xsd:annotation>
+            
     <xsd:complexType name="emailDownloadConnectorType">
         <xsd:complexContent>
             <xsd:extension base="mule:connectorType">
@@ -60,10 +71,40 @@
         <xsd:attribute name="port" type="mule:substitutablePortNumber"/>
     </xsd:attributeGroup>
 
-    <xsd:element name="email-to-string-transformer" type="mule:abstractTransformerType" substitutionGroup="mule:abstract-transformer"/>
-    <xsd:element name="string-to-email-transformer" type="mule:abstractTransformerType" substitutionGroup="mule:abstract-transformer"/>
-    <xsd:element name="object-to-mime-transformer" type="mule:abstractTransformerType" substitutionGroup="mule:abstract-transformer"/>
-    <xsd:element name="mime-to-bytes-transformer" type="mule:abstractTransformerType" substitutionGroup="mule:abstract-transformer"/>
-    <xsd:element name="bytes-to-mime-transformer" type="mule:abstractTransformerType" substitutionGroup="mule:abstract-transformer"/>
+    <xsd:element name="email-to-string-transformer" type="mule:abstractTransformerType" substitutionGroup="mule:abstract-transformer">
+        <xsd:annotation>
+            <xsd:documentation>
+                Converts an email message to string format.
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="string-to-email-transformer" type="mule:abstractTransformerType" substitutionGroup="mule:abstract-transformer">
+        <xsd:annotation>
+            <xsd:documentation>
+                Converts a string message to email format.
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="object-to-mime-transformer" type="mule:abstractTransformerType" substitutionGroup="mule:abstract-transformer">
+        <xsd:annotation>
+            <xsd:documentation>
+                Converts an object to MIME format.
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="mime-to-bytes-transformer" type="mule:abstractTransformerType" substitutionGroup="mule:abstract-transformer">
+        <xsd:annotation>
+            <xsd:documentation>
+                Converts a MIME message to a byte array.
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="bytes-to-mime-transformer" type="mule:abstractTransformerType" substitutionGroup="mule:abstract-transformer">
+        <xsd:annotation>
+            <xsd:documentation>
+                Converts a byte array message to MIME format.
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
 
 </xsd:schema>
