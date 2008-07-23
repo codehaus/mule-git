@@ -37,13 +37,15 @@
 		</xsd:annotation>
 		<xsd:complexContent>
 			<xsd:extension base="mule:connectorType">
-				<xsd:group ref="queryElements">
-					<xsd:annotation>
-						<xsd:documentation>Defines a set of queries. Each query has a key
-							and a value (SQL statement). Queries are later referenced by
-							key.</xsd:documentation>
-					</xsd:annotation>
-				</xsd:group>
+        		<xsd:sequence>
+                    <xsd:element ref="abstract-query" minOccurs="0" maxOccurs="unbounded">
+                        <xsd:annotation>
+                            <xsd:documentation>Defines a set of queries. Each query has a key
+                                and a value (SQL statement). Queries are later referenced by
+                                key.</xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
+        		</xsd:sequence>
 				<xsd:attribute name="pollingFrequency"
 					type="mule:substitutableLong">
 					<xsd:annotation>
@@ -97,7 +99,9 @@
 	<xsd:complexType name="inboundEndpointType">
 		<xsd:complexContent>
 			<xsd:extension base="mule:inboundEndpointType">
-				<xsd:group ref="queryElements"/>
+        		<xsd:sequence>
+                    <xsd:element ref="abstract-query" minOccurs="0" maxOccurs="unbounded"/>
+        		</xsd:sequence>
 				<xsd:attributeGroup ref="addressAttributes"/>
 			</xsd:extension>
 		</xsd:complexContent>
@@ -113,7 +117,9 @@
 	<xsd:complexType name="outboundEndpointType">
 		<xsd:complexContent>
 			<xsd:extension base="mule:outboundEndpointType">
-				<xsd:group ref="queryElements"/>
+        		<xsd:sequence>
+                    <xsd:element ref="abstract-query" minOccurs="0" maxOccurs="unbounded"/>
+        		</xsd:sequence>
 				<xsd:attributeGroup ref="addressAttributes"/>
 			</xsd:extension>
 		</xsd:complexContent>
@@ -124,38 +130,50 @@
 	<xsd:complexType name="globalEndpointType">
 		<xsd:complexContent>
 			<xsd:extension base="mule:globalEndpointType">
-				<xsd:group ref="queryElements"/>
+        		<xsd:sequence>
+                    <xsd:element ref="abstract-query" minOccurs="0" maxOccurs="unbounded"/>
+        		</xsd:sequence>
 				<xsd:attributeGroup ref="addressAttributes"/>
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
 	
+    <!-- Define a type hierarchy so that the EE transport can re-define the "query" element. -->
+    <xsd:element name="abstract-query" abstract="true" type="abstractQueryType"/>
+    <xsd:complexType name="abstractQueryType">
+        <xsd:complexContent>
+            <xsd:extension base="mule:keyValueType"/>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <xsd:element name="query" type="queryType" substitutionGroup="abstract-query">
+        <xsd:annotation>
+            <xsd:documentation>Assigns a name (key) to a query (value). Queries
+                are then referenced by key, such as jdbc://myQuery for
+                <![CDATA[<jdbc:query key="myQuery" value="select * from table"/>]]>
+                </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="queryType">
+        <xsd:complexContent>
+            <xsd:extension base="abstractQueryType"/>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
 	<xsd:attributeGroup name="addressAttributes">
 		<xsd:attribute name="queryKey" type="xsd:string"/>
 		<xsd:attribute name="pollingFrequency" type="mule:substitutableLong"/>
 	</xsd:attributeGroup>
 	
-	<xsd:element name="transaction" type="mule:baseTransactionType"
-		substitutionGroup="mule:abstract-transaction">
+	<xsd:element name="transaction" type="transactionType" substitutionGroup="mule:abstract-transaction">
 		<xsd:annotation>
 			<xsd:documentation>Standard Mule transaction configuration. See the following for usage: http://www.mulesource.org/display/MULE2USER/Transaction+Management 
 			</xsd:documentation>
 		</xsd:annotation>
 	</xsd:element>
-	
-	<xsd:group name="queryElements">
-		<xsd:sequence>
-			<xsd:element name="query" type="mule:keyValueType" minOccurs="0"
-				maxOccurs="unbounded">
-				<xsd:annotation>
-					<xsd:documentation>Assigns a name (key) to a query (value). Queries
-						are then referenced by key, such as jdbc://myQuery for
-						<![CDATA[<jdbc:query key="myQuery" value="select * from table"/>]]>
-						</xsd:documentation>
-				</xsd:annotation>
-			</xsd:element>
-		</xsd:sequence>
-	</xsd:group>
-	
-	
+    <xsd:complexType name="transactionType">
+        <xsd:complexContent>
+            <xsd:extension base="mule:baseTransactionType"/>
+        </xsd:complexContent>
+    </xsd:complexType>    	
 </xsd:schema>
