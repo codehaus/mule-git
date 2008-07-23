@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.mule</groupId>
         <artifactId>mule</artifactId>
- <version>2.0.3-SNAPSHOT</version>
+        <version>2.0.3-SNAPSHOT</version>
     </parent>
     <groupId>org.mule.distributions</groupId>
     <artifactId>mule-distributions</artifactId>
@@ -14,11 +14,6 @@
     <name>Mule Distributions</name>
 
     <distributionManagement>
-        <repository>
-            <id>mule-dist-releases</id>
-            <name>Mule Distributions Release Repository</name>
-            <url>dav:https://dav.codehaus.org/dist/mule/</url>
-        </repository>
         <snapshotRepository>
             <id>mule-dist-snapshots</id>
             <name>Mule Distributions Snapshot Repository</name>
