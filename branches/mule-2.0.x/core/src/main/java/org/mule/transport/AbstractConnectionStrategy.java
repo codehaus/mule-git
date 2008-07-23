@@ -112,7 +112,14 @@ public abstract class AbstractConnectionStrategy implements ConnectionStrategy, 
 
     public int hashCode()
     {
-        return ClassUtils.hash(new Object[]{doThreading ? Boolean.TRUE : Boolean.FALSE, muleContext.getWorkManager()});
+        if (muleContext != null)
+        {
+            return ClassUtils.hash(new Object[]{doThreading ? Boolean.TRUE : Boolean.FALSE, muleContext.getWorkManager()});
+        }
+        else
+        {
+            return ClassUtils.hash(new Object[]{doThreading ? Boolean.TRUE : Boolean.FALSE});
+        }
     }
 
     public boolean equals(Object obj)
