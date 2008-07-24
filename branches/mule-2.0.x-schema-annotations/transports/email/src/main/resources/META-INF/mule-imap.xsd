@@ -14,8 +14,28 @@
                 schemaLocation="http://www.mulesource.org/schema/mule/email/2.0/mule-email.xsd"/>
 
     <xsd:import namespace="http://www.mulesource.org/schema/mule/core/2.0"/>
-
-    <xsd:element name="connector" type="imapConnectorType" substitutionGroup="mule:abstract-connector"/>
+        
+    <xsd:annotation>
+        <xsd:documentation>The IMAP transport can be used to for receiving messages from IMAP inboxes using the {{javax.mail}} API. The [IMAPS Transport] is similar but uses secure connections over SSL/TLS.</xsd:documentation>
+        <xsd:appinfo>
+            <schemadoc:short-name>imap</schemadoc:short-name>
+            <schemadoc:page-title>IMAP Transport</schemadoc:page-title>
+            <schemadoc:transport-features receiveEvents="true" dispatchEvents="true" responseEvents="true"
+                                          requestEvents="true"
+                                          transactions="false" streaming="true">
+                <schemadoc:inboundMEPs in-only="true" in-optional-out="true" in-out="true"/>
+                <schemadoc:outboundMEPs out-only="true" out-in="true" out-optional-in="true"/>
+            </schemadoc:transport-features>
+        </xsd:appinfo>
+    </xsd:annotation>
+        
+    <xsd:element name="connector" type="imapConnectorType" substitutionGroup="mule:abstract-connector">
+        <xsd:annotation>
+            <xsd:documentation>
+                Allows Mule to communicate over IMAP. 
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
     <xsd:complexType name="imapConnectorType">
         <xsd:complexContent>
             <xsd:extension base="email:emailDownloadConnectorType"/>

@@ -16,7 +16,7 @@
     <xsd:element name="connector" substitutionGroup="mule:abstract-connector">
         <xsd:annotation>
             <xsd:documentation>
-                Connect Mule to an SSL socket, to send or receive data via the network.
+                Connects Mule to an SSL socket to send or receive data via the network.
             </xsd:documentation>
         </xsd:annotation>
         <xsd:complexType>

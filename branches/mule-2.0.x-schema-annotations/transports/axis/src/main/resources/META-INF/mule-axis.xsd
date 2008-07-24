@@ -9,7 +9,19 @@
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
     <xsd:import namespace="http://www.mulesource.org/schema/mule/core/2.0" 
                 schemaLocation="http://www.mulesource.org/schema/mule/core/2.0/mule.xsd" />
-
+    <xsd:annotation>
+            <xsd:documentation>The Axis transport allows Mule managed components to be published as Axis services and allows components to invoke web services using Axis client calls.  
+            </xsd:documentation>
+            <xsd:appinfo>
+                <schemadoc:page-title> Axis Transport</schemadoc:page-title>
+                <schemadoc:transport-features receiveEvents="true" dispatchEvents="true" responseEvents="true"
+	requestEvents="true"
+	transactions="false" streaming="false">
+                    <schemadoc:inboundMEPs in-only="true"/>
+                    <schemadoc:outboundMEPs out-only="true"/>
+                </schemadoc:transport-features>
+            </xsd:appinfo>
+	</xsd:annotation>
     <xsd:element name="connector" type="axisConnectorType" substitutionGroup="mule:abstract-connector">
         <xsd:annotation>
             <xsd:documentation>
@@ -50,8 +62,8 @@
                     <xsd:annotation>
                         <xsd:documentation>
                             Use this property to configure whether AxisServer should automatically map types.
-                            This property has only effect if you don't provide your own axisServer via the
-                            'axisServer-ref' property.
+                            This property only takes effect if you do not provide your own axisServer via the
+                            axisServer-ref property.
                         </xsd:documentation>
                     </xsd:annotation>
                 </xsd:attribute>
@@ -212,8 +224,7 @@
     <xsd:element name="wrapper-component" type="wrapperComponentType" substitutionGroup="mule:abstract-component">
         <xsd:annotation>
             <xsd:documentation>
-                The WebServiceWrapperComponent class allows you to send 
-                the result of a web service call to another endpoint. 
+                The WebServiceWrapperComponent class allows you to send the result of a web service call to another endpoint. 
             </xsd:documentation>
         </xsd:annotation>
     </xsd:element>

@@ -18,7 +18,7 @@
                 <xsd:attribute name="messageDelayTime" type="mule:substitutableLong">
                     <xsd:annotation>
                         <xsd:documentation>
-                            Delay (ms) before printing prompt to stdout.
+                            Delay in milliseconds before printing the prompt to stdout.
                         </xsd:documentation>
                     </xsd:annotation>
                 </xsd:attribute>
@@ -53,7 +53,7 @@
                 <xsd:attribute name="resourceBundle" type="xsd:string">
                     <xsd:annotation>
                         <xsd:documentation>
-                            Resource bundle to provide prompt, with promptMessageCode.
+                            Resource bundle to provide prompt with promptMessageCode.
                         </xsd:documentation>
                     </xsd:annotation>
                 </xsd:attribute>

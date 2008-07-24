@@ -42,21 +42,21 @@
                 <xsd:attribute name="checkFrequency" type="mule:substitutableLong">
                     <xsd:annotation>
                         <xsd:documentation>
-                            Period (ms) between poll connections to the server.
+                            Period (ms) between poll connections to the server. Default is 60000.
                         </xsd:documentation>
                     </xsd:annotation>
                 </xsd:attribute>
                 <xsd:attribute name="mailboxFolder" type="xsd:NMTOKEN">
                     <xsd:annotation>
                         <xsd:documentation>
-                            The folder to check for email.
+                            The remote folder to check for email. Default is INBOX.
                         </xsd:documentation>
                     </xsd:annotation>
                 </xsd:attribute>
                 <xsd:attribute name="deleteReadMessages" type="mule:substitutableBoolean">
                     <xsd:annotation>
                         <xsd:documentation>
-                            Whether to delete messages from the server when they have been downloaded.
+                            Whether to delete messages from the server when they have been downloaded. The default is true. If set to false, the messages are set to SEEN.
                         </xsd:documentation>
                     </xsd:annotation>
                 </xsd:attribute>

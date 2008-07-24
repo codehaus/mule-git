@@ -16,9 +16,7 @@
     <xsd:element name="connector" type="servletConnectorType" substitutionGroup="mule:abstract-connector">
         <xsd:annotation>
             <xsd:documentation>
-                Servlet connector is a channel adapter between Mule and a servlet
-                engine. It allows the MuleReceiverServlet to look up components interested in
-                requests it receives via the servlet container.
+                Servlet connector is a channel adapter between Mule and a servlet engine. It allows the MuleReceiverServlet to look up components interested in requests it receives via the servlet container.
             </xsd:documentation>
         </xsd:annotation>
     </xsd:element>
@@ -28,8 +26,7 @@
                 <xsd:attribute name="servletUrl">
                     <xsd:annotation>
                         <xsd:documentation>
-                            The real URL that the servlet container is bound on.
-                            If this is not set the wsdl may not be generated correctly
+                            The real URL on which the servlet container is bound. If this is not set, the WSDL may not be generated correctly.
                         </xsd:documentation>
                     </xsd:annotation>
                 </xsd:attribute>

@@ -32,11 +32,7 @@
     <xsd:element name="connector" type="jettyConnectorType" substitutionGroup="mule:abstract-connector">
         <xsd:annotation>
             <xsd:documentation>
-                Allows Mule to expose Mule Services over http using a Jttp Http server. A single Jetty server is created
-                for each connector instance. One connector can serve many endpoints. Users should rarely need to
-                have more than one Jetty connector.
-                The Jetty connector can be configured using a Jetty Xml config file, but the default configuration
-                is sufficient for most scenarios.
+                Allows Mule to expose Mule Services over HTTPS using a Jetty HTTP server. A single Jetty server is created for each connector instance. One connector can serve many endpoints. Users should rarely need to have more than one Jetty connector. The Jetty connector can be configured using a Jetty XML config file, but the default configuration is sufficient for most scenarios.
             </xsd:documentation>
         </xsd:annotation>
     </xsd:element>
@@ -51,7 +47,8 @@
                 </xsd:sequence>
                 <xsd:attribute name="configFile" type="xsd:string">
                     <xsd:annotation>
-                        <xsd:documentation>The location of the Jetty config file to configure this connector with.
+                        <xsd:documentation>
+                            The location of the Jetty config file to configure this connector with.
                         </xsd:documentation>
                     </xsd:annotation>
                 </xsd:attribute>
@@ -61,7 +58,8 @@
 
     <xsd:element name="inbound-endpoint" type="inboundEndpointType" substitutionGroup="mule:abstract-inbound-endpoint">
         <xsd:annotation>
-            <xsd:documentation>Allows a Mule service to receive requests over Http using a Jetty server.
+            <xsd:documentation>
+                Allows a Mule service to receive requests over HTTPS using a Jetty server.
             </xsd:documentation>
         </xsd:annotation>
     </xsd:element>
@@ -73,8 +71,8 @@
 
     <xsd:element name="endpoint" type="globalEndpointType" substitutionGroup="mule:abstract-global-endpoint">
         <xsd:annotation>
-            <xsd:documentation>Allows users to configure a global Jetty Http endpoint. Note that this can only ne used
-                as an inbound-endpoint reference.
+            <xsd:documentation>
+                Allows users to configure a global Jetty HTTPS endpoint. Note that this can only be used as an inbound-endpoint reference.
             </xsd:documentation>
         </xsd:annotation>
     </xsd:element>
