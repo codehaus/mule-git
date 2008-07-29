@@ -15,7 +15,6 @@
 
     <properties>
         <webappName>mule-examples</webappName>
-        <jettyVersion>6.1.9</jettyVersion>
     </properties>
 
     <build>
@@ -153,7 +152,6 @@
         <dependency>
           <groupId>org.mortbay.jetty</groupId>
           <artifactId>jetty</artifactId>
-          <version>${jettyVersion}</version>
           <scope>test</scope>
         </dependency>
         <dependency>
