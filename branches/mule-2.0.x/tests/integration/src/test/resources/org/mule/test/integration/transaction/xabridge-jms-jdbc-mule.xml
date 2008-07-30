@@ -21,12 +21,13 @@
     -->
 
     <!-- JOTM Transaction manager -->
-    <spring:bean name="ArjunaFactory" class="org.mule.module.jboss.transactions.JBossArjunaTransactionManagerFactory"/>
-
+    <spring:bean name="ArjunaFactory" class="org.mule.module.jboss.transaction.JBossArjunaTransactionManagerFactory"/>
     <spring:bean id="arjunaTM" factory-bean="ArjunaFactory" factory-method="create"/>
 
-
-    <context:property-placeholder location="classpath:derby.properties"/>
+    <spring:bean id="property-placeholder" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <spring:property name="placeholderPrefix" value="#{"/>
+        <spring:property name="location" value="classpath:derby.properties"/>
+    </spring:bean>
 
     <!-- Data Source -->
     <spring:bean id="jdbcDataSource"
@@ -39,7 +40,7 @@
             <spring:value>org.apache.derby.jdbc.EmbeddedDriver</spring:value>
         </spring:property>
         <spring:property name="url">
-            <spring:value>${database.connection}</spring:value>
+            <spring:value>#{database.connection}</spring:value>
         </spring:property>
     </spring:bean>
     <!--
@@ -58,9 +59,7 @@
     <!-- Transaction manager -->
     <jbossts:transaction-manager/>
 
-    <custom-transaction-factory name="xaTxFactory" class="org.mule.transaction.XaTransactionFactory"/>
-
-    <jms:activemq-connector name="jmsConnector" eagerConsumer="false"/>
+    <jms:activemq-xa-connector name="jmsConnector" eagerConsumer="false"/>
 
     <jdbc:connector name="jdbcConnector" pollingFrequency="1000" dataSource-ref="jdbcDataSource">
         <receiver-threading-profile maxThreadsActive="2" maxThreadsIdle="2" maxBufferSize="1" doThreading="false" poolExhaustedAction="WAIT"/>
@@ -75,15 +74,15 @@
         <service name="JdbcToJms">
             <inbound>
                 <jdbc:inbound-endpoint address="jdbc://getTest?type=1">
-                    <jdbc:transaction action="ALWAYS_BEGIN"/>
-                        <transaction-factory ref="xaTxFactory"/>
-                    </jdbc:transaction>
+                    <xa-transaction action="ALWAYS_BEGIN"/>
                 </jdbc:inbound-endpoint>
             </inbound>
             <component class="org.mule.test.integration.transaction.XABridgeComponent"/>
             <outbound>
                 <outbound-pass-through-router>
-                    <outbound-endpoint address="jms://my.queue" />
+                    <outbound-endpoint address="jms://my.queue">
+                        <xa-transaction action="ALWAYS_JOIN"/>
+                    </outbound-endpoint>
                 </outbound-pass-through-router>
             </outbound>
         </service>
@@ -91,13 +90,15 @@
         <service name="JmsToJdbc">
             <inbound>
                 <jms:inbound-endpoint address="jms://my.queue?frequency=60000&amp;reuseSession=false">
-                    <jms:xa-transaction action="ALWAYS_BEGIN"/>
+                    <xa-transaction action="ALWAYS_BEGIN"/>
                 </jms:inbound-endpoint>
             </inbound>
             <component class="org.mule.test.integration.transaction.XABridgeComponent"/>
             <outbound>
                 <outbound-pass-through-router>
-                    <outbound-endpoint address="jdbc://writeTest?type=2" />
+                    <outbound-endpoint address="jdbc://writeTest?type=2">
+                        <xa-transaction action="ALWAYS_JOIN"/>
+                    </outbound-endpoint>
                 </outbound-pass-through-router>
             </outbound>
         </service>

@@ -23,6 +23,7 @@ import org.apache.commons.dbutils.handlers.ArrayListHandler;
 
 public class XABridgeJmsJdbcTestCase extends FunctionalTestCase
 {
+    private static final int NUMBER_OF_MESSAGES = 1;
     private static String connectionString;
     
     protected String getConfigResources()
@@ -100,25 +101,27 @@ public class XABridgeJmsJdbcTestCase extends FunctionalTestCase
         List results = execSqlQuery("SELECT * FROM TEST");
         assertEquals(0, results.size());
 
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < NUMBER_OF_MESSAGES; i++)
         {
             execSqlUpdate("INSERT INTO TEST(TYPE, DATA) VALUES (1, 'Test " + i + "')");
         }
         results = execSqlQuery("SELECT * FROM TEST WHERE TYPE = 1");
-        assertEquals(10, results.size());
+        assertEquals(NUMBER_OF_MESSAGES, results.size());
 
         long t0 = System.currentTimeMillis();
         while (true)
         {
             results = execSqlQuery("SELECT * FROM TEST WHERE TYPE = 2");
             logger.info("Results found: " + results.size());
-            if (results.size() >= 10)
+            if (results.size() >= NUMBER_OF_MESSAGES)
             {
                 break;
             }
             assertTrue(System.currentTimeMillis() - t0 < 20000);
             Thread.sleep(500);
         }
+        
+        assertTrue(results.size() >= NUMBER_OF_MESSAGES);
     }
 
     public void testXaBridgeWithoutRollbacks() throws Exception
