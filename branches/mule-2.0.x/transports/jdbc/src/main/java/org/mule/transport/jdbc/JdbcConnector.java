@@ -22,7 +22,9 @@ import org.mule.config.ExceptionHelper;
 import org.mule.config.i18n.MessageFactory;
 import org.mule.transaction.TransactionCoordination;
 import org.mule.transport.AbstractConnector;
+import org.mule.transport.jdbc.sqlstrategy.SQLStrategyFactory;
 import org.mule.transport.jdbc.xa.DataSourceWrapper;
+import org.mule.util.StringUtils;
 import org.mule.util.expression.ExpressionEvaluatorManager;
 
 import java.sql.Connection;
@@ -48,6 +50,7 @@ public class JdbcConnector extends AbstractConnector
     public static final long DEFAULT_POLLING_FREQUENCY = 1000;
 
     private static final Pattern STATEMENT_ARGS = Pattern.compile("\\$\\{[^\\}]*\\}");
+    protected SQLStrategyFactory sqlStrategyFactory = new SQLStrategyFactory(this);
 
     /* Register the SQL Exception reader if this class gets loaded */
     static
@@ -403,5 +406,26 @@ public class JdbcConnector extends AbstractConnector
     public void setQueries(Map queries)
     {
         this.queries = queries;
+    }
+	public SQLStrategyFactory getSqlStrategyFactory() 
+	{
+		return sqlStrategyFactory;
+	}
+	
+    public String getStatement(ImmutableEndpoint endpoint)
+    {
+        String writeStmt = endpoint.getEndpointURI().getAddress();
+        String str;
+        if ((str = getQuery(endpoint, writeStmt)) != null)
+        { 
+            writeStmt = str;
+        }
+        writeStmt = StringUtils.trimToEmpty(writeStmt);
+        if (StringUtils.isBlank(writeStmt))
+        {
+            throw new IllegalArgumentException("Missing statement");
+        }
+        
+        return writeStmt;
     }
 }
