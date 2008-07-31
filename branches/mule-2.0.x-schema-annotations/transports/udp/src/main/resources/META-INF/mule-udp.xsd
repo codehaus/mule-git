@@ -2,6 +2,7 @@
 <xsd:schema xmlns="http://www.mulesource.org/schema/mule/udp/2.0"
             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
             xmlns:mule="http://www.mulesource.org/schema/mule/core/2.0"
+            xmlns:schemadoc="http://www.mulesource.org/schema/mule/schemadoc/2.0"
             targetNamespace="http://www.mulesource.org/schema/mule/udp/2.0"
             elementFormDefault="qualified"
             attributeFormDefault="unqualified">
@@ -10,6 +11,21 @@
     <xsd:import namespace="http://www.mulesource.org/schema/mule/core/2.0" 
                 schemaLocation="http://www.mulesource.org/schema/mule/core/2.0/mule.xsd" />
 
+       //update the following info in the annotation to reflect the actual settings for this transport        
+        <xsd:annotation>
+            <xsd:documentation>The UDP transport can send and receive Mule events as Datagram packets.
+            </xsd:documentation>
+            <xsd:appinfo>
+                <schemadoc:page-title>UDP Transport</schemadoc:page-title>
+                <schemadoc:transport-features receiveEvents="true" dispatchEvents="true" responseEvents="false"
+	requestEvents="true"
+	transactions="true" streaming="false">
+                    <schemadoc:inboundMEPs in-only="true"/>
+                    <schemadoc:outboundMEPs out-only="true"/>
+                </schemadoc:transport-features>
+            </xsd:appinfo>
+	</xsd:annotation>
+            
     <xsd:element name="connector" type="udpConnectorType" substitutionGroup="mule:abstract-connector"/>
 
     <xsd:complexType name="udpConnectorType">
