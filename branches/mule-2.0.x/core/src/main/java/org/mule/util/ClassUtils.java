@@ -505,8 +505,6 @@ public class ClassUtils extends org.apache.commons.lang.ClassUtils
                                              Collection ignoredMethodNames,
                                              WildcardFilter filter)
     {
-
-
         List result = new ArrayList();
 
         if (ignoredMethodNames == null)
@@ -617,7 +615,11 @@ public class ClassUtils extends org.apache.commons.lang.ClassUtils
             types = new Class[objects.length];
             for (int i = 0; i < objects.length; i++)
             {
-                types[i] = objects[i].getClass();
+                Object o = objects[i];
+                if (o != null)
+                {
+                    types[i] = o.getClass();
+                }
             }
         }
         else
@@ -646,13 +648,16 @@ public class ClassUtils extends org.apache.commons.lang.ClassUtils
         }
         for (int i = 0; i < c1.length; i++)
         {
+            if ((c1[i] == null) || (c2[i] == null))
+            {
+                return false;
+            }
             if (c1[i].equals(Object.class) && !matchOnObject)
             {
                 return false;
             }
             if (!c1[i].isAssignableFrom(c2[i]))
             {
-
                 return false;
             }
         }
