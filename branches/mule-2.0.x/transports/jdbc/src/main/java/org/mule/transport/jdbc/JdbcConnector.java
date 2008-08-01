@@ -50,8 +50,9 @@ public class JdbcConnector extends AbstractConnector
     public static final long DEFAULT_POLLING_FREQUENCY = 1000;
 
     private static final Pattern STATEMENT_ARGS = Pattern.compile("\\$\\{[^\\}]*\\}");
-    protected SQLStrategyFactory sqlStrategyFactory = new SQLStrategyFactory(this);
+    protected SQLStrategyFactory sqlStrategyFactory = new SQLStrategyFactory();
 
+    
     /* Register the SQL Exception reader if this class gets loaded */
     static
     {

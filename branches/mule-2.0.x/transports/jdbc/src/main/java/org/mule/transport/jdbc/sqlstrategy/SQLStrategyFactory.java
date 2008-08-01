@@ -14,22 +14,17 @@ package org.mule.transport.jdbc.sqlstrategy;
  * Factory that selects appropriate implementation of SQLStrategy for a particular SQL string
  */
 
-import org.mule.transport.jdbc.JdbcConnector;
-
 
 public class SQLStrategyFactory 
 {
 
-	protected JdbcConnector connector;
 	
 	protected SimpleUpdateSQLStrategy simpleUpdateSQLStrategy;
 	protected SelectSQLStrategy selectSQLStrategy;
 	protected CallableSQLStrategy callableSQLStrategy;
 	
-	public SQLStrategyFactory(JdbcConnector connector)
-	{
-		this.connector = connector;
-		
+	public SQLStrategyFactory()
+	{		
 		simpleUpdateSQLStrategy = new SimpleUpdateSQLStrategy();
 		selectSQLStrategy = new SelectSQLStrategy();
 		callableSQLStrategy = new CallableSQLStrategy();
