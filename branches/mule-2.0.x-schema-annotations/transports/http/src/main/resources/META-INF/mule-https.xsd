@@ -15,7 +15,8 @@
                 schemaLocation="http://www.mulesource.org/schema/mule/http/2.0/mule-http.xsd"/>
 
     <xsd:annotation>
-        <xsd:documentation>The Secure HTTP transport provides support for exposing services over HTTP and making HTTP client requests from Mule services to external services as part of service event flows. Mule supports secure inbound, secure outbound, and secure polling HTTP endpooints. These endpoints support all common features of the HTTP spec, such as ETag processing, cookies, and keepalive. Both HTTP 1.0 and 1.1 are supported.
+        <xsd:documentation>
+            The Secure HTTP transport provides support for exposing services over HTTP and making HTTP client requests from Mule services to external services as part of service event flows. Mule supports secure inbound, secure outbound, and secure polling HTTP endpooints. These endpoints support all common features of the HTTP spec, such as ETag processing, cookies, and keepalive. Both HTTP 1.0 and 1.1 are supported.
         </xsd:documentation>
         <xsd:appinfo>
             <schemadoc:short-name>https</schemadoc:short-name>
@@ -99,7 +100,7 @@
     <xsd:element name="outbound-endpoint" type="outboundEndpointType" substitutionGroup="mule:abstract-outbound-endpoint">
         <xsd:annotation>
             <xsd:documentation>
-                The HTTPS outbound endpoint allows Mule to send requests securely using SSL to external servers or Mule inbound http endpoints using the the HTTP over SSL protocol.
+                The HTTPS outbound endpoint allows Mule to send requests securely using SSL to external servers or Mule inbound HTTP endpoints using HTTP over SSL protocol.
             </xsd:documentation>
         </xsd:annotation>
     </xsd:element>

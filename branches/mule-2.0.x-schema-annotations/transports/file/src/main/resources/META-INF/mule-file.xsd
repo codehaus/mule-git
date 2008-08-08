@@ -13,12 +13,10 @@
 
     <xsd:annotation>
         <xsd:documentation>
-            The File transport allows files to be read and written to and from directories on the local
-            file system. The connector can be configured to filter the file it reads and the way files are written, such
-            as whether binary output is used or the file is appended.
+            The File transport allows files to be read and written to and from directories on the local file system. The connector can be configured to filter the file it reads and the way files are written, such as whether binary output is used or the file is appended.
         </xsd:documentation>
         <xsd:appinfo>
-            <schemadoc:short-name>flie</schemadoc:short-name>
+            <schemadoc:short-name>file</schemadoc:short-name>
             <schemadoc:page-title>File Transport</schemadoc:page-title>
             <schemadoc:additional-documentation where="before-specific-elements">
                 h2. Filename Parsers
@@ -28,8 +26,8 @@
             <schemadoc:transport-features receiveEvents="true" dispatchEvents="true" responseEvents="false"
                                           requestEvents="true"
                                           transactions="false" streaming="true">
-                <schemadoc:inboundMEPs in-only="true"/>
-                <schemadoc:outboundMEPs out-only="true"/>
+                <schemadoc:inboundMEPs in-only="true" in-optional-out="true" in-out="true"/>
+                <schemadoc:outboundMEPs out-only="true" out-in="true" out-optional-in="true"/>
             </schemadoc:transport-features>
         </xsd:appinfo>
     </xsd:annotation>

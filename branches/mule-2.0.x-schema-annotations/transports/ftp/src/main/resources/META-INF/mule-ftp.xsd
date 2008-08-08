@@ -15,17 +15,17 @@
                 schemaLocation="http://www.mulesource.org/schema/mule/core/2.0/mule.xsd"/>
 
     <xsd:annotation>
-        <xsd:documentation>The FTP connector provides connectivity to FTP servers to allow files to be read and written
-            as events in Mule.
+        <xsd:documentation>
+            The FTP transport provides connectivity to FTP servers to allow files to be read and written as messages in Mule.
         </xsd:documentation>
         <xsd:appinfo>
             <schemadoc:short-name>ftp</schemadoc:short-name>
             <schemadoc:page-title>FTP Transport</schemadoc:page-title>
-            <schemadoc:transport-features receiveEvents="true" dispatchEvents="true" responseEvents="false"
+            <schemadoc:transport-features receiveEvents="true" dispatchEvents="true" responseEvents="true"
                                           requestEvents="true"
-                                          transactions="false" streaming="true">
-                <schemadoc:inboundMEPs in-only="true"/>
-                <schemadoc:outboundMEPs out-only="true"/>
+                                          transactions="false" streaming="false">
+                <schemadoc:inboundMEPs in-only="true" in-optional-out="true" in-out="true"/>
+                <schemadoc:outboundMEPs out-only="true" out-in="true" out-optional-in="true"/>
             </schemadoc:transport-features>
         </xsd:appinfo>
     </xsd:annotation>

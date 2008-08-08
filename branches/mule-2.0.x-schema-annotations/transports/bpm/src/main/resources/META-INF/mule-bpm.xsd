@@ -10,6 +10,23 @@
     <xsd:import namespace="http://www.mulesource.org/schema/mule/core/2.0" 
                 schemaLocation="http://www.mulesource.org/schema/mule/core/2.0/mule.xsd" />
     
+    <xsd:annotation>
+        <xsd:documentation>
+            The BPM transport allows process engines to send and receive messages through Mule. 
+        </xsd:documentation>
+        <xsd:appinfo>
+            <schemadoc:short-name>bpm</schemadoc:short-name>
+            <schemadoc:page-title>BPM Transport</schemadoc:page-title>
+
+            <schemadoc:transport-features receiveEvents="true" dispatchEvents="true" responseEvents="true"
+                                          requestEvents="false"
+                                          transactions="false" streaming="false">
+                <schemadoc:inboundMEPs in-only="true" in-out="true" in-optional-out="true"/>
+                <schemadoc:outboundMEPs out-only="true" out-in="false" out-optional-in="false"/>
+            </schemadoc:transport-features>
+        </xsd:appinfo>
+    </xsd:annotation>
+
     <xsd:element name="connector" type="bpmConnectorType" substitutionGroup="mule:abstract-connector"/>
 
     <xsd:complexType name="bpmConnectorType">
@@ -18,7 +35,7 @@
                 <xsd:attribute name="bpms-ref" type="xsd:IDREF" use="required">
                     <xsd:annotation>
                         <xsd:documentation>
-                            A reference to the underlying BPMS. This must implement the {javadoc:mule/transport/bpm|BPMS}org.mule.transport.bpm.BPMS{javadoc} interface.
+                            A reference to the underlying BPMS, which must implement the {javadoc:mule/transport/bpm|BPMS}org.mule.transport.bpm.BPMS{javadoc} interface to exchange messages through Mule using the BPM transport. 
                         </xsd:documentation>
                     </xsd:annotation>
                 </xsd:attribute>
