@@ -46,6 +46,16 @@
             <artifactId>mule-transport-http</artifactId>
             <version>${muleVersion}</version>
         </dependency>
+        <dependency>
+            <groupId>org.mule.transports</groupId>
+            <artifactId>mule-transport-http</artifactId>
+            <version>${muleVersion}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.geronimo.specs</groupId>
+            <artifactId>geronimo-servlet_2.4_spec</artifactId>
+            <version>1.1</version>
+        </dependency>
         <!-- Use the SpringConfigurationBuilder as a workaround because the MuleXmlConfigurationBuilder
              (Commons Digester) has issues when merging config files. -->
         <dependency>
@@ -54,13 +64,14 @@
             <version>${muleVersion}</version>
         </dependency>
         <!-- 
-             re-declare the spring dependency here as this pom is not under parent's
-             dependencyManagement
+             re-declare the spring dependency here as cxf comes with a different transitive version.
+             The spring version must be in sync with what's used in the regular Mule build as 
+             this pom is not under parent's dependencyManagement
         -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
-            <version>2.5.1</version>
+            <version>2.5.3</version>
             <exclusions>
                 <exclusion>
                     <groupId>aopalliance</groupId>
