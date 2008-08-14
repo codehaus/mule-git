@@ -46,10 +46,16 @@ public  class SelectSQLStrategy
         logger.debug("Trying to receive a message with a timeout of " + timeout);
         
         String[] stmts = connector.getReadAndAckStatements(endpoint);
+        
+        //Unparsed SQL statements (with ${foo} parameters)
         String readStmt = stmts[0];
         String ackStmt = stmts[1];
+        
+        //Storage for params (format is ${foo})
         List readParams = new ArrayList();
         List ackParams = new ArrayList();
+        
+        //Prepared statement form (with ? placeholders instead of ${foo} params)
         readStmt = connector.parseStatement(readStmt, readParams);
         ackStmt = connector.parseStatement(ackStmt, ackParams);
 
@@ -59,21 +65,31 @@ public  class SelectSQLStrategy
         try
         {
             con = connector.getConnection();
+            
+            //This method is used in both JDBCMessageDispatcher and JDBCMessageRequester.  
+            //JDBCMessageRequester specifies a finite timeout.
             if (timeout < 0)
             {
                 timeout = Long.MAX_VALUE;
             }
             Object result;
+            
+            //do-while loop.  execute query until there's a result or timeout exceeded
             do
             {
+            	//Get the actual param values from the message. 
                 Object[] params = connector.getParams(endpoint, readParams,
                     event!=null ? event.getMessage() : null,
                     endpoint.getEndpointURI().getAddress());
+                
                 if (logger.isDebugEnabled())
                 {
                     logger.debug("SQL QUERY: " + readStmt + ", params = " + ArrayUtils.toString(params));
                 }
+
+                //Perform actual query
                 result = connector.getQueryRunner().query(con, readStmt, params, connector.getResultSetHandler());
+                
                 if (result != null)
                 {
                     if (logger.isDebugEnabled())
@@ -98,8 +114,9 @@ public  class SelectSQLStrategy
                     JdbcUtils.rollbackAndClose(con);
                     return null;
                 }
-            }
-            while (true);
+            } while (true);
+            
+            //Execute ack statement
             if (ackStmt != null)
             {
                 Object[] params = connector.getParams(endpoint, ackParams, result, ackStmt);
@@ -113,8 +130,12 @@ public  class SelectSQLStrategy
                     logger.warn("Row count for ack should be 1 and not " + nbRows);
                 }
             }
+            
+            //Package up result
             MessageAdapter msgAdapter = connector.getMessageAdapter(result);
             MuleMessage message = new DefaultMuleMessage(msgAdapter);
+            
+            //Close or return connection if not in a transaction
             if (tx == null)
             {
                 JdbcUtils.commitAndClose(con);

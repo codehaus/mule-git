@@ -12,7 +12,8 @@
 package org.mule.transport.jdbc.sqlstrategy;
 
 /**
- * Implements strategy for handling simple stored procedures (no output parameter support).
+ * Implements strategy for executing simple stored procedures.  Only IN parameters
+ * can be used and no OUT values can be returned from the stored procedure.
  * 
  */
 
