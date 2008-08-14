@@ -13,7 +13,7 @@
     <!-- The info section -->
     <info>
         <appname>Mule</appname>
-        <appversion>2.0.3-SNAPSHOT</appversion>
+        <appversion>2.0.2.20080813</appversion>
         <authors>
             <author name="MuleSource" email="support@mulesource.com"/>
         </authors>
