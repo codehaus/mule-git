@@ -278,7 +278,7 @@ public class JdbcConnector extends AbstractConnector
         for (int i = 0; i < paramNames.size(); i++)
         {
             String param = (String)paramNames.get(i);
-            String name = param.substring(2, param.length() - 1);
+            String name = getNameFromParam(param);
             Object value = null;
             // If we find a value and it happens to be null, thats acceptable
             boolean foundValue = false;
@@ -304,6 +304,11 @@ public class JdbcConnector extends AbstractConnector
             params[i] = value;
         }
         return params;
+    }
+    
+    protected String getNameFromParam(String param)
+    {
+    	return param.substring(2, param.length() - 1);
     }
 
     protected void doDispose()
