@@ -22,7 +22,6 @@ import org.mule.tck.testmodels.mule.TestInboundTransformer;
 import org.mule.tck.testmodels.mule.TestOutboundTransformer;
 import org.mule.tck.testmodels.mule.TestResponseTransformer;
 import org.mule.transaction.MuleTransactionConfig;
-import org.mule.transport.SingleAttemptConnectionStrategy;
 import org.mule.util.ObjectNameHelper;
 
 public class EndpointURIEndpointBuilderTestCase extends AbstractMuleTestCase
@@ -80,7 +79,8 @@ public class EndpointURIEndpointBuilderTestCase extends AbstractMuleTestCase
         assertEquals(muleContext.getConfiguration().isDefaultSynchronousEndpoints()
                      || muleContext.getConfiguration().isDefaultRemoteSync(), ep.isSynchronous());
         assertEquals(muleContext.getConfiguration().isDefaultRemoteSync(), ep.isRemoteSync());
-        assertTrue(ep.getConnectionStrategy() instanceof SingleAttemptConnectionStrategy);
+        // TODO EE-244
+        //assertTrue(ep.getConnectionStrategy() instanceof SingleAttemptConnectionStrategy);
         assertTrue(ep.getTransactionConfig() instanceof MuleTransactionConfig);
         assertTrue(ep.getTransactionConfig() instanceof MuleTransactionConfig);
         assertEquals(null, ep.getSecurityFilter());

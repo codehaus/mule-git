@@ -288,7 +288,8 @@ public abstract class AbstractConnector
         supportedProtocols = new ArrayList();
         supportedProtocols.add(getProtocol().toLowerCase());
 
-        connectionStrategy = new SingleAttemptConnectionStrategy();
+        // TODO EE-244
+        // connectionStrategy = new SingleAttemptConnectionStrategy();
 
         // TODO dispatcher pool configuration should be extracted, maybe even
         // moved into the factory?

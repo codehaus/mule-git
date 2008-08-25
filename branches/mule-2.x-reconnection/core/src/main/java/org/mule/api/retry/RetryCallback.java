@@ -11,13 +11,13 @@
 package org.mule.api.retry;
 
 /**
- * This is the main Reptry SPI. Any code executed in the {@link #doWork} method will be subject to any Retry Policies
- * associated with the {@link org.mule.umo.retry.RetryTemplate}. If {@link #doWork} throws an exception the operation
+ * This is the main Retry SPI. Any code executed in the {@link #doWork} method will be subject to any Retry Policies
+ * associated with the {@link org.mule.api.retry.RetryTemplate}. If {@link #doWork} throws an exception the operation
  * will be attempted again until the Retry Policy has been exhausted. Note that Reties cn be wrapped in a transaction to ensure
  * the work is automic.
  *
- * @see org.mule.umo.retry.RetryTemplate
- * @see org.mule.umo.retry.TemplatePolicy
+ * @see org.mule.api.retry.RetryTemplate
+ * @see org.mule.api.retry.TemplatePolicy
  *
  */
 

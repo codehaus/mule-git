@@ -51,22 +51,23 @@ public abstract class AbstractConnectable implements Connectable, ExceptionListe
         this.endpoint = endpoint;
         this.connector = (AbstractConnector) endpoint.getConnector();
 
-        connectionStrategy = endpoint.getConnectionStrategy();
-        if (connectionStrategy instanceof AbstractConnectionStrategy)
-        {
-            // We don't want to do threading in the dispatcher because we're either
-            // already running in a worker thread (asynchronous) or we need to
-            // complete the operation in a single thread
-            final AbstractConnectionStrategy connStrategy = (AbstractConnectionStrategy) connectionStrategy;
-            if (connStrategy.isDoThreading())
-            {
-                if (logger.isDebugEnabled())
-                {
-                    logger.debug("Overriding doThreading to false on " + connStrategy);
-                }
-                connStrategy.setDoThreading(false);
-            }
-        }
+        // TODO EE-244
+//        connectionStrategy = endpoint.getConnectionStrategy();
+//        if (connectionStrategy instanceof AbstractConnectionStrategy)
+//        {
+//            // We don't want to do threading in the dispatcher because we're either
+//            // already running in a worker thread (asynchronous) or we need to
+//            // complete the operation in a single thread
+//            final AbstractConnectionStrategy connStrategy = (AbstractConnectionStrategy) connectionStrategy;
+//            if (connStrategy.isDoThreading())
+//            {
+//                if (logger.isDebugEnabled())
+//                {
+//                    logger.debug("Overriding doThreading to false on " + connStrategy);
+//                }
+//                connStrategy.setDoThreading(false);
+//            }
+//        }
 
         if (isDoThreading())
         {
