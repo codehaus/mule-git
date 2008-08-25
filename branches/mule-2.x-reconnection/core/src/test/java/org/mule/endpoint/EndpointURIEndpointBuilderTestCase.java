@@ -16,6 +16,7 @@ import org.mule.api.endpoint.EndpointException;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.endpoint.InboundEndpoint;
 import org.mule.api.endpoint.OutboundEndpoint;
+import org.mule.retry.DefaultRetryTemplate;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.tck.testmodels.mule.TestConnector;
 import org.mule.tck.testmodels.mule.TestInboundTransformer;
@@ -79,8 +80,7 @@ public class EndpointURIEndpointBuilderTestCase extends AbstractMuleTestCase
         assertEquals(muleContext.getConfiguration().isDefaultSynchronousEndpoints()
                      || muleContext.getConfiguration().isDefaultRemoteSync(), ep.isSynchronous());
         assertEquals(muleContext.getConfiguration().isDefaultRemoteSync(), ep.isRemoteSync());
-        // TODO EE-244
-        //assertTrue(ep.getConnectionStrategy() instanceof SingleAttemptConnectionStrategy);
+        assertTrue(ep.getConnectionStrategy() instanceof DefaultRetryTemplate);
         assertTrue(ep.getTransactionConfig() instanceof MuleTransactionConfig);
         assertTrue(ep.getTransactionConfig() instanceof MuleTransactionConfig);
         assertEquals(null, ep.getSecurityFilter());
