@@ -25,6 +25,7 @@ import org.mule.api.context.WorkManager;
 import org.mule.api.context.notification.ServerNotification;
 import org.mule.api.context.notification.ServerNotificationHandler;
 import org.mule.api.endpoint.EndpointURI;
+import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.endpoint.InboundEndpoint;
 import org.mule.api.endpoint.OutboundEndpoint;
 import org.mule.api.lifecycle.DisposeException;
@@ -1165,7 +1166,7 @@ public abstract class AbstractConnector
         this.receiverThreadingProfile = receiverThreadingProfile;
     }
 
-    public void destroyReceiver(MessageReceiver receiver, InboundEndpoint endpoint) throws Exception
+    public void destroyReceiver(MessageReceiver receiver, ImmutableEndpoint endpoint) throws Exception
     {
         receiver.dispose();
     }
