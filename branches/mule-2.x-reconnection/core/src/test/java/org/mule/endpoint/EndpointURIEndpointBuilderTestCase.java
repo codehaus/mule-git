@@ -80,7 +80,7 @@ public class EndpointURIEndpointBuilderTestCase extends AbstractMuleTestCase
         assertEquals(muleContext.getConfiguration().isDefaultSynchronousEndpoints()
                      || muleContext.getConfiguration().isDefaultRemoteSync(), ep.isSynchronous());
         assertEquals(muleContext.getConfiguration().isDefaultRemoteSync(), ep.isRemoteSync());
-        assertTrue(ep.getConnectionStrategy() instanceof DefaultRetryTemplate);
+        assertTrue(ep.getRetryPolicyFactory() instanceof DefaultRetryTemplate);
         assertTrue(ep.getTransactionConfig() instanceof MuleTransactionConfig);
         assertTrue(ep.getTransactionConfig() instanceof MuleTransactionConfig);
         assertEquals(null, ep.getSecurityFilter());

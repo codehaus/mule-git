@@ -26,7 +26,7 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * A RetryTemplate can be used to invoke actions that may need to be retried i.e. connecting to an external process,
- * or dispatching an event. How retries are made is dictatated by the {@link org.mule.api.retry.PolicyFactory}. Policies
+ * or dispatching an event. How retries are made is dictated by the {@link org.mule.api.retry.PolicyFactory}. Policies
  * are stategies that define what happens between retries.
  * Also a {@link org.mule.api.retry.RetryNotifier} that can be used to invoke actions between Retries for tracking and
  * notifications.

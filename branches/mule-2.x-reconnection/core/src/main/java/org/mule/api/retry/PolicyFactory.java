@@ -12,9 +12,9 @@ package org.mule.api.retry;
 
 /**
  * A factory responsible for creating a policy.  Custom policies should
- * Implement this factory and provide a private {@link org.mule.umo.retry.TemplatePolicy}
+ * Implement this factory and provide a private {@link org.mule.api.retry.TemplatePolicy}
  * class within this class.  The factory is the object that actually gets configured then new
- * {@link org.mule.umo.retry.TemplatePolicy} objects are create each time using the configuration
+ * {@link org.mule.api.retry.TemplatePolicy} objects are created each time using the configuration
  * on the factory. 
  */
 public interface PolicyFactory

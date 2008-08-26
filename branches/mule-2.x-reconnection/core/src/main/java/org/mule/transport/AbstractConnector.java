@@ -222,7 +222,7 @@ public abstract class AbstractConnector
     protected volatile int numberOfConcurrentTransactedReceivers = DEFAULT_NUM_CONCURRENT_TX_RECEIVERS;
 
 
-    protected volatile RetryTemplate connectionStrategy;
+    protected volatile RetryTemplate retryTemplate;
     
     /**
      * If doThreading is used in ReconnectingStrategy receivers must wait for 
@@ -298,7 +298,7 @@ public abstract class AbstractConnector
         supportedProtocols = new ArrayList();
         supportedProtocols.add(getProtocol().toLowerCase());
 
-        connectionStrategy = new DefaultRetryTemplate(new NoRetryPolicyFactory(), new ConnectNotifier());
+        retryTemplate = new DefaultRetryTemplate(new NoRetryPolicyFactory(), new ConnectNotifier());
 
         // TODO dispatcher pool configuration should be extracted, maybe even
         // moved into the factory?
@@ -1244,14 +1244,14 @@ public abstract class AbstractConnector
      *
      * @return Value for property 'connectionStrategy'.
      */
-    public RetryTemplate getConnectionStrategy()
+    public RetryTemplate getRetryTemplate()
     {
         // not happy with this but each receiver needs its own instance
         // of the connection strategy and using a factory just introduces extra
         // implementation
         try
         {
-            return new DefaultRetryTemplate(connectionStrategy.getPolicyFactory(), connectionStrategy.getRetryNotifier());
+            return new DefaultRetryTemplate(retryTemplate.getPolicyFactory(), retryTemplate.getRetryNotifier());
         }
         catch (Exception e)
         {
@@ -1259,11 +1259,11 @@ public abstract class AbstractConnector
         }
     }
 
-    protected AsynchronousRetryTemplate getConnectionStrategy(WorkManager workManager)
+    protected AsynchronousRetryTemplate getRetryTemplate(WorkManager workManager)
     {
         try
         {
-            return new AsynchronousRetryTemplate(getConnectionStrategy(), workManager, new ConnectLatch(this));
+            return new AsynchronousRetryTemplate(getRetryTemplate(), workManager, new ConnectLatch(this));
         }
         catch (Exception e)
         {
@@ -1271,14 +1271,9 @@ public abstract class AbstractConnector
         }
     }
 
-    /**
-     * Setter for property 'connectionStrategy'.
-     *
-     * @param connectionStrategy Value to set for property 'connectionStrategy'.
-     */
-    public void setConnectionStrategy(RetryTemplate connectionStrategy)
+    public void setRetryTemplate(RetryTemplate retryTemplate)
     {
-        this.connectionStrategy = connectionStrategy;
+        this.retryTemplate = retryTemplate;
     }
 
     /** {@inheritDoc} */
@@ -1369,8 +1364,8 @@ public abstract class AbstractConnector
         }
 
         RetryTemplate template = 
-            new DefaultRetryTemplate(connectionStrategy.getPolicyFactory(),
-                                     connectionStrategy.getRetryNotifier());
+            new DefaultRetryTemplate(retryTemplate.getPolicyFactory(),
+                                     retryTemplate.getRetryNotifier());
 
         if (asyncConnections)
         {

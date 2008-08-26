@@ -46,7 +46,7 @@ public abstract class AbstractMessageRequester extends AbstractConnectable imple
         final long finalTimeout = timeout;
         try
         {
-            RetryContext context = connectionStrategy.execute(new RetryCallback()
+            RetryContext context = retryTemplate.execute(new RetryCallback()
             {
                 public void doWork(RetryContext context) throws Exception
                 {

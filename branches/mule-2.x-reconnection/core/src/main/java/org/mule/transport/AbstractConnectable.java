@@ -41,13 +41,13 @@ public abstract class AbstractConnectable implements Connectable, ExceptionListe
 {
     protected transient Log logger = LogFactory.getLog(getClass());
 
-    protected final ImmutableEndpoint endpoint;
+    protected ImmutableEndpoint endpoint;
     protected final AbstractConnector connector;
 
     protected final AtomicBoolean disposing = new AtomicBoolean(false);
     protected final AtomicBoolean disposed = new AtomicBoolean(false);
 
-    protected RetryTemplate connectionStrategy;
+    protected RetryTemplate retryTemplate;
     
     private WorkManager workManager = null;    
 
@@ -110,7 +110,6 @@ public abstract class AbstractConnectable implements Connectable, ExceptionListe
     {
         // nothing to do by default
     }
-
     
     public void initialise() throws InitialisationException
     {
@@ -119,27 +118,27 @@ public abstract class AbstractConnectable implements Connectable, ExceptionListe
             if(endpoint.getRetryPolicyFactory().isConnectAsynchronously())
             {
                 asyncConnections = true;
-                connectionStrategy = new AsynchronousRetryTemplate(
+                retryTemplate = new AsynchronousRetryTemplate(
                         new DefaultRetryTemplate(endpoint.getRetryPolicyFactory(), new ConnectNotifier()),
                         workManager, new ConnectLatch(this.connector));
             }
             else
             {
-                connectionStrategy = new DefaultRetryTemplate(endpoint.getRetryPolicyFactory(), new ConnectNotifier());
+                retryTemplate = new DefaultRetryTemplate(endpoint.getRetryPolicyFactory(), new ConnectNotifier());
             }
         }
-        else if(this.connector.getConnectionStrategy().getPolicyFactory().isConnectAsynchronously())
+        else if(this.connector.getRetryTemplate().getPolicyFactory().isConnectAsynchronously())
         {
             asyncConnections = true;
             if (workManager == null)
             {
                 throw new InitialisationException(MessageFactory.createStaticMessage("Asynchronous connection strategy specified but no work manager available"), this);
             }
-            connectionStrategy = this.connector.getConnectionStrategy(workManager);
+            retryTemplate = this.connector.getRetryTemplate(workManager);
         }
         else
         {
-            connectionStrategy = this.connector.getConnectionStrategy();
+            retryTemplate = this.connector.getRetryTemplate();
         }
         
         doInitialise();
@@ -211,11 +210,11 @@ public abstract class AbstractConnectable implements Connectable, ExceptionListe
         
         if (asyncConnections)
         {
-            connector.getConnectionStrategy(workManager).execute(callback);
+            connector.getRetryTemplate(workManager).execute(callback);
         }
         else
         {
-            connectionStrategy.execute(callback);
+            retryTemplate.execute(callback);
         }
         
         if (startOnConnect)
@@ -320,17 +319,35 @@ public abstract class AbstractConnectable implements Connectable, ExceptionListe
         }
     }
 
-    protected abstract void doInitialise() throws InitialisationException;
+    protected void doInitialise() throws InitialisationException
+    {
+        // nothing to do by default
+    }
     
-    protected abstract void doDispose();
+    protected void doDispose()
+    {
+        // nothing to do by default
+    }
 
-    protected abstract void doConnect() throws Exception;
+    protected void doConnect() throws Exception
+    {
+        // nothing to do by default
+    }
 
-    protected abstract void doDisconnect() throws Exception;
+    protected void doDisconnect() throws Exception
+    {
+        // nothing to do by default
+    }
 
-    protected abstract void doStart() throws MuleException;
+    protected void doStart() throws MuleException
+    {
+        // nothing to do by default
+    }
 
-    protected abstract void doStop() throws MuleException;
+    protected void doStop() throws MuleException
+    {
+        // nothing to do by default
+    }
     
     //  @Override
     public String toString()
@@ -352,5 +369,10 @@ public abstract class AbstractConnectable implements Connectable, ExceptionListe
     protected void setWorkManager(WorkManager workManager)
     {
         this.workManager = workManager;
+    }
+
+    public void setEndpoint(ImmutableEndpoint endpoint)
+    {
+        this.endpoint = endpoint;
     }
 }

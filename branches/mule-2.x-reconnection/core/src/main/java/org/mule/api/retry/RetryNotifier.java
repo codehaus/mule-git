@@ -11,7 +11,7 @@
 package org.mule.api.retry;
 
 /**
- * The UMORetryNotifier interface is a callback that allows actions to be performed after each retry. For example, when
+ * The RetryNotifier interface is a callback that allows actions to be performed after each retry. For example, when
  * retrying connections Mule will fire server notification events on success or failure.
  */
 

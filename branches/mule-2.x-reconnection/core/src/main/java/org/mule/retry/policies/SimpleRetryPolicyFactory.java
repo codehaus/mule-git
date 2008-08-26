@@ -19,7 +19,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * This policy allows the user to configure how namy times a retry should be attempted and
+ * This policy allows the user to configure how many times a retry should be attempted and
  * how much time to wait between retries.
  */
 public class SimpleRetryPolicyFactory extends AbstractPolicyFactory

@@ -139,7 +139,7 @@ public abstract class AbstractMessageDispatcher extends AbstractConnectable impl
         final MuleEvent finalEvent = event;
         try
         {
-            RetryContext context = connectionStrategy.execute(new RetryCallback()
+            RetryContext context = retryTemplate.execute(new RetryCallback()
             {
                 public void doWork(RetryContext context) throws Exception
                 {
@@ -240,7 +240,7 @@ public abstract class AbstractMessageDispatcher extends AbstractConnectable impl
         {
             try
             {
-                connectionStrategy.execute(new RetryCallback()
+                retryTemplate.execute(new RetryCallback()
                 {
 
                     public void doWork(RetryContext context) throws Exception

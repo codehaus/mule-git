@@ -28,6 +28,7 @@ import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.security.SecurityException;
 import org.mule.api.service.Service;
 import org.mule.api.transaction.Transaction;
+import org.mule.api.transport.Connector;
 import org.mule.api.transport.InternalMessageListener;
 import org.mule.api.transport.MessageReceiver;
 import org.mule.config.ExceptionHelper;
@@ -82,7 +83,7 @@ public abstract class AbstractMessageReceiver extends AbstractConnectable implem
      * @see Service
      * @see InboundEndpoint
      */
-    public AbstractMessageReceiver(Service service, InboundEndpoint endpoint) throws CreateException
+    public AbstractMessageReceiver(Connector connector, Service service, InboundEndpoint endpoint) throws CreateException
     {
         super(endpoint);
         // TODO
@@ -414,6 +415,11 @@ public abstract class AbstractMessageReceiver extends AbstractConnectable implem
     public InboundEndpoint getEndpoint()
     {
         return (InboundEndpoint) super.getEndpoint();
+    }
+    
+    public void setEndpoint(InboundEndpoint endpoint)
+    {
+        super.setEndpoint(endpoint);
     }
     
     public String toString()

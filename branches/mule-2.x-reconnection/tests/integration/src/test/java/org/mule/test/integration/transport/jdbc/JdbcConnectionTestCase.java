@@ -16,8 +16,9 @@ import org.mule.api.endpoint.InboundEndpoint;
 import org.mule.api.service.Service;
 import org.mule.api.transport.Connector;
 import org.mule.endpoint.EndpointURIEndpointBuilder;
+import org.mule.retry.DefaultRetryTemplate;
+import org.mule.retry.policies.SimpleRetryPolicyFactory;
 import org.mule.tck.testmodels.fruit.Orange;
-import org.mule.transport.SimpleRetryConnectionStrategy;
 import org.mule.transport.jdbc.JdbcConnector;
 
 import javax.sql.DataSource;
@@ -39,11 +40,7 @@ public class JdbcConnectionTestCase extends AbstractJdbcFunctionalTestCase
     public Connector createConnector() throws Exception
     {
         connector = (JdbcConnector)super.createConnector();
-        SimpleRetryConnectionStrategy strategy = new SimpleRetryConnectionStrategy();
-        strategy.setRetryCount(10);
-        strategy.setRetryFrequency(1000);
-        strategy.setDoThreading(true);
-        connector.setConnectionStrategy(strategy);
+        connector.setRetryTemplate(new DefaultRetryTemplate(new SimpleRetryPolicyFactory(1000, 10)));
         return connector;
     }
 
