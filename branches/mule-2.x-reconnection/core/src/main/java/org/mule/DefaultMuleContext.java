@@ -28,9 +28,9 @@ import org.mule.api.registry.MuleRegistry;
 import org.mule.api.registry.RegistrationException;
 import org.mule.api.registry.Registry;
 import org.mule.api.registry.RegistryBroker;
+import org.mule.api.retry.PolicyFactory;
 import org.mule.api.security.SecurityManager;
 import org.mule.api.transaction.TransactionManagerFactory;
-import org.mule.api.transport.ConnectionStrategy;
 import org.mule.config.DefaultMuleConfiguration;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.context.notification.MuleContextNotification;
@@ -560,19 +560,19 @@ public class DefaultMuleContext implements MuleContext
     }
 
     /**
-     * Returns a clone of the default Connection strategy. The clone ensures that the
-     * connection strategy can be manipulated without affecting other connectors
+     * Returns a clone of the default Retry strategy. The clone ensures that the
+     * retry strategy can be manipulated without affecting other connectors
      * using the same strategy
      * 
-     * @return a clone of the default Connection strategy
+     * @return a clone of the default Retry strategy
      */
-    public ConnectionStrategy getDefaultConnectionStrategy()
+    public PolicyFactory getDefaultRetryPolicyFactory()
     {
-        ConnectionStrategy defaultConnectionStrategy = 
-            (ConnectionStrategy) getRegistry().lookupObject(MuleProperties.OBJECT_DEFAULT_CONNECTION_STRATEGY);
+        PolicyFactory defaultRetryPolicyFactory = 
+            (PolicyFactory) getRegistry().lookupObject(MuleProperties.OBJECT_DEFAULT_RETRY_POLICY_FACTORY);
         try
         {
-            return (ConnectionStrategy) BeanUtils.cloneBean(defaultConnectionStrategy);
+            return (PolicyFactory) BeanUtils.cloneBean(defaultRetryPolicyFactory);
         }
         catch (Exception e)
         {

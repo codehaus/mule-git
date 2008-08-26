@@ -49,7 +49,7 @@ public class EndpointURIEndpointBuilder extends AbstractEndpointBuilder
         remoteSync = global.remoteSync;
         remoteSyncTimeout = global.remoteSyncTimeout;
         encoding = global.encoding;
-        connectionStrategy = global.connectionStrategy;
+        retryPolicyFactory = global.retryPolicyFactory;
     }
 
     public EndpointURIEndpointBuilder(URIBuilder URIBuilder, MuleContext muleContext)
@@ -90,7 +90,7 @@ public class EndpointURIEndpointBuilder extends AbstractEndpointBuilder
         setRemoteSync(source.isRemoteSync());
         setFilter(source.getFilter());
         setSecurityFilter(source.getSecurityFilter());
-        setConnectionStrategy(source.getConnectionStrategy());
+        setRetryPolicyFactory(source.getRetryPolicyFactory());
         setSynchronous(source.isSynchronous());
         setMuleContext(source.getMuleContext());
     }

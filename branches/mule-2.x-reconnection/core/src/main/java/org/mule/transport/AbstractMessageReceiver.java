@@ -411,6 +411,11 @@ public abstract class AbstractMessageReceiver extends AbstractConnectable implem
         return receiverKey;
     }
 
+    public InboundEndpoint getEndpoint()
+    {
+        return (InboundEndpoint) super.getEndpoint();
+    }
+    
     public String toString()
     {
         final StringBuffer sb = new StringBuffer(80);

@@ -51,7 +51,7 @@ public abstract class AbstractPollingMessageReceiver extends AbstractMessageRece
                                           Service service,
                                           final InboundEndpoint endpoint) throws CreateException
     {
-        super(connector, service, endpoint);
+        super(service, endpoint);
     }
 
     protected void doStart() throws MuleException

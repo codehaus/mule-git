@@ -1264,7 +1264,9 @@
             </activation>
             <modules>
                 <module>buildtools</module>
+                <!--
                 <module>osgi-libs</module> 
+                -->
                 <module>core</module>
                 <module>modules</module>
                 <module>transports</module>

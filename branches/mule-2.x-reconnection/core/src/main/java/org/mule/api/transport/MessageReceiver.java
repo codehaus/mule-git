@@ -12,7 +12,7 @@ package org.mule.api.transport;
 
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
-import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.api.endpoint.InboundEndpoint;
 import org.mule.api.service.Service;
 import org.mule.api.transaction.Transaction;
 
@@ -34,7 +34,7 @@ public interface MessageReceiver extends Connectable
     /**
      * @return the receivers endpoint
      */
-    ImmutableEndpoint getEndpoint();
+    InboundEndpoint getEndpoint();
 
     /**
      * @return the service associated with the receiver

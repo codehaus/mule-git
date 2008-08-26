@@ -21,6 +21,7 @@ import org.mule.api.transport.Connectable;
 import org.mule.api.transport.Connector;
 import org.mule.config.i18n.MessageFactory;
 import org.mule.context.notification.ConnectionNotification;
+import org.mule.retry.DefaultRetryTemplate;
 import org.mule.retry.async.AsynchronousRetryTemplate;
 import org.mule.retry.async.ConnectLatch;
 import org.mule.util.ClassUtils;
@@ -119,12 +120,12 @@ public abstract class AbstractConnectable implements Connectable, ExceptionListe
             {
                 asyncConnections = true;
                 connectionStrategy = new AsynchronousRetryTemplate(
-                        new RetryTemplate(endpoint.getRetryPolicyFactory(), new ConnectNotifier()),
+                        new DefaultRetryTemplate(endpoint.getRetryPolicyFactory(), new ConnectNotifier()),
                         workManager, new ConnectLatch(this.connector));
             }
             else
             {
-                connectionStrategy = new RetryTemplate(endpoint.getRetryPolicyFactory(), new ConnectNotifier());
+                connectionStrategy = new DefaultRetryTemplate(endpoint.getRetryPolicyFactory(), new ConnectNotifier());
             }
         }
         else if(this.connector.getConnectionStrategy().getPolicyFactory().isConnectAsynchronously())

@@ -85,7 +85,7 @@ public class DefaultsConfigurationBuilder extends AbstractConfigurationBuilder
         registry.registerObject(MuleProperties.OBJECT_DEFAULT_COMPONENT_THREADING_PROFILE,
             new ChainedThreadingProfile(defaultThreadingProfile));
         
-        registry.registerObject(MuleProperties.OBJECT_DEFAULT_CONNECTION_STRATEGY, new DefaultRetryTemplate(new NoRetryPolicyFactory(), new ConnectNotifier()));
+        registry.registerObject(MuleProperties.OBJECT_DEFAULT_RETRY_POLICY_FACTORY, new DefaultRetryTemplate(new NoRetryPolicyFactory(), new ConnectNotifier()));
         
         Model systemModel = new SedaModel();
         systemModel.setName(MuleProperties.OBJECT_SYSTEM_MODEL);
