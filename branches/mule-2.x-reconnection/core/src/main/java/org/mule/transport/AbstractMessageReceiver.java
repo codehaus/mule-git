@@ -86,8 +86,6 @@ public abstract class AbstractMessageReceiver extends AbstractConnectable implem
     public AbstractMessageReceiver(Connector connector, Service service, InboundEndpoint endpoint) throws CreateException
     {
         super(endpoint);
-        // TODO
-        asyncConnections = true;
         
         setService(service);
         if (service.getResponseRouter() != null && service.getResponseRouter().getEndpoints().contains(endpoint))

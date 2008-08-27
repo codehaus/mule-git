@@ -373,6 +373,10 @@ public abstract class AbstractConnectable implements Connectable, ExceptionListe
 
     public void setEndpoint(ImmutableEndpoint endpoint)
     {
+        if (endpoint == null)
+        {
+            throw new IllegalArgumentException("Endpoint cannot be null");
+        }
         this.endpoint = endpoint;
     }
 }

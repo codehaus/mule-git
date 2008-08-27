@@ -33,6 +33,7 @@ import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.lifecycle.LifecycleException;
 import org.mule.api.registry.ServiceDescriptorFactory;
 import org.mule.api.registry.ServiceException;
+import org.mule.api.retry.PolicyFactory;
 import org.mule.api.retry.RetryCallback;
 import org.mule.api.retry.RetryContext;
 import org.mule.api.retry.RetryTemplate;
@@ -286,7 +287,7 @@ public abstract class AbstractConnector
      */
     protected volatile SessionHandler sessionHandler = new MuleSessionHandler();
 
-    protected boolean asyncConnections = true;
+    protected boolean asyncConnections = false;
     
     protected MuleContext muleContext;
 
@@ -817,6 +818,7 @@ public abstract class AbstractConnector
             }
 
             dispatcher = (MessageDispatcher)dispatchers.borrowObject(endpoint);
+            dispatcher.initialise();
 
             if (logger.isDebugEnabled())
             {
@@ -931,6 +933,7 @@ public abstract class AbstractConnector
             }
 
             requester = (MessageRequester)requesters.borrowObject(endpoint);
+            requester.initialise();
 
             if (logger.isDebugEnabled())
             {
@@ -1276,6 +1279,11 @@ public abstract class AbstractConnector
         this.retryTemplate = retryTemplate;
     }
 
+    public void setRetryPolicyFactory(PolicyFactory retryPolicyFactory)
+    {
+        setRetryTemplate(new DefaultRetryTemplate(retryPolicyFactory));
+    }
+
     /** {@inheritDoc} */
     public boolean isDisposing()
     {
@@ -1369,10 +1377,9 @@ public abstract class AbstractConnector
 
         if (asyncConnections)
         {
-            //Wrap the ReptryTemplate
+            //Wrap the RetryTemplate
             template = new AsynchronousRetryTemplate(template, muleContext.getWorkManager());
         }
-
 
         template.execute(new RetryCallback()
         {
@@ -1394,7 +1401,6 @@ public abstract class AbstractConnector
                 return getConnectionDescription();
             }
         });
-
 
         if (receivers != null)
         {

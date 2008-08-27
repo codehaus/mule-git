@@ -146,7 +146,7 @@ public abstract class AbstractMessageDispatcher extends AbstractConnectable impl
                     // Make sure we are connected
                     connect();
 
-                    doSend(finalEvent);
+                    MuleMessage result = doSend(finalEvent);
                     if (connector.isEnableMessageEvents())
                     {
                         String component = null;
@@ -157,6 +157,7 @@ public abstract class AbstractMessageDispatcher extends AbstractConnectable impl
                         connector.fireNotification(new EndpointMessageNotification(finalEvent.getMessage(), finalEvent.getEndpoint(),
                                 component, EndpointMessageNotification.MESSAGE_SENT));
                     }
+                    context.addReturnMessage(result);
                 }
 
                 public String getWorkDescription()

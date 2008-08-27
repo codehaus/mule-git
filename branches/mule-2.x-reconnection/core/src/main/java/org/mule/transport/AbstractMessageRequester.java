@@ -58,7 +58,9 @@ public abstract class AbstractMessageRequester extends AbstractConnectable imple
                         connector.fireNotification(new EndpointMessageNotification(result, endpoint, null,
                             EndpointMessageNotification.MESSAGE_REQUESTED));
                     }
-                    context.setReturnMessages(new MuleMessage[]{result});
+                    context.addReturnMessage(result);
+                    // Is there any difference ?
+                    //context.setReturnMessages(new MuleMessage[]{result});
                 }
 
                 public String getWorkDescription()
