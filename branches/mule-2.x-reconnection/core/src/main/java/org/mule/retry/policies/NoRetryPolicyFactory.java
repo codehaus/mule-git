@@ -28,7 +28,7 @@ public class NoRetryPolicyFactory extends AbstractPolicyFactory
     {
         public PolicyStatus applyPolicy()
         {
-            return PolicyStatus.policyExhaused(null);
+            return PolicyStatus.policyExhausted(null);
         }
     }
 

@@ -119,7 +119,7 @@ public class SimpleRetryPolicyFactory extends AbstractPolicyFactory
 
             if (retryCount != RETRY_COUNT_FOREVER && retryCounter.current().get() >= retryCount)
             {
-                return PolicyStatus.policyExhaused(null);
+                return PolicyStatus.policyExhausted(null);
             }
             else
             {
@@ -145,7 +145,7 @@ public class SimpleRetryPolicyFactory extends AbstractPolicyFactory
                 catch (InterruptedException e)
                 {
                     // If we get an interrupt exception, some one is telling us to stop
-                    return PolicyStatus.policyExhaused(e);
+                    return PolicyStatus.policyExhausted(e);
                 }
 
             }
