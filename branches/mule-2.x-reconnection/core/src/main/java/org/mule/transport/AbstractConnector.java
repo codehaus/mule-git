@@ -1850,10 +1850,10 @@ public abstract class AbstractConnector
         MessageRequester requester = null;
         MuleMessage result = null;
 
-        if(!isConnected())
-        {
-            throw new ReceiveException(CoreMessages.notConnectedYet(getConnectionDescription()), endpoint, timeout);
-        }
+        //if (!isConnected())
+        //{
+        //    throw new ReceiveException(CoreMessages.notConnectedYet(getConnectionDescription()), endpoint, timeout);
+        //}
 
         try
         {
