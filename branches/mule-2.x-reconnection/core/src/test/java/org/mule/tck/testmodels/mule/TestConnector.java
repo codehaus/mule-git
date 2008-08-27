@@ -17,7 +17,6 @@ import org.mule.api.endpoint.InboundEndpoint;
 import org.mule.api.endpoint.OutboundEndpoint;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.service.Service;
-import org.mule.api.transport.Connector;
 import org.mule.api.transport.MessageAdapter;
 import org.mule.api.transport.MessageDispatcher;
 import org.mule.api.transport.MessageReceiver;
@@ -99,9 +98,9 @@ public class TestConnector extends AbstractConnector
         this.someProperty = someProperty;
     }
 
-    public MessageReceiver createReceiver(Connector connector, Service service, InboundEndpoint endpoint) throws Exception
+    public MessageReceiver createReceiver(Service service, InboundEndpoint endpoint) throws Exception
     {
-        MessageReceiver receiver = new AbstractMessageReceiver(connector, service, endpoint)
+        MessageReceiver receiver = new AbstractMessageReceiver(this, service, endpoint)
         {
 
             protected void doInitialise() throws InitialisationException
