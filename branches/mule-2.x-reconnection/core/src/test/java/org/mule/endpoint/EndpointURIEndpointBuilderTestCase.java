@@ -16,7 +16,7 @@ import org.mule.api.endpoint.EndpointException;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.endpoint.InboundEndpoint;
 import org.mule.api.endpoint.OutboundEndpoint;
-import org.mule.retry.DefaultRetryTemplate;
+import org.mule.retry.policies.NoRetryPolicyFactory;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.tck.testmodels.mule.TestConnector;
 import org.mule.tck.testmodels.mule.TestInboundTransformer;
@@ -80,7 +80,7 @@ public class EndpointURIEndpointBuilderTestCase extends AbstractMuleTestCase
         assertEquals(muleContext.getConfiguration().isDefaultSynchronousEndpoints()
                      || muleContext.getConfiguration().isDefaultRemoteSync(), ep.isSynchronous());
         assertEquals(muleContext.getConfiguration().isDefaultRemoteSync(), ep.isRemoteSync());
-        assertTrue(ep.getRetryPolicyFactory() instanceof DefaultRetryTemplate);
+        assertTrue(ep.getRetryPolicyFactory() instanceof NoRetryPolicyFactory);
         assertTrue(ep.getTransactionConfig() instanceof MuleTransactionConfig);
         assertTrue(ep.getTransactionConfig() instanceof MuleTransactionConfig);
         assertEquals(null, ep.getSecurityFilter());
