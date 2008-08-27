@@ -30,7 +30,8 @@ public class WebServiceWrapperComponent extends AbstractWebServiceWrapperCompone
     private String style;
     private Map properties;
 
-    protected MuleMessage doOnCall(MuleEvent event) throws Exception
+    //@Override
+    protected Object doInvoke(MuleEvent event) throws Exception
     {
         MuleContext muleContext = event.getMuleContext();
 

@@ -128,5 +128,42 @@
             <artifactId>geronimo-ws-metadata_2.0_spec</artifactId>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <!-- OSGi-ready -->
+            <groupId>org.apache.geronimo.specs</groupId>
+            <artifactId>geronimo-stax-api_1.0_spec</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <!-- Distributed separately in profiler pack -->
+        <dependency>
+            <groupId>com.yourkit</groupId>
+            <artifactId>yjp-controller-api-redist.osgi</artifactId>
+            <version>${yourKitVersion}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>xml-apis</groupId>
+            <artifactId>xml-apis</artifactId>
+            <version>1.3.04</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>xerces</groupId>
+            <artifactId>xercesImpl</artifactId>
+            <version>2.9.1</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>xerces</groupId>
+            <artifactId>xml-serializer</artifactId>
+            <version>2.7.1</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>xalan</groupId>
+            <artifactId>xalan</artifactId>
+            <version>2.7.1</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 </project>

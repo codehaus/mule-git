@@ -100,7 +100,7 @@ public class SedaService extends AbstractService implements Work, WorkListener
         if (threadingProfile == null)
         {
             // TODO MULE-2102 This should be configured in the default template.
-            threadingProfile = muleContext.getDefaultComponentThreadingProfile();
+            threadingProfile = muleContext.getDefaultServiceThreadingProfile();
         }
         // Create thread pool
         workManager = threadingProfile.createWorkManager(getName());
@@ -234,7 +234,7 @@ public class SedaService extends AbstractService implements Work, WorkListener
             }
             Object replyTo = event.getMessage().getReplyTo();
             ReplyToHandler replyToHandler = getReplyToHandler(event.getMessage(), (InboundEndpoint) event.getEndpoint());
-            result = component.onCall(event);
+            result = invokeComponent(event);
             result = sendToOutboundRouter(event, result);
             result = processAsyncReplyRouter(result);
             processReplyTo(event, result, replyToHandler, replyTo);
@@ -533,7 +533,7 @@ public class SedaService extends AbstractService implements Work, WorkListener
                 Object replyTo = event.getMessage().getReplyTo();
                 ReplyToHandler replyToHandler = getReplyToHandler(event.getMessage(),
                     (InboundEndpoint) event.getEndpoint());
-                MuleMessage result = component.onCall(event);
+                MuleMessage result = invokeComponent(event);
                 dispatchToOutboundRouter(event, result);
                 processReplyTo(event, result, replyToHandler, replyTo);
             }

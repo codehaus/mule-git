@@ -23,6 +23,7 @@ import org.mule.api.endpoint.OutboundEndpoint
 import org.mule.api.model.Model
 import org.mule.api.service.Service
 import org.mule.component.DefaultJavaComponent
+import org.mule.interceptor.InterceptorStack
 import org.mule.model.seda.SedaService
 import org.mule.routing.inbound.DefaultInboundRouterCollection
 import org.mule.routing.nested.DefaultNestedRouterCollection
@@ -56,7 +57,7 @@ defaultThreadingProfile.setMaxThreadsIdle(10);
 defaultThreadingProfile.setMaxBufferSize(0);
 defaultThreadingProfile.setThreadTTL(60000);
 defaultThreadingProfile.setPoolExhaustedAction(ThreadingProfile.WHEN_EXHAUSTED_RUN);
-muleContext.registry.registerObject(MuleProperties.OBJECT_DEFAULT_COMPONENT_THREADING_PROFILE,
+muleContext.registry.registerObject(MuleProperties.OBJECT_DEFAULT_SERVICE_THREADING_PROFILE,
             new ChainedThreadingProfile(defaultThreadingProfile));
 muleContext.registry.registerObject(MuleProperties.OBJECT_DEFAULT_MESSAGE_RECEIVER_THREADING_PROFILE,
             new ChainedThreadingProfile(defaultThreadingProfile));
@@ -142,6 +143,13 @@ epBuilder.name = "Orange"
 epBuilder.responseTransformers = [ muleContext.registry.lookupTransformer("TestCompressionTransformer") ]
 orangeEndpoint = epFactory.getInboundEndpoint(epBuilder)
 
+List interceptorStackList = new ArrayList()
+interceptorStackList.add(new org.mule.interceptor.LoggingInterceptor())
+interceptorStackList.add(new org.mule.interceptor.TimerInterceptor())
+interceptorStackList.add(new org.mule.interceptor.LoggingInterceptor())
+InterceptorStack interceptorStack = new InterceptorStack(interceptorStackList);
+muleContext.registry.registerObject("testInterceptorStack", interceptorStack)
+
 //register model
 Model model = new SedaModel();
 exceptionStrategy = new TestExceptionStrategy();
@@ -156,6 +164,11 @@ Service service = new SedaService();
 service.model = model
 service.name = "orangeComponent"
 service.component = new DefaultJavaComponent(new SingletonObjectFactory(Orange.class.name))
+List interceptorList = new ArrayList()
+interceptorList.add(new org.mule.interceptor.LoggingInterceptor())
+interceptorList.add(interceptorStack)
+interceptorList.add(new org.mule.interceptor.TimerInterceptor())
+service.component.interceptors = interceptorList
 epBuilder= new EndpointURIEndpointBuilder(muleContext.registry.lookupEndpointBuilder("orangeEndpoint"))
 epBuilder.muleContext = muleContext
 epBuilder.setProperty("testLocal", "value1")

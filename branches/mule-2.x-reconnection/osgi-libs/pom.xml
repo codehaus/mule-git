@@ -44,6 +44,18 @@
                     </instructions>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-eclipse-plugin</artifactId>
+                <version>${eclipsePluginVersion}</version>
+                <configuration>
+                    <!-- 
+                         Do not generate eclipse project files for the osgified libs.
+                         Instead, we want the Mule projects to depend on the jars.
+                    -->
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
         </plugins>
         <!-- Don't pull in someone else's MANIFEST.MF file, we're going to generate it ourselves -->
         <resources>
@@ -52,7 +64,7 @@
                 <excludes>
                     <exclude>MANIFEST.MF</exclude>
                     <exclude>INDEX.LIST</exclude>
-                </excludes>                
+                </excludes>
             </resource>
         </resources>
     </build>
@@ -87,6 +99,8 @@
         <!-- SSEBR has 1.1.2, we use 2.0.0 -->
         <module>jug</module>
         <module>mx4j</module>
+        <!-- SSEBR has this but it depends on a newer version of log4j -->
+        <module>opensaml</module>
         <module>saxon</module>
         <module>script</module>
         <module>smack</module>
