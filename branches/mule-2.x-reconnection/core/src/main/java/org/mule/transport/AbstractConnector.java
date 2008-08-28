@@ -48,7 +48,6 @@ import org.mule.api.transport.MessageDispatcherFactory;
 import org.mule.api.transport.MessageReceiver;
 import org.mule.api.transport.MessageRequester;
 import org.mule.api.transport.MessageRequesterFactory;
-import org.mule.api.transport.ReceiveException;
 import org.mule.api.transport.ReplyToHandler;
 import org.mule.api.transport.SessionHandler;
 import org.mule.config.i18n.CoreMessages;
@@ -1777,11 +1776,6 @@ public abstract class AbstractConnector
     {
         MessageDispatcher dispatcher = null;
 
-        if(!isConnected())
-        {
-            throw new DispatchException(CoreMessages.notConnectedYet(getConnectionDescription()), event.getMessage(), endpoint);
-        }
-        
         try
         {
             dispatcher = this.getDispatcher(endpoint);
@@ -1850,11 +1844,6 @@ public abstract class AbstractConnector
         MessageRequester requester = null;
         MuleMessage result = null;
 
-        //if (!isConnected())
-        //{
-        //    throw new ReceiveException(CoreMessages.notConnectedYet(getConnectionDescription()), endpoint, timeout);
-        //}
-
         try
         {
             requester = this.getRequester(endpoint);
@@ -1908,11 +1897,6 @@ public abstract class AbstractConnector
     public MuleMessage send(OutboundEndpoint endpoint, MuleEvent event) throws DispatchException
     {
         MessageDispatcher dispatcher = null;
-
-        if(!isConnected())
-        {
-            throw new DispatchException(CoreMessages.notConnectedYet(getConnectionDescription()), event.getMessage(), endpoint);
-        }
 
         try
         {

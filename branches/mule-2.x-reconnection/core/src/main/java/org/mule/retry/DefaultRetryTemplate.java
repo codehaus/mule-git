@@ -68,6 +68,7 @@ public class DefaultRetryTemplate implements RetryTemplate
         {
             do
             {
+                Throwable cause;
                 try
                 {
                     callback.doWork(context);
@@ -80,6 +81,7 @@ public class DefaultRetryTemplate implements RetryTemplate
                 }
                 catch (Exception e)
                 {
+                    cause = e;
                     if (notifier != null)
                     {
                         notifier.failed(context, e);
@@ -90,7 +92,7 @@ public class DefaultRetryTemplate implements RetryTemplate
                         break;
                     }
                 }
-                status = policy.applyPolicy();
+                status = policy.applyPolicy(cause);
             }
             while (status.isOk());
 

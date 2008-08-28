@@ -10,6 +10,7 @@
 
 package org.mule.retry.policies;
 
+import org.mule.api.retry.RetryTemplate;
 import org.mule.api.retry.TemplatePolicy;
 import org.mule.retry.PolicyStatus;
 
@@ -26,9 +27,9 @@ public class NoRetryPolicyFactory extends AbstractPolicyFactory
 
     protected static class NoRetryPolicy implements TemplatePolicy
     {
-        public PolicyStatus applyPolicy()
+        public PolicyStatus applyPolicy(Throwable cause)
         {
-            return PolicyStatus.policyExhausted(null);
+            return PolicyStatus.policyExhausted(cause);
         }
     }
 

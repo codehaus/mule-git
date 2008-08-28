@@ -111,7 +111,7 @@ public abstract class AbstractConnectable implements Connectable, ExceptionListe
         // nothing to do by default
     }
     
-    public void initialise() throws InitialisationException
+    public final void initialise() throws InitialisationException
     {
         if (endpoint.getRetryPolicyFactory() != null)
         {
@@ -183,7 +183,7 @@ public abstract class AbstractConnectable implements Connectable, ExceptionListe
         return endpoint;
     }
 
-    public synchronized void connect() throws Exception
+    public final synchronized void connect() throws Exception
     {
         if (disposed.get())
         {
@@ -223,7 +223,7 @@ public abstract class AbstractConnectable implements Connectable, ExceptionListe
         }
     }
 
-    public synchronized void disconnect() throws Exception
+    public final synchronized void disconnect() throws Exception
     {
         if (!connected.get())
         {

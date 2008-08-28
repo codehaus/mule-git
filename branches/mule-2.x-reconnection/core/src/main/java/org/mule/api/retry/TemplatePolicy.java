@@ -18,5 +18,5 @@ import org.mule.retry.PolicyStatus;
 
 public interface TemplatePolicy
 {
-    public PolicyStatus applyPolicy();
+    public PolicyStatus applyPolicy(Throwable cause);
 }

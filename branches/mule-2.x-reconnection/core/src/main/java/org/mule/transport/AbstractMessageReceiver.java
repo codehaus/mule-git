@@ -108,9 +108,8 @@ public abstract class AbstractMessageReceiver extends AbstractConnectable implem
      * @throws org.mule.api.lifecycle.RecoverableException
      *          if an error occurs that can be recovered from
      */
-    public void initialise() throws InitialisationException
+    protected void doInitialise() throws InitialisationException
     {
-        super.initialise();
         listener = new DefaultInternalMessageListener();
         endpointUri = endpoint.getEndpointURI();
 
@@ -122,8 +121,6 @@ public abstract class AbstractMessageReceiver extends AbstractConnectable implem
         {
             throw new InitialisationException(e, this);
         }
-
-        doInitialise();
     }
 
     /*

@@ -114,12 +114,12 @@ public class SimpleRetryPolicyFactory extends AbstractPolicyFactory
             this.frequency = frequency;
         }
 
-        public PolicyStatus applyPolicy()
+        public PolicyStatus applyPolicy(Throwable cause)
         {
 
             if (retryCount != RETRY_COUNT_FOREVER && retryCounter.current().get() >= retryCount)
             {
-                return PolicyStatus.policyExhausted(null);
+                return PolicyStatus.policyExhausted(cause);
             }
             else
             {
@@ -147,7 +147,6 @@ public class SimpleRetryPolicyFactory extends AbstractPolicyFactory
                     // If we get an interrupt exception, some one is telling us to stop
                     return PolicyStatus.policyExhausted(e);
                 }
-
             }
         }
 
