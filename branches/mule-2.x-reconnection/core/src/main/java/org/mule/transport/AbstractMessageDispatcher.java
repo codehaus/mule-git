@@ -247,21 +247,21 @@ public abstract class AbstractMessageDispatcher extends AbstractConnectable impl
                     public void doWork(RetryContext context) throws Exception
                     {
 
-                        RequestContext.setEvent(event);
+                        final MuleEvent finalEvent = RequestContext.setEvent(event);
                         // Make sure we are connected
                         connect();
-                        AbstractMessageDispatcher.this.doDispatch(event);
+                        doDispatch(finalEvent);
 
                         if (connector.isEnableMessageEvents())
                         {
                             String component = null;
-                            if (event.getService() != null)
+                            if (finalEvent.getService() != null)
                             {
-                                component = event.getService().getName();
+                                component = finalEvent.getService().getName();
                             }
 
-                            connector.fireNotification(new EndpointMessageNotification(event.getMessage(),
-                                event.getEndpoint(), component, EndpointMessageNotification.MESSAGE_DISPATCHED));
+                            connector.fireNotification(new EndpointMessageNotification(finalEvent.getMessage(),
+                                finalEvent.getEndpoint(), component, EndpointMessageNotification.MESSAGE_DISPATCHED));
                         }
                     }
 
