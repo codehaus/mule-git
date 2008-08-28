@@ -39,7 +39,6 @@ import org.mule.api.config.MuleProperties;
 import org.mule.api.config.ThreadingProfile;
 import org.mule.config.ChainedThreadingProfile;
 import org.mule.retry.policies.NoRetryPolicyFactory;
-import org.mule.retry.policies.SimpleRetryPolicyFactory;
 
 // Set up defaults / system objects
 QueueManager queueManager = new TransactionalQueueManager();
@@ -127,7 +126,6 @@ muleContext.registry.registerEndpointBuilder("orangeEndpoint", epBuilder);
 
 epBuilder = new EndpointURIEndpointBuilder("test://test.queue2", muleContext);
 epBuilder.name = "testEPWithCS";
-epBuilder.setRetryPolicyFactory(new SimpleRetryPolicyFactory(3000, 4));
 muleContext.registry.registerEndpointBuilder("testEPWithCS", epBuilder);
 
 // Concrete Endpoints

@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.test.integration.transport.jdbc;
+package org.mule.integration.jdbc;
 
 
 import org.mule.api.endpoint.EndpointBuilder;
@@ -19,6 +19,7 @@ import org.mule.endpoint.EndpointURIEndpointBuilder;
 import org.mule.retry.DefaultRetryTemplate;
 import org.mule.retry.policies.SimpleRetryPolicyFactory;
 import org.mule.tck.testmodels.fruit.Orange;
+import org.mule.test.integration.transport.jdbc.AbstractJdbcFunctionalTestCase;
 import org.mule.transport.jdbc.JdbcConnector;
 
 import javax.sql.DataSource;

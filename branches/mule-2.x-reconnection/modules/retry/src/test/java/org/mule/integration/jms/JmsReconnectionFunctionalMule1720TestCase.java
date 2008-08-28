@@ -7,13 +7,13 @@
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
-package org.mule.transport.jms.issues;
+package org.mule.integration.jms;
 
 import org.mule.api.MuleEventContext;
 import org.mule.component.DefaultJavaComponent;
-import org.mule.transport.jms.JmsConnector;
 import org.mule.tck.functional.EventCallback;
 import org.mule.tck.functional.FunctionalTestComponent;
+import org.mule.transport.jms.JmsConnector;
 import org.mule.transport.jms.integration.AbstractJmsFunctionalTestCase;
 import org.mule.util.concurrent.Latch;
 
@@ -28,7 +28,7 @@ public class JmsReconnectionFunctionalMule1720TestCase extends AbstractJmsFuncti
 
     protected String getConfigResources()
     {
-        return "providers/activemq/jms-reconnection-strategy.xml";
+        return "jms-reconnection-strategy.xml";
     }
     
 	public void testReconnectionAfterConnectionFailure() throws Exception {

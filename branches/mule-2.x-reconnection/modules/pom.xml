@@ -41,6 +41,7 @@
                 <module>management</module>
                 <module>ognl</module>
                 <module>pgp</module>
+                <module>retry</module>
                 <module>scripting</module>
                 <module>spring-extras</module>
                 <module>spring-config</module>
