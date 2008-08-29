@@ -10,13 +10,25 @@
        http://www.mulesource.org/schema/mule/test/2.0 http://www.mulesource.org/schema/mule/test/2.0/mule-test.xsd
        http://www.mulesource.com/schema/mule/retry/2.0 http://www.mulesource.com/schema/mule/retry/2.0/mule-retry-ee.xsd">
 
-    <test:connector name="testConnector">
-        <spring:property name="retryPolicyFactory" ref="SimpleRetryPolicyFactory"/>
+    <test:connector name="testConnector1"/>
+
+    <test:connector name="testConnector2">
+        <retry:simple-policy count="5" frequency="1000"/>
     </test:connector>
 
-    <spring:bean name="SimpleRetryPolicyFactory" class="org.mule.retry.policies.SimpleRetryPolicyFactory">
-        <spring:property name="retryCount" value="5"/>
-        <spring:property name="frequency" value="1000"/>
-    </spring:bean>
+    <test:connector name="testConnector3">
+        <retry:forever-policy frequency="5000"/>
+    </test:connector>
 
+    <!-- 
+    <test:connector name="testConnector3">
+        <retry:custom-policy class="org.mule.retry.policies.RetryForeverPolicyFactory"/>
+    </test:connector>
+
+    <test:connector name="testConnector4">
+        <retry:forever-policy frequency="5000">
+            <retry:connect-notifier/>
+        </retry:forever-policy>
+    </test:connector>
+    -->
 </mule>

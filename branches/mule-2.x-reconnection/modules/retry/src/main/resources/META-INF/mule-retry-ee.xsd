@@ -19,4 +19,73 @@
         </xsd:appinfo>
     </xsd:annotation>
 
+    <xsd:element name="simple-policy" type="simpleRetryPolicyType"
+                 substitutionGroup="mule:abstract-retry-policy">
+        <xsd:annotation>
+            <xsd:documentation>
+                This policy allows the user to configure how many times a retry should 
+                be attempted and how much time to wait between retries.
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="simpleRetryPolicyType">
+        <xsd:complexContent>
+            <xsd:extension base="mule:abstractRetryPolicyType">
+                <xsd:attribute name="frequency" type="mule:substitutableLong" default="2000">
+                    <xsd:annotation>
+                        <xsd:documentation>How often (in ms) to retry</xsd:documentation>
+                    </xsd:annotation>
+                </xsd:attribute>
+                <xsd:attribute name="count" type="mule:substitutableInt" default="2">
+                    <xsd:annotation>
+                        <xsd:documentation>How many times to retry</xsd:documentation>
+                    </xsd:annotation>
+                </xsd:attribute>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:element name="forever-policy" type="foreverRetryPolicyType"
+                 substitutionGroup="mule:abstract-retry-policy">
+        <xsd:annotation>
+            <xsd:documentation>
+                Retry an infinite amount of times at the specified frequency.
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="foreverRetryPolicyType">
+        <xsd:complexContent>
+            <xsd:extension base="mule:abstractRetryPolicyType">
+                <xsd:attribute name="frequency" type="mule:substitutableLong" default="2000">
+                    <xsd:annotation>
+                        <xsd:documentation>How often (in ms) to retry</xsd:documentation>
+                    </xsd:annotation>
+                </xsd:attribute>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:element name="custom-policy" type="customRetryPolicyType"
+                 substitutionGroup="mule:abstract-retry-policy">
+        <xsd:annotation>
+            <xsd:documentation>
+                A user-defined retry policy.
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="customRetryPolicyType">
+        <xsd:complexContent>
+            <xsd:extension base="mule:abstractRetryPolicyType">
+                <xsd:sequence>
+                    <xsd:element ref="spring:property" minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:sequence>
+                <xsd:attribute name="class" type="substitutableClass" use="required">
+                    <xsd:annotation>
+                        <xsd:documentation>A class that implements the RetryPolicyFactory interface.</xsd:documentation>
+                    </xsd:annotation>
+                </xsd:attribute>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
 </xsd:schema>

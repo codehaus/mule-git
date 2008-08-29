@@ -13,12 +13,11 @@ package org.mule.retry.policies;
 import org.mule.api.retry.RetryPolicy;
 
 /**
- * This policy allows the user to configure how namy times a retry should be attempted and
- * how much time to wait between retries.
+ * This policy is the same as {@link SimpleRetryPolicyFactory} but will retry an infinite amount of times.
+ * @see SimpleRetryPolicyFactory
  */
 public class RetryForeverPolicyFactory extends SimpleRetryPolicyFactory
 {
-
     public RetryForeverPolicyFactory()
     {
         super();

@@ -1085,6 +1085,16 @@
         </xsd:attribute>
     </xsd:complexType>
 
+    <xsd:element name="abstract-retry-policy" abstract="true" type="abstractRetryPolicyType">
+        <xsd:annotation>
+            <xsd:documentation>
+                A placeholder for a retry policy element.
+                Retry policies define how Mule should retry a failed message send/dispatch/request.
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="abstractRetryPolicyType"/>
+
     <xsd:complexType name="asyncReplyCollectionType">
         <xsd:sequence>
             <xsd:element ref="abstract-inbound-endpoint" minOccurs="1" maxOccurs="unbounded"/>
@@ -1654,6 +1664,7 @@
                 <xsd:element ref="abstract-transaction" minOccurs="0"/>
                 <xsd:element ref="abstract-filter" minOccurs="0"/>
                 <xsd:element ref="abstract-security-filter" minOccurs="0"/>
+                <xsd:element ref="abstract-retry-policy" minOccurs="0"/>
                 <xsd:group ref="propertiesGroup"/>
             </xsd:sequence>
         </xsd:sequence>
@@ -2943,7 +2954,6 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-
 
     <!-- Custom connector element -->
 
@@ -4275,6 +4285,7 @@
                     <xsd:element name="receiver-threading-profile" type="threadingProfileType" minOccurs="0"/>
                     <xsd:element name="dispatcher-threading-profile" type="threadingProfileType" minOccurs="0"/>
                     <xsd:element ref="abstract-exception-strategy" minOccurs="0"/>
+                    <xsd:element ref="abstract-retry-policy" minOccurs="0"/>
                     <xsd:element name="service-overrides" type="serviceOverridesType" minOccurs="0"/>
                 </xsd:sequence>
                 <xsd:attribute name="createMultipleTransactedReceivers" type="substitutableBoolean"/>

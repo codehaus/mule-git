@@ -13,6 +13,7 @@ package org.mule.retry.config;
 import org.mule.api.retry.RetryTemplateFactory;
 import org.mule.api.transport.Connector;
 import org.mule.retry.DefaultRetryTemplate;
+import org.mule.retry.policies.NoRetryPolicyFactory;
 import org.mule.tck.FunctionalTestCase;
 
 public class RetryNamespaceHandlerTestCase extends FunctionalTestCase
@@ -22,9 +23,24 @@ public class RetryNamespaceHandlerTestCase extends FunctionalTestCase
         return "retry-namespace-config.xml";
     }
 
-    public void testConfig() throws Exception
+    public void testDefaultConfig() throws Exception
     {
-        Connector c = muleContext.getRegistry().lookupConnector("testConnector");
+        Connector c = muleContext.getRegistry().lookupConnector("testConnector1");
+        assertNotNull(c);
+
+        RetryTemplateFactory rtf = c.getRetryTemplateFactory();
+        assertNotNull(rtf);
+        assertTrue(rtf instanceof DefaultRetryTemplate);
+        assertFalse(rtf.isRetryEnabled());
+        assertTrue(((DefaultRetryTemplate) rtf).getPolicyFactory() instanceof NoRetryPolicyFactory);
+        
+        assertTrue(c.isConnected());
+        assertTrue(c.isStarted());
+    }
+
+    public void testSimpleConfig() throws Exception
+    {
+        Connector c = muleContext.getRegistry().lookupConnector("testConnector2");
         assertNotNull(c);
 
         RetryTemplateFactory rtf = c.getRetryTemplateFactory();

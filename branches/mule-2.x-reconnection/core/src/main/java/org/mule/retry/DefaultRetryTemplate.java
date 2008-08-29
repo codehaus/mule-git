@@ -131,4 +131,14 @@ public class DefaultRetryTemplate implements RetryTemplate, RetryTemplateFactory
     {
         return policyFactory != null && !(policyFactory instanceof NoRetryPolicyFactory);
     }
+
+    public RetryPolicyFactory getPolicyFactory()
+    {
+        return policyFactory;
+    }
+
+    public RetryNotifier getNotifier()
+    {
+        return notifier;
+    }
 }

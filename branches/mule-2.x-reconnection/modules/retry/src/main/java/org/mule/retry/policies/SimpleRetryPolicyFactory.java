@@ -33,7 +33,7 @@ public class SimpleRetryPolicyFactory extends AbstractPolicyFactory
     public static final int DEFAULT_RETRY_COUNT = 2;
     public static final int RETRY_COUNT_FOREVER = -1;
 
-    protected volatile int retryCount = DEFAULT_RETRY_COUNT;
+    protected volatile int count = DEFAULT_RETRY_COUNT;
     protected volatile long frequency = DEFAULT_FREQUENCY;
 
     public SimpleRetryPolicyFactory()
@@ -44,7 +44,7 @@ public class SimpleRetryPolicyFactory extends AbstractPolicyFactory
     public SimpleRetryPolicyFactory(long frequency, int retryCount)
     {
         this.frequency = frequency;
-        this.retryCount = retryCount;
+        this.count = retryCount;
     }
 
     public long getFrequency()
@@ -52,9 +52,9 @@ public class SimpleRetryPolicyFactory extends AbstractPolicyFactory
         return frequency;
     }
 
-    public int getRetryCount()
+    public int getCount()
     {
-        return retryCount;
+        return count;
     }
 
     public void setFrequency(long frequency)
@@ -62,14 +62,14 @@ public class SimpleRetryPolicyFactory extends AbstractPolicyFactory
         this.frequency = frequency;
     }
 
-    public void setRetryCount(int retryCount)
+    public void setCount(int count)
     {
-        this.retryCount = retryCount;
+        this.count = count;
     }
 
     public RetryPolicy create()
     {
-        return new SimpleRetryPolicy(frequency, retryCount);
+        return new SimpleRetryPolicy(frequency, count);
     }
 
     protected static class SimpleRetryPolicy implements RetryPolicy
@@ -80,18 +80,18 @@ public class SimpleRetryPolicyFactory extends AbstractPolicyFactory
 
         protected static final ThreadLocal called = new ThreadLocal();
 
-        private volatile int retryCount = DEFAULT_RETRY_COUNT;
+        private volatile int count = DEFAULT_RETRY_COUNT;
         private volatile long frequency = DEFAULT_FREQUENCY;
 
         public SimpleRetryPolicy(long frequency, int retryCount)
         {
             this.frequency = frequency;
-            this.retryCount = retryCount;
+            this.count = retryCount;
         }
 
-        public int getRetryCount()
+        public int getCount()
         {
-            return retryCount;
+            return count;
         }
 
         /**
@@ -99,9 +99,9 @@ public class SimpleRetryPolicyFactory extends AbstractPolicyFactory
          * 
          * @param retryCount number of retries
          */
-        public void setRetryCount(int retryCount)
+        public void setCount(int count)
         {
-            this.retryCount = retryCount;
+            this.count = count;
         }
 
         public long getFrequency()
@@ -117,7 +117,7 @@ public class SimpleRetryPolicyFactory extends AbstractPolicyFactory
         public PolicyStatus applyPolicy(Throwable cause)
         {
 
-            if (retryCount != RETRY_COUNT_FOREVER && retryCounter.current().get() >= retryCount)
+            if (count != RETRY_COUNT_FOREVER && retryCounter.current().get() >= count)
             {
                 return PolicyStatus.policyExhausted(cause);
             }
@@ -131,8 +131,8 @@ public class SimpleRetryPolicyFactory extends AbstractPolicyFactory
                                 + "ms before reconnecting. Failed attempt "
                                 + retryCounter.current().get()
                                 + " of "
-                                + (retryCount != RETRY_COUNT_FOREVER
-                                                ? String.valueOf(retryCount)
+                                + (count != RETRY_COUNT_FOREVER
+                                                ? String.valueOf(count)
                                                 : "unlimited"));
                 }
 
@@ -181,7 +181,7 @@ public class SimpleRetryPolicyFactory extends AbstractPolicyFactory
         final StringBuffer sb = new StringBuffer();
         sb.append("SimpleRetryPolicy");
         sb.append("{frequency=").append(frequency);
-        sb.append(", retryCount=").append(retryCount);
+        sb.append(", retryCount=").append(count);
         sb.append(", connectAsync=").append(isConnectAsynchronously());
         sb.append('}');
         return sb.toString();

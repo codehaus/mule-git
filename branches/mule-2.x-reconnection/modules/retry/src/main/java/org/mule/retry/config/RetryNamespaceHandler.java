@@ -9,12 +9,18 @@
  */
 package org.mule.retry.config;
 
+import org.mule.config.spring.parsers.generic.ChildDefinitionParser;
+import org.mule.retry.policies.RetryForeverPolicyFactory;
+import org.mule.retry.policies.SimpleRetryPolicyFactory;
+
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
 public class RetryNamespaceHandler extends NamespaceHandlerSupport
 {
     public void init()
     {
-        // TODO
+        registerBeanDefinitionParser("simple-policy", new ChildDefinitionParser("retryPolicyFactory", SimpleRetryPolicyFactory.class));
+        registerBeanDefinitionParser("forever-policy", new ChildDefinitionParser("retryPolicyFactory", RetryForeverPolicyFactory.class));
+        //registerBeanDefinitionParser("connect-notifier", new ChildDefinitionParser("retryPolicyFactory", RetryForeverPolicyFactory.class));
     }
 }
