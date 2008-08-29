@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema xmlns="http://www.mulesource.com/schema/mule/retry/2.0"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:mule="http://www.mulesource.org/schema/mule/core/2.0"
+            xmlns:schemadoc="http://www.mulesource.org/schema/mule/schemadoc/2.0"
+            targetNamespace="http://www.mulesource.com/schema/mule/retry/2.0"
+            elementFormDefault="qualified"
+            attributeFormDefault="unqualified">
+
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:import namespace="http://www.mulesource.org/schema/mule/core/2.0"
+                schemaLocation="http://www.mulesource.org/schema/mule/core/2.0/mule.xsd"/>
+ 
+    <xsd:annotation>
+        <xsd:documentation>Support for Retry Policies only available as part of Mule Enterprise</xsd:documentation>
+        <xsd:appinfo>
+            <schemadoc:short-name>retry-ee</schemadoc:short-name>
+            <schemadoc:page-title>Retry Policies</schemadoc:page-title>
+        </xsd:appinfo>
+    </xsd:annotation>
+
+</xsd:schema>
