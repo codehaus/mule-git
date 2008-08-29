@@ -11,15 +11,16 @@
 package org.mule.api.retry;
 
 /**
- * A factory responsible for creating a policy.  Custom policies should
- * Implement this factory and provide a private {@link org.mule.api.retry.TemplatePolicy}
- * class within this class.  The factory is the object that actually gets configured then new
- * {@link org.mule.api.retry.TemplatePolicy} objects are created each time using the configuration
+ * A factory responsible for creating a retry policy.  Custom policies should
+ * Implement this factory and provide a private class which implements the 
+ * {@link org.mule.api.retry.RetryPolicy} interface.  
+ * The factory is the object that actually gets configured then new
+ * {@link org.mule.api.retry.RetryPolicy} objects are created each time using the configuration
  * on the factory. 
  */
-public interface PolicyFactory
+public interface RetryPolicyFactory
 {
-    TemplatePolicy create();
+    RetryPolicy create();
 
     boolean isConnectAsynchronously();
 }

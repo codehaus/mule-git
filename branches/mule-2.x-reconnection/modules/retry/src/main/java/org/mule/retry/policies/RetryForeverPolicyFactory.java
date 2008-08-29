@@ -10,7 +10,7 @@
 
 package org.mule.retry.policies;
 
-import org.mule.api.retry.TemplatePolicy;
+import org.mule.api.retry.RetryPolicy;
 
 /**
  * This policy allows the user to configure how namy times a retry should be attempted and
@@ -29,7 +29,7 @@ public class RetryForeverPolicyFactory extends SimpleRetryPolicyFactory
         this.frequency = frequency;
     }
 
-    public TemplatePolicy create()
+    public RetryPolicy create()
     {
         return new SimpleRetryPolicy(frequency, RETRY_COUNT_FOREVER);
     }

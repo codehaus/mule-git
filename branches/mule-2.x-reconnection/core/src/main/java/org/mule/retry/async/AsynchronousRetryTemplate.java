@@ -10,12 +10,13 @@
 
 package org.mule.retry.async;
 
+import org.mule.api.MuleRuntimeException;
 import org.mule.api.context.WorkManager;
-import org.mule.api.retry.PolicyFactory;
 import org.mule.api.retry.RetryCallback;
 import org.mule.api.retry.RetryContext;
-import org.mule.api.retry.RetryNotifier;
 import org.mule.api.retry.RetryTemplate;
+import org.mule.api.retry.RetryTemplateFactory;
+import org.mule.config.i18n.MessageFactory;
 import org.mule.transport.FatalConnectException;
 import org.mule.util.concurrent.Latch;
 
@@ -28,12 +29,21 @@ import javax.resource.spi.work.WorkException;
  * template will only occur once the latch is released.
  *
  */
-public class AsynchronousRetryTemplate implements RetryTemplate
+public class AsynchronousRetryTemplate implements RetryTemplate, RetryTemplateFactory
 {
-    private WorkManager workManager;
-    private RetryTemplate delegate;
-    private Latch startLatch;
+    private final WorkManager workManager;
+    private final RetryTemplate delegate;
+    private final Latch startLatch;
 
+    public RetryTemplate create()
+    {
+        if (workManager == null)
+        {
+            throw new MuleRuntimeException(MessageFactory.createStaticMessage("Asynchronous connections specified but no work manager provided"));
+        }
+        return new AsynchronousRetryTemplate(delegate, workManager, startLatch);
+    }
+    
     public AsynchronousRetryTemplate(RetryTemplate delegate, WorkManager workManager)
     {
         this(delegate, workManager, null);
@@ -61,13 +71,8 @@ public class AsynchronousRetryTemplate implements RetryTemplate
         return context;
     }
 
-    public PolicyFactory getPolicyFactory()
+    public boolean isRetryEnabled()
     {
-        return delegate.getPolicyFactory();
-    }
-
-    public RetryNotifier getRetryNotifier()
-    {
-        return delegate.getRetryNotifier();
+        return delegate.isRetryEnabled();
     }
 }

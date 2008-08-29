@@ -10,15 +10,15 @@
 
 package org.mule.retry.policies;
 
-import org.mule.api.retry.PolicyFactory;
+import org.mule.api.retry.RetryPolicyFactory;
 
 /**
  * Base class for PolicyFactory implementations
  * */
-public abstract class AbstractPolicyFactory implements PolicyFactory
+public abstract class AbstractPolicyFactory implements RetryPolicyFactory
 {
     /** should the retry template using this policy be executed in its own thread */
-    protected boolean conectAsychronously;
+    protected boolean connectAsychronously = false;
 
     /**
      * should the retry template using this policy be executed in its own thread
@@ -26,15 +26,15 @@ public abstract class AbstractPolicyFactory implements PolicyFactory
      */
     public boolean isConnectAsynchronously()
     {
-        return conectAsychronously;
+        return connectAsychronously;
     }
 
     /**
      * should the retry template using this policy be executed in its own thread
      * @param conectAsychronously
      */
-    public void setConectAsychronously(boolean conectAsychronously)
+    public void setConectAsychronously(boolean connectAsychronously)
     {
-        this.conectAsychronously = conectAsychronously;
+        this.connectAsychronously = connectAsychronously;
     }
 }

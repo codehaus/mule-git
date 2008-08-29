@@ -223,7 +223,7 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
         // Register a JMS exception listener to detect failed connections.
         // Existing connection strategy will be used to recover.
 
-        if (recoverJmsConnections && retryTemplate != null && connection != null)
+        if (recoverJmsConnections && getRetryTemplateFactory().isRetryEnabled() && connection != null)
         {
             connection.setExceptionListener(new ExceptionListener()
             {

@@ -28,7 +28,6 @@ import org.mule.api.registry.MuleRegistry;
 import org.mule.api.registry.RegistrationException;
 import org.mule.api.registry.Registry;
 import org.mule.api.registry.RegistryBroker;
-import org.mule.api.retry.PolicyFactory;
 import org.mule.api.security.SecurityManager;
 import org.mule.api.transaction.TransactionManagerFactory;
 import org.mule.config.DefaultMuleConfiguration;
@@ -49,7 +48,6 @@ import java.util.Collection;
 import javax.resource.spi.work.WorkListener;
 import javax.transaction.TransactionManager;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -557,27 +555,6 @@ public class DefaultMuleContext implements MuleContext
     public ThreadingProfile getDefaultThreadingProfile()
     {
         return (ThreadingProfile) getRegistry().lookupObject(MuleProperties.OBJECT_DEFAULT_THREADING_PROFILE);
-    }
-
-    /**
-     * Returns a clone of the default Retry strategy. The clone ensures that the
-     * retry strategy can be manipulated without affecting other connectors
-     * using the same strategy
-     * 
-     * @return a clone of the default Retry strategy
-     */
-    public PolicyFactory getDefaultRetryPolicyFactory()
-    {
-        PolicyFactory defaultRetryPolicyFactory = 
-            (PolicyFactory) getRegistry().lookupObject(MuleProperties.OBJECT_DEFAULT_RETRY_POLICY_FACTORY);
-        try
-        {
-            return (PolicyFactory) BeanUtils.cloneBean(defaultRetryPolicyFactory);
-        }
-        catch (Exception e)
-        {
-            throw new MuleRuntimeException(CoreMessages.failedToClone("Connection Strategy"), e);
-        }
     }
 
     // TODO This should ideally only be available via an Admin interface

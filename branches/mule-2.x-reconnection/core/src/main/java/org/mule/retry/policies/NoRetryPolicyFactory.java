@@ -11,7 +11,7 @@
 package org.mule.retry.policies;
 
 import org.mule.api.retry.RetryTemplate;
-import org.mule.api.retry.TemplatePolicy;
+import org.mule.api.retry.RetryPolicy;
 import org.mule.retry.PolicyStatus;
 
 /**
@@ -20,19 +20,18 @@ import org.mule.retry.PolicyStatus;
  */
 public class NoRetryPolicyFactory extends AbstractPolicyFactory
 {
-    public TemplatePolicy create()
+    public RetryPolicy create()
     {
         return new NoRetryPolicy();
     }
 
-    protected static class NoRetryPolicy implements TemplatePolicy
+    protected static class NoRetryPolicy implements RetryPolicy
     {
         public PolicyStatus applyPolicy(Throwable cause)
         {
             return PolicyStatus.policyExhausted(cause);
         }
     }
-
 
     public String toString()
     {

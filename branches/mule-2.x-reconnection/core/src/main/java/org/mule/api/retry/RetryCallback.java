@@ -17,7 +17,7 @@ package org.mule.api.retry;
  * to ensure the work is atomic.
  *
  * @see org.mule.api.retry.RetryTemplate
- * @see org.mule.api.retry.TemplatePolicy
+ * @see org.mule.api.retry.RetryPolicy
  *
  */
 

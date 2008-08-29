@@ -41,7 +41,8 @@ public class JdbcConnectionTestCase extends AbstractJdbcFunctionalTestCase
     public Connector createConnector() throws Exception
     {
         connector = (JdbcConnector)super.createConnector();
-        connector.setRetryTemplate(new DefaultRetryTemplate(new SimpleRetryPolicyFactory(1000, 10)));
+        // TODO Fix this
+        connector.setRetryTemplateFactory(new DefaultRetryTemplate(new SimpleRetryPolicyFactory(1000, 10)));
         return connector;
     }
 

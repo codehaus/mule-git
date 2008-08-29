@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.transport;
+package org.mule.retry;
 
 import org.mule.MuleServer;
 import org.mule.api.retry.RetryContext;

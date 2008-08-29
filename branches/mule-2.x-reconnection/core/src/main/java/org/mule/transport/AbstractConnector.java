@@ -20,6 +20,7 @@ import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.MuleRuntimeException;
 import org.mule.api.config.ConfigurationException;
+import org.mule.api.config.MuleProperties;
 import org.mule.api.config.ThreadingProfile;
 import org.mule.api.context.WorkManager;
 import org.mule.api.context.notification.ServerNotification;
@@ -33,10 +34,12 @@ import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.lifecycle.LifecycleException;
 import org.mule.api.registry.ServiceDescriptorFactory;
 import org.mule.api.registry.ServiceException;
-import org.mule.api.retry.PolicyFactory;
 import org.mule.api.retry.RetryCallback;
 import org.mule.api.retry.RetryContext;
+import org.mule.api.retry.RetryNotifier;
+import org.mule.api.retry.RetryPolicyFactory;
 import org.mule.api.retry.RetryTemplate;
+import org.mule.api.retry.RetryTemplateFactory;
 import org.mule.api.service.Service;
 import org.mule.api.transport.Connectable;
 import org.mule.api.transport.Connector;
@@ -57,10 +60,8 @@ import org.mule.context.notification.EndpointMessageNotification;
 import org.mule.context.notification.OptimisedNotificationHandler;
 import org.mule.lifecycle.AlreadyInitialisedException;
 import org.mule.model.streaming.DelegatingInputStream;
+import org.mule.retry.ConnectNotifier;
 import org.mule.retry.DefaultRetryTemplate;
-import org.mule.retry.async.AsynchronousRetryTemplate;
-import org.mule.retry.async.ConnectLatch;
-import org.mule.retry.policies.NoRetryPolicyFactory;
 import org.mule.routing.filters.WildcardFilter;
 import org.mule.transformer.TransformerUtils;
 import org.mule.transport.service.TransportFactory;
@@ -221,8 +222,7 @@ public abstract class AbstractConnector
      */
     protected volatile int numberOfConcurrentTransactedReceivers = DEFAULT_NUM_CONCURRENT_TX_RECEIVERS;
 
-
-    protected volatile RetryTemplate retryTemplate;
+    private RetryTemplateFactory retryTemplateFactory;
     
     /**
      * If doThreading is used in ReconnectingStrategy receivers must wait for 
@@ -298,8 +298,6 @@ public abstract class AbstractConnector
         supportedProtocols = new ArrayList();
         supportedProtocols.add(getProtocol().toLowerCase());
 
-        retryTemplate = new DefaultRetryTemplate(new NoRetryPolicyFactory(), new ConnectNotifier());
-
         // TODO dispatcher pool configuration should be extracted, maybe even
         // moved into the factory?
         // NOTE: testOnBorrow MUST be FALSE. this is a bit of a design bug in
@@ -354,6 +352,13 @@ public abstract class AbstractConnector
         if (logger.isInfoEnabled())
         {
             logger.info("Initialising: " + this);
+        }
+
+        if (retryTemplateFactory == null)
+        {
+            RetryPolicyFactory rpf = (RetryPolicyFactory) muleContext.getRegistry().lookupObject(MuleProperties.OBJECT_DEFAULT_RETRY_POLICY_FACTORY);
+            RetryNotifier rn = (RetryNotifier) muleContext.getRegistry().lookupObject(MuleProperties.OBJECT_DEFAULT_RETRY_NOTIFIER);
+            retryTemplateFactory = new DefaultRetryTemplate(rpf, rn);
         }
 
         // Use lazy-init (in get() methods) for this instead.
@@ -447,7 +452,7 @@ public abstract class AbstractConnector
      *
      * @see org.mule.api.transport.Connector#isStarted()
      */
-    public boolean isStarted()
+    public final boolean isStarted()
     {
         return started.get();
     }
@@ -1241,48 +1246,6 @@ public abstract class AbstractConnector
         cachedNotificationHandler.fireNotification(notification);
     }
 
-    /**
-     * Getter for property 'connectionStrategy'.
-     *
-     * @return Value for property 'connectionStrategy'.
-     */
-    public RetryTemplate getRetryTemplate()
-    {
-        // not happy with this but each receiver needs its own instance
-        // of the connection strategy and using a factory just introduces extra
-        // implementation
-        try
-        {
-            return new DefaultRetryTemplate(retryTemplate.getPolicyFactory(), retryTemplate.getRetryNotifier());
-        }
-        catch (Exception e)
-        {
-            throw new MuleRuntimeException(CoreMessages.failedToClone("connectionStrategy"), e);
-        }
-    }
-
-    protected AsynchronousRetryTemplate getRetryTemplate(WorkManager workManager)
-    {
-        try
-        {
-            return new AsynchronousRetryTemplate(getRetryTemplate(), workManager, new ConnectLatch(this));
-        }
-        catch (Exception e)
-        {
-            throw new MuleRuntimeException(CoreMessages.failedToClone("connectionStrategy"), e);
-        }
-    }
-
-    public void setRetryTemplate(RetryTemplate retryTemplate)
-    {
-        this.retryTemplate = retryTemplate;
-    }
-
-    public void setRetryPolicyFactory(PolicyFactory retryPolicyFactory)
-    {
-        setRetryTemplate(new DefaultRetryTemplate(retryPolicyFactory));
-    }
-
     /** {@inheritDoc} */
     public boolean isDisposing()
     {
@@ -1370,16 +1333,7 @@ public abstract class AbstractConnector
             return;
         }
 
-        RetryTemplate template = 
-            new DefaultRetryTemplate(retryTemplate.getPolicyFactory(),
-                                     retryTemplate.getRetryNotifier());
-
-        if (asyncConnections)
-        {
-            //Wrap the RetryTemplate
-            template = new AsynchronousRetryTemplate(template, muleContext.getWorkManager());
-        }
-
+        RetryTemplate template = retryTemplateFactory.create();
         template.execute(new RetryCallback()
         {
             public void doWork(RetryContext context) throws Exception
@@ -1453,7 +1407,7 @@ public abstract class AbstractConnector
         connected.set(flag);
     }
 
-    protected final boolean isConnecting()
+    public final boolean isConnecting()
     {
         return connecting.get();
     }
@@ -2174,5 +2128,21 @@ public abstract class AbstractConnector
     public Semaphore getConnectedSemaphore()
     {
         return connectedSemaphore;
+    }
+
+    public RetryTemplateFactory getRetryTemplateFactory()
+    {
+        return retryTemplateFactory;
+    }
+
+    public void setRetryTemplateFactory(RetryTemplateFactory retryTemplateFactory)
+    {
+        this.retryTemplateFactory = retryTemplateFactory;
+    }
+
+    // TODO Remove me, for testing only
+    public void setRetryPolicyFactory(RetryPolicyFactory retryPolicyFactory)
+    {
+        setRetryTemplateFactory(new DefaultRetryTemplate(retryPolicyFactory, new ConnectNotifier()));
     }
 }

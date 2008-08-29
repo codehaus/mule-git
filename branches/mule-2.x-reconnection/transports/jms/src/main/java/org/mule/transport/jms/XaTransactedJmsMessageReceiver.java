@@ -18,7 +18,6 @@ import org.mule.api.transaction.Transaction;
 import org.mule.api.transaction.TransactionCallback;
 import org.mule.api.transport.Connector;
 import org.mule.api.transport.MessageAdapter;
-import org.mule.retry.policies.NoRetryPolicyFactory;
 import org.mule.transaction.TransactionCoordination;
 import org.mule.transaction.TransactionTemplate;
 import org.mule.transaction.XaTransaction;
@@ -90,9 +89,7 @@ public class XaTransactedJmsMessageReceiver extends TransactedPollingMessageRece
         // If reconnection is set, default reuse strategy to false
         // as some jms brokers will not detect lost connections if the
         // same consumer / session is used
-        // TODO Verify this is still correct after EE-244
-        if (retryTemplate != null && retryTemplate.getPolicyFactory() != null 
-            && !(retryTemplate.getPolicyFactory() instanceof NoRetryPolicyFactory))
+        if (retryTemplate != null && retryTemplate.isRetryEnabled())
         {
             this.reuseConsumer = true;
             this.reuseSession = true;

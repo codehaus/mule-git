@@ -19,11 +19,7 @@ import org.mule.api.retry.RetryContext;
 import org.mule.api.retry.RetryTemplate;
 import org.mule.api.transport.Connectable;
 import org.mule.api.transport.Connector;
-import org.mule.config.i18n.MessageFactory;
 import org.mule.context.notification.ConnectionNotification;
-import org.mule.retry.DefaultRetryTemplate;
-import org.mule.retry.async.AsynchronousRetryTemplate;
-import org.mule.retry.async.ConnectLatch;
 import org.mule.util.ClassUtils;
 import org.mule.util.concurrent.WaitableBoolean;
 
@@ -113,32 +109,13 @@ public abstract class AbstractConnectable implements Connectable, ExceptionListe
     
     public final void initialise() throws InitialisationException
     {
-        if (endpoint.getRetryPolicyFactory() != null)
+        if (endpoint.getRetryTemplateFactory() != null)
         {
-            if(endpoint.getRetryPolicyFactory().isConnectAsynchronously())
-            {
-                asyncConnections = true;
-                retryTemplate = new AsynchronousRetryTemplate(
-                        new DefaultRetryTemplate(endpoint.getRetryPolicyFactory(), new ConnectNotifier()),
-                        workManager, new ConnectLatch(this.connector));
-            }
-            else
-            {
-                retryTemplate = new DefaultRetryTemplate(endpoint.getRetryPolicyFactory(), new ConnectNotifier());
-            }
-        }
-        else if(this.connector.getRetryTemplate().getPolicyFactory().isConnectAsynchronously())
-        {
-            asyncConnections = true;
-            if (workManager == null)
-            {
-                throw new InitialisationException(MessageFactory.createStaticMessage("Asynchronous connection strategy specified but no work manager available"), this);
-            }
-            retryTemplate = this.connector.getRetryTemplate(workManager);
+            retryTemplate = endpoint.getRetryTemplateFactory().create();
         }
         else
         {
-            retryTemplate = this.connector.getRetryTemplate();
+            retryTemplate = connector.getRetryTemplateFactory().create();
         }
         
         doInitialise();
@@ -208,14 +185,7 @@ public abstract class AbstractConnectable implements Connectable, ExceptionListe
             }
         };
         
-        if (asyncConnections)
-        {
-            connector.getRetryTemplate(workManager).execute(callback);
-        }
-        else
-        {
-            retryTemplate.execute(callback);
-        }
+        retryTemplate.execute(callback);
         
         if (startOnConnect)
         {

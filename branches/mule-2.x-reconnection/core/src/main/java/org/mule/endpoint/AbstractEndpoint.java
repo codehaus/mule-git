@@ -13,7 +13,7 @@ package org.mule.endpoint;
 import org.mule.api.MuleContext;
 import org.mule.api.endpoint.EndpointURI;
 import org.mule.api.endpoint.ImmutableEndpoint;
-import org.mule.api.retry.PolicyFactory;
+import org.mule.api.retry.RetryTemplateFactory;
 import org.mule.api.routing.filter.Filter;
 import org.mule.api.security.EndpointSecurityFilter;
 import org.mule.api.transaction.TransactionConfig;
@@ -133,7 +133,7 @@ public abstract class AbstractEndpoint implements ImmutableEndpoint
 
     private final MuleContext muleContext;
 
-    protected PolicyFactory retryPolicyFactory;
+    protected RetryTemplateFactory retryTemplateFactory;
     
     public AbstractEndpoint(Connector connector,
                             EndpointURI endpointUri,
@@ -151,7 +151,7 @@ public abstract class AbstractEndpoint implements ImmutableEndpoint
                             String initialState,
                             String endpointEncoding,
                             MuleContext muleContext,
-                            PolicyFactory retryPolicyFactory)
+                            RetryTemplateFactory retryTemplateFactory)
     {
         this.connector = connector;
         this.endpointUri = endpointUri;
@@ -191,7 +191,7 @@ public abstract class AbstractEndpoint implements ImmutableEndpoint
         this.initialState = initialState;
         this.endpointEncoding = endpointEncoding;
         this.muleContext = muleContext;
-        this.retryPolicyFactory = retryPolicyFactory;
+        this.retryTemplateFactory = retryTemplateFactory;
     }
 
     public EndpointURI getEndpointURI()
@@ -295,7 +295,7 @@ public abstract class AbstractEndpoint implements ImmutableEndpoint
         if (obj == null || getClass() != obj.getClass()) return false;
 
         final AbstractEndpoint other = (AbstractEndpoint) obj;
-        return equal(retryPolicyFactory, other.retryPolicyFactory)
+        return equal(retryTemplateFactory, other.retryTemplateFactory)
                && equal(connector, other.connector)
                && deleteUnacceptedMessages == other.deleteUnacceptedMessages
                && equal(endpointEncoding, other.endpointEncoding)
@@ -313,7 +313,7 @@ public abstract class AbstractEndpoint implements ImmutableEndpoint
 
     public int hashCode()
     {
-        return ClassUtils.hash(new Object[]{this.getClass(), retryPolicyFactory, connector,
+        return ClassUtils.hash(new Object[]{this.getClass(), retryTemplateFactory, connector,
             deleteUnacceptedMessages ? Boolean.TRUE : Boolean.FALSE,
             endpointEncoding,
             endpointUri,
@@ -421,8 +421,8 @@ public abstract class AbstractEndpoint implements ImmutableEndpoint
         return muleContext;
     }
 
-    public PolicyFactory getRetryPolicyFactory()
+    public RetryTemplateFactory getRetryTemplateFactory()
     {
-        return retryPolicyFactory;
+        return retryTemplateFactory;
     }
 }

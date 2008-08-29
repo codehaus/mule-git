@@ -10,13 +10,15 @@
 
 package org.mule.retry;
 
-import org.mule.api.retry.PolicyFactory;
 import org.mule.api.retry.RetryCallback;
 import org.mule.api.retry.RetryContext;
 import org.mule.api.retry.RetryNotifier;
+import org.mule.api.retry.RetryPolicy;
+import org.mule.api.retry.RetryPolicyFactory;
 import org.mule.api.retry.RetryTemplate;
-import org.mule.api.retry.TemplatePolicy;
+import org.mule.api.retry.RetryTemplateFactory;
 import org.mule.config.i18n.CoreMessages;
+import org.mule.retry.policies.NoRetryPolicyFactory;
 import org.mule.transport.FatalConnectException;
 
 import java.io.InterruptedIOException;
@@ -26,30 +28,32 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * A RetryTemplate can be used to invoke actions that may need to be retried i.e. connecting to an external process,
- * or dispatching an event. How retries are made is dictated by the {@link org.mule.api.retry.PolicyFactory}. Policies
+ * or dispatching an event. How retries are made is dictated by the {@link org.mule.api.retry.RetryPolicyFactory}. Policies
  * are stategies that define what happens between retries.
  * Also a {@link org.mule.api.retry.RetryNotifier} that can be used to invoke actions between Retries for tracking and
  * notifications.
  *
  * @see org.mule.api.retry.RetryNotifier
  * @see RetryCallback
- * @see org.mule.api.retry.PolicyFactory
+ * @see org.mule.api.retry.RetryPolicyFactory
  */
-public class DefaultRetryTemplate implements RetryTemplate
+public class DefaultRetryTemplate implements RetryTemplate, RetryTemplateFactory
 {
-    /**
-     * logger used by this class
-     */
     protected transient final Log logger = LogFactory.getLog(DefaultRetryTemplate.class);
-    private final PolicyFactory policyFactory;
-    private RetryNotifier notifier;
+    private final RetryPolicyFactory policyFactory;
+    private final RetryNotifier notifier;
 
-    public DefaultRetryTemplate(PolicyFactory policyFactory)
+    public RetryTemplate create()
+    {
+        return new DefaultRetryTemplate(policyFactory, notifier);
+    }
+    
+    public DefaultRetryTemplate(RetryPolicyFactory policyFactory)
     {
         this(policyFactory, null);
     }
 
-    public DefaultRetryTemplate(PolicyFactory policyFactory, RetryNotifier notifier)
+    public DefaultRetryTemplate(RetryPolicyFactory policyFactory, RetryNotifier notifier)
     {
         if (policyFactory == null)
         {
@@ -62,7 +66,7 @@ public class DefaultRetryTemplate implements RetryTemplate
     public RetryContext execute(RetryCallback callback) throws FatalConnectException
     {
         PolicyStatus status = null;
-        TemplatePolicy policy = policyFactory.create();
+        RetryPolicy policy = policyFactory.create();
         DefaultRetryContext context = new DefaultRetryContext(callback.getWorkDescription());
         try
         {
@@ -120,13 +124,11 @@ public class DefaultRetryTemplate implements RetryTemplate
 
     }
 
-    public PolicyFactory getPolicyFactory()
+    /**
+     * @return true if a policy is configured which will actually retry
+     */
+    public boolean isRetryEnabled()
     {
-        return policyFactory;
-    }
-
-    public RetryNotifier getRetryNotifier()
-    {
-        return notifier;
+        return policyFactory != null && !(policyFactory instanceof NoRetryPolicyFactory);
     }
 }

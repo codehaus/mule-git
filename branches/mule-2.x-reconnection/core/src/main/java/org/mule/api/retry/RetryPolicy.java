@@ -16,7 +16,7 @@ import org.mule.retry.PolicyStatus;
  * A policy defines 
  */
 
-public interface TemplatePolicy
+public interface RetryPolicy
 {
     public PolicyStatus applyPolicy(Throwable cause);
 }

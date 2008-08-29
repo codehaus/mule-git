@@ -14,7 +14,7 @@ import org.mule.api.MuleContext;
 import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.EndpointURI;
 import org.mule.api.endpoint.InboundEndpoint;
-import org.mule.api.retry.PolicyFactory;
+import org.mule.api.retry.RetryTemplateFactory;
 import org.mule.api.routing.filter.Filter;
 import org.mule.api.security.EndpointSecurityFilter;
 import org.mule.api.transaction.TransactionConfig;
@@ -62,9 +62,9 @@ public class DynamicURIInboundEndpoint implements InboundEndpoint
         this.dynamicEndpointURI = dynamicEndpointURI;
     }
 
-    public PolicyFactory getRetryPolicyFactory()
+    public RetryTemplateFactory getRetryTemplateFactory()
     {
-        return endpoint.getRetryPolicyFactory();
+        return endpoint.getRetryTemplateFactory();
     }
 
     public Connector getConnector()

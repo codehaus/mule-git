@@ -15,7 +15,7 @@ import org.mule.api.config.ConfigurationBuilder;
 import org.mule.api.endpoint.EndpointURI;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.model.EntryPointResolver;
-import org.mule.api.retry.PolicyFactory;
+import org.mule.api.retry.RetryPolicyFactory;
 import org.mule.api.routing.InboundRouterCollection;
 import org.mule.api.routing.OutboundRouter;
 import org.mule.api.routing.ResponseRouterCollection;
@@ -1124,7 +1124,7 @@ public class CoreMessages extends MessageFactory
         return factory.createMessage(BUNDLE_PATH, 271);
     }
 
-    public static Message failedToConnect(String what, PolicyFactory policy)
+    public static Message failedToConnect(String what, RetryPolicyFactory policy)
     {
         return factory.createMessage(BUNDLE_PATH, 272, what, policy);
     }

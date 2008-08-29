@@ -20,6 +20,7 @@ import org.mule.config.ChainedThreadingProfile;
 import org.mule.config.bootstrap.SimpleRegistryBootstrap;
 import org.mule.endpoint.DefaultEndpointFactory;
 import org.mule.model.seda.SedaModel;
+import org.mule.retry.ConnectNotifier;
 import org.mule.retry.policies.NoRetryPolicyFactory;
 import org.mule.security.MuleSecurityManager;
 import org.mule.util.DefaultStreamCloserService;
@@ -84,6 +85,7 @@ public class DefaultsConfigurationBuilder extends AbstractConfigurationBuilder
             new ChainedThreadingProfile(defaultThreadingProfile));
         
         registry.registerObject(MuleProperties.OBJECT_DEFAULT_RETRY_POLICY_FACTORY, new NoRetryPolicyFactory());
+        registry.registerObject(MuleProperties.OBJECT_DEFAULT_RETRY_NOTIFIER, new ConnectNotifier());
         
         Model systemModel = new SedaModel();
         systemModel.setName(MuleProperties.OBJECT_SYSTEM_MODEL);

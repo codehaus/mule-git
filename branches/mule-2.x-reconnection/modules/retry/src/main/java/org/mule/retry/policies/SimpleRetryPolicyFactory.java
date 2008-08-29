@@ -10,7 +10,7 @@
 
 package org.mule.retry.policies;
 
-import org.mule.api.retry.TemplatePolicy;
+import org.mule.api.retry.RetryPolicy;
 import org.mule.retry.PolicyStatus;
 
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicInteger;
@@ -67,12 +67,12 @@ public class SimpleRetryPolicyFactory extends AbstractPolicyFactory
         this.retryCount = retryCount;
     }
 
-    public TemplatePolicy create()
+    public RetryPolicy create()
     {
         return new SimpleRetryPolicy(frequency, retryCount);
     }
 
-    protected static class SimpleRetryPolicy implements TemplatePolicy
+    protected static class SimpleRetryPolicy implements RetryPolicy
     {
         protected transient final Log logger = LogFactory.getLog(SimpleRetryPolicy.class);
 

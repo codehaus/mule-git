@@ -10,6 +10,9 @@
 
 package org.mule.retry.config;
 
+import org.mule.api.retry.RetryTemplateFactory;
+import org.mule.api.transport.Connector;
+import org.mule.retry.DefaultRetryTemplate;
 import org.mule.tck.FunctionalTestCase;
 
 public class RetryNamespaceHandlerTestCase extends FunctionalTestCase
@@ -21,7 +24,16 @@ public class RetryNamespaceHandlerTestCase extends FunctionalTestCase
 
     public void testConfig() throws Exception
     {
-        // TODO
+        Connector c = muleContext.getRegistry().lookupConnector("testConnector");
+        assertNotNull(c);
+
+        RetryTemplateFactory rtf = c.getRetryTemplateFactory();
+        assertNotNull(rtf);
+        assertTrue(rtf instanceof DefaultRetryTemplate);
+        assertTrue(rtf.isRetryEnabled());
+        
+        assertTrue(c.isConnected());
+        assertTrue(c.isStarted());
     }
 
 }

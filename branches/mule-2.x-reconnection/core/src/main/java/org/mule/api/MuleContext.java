@@ -20,7 +20,7 @@ import org.mule.api.lifecycle.LifecycleManager;
 import org.mule.api.registry.MuleRegistry;
 import org.mule.api.registry.RegistrationException;
 import org.mule.api.registry.Registry;
-import org.mule.api.retry.PolicyFactory;
+import org.mule.api.retry.RetryPolicyFactory;
 import org.mule.api.security.SecurityManager;
 import org.mule.context.notification.NotificationException;
 import org.mule.context.notification.ServerNotificationManager;
@@ -193,7 +193,7 @@ public interface MuleContext extends Lifecycle
 
     ThreadingProfile getDefaultThreadingProfile();
 
-    PolicyFactory getDefaultRetryPolicyFactory();
+    RetryPolicyFactory getDefaultRetryPolicyFactory();
 
     // TODO This should ideally only be available via an Admin interface
     void addRegistry(long id, Registry registry);
