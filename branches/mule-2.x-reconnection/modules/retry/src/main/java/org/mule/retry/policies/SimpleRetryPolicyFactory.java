@@ -89,31 +89,6 @@ public class SimpleRetryPolicyFactory extends AbstractPolicyFactory
             this.count = retryCount;
         }
 
-        public int getCount()
-        {
-            return count;
-        }
-
-        /**
-         * How many times to retry. Set to -1 to retry forever.
-         * 
-         * @param retryCount number of retries
-         */
-        public void setCount(int count)
-        {
-            this.count = count;
-        }
-
-        public long getFrequency()
-        {
-            return frequency;
-        }
-
-        public void setFrequency(long frequency)
-        {
-            this.frequency = frequency;
-        }
-
         public PolicyStatus applyPolicy(Throwable cause)
         {
 

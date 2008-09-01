@@ -20,12 +20,15 @@
         <retry:forever-policy frequency="5000"/>
     </test:connector>
 
-    <!-- 
-    <test:connector name="testConnector3">
-        <retry:custom-policy class="org.mule.retry.policies.RetryForeverPolicyFactory"/>
+    <test:connector name="testConnector4">
+        <retry:custom-policy class="org.mule.retry.test.TestRetryPolicyFactory">
+            <spring:property name="fooBar" value="true"/>
+            <spring:property name="revolutions" value="500"/>
+        </retry:custom-policy>
     </test:connector>
 
-    <test:connector name="testConnector4">
+    <!-- 
+    <test:connector name="testConnector5">
         <retry:forever-policy frequency="5000">
             <retry:connect-notifier/>
         </retry:forever-policy>

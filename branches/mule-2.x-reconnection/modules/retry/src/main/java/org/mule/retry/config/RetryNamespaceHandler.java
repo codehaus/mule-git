@@ -21,6 +21,7 @@ public class RetryNamespaceHandler extends NamespaceHandlerSupport
     {
         registerBeanDefinitionParser("simple-policy", new ChildDefinitionParser("retryPolicyFactory", SimpleRetryPolicyFactory.class));
         registerBeanDefinitionParser("forever-policy", new ChildDefinitionParser("retryPolicyFactory", RetryForeverPolicyFactory.class));
+        registerBeanDefinitionParser("custom-policy", new ChildDefinitionParser("retryPolicyFactory"));
         //registerBeanDefinitionParser("connect-notifier", new ChildDefinitionParser("retryPolicyFactory", RetryForeverPolicyFactory.class));
     }
 }

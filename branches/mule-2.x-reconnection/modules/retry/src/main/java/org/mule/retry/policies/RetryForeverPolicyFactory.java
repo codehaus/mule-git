@@ -33,7 +33,6 @@ public class RetryForeverPolicyFactory extends SimpleRetryPolicyFactory
         return new SimpleRetryPolicy(frequency, RETRY_COUNT_FOREVER);
     }
 
-
     public String toString()
     {
         final StringBuffer sb = new StringBuffer();
@@ -43,5 +42,4 @@ public class RetryForeverPolicyFactory extends SimpleRetryPolicyFactory
         sb.append('}');
         return sb.toString();
     }
-
 }
