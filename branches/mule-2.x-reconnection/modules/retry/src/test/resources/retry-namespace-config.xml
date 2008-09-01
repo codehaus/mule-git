@@ -13,14 +13,18 @@
     <test:connector name="testConnector1"/>
 
     <test:connector name="testConnector2">
-        <retry:simple-policy count="5" frequency="1000"/>
+        <retry:simple-policy/>
     </test:connector>
 
     <test:connector name="testConnector3">
-        <retry:forever-policy frequency="5000"/>
+        <retry:simple-policy count="5" frequency="1000"/>
     </test:connector>
 
     <test:connector name="testConnector4">
+        <retry:forever-policy frequency="5000"/>
+    </test:connector>
+
+    <test:connector name="testConnector5">
         <retry:custom-policy class="org.mule.retry.test.TestRetryPolicyFactory">
             <spring:property name="fooBar" value="true"/>
             <spring:property name="revolutions" value="500"/>
@@ -28,7 +32,7 @@
     </test:connector>
 
     <!-- 
-    <test:connector name="testConnector5">
+    <test:connector name="testConnector6">
         <retry:forever-policy frequency="5000">
             <retry:connect-notifier/>
         </retry:forever-policy>

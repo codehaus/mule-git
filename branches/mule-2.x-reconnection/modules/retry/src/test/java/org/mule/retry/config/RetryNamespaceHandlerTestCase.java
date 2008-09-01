@@ -42,9 +42,27 @@ public class RetryNamespaceHandlerTestCase extends FunctionalTestCase
         assertTrue(c.isStarted());
     }
 
-    public void testSimpleConfig() throws Exception
+    public void testSimpleDefaults() throws Exception
     {
         Connector c = muleContext.getRegistry().lookupConnector("testConnector2");
+        assertNotNull(c);
+
+        RetryTemplateFactory rtf = c.getRetryTemplateFactory();
+        assertNotNull(rtf);
+        assertTrue(rtf.isRetryEnabled());
+        assertTrue(rtf instanceof DefaultRetryTemplate);
+        RetryPolicyFactory rpf = ((DefaultRetryTemplate) rtf).getPolicyFactory();
+        assertTrue(rpf instanceof SimpleRetryPolicyFactory);
+        assertEquals(SimpleRetryPolicyFactory.DEFAULT_RETRY_COUNT, ((SimpleRetryPolicyFactory) rpf).getCount());
+        assertEquals(SimpleRetryPolicyFactory.DEFAULT_FREQUENCY, ((SimpleRetryPolicyFactory) rpf).getFrequency());
+        
+        assertTrue(c.isConnected());
+        assertTrue(c.isStarted());
+    }
+
+    public void testSimpleConfig() throws Exception
+    {
+        Connector c = muleContext.getRegistry().lookupConnector("testConnector3");
         assertNotNull(c);
 
         RetryTemplateFactory rtf = c.getRetryTemplateFactory();
@@ -62,7 +80,7 @@ public class RetryNamespaceHandlerTestCase extends FunctionalTestCase
 
     public void testForeverConfig() throws Exception
     {
-        Connector c = muleContext.getRegistry().lookupConnector("testConnector3");
+        Connector c = muleContext.getRegistry().lookupConnector("testConnector4");
         assertNotNull(c);
 
         RetryTemplateFactory rtf = c.getRetryTemplateFactory();
@@ -79,7 +97,7 @@ public class RetryNamespaceHandlerTestCase extends FunctionalTestCase
 
     public void testCustomConfig() throws Exception
     {
-        Connector c = muleContext.getRegistry().lookupConnector("testConnector4");
+        Connector c = muleContext.getRegistry().lookupConnector("testConnector5");
         assertNotNull(c);
 
         RetryTemplateFactory rtf = c.getRetryTemplateFactory();
