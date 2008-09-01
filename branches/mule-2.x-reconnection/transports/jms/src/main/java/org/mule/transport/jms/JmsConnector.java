@@ -27,6 +27,7 @@ import org.mule.config.ExceptionHelper;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.context.notification.ConnectionNotification;
 import org.mule.context.notification.NotificationException;
+import org.mule.retry.policies.NoRetryPolicyTemplate;
 import org.mule.transaction.TransactionCoordination;
 import org.mule.transport.AbstractConnector;
 import org.mule.transport.ConnectException;
@@ -223,7 +224,7 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
         // Register a JMS exception listener to detect failed connections.
         // Existing connection strategy will be used to recover.
 
-        if (recoverJmsConnections && getRetryTemplateFactory().isRetryEnabled() && connection != null)
+        if (recoverJmsConnections && !(getRetryPolicyTemplate() instanceof NoRetryPolicyTemplate) && connection != null)
         {
             connection.setExceptionListener(new ExceptionListener()
             {

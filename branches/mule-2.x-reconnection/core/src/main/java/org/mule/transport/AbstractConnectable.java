@@ -16,7 +16,7 @@ import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.retry.RetryCallback;
 import org.mule.api.retry.RetryContext;
-import org.mule.api.retry.RetryTemplate;
+import org.mule.api.retry.RetryPolicyTemplate;
 import org.mule.api.transport.Connectable;
 import org.mule.api.transport.Connector;
 import org.mule.context.notification.ConnectionNotification;
@@ -43,7 +43,7 @@ public abstract class AbstractConnectable implements Connectable, ExceptionListe
     protected final AtomicBoolean disposing = new AtomicBoolean(false);
     protected final AtomicBoolean disposed = new AtomicBoolean(false);
 
-    protected RetryTemplate retryTemplate;
+    protected RetryPolicyTemplate retryTemplate;
     
     private WorkManager workManager = null;    
 
@@ -109,13 +109,13 @@ public abstract class AbstractConnectable implements Connectable, ExceptionListe
     
     public final void initialise() throws InitialisationException
     {
-        if (endpoint.getRetryTemplateFactory() != null)
+        if (endpoint.getRetryPolicyTemplate() != null)
         {
-            retryTemplate = endpoint.getRetryTemplateFactory().create();
+            retryTemplate = endpoint.getRetryPolicyTemplate();
         }
         else
         {
-            retryTemplate = connector.getRetryTemplateFactory().create();
+            retryTemplate = connector.getRetryPolicyTemplate();
         }
         
         doInitialise();

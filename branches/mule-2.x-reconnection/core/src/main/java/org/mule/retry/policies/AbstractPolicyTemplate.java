@@ -8,17 +8,17 @@
  * LICENSE.txt file.
  */
 
-package org.mule.retry;
+package org.mule.retry.policies;
 
 import org.mule.api.retry.RetryCallback;
 import org.mule.api.retry.RetryContext;
 import org.mule.api.retry.RetryNotifier;
 import org.mule.api.retry.RetryPolicy;
-import org.mule.api.retry.RetryPolicyFactory;
-import org.mule.api.retry.RetryTemplate;
-import org.mule.api.retry.RetryTemplateFactory;
+import org.mule.api.retry.RetryPolicyTemplate;
 import org.mule.config.i18n.CoreMessages;
-import org.mule.retry.policies.NoRetryPolicyFactory;
+import org.mule.retry.DefaultRetryContext;
+import org.mule.retry.PolicyStatus;
+import org.mule.retry.notifiers.ConnectNotifier;
 import org.mule.transport.FatalConnectException;
 
 import java.io.InterruptedIOException;
@@ -27,46 +27,21 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * A RetryTemplate can be used to invoke actions that may need to be retried i.e. connecting to an external process,
- * or dispatching an event. How retries are made is dictated by the {@link org.mule.api.retry.RetryPolicyFactory}. Policies
- * are stategies that define what happens between retries.
- * Also a {@link org.mule.api.retry.RetryNotifier} that can be used to invoke actions between Retries for tracking and
- * notifications.
- *
- * @see org.mule.api.retry.RetryNotifier
- * @see RetryCallback
- * @see org.mule.api.retry.RetryPolicyFactory
- */
-public class DefaultRetryTemplate implements RetryTemplate, RetryTemplateFactory
+ * Base class for PolicyFactory implementations
+ * */
+public abstract class AbstractPolicyTemplate implements RetryPolicyTemplate
 {
-    protected transient final Log logger = LogFactory.getLog(DefaultRetryTemplate.class);
-    private final RetryPolicyFactory policyFactory;
-    private final RetryNotifier notifier;
+    /** should the retry template using this policy be executed in its own thread */
+    protected boolean connectAsychronously = false;
 
-    public RetryTemplate create()
-    {
-        return new DefaultRetryTemplate(policyFactory, notifier);
-    }
+    protected RetryNotifier notifier = new ConnectNotifier();
     
-    public DefaultRetryTemplate(RetryPolicyFactory policyFactory)
-    {
-        this(policyFactory, null);
-    }
-
-    public DefaultRetryTemplate(RetryPolicyFactory policyFactory, RetryNotifier notifier)
-    {
-        if (policyFactory == null)
-        {
-            throw new IllegalArgumentException(CoreMessages.objectIsNull("policyFactory").getMessage());
-        }
-        this.policyFactory = policyFactory;
-        this.notifier = notifier;
-    }
-
+    protected transient final Log logger = LogFactory.getLog(getClass());
+    
     public RetryContext execute(RetryCallback callback) throws FatalConnectException
     {
         PolicyStatus status = null;
-        RetryPolicy policy = policyFactory.create();
+        RetryPolicy policy = createRetryInstance();
         DefaultRetryContext context = new DefaultRetryContext(callback.getWorkDescription());
         try
         {
@@ -107,7 +82,7 @@ public class DefaultRetryTemplate implements RetryTemplate, RetryTemplateFactory
             else
             {
                 throw new FatalConnectException(
-                        CoreMessages.failedToConnect(context.getDescription(), policyFactory),
+                        CoreMessages.failedToConnect(context.getDescription(), this),
                         status.getThrowable(), this);
             }
         }
@@ -121,24 +96,41 @@ public class DefaultRetryTemplate implements RetryTemplate, RetryTemplateFactory
                 }
             }
         }
-
+    }
+    
+    /**
+    * @return true if a policy is configured which will actually retry
+    */
+    public boolean isRetryEnabled()
+    {
+        return true;
     }
 
     /**
-     * @return true if a policy is configured which will actually retry
+     * should the retry template using this policy be executed in its own thread
+     * @return
      */
-    public boolean isRetryEnabled()
+    public boolean isConnectAsynchronously()
     {
-        return policyFactory != null && !(policyFactory instanceof NoRetryPolicyFactory);
+        return connectAsychronously;
     }
 
-    public RetryPolicyFactory getPolicyFactory()
+    /**
+     * should the retry template using this policy be executed in its own thread
+     * @param conectAsychronously
+     */
+    public void setConectAsychronously(boolean connectAsychronously)
     {
-        return policyFactory;
+        this.connectAsychronously = connectAsychronously;
     }
 
     public RetryNotifier getNotifier()
     {
         return notifier;
+    }
+
+    public void setNotifier(RetryNotifier retryNotifier)
+    {
+        this.notifier = retryNotifier;
     }
 }

@@ -21,7 +21,7 @@ import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.endpoint.InboundEndpoint;
 import org.mule.api.endpoint.OutboundEndpoint;
 import org.mule.api.lifecycle.Lifecycle;
-import org.mule.api.retry.RetryTemplateFactory;
+import org.mule.api.retry.RetryPolicyTemplate;
 import org.mule.api.service.Service;
 
 import java.beans.ExceptionListener;
@@ -224,5 +224,5 @@ public interface Connector extends Lifecycle, MuleContextAware, NamedObject
 
     MuleContext getMuleContext();
 
-    RetryTemplateFactory getRetryTemplateFactory();
+    RetryPolicyTemplate getRetryPolicyTemplate();
 }

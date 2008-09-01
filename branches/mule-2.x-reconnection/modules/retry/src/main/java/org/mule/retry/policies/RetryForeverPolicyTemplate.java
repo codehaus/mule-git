@@ -13,22 +13,22 @@ package org.mule.retry.policies;
 import org.mule.api.retry.RetryPolicy;
 
 /**
- * This policy is the same as {@link SimpleRetryPolicyFactory} but will retry an infinite amount of times.
- * @see SimpleRetryPolicyFactory
+ * This policy is the same as {@link SimpleRetryPolicyTemplate} but will retry an infinite amount of times.
+ * @see SimpleRetryPolicyTemplate
  */
-public class RetryForeverPolicyFactory extends SimpleRetryPolicyFactory
+public class RetryForeverPolicyTemplate extends SimpleRetryPolicyTemplate
 {
-    public RetryForeverPolicyFactory()
+    public RetryForeverPolicyTemplate()
     {
         super();
     }
 
-    public RetryForeverPolicyFactory(long frequency)
+    public RetryForeverPolicyTemplate(long frequency)
     {
         this.frequency = frequency;
     }
 
-    public RetryPolicy create()
+    public RetryPolicy createRetryInstance()
     {
         return new SimpleRetryPolicy(frequency, RETRY_COUNT_FOREVER);
     }

@@ -11,7 +11,7 @@
 package org.mule.api.endpoint;
 
 import org.mule.api.MuleContext;
-import org.mule.api.retry.RetryTemplateFactory;
+import org.mule.api.retry.RetryPolicyTemplate;
 import org.mule.api.routing.filter.Filter;
 import org.mule.api.security.EndpointSecurityFilter;
 import org.mule.api.transaction.TransactionConfig;
@@ -203,5 +203,5 @@ public interface ImmutableEndpoint extends Serializable
      * For outbound endpoints, the Retry Policy will attempt to retry dispatching, sending and receiving an event
      * @return the Policy factory to use when retrying a connection or dispatching an event
      */
-    RetryTemplateFactory getRetryTemplateFactory();
+    RetryPolicyTemplate getRetryPolicyTemplate();
 }

@@ -24,7 +24,7 @@ import org.mule.api.endpoint.OutboundEndpoint;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.registry.ServiceDescriptorFactory;
 import org.mule.api.registry.ServiceException;
-import org.mule.api.retry.RetryTemplateFactory;
+import org.mule.api.retry.RetryPolicyTemplate;
 import org.mule.api.routing.filter.Filter;
 import org.mule.api.security.EndpointSecurityFilter;
 import org.mule.api.transaction.TransactionConfig;
@@ -79,7 +79,7 @@ public abstract class AbstractEndpointBuilder implements EndpointBuilder
     protected String initialState = ImmutableEndpoint.INITIAL_STATE_STARTED;
     protected String encoding;
     protected Integer createConnector;
-    protected RetryTemplateFactory retryTemplateFactory;
+    protected RetryPolicyTemplate retryPolicyTemplate;
 
     // not included in equality/hash
     protected String registryId = null;
@@ -167,7 +167,7 @@ public abstract class AbstractEndpointBuilder implements EndpointBuilder
             getName(endpointURI), getProperties(), getTransactionConfig(), getFilter(connector),
             getDefaultDeleteUnacceptedMessages(connector), getSecurityFilter(), synchronous, remoteSync,
             getRemoteSyncTimeout(connector), getInitialState(connector), getEndpointEncoding(connector), muleContext,
-            getRetryTemplateFactory(connector));
+            getRetryPolicyTemplate(connector));
     }
 
     protected OutboundEndpoint doBuildOutboundEndpoint() throws InitialisationException, EndpointException
@@ -211,7 +211,7 @@ public abstract class AbstractEndpointBuilder implements EndpointBuilder
             getName(endpointURI), getProperties(), getTransactionConfig(), getFilter(connector),
             getDefaultDeleteUnacceptedMessages(connector), getSecurityFilter(), synchronous, remoteSync,
             getRemoteSyncTimeout(connector), getInitialState(connector), getEndpointEncoding(connector), muleContext,
-            getRetryTemplateFactory(connector));
+            getRetryPolicyTemplate(connector));
 
     }
 
@@ -233,9 +233,9 @@ public abstract class AbstractEndpointBuilder implements EndpointBuilder
         }
     }
 
-    protected RetryTemplateFactory getRetryTemplateFactory(Connector connector)
+    protected RetryPolicyTemplate getRetryPolicyTemplate(Connector connector)
     {
-        return retryTemplateFactory != null ? retryTemplateFactory : connector.getRetryTemplateFactory();
+        return retryPolicyTemplate != null ? retryPolicyTemplate : connector.getRetryPolicyTemplate();
     }
 
     protected TransactionConfig getTransactionConfig()
@@ -693,9 +693,9 @@ public abstract class AbstractEndpointBuilder implements EndpointBuilder
 
     }
 
-    public void setRetryTemplateFactory(RetryTemplateFactory retryTemplateFactory)
+    public void setRetryPolicyTemplate(RetryPolicyTemplate retryPolicyTemplate)
     {
-        this.retryTemplateFactory = retryTemplateFactory;
+        this.retryPolicyTemplate = retryPolicyTemplate;
 
     }
 
@@ -713,7 +713,7 @@ public abstract class AbstractEndpointBuilder implements EndpointBuilder
     // TODO Equals() and hashCode() only needed for tests, move to tests
     public int hashCode()
     {
-        return ClassUtils.hash(new Object[]{retryTemplateFactory, connector, createConnector, deleteUnacceptedMessages,
+        return ClassUtils.hash(new Object[]{retryPolicyTemplate, connector, createConnector, deleteUnacceptedMessages,
             encoding, uriBuilder, filter, initialState, name, properties, remoteSync, remoteSyncTimeout,
             responseTransformers, securityFilter, synchronous, transactionConfig, transformers});
     }
@@ -725,7 +725,7 @@ public abstract class AbstractEndpointBuilder implements EndpointBuilder
         if (obj == null || getClass() != obj.getClass()) return false;
 
         final AbstractEndpointBuilder other = (AbstractEndpointBuilder) obj;
-        return equal(retryTemplateFactory, other.retryTemplateFactory) && equal(connector, other.connector)
+        return equal(retryPolicyTemplate, other.retryPolicyTemplate) && equal(connector, other.connector)
                && equal(createConnector, other.createConnector)
                && equal(deleteUnacceptedMessages, other.deleteUnacceptedMessages) && equal(encoding, other.encoding)
                && equal(uriBuilder, other.uriBuilder) && equal(filter, other.filter)
@@ -758,7 +758,7 @@ public abstract class AbstractEndpointBuilder implements EndpointBuilder
         builder.setEncoding(encoding);
         builder.setRegistryId(registryId);
         builder.setMuleContext(muleContext);
-        builder.setRetryTemplateFactory(retryTemplateFactory);
+        builder.setRetryPolicyTemplate(retryPolicyTemplate);
 
         if (deleteUnacceptedMessages != null)
         {

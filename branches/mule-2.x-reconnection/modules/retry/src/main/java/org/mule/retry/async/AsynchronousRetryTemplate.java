@@ -10,13 +10,12 @@
 
 package org.mule.retry.async;
 
-import org.mule.api.MuleRuntimeException;
 import org.mule.api.context.WorkManager;
 import org.mule.api.retry.RetryCallback;
 import org.mule.api.retry.RetryContext;
-import org.mule.api.retry.RetryTemplate;
-import org.mule.api.retry.RetryTemplateFactory;
-import org.mule.config.i18n.MessageFactory;
+import org.mule.api.retry.RetryNotifier;
+import org.mule.api.retry.RetryPolicy;
+import org.mule.api.retry.RetryPolicyTemplate;
 import org.mule.transport.FatalConnectException;
 import org.mule.util.concurrent.Latch;
 
@@ -29,27 +28,18 @@ import javax.resource.spi.work.WorkException;
  * template will only occur once the latch is released.
  *
  */
-public class AsynchronousRetryTemplate implements RetryTemplate, RetryTemplateFactory
+public class AsynchronousRetryTemplate implements RetryPolicyTemplate
 {
     private final WorkManager workManager;
-    private final RetryTemplate delegate;
+    private final RetryPolicyTemplate delegate;
     private final Latch startLatch;
 
-    public RetryTemplate create()
-    {
-        if (workManager == null)
-        {
-            throw new MuleRuntimeException(MessageFactory.createStaticMessage("Asynchronous connections specified but no work manager provided"));
-        }
-        return new AsynchronousRetryTemplate(delegate, workManager, startLatch);
-    }
-    
-    public AsynchronousRetryTemplate(RetryTemplate delegate, WorkManager workManager)
+    public AsynchronousRetryTemplate(RetryPolicyTemplate delegate, WorkManager workManager)
     {
         this(delegate, workManager, null);
     }
 
-    public AsynchronousRetryTemplate(RetryTemplate delegate, WorkManager workManager, Latch startLatch)
+    public AsynchronousRetryTemplate(RetryPolicyTemplate delegate, WorkManager workManager, Latch startLatch)
     {
         this.delegate = delegate;
         this.workManager = workManager;
@@ -66,13 +56,28 @@ public class AsynchronousRetryTemplate implements RetryTemplate, RetryTemplateFa
         }
         catch (WorkException e)
         {
-            throw new FatalConnectException(e, this);
+            throw new FatalConnectException(e, null);
         }
         return context;
     }
 
-    public boolean isRetryEnabled()
+    public RetryPolicy createRetryInstance()
     {
-        return delegate.isRetryEnabled();
+        return delegate.createRetryInstance();
+    }
+    
+    public RetryNotifier getNotifier()
+    {
+        return delegate.getNotifier();
+    }
+
+    public void setNotifier(RetryNotifier retryNotifier)
+    {
+        delegate.setNotifier(retryNotifier);
+    }
+
+    public boolean isConnectAsynchronously()
+    {
+        return true;
     }
 }

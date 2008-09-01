@@ -1093,7 +1093,22 @@
             </xsd:documentation>
         </xsd:annotation>
     </xsd:element>
-    <xsd:complexType name="abstractRetryPolicyType"/>
+    <xsd:complexType name="abstractRetryPolicyType">
+        <xsd:sequence>
+            <xsd:element ref="abstract-retry-notifier" minOccurs="0" maxOccurs="1"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:element name="abstract-retry-notifier" abstract="true" type="abstractRetryNotifierType">
+        <xsd:annotation>
+            <xsd:documentation>
+                A placeholder for a retry notifier element.
+	            The RetryNotifier interface is a callback that allows actions to be performed after each retry. 
+                For example, when retrying connections Mule will fire server notification events on success or failure.
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="abstractRetryNotifierType"/>
 
     <xsd:complexType name="asyncReplyCollectionType">
         <xsd:sequence>

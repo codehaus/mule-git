@@ -110,8 +110,7 @@
         <constructor-arg ref="_defaultThreadingProfile"/>
     </bean>
 
-    <bean name="_defaultRetryPolicyFactory" class="org.mule.retry.policies.NoRetryPolicyFactory"/>
-    <bean name="_defaultRetryNotifier" class="org.mule.retry.ConnectNotifier"/>
+    <bean name="_defaultRetryPolicyTemplate" class="org.mule.retry.policies.NoRetryPolicyTemplate"/>
 
     <!-- Default Transformers are now loaded from META-INF/services/org/mule/config/registry-bootstrap.properties so that
     the transformers will be available even when using the the TransientRegistry only -->

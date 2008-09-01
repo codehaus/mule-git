@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.retry;
+package org.mule.retry.notifiers;
 
 import org.mule.MuleServer;
 import org.mule.api.retry.RetryContext;
@@ -20,13 +20,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * TODO
+ * Fires a ConnectionNotification when the Retry Policy succeeds or fails.
  */
 public class ConnectNotifier implements RetryNotifier
 {
-    /**
-     * logger used by this class
-     */
     protected transient final Log logger = LogFactory.getLog(ConnectNotifier.class);
 
     public void sucess(RetryContext context)

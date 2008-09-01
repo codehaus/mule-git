@@ -91,4 +91,41 @@
         </xsd:complexContent>
     </xsd:complexType>
 
+    <xsd:element name="connect-notifier" type="connectNotifierType"
+                 substitutionGroup="mule:abstract-retry-notifier">
+        <xsd:annotation>
+            <xsd:documentation>
+                Fires a ConnectionNotification when the Retry Policy succeeds or fails.
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="connectNotifierType">
+        <xsd:complexContent>
+            <xsd:extension base="mule:abstractRetryNotifierType"/>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:element name="custom-notifier" type="customNotifierType"
+                 substitutionGroup="mule:abstract-retry-notifier">
+        <xsd:annotation>
+            <xsd:documentation>
+                A user-defined retry notifier.
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="customNotifierType">
+        <xsd:complexContent>
+            <xsd:extension base="mule:abstractRetryNotifierType">
+                <xsd:sequence>
+                    <xsd:element ref="spring:property" minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:sequence>
+                <xsd:attribute name="class" type="mule:substitutableClass" use="required">
+                    <xsd:annotation>
+                        <xsd:documentation>A class that implements the RetryPolicyFactory interface.</xsd:documentation>
+                    </xsd:annotation>
+                </xsd:attribute>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
 </xsd:schema>

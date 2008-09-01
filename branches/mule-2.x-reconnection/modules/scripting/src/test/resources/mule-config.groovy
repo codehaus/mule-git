@@ -38,7 +38,7 @@ import org.mule.endpoint.DefaultEndpointFactory
 import org.mule.api.config.MuleProperties;
 import org.mule.api.config.ThreadingProfile;
 import org.mule.config.ChainedThreadingProfile;
-import org.mule.retry.policies.NoRetryPolicyFactory;
+import org.mule.retry.policies.NoRetryPolicyTemplate;
 
 // Set up defaults / system objects
 QueueManager queueManager = new TransactionalQueueManager();
@@ -62,7 +62,7 @@ muleContext.registry.registerObject(MuleProperties.OBJECT_DEFAULT_MESSAGE_RECEIV
             new ChainedThreadingProfile(defaultThreadingProfile));
 muleContext.registry.registerObject(MuleProperties.OBJECT_DEFAULT_MESSAGE_DISPATCHER_THREADING_PROFILE,
             new ChainedThreadingProfile(defaultThreadingProfile));
-muleContext.registry.registerObject(MuleProperties.OBJECT_DEFAULT_RETRY_POLICY_FACTORY, new NoRetryPolicyFactory());
+muleContext.registry.registerObject(MuleProperties.OBJECT_DEFAULT_RETRY_POLICY_TEMPLATE, new NoRetryPolicyTemplate());
 
 muleContext.registry.registerObject("doCompression", "true")
 

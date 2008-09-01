@@ -36,10 +36,7 @@ import org.mule.api.registry.ServiceDescriptorFactory;
 import org.mule.api.registry.ServiceException;
 import org.mule.api.retry.RetryCallback;
 import org.mule.api.retry.RetryContext;
-import org.mule.api.retry.RetryNotifier;
-import org.mule.api.retry.RetryPolicyFactory;
-import org.mule.api.retry.RetryTemplate;
-import org.mule.api.retry.RetryTemplateFactory;
+import org.mule.api.retry.RetryPolicyTemplate;
 import org.mule.api.service.Service;
 import org.mule.api.transport.Connectable;
 import org.mule.api.transport.Connector;
@@ -60,8 +57,6 @@ import org.mule.context.notification.EndpointMessageNotification;
 import org.mule.context.notification.OptimisedNotificationHandler;
 import org.mule.lifecycle.AlreadyInitialisedException;
 import org.mule.model.streaming.DelegatingInputStream;
-import org.mule.retry.ConnectNotifier;
-import org.mule.retry.DefaultRetryTemplate;
 import org.mule.routing.filters.WildcardFilter;
 import org.mule.transformer.TransformerUtils;
 import org.mule.transport.service.TransportFactory;
@@ -222,7 +217,7 @@ public abstract class AbstractConnector
      */
     protected volatile int numberOfConcurrentTransactedReceivers = DEFAULT_NUM_CONCURRENT_TX_RECEIVERS;
 
-    private RetryTemplateFactory retryTemplateFactory;
+    private RetryPolicyTemplate retryPolicyTemplate;
     
     /**
      * If doThreading is used in ReconnectingStrategy receivers must wait for 
@@ -352,11 +347,9 @@ public abstract class AbstractConnector
             logger.info("Initialising: " + this);
         }
 
-        if (retryTemplateFactory == null)
+        if (retryPolicyTemplate == null)
         {
-            RetryPolicyFactory rpf = (RetryPolicyFactory) muleContext.getRegistry().lookupObject(MuleProperties.OBJECT_DEFAULT_RETRY_POLICY_FACTORY);
-            RetryNotifier rn = (RetryNotifier) muleContext.getRegistry().lookupObject(MuleProperties.OBJECT_DEFAULT_RETRY_NOTIFIER);
-            retryTemplateFactory = new DefaultRetryTemplate(rpf, rn);
+            retryPolicyTemplate = (RetryPolicyTemplate) muleContext.getRegistry().lookupObject(MuleProperties.OBJECT_DEFAULT_RETRY_POLICY_TEMPLATE);
         }
 
         // Use lazy-init (in get() methods) for this instead.
@@ -1331,8 +1324,7 @@ public abstract class AbstractConnector
             return;
         }
 
-        RetryTemplate template = retryTemplateFactory.create();
-        template.execute(new RetryCallback()
+        retryPolicyTemplate.execute(new RetryCallback()
         {
             public void doWork(RetryContext context) throws Exception
             {
@@ -2128,31 +2120,13 @@ public abstract class AbstractConnector
         return connectedSemaphore;
     }
 
-    public RetryTemplateFactory getRetryTemplateFactory()
+    public RetryPolicyTemplate getRetryPolicyTemplate()
     {
-        return retryTemplateFactory;
+        return retryPolicyTemplate;
     }
 
-    public void setRetryTemplateFactory(RetryTemplateFactory retryTemplateFactory)
+    public void setRetryPolicyTemplate(RetryPolicyTemplate retryPolicyTemplate)
     {
-        this.retryTemplateFactory = retryTemplateFactory;
-    }
-
-    /**
-     * This method sets the specified RetryPolicyFactory and uses the default RetryNotifier
-     * @see MuleProperties.OBJECT_DEFAULT_RETRY_NOTIFIER
-     */
-    public void setRetryPolicyFactory(RetryPolicyFactory retryPolicyFactory)
-    {
-        RetryNotifier rn;
-        if (muleContext != null)
-        {
-            rn = (RetryNotifier) muleContext.getRegistry().lookupObject(MuleProperties.OBJECT_DEFAULT_RETRY_NOTIFIER);
-        }
-        else
-        {
-            rn = new ConnectNotifier();
-        }
-        setRetryTemplateFactory(new DefaultRetryTemplate(retryPolicyFactory, rn));
+        this.retryPolicyTemplate = retryPolicyTemplate;
     }
 }

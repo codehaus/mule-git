@@ -11,7 +11,7 @@
 package org.mule.retry.async;
 
 import org.mule.api.retry.RetryCallback;
-import org.mule.api.retry.RetryTemplate;
+import org.mule.api.retry.RetryPolicyTemplate;
 import org.mule.transport.FatalConnectException;
 import org.mule.util.concurrent.Latch;
 
@@ -34,15 +34,15 @@ public class RetryWorker implements Work
     private RetryCallback callback;
     private FatalConnectException exception = null;
     private FutureRetryContext context = new FutureRetryContext();
-    private RetryTemplate delegate;
+    private RetryPolicyTemplate delegate;
     private Latch startLatch;
 
-    public RetryWorker(RetryTemplate delegate, RetryCallback callback)
+    public RetryWorker(RetryPolicyTemplate delegate, RetryCallback callback)
     {
         this(delegate, callback, null);
     }
 
-    public RetryWorker(RetryTemplate delegate, RetryCallback callback, Latch startLatch)
+    public RetryWorker(RetryPolicyTemplate delegate, RetryCallback callback, Latch startLatch)
     {
         this.callback = callback;
         this.delegate = delegate;

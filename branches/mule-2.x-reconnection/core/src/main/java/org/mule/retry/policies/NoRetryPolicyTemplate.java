@@ -10,7 +10,6 @@
 
 package org.mule.retry.policies;
 
-import org.mule.api.retry.RetryTemplate;
 import org.mule.api.retry.RetryPolicy;
 import org.mule.retry.PolicyStatus;
 
@@ -18,9 +17,9 @@ import org.mule.retry.PolicyStatus;
  * This policy does what it says on the tin.  It will allow a {@link RetryTemplate} to execute
  * once and then stop.
  */
-public class NoRetryPolicyFactory extends AbstractPolicyFactory
+public class NoRetryPolicyTemplate extends AbstractPolicyTemplate
 {
-    public RetryPolicy create()
+    public RetryPolicy createRetryInstance()
     {
         return new NoRetryPolicy();
     }
@@ -33,6 +32,12 @@ public class NoRetryPolicyFactory extends AbstractPolicyFactory
         }
     }
 
+    //@Override
+    public boolean isRetryEnabled()
+    {
+        return false;
+    }
+    
     public String toString()
     {
         return "NoRetryPolicy{}";

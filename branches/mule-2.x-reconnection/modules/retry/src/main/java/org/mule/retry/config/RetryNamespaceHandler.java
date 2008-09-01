@@ -10,8 +10,9 @@
 package org.mule.retry.config;
 
 import org.mule.config.spring.parsers.generic.ChildDefinitionParser;
-import org.mule.retry.policies.RetryForeverPolicyFactory;
-import org.mule.retry.policies.SimpleRetryPolicyFactory;
+import org.mule.retry.notifiers.ConnectNotifier;
+import org.mule.retry.policies.RetryForeverPolicyTemplate;
+import org.mule.retry.policies.SimpleRetryPolicyTemplate;
 
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
@@ -19,9 +20,37 @@ public class RetryNamespaceHandler extends NamespaceHandlerSupport
 {
     public void init()
     {
-        registerBeanDefinitionParser("simple-policy", new ChildDefinitionParser("retryPolicyFactory", SimpleRetryPolicyFactory.class));
-        registerBeanDefinitionParser("forever-policy", new ChildDefinitionParser("retryPolicyFactory", RetryForeverPolicyFactory.class));
-        registerBeanDefinitionParser("custom-policy", new ChildDefinitionParser("retryPolicyFactory"));
-        //registerBeanDefinitionParser("connect-notifier", new ChildDefinitionParser("retryPolicyFactory", RetryForeverPolicyFactory.class));
+        registerBeanDefinitionParser("simple-policy", new RetryPolicyDefinitionParser(SimpleRetryPolicyTemplate.class));
+        registerBeanDefinitionParser("forever-policy", new RetryPolicyDefinitionParser(RetryForeverPolicyTemplate.class));
+        registerBeanDefinitionParser("custom-policy", new RetryPolicyDefinitionParser());
+        
+        registerBeanDefinitionParser("connect-notifier", new RetryNotifierDefinitionParser(ConnectNotifier.class));
+        registerBeanDefinitionParser("custom-notifier", new RetryNotifierDefinitionParser());
     }
+    
+    class RetryPolicyDefinitionParser extends ChildDefinitionParser
+    {
+        RetryPolicyDefinitionParser()
+        {
+            super("retryPolicyTemplate");
+        }
+
+        RetryPolicyDefinitionParser(Class clazz)
+        {
+            super("retryPolicyTemplate", clazz);
+        }
+    };
+
+    class RetryNotifierDefinitionParser extends ChildDefinitionParser
+    {
+        RetryNotifierDefinitionParser()
+        {
+            super("notifier");
+        }
+
+        RetryNotifierDefinitionParser(Class clazz)
+        {
+            super("notifier", clazz);
+        }
+    };
 }

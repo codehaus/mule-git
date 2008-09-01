@@ -10,14 +10,15 @@
 
 package org.mule.retry.config;
 
-import org.mule.api.retry.RetryPolicyFactory;
-import org.mule.api.retry.RetryTemplateFactory;
+import org.mule.api.retry.RetryNotifier;
+import org.mule.api.retry.RetryPolicyTemplate;
 import org.mule.api.transport.Connector;
-import org.mule.retry.DefaultRetryTemplate;
-import org.mule.retry.policies.NoRetryPolicyFactory;
-import org.mule.retry.policies.RetryForeverPolicyFactory;
-import org.mule.retry.policies.SimpleRetryPolicyFactory;
-import org.mule.retry.test.TestRetryPolicyFactory;
+import org.mule.retry.notifiers.ConnectNotifier;
+import org.mule.retry.policies.NoRetryPolicyTemplate;
+import org.mule.retry.policies.RetryForeverPolicyTemplate;
+import org.mule.retry.policies.SimpleRetryPolicyTemplate;
+import org.mule.retry.test.TestRetryNotifier;
+import org.mule.retry.test.TestRetryPolicyTemplate;
 import org.mule.tck.FunctionalTestCase;
 
 public class RetryNamespaceHandlerTestCase extends FunctionalTestCase
@@ -32,11 +33,12 @@ public class RetryNamespaceHandlerTestCase extends FunctionalTestCase
         Connector c = muleContext.getRegistry().lookupConnector("testConnector1");
         assertNotNull(c);
 
-        RetryTemplateFactory rtf = c.getRetryTemplateFactory();
-        assertNotNull(rtf);
-        assertTrue(rtf instanceof DefaultRetryTemplate);
-        assertFalse(rtf.isRetryEnabled());
-        assertTrue(((DefaultRetryTemplate) rtf).getPolicyFactory() instanceof NoRetryPolicyFactory);
+        RetryPolicyTemplate rpf = c.getRetryPolicyTemplate();
+        assertNotNull(rpf);
+        assertTrue(rpf instanceof NoRetryPolicyTemplate);
+        RetryNotifier rn = rpf.getNotifier();
+        assertNotNull(rn);
+        assertTrue(rn instanceof ConnectNotifier);
         
         assertTrue(c.isConnected());
         assertTrue(c.isStarted());
@@ -47,14 +49,11 @@ public class RetryNamespaceHandlerTestCase extends FunctionalTestCase
         Connector c = muleContext.getRegistry().lookupConnector("testConnector2");
         assertNotNull(c);
 
-        RetryTemplateFactory rtf = c.getRetryTemplateFactory();
-        assertNotNull(rtf);
-        assertTrue(rtf.isRetryEnabled());
-        assertTrue(rtf instanceof DefaultRetryTemplate);
-        RetryPolicyFactory rpf = ((DefaultRetryTemplate) rtf).getPolicyFactory();
-        assertTrue(rpf instanceof SimpleRetryPolicyFactory);
-        assertEquals(SimpleRetryPolicyFactory.DEFAULT_RETRY_COUNT, ((SimpleRetryPolicyFactory) rpf).getCount());
-        assertEquals(SimpleRetryPolicyFactory.DEFAULT_FREQUENCY, ((SimpleRetryPolicyFactory) rpf).getFrequency());
+        RetryPolicyTemplate rpf = c.getRetryPolicyTemplate();
+        assertNotNull(rpf);
+        assertTrue(rpf instanceof SimpleRetryPolicyTemplate);
+        assertEquals(SimpleRetryPolicyTemplate.DEFAULT_RETRY_COUNT, ((SimpleRetryPolicyTemplate) rpf).getCount());
+        assertEquals(SimpleRetryPolicyTemplate.DEFAULT_FREQUENCY, ((SimpleRetryPolicyTemplate) rpf).getFrequency());
         
         assertTrue(c.isConnected());
         assertTrue(c.isStarted());
@@ -65,14 +64,11 @@ public class RetryNamespaceHandlerTestCase extends FunctionalTestCase
         Connector c = muleContext.getRegistry().lookupConnector("testConnector3");
         assertNotNull(c);
 
-        RetryTemplateFactory rtf = c.getRetryTemplateFactory();
-        assertNotNull(rtf);
-        assertTrue(rtf.isRetryEnabled());
-        assertTrue(rtf instanceof DefaultRetryTemplate);
-        RetryPolicyFactory rpf = ((DefaultRetryTemplate) rtf).getPolicyFactory();
-        assertTrue(rpf instanceof SimpleRetryPolicyFactory);
-        assertEquals(5, ((SimpleRetryPolicyFactory) rpf).getCount());
-        assertEquals(1000, ((SimpleRetryPolicyFactory) rpf).getFrequency());
+        RetryPolicyTemplate rpf = c.getRetryPolicyTemplate();
+        assertNotNull(rpf);
+        assertTrue(rpf instanceof SimpleRetryPolicyTemplate);
+        assertEquals(5, ((SimpleRetryPolicyTemplate) rpf).getCount());
+        assertEquals(1000, ((SimpleRetryPolicyTemplate) rpf).getFrequency());
         
         assertTrue(c.isConnected());
         assertTrue(c.isStarted());
@@ -83,13 +79,10 @@ public class RetryNamespaceHandlerTestCase extends FunctionalTestCase
         Connector c = muleContext.getRegistry().lookupConnector("testConnector4");
         assertNotNull(c);
 
-        RetryTemplateFactory rtf = c.getRetryTemplateFactory();
-        assertNotNull(rtf);
-        assertTrue(rtf.isRetryEnabled());
-        assertTrue(rtf instanceof DefaultRetryTemplate);
-        RetryPolicyFactory rpf = ((DefaultRetryTemplate) rtf).getPolicyFactory();
-        assertTrue(rpf instanceof RetryForeverPolicyFactory);
-        assertEquals(5000, ((RetryForeverPolicyFactory) rpf).getFrequency());
+        RetryPolicyTemplate rpf = c.getRetryPolicyTemplate();
+        assertNotNull(rpf);
+        assertTrue(rpf instanceof RetryForeverPolicyTemplate);
+        assertEquals(5000, ((RetryForeverPolicyTemplate) rpf).getFrequency());
         
         assertTrue(c.isConnected());
         assertTrue(c.isStarted());
@@ -100,17 +93,44 @@ public class RetryNamespaceHandlerTestCase extends FunctionalTestCase
         Connector c = muleContext.getRegistry().lookupConnector("testConnector5");
         assertNotNull(c);
 
-        RetryTemplateFactory rtf = c.getRetryTemplateFactory();
-        assertNotNull(rtf);
-        assertTrue(rtf.isRetryEnabled());
-        assertTrue(rtf instanceof DefaultRetryTemplate);
-        RetryPolicyFactory rpf = ((DefaultRetryTemplate) rtf).getPolicyFactory();
-        assertTrue(rpf instanceof TestRetryPolicyFactory);
-        assertTrue(((TestRetryPolicyFactory) rpf).isFooBar());
-        assertEquals(500, ((TestRetryPolicyFactory) rpf).getRevolutions());
+        RetryPolicyTemplate rpf = c.getRetryPolicyTemplate();
+        assertNotNull(rpf);
+        assertTrue(rpf instanceof TestRetryPolicyTemplate);
+        assertTrue(((TestRetryPolicyTemplate) rpf).isFooBar());
+        assertEquals(500, ((TestRetryPolicyTemplate) rpf).getRevolutions());
         
         assertTrue(c.isConnected());
         assertTrue(c.isStarted());
     }
 
+    public void testConnectNotifierConfig() throws Exception
+    {
+        Connector c = muleContext.getRegistry().lookupConnector("testConnector6");
+        assertNotNull(c);
+
+        RetryPolicyTemplate rpf = c.getRetryPolicyTemplate();
+        assertNotNull(rpf);
+        RetryNotifier rn = rpf.getNotifier();
+        assertNotNull(rn);
+        assertTrue(rn instanceof ConnectNotifier);
+        
+        assertTrue(c.isConnected());
+        assertTrue(c.isStarted());
+    }
+
+    public void testCustomNotifierConfig() throws Exception
+    {
+        Connector c = muleContext.getRegistry().lookupConnector("testConnector7");
+        assertNotNull(c);
+
+        RetryPolicyTemplate rpf = c.getRetryPolicyTemplate();
+        assertNotNull(rpf);
+        RetryNotifier rn = rpf.getNotifier();
+        assertNotNull(rn);
+        assertTrue(rn instanceof TestRetryNotifier);
+        assertEquals("red", ((TestRetryNotifier) rn).getColor());
+        
+        assertTrue(c.isConnected());
+        assertTrue(c.isStarted());
+    }
 }

@@ -10,6 +10,8 @@
 
 package org.mule.api.retry;
 
+import org.mule.transport.FatalConnectException;
+
 /**
  * A factory responsible for creating a retry policy.  Custom policies should
  * Implement this factory and provide a private class which implements the 
@@ -18,9 +20,13 @@ package org.mule.api.retry;
  * {@link org.mule.api.retry.RetryPolicy} objects are created each time using the configuration
  * on the factory. 
  */
-public interface RetryPolicyFactory
+public interface RetryPolicyTemplate
 {
-    RetryPolicy create();
+    RetryPolicy createRetryInstance();
 
-    boolean isConnectAsynchronously();
+    RetryNotifier getNotifier();
+
+    void setNotifier(RetryNotifier retryNotifier);
+
+    RetryContext execute(RetryCallback callback) throws FatalConnectException;
 }
