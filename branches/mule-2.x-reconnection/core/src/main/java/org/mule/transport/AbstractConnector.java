@@ -60,6 +60,7 @@ import org.mule.context.notification.EndpointMessageNotification;
 import org.mule.context.notification.OptimisedNotificationHandler;
 import org.mule.lifecycle.AlreadyInitialisedException;
 import org.mule.model.streaming.DelegatingInputStream;
+import org.mule.retry.ConnectNotifier;
 import org.mule.retry.DefaultRetryTemplate;
 import org.mule.routing.filters.WildcardFilter;
 import org.mule.transformer.TransformerUtils;
@@ -2143,7 +2144,15 @@ public abstract class AbstractConnector
      */
     public void setRetryPolicyFactory(RetryPolicyFactory retryPolicyFactory)
     {
-        RetryNotifier rn = (RetryNotifier) muleContext.getRegistry().lookupObject(MuleProperties.OBJECT_DEFAULT_RETRY_NOTIFIER);
+        RetryNotifier rn;
+        if (muleContext != null)
+        {
+            rn = (RetryNotifier) muleContext.getRegistry().lookupObject(MuleProperties.OBJECT_DEFAULT_RETRY_NOTIFIER);
+        }
+        else
+        {
+            rn = new ConnectNotifier();
+        }
         setRetryTemplateFactory(new DefaultRetryTemplate(retryPolicyFactory, rn));
     }
 }

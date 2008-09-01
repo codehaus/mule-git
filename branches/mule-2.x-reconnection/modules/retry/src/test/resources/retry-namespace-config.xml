@@ -3,7 +3,7 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:spring="http://www.springframework.org/schema/beans"
        xmlns:test="http://www.mulesource.org/schema/mule/test/2.0"
-       xmlns:retry="http://www.mulesource.org/schema/mule/retry/2.0"
+       xmlns:retry="http://www.mulesource.com/schema/mule/retry/2.0"
     xsi:schemaLocation="
        http://www.mulesource.org/schema/mule/core/2.0 http://www.mulesource.org/schema/mule/core/2.0/mule.xsd
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
