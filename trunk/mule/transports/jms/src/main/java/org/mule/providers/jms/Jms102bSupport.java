@@ -44,7 +44,7 @@ public class Jms102bSupport extends Jms11Support
                           boolean jndiDestinations,
                           boolean forceJndiDestinations)
     {
-        super(connector, context, jndiDestinations, forceJndiDestinations);
+        super(connector, jndiDestinations, forceJndiDestinations);
     }
 
     public Connection createConnection(ConnectionFactory connectionFactory, String username, String password)
@@ -176,7 +176,7 @@ public class Jms102bSupport extends Jms11Support
 
         if (jndiDestinations)
         {
-            if (context == null)
+            if (connector.getJndiContext() == null)
             {
                 throw new IllegalArgumentException("Jndi Context name cannot be null when looking up a destination");
             }

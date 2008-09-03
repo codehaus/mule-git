@@ -11,8 +11,10 @@
 package org.mule.providers.jms;
 
 import org.mule.MuleManager;
+import org.mule.MuleRuntimeException;
 import org.mule.config.ExceptionHelper;
 import org.mule.config.i18n.CoreMessages;
+import org.mule.config.i18n.MessageFactory;
 import org.mule.impl.internal.notifications.ConnectionNotification;
 import org.mule.impl.internal.notifications.ConnectionNotificationListener;
 import org.mule.impl.internal.notifications.NotificationException;
@@ -54,6 +56,7 @@ import javax.jms.Session;
 import javax.jms.TemporaryQueue;
 import javax.jms.TemporaryTopic;
 import javax.jms.XAConnectionFactory;
+import javax.naming.CommunicationException;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -129,7 +132,9 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
     private boolean recoverJmsConnections = true;
 
     private JmsTopicResolver topicResolver;
-
+    
+    private Object jndiLock = new Object();
+    
     /**
      * Whether to create a consumer on connect.
      */
@@ -194,7 +199,7 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
 
     protected void initJndiContext() throws NamingException, InitialisationException
     {
-        if (jndiContext == null)
+        synchronized (jndiLock)
         {
             Hashtable props = new Hashtable();
 
@@ -228,7 +233,6 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
 
     protected ConnectionFactory createConnectionFactory() throws InitialisationException, NamingException
     {
-
         Object temp = jndiContext.lookup(connectionFactoryJndiName);
 
         if (temp instanceof ConnectionFactory)
@@ -240,6 +244,54 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
             throw new InitialisationException(
                 JmsMessages.invalidResourceType(ConnectionFactory.class, 
                     (temp == null ? null : temp.getClass())), this);
+        }
+    }
+    
+    protected Object lookupFromJndi(String jndiName) throws NamingException
+    {
+        synchronized (jndiLock)
+        {
+            try
+            {
+                return jndiContext.lookup(jndiName);
+            }
+            catch (CommunicationException ce)
+            {
+                logger.error("JNDI failure", ce);
+                
+                // Our connection to JNDI failed. Make a single attempt to reconnect to JNDI.
+                try
+                {
+                    /*
+                     Uncomment for manual testing ... this gives you time to restart the JNDI
+                     server
+                     
+                    try
+                    {
+                        logger.info("sleep for 20 secs before JNDI retry");
+                        Thread.sleep(20000);
+                        logger.info("done sleeping");
+                    }
+                    catch (InterruptedException e)
+                    {
+                        throw new RuntimeException(e);
+                    }
+                    */
+                    
+                    // re-connect to JNDI
+                    this.initJndiContext();
+                    
+                    // now retry the lookup.
+                    return jndiContext.lookup(jndiName);
+                }
+                catch (InitialisationException ie)
+                {
+                    // this may actually never happen as we were connected to JNDI before
+                    throw new MuleRuntimeException(
+                        MessageFactory.createStaticMessage("Error initializing the JNDI connecgtion"), 
+                        ie);
+                }
+            }
         }
     }
 
@@ -276,7 +328,6 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
 
         // Register a JMS exception listener to detect failed connections.
         // Existing connection strategy will be used to recover.
-
         if (recoverJmsConnections && connectionStrategy != null && connection != null)
         {
             connection.setExceptionListener(new ExceptionListener()
@@ -365,7 +416,7 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
                 }
                 else
                 {
-                    jmsSupport = new Jms11Support(this, jndiContext, jndiDestinations, forceJndiDestinations);
+                    jmsSupport = new Jms11Support(this, jndiDestinations, forceJndiDestinations);
                 }
             }
             if (connectionFactory == null)

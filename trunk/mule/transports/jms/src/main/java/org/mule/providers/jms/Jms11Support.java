@@ -22,7 +22,6 @@ import javax.jms.MessageConsumer;
 import javax.jms.MessageProducer;
 import javax.jms.Session;
 import javax.jms.Topic;
-import javax.naming.Context;
 import javax.naming.NamingException;
 
 /**
@@ -32,18 +31,15 @@ import javax.naming.NamingException;
 
 public class Jms11Support implements JmsSupport
 {
-    protected Context context;
     protected boolean jndiDestinations = false;
     protected boolean forceJndiDestinations = false;
     protected JmsConnector connector;
 
     public Jms11Support(JmsConnector connector,
-                        Context context,
                         boolean jndiDestinations,
                         boolean forceJndiDestinations)
     {
         this.connector = connector;
-        this.context = context;
         this.jndiDestinations = jndiDestinations;
         this.forceJndiDestinations = forceJndiDestinations;
     }
@@ -134,7 +130,7 @@ public class Jms11Support implements JmsSupport
 
         if (jndiDestinations)
         {
-            if (context == null)
+            if (connector.getJndiContext() == null)
             {
                 throw new IllegalArgumentException(
                     "Jndi Context name cannot be null when looking up a destination");
@@ -165,7 +161,7 @@ public class Jms11Support implements JmsSupport
         Object temp;
         try
         {
-            temp = context.lookup(name);
+            temp = connector.lookupFromJndi(name);
         }
         catch (NamingException e)
         {
