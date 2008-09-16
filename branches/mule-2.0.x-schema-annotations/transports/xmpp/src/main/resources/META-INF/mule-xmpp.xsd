@@ -9,7 +9,21 @@
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
     <xsd:import namespace="http://www.mulesource.org/schema/mule/core/2.0" 
                 schemaLocation="http://www.mulesource.org/schema/mule/core/2.0/mule.xsd" />
-        
+    <xsd:annotation>
+        <xsd:documentation>
+            The XMPP transport connects Mule to an XMPP (Jabber) server. The XMPPS connector provides a secure implementation.
+        </xsd:documentation>
+        <xsd:appinfo>
+            <schemadoc:short-name>xmpp</schemadoc:short-name>
+            <schemadoc:page-title>XMPP Transport</schemadoc:page-title>
+            <schemadoc:transport-features receiveEvents="true" dispatchEvents="true" responseEvents="true"
+                                          requestEvents="true"
+                                          transactions="false" streaming="false">
+                <schemadoc:inboundMEPs in-only="true" in-out="true" in-optional-out="true"/>
+                <schemadoc:outboundMEPs out-only="true" out-in="true" out-optional-in="true"/>
+            </schemadoc:transport-features>
+        </xsd:appinfo>
+    </xsd:annotation>        
     <xsd:element name="connector" type="xmppConnectorType" substitutionGroup="mule:abstract-connector">
         <xsd:annotation>
             <xsd:documentation>

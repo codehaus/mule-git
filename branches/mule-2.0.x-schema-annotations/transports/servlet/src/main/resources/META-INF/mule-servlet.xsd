@@ -12,7 +12,20 @@
                 schemaLocation="http://www.mulesource.org/schema/mule/core/2.0/mule.xsd" />
     <xsd:import namespace="http://www.mulesource.org/schema/mule/http/2.0"
                 schemaLocation="http://www.mulesource.org/schema/mule/http/2.0/mule-http.xsd"/>
-
+   <xsd:annotation>
+        <xsd:documentation>
+            The Servlet transport allows Mule components to listen for events received via a servlet request. 
+        </xsd:documentation>
+        <xsd:appinfo>
+            <schemadoc:short-name>servlet</schemadoc:short-name>
+            <schemadoc:page-title>Servlet Transport</schemadoc:page-title>
+            <schemadoc:transport-features receiveEvents="true" dispatchEvents="true" responseEvents="true"
+                                          requestEvents="true"
+                                          transactions="false" streaming="true">
+                <schemadoc:inboundMEPs in-only="true" in-out="true" in-optional-out="true"/>
+            </schemadoc:transport-features>
+        </xsd:appinfo>
+    </xsd:annotation>
     <xsd:element name="connector" type="servletConnectorType" substitutionGroup="mule:abstract-connector">
         <xsd:annotation>
             <xsd:documentation>

@@ -11,18 +11,18 @@
     <xsd:import namespace="http://www.mulesource.org/schema/mule/core/2.0" 
                 schemaLocation="http://www.mulesource.org/schema/mule/core/2.0/mule.xsd" />
 
-       //update the following info in the annotation to reflect the actual settings for this transport        
         <xsd:annotation>
-            <xsd:documentation>The UDP transport can send and receive Mule events as Datagram packets.
+            <xsd:documentation>
+            The UDP transport enables events to be sent and received as Datagram packets.
             </xsd:documentation>
             <xsd:appinfo>
                 <schemadoc:page-title>UDP Transport</schemadoc:page-title>
-                <schemadoc:transport-features receiveEvents="true" dispatchEvents="true" responseEvents="false"
-	requestEvents="true"
-	transactions="true" streaming="false">
-                    <schemadoc:inboundMEPs in-only="true"/>
-                    <schemadoc:outboundMEPs out-only="true"/>
-                </schemadoc:transport-features>
+                <schemadoc:transport-features receiveEvents="true" dispatchEvents="true" responseEvents="true"
+                                          requestEvents="true"
+                                          transactions="false" streaming="true">
+                <schemadoc:inboundMEPs in-out="true" in-optional-out="true"/>
+                <schemadoc:outboundMEPs out-in="true" out-optional-in="true"/>
+            </schemadoc:transport-features>
             </xsd:appinfo>
 	</xsd:annotation>
             

@@ -16,6 +16,7 @@
     <xsd:element name="connector" type="rmi:rmiConnectorType" substitutionGroup="mule:abstract-connector">
         <xsd:annotation>
             <xsd:documentation>
+                The JNP connector is an extension of the RMI connector that uses the Java Naming protocol to bind to remote objects. 
             </xsd:documentation>
         </xsd:annotation>
     </xsd:element>

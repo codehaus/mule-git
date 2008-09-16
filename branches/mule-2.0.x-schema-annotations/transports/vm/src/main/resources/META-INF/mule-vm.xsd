@@ -9,7 +9,21 @@
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
     <xsd:import namespace="http://www.mulesource.org/schema/mule/core/2.0" 
                 schemaLocation="http://www.mulesource.org/schema/mule/core/2.0/mule.xsd" />
-
+    <xsd:annotation>
+        <xsd:documentation>
+            The VM transport is used for intra-VM communication between components managed by Mule. The transport provides options for configuring VM transient or persistent queues.
+        </xsd:documentation>
+        <xsd:appinfo>
+            <schemadoc:short-name>vm</schemadoc:short-name>
+            <schemadoc:page-title>VM Transport</schemadoc:page-title>
+            <schemadoc:transport-features receiveEvents="true" dispatchEvents="true" responseEvents="true"
+                                          requestEvents="true"
+                                          transactions="true" streaming="true">
+                <schemadoc:inboundMEPs in-only="true" in-out="true" in-optional-out="true"/>
+                <schemadoc:outboundMEPs out-only="true" out-in="true" out-optional-in="true"/>
+            </schemadoc:transport-features>
+        </xsd:appinfo>
+    </xsd:annotation>
     <xsd:element name="connector" type="vmConnectorType" substitutionGroup="mule:abstract-connector"/>
     <xsd:complexType name="vmConnectorType">
         <xsd:complexContent>

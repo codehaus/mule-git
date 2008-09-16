@@ -19,11 +19,10 @@
         <xsd:appinfo>
             <schemadoc:short-name>smtp</schemadoc:short-name>
             <schemadoc:page-title>SMTP Transport</schemadoc:page-title>
-            <schemadoc:transport-features receiveEvents="true" dispatchEvents="true" responseEvents="true"
+            <schemadoc:transport-features receiveEvents="false" dispatchEvents="true" responseEvents="false"
                                           requestEvents="true"
                                           transactions="false" streaming="false">
-                <schemadoc:inboundMEPs in-only="false" in-optional-out="true" in-out="true"/>
-                <schemadoc:outboundMEPs out-only="true" out-in="true" out-optional-in="true"/>
+                <schemadoc:outboundMEPs out-only="true"/>
             </schemadoc:transport-features>
         </xsd:appinfo>
     </xsd:annotation>
