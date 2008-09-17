@@ -1,9 +1,0 @@
-#
-# Test cases listed in this file are not run.
-#
-
-# These tests are a work-in-progress
-org.mule.examples.webapp.JettyTestCase
-
-# webservicex.net is down quite often
-org.mule.examples.webapp.MockTestCase
