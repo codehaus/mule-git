@@ -1,6 +1,0 @@
-#
-# Test cases listed in this file are not run.
-#
-
-# This test says it needs to be run manually, also see MULE-2749
-org.mule.integration.jdbc.JdbcConnectionTestCase 
