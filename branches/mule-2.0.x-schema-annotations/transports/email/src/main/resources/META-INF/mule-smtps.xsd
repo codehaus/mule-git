@@ -19,7 +19,7 @@
      <xsd:annotation>
         <xsd:documentation>The SMTPS transport is similar to the [SMTP Transport] but uses secure connections over SSL/TLS.</xsd:documentation>
         <xsd:appinfo>
-            <schemadoc:short-name>smtps</schemadoc:short-name>
+            <schemadoc:short-name>SMTPS</schemadoc:short-name>
             <schemadoc:page-title>SMTPS Transport</schemadoc:page-title>
             <schemadoc:transport-features receiveEvents="false" dispatchEvents="true" responseEvents="false"
                                           requestEvents="true"

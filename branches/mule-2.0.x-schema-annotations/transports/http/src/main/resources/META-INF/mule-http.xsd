@@ -18,7 +18,7 @@
     <xsd:annotation>
         <xsd:documentation>The HTTP transport provides support for exposing services over HTTP and making HTTP client requests from Mule services to external services as part of service event flows. Mule supports inbound, outbound, and polling HTTP endpooints. These endpoints support all common features of the HTTP spec, such as ETag processing, cookies, and keepalive. Both HTTP 1.0 and 1.1 are supported.</xsd:documentation>
         <xsd:appinfo>
-            <schemadoc:short-name>http</schemadoc:short-name>
+            <schemadoc:short-name>HTTP</schemadoc:short-name>
             <schemadoc:page-title>HTTP Transport</schemadoc:page-title>
             <schemadoc:transport-features receiveEvents="true" dispatchEvents="true" responseEvents="true"
                                           requestEvents="true"

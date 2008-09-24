@@ -2,6 +2,7 @@
 <xsd:schema xmlns="http://www.mulesource.org/schema/mule/tcp/2.0"
             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
             xmlns:mule="http://www.mulesource.org/schema/mule/core/2.0"
+            xmlns:schemadoc="http://www.mulesource.org/schema/mule/schemadoc/2.0"
             targetNamespace="http://www.mulesource.org/schema/mule/tcp/2.0"
             elementFormDefault="qualified"
             attributeFormDefault="unqualified">
@@ -14,7 +15,7 @@
             The TCP transport enables events to be sent and received over TCP sockets.
         </xsd:documentation>
         <xsd:appinfo>
-            <schemadoc:short-name>tcp</schemadoc:short-name>
+            <schemadoc:short-name>TCP</schemadoc:short-name>
             <schemadoc:page-title>TCP Transport</schemadoc:page-title>
             <schemadoc:transport-features receiveEvents="true" dispatchEvents="true" responseEvents="true"
                                           requestEvents="true"

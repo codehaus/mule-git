@@ -19,12 +19,11 @@
             light-weight Jetty server. You can only define inbound endpoints with this transport.
         </xsd:documentation>
         <xsd:appinfo>
-            <schemadoc:short-name>jetty-ssl</schemadoc:short-name>
-            <schemadoc:page-title>Jetty HTTPS Transport</schemadoc:page-title>
+            <schemadoc:short-name>Jetty SSL</schemadoc:short-name>
+            <schemadoc:page-title>Jetty SSL Transport</schemadoc:page-title>
             <schemadoc:transport-features receiveEvents="true" dispatchEvents="false" responseEvents="true"
-                                          requestEvents="false" transactions="false" streaming="true">
+                                          requestEvents="true" transactions="false" streaming="true">
                 <schemadoc:inboundMEPs in-only="true" in-optional-out="true" in-out="true"/>
-                <schemadoc:outboundMEPs none="true"/>
             </schemadoc:transport-features>
         </xsd:appinfo>
     </xsd:annotation>

@@ -15,6 +15,7 @@
             <xsd:documentation>The email transport supplies various email connectivity options.   
             </xsd:documentation>
             <xsd:appinfo>
+                <schemadoc:short-name>Email</schemadoc:short-name>
                 <schemadoc:page-title>Email Transport</schemadoc:page-title>
                 <schemadoc:transport-features receiveEvents="true" dispatchEvents="true" responseEvents="true"
 	requestEvents="true" transactions="false" streaming="false">

@@ -15,15 +15,14 @@
                 schemaLocation="http://www.mulesource.org/schema/mule/http/2.0/mule-http.xsd"/>
 
     <xsd:annotation>
-        <xsd:documentation>The Jetty HTTP transport provides support for exposing services over HTTP by embedding a light-weight Jetty server. You can only define inbound endpoints with this transport.
+        <xsd:documentation>The Jetty transport provides support for exposing services over HTTP by embedding a light-weight Jetty server. You can only define inbound endpoints with this transport.
         </xsd:documentation>
         <xsd:appinfo>
-            <schemadoc:short-name>jetty</schemadoc:short-name>
-            <schemadoc:page-title>Jetty HTTP Transport</schemadoc:page-title>
-            <schemadoc:transport-features receiveEvents="true" dispatchEvents="false" responseEvents="false"
+            <schemadoc:short-name>Jetty</schemadoc:short-name>
+            <schemadoc:page-title>Jetty Transport</schemadoc:page-title>
+            <schemadoc:transport-features receiveEvents="true" dispatchEvents="false" responseEvents="true"
                                           requestEvents="true" transactions="false" streaming="true">
                 <schemadoc:inboundMEPs in-only="true" in-optional-out="true" in-out="true"/>
-                <schemadoc:outboundMEPs none="true"/>
             </schemadoc:transport-features>
         </xsd:appinfo>
     </xsd:annotation>

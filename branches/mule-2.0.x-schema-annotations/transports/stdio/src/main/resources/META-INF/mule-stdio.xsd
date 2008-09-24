@@ -2,6 +2,7 @@
 <xsd:schema xmlns="http://www.mulesource.org/schema/mule/stdio/2.0"
             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
             xmlns:mule="http://www.mulesource.org/schema/mule/core/2.0"
+            xmlns:schemadoc="http://www.mulesource.org/schema/mule/schemadoc/2.0" 
             targetNamespace="http://www.mulesource.org/schema/mule/stdio/2.0"
             elementFormDefault="qualified"
             attributeFormDefault="unqualified">
@@ -14,7 +15,7 @@
             The STDIO transport The STDIO Transport allows the reading and writing of streaming data to Java's System.out and System.in objects for debugging.
         </xsd:documentation>
         <xsd:appinfo>
-            <schemadoc:short-name>stdio</schemadoc:short-name>
+            <schemadoc:short-name>STDIO</schemadoc:short-name>
             <schemadoc:page-title>STDIO Transport</schemadoc:page-title>
             <schemadoc:transport-features receiveEvents="true" dispatchEvents="true" responseEvents="false"
                                           requestEvents="true"

@@ -13,12 +13,12 @@
                 schemaLocation="http://www.mulesource.org/schema/mule/core/2.0/mule.xsd" />
     <xsd:import namespace="http://www.mulesource.org/schema/mule/udp/2.0"
                 schemaLocation="http://www.mulesource.org/schema/mule/udp/2.0/mule-udp.xsd"/>
-        
-        //update the following info in the annotation to reflect the actual settings for this transport        
+              
         <xsd:annotation>
             <xsd:documentation>The Multicast transport can dispatch Mule events using IP multicasting.
             </xsd:documentation>
             <xsd:appinfo>
+                <schemadoc:short-name>Multicast</schemadoc:short-name>
                 <schemadoc:page-title>Multicast Transport</schemadoc:page-title>
                 <schemadoc:transport-features receiveEvents="true" dispatchEvents="true" responseEvents="true"
 	requestEvents="true"

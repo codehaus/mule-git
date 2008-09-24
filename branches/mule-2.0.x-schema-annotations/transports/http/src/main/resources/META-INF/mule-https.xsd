@@ -16,10 +16,10 @@
 
     <xsd:annotation>
         <xsd:documentation>
-            The Secure HTTP transport provides support for exposing services over HTTP and making HTTP client requests from Mule services to external services as part of service event flows. Mule supports secure inbound, secure outbound, and secure polling HTTP endpooints. These endpoints support all common features of the HTTP spec, such as ETag processing, cookies, and keepalive. Both HTTP 1.0 and 1.1 are supported.
+            The Secure HTTP transport provides support for exposing services over HTTP and making HTTP client requests from Mule services to external services as part of service event flows. Mule supports secure inbound, secure outbound, and secure polling HTTP endpoints. These endpoints support all common features of the HTTP spec, such as ETag processing, cookies, and keepalive. Both HTTP 1.0 and 1.1 are supported.
         </xsd:documentation>
         <xsd:appinfo>
-            <schemadoc:short-name>https</schemadoc:short-name>
+            <schemadoc:short-name>HTTPS</schemadoc:short-name>
             <schemadoc:page-title>HTTPS Transport</schemadoc:page-title>
             <schemadoc:transport-features receiveEvents="true" dispatchEvents="true" responseEvents="true"
                                           requestEvents="true"
@@ -50,10 +50,49 @@
         <xsd:complexContent>
             <xsd:extension base="http:httpConnectorType">
                 <xsd:sequence minOccurs="1" maxOccurs="1">
-                    <xsd:element minOccurs="0" maxOccurs="1" name="tls-client" type="mule:tlsClientKeyStoreType"/>
-                    <xsd:element minOccurs="0" maxOccurs="1" name="tls-key-store" type="mule:tlsKeyStoreType"/>
-                    <xsd:element minOccurs="0" maxOccurs="1" name="tls-server" type="mule:tlsServerTrustStoreType"/>
-                    <xsd:element minOccurs="0" maxOccurs="1" name="tls-protocol-handler" type="mule:tlsProtocolHandler"/>
+                    <xsd:element minOccurs="0" maxOccurs="1" name="tls-client" type="mule:tlsClientKeyStoreType">
+                        <xsd:annotation>
+                            <xsd:documentation>
+                                Configures the client key store with the following attributes:
+                                * path: The location (which will be resolved relative to the current classpath and file system, if possible) of the keystore that contains public certificates and private keys for identification
+                                * storePassword: The password used to protect the keystore
+                                * class: The type of keystore used (a Java class name)
+                            </xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element minOccurs="0" maxOccurs="1" name="tls-key-store" type="mule:tlsKeyStoreType">
+                        <xsd:annotation>
+                            <xsd:documentation>
+                                Configures the direct key store with the following attributes:
+                                * path: The location (which will be resolved relative to the current classpath and file system, if possible) of the keystore that contains public certificates and private keys for identification
+                                * class: The type of keystore used (a Java class name)
+                                * keyPassword: The password used to protect the private key
+                                * storePassword: The password used to protect the keystore
+                                * algorithm: The algorithm used by the keystore
+                            </xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element minOccurs="0" maxOccurs="1" name="tls-server" type="mule:tlsServerTrustStoreType">
+                        <xsd:annotation>
+                            <xsd:documentation>
+                                Configures the trust store. The attributes are:
+                                * path: The location (which will be resolved relative to the current classpath and file system, if possible) of the trust store that contains public certificates of trusted servers
+                                * storePassword: The password used to protect the trust store
+                                * class: The type of trust store used (a Java class name)
+                                * algorithm: The algorithm used by the trust store
+                                * factory-ref: Reference to the trust manager factory
+                                * explicitOnly: Whether this is an explicit trust store
+                                * requireClientAuthentication: Whether client authentication is required
+                            </xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element minOccurs="0" maxOccurs="1" name="tls-protocol-handler" type="mule:tlsProtocolHandler">
+                        <xsd:annotation>
+                            <xsd:documentation>
+                                Configures the global Java protocol handler. It has one attribute, property, which specifies the java.protocol.handler.pkgs system property.
+                            </xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
                 </xsd:sequence>
             </xsd:extension>
         </xsd:complexContent>

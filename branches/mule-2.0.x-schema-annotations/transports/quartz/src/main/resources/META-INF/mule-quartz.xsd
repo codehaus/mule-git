@@ -26,7 +26,7 @@
             tutorial|http://www.opensymphony.com/quartz/wikidocs/CronTriggers%20Tutorial.html].
         </xsd:documentation>
         <xsd:appinfo>
-            <schemadoc:short-name>quartz</schemadoc:short-name>
+            <schemadoc:short-name>Quartz</schemadoc:short-name>
             <schemadoc:page-title>Quartz Transport</schemadoc:page-title>
             <schemadoc:additional-documentation where="before-specific-elements">
                 h1. Jobs

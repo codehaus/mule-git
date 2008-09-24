@@ -18,7 +18,7 @@ The EJB transport allows EJB session beans to be invoked as part of an event flo
 The Javadoc for this transport can be found {javadoc:mule/transport/ejb}here{javadoc}. 
 		</xsd:documentation>
 		<xsd:appinfo>
-			<schemadoc:short-name>ejb</schemadoc:short-name>
+			<schemadoc:short-name>EJB</schemadoc:short-name>
 			<schemadoc:page-title>EJB Transport</schemadoc:page-title>
 			<schemadoc:additional-documentation where="before-specific-elements">
 			h2. Using the EJB Connector

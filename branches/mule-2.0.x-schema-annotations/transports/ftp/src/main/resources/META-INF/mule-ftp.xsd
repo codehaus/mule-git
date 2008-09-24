@@ -19,7 +19,7 @@
             The FTP transport provides connectivity to FTP servers to allow files to be read and written as messages in Mule.
         </xsd:documentation>
         <xsd:appinfo>
-            <schemadoc:short-name>ftp</schemadoc:short-name>
+            <schemadoc:short-name>FTP</schemadoc:short-name>
             <schemadoc:page-title>FTP Transport</schemadoc:page-title>
             <schemadoc:transport-features receiveEvents="true" dispatchEvents="true" responseEvents="false"
                                           requestEvents="true"

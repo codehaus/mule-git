@@ -14,6 +14,7 @@
             <xsd:documentation>The JDBC transport allows data to be retrieved from and written to any database that supports a JDBC driver. It also supports invoking stored precedures.  
             </xsd:documentation>
             <xsd:appinfo>
+                <schemadoc:short-name>JDBC</schemadoc:short-name>
                 <schemadoc:page-title>JDBC Transport</schemadoc:page-title>
                 <schemadoc:transport-features receiveEvents="true" dispatchEvents="true" responseEvents="true"
 	requestEvents="true"
