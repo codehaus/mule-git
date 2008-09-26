@@ -31,23 +31,22 @@ The Javadoc for this transport can be found {javadoc:mule/transport/ejb}here{jav
 			- remote method name
 
 			These values will be used to establish the dispatcher connection. For example:
-
 			{code:xml}
-			<ejb:endpoint host="localhost" port="1099" object="SomeService" method="remoteMethod"/>
+			&lt;ejb:endpoint host="localhost" port="1099" object="SomeService" method="remoteMethod"/&gt;
 			{code}
 
 			Alternatively, you could use URI-based configuration:
 			{code:xml}
-			<outbound-endpoint address="ejb://localhost:1099/SomeService?method=remoteMethod"/>
+			&lt;outbound-endpoint address="ejb://localhost:1099/SomeService?method=remoteMethod"/&gt;
 			{code}
 
 			If the {{remoteMethod}} can take one or more input arguments, you configure them on the endpoint as list properties. A recommended approach is to use a list of comma-separated values in the property methodArgumentTypes.
 			{code:xml}
-			<properties>
-			    <list name="methodArgumentTypes">
-			        <entry value="java.lang.String,java.lang.String,java.math.BigInteger"/>
-			    </list>
-			</properties>
+			&lt;properties&gt;
+			    &lt;list name="methodArgumentTypes"&gt;
+			        &lt;entry value="java.lang.String,java.lang.String,java.math.BigInteger"/&gt;
+			    &lt;/list&gt;
+			&lt;/properties&gt;
 			{code}
 			
 			Multiple arguments are passed in as an array of objects as the payload of the Mule event.
@@ -67,8 +66,6 @@ The Javadoc for this transport can be found {javadoc:mule/transport/ejb}here{jav
 		<xsd:annotation>
 			<xsd:documentation>
                 The Mule EJB Connector provides connectivity for EJB beans.
-            
-
 			</xsd:documentation>
 		</xsd:annotation>
 	</xsd:element>
@@ -79,8 +76,6 @@ The Javadoc for this transport can be found {javadoc:mule/transport/ejb}here{jav
 					<xsd:annotation>
 						<xsd:documentation>
                             Period (ms) between polling connections.
-                        
-						
 						</xsd:documentation>
 					</xsd:annotation>
 				</xsd:attribute>
@@ -88,8 +83,6 @@ The Javadoc for this transport can be found {javadoc:mule/transport/ejb}here{jav
 					<xsd:annotation>
 						<xsd:documentation>
                             Bean reference to the security manager that should be used.
-                        
-						
 						</xsd:documentation>
 					</xsd:annotation>
 				</xsd:attribute>
@@ -97,8 +90,6 @@ The Javadoc for this transport can be found {javadoc:mule/transport/ejb}here{jav
 					<xsd:annotation>
 						<xsd:documentation>
                             The security policy (file name) used to enable connections.
-                        
-						
 						</xsd:documentation>
 					</xsd:annotation>
 				</xsd:attribute>
@@ -106,8 +97,6 @@ The Javadoc for this transport can be found {javadoc:mule/transport/ejb}here{jav
 					<xsd:annotation>
 						<xsd:documentation>
                             The target class name.
-                        
-						
 						</xsd:documentation>
 					</xsd:annotation>
 				</xsd:attribute>
@@ -115,8 +104,6 @@ The Javadoc for this transport can be found {javadoc:mule/transport/ejb}here{jav
 					<xsd:annotation>
 						<xsd:documentation>
                             The target method.
-                        
-						
 						</xsd:documentation>
 					</xsd:annotation>
 				</xsd:attribute>
