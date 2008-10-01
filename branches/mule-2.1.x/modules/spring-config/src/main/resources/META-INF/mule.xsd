@@ -3588,10 +3588,9 @@
     <xsd:element name="static-recipient-list-router" type="staticRecipientListRouterType" substitutionGroup="abstract-outbound-router">
         <xsd:annotation>
             <xsd:documentation>
-                The recipient list router can be used to send the same message to multiple endpoints over the same 
+                The Recipient list router can be used to send the same message to multiple endpoints over the same 
                 endpoint or to implement routing-slip behaviour where the next destination for the message is 
-                determined from message properties or the payload. It uses a static list of recipient endpoints
-                which are specified via the attribute recipientsProperty and delimited by the attribute recipientsDelimieter.
+                determined from message properties or the payload.
             </xsd:documentation>
         </xsd:annotation>
     </xsd:element>
@@ -3610,25 +3609,17 @@
         </xsd:complexContent>
     </xsd:complexType>
 
-    <xsd:element name="expression-recipient-list-router" type="expressionRecipientListRouterType"
+    <xsd:element name="recipient-list-router" type="recipientListRouterType"
                  substitutionGroup="abstract-outbound-router">
         <xsd:annotation>
             <xsd:documentation>
-                The expression recipient list router can be used to send the same message to multiple endpoints over the same 
-                endpoint or to implement routing-slip behaviour where the next destination for the message is 
-                determined from message properties or the payload. It uses a list of recipients endpoints
-                which are extracted from the message using an expression. (As of 2.1)
+                // TODO
             </xsd:documentation>
         </xsd:annotation>
     </xsd:element>
-    <xsd:complexType name="expressionRecipientListRouterType">
+    <xsd:complexType name="recipientListRouterType">
         <xsd:complexContent>
-            <xsd:extension base="abstractOutboundRouterType">
-                <xsd:sequence>
-                    <xsd:group ref="defaultFilteredOutboundRouterElements"/>
-                    <xsd:element name="recipients" type="listOrSetType" minOccurs="0" maxOccurs="1"/>
-                </xsd:sequence>
-                <xsd:attributeGroup ref="defaultFilteredOutboundRouterAttributes"/>
+            <xsd:extension base="multipleEndpointFilteringOutboundRouterType">
                 <xsd:attributeGroup ref="expressionAttributes"/>
                 <xsd:attribute name="synchronous" type="xsd:boolean"/>
             </xsd:extension>

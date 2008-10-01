@@ -22,7 +22,6 @@ import org.mule.api.model.Model;
 import org.mule.api.routing.InboundRouterCollection;
 import org.mule.api.routing.OutboundRouterCollection;
 import org.mule.api.routing.ResponseRouterCollection;
-import org.mule.management.stats.ServiceStatistics;
 
 import java.beans.ExceptionListener;
 import java.io.Serializable;
@@ -206,12 +205,6 @@ public interface Service extends Serializable, Lifecycle, MuleContextAware, Name
      * @param component
      */
     void setComponent(Component component);
-    
-    /**
-     * Returns the Service statistics.  This provides Service router and component statistics.
-     * @return
-     */
-    ServiceStatistics getStatistics();
     
     MuleContext getMuleContext();
 
