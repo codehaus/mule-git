@@ -18,12 +18,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 
 import javax.jms.BytesMessage;
 import javax.jms.Destination;
@@ -37,6 +37,7 @@ import javax.jms.Session;
 import javax.jms.StreamMessage;
 import javax.jms.TextMessage;
 import javax.jms.Topic;
+import javax.jms.MessageFormatException;
 
 import org.apache.commons.io.output.ByteArrayOutputStream;
 
@@ -139,7 +140,9 @@ public class JmsMessageUtils
             List list = (List) object;
             for (Iterator iter = list.iterator(); iter.hasNext();)
             {
-                sMsg.writeObject(iter.next());
+                Object o = iter.next();
+                validateStreamMessageType(o);
+                sMsg.writeObject(o);
             }
             return sMsg;
         }
@@ -193,14 +196,14 @@ public class JmsMessageUtils
         }
         else if (source instanceof StreamMessage)
         {
-            Vector result = new Vector();
+            List result = new ArrayList();
             try
             {
                 StreamMessage sMsg = (StreamMessage) source;
                 Object obj;
                 while ((obj = sMsg.readObject()) != null)
                 {
-                    result.addElement(obj);
+                    result.add(obj);
                 }
             }
             catch (MessageEOFException eof)
@@ -390,4 +393,34 @@ public class JmsMessageUtils
         return to;
     }
 
+    /**
+     * {@link StreamMessage#writeObject(Object)} accepts only primitives (and wrappers), String and byte[].
+     * An attempt to write anything else must fail with a MessageFormatException as per
+     * JMS 1.1 spec, Section 7.3 Standard Exceptions, page 89, 1st paragraph.
+     * <p/>
+     * Unfortunately, some JMS vendors are not compliant in this area, enforce here for consistent behavior.
+     * 
+     * @param candidate object to validate
+     */
+    protected static void validateStreamMessageType(Object candidate) throws MessageFormatException
+    {
+        if (candidate instanceof Boolean ||
+            candidate instanceof Byte ||
+            candidate instanceof Short ||
+            candidate instanceof Character ||
+            candidate instanceof Integer ||
+            candidate instanceof Long ||
+            candidate instanceof Float ||
+            candidate instanceof Double ||
+            candidate instanceof String ||
+            candidate instanceof byte[])
+        {
+            return;
+        }
+
+        throw new MessageFormatException(String.format("Invalid type passed to StreamMessage: %s . Allowed types are: " +
+                                                       "Boolean, Byte, Short, Character, Integer, Long, Float, Double," +
+                                                       "String and byte[]",
+                                                       ClassUtils.getShortClassName(candidate, "null")));
+    }
 }
