@@ -153,7 +153,7 @@ import org.mule.util.store.TextFileObjectStore;
 
 /**
  * This is the core namespace handler for Mule and configures all Mule configuration elements under the
- * <code>http://www.mulesource.org/schema/mule/core/2.0</code> Namespace.
+ * <code>http://www.mulesource.org/schema/mule/core/${version}</code> Namespace.
  */
 public class MuleNamespaceHandler extends AbstractMuleNamespaceHandler
 {
