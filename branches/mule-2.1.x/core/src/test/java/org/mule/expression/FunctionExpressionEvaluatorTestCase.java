@@ -14,6 +14,7 @@ import org.mule.util.expression.FunctionExpressionEvaluator;
 import org.mule.util.expression.ExpressionEvaluatorManager;
 import org.mule.api.MuleMessage;
 import org.mule.tck.AbstractMuleTestCase;
+import org.mule.tck.testmodels.fruit.Apple;
 
 import java.net.InetAddress;
 import java.sql.Timestamp;
@@ -23,7 +24,7 @@ public class FunctionExpressionEvaluatorTestCase extends AbstractMuleTestCase
 {
     public void testFunctions() throws Exception
     {
-        MuleMessage message = new DefaultMuleMessage("test");
+        MuleMessage message = new DefaultMuleMessage(new Apple());
         FunctionExpressionEvaluator extractor = new FunctionExpressionEvaluator();
         Object o = extractor.evaluate("uuid", message);
         assertNotNull(o);
@@ -43,12 +44,20 @@ public class FunctionExpressionEvaluatorTestCase extends AbstractMuleTestCase
         assertNotNull(o);
         assertEquals(InetAddress.getLocalHost().getHostAddress(), o);
 
+        o = extractor.evaluate("payloadClass", message);
+        assertNotNull(o);
+        assertEquals(Apple.class.getName(), o);
+
+        o = extractor.evaluate("shortPayloadClass", message);
+        assertNotNull(o);
+        assertEquals("Apple", o);
+
         try
         {
-            o = extractor.evaluate("bork", message);
+            extractor.evaluate("bork", message);
             fail("bork is not a valid function");
         }
-        catch (Exception e)
+        catch (IllegalArgumentException e)
         {
             //expected
         }
@@ -56,7 +65,7 @@ public class FunctionExpressionEvaluatorTestCase extends AbstractMuleTestCase
 
     public void testFunctionsFromExtractorManager() throws Exception
     {
-        MuleMessage message = new DefaultMuleMessage("test");
+        MuleMessage message = new DefaultMuleMessage(new Apple());
         Object o = ExpressionEvaluatorManager.evaluate("function:uuid", message);
         assertNotNull(o);
         o = ExpressionEvaluatorManager.evaluate("function:now", message);
@@ -75,12 +84,30 @@ public class FunctionExpressionEvaluatorTestCase extends AbstractMuleTestCase
         assertNotNull(o);
         assertEquals(InetAddress.getLocalHost().getHostAddress(), o);
 
+        o = ExpressionEvaluatorManager.evaluate("function:payloadClass", message);
+        assertNotNull(o);
+        assertEquals(Apple.class.getName(), o);
+
+        o = ExpressionEvaluatorManager.evaluate("function:shortPayloadClass", message);
+        assertNotNull(o);
+        assertEquals("Apple", o);
+
         try
         {
-            o = ExpressionEvaluatorManager.evaluate("function:bork", message);
+            ExpressionEvaluatorManager.evaluate("function:bork", message);
             fail("bork is not a valid function");
         }
-        catch (Exception e)
+        catch (IllegalArgumentException e)
+        {
+            //expected
+        }
+
+        try
+        {
+            ExpressionEvaluatorManager.evaluate("function:", message);
+            fail("'Empty string' is not a valid function");
+        }
+        catch (IllegalArgumentException e)
         {
             //expected
         }
