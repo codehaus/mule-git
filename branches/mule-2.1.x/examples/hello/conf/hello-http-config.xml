@@ -75,12 +75,12 @@
             
             <outbound>
                 <filtering-router>
-                    <vm:outbound-endpoint path="chitchatter"/>
+                    <vm:outbound-endpoint path="chitchatter" synchronous="true"/>
                     <payload-type-filter expectedType="org.mule.example.hello.NameString"/>
                 </filtering-router>
                 
                 <filtering-router>
-                    <vm:outbound-endpoint path="userErrorHandler"/>
+                    <vm:outbound-endpoint path="userErrorHandler" synchronous="true"/>
                     <payload-type-filter expectedType="java.lang.Exception"/>
                 </filtering-router>
             </outbound>
