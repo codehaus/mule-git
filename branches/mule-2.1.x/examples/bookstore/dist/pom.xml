@@ -98,11 +98,6 @@
       <artifactId>mule-transport-http</artifactId>
       <version>${muleVersion}</version>
     </dependency>
-    <dependency>
-      <groupId>javax.mail</groupId>
-      <artifactId>mail</artifactId>
-      <version>1.4</version>
-    </dependency>
     
     <!-- 
      Bug in CXF 2.0.2 which requires this to use the ClientMain.
