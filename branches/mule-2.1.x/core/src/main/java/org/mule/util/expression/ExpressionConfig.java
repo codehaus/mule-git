@@ -28,9 +28,6 @@ public class ExpressionConfig
 
     private String fullExpression;
 
-    private String expressionPrefix = ExpressionEvaluatorManager.DEFAULT_EXPRESSION_PREFIX;
-    private String expressionPostfix = ExpressionEvaluatorManager.DEFAULT_EXPRESSION_POSTFIX;
-
     public ExpressionConfig()
     {
     }
@@ -40,16 +37,6 @@ public class ExpressionConfig
         this.customEvaluator = customEvaluator;
         this.evaluator = evaluator;
         this.expression = expression;
-    }
-
-    public ExpressionConfig(String expression, String evaluator, String customEvaluator, String expressionPrefix, String expressionPostfix)
-    {
-        this.customEvaluator = customEvaluator;
-        this.evaluator = evaluator;
-        this.expression = expression;
-        this.expressionPostfix = expressionPostfix;
-        this.expressionPrefix = expressionPrefix;
-        this.fullExpression = fullExpression;
     }
 
     public void validate()
@@ -84,7 +71,7 @@ public class ExpressionConfig
     {
         if (fullExpression == null)
         {
-            fullExpression = expressionPrefix + evaluator + ":" + expression + expressionPostfix;
+            fullExpression = evaluator + ":" + expression;
         }
         return fullExpression;
     }

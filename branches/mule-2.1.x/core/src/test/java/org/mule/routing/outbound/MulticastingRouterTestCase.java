@@ -12,7 +12,6 @@ package org.mule.routing.outbound;
 
 import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleMessage;
-import org.mule.api.MuleMessageCollection;
 import org.mule.api.MuleSession;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.routing.filters.RegExFilter;
@@ -88,8 +87,7 @@ public class MulticastingRouterTestCase extends AbstractMuleTestCase
         session.expectAndReturn("sendEvent", C.eq(message, endpoint2), message);
         MuleMessage result = router.route(message, (MuleSession)session.proxy());
         assertNotNull(result);
-        assertTrue(result instanceof MuleMessageCollection);
-        assertEquals(2, ((MuleMessageCollection)result).size());
+        assertEquals(message, result);
         session.verify();
     }
 

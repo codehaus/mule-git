@@ -50,10 +50,7 @@ public class DefaultRouterResultsHandler implements RouterResultsHandler
             for (Iterator iterator = results.iterator(); iterator.hasNext();)
             {
                 MuleMessage muleMessage = (MuleMessage) iterator.next();
-                if(muleMessage!=null)
-                {
-                    coll.addMessage(muleMessage);
-                }
+                coll.addMessage(muleMessage);
             }
             return coll;
         }

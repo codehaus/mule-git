@@ -20,9 +20,6 @@ import org.mule.api.routing.RoutePathNotFoundException;
 import org.mule.api.routing.RoutingException;
 import org.mule.config.i18n.CoreMessages;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * <code>MulticastingRouter</code> will broadcast the current message to every endpoint
  * registed with the router.
@@ -53,7 +50,6 @@ public class MulticastingRouter extends FilteringOutboundRouter
             }
         }
 
-        List results = new ArrayList(endpoints.size());
         try
         {
             OutboundEndpoint endpoint;
@@ -64,7 +60,23 @@ public class MulticastingRouter extends FilteringOutboundRouter
                     endpoint = (OutboundEndpoint) endpoints.get(i);
                     if (endpoint.isSynchronous())
                     {
-                        results.add(send(session, message, endpoint));
+                        // Were we have multiple outbound endpoints
+                        if (result == null)
+                        {
+                            result = send(session, message, endpoint);
+                        }
+                        else
+                        {
+                            String def = (String) endpoint.getProperties().get("default");
+                            if (def != null)
+                            {
+                                result = send(session, message, endpoint);
+                            }
+                            else
+                            {
+                                send(session, message, endpoint);
+                            }
+                        }
                     }
                     else
                     {
@@ -77,6 +89,6 @@ public class MulticastingRouter extends FilteringOutboundRouter
         {
             throw new CouldNotRouteOutboundMessageException(message, (ImmutableEndpoint) endpoints.get(0), e);
         }
-        return resultsHandler.aggregateResults(results, message);
+        return result;
     }
 }

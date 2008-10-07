@@ -10,6 +10,7 @@
 
 package org.mule.routing.outbound;
 
+import org.mule.DefaultMessageCollection;
 import org.mule.DefaultMuleMessage;
 import org.mule.MuleServer;
 import org.mule.api.MuleException;
@@ -68,7 +69,7 @@ public abstract class AbstractRecipientList extends FilteringOutboundRouter
             }
         }
 
-        MuleMessage result;
+        MuleMessage result = null;
         OutboundEndpoint endpoint;
         MuleMessage request;
 
@@ -79,18 +80,30 @@ public abstract class AbstractRecipientList extends FilteringOutboundRouter
             // which case there
             // would potentially be multiple messages with the same id...
             request = new DefaultMuleMessage(message.getPayload(), message);
-            endpoint = getRecipientEndpoint(request, recipient);
+            endpoint = this.getRecipientEndpoint(request, recipient);
 
             boolean sync = (this.synchronous==null ? endpoint.isSynchronous() : this.synchronous.booleanValue());
             try
             {
                 if (sync)
                 {
-                    results.add(send(session, request, endpoint));
+                    result = this.send(session, request, endpoint);
+                    if (result != null)
+                    {
+                        results.add(result);
+                    }
+                    else
+                    {
+                        if (logger.isDebugEnabled())
+                        {
+                            logger.debug("No result was returned for sync call to: "
+                                            + endpoint.getEndpointURI());
+                        }
+                    }
                 }
                 else
                 {
-                    dispatch(session, request, endpoint);
+                    this.dispatch(session, request, endpoint);
                 }
             }
             catch (MuleException e)
@@ -99,7 +112,20 @@ public abstract class AbstractRecipientList extends FilteringOutboundRouter
             }
         }
 
-        return resultsHandler.aggregateResults(results, message);
+        if (results.size() == 0)
+        {
+            return null;
+        }
+        else if (results.size() == 1)
+        {
+            return new DefaultMuleMessage(results.get(0), result);
+        }
+        else
+        {
+            DefaultMessageCollection collection = new DefaultMessageCollection();
+            collection.addMessages(results);
+            return collection;
+        }
     }
 
     protected OutboundEndpoint getRecipientEndpoint(MuleMessage message, Object recipient) throws RoutingException
