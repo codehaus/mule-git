@@ -11,7 +11,7 @@
     <!-- The info section -->
     <info>
         <appname>Mule</appname>
-        <appversion>2.1.0</appversion>
+        <appversion>2.1.1-SNAPSHOT</appversion>
         <authors>
             <author name="MuleSource" email="support@mulesource.com"/>
         </authors>
