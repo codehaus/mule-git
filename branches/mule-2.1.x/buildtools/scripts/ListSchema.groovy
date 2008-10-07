@@ -24,10 +24,8 @@
   $Id$
 */
 
-import org.codehaus.groovy.runtime.InvokerHelper
-
 // Schema version
-def version = 2.0
+def version = 2.1
 
 // Provide the location where https://dav.codehaus.org/dist/mule is mounted on your file system
 // as a parameter to the script.
