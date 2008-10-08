@@ -411,8 +411,7 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
             {
                 if (JmsConstants.JMS_SPECIFICATION_102B.equals(specification))
                 {
-                    jmsSupport = new Jms102bSupport(this, jndiContext, jndiDestinations,
-                        forceJndiDestinations);
+                    jmsSupport = new Jms102bSupport(this, jndiDestinations, forceJndiDestinations);
                 }
                 else
                 {

@@ -29,7 +29,6 @@ import javax.jms.TopicConnection;
 import javax.jms.TopicConnectionFactory;
 import javax.jms.TopicPublisher;
 import javax.jms.TopicSession;
-import javax.naming.Context;
 
 /**
  * <code>Jms102bSupport</code> is a template class to provide an absstraction
@@ -40,7 +39,6 @@ import javax.naming.Context;
 public class Jms102bSupport extends Jms11Support
 {
     public Jms102bSupport(JmsConnector connector,
-                          Context context,
                           boolean jndiDestinations,
                           boolean forceJndiDestinations)
     {
