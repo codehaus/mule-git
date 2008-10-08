@@ -35,10 +35,11 @@ public class ExpressionEvaluatorManager
      */
     protected static transient final Log logger = LogFactory.getLog(ExpressionEvaluatorManager.class);
 
-    public static final String DEFAULT_EXPRESSION_PREFIX = "${";
-    public static final String DEFAULT_EXPRESSION_POSTFIX = "}";
+    public static final String DEFAULT_EXPRESSION_PREFIX = "#[";
+    public static final String DEFAULT_EXPRESSION_POSTFIX = "]";
 
-    private static TemplateParser parser = TemplateParser.createAntStyleParser();
+    // default style parser
+    private static TemplateParser parser = TemplateParser.createMuleStyleParser();
 
     private static ConcurrentMap evaluators = new ConcurrentHashMap(8);
 
