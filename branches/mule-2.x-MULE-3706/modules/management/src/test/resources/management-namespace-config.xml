@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesource.org/schema/mule/core/2.2"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:spring="http://www.springframework.org/schema/beans"
+       xmlns:management="http://www.mulesource.org/schema/mule/management/2.2"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+       http://www.mulesource.org/schema/mule/core/2.2 http://www.mulesource.org/schema/mule/core/2.2/mule.xsd
+       http://www.mulesource.org/schema/mule/management/2.2 http://www.mulesource.org/schema/mule/management/2.2/mule-management.xsd">
+
+    <management:jmx-server>
+        <management:credentials>
+            <spring:entry key="a" value="b"/>
+            <spring:entry key="c" value="c"/>
+        </management:credentials>
+    </management:jmx-server>
+
+    <management:jmx-log4j/>
+
+    <management:jmx-mx4j-adaptor jmxAdaptorUrl="http://127.0.0.1:8000"/>
+
+    <management:custom-agent name="test-custom-agent" class="org.mule.tck.testmodels.mule.TestAgent">
+        <spring:property name="frobbit" value="woggle"/>
+    </management:custom-agent>
+
+    <management:jmx-notifications/>
+
+    <management:log4j-notifications/>
+
+    <management:chainsaw-notifications chainsawPort="8080" chainsawHost="127.0.0.1"/>
+
+    <management:publish-notifications endpointAddress="test://test"/>
+
+    <!-- needs profiler installed -->
+    <!-- management:yourkit-profiler/ -->
+
+ </mule>
