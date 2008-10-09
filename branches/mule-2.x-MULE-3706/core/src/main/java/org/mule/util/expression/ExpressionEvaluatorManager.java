@@ -51,7 +51,11 @@ public class ExpressionEvaluatorManager
         }
 
         final String name = evaluator.getName();
-        logger.warn("Evaluators already contain an object named '" + name + "'.  The previous object will be overwritten.");
+        // TODO MULE-3809 Eliminate duplicate evaluators registration
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("Evaluators already contain an object named '" + name + "'.  The previous object will be overwritten.");
+        }
         evaluators.put(evaluator.getName(), evaluator);
     }
 
