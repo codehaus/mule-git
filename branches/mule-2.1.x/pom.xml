@@ -981,9 +981,8 @@
                 <configuration>
                     <!-- by default download all sources when generating project files -->
                     <downloadSources>true</downloadSources>
-                    <!-- configure a JDK named 'jdk1.4' for this project -->
                     <classpathContainers>
-                        <classpathContainer>org.eclipse.jdt.launching.JRE_CONTAINER/${vmtype}/${jdk14Name}</classpathContainer>
+                        <classpathContainer>org.eclipse.jdt.launching.JRE_CONTAINER/${vmtype}/${jdk15Name}</classpathContainer>
                     </classpathContainers>
                 </configuration>
             </plugin>
@@ -992,7 +991,7 @@
                 <artifactId>maven-idea-plugin</artifactId>
                 <configuration>
                     <downloadSources>true</downloadSources>
-                    <jdkName>1.4</jdkName>
+                    <jdkName>1.5</jdkName>
                 </configuration>
             </plugin>
 
@@ -1050,8 +1049,13 @@
                             <!-- This would work if this issue gets closed: http://jira.codehaus.org/browse/MNG-1832 -->
                             <!--Build-Date>${mvn.timestamp.yyyy-MM-dd-HH:mm:ss}</Build-Date-->
                             <!-- include repository revision from buildnumber plugin -->
+                            
+                            <!-- MULE-3783 Exclude for now as otherwise bundle manifest don't get these properties
+                                 Only a few jars that are not converted to bundles yet will have these entries missing 
+                                 and more important bundles will now have this entry.
                             <Build-Revision>${buildNumber}</Build-Revision>
                             <Build-Date>${timestamp}</Build-Date>
+                            -->
                             <Dev-List-Email>dev@mule.codehaus.org</Dev-List-Email>
                         </manifestEntries>
                     </archive>
@@ -1082,7 +1086,7 @@
             <plugin>
                 <groupId>org.mule.tools</groupId>
                 <artifactId>mule-test-exclusions-report-plugin</artifactId>
-                <version>1.0</version>
+                <version>1.2</version>
             </plugin>
 
             <!-- Javadoc settings -->
