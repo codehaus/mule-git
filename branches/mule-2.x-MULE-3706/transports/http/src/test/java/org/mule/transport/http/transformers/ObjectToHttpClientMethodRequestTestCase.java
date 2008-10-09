@@ -104,7 +104,7 @@ public class ObjectToHttpClientMethodRequestTestCase extends AbstractMuleTestCas
 
     public void testAppendedUrlWithExpressions() throws Exception
     {
-        MuleMessage message = setupRequestContext("http://mycompany.com/test?fruits=${header:fruit1},${header:fruit2}&correlationID=${message:correlationId}");
+        MuleMessage message = setupRequestContext("http://mycompany.com/test?fruits=#[header:fruit1],#[header:fruit2]&correlationID=#[message:correlationId]");
         // transforming a payload here will add it as body=xxx query parameter
         message.setPayload(NullPayload.getInstance());
         message.setCorrelationId("1234");

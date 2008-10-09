@@ -174,8 +174,6 @@ public class ObjectToHttpClientMethodRequest extends AbstractMessageAwareTransfo
         try
         {
             //Allow Expressions to be embedded
-            endpoint = endpoint.replaceAll("\\[", "\\{");
-            endpoint = endpoint.replaceAll("\\]", "\\}");
             endpoint = ExpressionEvaluatorManager.parse(endpoint, msg, true);
             URI uri = new URI(endpoint);
             HttpMethod httpMethod;
