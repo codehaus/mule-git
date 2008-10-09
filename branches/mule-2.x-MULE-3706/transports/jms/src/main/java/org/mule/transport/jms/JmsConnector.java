@@ -28,8 +28,6 @@ import org.mule.config.ExceptionHelper;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.context.notification.ConnectionNotification;
 import org.mule.context.notification.NotificationException;
-import org.mule.retry.RetryPolicyExhaustedException;
-import org.mule.retry.policies.NoRetryPolicyTemplate;
 import org.mule.transaction.TransactionCoordination;
 import org.mule.transport.AbstractConnector;
 import org.mule.transport.ConnectException;
@@ -42,7 +40,6 @@ import java.util.Map;
 
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
-import javax.jms.ExceptionListener;
 import javax.jms.JMSException;
 import javax.jms.MessageConsumer;
 import javax.jms.MessageProducer;
@@ -57,15 +54,13 @@ import javax.naming.NamingException;
 
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicInteger;
 
-import org.apache.commons.lang.UnhandledException;
-
 /**
  * <code>JmsConnector</code> is a JMS 1.0.2b compliant connector that can be used
  * by a Mule endpoint. The connector supports all JMS functionality including topics
  * and queues, durable subscribers, acknowledgement modes and local transactions.
  */
 
-public class JmsConnector extends AbstractConnector implements ConnectionNotificationListener
+public class JmsConnector extends AbstractConnector implements ConnectionNotificationListener, javax.jms.ExceptionListener
 {
 
     public static final String JMS = "jms";
@@ -324,7 +319,7 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
                     /*
                      Uncomment for manual testing ... this gives you time to restart the JNDI
                      server
-                     
+
                     try
                     {
                         logger.info("sleep for 20 secs before JNDI retry");
@@ -336,7 +331,7 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
                         throw new RuntimeException(e);
                     }
                     */
-                    
+
                     // re-connect to JNDI
                     this.initJndiContext();
                     
@@ -378,76 +373,50 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
             connection = jmsSupport.createConnection(cf);
         }
 
+        if (connection != null)
+        {
+            connection.setExceptionListener(this);
+        }
+
         if (clientId != null)
         {
             connection.setClientID(getClientId());
         }
 
-        // Register a JMS exception listener to detect failed connections.
-        // Existing connection strategy will be used to recover.
-
-        if (recoverJmsConnections && !(getRetryPolicyTemplate() instanceof NoRetryPolicyTemplate) && connection != null)
-        {
-            connection.setExceptionListener(new ExceptionListener()
-            {
-                public void onException(JMSException jmsException)
-                {
-                    final JmsConnector jmsConnector = JmsConnector.this;
-                    Map receivers = jmsConnector.getReceivers();
-                    boolean isMultiConsumerReceiver = false;
-                    
-                    if (!receivers.isEmpty()) 
-                    {
-                        Map.Entry entry = (Map.Entry) receivers.entrySet().iterator().next();
-                        if (entry.getValue() instanceof MultiConsumerJmsMessageReceiver)
-                        {
-                            isMultiConsumerReceiver = true;
-                        }
-                    }
-                    
-                    int expectedReceiverCount = isMultiConsumerReceiver ? 1 : 
-                        (jmsConnector.getReceivers().size() * jmsConnector.getNumberOfConcurrentTransactedReceivers());
-                    
-                    if (logger.isDebugEnabled())
-                    {
-                        logger.debug("About to recycle myself due to remote JMS connection shutdown but need "
-                            + "to wait for all active receivers to report connection loss. Receiver count: " 
-                            + (receiverReportedExceptionCount.get() + 1) + '/' + expectedReceiverCount);
-                    }
-                    
-                    if (receiverReportedExceptionCount.incrementAndGet() >= expectedReceiverCount)
-                    {
-                        receiverReportedExceptionCount.set(0);
-                    
-                        try
-                        {
-                            jmsConnector.stop();
-                            jmsConnector.initialised.set(true);
-                        }
-                        catch (MuleException e)
-                        {
-                            logger.warn(e.getMessage(), e);
-                        }
-    
-                        try
-                        {
-                            jmsConnector.start();
-                        }
-                        catch (RetryPolicyExhaustedException rpex)
-                        {
-                            logger.fatal("Failed to reconnect to JMS server. I'm giving up.");
-                        }
-                        catch (MuleException umoex)
-                        {
-                            throw new UnhandledException("Failed to recover a connector.", umoex);
-                        }
-                    }
-
-                }
-            });
-        }
-
         return connection;
+    }
+
+    public void onException(JMSException jmsException)
+    {
+        final JmsConnector jmsConnector = JmsConnector.this;
+        Map receivers = jmsConnector.getReceivers();
+        boolean isMultiConsumerReceiver = false;
+        
+        if (!receivers.isEmpty()) 
+        {
+            Map.Entry entry = (Map.Entry) receivers.entrySet().iterator().next();
+            if (entry.getValue() instanceof MultiConsumerJmsMessageReceiver)
+            {
+                isMultiConsumerReceiver = true;
+            }
+        }
+        
+        int expectedReceiverCount = isMultiConsumerReceiver ? 1 : 
+            (jmsConnector.getReceivers().size() * jmsConnector.getNumberOfConcurrentTransactedReceivers());
+        
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("About to recycle myself due to remote JMS connection shutdown but need "
+                + "to wait for all active receivers to report connection loss. Receiver count: " 
+                + (receiverReportedExceptionCount.get() + 1) + '/' + expectedReceiverCount);
+        }
+        
+        if (receiverReportedExceptionCount.incrementAndGet() >= expectedReceiverCount)
+        {
+            receiverReportedExceptionCount.set(0);
+        
+            handleException(new ConnectException(jmsException, this));
+        }
     }
 
     protected void doConnect() throws ConnectException
@@ -1117,6 +1086,16 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
    public void setJndiProviderUrl(String jndiProviderUrl)
    {
        this.jndiProviderUrl = jndiProviderUrl;
+   }
+
+   public Map getJndiProviderProperties()
+   {
+       return jndiProviderProperties;
+   }
+
+   public void setJndiProviderProperties(Map jndiProviderProperties)
+   {
+       this.jndiProviderProperties = jndiProviderProperties;
    }
 
    public String getConnectionFactoryJndiName()
