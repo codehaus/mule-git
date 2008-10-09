@@ -167,4 +167,17 @@ public class JmsNamespaceHandlerTestCase extends FunctionalTestCase
         assertEquals(MuleTransactionConfig.ACTION_ALWAYS_JOIN, endpoint.getTransactionConfig().getAction());
     }
 
+    public void testJndiConnectorAtributes() throws Exception
+    {
+        JmsConnector connector = (JmsConnector) muleContext.getRegistry().lookupConnector("jmsJndiConnector");
+        assertNotNull(connector);
+
+        assertEquals("org.mule.transport.jms.test.JmsTestContextFactory", connector.getJndiInitialFactory());
+        assertEquals("jndi://test", connector.getJndiProviderUrl());
+        assertEquals("jms/connectionFactory", connector.getConnectionFactoryJndiName());
+        assertEquals("org.mule.transport.jms.test.TestConnectionFactory", connector.getConnectionFactory().getClass().getName());
+        assertTrue(connector.isJndiDestinations());
+        assertTrue(connector.isForceJndiDestinations());
+        assertEquals("value", connector.getJndiProviderProperties().get("key"));
+    }
 }
