@@ -90,6 +90,12 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
     /** Whether to create a consumer on connect. */
     private boolean eagerConsumer = true;
 
+    /**
+     * @deprecated This attribute is no longer relevant for the new retry policies.  
+     * @see MULE-3812
+     */
+    private boolean recoverJmsConnections;
+    
     ////////////////////////////////////////////////////////////////////////
     // JMS Connection
     ////////////////////////////////////////////////////////////////////////
@@ -1116,4 +1122,13 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
        this.forceJndiDestinations = forceJndiDestinations;
    }
 
+   public boolean isRecoverJmsConnections()
+   {
+       return recoverJmsConnections;
+   }
+    
+   public void setRecoverJmsConnections(boolean recoverJmsConnections)
+   {
+       this.recoverJmsConnections = recoverJmsConnections;
+   }
 }

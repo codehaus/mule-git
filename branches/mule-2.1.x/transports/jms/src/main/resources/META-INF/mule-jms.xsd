@@ -74,6 +74,13 @@
         <xsd:attribute name="honorQosHeaders" type="mule:substitutableBoolean"/>
         <xsd:attribute name="maxRedelivery" type="mule:substitutableInt"/>
         <xsd:attribute name="cacheJmsSessions" type="mule:substitutableBoolean"/>
+        <xsd:attribute name="recoverJmsConnections" type="mule:substitutableBoolean">
+            <xsd:annotation>
+                <xsd:documentation>
+                    Deprecated.  This attribute is no longer relevant for the new retry policies.  See MULE-3812
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
         <xsd:attribute name="eagerConsumer" type="mule:substitutableBoolean"/>
         <!-- Defaults to org.mule.transport.jms.JmsConstants.JMS_SPECIFICATION_102B  -->
         <xsd:attribute name="specification" default="1.0.2b">
