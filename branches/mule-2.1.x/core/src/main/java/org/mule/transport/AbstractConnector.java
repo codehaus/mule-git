@@ -57,6 +57,7 @@ import org.mule.context.notification.EndpointMessageNotification;
 import org.mule.context.notification.OptimisedNotificationHandler;
 import org.mule.lifecycle.AlreadyInitialisedException;
 import org.mule.model.streaming.DelegatingInputStream;
+import org.mule.retry.policies.NoRetryPolicyTemplate;
 import org.mule.routing.filters.WildcardFilter;
 import org.mule.transformer.TransformerUtils;
 import org.mule.transport.service.TransportFactory;
@@ -661,14 +662,48 @@ public abstract class AbstractConnector
      */
     public void handleException(Exception exception)
     {
-        if (exceptionListener == null)
+        boolean retry = 
+            exception instanceof ConnectException 
+            && !(retryPolicyTemplate instanceof NoRetryPolicyTemplate);
+            
+        if (retry)
         {
-            throw new MuleRuntimeException(
-                CoreMessages.exceptionOnConnectorNotExceptionListener(this.getName()), exception);
+            logger.info("Exception caught is a ConnectException, attempting to reconnect...");
+            try
+            {
+                disconnect();
+                if (exceptionListener != null)
+                {
+                    exceptionListener.exceptionThrown(exception);
+                }
+                else
+                {
+                    throw new MuleRuntimeException(CoreMessages.exceptionOnConnectorNotExceptionListener(this.getName()), exception);
+                }
+                connect();
+            }
+            catch (Exception e)
+            {
+                if (exceptionListener == null)
+                {
+                    throw new MuleRuntimeException(CoreMessages.exceptionOnConnectorNotExceptionListener(this.getName()), e);
+                }
+                else
+                {
+                    exceptionListener.exceptionThrown(e);
+                }
+            }
         }
         else
         {
-            exceptionListener.exceptionThrown(exception);
+            if (exceptionListener != null)
+            {
+                exceptionListener.exceptionThrown(exception);
+            }
+            else
+            {
+                throw new MuleRuntimeException(CoreMessages.exceptionOnConnectorNotExceptionListener(this.getName()), exception);
+            }
         }
     }
 
@@ -1355,10 +1390,13 @@ public abstract class AbstractConnector
                 MessageReceiver receiver = (MessageReceiver) iterator.next();
                 if (logger.isDebugEnabled())
                 {
-                    logger.debug("Connecting receiver on endpoint: "
-                            + receiver.getEndpoint().getEndpointURI());
+                    logger.debug("Connecting receiver on endpoint: " + receiver.getEndpoint().getEndpointURI());
                 }
                 receiver.connect();
+                if(startOnConnect.get())
+                {
+                    receiver.start();
+                }
             }
         }
     }
@@ -1375,10 +1413,34 @@ public abstract class AbstractConnector
 
         try
         {
+            if (receivers != null)
+            {
+                for (Iterator iterator = receivers.values().iterator(); iterator.hasNext();)
+                {
+                    MessageReceiver receiver = (MessageReceiver) iterator.next();
+                    if (logger.isDebugEnabled())
+                    {
+                        logger.debug("Disonnecting receiver on endpoint: " + receiver.getEndpoint().getEndpointURI());
+                    }
+                    receiver.disconnect();
+                }
+            }
             this.doDisconnect();
         }
         finally
         {
+            if (receivers != null)
+            {
+                for (Iterator iterator = receivers.values().iterator(); iterator.hasNext();)
+                {
+                    MessageReceiver receiver = (MessageReceiver) iterator.next();
+                    if (logger.isDebugEnabled())
+                    {
+                        logger.debug("Stopping receiver on endpoint: " + receiver.getEndpoint().getEndpointURI());
+                    }
+                    receiver.stop();
+                }
+            }
             this.stop();
         }
 
@@ -1715,9 +1777,6 @@ public abstract class AbstractConnector
             throw new MuleRuntimeException(CoreMessages.connectorCausedError(this.getName()), e);
         }
     }
-
-    // TODO the following methods should probably be lifecycle-enabled;
-    // for now they are only stubs to get the refactoring going.
 
     public void dispatch(OutboundEndpoint endpoint, MuleEvent event) throws DispatchException
     {

@@ -148,8 +148,10 @@ public class TransactionTemplate
                 // the context delimited by XA's ALWAYS_BEGIN
                 return null;
             }
-
-            throw e;
+            else
+            {
+                throw e;
+            }
         }
         catch (Error e)
         {

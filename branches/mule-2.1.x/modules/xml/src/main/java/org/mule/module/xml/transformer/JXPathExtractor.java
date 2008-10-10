@@ -11,14 +11,16 @@
 package org.mule.module.xml.transformer;
 
 import org.mule.api.transformer.TransformerException;
-import org.mule.module.xml.util.XMLUtils;
 import org.mule.transformer.AbstractTransformer;
+import org.mule.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.jxpath.JXPathContext;
 import org.dom4j.Document;
+import org.dom4j.DocumentHelper;
 import org.dom4j.Node;
 import org.dom4j.XPath;
 
@@ -32,8 +34,17 @@ import org.dom4j.XPath;
  */
 public class JXPathExtractor extends AbstractTransformer
 {
+    public static final String OUTPUT_TYPE_NODE = "NODE";
+
+    public static final String OUTPUT_TYPE_XML = "XML";
+
+    public static final String OUTPUT_TYPE_VALUE = "VALUE";
 
     private volatile String expression;
+    
+    private volatile String outputType;
+    
+    private volatile Map namespaces;
 
     private volatile boolean singleResult = true;
 
@@ -46,31 +57,47 @@ public class JXPathExtractor extends AbstractTransformer
     {
         try
         {
-            Object result;
-            Document doc = XMLUtils.toDocument(src);
-            
-            // Payload is XML
-            if (doc != null)
+            Object result = null;
+            if (src instanceof String)
             {
-                if (singleResult)
+                Document doc = DocumentHelper.parseText((String) src);
+
+                XPath xpath = doc.createXPath(expression);
+                if (namespaces != null)
                 {
-                    result = doc.valueOf(expression);
+                    xpath.setNamespaceURIs(namespaces);
+                }
+                
+                // This is the way we always did it before, so keep doing it that way
+                // as xpath.evaluate() will return non-string results (like Doubles)
+                // for some scenarios.
+                if (outputType == null && singleResult)
+                {
+                    return xpath.valueOf(doc);
+                }
+                
+                // TODO handle non-list cases, see
+                //http://www.dom4j.org/apidocs/org/dom4j/XPath.html#evaluate(java.lang.Object)
+                Object obj = xpath.evaluate(doc);
+                if (obj instanceof List)
+                {
+                    for (int i = 0; i < ((List) obj).size(); i++)
+                    {
+                        final Node node = (Node) ((List) obj).get(i);
+                        result = add(result, node);
+                        
+                        if (singleResult)
+                        {
+                            break;
+                        }
+                    }
                 }
                 else
                 {
-                    XPath xpath = doc.createXPath(expression);
-                    // TODO handle non-list cases, see
-                    // http://www.dom4j.org/apidocs/org/dom4j/XPath.html#evaluate(java.lang.Object)
-                    List obj = (List)xpath.evaluate(doc);
-                    result = new ArrayList(obj.size());
-                    for (int i = 0; i < obj.size(); i++)
-                    {
-                        final Node node = (Node)obj.get(i);
-                        ((List)result).add(node.getText());
-                    }
+                    result = add(result, obj);
                 }
+
             }
-            // Payload is a Java object
             else
             {
                 JXPathContext context = JXPathContext.newContext(src);
@@ -82,6 +109,59 @@ public class JXPathExtractor extends AbstractTransformer
         {
             throw new TransformerException(this, e);
         }
+
+    }
+    
+    private Object add(Object result, Object value)
+    {
+        Object formattedResult = getResult(value);
+        if (singleResult)
+        {
+            return formattedResult;
+        }
+        else
+        {
+            if (result == null)
+            {
+                result = new ArrayList();
+            }
+            
+            ((List) result).add(formattedResult);
+        }
+        return result;
+    }
+
+    private Object getResult(Object value)
+    {
+        Object result = null;
+        if (StringUtils.contains(OUTPUT_TYPE_VALUE, outputType) || outputType == null)
+        {
+            if (value instanceof Node)
+            {
+                result = ((Node) value).getText();
+            }
+            else
+            {
+                // this maintains backward compat with previous 2.1.x versions. 
+                result = value.toString();
+            }
+        }
+        else if (StringUtils.contains(OUTPUT_TYPE_XML, outputType))
+        {
+            if (value instanceof Node)
+            {
+                result = ((Node) value).asXML();
+            }
+            else 
+            {
+                throw new IllegalStateException("XPath expression output must be a Node to output as XML. Expression type was: " + value.getClass());
+            }
+        }
+        else if (StringUtils.contains(OUTPUT_TYPE_NODE, outputType))
+        {
+            result = value;
+        }
+        return result;
     }
 
     /**
@@ -120,4 +200,25 @@ public class JXPathExtractor extends AbstractTransformer
     {
         this.singleResult = singleResult;
     }
+
+    public String getOutputType()
+    {
+        return outputType;
+    }
+
+    public void setOutputType(String outputEncoding)
+    {
+        this.outputType = outputEncoding;
+    }
+
+    public Map getNamespaces()
+    {
+        return namespaces;
+    }
+
+    public void setNamespaces(Map namespaceURIs)
+    {
+        this.namespaces = namespaceURIs;
+    }
+    
 }
