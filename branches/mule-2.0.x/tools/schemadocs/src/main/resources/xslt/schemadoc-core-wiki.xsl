@@ -19,10 +19,15 @@
 
     <xsl:template match="xsd:element" mode="single-element">
 
+        <!-- Convert the element name "foo-bar" to "Foo Bar" -->
         <xsl:variable name="temp" select="translate(@name, '-', ' ')"/>
-        <xsl:variable name="t" select="concat( translate( substring( $temp, 1, 1 ),'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' ), substring( $temp, 2, string-length( $temp )))"/>
-
-        h2. <xsl:value-of select="$t"/>
+        <xsl:variable name="title">
+            <xsl:call-template name="TitleCase">
+                <xsl:with-param name="text" select="translate(normalize-space($temp),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')" />
+            </xsl:call-template>
+        </xsl:variable>
+        
+        h2. <xsl:value-of select="$title"/>
         <xsl:value-of select="xsd:annotation/xsd:documentation"/>
 
         <xsl:variable name="type"><xsl:value-of select="@type"/> </xsl:variable>
@@ -31,15 +36,32 @@
             <xsl:with-param name="name"><xsl:value-of select="@name"/> </xsl:with-param>
         </xsl:apply-templates>
 
-        <xsl:if test="@type">
-            <xsl:variable name="type" select="@type"/>
-            <xsl:apply-templates select="/xsd:schema/xsd:complexType[@name=$type]" mode="elements"/>
-        </xsl:if>
-
         <!-- Render Example configurations -->
         <xsl:apply-templates select="xsd:annotation/xsd:appinfo/schemadoc:snippet"/>
     </xsl:template>
-
+    
+    <!-- Converts a string like "foo bar" to "Foo Bar" -->
+    <xsl:template name="TitleCase">
+        <xsl:param name="text" />
+        <xsl:param name="lastletter" select="' '" />
+        <xsl:if test="$text">
+            <xsl:variable name="thisletter" select="substring($text,1,1)" />
+            <xsl:choose>
+                <xsl:when test="$lastletter=' '">
+                    <xsl:value-of
+                        select="translate($thisletter,'abcdefghijklmnopqrstuvwxyz','ABCDEFGHIJKLMNOPQRSTUVWXYZ')" />
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:value-of select="$thisletter" />
+                </xsl:otherwise>
+            </xsl:choose>
+            <xsl:call-template name="TitleCase">
+                <xsl:with-param name="text" select="substring($text,2)" />
+                <xsl:with-param name="lastletter" select="$thisletter" />
+            </xsl:call-template>
+        </xsl:if>
+    </xsl:template>
+    
     <xsl:template match="xsd:complexType" mode="table">
         <xsl:param name="name"/>
         <xsl:if test="(count(.//xsd:attribute) +  count(.//xsd:attributeGroup)) > 0">
