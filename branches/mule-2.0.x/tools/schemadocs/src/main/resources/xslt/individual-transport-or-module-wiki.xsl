@@ -25,7 +25,7 @@
 
     <!-- xsl:include href="http://www.mulesource.org/xslt/mule/schemadoc/2.0/schemadoc-core-wiki.xsl"/> -->
     <!--Use this if testing locally -->
-    <xsl:include href="schemadoc-core-wiki.xsl"/>
+    <xsl:include href="./schemadoc-core-wiki.xsl"/>
 
 
     <xsl:template match="/">
