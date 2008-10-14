@@ -63,14 +63,12 @@
         at start up. When doing automatic transformations these will be included when searching for the correct
         transformers.
 
-        ||Name||Description||
-        <xsl:apply-templates select="//xsd:element[contains(@substitutionGroup,'abstract-transformer')]"
-                             mode="transformer"/>
+        ||Name||Description||<xsl:apply-templates select="//xsd:element[contains(@substitutionGroup,'abstract-transformer')]"
+                                                  mode="transformer"/>
     </xsl:template>
 
     <xsl:template match="xsd:element" mode="transformer">
-        |<xsl:value-of select="@name"/>|<xsl:value-of select="normalize-space(xsd:annotation/xsd:documentation)"/>|
-    </xsl:template>
+        |<xsl:value-of select="@name"/>|<xsl:value-of select="normalize-space(xsd:annotation/xsd:documentation)"/>|</xsl:template>
 
     <!-- FILTERS -->
     <xsl:template name="filters">
@@ -78,13 +76,11 @@
         h2. Filters
         Filters can be used on inbound endpoints to control which data is received by a service.
 
-        ||Name||Description||
-        <xsl:apply-templates select="//xsd:element[contains(@substitutionGroup,'abstract-filter')]" mode="filter"/>
+        ||Name||Description||<xsl:apply-templates select="//xsd:element[contains(@substitutionGroup,'abstract-filter')]" mode="filter"/>
     </xsl:template>
 
     <xsl:template match="xsd:element" mode="filter">
-        |<xsl:value-of select="@name"/>|<xsl:value-of select="normalize-space(xsd:annotation/xsd:documentation)"/>|
-    </xsl:template>
+        |<xsl:value-of select="@name"/>|<xsl:value-of select="normalize-space(xsd:annotation/xsd:documentation)"/>|</xsl:template>
 
     <!-- App Info extension processing -->
     <xsl:template match="xsd:appinfo/schemadoc:snippet">
