@@ -63,8 +63,7 @@
             <outbound>
                 <pass-through-router>
                     <outbound-endpoint ref="out">
-                        <!-- MULE-3382 -->
-                        <custom-transaction action="NONE" factory-class="org.mule.transaction.XaTransactionFactory"/>
+                        <xa-transaction action="NONE"/>
                     </outbound-endpoint>
                 </pass-through-router>
             </outbound>
@@ -82,8 +81,7 @@
             <outbound>
                 <pass-through-router>
                     <outbound-endpoint ref="out">
-                        <!-- MULE-3382 -->
-                        <custom-transaction action="NONE" factory-class="org.mule.transaction.XaTransactionFactory"/>
+                        <xa-transaction action="NONE"/>
                     </outbound-endpoint>
                 </pass-through-router>
             </outbound>
