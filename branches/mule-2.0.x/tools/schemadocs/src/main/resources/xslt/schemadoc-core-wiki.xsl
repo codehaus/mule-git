@@ -32,9 +32,19 @@
 
         <xsl:variable name="type"><xsl:value-of select="@type"/> </xsl:variable>
 
-        <xsl:apply-templates select="//xsd:complexType[@name=$type]" mode="table">
-            <xsl:with-param name="name"><xsl:value-of select="@name"/> </xsl:with-param>
-        </xsl:apply-templates>
+        <xsl:choose>
+            <xsl:when test="$type">
+                <xsl:apply-templates select="//xsd:complexType[@name=$type]" mode="table">
+                    <xsl:with-param name="name"><xsl:value-of select="@name"/> </xsl:with-param>
+                </xsl:apply-templates>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:apply-templates select="xsd:complexType" mode="table">
+                    <xsl:with-param name="name"><xsl:value-of select="@name"/> </xsl:with-param>
+                </xsl:apply-templates>
+            </xsl:otherwise>
+        </xsl:choose>
+        
 
         <!-- Render Example configurations -->
         <xsl:apply-templates select="xsd:annotation/xsd:appinfo/schemadoc:snippet"/>
