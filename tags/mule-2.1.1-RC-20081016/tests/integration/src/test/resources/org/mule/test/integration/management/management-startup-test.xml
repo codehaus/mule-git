@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesource.org/schema/mule/core/2.1"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:util="http://www.springframework.org/schema/util"
+      xmlns:spring="http://www.springframework.org/schema/beans"
+      xmlns:mxml="http://www.mulesource.org/schema/mule/xml/2.1"
+      xmlns:mgmt="http://www.mulesource.org/schema/mule/management/2.1"
+      xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+       http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd
+       http://www.mulesource.org/schema/mule/core/2.1 http://www.mulesource.org/schema/mule/core/2.1/mule.xsd
+       http://www.mulesource.org/schema/mule/xml/2.1 http://www.mulesource.org/schema/mule/xml/2.1/mule-xml.xsd
+       http://www.mulesource.org/schema/mule/management/2.1 http://www.mulesource.org/schema/mule/management/2.1/mule-management.xsd">
+
+    <mgmt:rmi-server serverUri="rmi://localhost:1100"/>
+    <mgmt:jmx-server>
+        <!-- localhost is more secure, but we use 0.0.0.0 here to have an unusual value to test for -->
+        <mgmt:connector-server url="service:jmx:rmi:///jndi/rmi://0.0.0.0:1100/server" rebind="true"/>
+    </mgmt:jmx-server>
+
+    <mgmt:chainsaw-notifications chainsawHost="localhost" chainsawPort="20202">
+        <mgmt:level-mapping eventId="ModelNotification.stop" severity="WARN"/> 
+    </mgmt:chainsaw-notifications>
+
+</mule>
+        
