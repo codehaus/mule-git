@@ -40,8 +40,8 @@
 
     <!-- Build -->
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/mule/trunk/mule</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/mule/trunk/mule</developerConnection>
+        <connection>scm:svn:http://svn.codehaus.org/mule/branches/mule-1.4.x/</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/mule/branches/mule-1.4.x/</developerConnection>
         <url>http://svn.mule.codehaus.org/</url>
     </scm>
 
