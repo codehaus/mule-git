@@ -1,0 +1,50 @@
+<mule xmlns="http://www.mulesource.org/schema/mule/core/2.1"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:spring="http://www.springframework.org/schema/beans"
+       xmlns:cxf="http://www.mulesource.org/schema/mule/cxf/2.1"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+       http://www.mulesource.org/schema/mule/core/2.1 http://www.mulesource.org/schema/mule/core/2.1/mule.xsd
+       http://www.mulesource.org/schema/mule/cxf/2.1 http://www.mulesource.org/schema/mule/cxf/2.1/mule-cxf.xsd">
+
+    <cxf:connector name="cxf" defaultFrontend="simple"/>
+    
+    <model name="test">
+        <service name="mycomponent">
+            <inbound>
+                <inbound-endpoint address="cxf:http://localhost:62108/mule/mycomponent"/>
+            </inbound>
+            <component>
+                <singleton-object class="org.mule.tck.testmodels.services.TestServiceComponent"/>
+            </component>
+        </service>
+
+        <service name="mycomponent2">
+            <inbound>
+                <inbound-endpoint address="cxf:http://localhost:62109/mule/services/mycomponent2"/>
+            </inbound>
+            <component>
+                <singleton-object class="org.mule.tck.testmodels.services.TestServiceComponent"/>
+            </component>
+        </service>
+
+        <service name="mycomponent3">
+            <inbound>
+                <inbound-endpoint address="cxf:http://localhost:62109/mycomponent3"/>
+            </inbound>
+            <component>
+                <singleton-object class="org.mule.tck.testmodels.services.TestServiceComponent"/>
+            </component>
+        </service>
+
+        <service name="mycomponent4">
+            <inbound>
+                <inbound-endpoint address="cxf:http://localhost:62110/mycomponent4" synchronous="false"/>
+            </inbound>
+            <component>
+                <singleton-object class="org.mule.tck.testmodels.services.TestServiceComponent"/>
+            </component>
+        </service>
+    </model>
+
+</mule>

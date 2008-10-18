@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesource.org/schema/mule/core/2.1"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:spring="http://www.springframework.org/schema/beans"
+       xmlns:axis="http://www.mulesource.org/schema/mule/axis/2.1"
+    xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+       http://www.mulesource.org/schema/mule/core/2.1 http://www.mulesource.org/schema/mule/core/2.1/mule.xsd
+       http://www.mulesource.org/schema/mule/axis/2.1 http://www.mulesource.org/schema/mule/axis/2.1/mule-axis.xsd">
+
+    <axis:connector name="testAxis">
+        <dispatcher-threading-profile doThreading="false"/>
+    </axis:connector>
+
+    <custom-connector name="testConnector" class="org.mule.tck.testmodels.mule.TestConnector"/>
+
+    <model name="main">
+        <service name="testComponent">
+            <inbound>
+                <inbound-endpoint address="axis:http://localhost:60198/mule/services" synchronous="true"/>
+            </inbound>
+            <component class="org.mule.transport.soap.axis.functional.SoapAttachmentsFunctionalTestComponent"/>
+            <outbound>
+                <pass-through-router>
+                    <outbound-endpoint address="test://test" name="test1"/>
+                </pass-through-router>
+            </outbound>
+        </service>
+    </model>
+    
+</mule>

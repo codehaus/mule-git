@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mule="http://www.mulesource.org/schema/mule/core/2.1"
+       xmlns:http="http://www.mulesource.org/schema/mule/http/2.1"
+       xmlns:acegi="http://www.mulesource.org/schema/mule/acegi/2.1"
+    xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+       http://www.mulesource.org/schema/mule/core/2.1 http://www.mulesource.org/schema/mule/core/2.1/mule.xsd
+       http://www.mulesource.org/schema/mule/http/2.1 http://www.mulesource.org/schema/mule/http/2.1/mule-http.xsd
+       http://www.mulesource.org/schema/mule/acegi/2.1 http://www.mulesource.org/schema/mule/acegi/2.1/mule-acegi.xsd">
+
+    <!-- this doesn't work if the import is embedded in "other" -->
+
+    <import resource="auth-component-security.xml"/>
+
+    <mule:mule>
+
+        <acegi:security-manager>
+            <acegi:delegate-security-provider name="memory-dao" delegate-ref="daoAuthenticationProvider"/>
+        </acegi:security-manager>
+
+        <mule:security-manager>
+            <mule:password-encryption-strategy name="PBE" password="mule"/>
+        </mule:security-manager>
+
+        <mule:model name="test">
+            <mule:service name="echoUMO">
+                <mule:inbound>
+                    <mule:inbound-endpoint address="vm://test">
+                        <mule:encryption-security-filter strategy-ref="PBE"/>
+                    </mule:inbound-endpoint>
+                </mule:inbound>
+                <mule:component>
+                    <mule:spring-object bean="echoComponent"/>
+                </mule:component>
+            </mule:service>
+        </mule:model>
+
+    </mule:mule>
+
+</beans>
