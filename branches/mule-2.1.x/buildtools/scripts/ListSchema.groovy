@@ -55,17 +55,17 @@ def otherxsd = /.*(\/|\\)(transports|modules)(\/|\\)([^\/]+)(\/|\\).*(\/|\\)mule
 
 def checkCurrentDirectory = {
   if (! (new File("").getCanonicalFile().getName() == "scripts")) {
-    println ""
-    println "WARNING: run from in the scripts directory"
-    println ""
+    println "# "
+    println "# WARNING: run from in the scripts directory"
+    println "# "
     System.exit(1)
   }
 }
 
 def scanForSchemaAndInferDestinations = {
-	println ""
-	println "scanning for schema"
-	println ""
+	println "# "
+	println "# scanning for schema"
+	println "# "
 	for (f in new AntBuilder().fileScanner {
           fileset(dir: root) {
             include(name:"**/*.xsd")
@@ -99,15 +99,15 @@ def scanForSchemaAndInferDestinations = {
       schemaDestinations.put(name, "${base}${name}/${version}/mule-${name}.xsd")
       schemaDestinationPaths.put(name, "${base}${name}/${version}")
     } else {
-      println "WARNING: ignoring $f"
+      println "# WARNING: ignoring $f"
     }
   }
 }
 
 def checkSchema = {
-  println ""
-  println "checking schema"
-  println ""
+  println "# "
+  println "# checking schema"
+  println "# "
   for (name in schemaNames) {
     file = schemaSources[name]
     parser = new XmlParser().parse(file)
@@ -115,9 +115,9 @@ def checkSchema = {
       if (element.name.localPart == "import") {
         namespace = element.attributes["namespace"]
         if (namespace.contains("mulesource") && ! namespace.contains("core") && ! element.attributes.keySet().contains("schemaLocation")) {
-          println "WARNING: missing schema location"
-          println "in " + file
-          println "for " + namespace
+          println "# WARNING: missing schema location"
+          println "# in " + file
+          println "# for " + namespace
         }
       }
     }
@@ -125,9 +125,9 @@ def checkSchema = {
 }
 
 def scanAndCheckConfigs = {
-    println ""
-    println "checking configurations"
-    println ""
+    println "# "
+    println "# checking configurations"
+    println "# "
     for (f in new AntBuilder().fileScanner {
         fileset(dir: root) {
             include(name: "**/*.xml")
@@ -136,7 +136,7 @@ def scanAndCheckConfigs = {
     })
     {
         try {
-            // println "parsing $f"
+            // println "# parsing $f"
             def parser = new XmlParser().parse(f)
             for (key in parser?.attributes().keySet()) {
                 if (key instanceof groovy.xml.QName && key.localPart == "schemaLocation") {                    
@@ -151,9 +151,9 @@ def scanAndCheckConfigs = {
                             // but there's only one^H^H^H a few
                             if (name != "parsers-test" && ! name.startsWith("nest-example")) {
                                 if (! schemaNames.contains(name)) {
-                                    println "WARNING: missing schema for $name - see file $f"
+                                    println "# WARNING: missing schema for $name - see file $f"
                                 } else if (uri != schemaDestinations[name]) {
-                                    println "WARNING: URI for $name is ${schemaDestinations[name]} (not ${uri}) - see file $f"
+                                    println "# WARNING: URI for $name is ${schemaDestinations[name]} (not ${uri}) - see file $f"
                                 }
                             }
                         }
@@ -161,25 +161,25 @@ def scanAndCheckConfigs = {
                 }
             }
         } catch (e) {
-            println "WARNING: error parsing $f: $e"
+            println "# WARNING: error parsing $f: $e"
         }
     }
 }
 
 def listSchema = {
   for (name in schemaNames) {
-    println ""
-    println "${name}:"
-    println "  ${schemaSources[name]}"
-    println "  ${schemaDestinations[name]}"
+    println "# "
+    println "# ${name}:"
+    println "#   ${schemaSources[name]}"
+    println "#   ${schemaDestinations[name]}"
   }
 }
 
 // this is just a suggestion
 def generateDeployCommand = {
-  println ""
-  println "generating deploy command"
-  println ""
+  println "# "
+  println "# generating deploy command"
+  println "# "
   for (name in schemaNames) {
     source = schemaSources[name]
     pathUri = new URI(schemaDestinationPaths[name])
