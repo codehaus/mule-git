@@ -34,7 +34,6 @@ import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.MessageListener;
 import javax.jms.Session;
-import javax.jms.Topic;
 import javax.resource.spi.work.WorkException;
 
 import edu.emory.mathcs.backport.java.util.concurrent.BlockingDeque;
@@ -74,7 +73,7 @@ public class MultiConsumerJmsMessageReceiver extends AbstractMessageReceiver
             if (logger.isInfoEnabled())
             {
                 logger.info("Destination " + getEndpoint().getEndpointURI() + " is a topic, but " + receiversCount +
-                                " receivers have been configured. Will configure only 1.");
+                                " receivers have been requested. Will configure only 1.");
             }
             receiversCount = 1;
         }
@@ -253,7 +252,7 @@ public class MultiConsumerJmsMessageReceiver extends AbstractMessageReceiver
 
                 // Get the durable subscriber name if there is one
                 String durableName = (String) endpoint.getProperties().get(JmsConstants.DURABLE_NAME_PROPERTY);
-                if (durableName == null && durable && dest instanceof Topic)
+                if (durableName == null && durable && topic)
                 {
                     durableName = "mule." + jmsConnector.getName() + "." + endpoint.getEndpointURI().getAddress();
                     logger.debug("Jms Connector for this receiver is durable but no durable name has been specified. Defaulting to: "
