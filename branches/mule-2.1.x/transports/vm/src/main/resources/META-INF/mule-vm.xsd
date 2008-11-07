@@ -38,12 +38,18 @@
                             <xsd:documentation>DEPRECATED. USE "&lt;queue-profile&gt;" instead.</xsd:documentation>
                         </xsd:annotation>
                     </xsd:element>
-                    <xsd:element name="queue-profile" type="mule:queueProfileType" minOccurs="0"/>
+                    <xsd:element name="queue-profile" type="mule:queueProfileType" minOccurs="0">
+                        <xsd:annotation>
+                            <xsd:documentation>
+                                Configures the properties of this connector's queue (see [Configuring Queues]).
+                            </xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
                 </xsd:sequence>
                 <xsd:attribute name="queueEvents" type="mule:substitutableBoolean">
                     <xsd:annotation>
                         <xsd:documentation>
-                            Determines whether queues should be set up for listeners on the connector. If set to false, the connector simply forwards events to components via the Mule server. If it is set to true, the queues are configured using the queuing profile.
+                            Determines whether queues should be set up for listeners on the connector. If set to false, the connector simply forwards messsages to components via the Mule server. If it is set to true, the queues are configured using the queuing profile.
                         </xsd:documentation>
                     </xsd:annotation>
                 </xsd:attribute>
