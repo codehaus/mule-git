@@ -181,7 +181,7 @@
             
         </service>
 
-		<!-- MULE-3932 Ensure interceptors can be used with shortcut component config -->
+        <!-- MULE-3932 Ensure interceptors can be used with shortcut component config -->
         <service name="MULE3932Service">
             <component class="org.mule.tck.testmodels.fruit.Apple">
                 <logging-interceptor/>
