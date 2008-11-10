@@ -40,6 +40,7 @@ import java.util.Map;
 
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
+import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.MessageConsumer;
 import javax.jms.MessageProducer;
@@ -807,6 +808,35 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
             }
         }
     }
+
+    /**
+     * This is a temporary method that is gone in Mule 2.2 and later. The idea was to backport the feature
+     * preserving the backwards-compatibility. In Mule 2.2 and later this functionality is encapsulated in
+     * JmsSupport implementations, where it actually belongs.
+     *
+     */
+    protected Destination createDestinationMule3858Backport(Session session, ImmutableEndpoint endpoint)
+            throws JMSException
+    {
+        String address = endpoint.getEndpointURI().toString();
+        if (address.contains(JmsConstants.TOPIC_PROPERTY + ":"))
+        {
+            // cut prefixes
+            address = address.substring((getProtocol() + "://" + JmsConstants.TOPIC_PROPERTY + ":").length());
+            // cut any endpoint uri params, if any
+            if (address.contains("?"))
+            {
+                address = address.substring(0, address.indexOf('?'));
+            }
+        }
+        else
+        {
+            address = endpoint.getEndpointURI().getAddress();
+        }
+
+        return getJmsSupport().createDestination(session, address, getTopicResolver().isTopic(endpoint));
+    }
+
 
     ////////////////////////////////////////////////////////////////////////
     // Getters and Setters

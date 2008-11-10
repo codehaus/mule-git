@@ -70,7 +70,7 @@ public class JmsMessageRequester extends AbstractMessageRequester
 
             JmsSupport support = connector.getJmsSupport();
             session = connector.getSession(false, topic);
-            Destination dest = support.createDestination(session, endpoint);
+            Destination dest = connector.createDestinationMule3858Backport(session, endpoint);
 
             // Extract jms selector
             String selector = null;

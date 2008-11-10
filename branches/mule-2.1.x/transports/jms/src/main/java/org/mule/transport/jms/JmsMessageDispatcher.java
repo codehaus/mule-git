@@ -15,7 +15,6 @@ import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.endpoint.EndpointBuilder;
-import org.mule.api.endpoint.EndpointURI;
 import org.mule.api.endpoint.OutboundEndpoint;
 import org.mule.api.transport.Connector;
 import org.mule.api.transport.DispatchException;
@@ -132,11 +131,9 @@ public class JmsMessageDispatcher extends AbstractMessageDispatcher
                 }
             }
 
-            EndpointURI endpointUri = event.getEndpoint().getEndpointURI();
-
             boolean topic = connector.getTopicResolver().isTopic(event.getEndpoint(), true);
 
-            Destination dest = connector.getJmsSupport().createDestination(session, endpoint);
+            Destination dest = connector.createDestinationMule3858Backport(session, endpoint);
             producer = connector.getJmsSupport().createProducer(session, dest, topic);
 
             Object message = event.transformMessage();

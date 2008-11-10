@@ -224,7 +224,7 @@ public class MultiConsumerJmsMessageReceiver extends AbstractMessageReceiver
                 }
 
                 // Create destination
-                Destination dest = jmsSupport.createDestination(session, endpoint);
+                Destination dest = jmsConnector.createDestinationMule3858Backport(session, endpoint);
 
                 // Extract jms selector
                 String selector = null;

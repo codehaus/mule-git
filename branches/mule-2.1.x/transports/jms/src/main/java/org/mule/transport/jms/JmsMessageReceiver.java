@@ -228,7 +228,7 @@ public class JmsMessageReceiver extends AbstractMessageReceiver implements Messa
             boolean topic = connector.getTopicResolver().isTopic(endpoint);
 
             // Create destination
-            Destination dest = jmsSupport.createDestination(session, endpoint);
+            Destination dest = connector.createDestinationMule3858Backport(session, endpoint);
 
             // Extract jms selector
             String selector = null;
