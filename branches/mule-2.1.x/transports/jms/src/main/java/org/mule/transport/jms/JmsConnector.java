@@ -26,7 +26,6 @@ import org.mule.api.transport.MessageAdapter;
 import org.mule.api.transport.ReplyToHandler;
 import org.mule.config.ExceptionHelper;
 import org.mule.config.i18n.CoreMessages;
-import org.mule.config.i18n.MessageFactory;
 import org.mule.context.notification.ConnectionNotification;
 import org.mule.context.notification.NotificationException;
 import org.mule.transaction.TransactionCoordination;
@@ -121,7 +120,7 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
     /**
      * This object guards all access to the jndiContext
      */
-    private Object jndiLock = new Object();
+    private final Object jndiLock = new Object();
 
     private String jndiProviderUrl;
 
@@ -526,7 +525,7 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
     {
         if (!isConnected())
         {
-            throw new ConnectException(MessageFactory.createStaticMessage("Not connected"), this);
+            throw new ConnectException(CoreMessages.notConnectedYet("JMS connector"), this);
         }
         Session session = getSessionFromTransaction();
         if (session != null)
@@ -541,10 +540,7 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
             logger.debug(MessageFormat.format(
                     "Retrieving new jms session from connection: " +
                             "topic={0}, transacted={1}, ack mode={2}, nolocal={3}",
-                    new Object[]{Boolean.valueOf(topic),
-                                 Boolean.valueOf(transacted),
-                                 new Integer(acknowledgementMode),
-                                 Boolean.valueOf(noLocal)}));
+                            topic, transacted, acknowledgementMode, noLocal));
         }
 
         session = jmsSupport.createSession(connection, topic, transacted, acknowledgementMode, noLocal);
@@ -763,7 +759,7 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
                 }
                 logger.info(MessageFormat.format(
                         "Faled to delete a temporary queue '{0}' Reason: {1}",
-                        new Object[]{queueName, e.getMessage()}));
+                        queueName, e.getMessage()));
             }
         }
     }
