@@ -598,7 +598,7 @@
     <xsd:element name="abstract-queue-profile" abstract="true" type="abstractQueueProfileType">
         <xsd:annotation>
             <xsd:documentation>
-                A placeholder for queue profile elements. A queue profile controls how messages are queued	.
+                A placeholder for queue profile elements. A queue profile controls how messages are queued    .
             </xsd:documentation>
         </xsd:annotation>
     </xsd:element>
@@ -830,11 +830,11 @@
                     <xsd:element ref="include-entry-point" minOccurs="0" maxOccurs="unbounded"/>
                 </xsd:sequence>
                 <xsd:attribute name="enableDiscovery" type="substitutableBoolean" default="true">
-			        <xsd:annotation>
-			            <xsd:documentation>
-			                If no method names are configured attempt to discover the method to invoke based on the inbound message type.
-			            </xsd:documentation>
-			        </xsd:annotation>
+                    <xsd:annotation>
+                        <xsd:documentation>
+                            If no method names are configured attempt to discover the method to invoke based on the inbound message type.
+                        </xsd:documentation>
+                    </xsd:annotation>
                 </xsd:attribute>
             </xsd:extension>
         </xsd:complexContent>
@@ -891,7 +891,7 @@
                     <xsd:element name="description" type="descriptionType" minOccurs="0">
                         <xsd:annotation>
                             <xsd:documentation>
-		                        This can hold any kind of documentation related to the Service. It is intended to be "human readable" only and is not used by the system.
+                                This can hold any kind of documentation related to the Service. It is intended to be "human readable" only and is not used by the system.
                             </xsd:documentation>
                         </xsd:annotation>
                     </xsd:element>
@@ -4121,8 +4121,8 @@
                 <xsd:attribute name="createMultipleTransactedReceivers" type="substitutableBoolean">
                     <xsd:annotation>
                         <xsd:documentation>
-							Whether to create multiple concurrent receivers for this connector. This property is used by transports that support transactions, 
-							specifically receivers that extend the TransactedPollingMessageReceiver, and provides better throughput.
+                            Whether to create multiple concurrent receivers for this connector. This property is used by transports that support transactions,
+                            specifically receivers that extend the TransactedPollingMessageReceiver, and provides better throughput.
                         </xsd:documentation>
                     </xsd:annotation>
                 </xsd:attribute>
@@ -4136,8 +4136,8 @@
                 <xsd:attribute name="dynamicNotification" type="substitutableBoolean" default="false">
                     <xsd:annotation>
                         <xsd:documentation>
-		                    Enables dynamic notifications for notification fired by this connector.  This means that listeners can be registered dynamically in runtime 
-		                    via the MuleContext and notiification configured can be changed. This overrides the default value defined in the 'configuration' element.
+                            Enables dynamic notifications for notification fired by this connector.  This means that listeners can be registered dynamically in runtime
+                            via the MuleContext and notiification configured can be changed. This overrides the default value defined in the 'configuration' element.
                         </xsd:documentation>
                     </xsd:annotation>
                 </xsd:attribute>
