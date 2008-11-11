@@ -64,7 +64,12 @@
                             </xsd:documentation>
                         </xsd:annotation>
                     </xsd:element>
-                    <xsd:element name="context-property" type="spring:entryType" minOccurs="0" maxOccurs="unbounded"/>
+                    <xsd:element name="context-property" type="spring:entryType" minOccurs="0" maxOccurs="unbounded">
+                        <xsd:annotation>
+                            <xsd:documentation>A property that wil be made available to the filter context. Expression Evaluators can be used to grab these properties from the message at runtime.
+                            </xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
                 </xsd:sequence>
                 <xsd:attribute name="lenient" type="mule:substitutableBoolean" default="true">
 			        <xsd:annotation>
@@ -84,11 +89,16 @@
         </xsd:complexContent>
     </xsd:complexType>
 
-    <xsd:element name="jaxen-filter" type="jaxenFilterType" substitutionGroup="mule:abstract-filter"/>
+    <xsd:element name="jaxen-filter" type="jaxenFilterType" substitutionGroup="mule:abstract-filter">
+        <xsd:annotation>
+            <xsd:documentation>The Jaxen filter allows you to route messages based on XPath expressions. The Jaxen filter is generally faster than the JXPath filter and should be considered the first choice when using an XPath filter.
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
     <xsd:complexType name="jaxenFilterType">
         <xsd:annotation>
             <xsd:documentation>
-                The Jaxen filter filters messages based on XPath expressions using Jaxen.
+                The Jaxen filter allows you to route messages based on XPath expressions. 
             </xsd:documentation>
         </xsd:annotation>
         <xsd:complexContent>
@@ -101,7 +111,12 @@
                             </xsd:documentation>
                         </xsd:annotation>
                     </xsd:element>
-                    <xsd:element name="context-property" type="spring:entryType" minOccurs="0" maxOccurs="unbounded"/>
+                    <xsd:element name="context-property" type="spring:entryType" minOccurs="0" maxOccurs="unbounded">
+                        <xsd:annotation>
+                            <xsd:documentation>A property that wil be made available to the filter context. Expression Evaluators can be used to grab these properties from the message at runtime.
+                            </xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
                 </xsd:sequence>
                 <xsd:attribute name="expectedValue" type="xsd:string">
 			        <xsd:annotation>
@@ -314,10 +329,7 @@
     
     <xsd:element name="xslt-transformer" type="xsltTransformerType" substitutionGroup="mule:abstract-transformer">
         <xsd:annotation>
-            <xsd:documentation>The XSLT transformer uses XSLT to transform the message payload. Transformation objects are pooled for better performance. You can set transformation context properties on the transformer and can pull these properties from the message using Expression Evaluators. This works in a very similar
-                way to the
-                <a href="http://www.muleforge.org/display/EXTENDEDXML/XQuery" target="_blank">XQuery Transformer</a>
-                on<a href="http://www.muleforge.org" target="_blank">MuleForge</a>.
+            <xsd:documentation>The XSLT transformer uses XSLT to transform the message payload. Transformation objects are pooled for better performance. You can set transformation context properties on the transformer and can pull these properties from the message using Expression Evaluators. This works in a very similar way to the <a href="http://www.muleforge.org/display/EXTENDEDXML/XQuery" target="_blank">XQuery Transformer</a> on <a href="http://www.muleforge.org" target="_blank">MuleForge</a>.
             </xsd:documentation>
         </xsd:annotation>
     </xsd:element>
