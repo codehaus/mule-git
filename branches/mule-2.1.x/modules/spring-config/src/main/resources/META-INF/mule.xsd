@@ -1140,8 +1140,8 @@
                     <xsd:element ref="abstract-object-factory" minOccurs="0">
                         <xsd:annotation>
                             <xsd:documentation>
-                                Object factory used to the class or object instance that will be used for the component implementation.  The object factory is responsible for object creation 
-                                and may implemention different patters or  
+                                Object factory used to obtain the object instance that will be used for the component implementation.  The object factory is responsible for object creation 
+                                and may implement different patterns such a singleton or prototype or lookup instance from other object containers.  
                             </xsd:documentation>
                         </xsd:annotation>
                     </xsd:element>
@@ -1989,7 +1989,13 @@
         <xsd:sequence>
             <xsd:choice maxOccurs="unbounded">
                 <xsd:element ref="abstract-interceptor"/>
-                <xsd:element name="interceptor-stack" type="refInterceptorStackType"/>
+                <xsd:element name="interceptor-stack" type="refInterceptorStackType">
+	                <xsd:annotation>
+                        <xsd:documentation>
+                            A reference to a stack of intereceptors defined globally.
+                        </xsd:documentation>
+                    </xsd:annotation>
+                </xsd:element>
             </xsd:choice>
         </xsd:sequence>
     </xsd:group>
@@ -2382,6 +2388,12 @@
                 <xsd:extension base="abstractTransformerType">
                     <xsd:sequence minOccurs="1" maxOccurs="unbounded">
                         <xsd:element name="return-argument">
+                            <xsd:annotation>
+                                <xsd:documentation>
+                                    List of expressions each of which is evaluated and equates to an element in the result message.  If just one return-argument is configured then the result with be the evaluation of that expression 
+                                    rather than an object array. 
+                                </xsd:documentation>
+                            </xsd:annotation>
                             <xsd:complexType>
                                 <xsd:attributeGroup ref="expressionAttributes"/>
                                 <xsd:attribute name="optional" type="substitutableBoolean" use="optional">
@@ -3011,8 +3023,20 @@
                 <xsd:sequence>
                     <xsd:element ref="abstract-transformer" minOccurs="0" maxOccurs="unbounded"/>
                 </xsd:sequence>
-                <xsd:attribute name="transformer-refs" type="xsd:NMTOKENS"/>
-                <xsd:attribute name="transformFirst" type="substitutableBoolean"/>
+                <xsd:attribute name="transformer-refs" type="xsd:NMTOKENS">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                            A list of the transformers that will be applied to the message in order before it is delivered to the component.
+                        </xsd:documentation>
+                    </xsd:annotation>
+                </xsd:attribute>  
+                <xsd:attribute name="transformFirst" type="substitutableBoolean" default="true">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                            Determines if transformations are applied before filtering occurs. The default is true.
+                        </xsd:documentation>
+                    </xsd:annotation>
+                </xsd:attribute>  
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
@@ -3047,7 +3071,13 @@
     <xsd:complexType name="customCorrelationAggregatorRouterType">
         <xsd:complexContent>
             <xsd:extension base="messageChunkingAggregatorRouterType">
-                <xsd:attribute name="class" type="substitutableClass" use="required"/>
+                <xsd:attribute name="class" type="substitutableClass" use="required">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                            Fully qualified class name of the custom correlation agregator router to be used.
+                        </xsd:documentation>
+                    </xsd:annotation>  
+                </xsd:attribute> 
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
@@ -3091,7 +3121,13 @@
     <xsd:complexType name="baseAggregatorRouterType">
         <xsd:complexContent>
             <xsd:extension base="filteredInboundRouterType">
-                <xsd:attribute name="timeout" type="substitutableInt"/>
+                <xsd:attribute name="timeout" type="substitutableInt">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                            The time (ms) the router waits for messages to complete the group.
+                        </xsd:documentation>
+                    </xsd:annotation>
+                </xsd:attribute>
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
@@ -3181,6 +3217,12 @@
     
     <xsd:attributeGroup name="defaultOutboundRouterAttributes">
         <xsd:attribute name="enableCorrelation" default="IF_NOT_SET">
+            <xsd:annotation>
+                <xsd:documentation>
+                    Derterimes if Mule should give outgoing messages a correlation ID or not.  The default behaviour is to only give messages a correlation ID if they
+                    don't already have one so that existing correlation ID's are maintained.
+                </xsd:documentation>
+            </xsd:annotation>
             <xsd:simpleType>
                 <xsd:restriction base="xsd:NMTOKEN">
                     <xsd:enumeration value="ALWAYS" />
@@ -3193,7 +3235,13 @@
 
     <xsd:attributeGroup name="defaultFilteredOutboundRouterAttributes">
         <xsd:attributeGroup ref="defaultOutboundRouterAttributes"/>
-        <xsd:attribute name="transformer-refs" type="xsd:NMTOKENS"/>
+        <xsd:attribute name="transformer-refs" type="xsd:NMTOKENS">
+            <xsd:annotation>
+                <xsd:documentation>
+                    A list of the transformers that will be applied to the message in order before it is delivered to the component.
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
     </xsd:attributeGroup>
 
     <!-- Default Outbound Router Types -->
@@ -3352,7 +3400,13 @@
     <xsd:complexType name="chunkingRouterType">
         <xsd:complexContent>
             <xsd:extension base="multipleEndpointFilteringOutboundRouterType">
-                <xsd:attribute name="messageSize" type="substitutableInt"/>
+                <xsd:attribute name="messageSize" type="substitutableInt">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                            The size (bytes) that fixed-length message chunks should have.
+                        </xsd:documentation>
+                    </xsd:annotation>
+                </xsd:attribute>
                 <xsd:attribute name="numberOfMessages" type="substitutableInt"/>
             </xsd:extension>
         </xsd:complexContent>
@@ -3370,12 +3424,36 @@
             <xsd:extension base="abstractOutboundRouterType">
                 <xsd:sequence>
                     <xsd:group ref="defaultFilteredOutboundRouterElements"/>
-                    <xsd:element name="recipients" type="listOrSetType" minOccurs="0" maxOccurs="1"/>
+                    <xsd:element name="recipients" type="listOrSetType" minOccurs="0" maxOccurs="1">
+                        <xsd:annotation>
+                            <xsd:documentation>
+                                Static list of recipients that the outgoing message is sent to.  The default delimiter is ','.
+                            </xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
                 </xsd:sequence>
                 <xsd:attributeGroup ref="defaultFilteredOutboundRouterAttributes"/>
-                <xsd:attribute name="recipientsProperty" type="xsd:string"/>
-                <xsd:attribute name="recipientsDelimiter" type="xsd:string"/>
-                <xsd:attribute name="synchronous" type="xsd:boolean"/>
+                <xsd:attribute name="recipientsProperty" type="xsd:string">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                            CURRENTLY NOT SUPPORTED.
+                        </xsd:documentation>
+                    </xsd:annotation>
+                </xsd:attribute>
+                <xsd:attribute name="recipientsDelimiter" type="xsd:string">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                            CURRENTLY NOT SUPPORTED.
+                        </xsd:documentation>
+                    </xsd:annotation>
+                </xsd:attribute>
+                <xsd:attribute name="synchronous" type="xsd:boolean">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                            If true, messages will be sent synchronously and the router will wait for a response.
+                        </xsd:documentation>
+                    </xsd:annotation>
+                </xsd:attribute>
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
@@ -3397,7 +3475,13 @@
                 </xsd:sequence>
                 <xsd:attributeGroup ref="defaultFilteredOutboundRouterAttributes"/>
                 <xsd:attributeGroup ref="expressionAttributes"/>
-                <xsd:attribute name="synchronous" type="xsd:boolean"/>
+                <xsd:attribute name="synchronous" type="xsd:boolean">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                            If true, messages will be sent synchronously and the router will wait for a response.
+                        </xsd:documentation>
+                    </xsd:annotation>
+                </xsd:attribute>
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
@@ -3453,7 +3537,13 @@
                 <xsd:sequence>
                     <xsd:element ref="spring:property" minOccurs="0" maxOccurs="unbounded"/>
                 </xsd:sequence>
-                <xsd:attribute name="class" type="substitutableClass" use="required"/>
+                <xsd:attribute name="class" type="substitutableClass" use="required">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                            Fully qualified class name of the custom catch-all strategy to be used.
+                        </xsd:documentation>
+                    </xsd:annotation>                
+                </xsd:attribute>
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
@@ -3484,7 +3574,13 @@
                 <xsd:sequence>
                     <xsd:element ref="spring:property" minOccurs="0" maxOccurs="unbounded"/>
                 </xsd:sequence>
-                <xsd:attribute name="class" type="substitutableClass" use="required"/>
+                <xsd:attribute name="class" type="substitutableClass" use="required">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                            Fully qualified class name of the custom forwarding catch-all strategy to be used.
+                        </xsd:documentation>
+                    </xsd:annotation>                
+                </xsd:attribute>
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
@@ -3541,6 +3637,8 @@
     <xsd:complexType name="abstractLifecycleAdapterFactory">
         <xsd:annotation>
             <xsd:documentation>
+                Allows a lifecycle adaptor factory to be implemented which allows an alternative custom lifecycle adaptor to be used if 
+                required instead of Mule defaul implementation that propagates Mule lifecycle to component implementations.
             </xsd:documentation>
         </xsd:annotation>
     </xsd:complexType>
@@ -3573,7 +3671,8 @@
     <xsd:complexType name="abstractObjectFactoryType">
         <xsd:annotation>
             <xsd:documentation>
-                A factory that will be used by Mule to provide instances of an object.
+                An object factory is used to obtain object instances.  The object factory is responsible for object creation 
+                and may implement different patterns such a singleton or prototype or lookup instance from other object containers.  
             </xsd:documentation>
         </xsd:annotation>
         <xsd:sequence>
