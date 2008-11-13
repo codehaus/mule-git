@@ -91,7 +91,8 @@
 
     <xsd:element name="jaxen-filter" type="jaxenFilterType" substitutionGroup="mule:abstract-filter">
         <xsd:annotation>
-            <xsd:documentation>The Jaxen filter allows you to route messages based on XPath expressions. The Jaxen filter is generally faster than the JXPath filter and should be considered the first choice when using an XPath filter.
+            <xsd:documentation>
+                The Jaxen filter allows you to route messages based on XPath expressions. The Jaxen filter is generally faster than the JXPath filter and should be considered the first choice when using an XPath filter.
             </xsd:documentation>
         </xsd:annotation>
     </xsd:element>
