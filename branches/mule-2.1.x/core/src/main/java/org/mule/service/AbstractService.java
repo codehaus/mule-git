@@ -44,6 +44,7 @@ import org.mule.routing.outbound.DefaultOutboundRouterCollection;
 import org.mule.routing.outbound.OutboundPassThroughRouter;
 import org.mule.routing.response.DefaultResponseRouterCollection;
 import org.mule.transport.AbstractConnector;
+import org.mule.transport.NullPayload;
 import org.mule.util.concurrent.WaitableBoolean;
 
 import java.beans.ExceptionListener;
@@ -892,7 +893,7 @@ public abstract class AbstractService implements Service
         {
             logger.debug("MuleEvent stop further processing has been set, no outbound routing will be performed.");
         }
-        if (result != null && !event.isStopFurtherProcessing())
+        if (result != null && !event.isStopFurtherProcessing() && !(result.getPayload() instanceof NullPayload))
         {
             if (getOutboundRouter().hasEndpoints())
             {
