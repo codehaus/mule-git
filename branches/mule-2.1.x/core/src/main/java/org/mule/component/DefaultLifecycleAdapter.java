@@ -56,6 +56,8 @@ public class DefaultLifecycleAdapter implements LifecycleAdapter
 
     protected Object componentObject;
     protected JavaComponent component;
+    protected EntryPointResolverSet entryPointResolver;
+    
     private boolean isStoppable = false;
     private boolean isStartable = false;
     private boolean isDisposable = false;
@@ -63,18 +65,8 @@ public class DefaultLifecycleAdapter implements LifecycleAdapter
     private boolean started = false;
     private boolean disposed = false;
 
-    private EntryPointResolverSet entryPointResolver;
-
     public DefaultLifecycleAdapter(Object componentObject, JavaComponent component) throws MuleException
     {
-        this(componentObject, component, new LegacyEntryPointResolverSet());
-    }
-
-    public DefaultLifecycleAdapter(Object componentObject,
-                                   JavaComponent component,
-                                   EntryPointResolverSet entryPointResolver) throws MuleException
-    {
-
         if (componentObject == null)
         {
             throw new IllegalArgumentException("POJO Service cannot be null");
@@ -85,8 +77,16 @@ public class DefaultLifecycleAdapter implements LifecycleAdapter
         }
         this.componentObject = componentObject;
         this.component = component;
-        this.entryPointResolver = entryPointResolver;
+    }
+    
+    public DefaultLifecycleAdapter(Object componentObject,
+                                   JavaComponent component,
+                                   EntryPointResolverSet entryPointResolver) throws MuleException
+    {
 
+        this(componentObject, component);
+        this.entryPointResolver = entryPointResolver;
+        
         isStartable = Startable.class.isInstance(componentObject);
         isStoppable = Stoppable.class.isInstance(componentObject);
         isDisposable = Disposable.class.isInstance(componentObject);
