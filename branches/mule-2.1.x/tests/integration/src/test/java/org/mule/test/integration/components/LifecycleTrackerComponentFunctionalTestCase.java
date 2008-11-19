@@ -92,7 +92,7 @@ public class LifecycleTrackerComponentFunctionalTestCase extends FunctionalTestC
      */
     public void testMulePooledSingletonServiceLifecycle() throws Exception
     {
-        testComponentLifecycle("MulePooledSingletonService", "[setProperty, setService, setMuleContext, initialise, setService, setMuleContext, initialise, setService, setMuleContext, initialise, start, start, start, stop, stop, stop, dispose, dispose, dispose]");
+        testComponentLifecycle("MulePooledSingletonService", "[setProperty, setService, initialise, setService, initialise, setService, initialise, start, start, start, stop, stop, stop, dispose, dispose, dispose]");
     }
 
     private void testComponentLifecycle(final String serviceName, final String expectedLifeCycle)
