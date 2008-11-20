@@ -396,6 +396,6 @@ public abstract class AbstractConnectable implements Connectable, ExceptionListe
 
     public boolean isStarted()
     {
-        return started.get();
+        return !stopped.get();
     }
 }
