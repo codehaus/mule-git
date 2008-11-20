@@ -393,4 +393,9 @@ public abstract class AbstractConnectable implements Connectable, ExceptionListe
     }
     
     abstract protected WorkManager getWorkManager();
+
+    public boolean isStarted()
+    {
+        return started.get();
+    }
 }
