@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+ $Id$
+
+ Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
+
+ The software in this package is published under the terms of the CPAL v1.0
+ license, a copy of which has been included with this distribution in the
+ LICENSE.txt file.
+-->
+
+<mule xmlns="http://www.mulesource.org/schema/mule/core/2.2"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:management="http://www.mulesource.org/schema/mule/management/2.2"
+       xsi:schemaLocation="
+       http://www.mulesource.org/schema/mule/core/2.2 http://www.mulesource.org/schema/mule/core/2.2/mule.xsd
+       http://www.mulesource.org/schema/mule/management/2.2 http://www.mulesource.org/schema/mule/management/2.2/mule-management.xsd">
+
+    <management:jmx-server createServer="false" locateServer="true"/>
+
+ </mule>
+
