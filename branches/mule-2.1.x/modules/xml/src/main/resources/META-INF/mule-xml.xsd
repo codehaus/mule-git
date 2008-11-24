@@ -191,7 +191,7 @@
                  substitutionGroup="mule:abstract-outbound-router">
         <xsd:annotation>
             <xsd:documentation>
-                The round robin message splitter will split a DOM4J document into nodes based on the {{splitExpression}} property. It will then send these document fragments to the list of endpoints specified in a round robbin fashion. Optionally, you can specify a namespaces property map that contain prefix/namespace mappings.
+                The round robin message splitter will split a DOM4J document into nodes based on the {{splitExpression}} property. It will then send these document fragments to the list of specified endpoints in a round-robin fashion. Optionally, you can specify a namespaces property map that contain prefix/namespace mappings.
             </xsd:documentation>
         </xsd:annotation>
     </xsd:element>
