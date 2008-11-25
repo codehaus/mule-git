@@ -66,6 +66,9 @@ import org.mule.config.spring.util.SpringBeanLookup;
 import org.mule.context.notification.ListenerSubscriptionPair;
 import org.mule.endpoint.EndpointURIEndpointBuilder;
 import org.mule.expression.ExpressionConfig;
+import org.mule.expression.transformers.BeanBuilderTransformer;
+import org.mule.expression.transformers.ExpressionArgument;
+import org.mule.expression.transformers.ExpressionTransformer;
 import org.mule.interceptor.LoggingInterceptor;
 import org.mule.interceptor.TimerInterceptor;
 import org.mule.model.resolvers.ArrayEntryPointResolver;
@@ -83,6 +86,7 @@ import org.mule.object.SingletonObjectFactory;
 import org.mule.routing.ExpressionMessageInfoMapping;
 import org.mule.routing.ForwardingCatchAllStrategy;
 import org.mule.routing.LoggingCatchAllStrategy;
+import org.mule.routing.binding.DefaultInterfaceBinding;
 import org.mule.routing.filters.EqualsFilter;
 import org.mule.routing.filters.ExceptionTypeFilter;
 import org.mule.routing.filters.ExpressionFilter;
@@ -102,7 +106,6 @@ import org.mule.routing.inbound.MessageChunkingAggregator;
 import org.mule.routing.inbound.SelectiveConsumer;
 import org.mule.routing.inbound.SimpleCollectionAggregator;
 import org.mule.routing.inbound.WireTap;
-import org.mule.routing.nested.DefaultNestedRouter;
 import org.mule.routing.outbound.ChainingRouter;
 import org.mule.routing.outbound.DefaultOutboundRouterCollection;
 import org.mule.routing.outbound.EndpointSelector;
@@ -143,7 +146,6 @@ import org.mule.transformer.simple.AutoTransformer;
 import org.mule.transformer.simple.ByteArrayToHexString;
 import org.mule.transformer.simple.ByteArrayToObject;
 import org.mule.transformer.simple.ByteArrayToSerializable;
-import org.mule.transformer.simple.ExpressionTransformer;
 import org.mule.transformer.simple.HexStringToByteArray;
 import org.mule.transformer.simple.MessagePropertiesTransformer;
 import org.mule.transformer.simple.ObjectToByteArray;
@@ -204,7 +206,10 @@ public class MuleNamespaceHandler extends AbstractMuleNamespaceHandler
         registerBeanDefinitionParser("message-properties-transformer", new TransformerDefinitionParser(MessagePropertiesTransformer.class));
 
         registerBeanDefinitionParser("expression-transformer", new TransformerDefinitionParser(ExpressionTransformer.class));
-        registerBeanDefinitionParser("return-argument", new ChildDefinitionParser("argument", ExpressionTransformer.Argument.class));
+        registerBeanDefinitionParser("return-argument", new ChildDefinitionParser("argument", ExpressionArgument.class));
+
+        registerBeanDefinitionParser("bean-builder-transformer", new TransformerDefinitionParser(BeanBuilderTransformer.class));
+        registerBeanDefinitionParser("bean-property", new ChildDefinitionParser("argument", ExpressionArgument.class));
 
         registerBeanDefinitionParser("base64-encoder-transformer", new TransformerDefinitionParser(Base64Encoder.class));
         registerBeanDefinitionParser("base64-decoder-transformer", new TransformerDefinitionParser(Base64Decoder.class));
@@ -272,7 +277,7 @@ public class MuleNamespaceHandler extends AbstractMuleNamespaceHandler
         registerBeanDefinitionParser("component", new ComponentDelegatingDefinitionParser(DefaultJavaComponent.class));
         registerBeanDefinitionParser("pooled-component", new ComponentDelegatingDefinitionParser(PooledJavaComponent.class));
 
-        registerMuleBeanDefinitionParser("binding", new BindingDefinitionParser("nestedRouter.routers", DefaultNestedRouter.class)).addCollection("nestedRouter.routers");
+        registerMuleBeanDefinitionParser("binding", new BindingDefinitionParser("bindingCollection.routers", DefaultInterfaceBinding.class)).addCollection("bindingCollection.routers");
 
         // Simple Components
         registerBeanDefinitionParser("bridge-component", new ComponentDefinitionParser(PassThroughComponent.class));
