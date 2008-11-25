@@ -28,6 +28,7 @@ import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.lifecycle.LifecycleException;
 import org.mule.api.service.ServiceException;
 import org.mule.api.transport.ReplyToHandler;
+import org.mule.config.ChainedThreadingProfile;
 import org.mule.config.QueueProfile;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.config.i18n.MessageFactory;
@@ -100,6 +101,10 @@ public class SedaService extends AbstractService implements Work, WorkListener
             threadingProfile = muleContext.getDefaultServiceThreadingProfile();
         }
         // Create thread pool
+        // (Add one to maximum number of active threads to account for the service
+        // work item that is running continuously and polling the SEDA queue.)
+        ChainedThreadingProfile threadingProfile = new ChainedThreadingProfile(this.threadingProfile);
+        threadingProfile.setMaxThreadsActive(threadingProfile.getMaxThreadsActive() + 1);
         workManager = threadingProfile.createWorkManager(getName());
 
         if (queueProfile == null)
