@@ -335,7 +335,15 @@ public class SedaService extends AbstractService implements Work, WorkListener
                         logger.debug("Service: " + name + " dequeued event on: "
                                         + event.getEndpoint().getEndpointURI());
                     }
-                    workManager.scheduleWork(new ComponentStageWorker(event), WorkManager.INDEFINITE, null, this);
+                    Work work = new ComponentStageWorker(event);
+                    if (threadingProfile.isDoThreading())
+                    {
+                        workManager.scheduleWork(work, WorkManager.INDEFINITE, null, this);
+                    }
+                    else
+                    {
+                        work.run();
+                    }
                 }
             }
             catch (Exception e)

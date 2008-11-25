@@ -199,6 +199,78 @@ public class SedaServiceTestCase extends AbstractMuleTestCase // AbstractService
 
     }
 
+    /**
+     * SEE MULE-3975
+     * 
+     * @throws Exception
+     */
+    public void testDoThreadingFalse() throws Exception
+    {
+        final Latch latch = new Latch();
+        final String serviceName = "testDoThreadingFalse";
+        final String serviceThreadName = serviceName + ".1";
+
+        SedaService service = new SedaService();
+        service.setName(serviceName);
+        service.setModel(muleContext.getRegistry().lookupSystemModel());
+        ChainedThreadingProfile threadingProfile = (ChainedThreadingProfile) muleContext.getDefaultServiceThreadingProfile();
+        threadingProfile.setDoThreading(false);
+        service.setThreadingProfile(threadingProfile);
+        service.setComponent(new SimpleCallableJavaComponent(new Callable()
+        {
+
+            public Object onCall(MuleEventContext eventContext) throws Exception
+            {
+                assertEquals(serviceThreadName, Thread.currentThread().getName());
+                latch.countDown();
+                return null;
+            }
+        }));
+        muleContext.getRegistry().registerService(service);
+        service.start();
+
+        service.dispatchEvent(getTestInboundEvent("test"));
+
+        assertTrue(latch.await(200, TimeUnit.MILLISECONDS));
+
+    }
+
+    /**
+     * SEE MULE-3975
+     * 
+     * @throws Exception
+     */
+    public void testDoThreadingTrue() throws Exception
+    {
+        final Latch latch = new Latch();
+        final String serviceName = "testDoThreadingFalse";
+        final String serviceThreadName = serviceName + ".1";
+
+        SedaService service = new SedaService();
+        service.setName(serviceName);
+        service.setModel(muleContext.getRegistry().lookupSystemModel());
+        ChainedThreadingProfile threadingProfile = (ChainedThreadingProfile) muleContext.getDefaultServiceThreadingProfile();
+        threadingProfile.setDoThreading(true);
+        service.setThreadingProfile(threadingProfile);
+        service.setComponent(new SimpleCallableJavaComponent(new Callable()
+        {
+
+            public Object onCall(MuleEventContext eventContext) throws Exception
+            {
+                assertFalse(serviceThreadName.equals(Thread.currentThread().getName()));
+                latch.countDown();
+                return null;
+            }
+        }));
+        muleContext.getRegistry().registerService(service);
+        service.start();
+
+        service.dispatchEvent(getTestInboundEvent("test"));
+
+        assertTrue(latch.await(200, TimeUnit.MILLISECONDS));
+
+    }
+
     private WorkEvent getTestWorkEvent()
     {
         return new WorkEvent(this, // source
