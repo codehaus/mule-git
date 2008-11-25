@@ -103,7 +103,7 @@ public class SedaService extends AbstractService implements Work, WorkListener
         // Create thread pool
         // (Add one to maximum number of active threads to account for the service
         // work item that is running continuously and polling the SEDA queue.)
-        ChainedThreadingProfile threadingProfile = new ChainedThreadingProfile(this.threadingProfile);
+        threadingProfile = new ChainedThreadingProfile(this.threadingProfile);
         threadingProfile.setMaxThreadsActive(threadingProfile.getMaxThreadsActive() + 1);
         workManager = threadingProfile.createWorkManager(getName());
 
@@ -335,7 +335,15 @@ public class SedaService extends AbstractService implements Work, WorkListener
                         logger.debug("Service: " + name + " dequeued event on: "
                                         + event.getEndpoint().getEndpointURI());
                     }
-                    workManager.scheduleWork(new ComponentStageWorker(event), WorkManager.INDEFINITE, null, this);
+                    Work work = new ComponentStageWorker(event);
+                    if (threadingProfile.isDoThreading())
+                    {
+                        workManager.scheduleWork(work, WorkManager.INDEFINITE, null, this);
+                    }
+                    else
+                    {
+                        work.run();
+                    }
                 }
             }
             catch (Exception e)
