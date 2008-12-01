@@ -101,20 +101,23 @@
     <xsd:element name="file-to-byte-array-transformer" type="mule:abstractTransformerType"
                  substitutionGroup="mule:abstract-transformer">
         <xsd:annotation>
-            <xsd:documentation>Reads the contents of a {{java.io.File}} into a byte array (byte[]).</xsd:documentation>
+            <xsd:documentation>
+                Reads the contents of a {{java.io.File}} into a byte array (byte[]).</xsd:documentation>
         </xsd:annotation>
     </xsd:element>
     <xsd:element name="file-to-string-transformer" type="mule:abstractTransformerType"
                  substitutionGroup="mule:abstract-transformer">
         <xsd:annotation>
-            <xsd:documentation>Reads the contents of a {{java.io.File}} into a {{java.lang.String}}.</xsd:documentation>
+            <xsd:documentation>
+                Reads the contents of a {{java.io.File}} into a {{java.lang.String}}.</xsd:documentation>
         </xsd:annotation>
     </xsd:element>
 
     <xsd:element name="filename-wildcard-filter" type="mule:wildcardFilterType"
                  substitutionGroup="mule:abstract-filter">
         <xsd:annotation>
-            <xsd:documentation>This filter can be used to restrict the files being processed by applying wildcard expressions to the filename. For example, you can read only .xml and .txt files by entering the following: {noformat}&lt;file:filename-wildcard-filter pattern="*.txt,*.xml"/&gt;{noformat}
+            <xsd:documentation>
+                This filter can be used to restrict the files being processed by applying wildcard expressions to the filename. For example, you can read only .xml and .txt files by entering the following: {noformat}&lt;file:filename-wildcard-filter pattern="*.txt,*.xml"/&gt;{noformat}
             </xsd:documentation>
         </xsd:annotation>
     </xsd:element>
@@ -122,7 +125,8 @@
     <xsd:element name="filename-regex-filter" type="mule:wildcardFilterType"
                  substitutionGroup="mule:abstract-filter">
         <xsd:annotation>
-            <xsd:documentation>This filter can be used to restrict the files being processed by applying Java regular expressions to the filename, such as {{pattern="myCustomerFile(.*)"}}.
+            <xsd:documentation>
+                This filter can be used to restrict the files being processed by applying Java regular expressions to the filename, such as {{pattern="myCustomerFile(.*)"}}.
             </xsd:documentation>
         </xsd:annotation>
     </xsd:element>
