@@ -14,6 +14,8 @@ import org.mule.DefaultMuleMessage;
 import org.mule.RequestContext;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
+import org.mule.api.transport.PropertyScope;
+import org.mule.api.config.MuleProperties;
 import org.mule.api.routing.NestedRouter;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.transport.NullPayload;
@@ -93,6 +95,9 @@ public class NestedInvocationHandler implements InvocationHandler
         {
             throw new IllegalArgumentException(CoreMessages.cannotFindBindingForMethod(method.getName()).toString());
         }
+
+        //Some transports such as Axis, RMI and EJB can use the method information
+        message.setProperty(MuleProperties.MULE_METHOD_PROPERTY, method.getName(), PropertyScope.INVOCATION);
 
         MuleMessage reply;
         MuleEvent currentEvent = RequestContext.getEvent();

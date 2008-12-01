@@ -11,7 +11,6 @@ package org.mule.transport.http.components;
 
 import org.mule.api.component.Component;
 import org.mule.routing.filters.WildcardFilter;
-import org.mule.routing.filters.logic.NotFilter;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.util.expression.ExpressionEvaluatorManager;
 
@@ -40,10 +39,9 @@ public class RestServiceComponentTestCase extends FunctionalTestCase
         assertEquals(restServiceWrapper.getServiceUrl(), SERVICE_URL);
         assertEquals(restServiceWrapper.getHttpMethod(), "POST");
         assertNotNull(restServiceWrapper.getFilter());
-        assertEquals(NotFilter.class, restServiceWrapper.getFilter().getClass());
-        NotFilter filter = (NotFilter) restServiceWrapper.getFilter();
-        assertEquals(filter.getFilter().getClass(), WildcardFilter.class);
-        WildcardFilter innerFilter = (WildcardFilter) filter.getFilter();
+
+        assertEquals(restServiceWrapper.getFilter().getClass(), WildcardFilter.class);
+        WildcardFilter innerFilter = (WildcardFilter) restServiceWrapper.getFilter();
         assertEquals(innerFilter.getPattern(), "*xyz*");
         assertNotNull(restServiceWrapper.getPayloadParameterNames());
         assertEquals(restServiceWrapper.getPayloadParameterNames().size(), 2);
