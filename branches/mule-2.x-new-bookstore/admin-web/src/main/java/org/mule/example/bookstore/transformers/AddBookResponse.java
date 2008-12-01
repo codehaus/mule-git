@@ -11,6 +11,7 @@
 package org.mule.example.bookstore.transformers;
 
 import org.mule.api.transformer.TransformerException;
+import org.mule.example.bookstore.HtmlTemplate;
 import org.mule.transformer.AbstractTransformer;
 
 public class AddBookResponse extends AbstractTransformer
@@ -26,8 +27,8 @@ public class AddBookResponse extends AbstractTransformer
     protected Object doTransform(Object src, String encoding) throws TransformerException
     {
         Long numBooks = (Long) src;
-
-        return "Current inventory: " + numBooks + " book(s)<br/><a href=\"/bookstore-admin\">Add more books</a>";
+        String response = "Current inventory: " + numBooks + " book(s)";
+        return HtmlTemplate.wrapHtmlBody(response);
     }
 }
 

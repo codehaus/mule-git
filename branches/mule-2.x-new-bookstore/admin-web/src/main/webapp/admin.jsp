@@ -26,12 +26,12 @@
     </table>
 </form>
 
-<form method="GET" name="getLastOrder" action="/bookstore-admin/rest">
-    Get last order placed:
+<form method="GET" name="getStats" action="/bookstore-admin/rest">
+    Get latest statistics from Data Warehouse:
     <table>
         <tr><td colspan="2">
-            <input type="hidden" name="endpoint" value="orders"/>
-            <input type="submit" name="submit" value="Submit" />
+            <input type="hidden" name="endpoint" value="stats"/>
+            <input type="submit" name="submit" value="Get" />
         </td></tr>
     </table>
 </form>
