@@ -708,10 +708,10 @@ public class DefaultMuleEvent extends EventObject implements MuleEvent, ThreadSa
      */
     public String getEncoding()
     {
-        String encoding = message.getEncoding();
+        String encoding = endpoint.getEncoding();
         if (encoding == null)
         {
-            encoding = endpoint.getEncoding();
+            encoding = message.getEncoding();
         }
 
         return encoding;

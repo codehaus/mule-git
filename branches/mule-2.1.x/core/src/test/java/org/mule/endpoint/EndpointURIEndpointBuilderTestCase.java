@@ -80,7 +80,7 @@ public class EndpointURIEndpointBuilderTestCase extends AbstractMuleTestCase
         assertTrue(ep.getConnector() instanceof TestConnector);
         assertEquals(ObjectNameHelper.getEndpointName(ep.getEndpointURI()), ep.getName());
         assertFalse(ep.isDeleteUnacceptedMessages());
-        assertEquals(muleContext.getConfiguration().getDefaultEncoding(), ep.getEncoding());
+        assertEquals(null, ep.getEncoding());
         assertEquals(null, ep.getFilter());
         assertEquals(ImmutableEndpoint.INITIAL_STATE_STARTED, ep.getInitialState());
     }

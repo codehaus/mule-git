@@ -40,6 +40,7 @@ import org.mule.module.client.remoting.notification.RemoteDispatcherNotification
 import org.mule.security.MuleCredentials;
 import org.mule.transformer.TransformerUtils;
 import org.mule.transport.AbstractConnector;
+import org.mule.util.CharSetUtils;
 import org.mule.util.ClassUtils;
 import org.mule.util.IOUtils;
 
@@ -344,7 +345,21 @@ public class RemoteDispatcher implements Disposable
         updateContext(serializeMessage, serverEndpoint, synchronous);
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        wireFormat.write(out, serializeMessage, serverEndpoint.getEncoding());
+        
+        String encoding;
+        if (serverEndpoint.getEncoding() != null)
+        {
+            encoding = serverEndpoint.getEncoding();
+        }
+        else if (serverEndpoint.getMuleContext() != null)
+        {
+            encoding = serverEndpoint.getMuleContext().getConfiguration().getDefaultEncoding();
+        }
+        else
+        {
+            encoding = CharSetUtils.defaultCharsetName();
+        }
+        wireFormat.write(out, serializeMessage, encoding);
         byte[] payload = out.toByteArray();
 
         MuleMessage message = action.getMessage();
