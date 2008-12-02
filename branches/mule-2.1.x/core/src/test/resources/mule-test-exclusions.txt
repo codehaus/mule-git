@@ -19,3 +19,6 @@ org.mule.MuleMessageTestCase
 # Broke after EE-734, no idea what this is about
 # MULE-3670
 org.mule.util.store.TextFileStoreTestCase
+
+#Fails on CE CI server MULE-4008
+org.mule.util.TimedSocketTestCase
