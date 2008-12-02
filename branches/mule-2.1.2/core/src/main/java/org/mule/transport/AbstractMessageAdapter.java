@@ -10,7 +10,9 @@
 
 package org.mule.transport;
 
+import org.mule.MuleServer;
 import org.mule.api.ExceptionPayload;
+import org.mule.api.MuleContext;
 import org.mule.api.MuleRuntimeException;
 import org.mule.api.ThreadSafeAccess;
 import org.mule.api.config.MuleProperties;
@@ -19,7 +21,7 @@ import org.mule.api.transport.PropertyScope;
 import org.mule.api.transport.UniqueIdNotSupportedException;
 import org.mule.config.MuleManifest;
 import org.mule.config.i18n.CoreMessages;
-import org.mule.util.FileUtils;
+import org.mule.util.CharSetUtils;
 import org.mule.util.IOUtils;
 import org.mule.util.StringUtils;
 import org.mule.util.UUID;
@@ -55,9 +57,6 @@ public abstract class AbstractMessageAdapter implements MessageAdapter, ThreadSa
 
     /** Collection of attachments associatated with this message */
     protected ConcurrentMap attachments = new ConcurrentHashMap();
-
-    /** The encoding used by this message. This is usually used when working with String representations of the message payload */
-    protected String encoding = FileUtils.DEFAULT_ENCODING;
 
     /** If an excpetion occurs while processing this message an exception payload will be attached here */
     protected ExceptionPayload exceptionPayload;
@@ -112,7 +111,6 @@ public abstract class AbstractMessageAdapter implements MessageAdapter, ThreadSa
                     throw new MuleRuntimeException(CoreMessages.failedToReadPayload(), e);
                 }
             }
-            encoding = template.getEncoding();
             exceptionPayload = template.getExceptionPayload();
             
             try 
@@ -473,14 +471,30 @@ public abstract class AbstractMessageAdapter implements MessageAdapter, ThreadSa
     public String getEncoding()
     {
         assertAccess(READ);
-        return encoding;
+        String encoding = getStringProperty(MuleProperties.MULE_ENCODING_PROPERTY, null);
+        if (encoding != null)
+        {
+            return encoding;
+        }
+        else
+        {
+            MuleContext muleContext = MuleServer.getMuleContext();
+            if (muleContext != null)
+            {
+                return muleContext.getConfiguration().getDefaultEncoding();
+            }
+            else
+            {
+                return CharSetUtils.defaultCharsetName();
+            }
+        }
     }
 
     /** {@inheritDoc} */
     public void setEncoding(String encoding)
     {
         assertAccess(WRITE);
-        this.encoding = encoding;
+        setStringProperty(MuleProperties.MULE_ENCODING_PROPERTY, encoding);
     }
 
     /** {@inheritDoc} */
