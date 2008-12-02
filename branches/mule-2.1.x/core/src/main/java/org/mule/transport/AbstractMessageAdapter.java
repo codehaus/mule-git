@@ -111,7 +111,6 @@ public abstract class AbstractMessageAdapter implements MessageAdapter, ThreadSa
                     throw new MuleRuntimeException(CoreMessages.failedToReadPayload(), e);
                 }
             }
-            setEncoding(template.getEncoding());
             exceptionPayload = template.getExceptionPayload();
             
             try 
