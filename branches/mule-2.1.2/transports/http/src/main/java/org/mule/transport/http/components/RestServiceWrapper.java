@@ -22,6 +22,7 @@ import org.mule.routing.filters.MessagePropertyFilter;
 import org.mule.transport.NullPayload;
 import org.mule.util.expression.ExpressionEvaluator;
 import org.mule.util.expression.ExpressionEvaluatorManager;
+import org.mule.util.StringUtils;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -252,9 +253,13 @@ public class RestServiceWrapper extends AbstractComponent
         {
             sep = getSeparator(url.toString());
         }
+        else if(requestBodyBuffer.length() > 0)
+        {
+            sep = "&";
+        }
         else
         {
-            sep = "";
+            sep = StringUtils.EMPTY;
         }
 
         for (Iterator iterator = args.entrySet().iterator(); iterator.hasNext();)
@@ -262,7 +267,16 @@ public class RestServiceWrapper extends AbstractComponent
             Map.Entry entry = (Map.Entry) iterator.next();
             String name = (String) entry.getKey();
             String exp = (String) entry.getValue();
-            Object value = ExpressionEvaluatorManager.evaluate(exp, msg);
+            Object value;
+
+            if(ExpressionEvaluatorManager.isValidExpression(exp))
+            {
+                value = ExpressionEvaluatorManager.evaluate(exp, msg);
+            }
+            else
+            {
+                value = exp;
+            }
 
             if (value == null)
             {

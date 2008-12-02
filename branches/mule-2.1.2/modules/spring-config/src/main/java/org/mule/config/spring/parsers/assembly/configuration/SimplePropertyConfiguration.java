@@ -21,7 +21,6 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.Iterator;
 
-import org.springframework.core.Conventions;
 import org.springframework.util.StringUtils;
 
 /**
