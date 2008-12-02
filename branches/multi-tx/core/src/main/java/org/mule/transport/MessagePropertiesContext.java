@@ -22,25 +22,27 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
-
-/** TODO */
+/**
+ * This object maintains a scoped map of properties.  This means that certian properties will only be visiable under some
+ * scopes. The scopes support by Mule are:
+ * <ol>
+ * <li> {@link org.mule.api.transport.PropertyScope.INBOUND} Contains properties that were on the message when it was
+ * received by Mule. this scope is read-only.</li>
+ * <li>{@link org.mule.api.transport.PropertyScope.INVOCATION} Any properties set on the invocation scope will be
+ * available to the current service but will not be attached to any outound messages.  This is the default scope.</li>
+ * <li>{@link org.mule.api.transport.PropertyScope.OUTBOUND} Any properties set in this scope will be attached to any
+ * outbound messages resulting from this message</li>
+ * <li>{@link org.mule.api.transport.PropertyScope.SESSION} Any properties set on this scope will be added to the session.
+ * Note that this is a convinience scope in that you cannot directly access session properties from this scope.  Session
+ * properties can be accessed from the {@link MuleEvent}</li>
+ * </ol>
+ */
 public class MessagePropertiesContext implements Serializable
 {
     protected Map scopedMap;
     protected Set keySet;
 
-    //TODO RM*: Map these to a RegistryMapView, currently in another branch :(
-    //Treat Application properites as a special call
-    Map applicationProperties = new ConcurrentHashMap(0);
-
-    private PropertyScope defaultScope = PropertyScope.OUTBOUND;
-
-    /**
-     * if a property is not available in any ther scope, should we check the registry.
-     * Note there will be performance implementations is this is enabled
-     */
-    private boolean fallbackToRegistry = false;
+    protected PropertyScope defaultScope = PropertyScope.OUTBOUND;
 
     public MessagePropertiesContext()
     {
@@ -59,6 +61,19 @@ public class MessagePropertiesContext implements Serializable
         this();
         //We can't set a read only scope as default
         checkScopeForWriteAccess(defaultScope);
+        this.defaultScope = defaultScope;
+    }
+
+    /**
+     * Ctor used for copying only
+     * @param defaultScope
+     * @param keySet
+     * @param scopedMap
+     */
+    private MessagePropertiesContext(PropertyScope defaultScope, Set keySet, Map scopedMap)
+    {
+        this.keySet = keySet;
+        this.scopedMap = scopedMap;
         this.defaultScope = defaultScope;
     }
 
@@ -117,20 +132,11 @@ public class MessagePropertiesContext implements Serializable
                 break;
             }
         }
-        if (value == null && fallbackToRegistry)
-        {
-            value = applicationProperties.get(key);
-        }
         return value;
     }
 
     public Object getProperty(String key, PropertyScope scope)
     {
-        if (PropertyScope.APPLICATION.equals(scope))
-        {
-            return applicationProperties.get(key);
-        }
-
         Map props = getScopedProperties(scope);
         return props.get(key);
     }
@@ -277,6 +283,20 @@ public class MessagePropertiesContext implements Serializable
     public String getStringProperty(String name, String defaultValue)
     {
         return ObjectUtils.getString(getProperty(name), defaultValue);
+    }
+
+    MessagePropertiesContext copy()
+    {
+        Set<String> keySet = new TreeSet<String>(getPropertyNames());
+
+        Map scopedMap = new TreeMap(new PropertyScope.ScopeComparator());
+
+        scopedMap.put(PropertyScope.INVOCATION, new HashMap(getScopedProperties(PropertyScope.INVOCATION)));
+        scopedMap.put(PropertyScope.INBOUND, new HashMap(getScopedProperties(PropertyScope.INBOUND)));
+        scopedMap.put(PropertyScope.OUTBOUND, new HashMap(getScopedProperties(PropertyScope.OUTBOUND)));
+        scopedMap.put(PropertyScope.SESSION, new HashMap(getScopedProperties(PropertyScope.SESSION)));
+
+        return new MessagePropertiesContext(getDefaultScope(), keySet, scopedMap);
     }
 
     public String toString()
