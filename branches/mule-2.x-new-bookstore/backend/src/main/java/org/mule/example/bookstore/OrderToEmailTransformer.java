@@ -13,7 +13,7 @@ package org.mule.example.bookstore;
 import org.mule.RequestContext;
 import org.mule.api.transformer.TransformerException;
 import org.mule.transformer.AbstractTransformer;
-import org.mule.transport.email.MailProperties;
+//import org.mule.transport.email.MailProperties;
 
 public class OrderToEmailTransformer extends AbstractTransformer
 {
@@ -30,8 +30,8 @@ public class OrderToEmailTransformer extends AbstractTransformer
                        "Your order will be shipped  to " + 
                        address + " by 3 PM today!";
         
-        RequestContext.getEventContext().getMessage().setProperty(
-                      MailProperties.TO_ADDRESSES_PROPERTY, email);
+//        RequestContext.getEventContext().getMessage().setProperty(
+//                      MailProperties.TO_ADDRESSES_PROPERTY, email);
         System.out.println("Sent email to " + email);
         return body;
     }

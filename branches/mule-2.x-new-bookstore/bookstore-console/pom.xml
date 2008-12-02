@@ -1,86 +1,20 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.mule.examples</groupId>
         <artifactId>mule-example-bookstore-parent</artifactId>
         <version>2.2.0-SNAPSHOT</version>
     </parent>
-    <artifactId>mule-example-bookstore-webapp</artifactId>
-    <packaging>war</packaging>
-    <name>Bookstore Example: Customer Webapp</name>
-    <description>This is a webapp which runs in the customer-facing DMZ and communicates with Mule via secure web services.</description>
 
-    <properties>
-        <webappName>bookstore</webappName>
-    </properties>
-
-    <build>
-        <!-- Default goal is to build the war and start it up in Jetty
-             (surf to http://localhost:8090/bookstore to test) -->
-        <defaultGoal>jetty:run-war</defaultGoal>
-
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <configuration>
-                    <warName>${webappName}</warName>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                 <groupId>org.mortbay.jetty</groupId>
-                 <artifactId>maven-jetty-plugin</artifactId>
-                 <configuration>
-                    <contextPath>/${webappName}</contextPath>
-                    <webApp>${project.build.directory}/${webappName}.war</webApp>
-                    <scanIntervalSeconds>10</scanIntervalSeconds>
-                    <connectors>
-                        <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
-                            <port>8090</port>
-                            <maxIdleTime>60000</maxIdleTime>
-                        </connector>
-                    </connectors>
-                 </configuration>
-            </plugin>
-
-            <!-- skip unit test run, tests to be executed during integration-test phase -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>surefire-it</id>
-                        <phase>integration-test</phase>
-                        <goals>
-                          <goal>test</goal>
-                        </goals>
-                        <configuration>
-                          <skip>false</skip>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
+    <artifactId>mule-example-bookstore-console</artifactId>
+    <name>Bookstore Example: Command Line Console</name>
+    <description>Command-line interface for the on-line bookstore</description>
 
     <dependencies>
         <dependency>
             <groupId>org.mule.examples</groupId>
             <artifactId>mule-example-bookstore-api</artifactId>
             <version>${version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>xalan</groupId>
-            <artifactId>xalan</artifactId>
-            <version>2.7.1</version>
         </dependency>
 
         <!-- CXF deps -->
@@ -262,5 +196,5 @@
             <groupId>org.apache.geronimo.specs</groupId>
             <artifactId>geronimo-annotation_1.0_spec</artifactId>
         </dependency>
-    </dependencies>
+     </dependencies>
 </project>

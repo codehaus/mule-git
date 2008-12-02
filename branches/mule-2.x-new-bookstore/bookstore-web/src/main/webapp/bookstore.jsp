@@ -2,8 +2,7 @@
  				 org.mule.example.bookstore.Bookstore,
  				 java.util.Collection,
 				 java.util.Iterator,
-				 org.apache.cxf.jaxws.JaxWsProxyFactoryBean,
-				 org.apache.cxf.BusFactory"%>
+				 org.apache.cxf.jaxws.JaxWsProxyFactoryBean"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" %>
 
 <html>
@@ -15,8 +14,8 @@
     String title = request.getParameter("title");
     String author = request.getParameter("author");
 
-    if (title!=null || author!=null) {
-    	BusFactory.setDefaultBus(null);
+    if (title!=null || author!=null) 
+    {
         JaxWsProxyFactoryBean pf = new JaxWsProxyFactoryBean();
         pf.setServiceClass(Bookstore.class);
         pf.setAddress("http://localhost:8777/services/bookstore");

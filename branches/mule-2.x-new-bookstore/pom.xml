@@ -15,7 +15,9 @@
     <description>Bookstore Example App</description>
 
     <modules>
+        <module>api</module>
         <module>backend</module>
+        <module>bookstore-console</module>
         <module>bookstore-web</module>
         <module>admin-web</module>
     </modules>

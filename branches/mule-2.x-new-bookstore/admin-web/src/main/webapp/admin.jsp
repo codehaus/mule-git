@@ -2,13 +2,16 @@
  				 org.mule.example.bookstore.Bookstore,
  				 java.util.Collection,
 				 java.util.Iterator"%>
-<%@ page language="java" contentType="text/html; charset=UTF-8" %>
+<%@ page language="java" %>
 
-<html>
 <head>
+<meta http-equiv="Content-Language" content="en-us">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
 <title>Bookstore Administration Console</title>
+<base target="contents">
 </head>
-<body>
+
+<body link="#FFFFFF" vlink="#FFFFFF" alink="#FFFFFF" bgcolor="#990000" text="#FFFFFF">
 
 <form method="POST" name="addBook" action="/bookstore-admin/rest/bookstore">
     Add a new book:

@@ -8,14 +8,9 @@
  * LICENSE.txt file.
  */
 
-package org.mule.example.bookstore.client;
+package org.mule.example.bookstore;
 
-import org.mule.api.MuleContext;
 import org.mule.api.MuleException;
-import org.mule.context.DefaultMuleContextFactory;
-import org.mule.example.bookstore.Book;
-import org.mule.example.bookstore.Bookstore;
-import org.mule.example.bookstore.LocaleMessage;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -34,14 +29,8 @@ public class BookstoreClient
     protected static transient Log logger = LogFactory.getLog(BookstoreClient.class);
     protected static Bookstore bookstore;
     
-    protected MuleContext muleContext;
-    
-    public BookstoreClient(String config) throws MuleException
+    public BookstoreClient() throws MuleException
     {
-        // create mule
-        muleContext = new DefaultMuleContextFactory().createMuleContext(config);
-        muleContext.start();
-        
         // create client
         JaxWsProxyFactoryBean pf = new JaxWsProxyFactoryBean();
         pf.setServiceClass(Bookstore.class);
@@ -54,11 +43,6 @@ public class BookstoreClient
         bookstore.addBook(book);
     }
 
-    public void close()
-    {
-        muleContext.dispose();
-    }
-    
     public static void main(String[] args) throws Exception
     {
         // This is just a simple non mule way to invoke a web service.
@@ -66,7 +50,7 @@ public class BookstoreClient
         // in action.
         // For learning how to use CXF with an outbound router, please
         // see the mule-publisher-demo portion of the project.
-        new BookstoreClient("bookstore.xml");
+        new BookstoreClient();
         int response = 0;
         
         System.out.println("\n" + LocaleMessage.getWelcomeMessage());
