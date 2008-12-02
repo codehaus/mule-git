@@ -57,7 +57,7 @@ public abstract class AbstractMessageAdapter implements MessageAdapter, ThreadSa
     protected ConcurrentMap attachments = new ConcurrentHashMap();
 
     /** The encoding used by this message. This is usually used when working with String representations of the message payload */
-    //protected String encoding = FileUtils.DEFAULT_ENCODING;
+    protected String encoding = FileUtils.DEFAULT_ENCODING;
 
     /** If an excpetion occurs while processing this message an exception payload will be attached here */
     protected ExceptionPayload exceptionPayload;
@@ -112,7 +112,7 @@ public abstract class AbstractMessageAdapter implements MessageAdapter, ThreadSa
                     throw new MuleRuntimeException(CoreMessages.failedToReadPayload(), e);
                 }
             }
-            //encoding = template.getEncoding();
+            encoding = template.getEncoding();
             exceptionPayload = template.getExceptionPayload();
             
             try 
@@ -473,14 +473,14 @@ public abstract class AbstractMessageAdapter implements MessageAdapter, ThreadSa
     public String getEncoding()
     {
         assertAccess(READ);
-        return getStringProperty(MuleProperties.MULE_ENCODING_PROPERTY, FileUtils.DEFAULT_ENCODING);
+        return encoding;
     }
 
     /** {@inheritDoc} */
     public void setEncoding(String encoding)
     {
         assertAccess(WRITE);
-        setStringProperty(MuleProperties.MULE_ENCODING_PROPERTY, encoding);
+        this.encoding = encoding;
     }
 
     /** {@inheritDoc} */
