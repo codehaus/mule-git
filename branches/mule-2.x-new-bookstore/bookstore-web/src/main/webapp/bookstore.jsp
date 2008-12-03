@@ -14,59 +14,76 @@
 
 <body link="#FFFFFF" vlink="#FFFFFF" alink="#FFFFFF" bgcolor="#990000" text="#FFFFFF">
 
+<%
+    String field = request.getParameter("title");
+    String title = field != null ? field : "";
+    field = request.getParameter("author");
+    String author = field != null ? field : "";
+%>
+    
+<h2>Search for a book</h2>
 <form method="POST" name="submitRequest" action="">
-    Search for a book:
     <table>
-        <tr><td>Title: </td><td>
-            <input type="text" name="title"/>
-        </td></tr>
-        <tr><td>Author: </td><td>
-            <input type="text" name="author"/>
-        </td></tr>
-
-        <tr><td colspan="2">
-            <input type="submit" name="submit" value="Submit" />
-        </td></tr>
+        <tr>
+        	<td>Title: </td>
+        	<td><input type="text" name="title" value="<%=title%>"/></td>
+       	</tr>
+        <tr>
+        	<td>Author: </td>
+        	<td><input type="text" name="author" value="<%=author%>"/></td>
+        </tr>
     </table>
+	<input type="hidden" name="submitted" value="true"/>
+    <input type="submit" name="submit" value="Search" />
 </form>
 
 <%
-    String title = request.getParameter("title");
-    String author = request.getParameter("author");
+    String submitted = request.getParameter("submitted");
 
-    if (title!=null || author!=null) 
+    if (submitted != null) 
     {
         JaxWsProxyFactoryBean pf = new JaxWsProxyFactoryBean();
         pf.setServiceClass(Bookstore.class);
         pf.setAddress("http://localhost:8777/services/bookstore");
         Bookstore bookstore = (Bookstore) pf.create();
 
-        Collection < Book > books = bookstore.getBooks();
+        Collection <Book> books = bookstore.getBooks();
         // Something in the way CXF marshalls the response converts an empty collection to null
         if (books == null)
         {
             books = new ArrayList();
         }
         %>
-        Request returned <%=books.size()%> book(s)<br/>
+        Your search returned the following book(s):<br/>
         <br/>
 
+		<table>
+		<tr><th>Title</th><th>Author</th><th/></tr>
         <%
-        for (Iterator i = books.iterator(); i.hasNext();)
+        Book book;
+        for (Iterator<Book> i = books.iterator(); i.hasNext();)
         {
-            Book book = (Book) i.next();
+            book = i.next();
+            if (book.getTitle().contains(title) && book.getAuthor().contains(author))
+            {
             %>
-            Title: <%=book.getTitle()%><br/>
-            Author: <%=book.getAuthor()%><br/>
-            <a href="order.jsp?id=<%=book.getId()%>">Order this book</a>
-            <br/><%
+	            <tr>
+	            	<td><%=book.getTitle()%></td>
+	            	<td><%=book.getAuthor()%></td>
+	            	<td><a href="order.jsp?id=<%=book.getId()%>">Order this book</a></td>
+	           	</tr>
+        <%
+        	}
         }
+        %>
+        </table>
+    <%
      } 
      %>
 
-<p/>
-<table border="1" bordercolor="#990000"  align="left">
-<tr><td>For more information about the Bookstore example go <a target="_blank" href="http://mule.mulesource.org/display/MULE2INTRO/Bookstore+Example">here</a>.</td></tr>
-</table>
+<hr/>
+<center><i>
+For more information about the Bookstore example go <a target="_blank" href="http://mule.mulesource.org/display/MULE2INTRO/Bookstore+Example">here</a>.
+</i></center>
 </body>
 </html>

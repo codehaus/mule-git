@@ -6,7 +6,7 @@
 
     <context-param>
         <param-name>org.mule.config</param-name>
-        <param-value>bookstore.xml</param-value>
+        <param-value>bookstore-config.xml</param-value>
     </context-param>
 
     <listener>

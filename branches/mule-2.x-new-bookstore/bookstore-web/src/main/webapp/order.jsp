@@ -39,41 +39,48 @@
 %>
 
 
+<h2>Place an order</h2>
 <form method="POST" name="submitRequest" action="">
-    Place an order:
     <table>
-        <tr><td>Title: </td><td><%=book.getTitle()%></td></tr>
-        <tr><td>Author: </td><td><%=book.getAuthor()%></td></tr>
-        <tr><td>Quantity: </td><td>
-            <input type="text" name="quantity" value="<%=quantity%>"/>
-        </td></tr>
-        <tr><td>Shipping Address: </td><td>
-            <input type="text" name="address" value="<%=address%>"/>
-        </td></tr>
-        <tr><td>E-mail: </td><td>
-            <input type="text" name="email" value="<%=email%>"/>
-        </td></tr>        
-		<input type="hidden" name="submitted" value="true"/>
-        <tr><td colspan="2">
-            <input type="submit" name="submit" value="Order" />
-        </td></tr>
+        <tr>
+        	<td>Title: </td>
+        	<td><%=book.getTitle()%></td>
+       	</tr>
+        <tr>
+        	<td>Author: </td>
+        	<td><%=book.getAuthor()%></td>
+        </tr>
+        <tr>
+        	<td>Quantity: </td>
+        	<td><input type="text" name="quantity" value="<%=quantity%>"/></td>
+        </tr>
+        <tr>
+        	<td>Shipping Address: </td>
+        	<td><input type="text" name="address" value="<%=address%>"/></td>
+        </tr>
+        <tr>
+        	<td>E-mail: </td>
+        	<td><input type="text" name="email" value="<%=email%>"/></td>
+        </tr>        
     </table>
+	<input type="hidden" name="submitted" value="true"/>
+    <input type="submit" name="submit" value="Order" />
 </form>
 
 <%
     String submitted = request.getParameter("submitted");
 
     // Validate form fields
-	if (submitted!=null && quantity>0 && address!=null && email!=null) 
+	if (submitted != null && quantity > 0 && address != null && email != null) 
 	{
 	    bookstore.orderBook(id, address, email); 
 	    %>
 	    Thank you for your order, a notification e-mail will be sent to <%=email%><br/>
-	    <br/>
-	    <a href="/bookstore">Return to Home Page</a>
 	    <%
 	 } 
  %>
 
+<br/>
+<a href="/bookstore">Return to Home Page</a>
 </body>
 </html>

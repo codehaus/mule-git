@@ -20,35 +20,30 @@
 //Collection <Book> books = (Collection) msg.getPayload();
 %>
 
+<h2>Add a new book</h2>
 <form method="POST" name="addBook" action="/bookstore-admin/rest/bookstore">
-    Add a new book:
     <table>
-        <tr><td>Title: </td><td>
-            <input type="text" name="title"/>
-        </td></tr>
-        <tr><td>Author: </td><td>
-            <input type="text" name="author"/>
-        </td></tr>
-
-        <tr><td colspan="2">
-            <input type="submit" name="submit" value="Submit" />
-        </td></tr>
+        <tr>
+        	<td>Title: </td>
+        	<td><input type="text" name="title"/></td>
+        </tr>
+        <tr>
+        	<td>Author: </td>
+        	<td><input type="text" name="author"/></td>
+        </tr>
     </table>
+    <input type="submit" name="submit" value="Add book" />
 </form>
 
+<h2>Get latest statistics from Data Warehouse</h2>
 <form method="GET" name="getStats" action="/bookstore-admin/rest">
-    Get latest statistics from Data Warehouse:
-    <table>
-        <tr><td colspan="2">
-            <input type="hidden" name="endpoint" value="stats"/>
-            <input type="submit" name="submit" value="Get" />
-        </td></tr>
-    </table>
+    <input type="hidden" name="endpoint" value="stats"/>
+    <input type="submit" name="submit" value="Get" />
 </form>
 
-<p/>
-<table border="1" bordercolor="#990000"  align="left">
-<tr><td>For more information about the Bookstore example go <a target="_blank" href="http://mule.mulesource.org/display/MULE2INTRO/Bookstore+Example">here</a>.</td></tr>
-</table>
+<hr/>
+<center><i>
+For more information about the Bookstore example go <a target="_blank" href="http://mule.mulesource.org/display/MULE2INTRO/Bookstore+Example">here</a>.
+</i></center>
 </body>
 </html>
