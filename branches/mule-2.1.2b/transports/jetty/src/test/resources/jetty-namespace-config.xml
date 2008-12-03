@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesource.org/schema/mule/core/2.1"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:jetty="http://www.mulesource.org/schema/mule/jetty/2.1"
+    xsi:schemaLocation="
+       http://www.mulesource.org/schema/mule/core/2.1 http://www.mulesource.org/schema/mule/core/2.1/mule.xsd
+       http://www.mulesource.org/schema/mule/jetty/2.1 http://www.mulesource.org/schema/mule/jetty/2.1/mule-jetty.xsd">
+
+    <jetty:connector name="jettyConnector" configFile="jetty-config.xml"/>
+
+    <!-- See MULE-3603 
+    <jetty:endpoint name="endpoint" host="localhost" port="60223" path="/"/>
+    -->
+</mule>

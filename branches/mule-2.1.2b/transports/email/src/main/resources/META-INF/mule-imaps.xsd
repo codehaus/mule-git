@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema xmlns="http://www.mulesource.org/schema/mule/imaps/2.1"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:mule="http://www.mulesource.org/schema/mule/core/2.1"
+            xmlns:imap="http://www.mulesource.org/schema/mule/imap/2.1"
+            xmlns:email="http://www.mulesource.org/schema/mule/email/2.1"
+            xmlns:schemadoc="http://www.mulesource.org/schema/mule/schemadoc/2.1"
+            targetNamespace="http://www.mulesource.org/schema/mule/imaps/2.1"
+            elementFormDefault="qualified"
+            attributeFormDefault="unqualified">
+
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:import namespace="http://www.mulesource.org/schema/mule/core/2.1"
+                schemaLocation="http://www.mulesource.org/schema/mule/core/2.1/mule.xsd" />
+    <xsd:import namespace="http://www.mulesource.org/schema/mule/imap/2.1"
+                schemaLocation="http://www.mulesource.org/schema/mule/imap/2.1/mule-imap.xsd"/>
+    <xsd:import namespace="http://www.mulesource.org/schema/mule/email/2.1"
+                schemaLocation="http://www.mulesource.org/schema/mule/email/2.1/mule-email.xsd"/>
+    <xsd:import namespace = "http://www.mulesource.org/schema/mule/schemadoc/2.1"
+                schemaLocation = "http://www.mulesource.org/schema/mule/schemadoc/2.1/mule-schemadoc.xsd"/>
+
+   <xsd:annotation>
+        <xsd:documentation>The IMAPS transport is similar to the [IMAP Transport] but uses secure connections over SSL/TLS.</xsd:documentation>
+        <xsd:appinfo>
+            <schemadoc:short-name>IMAPS</schemadoc:short-name>
+            <schemadoc:page-title>IMAPS Transport</schemadoc:page-title>
+            <schemadoc:transport-features receiveEvents="true" dispatchEvents="false" responseEvents="false"
+                                          requestEvents="false"
+                                          transactions="false" streaming="false">
+                <schemadoc:inboundMEPs in-only="true"/>
+            </schemadoc:transport-features>
+        </xsd:appinfo>
+    </xsd:annotation>
+
+    <xsd:element name="connector" type="imapsConnectorType" substitutionGroup="mule:abstract-connector"/>
+
+    <xsd:complexType name="imapsConnectorType">
+        <xsd:complexContent>
+            <xsd:extension base="imap:imapConnectorType">
+                <xsd:sequence minOccurs="1" maxOccurs="1">
+                    <xsd:element name="tls-client" type="mule:tlsClientKeyStoreType"/>
+                    <xsd:element name="tls-trust-store" type="mule:tlsTrustStoreType"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:element name="inbound-endpoint" type="inboundEndpointType" substitutionGroup="mule:abstract-inbound-endpoint"/>
+    <xsd:complexType name="inboundEndpointType">
+        <xsd:complexContent>
+            <xsd:extension base="mule:inboundEndpointType">
+                <xsd:attributeGroup ref="email:addressAttributes"/>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:element name="endpoint" type="globalEndpointType" substitutionGroup="mule:abstract-global-endpoint"/>
+    <xsd:complexType name="globalEndpointType">
+        <xsd:complexContent>
+            <xsd:extension base="mule:globalEndpointType">
+                <xsd:attributeGroup ref="email:addressAttributes"/>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+</xsd:schema>
