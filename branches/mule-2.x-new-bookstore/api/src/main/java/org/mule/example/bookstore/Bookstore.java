@@ -24,6 +24,9 @@ public interface Bookstore
     @WebResult(name="bookIds")
     Collection<Long> addBooks(@WebParam(name="books") Collection<Book> books);
     
+    @WebResult(name="book") 
+    Book getBook(@WebParam(name="bookId") long bookId);
+
     @WebResult(name="books") 
     Collection<Book> getBooks();
     

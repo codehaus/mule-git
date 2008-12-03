@@ -7,7 +7,7 @@
     </parent>
 
     <artifactId>mule-example-bookstore-console</artifactId>
-    <name>Bookstore Example: Command Line Console</name>
+    <name>Bookstore Example: Command Line Interface</name>
     <description>Command-line interface for the on-line bookstore</description>
 
     <dependencies>

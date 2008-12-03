@@ -18,6 +18,14 @@
                http://www.mulesource.org/schema/mule/http/2.2 http://www.mulesource.org/schema/mule/http/2.2/mule-http.xsd
                http://cxf.apache.org/core http://cxf.apache.org/schemas/core.xsd">
     
+    <!-- This configures an extra setting if you're using GMail's SMTP -->
+    <smtp:gmail-connector name="emailConnector" />
+ 
+    <vm:endpoint name="orderEmailService" path="emailservice" />
+ 
+    <email:string-to-email-transformer name="StringToMimeMessage" />
+    <custom-transformer name="OrderToEmail" class="org.mule.example.bookstore.transformers.OrderToEmailTransformer" />
+ 
     <custom-transformer name="HttpRequestToParameterMap" class="org.mule.transport.servlet.transformers.HttpRequestToParameterMap"/>
     <custom-transformer name="ParameterMapToBook" class="org.mule.example.bookstore.transformers.ParameterMapToBook"/>
     <custom-transformer name="AddBookResponse" class="org.mule.example.bookstore.transformers.AddBookResponse"/>
@@ -55,6 +63,19 @@
                </outbound>
           </service> 
 
+          <service name="EmailBridge">
+               <inbound>
+                    <inbound-endpoint ref="orderEmailService" />
+               </inbound>
+               <outbound>
+                    <pass-through-router>
+                         <smtp:outbound-endpoint user="username" password="password" host="smtp.gmail.com"
+                              transformer-refs="OrderToEmail StringToMimeMessage" connector-ref="emailConnector"
+                              from="bookstore@mulesource.com" subject="Your order has been placed!" />
+                    </pass-through-router>
+               </outbound>
+          </service>
+          
           <service name="DataWarehouse">
                <inbound>
                     <inbound-endpoint ref="orders"/>

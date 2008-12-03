@@ -4,13 +4,32 @@
  				 java.util.Collection,
 				 java.util.Iterator,
 				 org.apache.cxf.jaxws.JaxWsProxyFactoryBean"%>
-<%@ page language="java" contentType="text/html; charset=UTF-8" %>
+<%@ page language="java" %>
 
-<html>
 <head>
-<title>Bookstore</title>
+<meta http-equiv="Content-Language" content="en-us">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>On-line Bookstore</title>
 </head>
-<body>
+
+<body link="#FFFFFF" vlink="#FFFFFF" alink="#FFFFFF" bgcolor="#990000" text="#FFFFFF">
+
+<form method="POST" name="submitRequest" action="">
+    Search for a book:
+    <table>
+        <tr><td>Title: </td><td>
+            <input type="text" name="title"/>
+        </td></tr>
+        <tr><td>Author: </td><td>
+            <input type="text" name="author"/>
+        </td></tr>
+
+        <tr><td colspan="2">
+            <input type="submit" name="submit" value="Submit" />
+        </td></tr>
+    </table>
+</form>
+
 <%
     String title = request.getParameter("title");
     String author = request.getParameter("author");
@@ -39,25 +58,11 @@
             %>
             Title: <%=book.getTitle()%><br/>
             Author: <%=book.getAuthor()%><br/>
+            <a href="order.jsp?id=<%=book.getId()%>">Order this book</a>
             <br/><%
         }
-     } else {%>
-<form method="POST" name="submitRequest" action="">
-    Search for a book:
-    <table>
-        <tr><td>Title: </td><td>
-            <input type="text" name="title"/>
-        </td></tr>
-        <tr><td>Author: </td><td>
-            <input type="text" name="author"/>
-        </td></tr>
-
-        <tr><td colspan="2">
-            <input type="submit" name="submit" value="Submit" />
-        </td></tr>
-    </table>
-</form>
-<%}%>
+     } 
+     %>
 
 <p/>
 <table border="1" bordercolor="#990000"  align="left">

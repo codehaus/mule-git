@@ -10,7 +10,6 @@
 <meta http-equiv="Content-Language" content="en-us">
 <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
 <title>Bookstore Administration Console</title>
-<base target="contents">
 </head>
 
 <body link="#FFFFFF" vlink="#FFFFFF" alink="#FFFFFF" bgcolor="#990000" text="#FFFFFF">
