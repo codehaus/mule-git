@@ -38,9 +38,9 @@ public class BookstoreClient
         bookstore = (Bookstore) pf.create();
         
         // add a book to the bookstore
-        Book book = new Book("J.R.R. Tolkien", "The Lord of the Rings");
-        book.setId(1);
-        bookstore.addBook(book);
+//        Book book = new Book("J.R.R. Tolkien", "The Lord of the Rings");
+//        book.setId(1);
+//        bookstore.addBook(book);
     }
 
     public static void main(String[] args) throws Exception
@@ -91,7 +91,12 @@ public class BookstoreClient
             }
             else if (response == '3')
             {
-                Collection < Book > books = bookstore.getBooks();
+                Collection <Book> books = bookstore.getBooks();
+                // Something in the way CXF marshalls the response converts an empty collection to null
+                if (books == null)
+                {
+                    books = new ArrayList();
+                }
                 System.out.println("Request returned " + books.size() + " book/s");
 
                 for (Iterator i = books.iterator(); i.hasNext();)

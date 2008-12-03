@@ -1,4 +1,6 @@
-<%@ page import="org.mule.example.bookstore.Book,
+<%@ page import="org.mule.api.MuleMessage,
+				 org.mule.module.client.MuleClient,
+                 org.mule.example.bookstore.Book,
  				 org.mule.example.bookstore.Bookstore,
  				 java.util.Collection,
 				 java.util.Iterator"%>
@@ -12,6 +14,12 @@
 </head>
 
 <body link="#FFFFFF" vlink="#FFFFFF" alink="#FFFFFF" bgcolor="#990000" text="#FFFFFF">
+
+<%
+//MuleClient client = new MuleClient(false);
+//MuleMessage msg = client.send("vm://bookstore?method=getBooks", null);
+//Collection <Book> books = (Collection) msg.getPayload();
+%>
 
 <form method="POST" name="addBook" action="/bookstore-admin/rest/bookstore">
     Add a new book:

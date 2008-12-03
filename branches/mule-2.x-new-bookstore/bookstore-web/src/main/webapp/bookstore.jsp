@@ -1,5 +1,6 @@
 <%@ page import="org.mule.example.bookstore.Book,
  				 org.mule.example.bookstore.Bookstore,
+ 				 java.util.ArrayList,
  				 java.util.Collection,
 				 java.util.Iterator,
 				 org.apache.cxf.jaxws.JaxWsProxyFactoryBean"%>
@@ -22,6 +23,11 @@
         Bookstore bookstore = (Bookstore) pf.create();
 
         Collection < Book > books = bookstore.getBooks();
+        // Something in the way CXF marshalls the response converts an empty collection to null
+        if (books == null)
+        {
+            books = new ArrayList();
+        }
         %>
         Request returned <%=books.size()%> book(s)<br/>
         <br/>
