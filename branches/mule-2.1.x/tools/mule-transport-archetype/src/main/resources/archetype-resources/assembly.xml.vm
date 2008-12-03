@@ -2,7 +2,7 @@
     Assembly descriptor for the full distribution.
 -->
 <assembly>
-    <id>${TransportName}</id>
+    <id>${ModuleName}</id>
     <formats>
         <format>zip</format>
         <format>tar.gz</format>
