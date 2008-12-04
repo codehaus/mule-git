@@ -15,12 +15,14 @@ import org.mule.api.lifecycle.Disposable;
 import org.mule.module.xml.i18n.XmlMessages;
 import org.mule.util.expression.ExpressionEvaluator;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 
+import org.dom4j.Document;
 import org.jaxen.JaxenException;
 import org.jaxen.XPath;
 
@@ -39,7 +41,12 @@ public abstract class AbstractXPathExpressionEvaluator implements ExpressionEval
         {
             if(message instanceof MuleMessage)
             {
-                message = ((MuleMessage)message).getPayload();
+                MuleMessage muleMessage = (MuleMessage)message;
+                message = muleMessage.getPayload();
+                if(message instanceof String || message instanceof InputStream)
+                {
+                    message = muleMessage.getPayload(Document.class);
+                }
             }
             XPath xpath = getXPath(expression, message);
 
@@ -58,7 +65,7 @@ public abstract class AbstractXPathExpressionEvaluator implements ExpressionEval
                 return result;
             }
         }
-        catch (JaxenException e)
+        catch (Exception e)
         {
             throw new MuleRuntimeException(XmlMessages.failedToProcessXPath(expression), e);
         }
