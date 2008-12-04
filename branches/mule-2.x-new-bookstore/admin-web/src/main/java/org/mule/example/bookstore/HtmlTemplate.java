@@ -18,10 +18,9 @@ public class HtmlTemplate
         
         output += "<html>";
         output += "<head>";
-        output += "<meta http-equiv=\"Content-Language\" content=\"en-us\">";
-        output += "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=windows-1252\">";
+        output += "<meta http-equiv=\"Content-Language\" content=\"en-us\"/>";
+        output += "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=windows-1252\"/>";
         output += "<title>Bookstore Administration Console</title>";
-        output += "<base target=\"contents\">";
         output += "</head>";
 
         output += "<body link=\"#FFFFFF\" vlink=\"#FFFFFF\" alink=\"#FFFFFF\" bgcolor=\"#990000\" text=\"#FFFFFF\">";            

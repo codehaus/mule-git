@@ -31,6 +31,10 @@
         	<td>Author: </td>
         	<td><input type="text" name="author"/></td>
         </tr>
+        <tr>
+        	<td>Price: </td>
+        	<td><input type="text" name="price"/></td>
+        </tr>
     </table>
     <input type="submit" name="submit" value="Add book" />
 </form>

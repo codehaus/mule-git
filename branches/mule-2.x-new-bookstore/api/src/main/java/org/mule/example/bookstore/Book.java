@@ -15,16 +15,18 @@ public class Book
     private long id;
     private String author;
     private String title;
+    double price;
 
     public Book()
     {
         // empty constructor
     }
     
-    public Book(String author, String title)
+    public Book(String author, String title, double price)
     {
         this.author = author;
         this.title = title;
+        this.price = price;
     }
     
     public long getId()
@@ -55,5 +57,15 @@ public class Book
     public void setTitle(String title)
     {
         this.title = title;
+    }
+
+    public double getPrice()
+    {
+        return price;
+    }
+
+    public void setPrice(double price)
+    {
+        this.price = price;
     }
 }

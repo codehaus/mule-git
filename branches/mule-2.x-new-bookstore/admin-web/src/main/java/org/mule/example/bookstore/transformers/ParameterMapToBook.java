@@ -34,6 +34,7 @@ public class ParameterMapToBook extends AbstractTransformer
         
         String author = parameters.get("author");
         String title = parameters.get("title");
+        String price = parameters.get("price");
 
         if (StringUtils.isBlank(author))
         {
@@ -43,8 +44,12 @@ public class ParameterMapToBook extends AbstractTransformer
         {
             throw new TransformerException(MessageFactory.createStaticMessage("Missing title field"));
         }
+        if (StringUtils.isBlank(price))
+        {
+            throw new TransformerException(MessageFactory.createStaticMessage("Missing price field"));
+        }
 
-        return new Book(author, title);
+        return new Book(author, title, Double.parseDouble(price));
     }
 
 }

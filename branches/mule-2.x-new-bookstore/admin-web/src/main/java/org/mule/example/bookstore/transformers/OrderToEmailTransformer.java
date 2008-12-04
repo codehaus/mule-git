@@ -10,27 +10,37 @@
 
 package org.mule.example.bookstore.transformers;
 
+import org.mule.RequestContext;
 import org.mule.api.transformer.TransformerException;
 import org.mule.example.bookstore.Book;
+import org.mule.example.bookstore.Order;
 import org.mule.transformer.AbstractTransformer;
+import org.mule.transport.email.MailProperties;
 
 public class OrderToEmailTransformer extends AbstractTransformer
 {
+    public OrderToEmailTransformer()
+    {
+        super();
+        registerSourceType(Order.class);
+        setReturnClass(String.class);
+    }
+    
     @Override
     protected Object doTransform(Object src, String encoding) throws TransformerException
     {
-        Object[] payload = (Object[]) src;
-        Book book = (Book) payload[0];
-        String address = (String) payload[1];
-        String email = (String) payload[2];
+        Order order = (Order) src;
+        Book book = order.getBook();
+        String address = order.getAddress();
+        String email = order.getEmail();
         
         String body =  "Thank you for placing your order for " +
                        book.getTitle() + " with Mule Bookstore. " +
                        "Your order will be shipped  to " + 
                        address + " by 3 PM today!";
         
-//        RequestContext.getEventContext().getMessage().setProperty(
-//                      MailProperties.TO_ADDRESSES_PROPERTY, email);
+        RequestContext.getEventContext().getMessage().setProperty(
+                      MailProperties.TO_ADDRESSES_PROPERTY, email);
         System.out.println("Sent email to " + email);
         return body;
     }

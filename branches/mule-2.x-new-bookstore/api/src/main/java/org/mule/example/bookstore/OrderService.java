@@ -1,5 +1,5 @@
 /*
- * $$Id$$
+ * $Id$
  * --------------------------------------------------------------------------------------
  * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
  *
@@ -10,19 +10,15 @@
 
 package org.mule.example.bookstore;
 
-import java.util.Collection;
-
 import javax.jws.WebParam;
-import javax.jws.WebResult;
 import javax.jws.WebService;
 // START SNIPPET: interface
 @WebService
-public interface Bookstore
+public interface OrderService
 {
-    @WebResult(name="book") 
-    Book getBook(@WebParam(name="bookId") long bookId);
-
-    @WebResult(name="books") 
-    Collection<Book> getBooks();
+    Order orderBook(@WebParam(name="book") Book book, 
+                    @WebParam(name="quantity") int quantity, 
+                    @WebParam(name="address") String address,
+                    @WebParam(name="email") String email);
 }
 // END SNIPPET: interface

@@ -10,10 +10,8 @@
 
 package org.mule.example.bookstore;
 
-import org.mule.DefaultMuleMessage;
-import org.mule.RequestContext;
-import org.mule.api.MuleException;
-import org.mule.api.MuleMessage;
+import org.mule.api.lifecycle.Initialisable;
+import org.mule.api.lifecycle.InitialisationException;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -26,10 +24,18 @@ import javax.jws.WebService;
 @WebService(serviceName="BookstoreService",
     portName="BookstorePort",
     endpointInterface="org.mule.example.bookstore.Bookstore")
-public class BookstoreImpl implements Bookstore
+public class BookstoreImpl implements Bookstore, Initialisable
 {
     private Map < Long, Book > books = new HashMap < Long, Book > ();
     
+    public void initialise() throws InitialisationException
+    {
+        books = new HashMap <Long, Book> ();
+        addBook(new Book("J.R.R. Tolkien", "The Fellowship of the Ring", 8));
+        addBook(new Book("J.R.R. Tolkien", "The Two Towers", 10));
+        addBook(new Book("J.R.R. Tolkien", "Return of the King", 10));
+    }
+
     public long addBook(Book book)
     {
         System.out.println("Adding book " + book.getTitle());
@@ -54,6 +60,21 @@ public class BookstoreImpl implements Bookstore
 
     public Collection < Book > getBooks()
     {
+        /*
+        try
+        {
+            MuleClient client = new MuleClient();
+            Map props = new HashMap();
+            props.put(MuleProperties.MULE_METHOD_PROPERTY, "getBooks");
+            MuleMessage msg = client.send("vm://inventory", null, props);
+            Collection <Book> books = (Collection) msg.getPayload();
+            return books;
+        }
+        catch (MuleException e)
+        {
+            throw new RuntimeException(e);
+        }
+        */
         return books.values();
     }
 
@@ -61,27 +82,4 @@ public class BookstoreImpl implements Bookstore
     {
         return books.get(bookId);
     }
-
-    public void orderBook(long bookId, String address, String email)
-    {
-        // In the real world we'd want this hidden behind an OrderService interface
-        try
-        {
-            Book book = books.get(bookId);
-            MuleMessage msg = new DefaultMuleMessage(new Object[] { book, address, email}, (Map) null);
-
-            RequestContext.getEventContext().dispatchEvent(msg, "orderEmailService");
-            System.out.println("Dispatched message to orderService.");
-        }
-        catch (MuleException e)
-        {
-            // If this was real, we'd want better error handling
-            throw new RuntimeException(e);
-        }
-    }
-    
-    public String sanityCheck(Object in)
-    {
-        return "Received object: " + in;
-    }   
 }

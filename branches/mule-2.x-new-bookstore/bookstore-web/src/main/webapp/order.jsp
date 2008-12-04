@@ -1,5 +1,6 @@
 <%@ page import="org.mule.example.bookstore.Book,
  				 org.mule.example.bookstore.Bookstore,
+ 				 org.mule.example.bookstore.OrderService,
  				 java.util.ArrayList,
  				 java.util.Collection,
 				 java.util.Iterator,
@@ -51,6 +52,10 @@
         	<td><%=book.getAuthor()%></td>
         </tr>
         <tr>
+        	<td>Price: </td>
+        	<td>$<%=book.getPrice()%></td>
+        </tr>
+        <tr>
         	<td>Quantity: </td>
         	<td><input type="text" name="quantity" value="<%=quantity%>"/></td>
         </tr>
@@ -73,7 +78,13 @@
     // Validate form fields
 	if (submitted != null && quantity > 0 && address != null && email != null) 
 	{
-	    bookstore.orderBook(id, address, email); 
+		// Invoke CXF web service
+	    JaxWsProxyFactoryBean pf2 = new JaxWsProxyFactoryBean();
+	    pf2.setServiceClass(OrderService.class);
+	    pf2.setAddress("http://localhost:8777/services/order");
+	    OrderService orderService = (OrderService) pf2.create();	
+	
+	    orderService.orderBook(book, quantity, address, email); 
 	    %>
 	    Thank you for your order, a notification e-mail will be sent to <%=email%><br/>
 	    <%

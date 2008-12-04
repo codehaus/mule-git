@@ -16,13 +16,17 @@ package org.mule.example.bookstore;
 public class DataWarehouse
 {
     int booksOrdered = 0;
-    float averagePrice = 0;
+    double totalRevenue = 0;
+    double averagePrice = 0;
     // TODO Create a HashMap to track quantities and determine the bestseller
     String bestSeller;
     
-    public String updateStats(Book book)
+    public String updateStats(Order order)
     {
-        ++booksOrdered;
+        Book book = order.getBook();
+        booksOrdered += order.getQuantity();
+        totalRevenue += (book.getPrice() * order.getQuantity());
+        averagePrice = totalRevenue / booksOrdered;
         bestSeller = book.getTitle();
         
         System.out.println("Updating stats");
@@ -31,9 +35,10 @@ public class DataWarehouse
     
     protected String printHtmlStats()
     {
-        String output = "";
+        String output = "<h2>Data Warehouse Statistics</h2>";
         output += "<table>";
         output += "<tr><td>Total orders</td> <td>" + booksOrdered + "</td></tr>";
+        output += "<tr><td>Total revenue</td> <td>$" + totalRevenue + "</td></tr>";
         output += "<tr><td>Average price</td> <td>$" + averagePrice + "</td></tr>";
         output += "<tr><td>Best seller</td> <td>" + bestSeller + "</td></tr>";
         output += "</table>";

@@ -56,16 +56,27 @@
                <component>
                     <singleton-object class="org.mule.example.bookstore.BookstoreImpl" />
                </component>
-               <outbound>
-                    <pass-through-router>
-                        <outbound-endpoint ref="orders"/>
-                    </pass-through-router>
-               </outbound>
           </service> 
 
-          <service name="EmailBridge">
+          <service name="OrderService">
                <inbound>
-                    <inbound-endpoint ref="orderEmailService" />
+                    <!-- Public interface -->
+                    <inbound-endpoint address="cxf:http://localhost:8777/services/order" />
+               </inbound>
+               <component>
+                    <singleton-object class="org.mule.example.bookstore.OrderServiceImpl" />
+               </component>
+               <outbound>
+                    <multicasting-router>
+                        <vm:outbound-endpoint path="orderEmailService"/>
+                        <vm:outbound-endpoint path="dataWarehouse"/>
+                    </multicasting-router>
+               </outbound>
+          </service>
+          
+          <service name="EmailNotificationService">
+               <inbound>
+                    <vm:inbound-endpoint path="orderEmailService" />
                </inbound>
                <outbound>
                     <pass-through-router>
@@ -78,7 +89,7 @@
           
           <service name="DataWarehouse">
                <inbound>
-                    <inbound-endpoint ref="orders"/>
+                    <vm:inbound-endpoint path="dataWarehouse"/>
                </inbound>
                <component>
                     <singleton-object class="org.mule.example.bookstore.DataWarehouse" />

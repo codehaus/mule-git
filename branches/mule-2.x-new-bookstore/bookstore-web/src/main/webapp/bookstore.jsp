@@ -58,7 +58,7 @@
         <br/>
 
 		<table>
-		<tr><th>Title</th><th>Author</th><th/></tr>
+		<tr><th>Title</th><th>Author</th><th>Price</th><th/></tr>
         <%
         Book book;
         for (Iterator<Book> i = books.iterator(); i.hasNext();)
@@ -70,6 +70,7 @@
 	            <tr>
 	            	<td><%=book.getTitle()%></td>
 	            	<td><%=book.getAuthor()%></td>
+	            	<td>$<%=book.getPrice()%></td>
 	            	<td><a href="order.jsp?id=<%=book.getId()%>">Order this book</a></td>
 	           	</tr>
         <%
