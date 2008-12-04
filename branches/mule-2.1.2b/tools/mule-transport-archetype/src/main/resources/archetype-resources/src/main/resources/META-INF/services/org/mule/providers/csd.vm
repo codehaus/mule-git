@@ -39,6 +39,9 @@ inbound.transformer=org.mule.transport.${ModuleNameLower}.transformers.$inboundT
 #if( $outboundTransformer && $outboundTransformer != "n")
 # The Default outbound transformer for this component
 outbound.transformer=org.mule.transport.${ModuleNameLower}.transformers.$outboundTransformer
+
+# The response transformer is used to convert a response back to a client, usually the outbound transformer does the same thing
+response.transformer=org.mule.transport.${ModuleNameLower}.transformers.$outboundTransformer
 #end
 
 # Defines the way in which endpoints for your transport will be constructed
