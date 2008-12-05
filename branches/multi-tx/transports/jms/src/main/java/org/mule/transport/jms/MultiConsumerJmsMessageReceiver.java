@@ -63,7 +63,7 @@ public class MultiConsumerJmsMessageReceiver extends AbstractMessageReceiver
         jmsConnector = (JmsConnector) connector;
 
         final boolean isTopic = jmsConnector.getTopicResolver().isTopic(endpoint, true);
-        receiversCount = jmsConnector.getNumberOfConcurrentTransactedReceivers();
+        receiversCount = jmsConnector.getNumberOfConsumers();
         if (isTopic && receiversCount != 1)
         {
             if (logger.isInfoEnabled())
