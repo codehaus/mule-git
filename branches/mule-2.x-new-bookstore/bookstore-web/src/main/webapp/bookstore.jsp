@@ -20,6 +20,9 @@
     field = request.getParameter("author");
     String author = field != null ? field : "";
 %>
+
+<center><h3>Welcome to the Mule-powered On-line Bookstore</h3></center>
+<hr/>
     
 <h2>Search for a book</h2>
 <form method="POST" name="submitRequest" action="">

@@ -25,20 +25,10 @@ public class LocaleMessage extends MessageFactory
 
     public static String getMenuOption1()
     {
-        return factory.getString(BUNDLE_PATH, 2);
-    }
-
-    public static String getMenuOption2()
-    {
-        return factory.getString(BUNDLE_PATH, 3);
-    }
-    
-    public static String getMenuOption3()
-    {
         return factory.getString(BUNDLE_PATH, 4);
     }
     
-    public static String getMenuOption4()
+    public static String getMenuOption2()
     {
         return factory.getString(BUNDLE_PATH, 5);
     }
@@ -96,5 +86,10 @@ public class LocaleMessage extends MessageFactory
     public static String getEmailAddressPrompt()
     {
         return factory.getString(BUNDLE_PATH, 16);
+    }
+
+    public static String getQuantityPrompt()
+    {
+        return factory.getString(BUNDLE_PATH, 17);
     }
 }

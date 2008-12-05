@@ -60,21 +60,6 @@ public class BookstoreImpl implements Bookstore, Initialisable
 
     public Collection < Book > getBooks()
     {
-        /*
-        try
-        {
-            MuleClient client = new MuleClient();
-            Map props = new HashMap();
-            props.put(MuleProperties.MULE_METHOD_PROPERTY, "getBooks");
-            MuleMessage msg = client.send("vm://inventory", null, props);
-            Collection <Book> books = (Collection) msg.getPayload();
-            return books;
-        }
-        catch (MuleException e)
-        {
-            throw new RuntimeException(e);
-        }
-        */
         return books.values();
     }
 

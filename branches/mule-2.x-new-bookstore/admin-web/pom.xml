@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.mule.examples</groupId>
         <artifactId>mule-example-bookstore-parent</artifactId>
-        <version>2.2.0-SNAPSHOT</version>
+        <version>1.0</version>
     </parent>
     <artifactId>mule-example-bookstore-admin-webapp</artifactId>
     <packaging>war</packaging>
@@ -18,10 +18,6 @@
     </properties>
 
     <build>
-        <!-- Default goal is to build the war and start it up in Jetty
-             (surf to http://localhost:8090/bookstore-admin to test) -->
-        <defaultGoal>jetty:run-war</defaultGoal>
-
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -30,74 +26,46 @@
                     <warName>${webappName}</warName>
                 </configuration>
             </plugin>
-
-            <plugin>
-                 <groupId>org.mortbay.jetty</groupId>
-                 <artifactId>maven-jetty-plugin</artifactId>
-                 <configuration>
-                    <contextPath>/${webappName}</contextPath>
-                    <webApp>${project.build.directory}/${webappName}.war</webApp>
-                    <scanIntervalSeconds>10</scanIntervalSeconds>
-                    <connectors>
-                        <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
-                            <port>8090</port>
-                            <maxIdleTime>60000</maxIdleTime>
-                        </connector>
-                    </connectors>
-                 </configuration>
-            </plugin>
-
-            <!-- skip unit test run, tests to be executed during integration-test phase -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>surefire-it</id>
-                        <phase>integration-test</phase>
-                        <goals>
-                          <goal>test</goal>
-                        </goals>
-                        <configuration>
-                          <skip>false</skip>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
     </build>
 
     <dependencies>
+        <!-- Bookstore domain objects + interfaces -->
         <dependency>
             <groupId>org.mule.examples</groupId>
             <artifactId>mule-example-bookstore-api</artifactId>
             <version>${version}</version>
         </dependency>
+
+        <!-- Contains MuleXmlBuilderContextListener -->
         <dependency>
             <groupId>org.mule.modules</groupId>
             <artifactId>mule-module-builders</artifactId>
-            <version>${version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.mule.modules</groupId>
-            <artifactId>mule-module-client</artifactId>
-            <version>${version}</version>
+            <version>${muleVersion}</version>
         </dependency>
 
         <!-- Transports used by the Mule config -->
         <dependency>
             <groupId>org.mule.transports</groupId>
             <artifactId>mule-transport-servlet</artifactId>
-            <version>${version}</version>
+            <version>${muleVersion}</version>
         </dependency>
         <dependency>
             <groupId>org.mule.transports</groupId>
             <artifactId>mule-transport-cxf</artifactId>
-            <version>${version}</version>
+            <version>${muleVersion}</version>
         </dependency>
+        <dependency>
+            <groupId>org.mule.transports</groupId>
+            <artifactId>mule-transport-email</artifactId>
+            <version>${muleVersion}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mule.transports</groupId>
+            <artifactId>mule-transport-vm</artifactId>
+            <version>${muleVersion}</version>
+        </dependency>
+
         <!-- CXF assumes you have an XSLT engine available -->
         <dependency>
             <groupId>xalan</groupId>
@@ -105,14 +73,9 @@
             <version>2.7.1</version>
         </dependency>
         <dependency>
-            <groupId>org.mule.transports</groupId>
-            <artifactId>mule-transport-email</artifactId>
-            <version>${version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.mule.transports</groupId>
-            <artifactId>mule-transport-vm</artifactId>
-            <version>${version}</version>
+            <groupId>xalan</groupId>
+            <artifactId>serializer</artifactId>
+            <version>2.7.1</version>
         </dependency>
     </dependencies>
 </project>

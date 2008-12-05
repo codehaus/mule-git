@@ -10,37 +10,37 @@
 
 package org.mule.example.bookstore;
 
-import org.mule.api.MuleException;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.Random;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
+import org.mule.api.MuleException;
 
 public class BookstoreClient
 {
     protected static transient Log logger = LogFactory.getLog(BookstoreClient.class);
     protected static Bookstore bookstore;
+    protected static OrderService orderService;
     
     public BookstoreClient() throws MuleException
     {
-        // create client
+        // Inventory web service
         JaxWsProxyFactoryBean pf = new JaxWsProxyFactoryBean();
         pf.setServiceClass(Bookstore.class);
         pf.setAddress("http://localhost:8777/services/bookstore");
         bookstore = (Bookstore) pf.create();
-        
-        // add a book to the bookstore
-//        Book book = new Book("J.R.R. Tolkien", "The Lord of the Rings");
-//        book.setId(1);
-//        bookstore.addBook(book);
+
+		// Order web service
+	    JaxWsProxyFactoryBean pf2 = new JaxWsProxyFactoryBean();
+	    pf2.setServiceClass(OrderService.class);
+	    pf2.setAddress("http://localhost:8777/services/order");
+	    orderService = (OrderService) pf2.create();		
     }
 
     public static void main(String[] args) throws Exception
@@ -59,37 +59,11 @@ public class BookstoreClient
         {
             System.out.println("\n" + LocaleMessage.getMenuOption1());
             System.out.println("\n" + LocaleMessage.getMenuOption2());
-            System.out.println("\n" + LocaleMessage.getMenuOption3());
-            System.out.println("\n" + LocaleMessage.getMenuOption4());
             System.out.println("\n" + LocaleMessage.getMenuOptionQuit());
             System.out.println("\n" + LocaleMessage.getMenuPromptMessage());
             response = getSelection();
             
             if (response == '1')
-            {
-                Book book = createBook();
-                bookstore.addBook(book);
-                System.out.println("Added Book");
-            }
-            else if (response == '2')
-            {
-                Collection < Book > books = new ArrayList< Book >();
-                boolean isAddAnotherBook = true;
-                while(isAddAnotherBook)
-                {
-                    Book book = createBook();
-                    books.add(book);
-                    System.out.println("\n" + LocaleMessage.getAddBooksMessagePrompt());
-                    int result = getSelection();
-                    if (result != 'y')
-                    {
-                        isAddAnotherBook = false;
-                        bookstore.addBooks(books);
-                        System.out.println("Added book list");
-                    }
-                }
-            }
-            else if (response == '3')
             {
                 Collection <Book> books = bookstore.getBooks();
                 // Something in the way CXF marshalls the response converts an empty collection to null
@@ -97,33 +71,36 @@ public class BookstoreClient
                 {
                     books = new ArrayList();
                 }
-                System.out.println("Request returned " + books.size() + " book/s");
+                System.out.println("There are " + books.size() + " available book(s):\n");
 
                 for (Iterator i = books.iterator(); i.hasNext();)
                 {
                     Book book = (Book) i.next();
+                    System.out.println("Id: " + book.getId());
                     System.out.println("Title: " + book.getTitle());
                     System.out.println("Author: " + book.getAuthor());
-                    System.out.println("Id: " + book.getId());
+                    System.out.println("Price: $" + book.getPrice());
                     System.out.println();
                 }
             }
-            else if (response == '4')
+            else if (response == '2')
             {   
                 System.out.println("\n" + LocaleMessage.getOrderWelcomeMessage());
                 System.out.println("\n" + LocaleMessage.getBookIdPrompt());
                 long bookId = Long.parseLong(getInput());
+                System.out.println("\n" + LocaleMessage.getQuantityPrompt());
+                int quantity = Integer.parseInt(getInput());
                 System.out.println("\n" + LocaleMessage.getHomeAddressPrompt());
                 String homeAddress = getInput();
                 System.out.println("\n" + LocaleMessage.getEmailAddressPrompt());
                 String emailAddress = getInput();
                 
+            	// Look up book details
+            	Book book = bookstore.getBook(bookId); 
                 // order book
-                bookstore.orderBook(bookId, 
-                                  homeAddress, 
-                                  emailAddress);
+        	    orderService.orderBook(book, quantity, homeAddress, emailAddress); 
                 
-                System.out.println("Book was ordered");
+                System.out.println("\nThank you for your order, a notification e-mail will be sent to " + emailAddress);
             }
             else if (response == 'q')
             {
@@ -137,26 +114,6 @@ public class BookstoreClient
         }
     }
     
-    private static Book createBook() throws Exception
-    {
-        String title = "";
-        String author = "";
-        while (title.compareTo("") == 0)
-        {
-            System.out.println("\n" + LocaleMessage.getBookTitlePrompt());
-            title = getInput();
-        }
-        while (author.compareTo("") == 0)
-        {
-            System.out.println("\n" + LocaleMessage.getAuthorNamePrompt());
-            author = getInput();
-        }
-
-        Book book = new Book(title,author);
-        book.setId(generateBookId());
-        return book;
-    }
-    
     private static int getSelection() throws IOException
     {
         byte[] buf = new byte[16];
@@ -168,11 +125,5 @@ public class BookstoreClient
     {
         BufferedReader request = new BufferedReader(new InputStreamReader(System.in));
         return request.readLine();
-    }
-    
-    private static long generateBookId()
-    {
-        Random randomGenerator = new Random();
-        return randomGenerator.nextInt(5000);
     }
 }

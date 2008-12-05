@@ -19,7 +19,7 @@ public class Order
     
     public Order()
     {
-        // empty constructor
+    	// empty constructor
     }
     
     public Order(Book book, int quantity, String address, String email)

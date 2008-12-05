@@ -4,11 +4,13 @@
     <display-name>Bookstore Administration</display-name>
     <description>Administration console for the Mule-driven On-line Bookstore</description>
 
+	<!-- The Mule configuration is provided as a context parameter -->
     <context-param>
         <param-name>org.mule.config</param-name>
         <param-value>bookstore-config.xml</param-value>
     </context-param>
 
+	<!-- This listener will start up Mule inside the webapp -->
     <listener>
         <listener-class>org.mule.config.builders.MuleXmlBuilderContextListener</listener-class>
     </listener>

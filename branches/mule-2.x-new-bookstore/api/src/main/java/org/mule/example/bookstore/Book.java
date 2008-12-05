@@ -19,7 +19,7 @@ public class Book
 
     public Book()
     {
-        // empty constructor
+    	// empty constructor
     }
     
     public Book(String author, String title, double price)
