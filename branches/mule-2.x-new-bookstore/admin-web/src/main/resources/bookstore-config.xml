@@ -25,7 +25,7 @@
     <custom-transformer name="AddBookResponse" class="org.mule.example.bookstore.transformers.AddBookResponse"/>
 
     <message-properties-transformer name="HtmlContentType">
-        <add-message-property key="ContentType" value="text/html"/>
+        <add-message-property key="Content-Type" value="text/html"/>
     </message-properties-transformer>
 
     <vm:connector name="vmConnector" queueEvents="true"/>
