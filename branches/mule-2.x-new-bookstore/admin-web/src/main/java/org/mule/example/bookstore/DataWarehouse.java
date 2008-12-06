@@ -10,6 +10,8 @@
 
 package org.mule.example.bookstore;
 
+import org.mule.example.bookstore.web.HtmlTemplate;
+
 /**
  * Tracks statistics on book orders.
  */

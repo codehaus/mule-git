@@ -11,7 +11,7 @@
 package org.mule.example.bookstore.transformers;
 
 import org.mule.api.transformer.TransformerException;
-import org.mule.example.bookstore.HtmlTemplate;
+import org.mule.example.bookstore.web.HtmlTemplate;
 import org.mule.transformer.AbstractTransformer;
 
 public class AddBookResponse extends AbstractTransformer

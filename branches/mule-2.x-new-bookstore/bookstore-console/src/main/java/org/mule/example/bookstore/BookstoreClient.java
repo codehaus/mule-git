@@ -25,21 +25,22 @@ import org.mule.api.MuleException;
 public class BookstoreClient
 {
     protected static transient Log logger = LogFactory.getLog(BookstoreClient.class);
-    protected static Bookstore bookstore;
+    protected static CatalogService catalog;
     protected static OrderService orderService;
     
     public BookstoreClient() throws MuleException
     {
-        // Inventory web service
         JaxWsProxyFactoryBean pf = new JaxWsProxyFactoryBean();
-        pf.setServiceClass(Bookstore.class);
-        pf.setAddress("http://localhost:8777/services/bookstore");
-        bookstore = (Bookstore) pf.create();
+
+        // Catalog web service
+        pf.setServiceClass(CatalogService.class);
+        pf.setAddress(CatalogService.URL);
+        catalog = (CatalogService) pf.create();
 
 		// Order web service
-	    JaxWsProxyFactoryBean pf2 = new JaxWsProxyFactoryBean();
+        JaxWsProxyFactoryBean pf2 = new JaxWsProxyFactoryBean();
 	    pf2.setServiceClass(OrderService.class);
-	    pf2.setAddress("http://localhost:8777/services/order");
+	    pf2.setAddress(OrderService.URL);
 	    orderService = (OrderService) pf2.create();		
     }
 
@@ -65,7 +66,7 @@ public class BookstoreClient
             
             if (response == '1')
             {
-                Collection <Book> books = bookstore.getBooks();
+                Collection <Book> books = catalog.getBooks();
                 // Something in the way CXF marshalls the response converts an empty collection to null
                 if (books == null)
                 {
@@ -96,7 +97,7 @@ public class BookstoreClient
                 String emailAddress = getInput();
                 
             	// Look up book details
-            	Book book = bookstore.getBook(bookId); 
+            	Book book = catalog.getBook(bookId); 
                 // order book
         	    orderService.orderBook(book, quantity, homeAddress, emailAddress); 
                 

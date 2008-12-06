@@ -11,12 +11,16 @@
 package org.mule.example.bookstore;
 
 import javax.jws.WebParam;
+import javax.jws.WebResult;
 import javax.jws.WebService;
 // START SNIPPET: interface
 @WebService
 public interface OrderService
 {
-    Order orderBook(@WebParam(name="book") Book book, 
+	static final String URL = "http://localhost:8777/services/order";
+
+    @WebResult(name="order") 
+	Order orderBook(@WebParam(name="book") Book book, 
                     @WebParam(name="quantity") int quantity, 
                     @WebParam(name="address") String address,
                     @WebParam(name="email") String email);

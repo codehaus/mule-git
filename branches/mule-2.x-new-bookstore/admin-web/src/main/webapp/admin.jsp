@@ -1,6 +1,6 @@
 <%@ page import="org.mule.api.MuleMessage,
                  org.mule.example.bookstore.Book,
- 				 org.mule.example.bookstore.Bookstore,
+ 				 org.mule.example.bookstore.CatalogService,
  				 java.util.Collection,
 				 java.util.Iterator"%>
 <%@ page language="java" %>
@@ -14,7 +14,7 @@
 <body link="#FFFFFF" vlink="#FFFFFF" alink="#FFFFFF" bgcolor="#990000" text="#FFFFFF">
 
 <h2>Add a new book</h2>
-<form method="POST" name="addBook" action="/bookstore-admin/rest/bookstore">
+<form method="POST" name="addBook" action="/bookstore-admin/rest/catalog">
     <table>
         <tr>
         	<td>Title: </td>

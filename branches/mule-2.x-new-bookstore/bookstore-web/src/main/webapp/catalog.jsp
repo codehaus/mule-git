@@ -1,5 +1,5 @@
 <%@ page import="org.mule.example.bookstore.Book,
- 				 org.mule.example.bookstore.Bookstore,
+ 				 org.mule.example.bookstore.CatalogService,
  				 java.util.ArrayList,
  				 java.util.Collection,
 				 java.util.Iterator,
@@ -46,11 +46,11 @@
     if (submitted != null) 
     {
         JaxWsProxyFactoryBean pf = new JaxWsProxyFactoryBean();
-        pf.setServiceClass(Bookstore.class);
-        pf.setAddress("http://localhost:8777/services/bookstore");
-        Bookstore bookstore = (Bookstore) pf.create();
+        pf.setServiceClass(CatalogService.class);
+        pf.setAddress(CatalogService.URL);
+        CatalogService catalog = (CatalogService) pf.create();
 
-        Collection <Book> books = bookstore.getBooks();
+        Collection <Book> books = catalog.getBooks();
         // Something in the way CXF marshalls the response converts an empty collection to null
         if (books == null)
         {

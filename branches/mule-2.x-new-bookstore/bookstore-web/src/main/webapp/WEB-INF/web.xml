@@ -5,6 +5,6 @@
     <description>Mule-driven On-line Bookstore</description>
 
     <welcome-file-list>
-        <welcome-file>bookstore.jsp</welcome-file>
+        <welcome-file>catalog.jsp</welcome-file>
     </welcome-file-list>
 </web-app>

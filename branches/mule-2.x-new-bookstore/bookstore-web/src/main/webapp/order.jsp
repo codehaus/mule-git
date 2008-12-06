@@ -1,5 +1,5 @@
 <%@ page import="org.mule.example.bookstore.Book,
- 				 org.mule.example.bookstore.Bookstore,
+ 				 org.mule.example.bookstore.CatalogService,
  				 org.mule.example.bookstore.OrderService,
  				 java.util.ArrayList,
  				 java.util.Collection,
@@ -31,12 +31,12 @@
 
 	// Invoke CXF web service
     JaxWsProxyFactoryBean pf = new JaxWsProxyFactoryBean();
-    pf.setServiceClass(Bookstore.class);
-    pf.setAddress("http://localhost:8777/services/bookstore");
-    Bookstore bookstore = (Bookstore) pf.create();	
+    pf.setServiceClass(CatalogService.class);
+    pf.setAddress(CatalogService.URL);
+    CatalogService catalog = (CatalogService) pf.create();
 
 	// Look up book details
-	Book book = bookstore.getBook(id); 
+	Book book = catalog.getBook(id); 
 %>
 
 
@@ -79,9 +79,9 @@
 	if (submitted != null && quantity > 0 && address != null && email != null) 
 	{
 		// Invoke CXF web service
-	    JaxWsProxyFactoryBean pf2 = new JaxWsProxyFactoryBean();
+          JaxWsProxyFactoryBean pf2 = new JaxWsProxyFactoryBean();
 	    pf2.setServiceClass(OrderService.class);
-	    pf2.setAddress("http://localhost:8777/services/order");
+	    pf2.setAddress(OrderService.URL);
 	    OrderService orderService = (OrderService) pf2.create();	
 	
 	    orderService.orderBook(book, quantity, address, email); 
