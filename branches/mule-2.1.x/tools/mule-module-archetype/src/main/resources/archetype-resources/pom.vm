@@ -154,21 +154,77 @@
         </dependency>
 
         <!-- Mule Transports -->
+
+        #set($emailDepSet = false)
+        #set($sslDepSet = false)
+        #set($httpDepSet = false)
+        #set($jettyDepSet = false)
+        #set($rmiDepSet = false)
         #foreach($item in $transportArray)
+          #if($item == 'smtp' || $item == 'smtps' || $item == 'pop3' || $item == 'pop3s' || $item == 'imap' || $item == 'imaps')
+            #if($emailDepSet == false)
+        <dependency>
+            <groupId>org.mule.transports</groupId>
+            <artifactId>mule-transport-email</artifactId>
+            <version>${mule.version}</version>
+        </dependency>
+              #set($emailDepSet = true)
+            #end
+          #elseif($item == 'ssl' || $item == 'tls')
+            #if($sslDepSet == false)
+        <dependency>
+            <groupId>org.mule.transports</groupId>
+            <artifactId>mule-transport-ssl</artifactId>
+            <version>${mule.version}</version>
+        </dependency>
+              #set($sslDepSet = true)
+            #end
+          #elseif($item == 'http' || $item == 'https')
+            #if($httpDepSet == false)
+        <dependency>
+            <groupId>org.mule.transports</groupId>
+            <artifactId>mule-transport-http</artifactId>
+            <version>${mule.version}</version>
+        </dependency>
+              #set($httpDepSet = true)
+            #end
+          #elseif($item == 'jetty' || $item == 'jetty-ssl')
+            #if($jettyDepSet == false)
+        <dependency>
+            <groupId>org.mule.transports</groupId>
+            <artifactId>mule-transport-jetty</artifactId>
+            <version>${mule.version}</version>
+        </dependency>
+              #set($jettyDepSet = true)
+            #end
+          #elseif($item == 'rmi' || $item == 'jnp')
+            #if($rmiDepSet == false)
+        <dependency>
+            <groupId>org.mule.transports</groupId>
+            <artifactId>mule-transport-rmi</artifactId>
+            <version>${mule.version}</version>
+        </dependency>
+              #set($rmiDepSet = true)
+            #end
+          #else
         <dependency>
             <groupId>org.mule.transports</groupId>
             <artifactId>mule-transport-${item}</artifactId>
             <version>${mule.version}</version>
         </dependency>
+          #end
         #end
         <!-- Mule Modules -->
+
         #foreach($item in $moduleArray)
         <dependency>
             <groupId>org.mule.modules</groupId>
             <artifactId>mule-module-${item}</artifactId>
             <version>${mule.version}</version>
         </dependency>
+
         #end
+
         <!-- for testing -->
         <dependency>
             <groupId>org.mule.tests</groupId>

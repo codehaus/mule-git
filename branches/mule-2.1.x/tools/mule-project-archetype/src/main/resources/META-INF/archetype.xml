@@ -24,9 +24,9 @@
             <description>
 Which Mule transports do you want to include in this project?
 
-(options: axis,cxf,ejb,file,ftp,http,https,imap,imaps,jbpm,jdbc,
-          jetty,jms,multicast,pop3,pop3s,quartz,rmi,servlet,smtp,
-          smtps,servlet,ssl,tls,stdio,tcp,udp,vm,xmpp):
+(options: axis, cxf, ejb, file, ftp, http, https, imap, imaps, jbpm, jdbc,
+          jetty, jetty-ssl, jms, jnp, multicast, pop3, pop3s, quartz, rmi, servlet,
+          smtp, smtps, servlet, ssl, tls, stdio, tcp, udp, vm, xmpp):
 
             </description>
             <defvalue>cxf,file,http,jdbc,jms,stdio,vm</defvalue>
@@ -35,8 +35,8 @@ Which Mule transports do you want to include in this project?
             <name>modules</name>
             <description>Which Mule modules do you want to include in this project?
 
-(options: bulders,client,jaas,jbossts,management,ognl,pgp,scripting,
-          spring-extras,sxc,xml):
+(options: bulders, client, jaas, jbossts, management, ognl, pgp, scripting,
+          spring-extras, sxc, xml):
 
             </description>
             <defvalue>client,management,scripting,sxc,xml</defvalue>

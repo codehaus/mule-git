@@ -1,16 +1,33 @@
+#* Common variables for all archetypes *#
 #set($ModuleName = "$artifactId")
 #set($ModuleName = "${ModuleName.substring(0,1).toUpperCase()}${ModuleName.substring(1).toLowerCase()}")
 #set($ModuleNameLower = "${ModuleName.toLowerCase()}")
 #set($MuleVersion = "$muleVersion")
-#set($id = "")
+
+#set($MuleMajorMinorVersion = "$MuleVersion.substring(0, 3)")
+
+#set($transports = $transports.replaceAll(" ", ""))
+#set($modules = $modules.replaceAll(" ", ""))
+
+#if($transports.indexOf("vm") == -1)
+  #set($transports = "$transports,vm")
+#end
+
+#if($transports.indexOf("stdio") == -1)
+  #set($transports = "$transports,stdio")
+#end
+#set( $transportArray = $transports.split(",") )
+
+#if($modules.indexOf("client") == -1)
+  #set($modules = "$modules,client")
+#end
+#set( $moduleArray = $modules.split(",") )
+
+#* Setting specifict to this archetype *#
 #set($package = "org/mule/example")
 #set($groupId = "org.mule.examples")
 #set($artifactId = "mule-example-${ModuleNameLower}")
 #set($ModuleType = "Example")
-
-#set($MuleMajorMinorVersion = "$MuleVersion.substring(0, 3)")
-#set( $transportArray = $transports.split(",") )
-#set( $moduleArray = $modules.split(",") )
 
 WELCOME
 =======

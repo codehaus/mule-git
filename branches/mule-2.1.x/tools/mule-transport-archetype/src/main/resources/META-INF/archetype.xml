@@ -115,9 +115,9 @@ transformer? (i.e. ObjectToJmsMessage)
             <description>
 Which Mule transports do you want to include in this project? If you intend extending a transport you should add it here:
 
-(options: axis,cxf,ejb,file,ftp,http,https,imap,imaps,jbpm,jdbc,
-          jetty,jms,multicast,pop3,pop3s,quartz,rmi,servlet,smtp,
-          smtps,servlet,ssl,tls,stdio,tcp,udp,vm,xmpp):
+(options: axis, cxf, ejb, file, ftp, http, https, imap, imaps, jbpm, jdbc,
+          jetty, jetty-ssl, jms, jnp, multicast, pop3, pop3s, quartz, rmi, servlet,
+          smtp, smtps, servlet, ssl, tls, stdio, tcp, udp, vm, xmpp):
 
             </description>
             <defvalue>vm</defvalue>
@@ -127,8 +127,8 @@ Which Mule transports do you want to include in this project? If you intend exte
             <description>
 Which Mule modules do you want to include in this project? The client is added for testing:
 
-(options: bulders,client,jaas,jbossts,management,ognl,pgp,scripting,
-          spring-extras,sxc,xml):
+(options: bulders, client, jaas, jbossts, management, ognl, pgp, scripting,
+          spring-extras, sxc, xml):
 
             </description>
             <defvalue>client</defvalue>
