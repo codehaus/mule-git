@@ -33,7 +33,7 @@ public class CatalogServiceImpl implements CatalogService, Initialisable
         books = new HashMap <Long, Book> ();
         addBook(new Book("J.R.R. Tolkien", "The Fellowship of the Ring", 8));
         addBook(new Book("J.R.R. Tolkien", "The Two Towers", 10));
-        addBook(new Book("J.R.R. Tolkien", "Return of the King", 10));
+        addBook(new Book("J.R.R. Tolkien", "The Return of the King", 10));
     }
 
     public long addBook(Book book)
