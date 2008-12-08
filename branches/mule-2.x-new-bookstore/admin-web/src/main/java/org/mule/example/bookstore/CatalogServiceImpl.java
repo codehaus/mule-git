@@ -1,5 +1,5 @@
 /*
- * $$Id: BookstoreImpl.java 13564 2008-12-05 21:55:22Z tcarlson $$
+ * $Id$
  * --------------------------------------------------------------------------------------
  * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
  *
@@ -21,17 +21,32 @@ import javax.jws.WebService;
 import org.mule.api.lifecycle.Initialisable;
 import org.mule.api.lifecycle.InitialisationException;
 
+/**
+ * Bookstore catalog service which implements both the public interface for 
+ * browsing the catalog and the admin interface for adding books to the catalog.
+ * 
+ * @see CatalogService
+ * @see CatalogAdminService
+ */
 @WebService(serviceName="CatalogService", endpointInterface="org.mule.example.bookstore.CatalogService")
 public class CatalogServiceImpl implements CatalogService, CatalogAdminService, Initialisable
 {
+	/** Simple hashmap used to store the catalog, in real life this would be a database */
     private Map <Long, Book> books = new HashMap <Long, Book> ();
     
     public void initialise() throws InitialisationException
     {
         books = new HashMap <Long, Book> ();
+
+        // Add some initial test data
         addBook(new Book("J.R.R. Tolkien", "The Fellowship of the Ring", 8));
         addBook(new Book("J.R.R. Tolkien", "The Two Towers", 10));
         addBook(new Book("J.R.R. Tolkien", "The Return of the King", 10));
+        addBook(new Book("C.S. Lewis", "The Lion, the Witch and the Wardrobe", 6));
+        addBook(new Book("C.S. Lewis", "Prince Caspian", 8));
+        addBook(new Book("C.S. Lewis", "The Voyage of the Dawn Treader", 6));
+        addBook(new Book("C.S. Lewis", "The Silver Chair", 8));
+        addBook(new Book("C.S. Lewis", "The Last Battle", 10));
     }
 
     public long addBook(Book book)

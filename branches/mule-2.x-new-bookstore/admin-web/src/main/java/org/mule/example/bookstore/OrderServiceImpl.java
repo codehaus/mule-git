@@ -12,9 +12,11 @@ package org.mule.example.bookstore;
 
 import javax.jws.WebService;
 
-@WebService(serviceName="OrderService",
-    portName="OrderPort",
-    endpointInterface="org.mule.example.bookstore.OrderService")
+/**
+ * Service for placing a book order.
+ * @see OrderService
+ */
+@WebService(serviceName="OrderService", endpointInterface="org.mule.example.bookstore.OrderService")
 public class OrderServiceImpl implements OrderService
 {
     public Order orderBook(Book book, int quantity, String address, String email)

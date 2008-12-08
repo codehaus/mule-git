@@ -10,6 +10,9 @@
 
 package org.mule.example.bookstore.web;
 
+/**
+ * Poor man's CSS stylesheet
+ */
 public class HtmlTemplate
 {
     public static String wrapHtmlBody(String body)

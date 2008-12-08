@@ -17,6 +17,9 @@ import org.mule.example.bookstore.Order;
 import org.mule.transformer.AbstractTransformer;
 import org.mule.transport.email.MailProperties;
 
+/**
+ * Composes an e-mail notification message to be sent based on the Book Order.
+ */
 public class OrderToEmailTransformer extends AbstractTransformer
 {
     public OrderToEmailTransformer()
@@ -31,17 +34,16 @@ public class OrderToEmailTransformer extends AbstractTransformer
     {
         Order order = (Order) src;
         Book book = order.getBook();
-        String address = order.getAddress();
-        String email = order.getEmail();
         
         String body =  "Thank you for placing your order for " +
-                       book.getTitle() + " with Mule Bookstore. " +
+                       book.getTitle() + " with the Mule-powered On-line Bookstore. " +
                        "Your order will be shipped  to " + 
-                       address + " by 3 PM today!";
+                       order.getAddress() + " by the next business day.";
         
+        String email = order.getEmail();
         RequestContext.getEventContext().getMessage().setProperty(
                       MailProperties.TO_ADDRESSES_PROPERTY, email);
-        System.out.println("Sent email to " + email);
+        logger.info("Sending e-mail notification to " + email);
         return body;
     }
 }

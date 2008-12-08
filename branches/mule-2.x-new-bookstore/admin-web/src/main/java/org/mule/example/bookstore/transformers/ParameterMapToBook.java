@@ -18,6 +18,11 @@ import org.mule.util.StringUtils;
 
 import java.util.Map;
 
+/**
+ * Transforms a Map of HttpRequest parameters into a Book object.  
+ * The request parameters are always strings (they come from the HTML form), 
+ * so we need to parse and convert them to their appropriate types.
+ */
 public class ParameterMapToBook extends AbstractTransformer
 {
     public ParameterMapToBook()
@@ -51,7 +56,4 @@ public class ParameterMapToBook extends AbstractTransformer
 
         return new Book(author, title, Double.parseDouble(price));
     }
-
 }
-
-
