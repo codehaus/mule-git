@@ -10,6 +10,11 @@
 
 package org.mule.example.bookstore;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
+
 import org.mule.example.bookstore.web.HtmlTemplate;
 
 /**
@@ -20,8 +25,8 @@ public class DataWarehouse
     int booksOrdered = 0;
     double totalRevenue = 0;
     double averagePrice = 0;
-    // TODO Create a HashMap to track quantities and determine the bestseller
-    String bestSeller;
+    Map <String, Integer> sales = new HashMap <String, Integer> ();
+    String bestSeller = "";
     
     public String updateStats(Order order)
     {
@@ -29,10 +34,39 @@ public class DataWarehouse
         booksOrdered += order.getQuantity();
         totalRevenue += (book.getPrice() * order.getQuantity());
         averagePrice = totalRevenue / booksOrdered;
-        bestSeller = book.getTitle();
+
+        String title = book.getTitle();
+        Integer quantity = sales.get(title);
+        if (quantity == null)
+        {
+        	sales.put(title, 1);
+        }
+        else
+        {
+        	sales.put(title, quantity + 1);
+        }
+        bestSeller = getBestSeller();
         
         System.out.println("Updating stats");
         return HtmlTemplate.wrapHtmlBody(printHtmlStats());
+    }
+
+    protected String getBestSeller()
+    {
+    	String title = "";
+    	int quantity = 0;
+    	Iterator it = sales.entrySet().iterator();
+    	Entry <String, Integer> entry;
+    	while (it.hasNext())
+    	{
+    		entry = (Entry <String, Integer>) it.next();
+    		if (entry.getValue() > quantity)
+    		{
+    			title = entry.getKey();
+    			quantity = entry.getValue();
+    		}    		
+    	}
+    	return title;
     }
     
     protected String printHtmlStats()
