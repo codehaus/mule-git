@@ -79,7 +79,7 @@
 	if (submitted != null && quantity > 0 && address != null && email != null) 
 	{
 		// Invoke CXF web service
-          JaxWsProxyFactoryBean pf2 = new JaxWsProxyFactoryBean();
+        JaxWsProxyFactoryBean pf2 = new JaxWsProxyFactoryBean();
 	    pf2.setServiceClass(OrderService.class);
 	    pf2.setAddress(OrderService.URL);
 	    OrderService orderService = (OrderService) pf2.create();	

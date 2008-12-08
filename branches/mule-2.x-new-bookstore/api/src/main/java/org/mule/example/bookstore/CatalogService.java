@@ -15,16 +15,21 @@ import java.util.Collection;
 import javax.jws.WebParam;
 import javax.jws.WebResult;
 import javax.jws.WebService;
-// START SNIPPET: interface
+
+/** 
+ * Interface for working with the bookstore's catalog of books 
+ */
 @WebService
 public interface CatalogService
 {
+	/** The catalog will be accesible as a web service at this URL */
 	static final String URL = "http://localhost:8777/services/catalog";
-	
-    @WebResult(name="book") 
-    Book getBook(@WebParam(name="bookId") long bookId);
 
+	/** Return a collection of all books in the catalog */
     @WebResult(name="books") 
     Collection<Book> getBooks();
+
+	/** Look up the details for a particular book by ID */
+    @WebResult(name="book") 
+    Book getBook(@WebParam(name="bookId") long bookId);
 }
-// END SNIPPET: interface

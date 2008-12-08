@@ -45,6 +45,7 @@
 
     if (submitted != null) 
     {
+	    // Invoke the CXF web service
         JaxWsProxyFactoryBean pf = new JaxWsProxyFactoryBean();
         pf.setServiceClass(CatalogService.class);
         pf.setAddress(CatalogService.URL);

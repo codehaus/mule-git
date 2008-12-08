@@ -10,11 +10,16 @@
 
 package org.mule.example.bookstore;
 
+/**
+ * Simple class which represents a Book Order.
+ */
 public class Order 
 {
     private Book book;
     private int quantity;
+    /** Shipping address */
     private String address;
+    /** E-mail address used to receive order notifications */
     private String email;
     
     public Order()

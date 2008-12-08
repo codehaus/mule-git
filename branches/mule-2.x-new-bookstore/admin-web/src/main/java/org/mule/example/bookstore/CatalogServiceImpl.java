@@ -21,12 +21,10 @@ import javax.jws.WebService;
 import org.mule.api.lifecycle.Initialisable;
 import org.mule.api.lifecycle.InitialisationException;
 
-@WebService(serviceName="CatalogService",
-    portName="CatalogPort",
-    endpointInterface="org.mule.example.bookstore.CatalogService")
-public class CatalogServiceImpl implements CatalogService, Initialisable
+@WebService(serviceName="CatalogService", endpointInterface="org.mule.example.bookstore.CatalogService")
+public class CatalogServiceImpl implements CatalogService, CatalogAdminService, Initialisable
 {
-    private Map < Long, Book > books = new HashMap < Long, Book > ();
+    private Map <Long, Book> books = new HashMap <Long, Book> ();
     
     public void initialise() throws InitialisationException
     {
@@ -45,9 +43,9 @@ public class CatalogServiceImpl implements CatalogService, Initialisable
         return id;
     }
 
-    public Collection < Long > addBooks(Collection < Book > books)
+    public Collection <Long> addBooks(Collection <Book> books)
     {
-        List < Long > ids = new ArrayList < Long > ();
+        List <Long> ids = new ArrayList <Long> ();
         if (books != null)
         {
             for (Book book : books)
@@ -58,7 +56,7 @@ public class CatalogServiceImpl implements CatalogService, Initialisable
         return ids;
     }
 
-    public Collection < Book > getBooks()
+    public Collection <Book> getBooks()
     {
         return books.values();
     }

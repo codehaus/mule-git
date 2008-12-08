@@ -10,6 +10,9 @@
 
 package org.mule.example.bookstore;
 
+/**
+ * Simple class which represents a Book in the catalog of the bookstore.
+ */
 public class Book 
 {
     private long id;
