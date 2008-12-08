@@ -13,6 +13,12 @@
 
 <body link="#FFFFFF" vlink="#FFFFFF" alink="#FFFFFF" bgcolor="#990000" text="#FFFFFF">
 
+<center>
+<h3>Bookstore Administration Console</h3>
+<i>With great power comes great responsibility...</i>
+</center>
+<hr/>
+
 <h2>Add a new book</h2>
 <form method="POST" name="addBook" action="/bookstore-admin/services/catalog">
     <table>

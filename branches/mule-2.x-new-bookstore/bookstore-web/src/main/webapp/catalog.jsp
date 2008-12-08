@@ -12,7 +12,7 @@
 <title>On-line Bookstore</title>
 </head>
 
-<body link="#FFFFFF" vlink="#FFFFFF" alink="#FFFFFF" bgcolor="#990000" text="#FFFFFF">
+<body link="#FFFFFF" vlink="#FFFFFF" alink="#FFFFFF" bgcolor="#000055" text="#FFFFFF">
 
 <%
     String field = request.getParameter("title");
