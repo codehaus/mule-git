@@ -73,10 +73,10 @@ public class DataWarehouse
     {
         String output = "<h2>Data Warehouse Statistics</h2>";
         output += "<table>";
-        output += "<tr><td>Total orders</td> <td>" + booksOrdered + "</td></tr>";
-        output += "<tr><td>Total revenue</td> <td>$" + totalRevenue + "</td></tr>";
-        output += "<tr><td>Average price</td> <td>$" + averagePrice + "</td></tr>";
-        output += "<tr><td>Best seller</td> <td>" + bestSeller + "</td></tr>";
+        output += "<tr><th>Total orders</th> <td>" + booksOrdered + "</td></tr>";
+        output += "<tr><th>Total revenue</th> <td>$" + totalRevenue + "</td></tr>";
+        output += "<tr><th>Average price</th> <td>$" + averagePrice + "</td></tr>";
+        output += "<tr><th>Best seller</th> <td>" + bestSeller + "</td></tr>";
         output += "</table>";
         return output;
     }
