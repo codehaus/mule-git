@@ -33,9 +33,8 @@
 </form>
 
 <h2>Get latest statistics from Data Warehouse</h2>
-<form method="GET" name="getStats" action="/bookstore-admin/services">
-    <input type="hidden" name="endpoint" value="stats"/>
-    <input type="submit" name="submit" value="Get" />
+<form method="GET" name="getStats" action="/bookstore-admin/services/stats">
+    <input type="submit" name="submit" value="Get stats" />
 </form>
 
 <hr/>
