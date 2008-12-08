@@ -14,7 +14,7 @@
 <body link="#FFFFFF" vlink="#FFFFFF" alink="#FFFFFF" bgcolor="#990000" text="#FFFFFF">
 
 <h2>Add a new book</h2>
-<form method="POST" name="addBook" action="/bookstore-admin/rest/catalog">
+<form method="POST" name="addBook" action="/bookstore-admin/services/catalog">
     <table>
         <tr>
         	<td>Title: </td>
@@ -33,7 +33,7 @@
 </form>
 
 <h2>Get latest statistics from Data Warehouse</h2>
-<form method="GET" name="getStats" action="/bookstore-admin/rest">
+<form method="GET" name="getStats" action="/bookstore-admin/services">
     <input type="hidden" name="endpoint" value="stats"/>
     <input type="submit" name="submit" value="Get" />
 </form>
