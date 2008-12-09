@@ -2757,7 +2757,7 @@
                  substitutionGroup="abstract-exception-strategy">
         <xsd:annotation>
             <xsd:documentation>
-                A user-defined exception stratgey.
+                A user-defined exception strategy.
             </xsd:documentation>
         </xsd:annotation>
     </xsd:element>
