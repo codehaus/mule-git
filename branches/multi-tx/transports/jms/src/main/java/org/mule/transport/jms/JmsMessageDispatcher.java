@@ -20,6 +20,7 @@ import org.mule.api.transaction.Transaction;
 import org.mule.api.transport.Connector;
 import org.mule.api.transport.DispatchException;
 import org.mule.api.transport.MessageAdapter;
+import org.mule.transaction.TransactionCollection;
 import org.mule.transaction.TransactionCoordination;
 import org.mule.transport.AbstractMessageDispatcher;
 import org.mule.transport.jms.i18n.JmsMessages;
@@ -88,6 +89,8 @@ public class JmsMessageDispatcher extends AbstractMessageDispatcher
         boolean cached = false;
         boolean remoteSync = returnResponse(event);
 
+        final Transaction muleTx = TransactionCoordination.getInstance().getTransaction();
+
         if (logger.isDebugEnabled())
         {
             logger.debug("dispatching on endpoint: " + event.getEndpoint().getEndpointURI()
@@ -127,7 +130,6 @@ public class JmsMessageDispatcher extends AbstractMessageDispatcher
             else
             {
                 // by now we're running with a different connector and connection
-                final Transaction muleTx = TransactionCoordination.getInstance().getTransaction();
                 sessionManaged = muleTx != null && muleTx.isXA();
 
                 session = connector.getSession(event.getEndpoint());
@@ -347,7 +349,7 @@ public class JmsMessageDispatcher extends AbstractMessageDispatcher
                 }
             }
 
-            if (!sessionManaged && transacted) {
+            if (!sessionManaged && transacted && muleTx instanceof TransactionCollection) {
                 handleMultiTx(session);
             }
 
