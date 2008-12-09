@@ -39,11 +39,11 @@ public class DataWarehouse
         Integer quantity = sales.get(title);
         if (quantity == null)
         {
-        	sales.put(title, 1);
+        	sales.put(title, order.getQuantity());
         }
         else
         {
-        	sales.put(title, quantity + 1);
+        	sales.put(title, quantity + order.getQuantity());
         }
         bestSeller = getBestSeller();
         
