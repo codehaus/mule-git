@@ -45,8 +45,14 @@ public class CatalogServiceImpl implements CatalogService, CatalogAdminService, 
         addBook(new Book("C.S. Lewis", "The Lion, the Witch and the Wardrobe", 6));
         addBook(new Book("C.S. Lewis", "Prince Caspian", 8));
         addBook(new Book("C.S. Lewis", "The Voyage of the Dawn Treader", 6));
-        addBook(new Book("C.S. Lewis", "The Silver Chair", 8));
-        addBook(new Book("C.S. Lewis", "The Last Battle", 10));
+        addBook(new Book("Leo Tolstoy", "War and Peace", 8));
+        addBook(new Book("Leo Tolstoy", "Anna Karenina", 6));
+        addBook(new Book("Henry David Thoreau", "Walden", 8));
+        addBook(new Book("Harriet Beecher Stowe", "Uncle Tom's Cabin", 6));
+        addBook(new Book("George Orwell", "1984", 8));
+        addBook(new Book("George Orwell", "Animal Farm", 8));
+        addBook(new Book("Aldous Huxley", "Brave New World", 8));
+
     }
 
     public long addBook(Book book)
