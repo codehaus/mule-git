@@ -14,16 +14,20 @@
     <properties>
         <muleVersion>2.2.0-SNAPSHOT</muleVersion>
         <cxfVersion>2.1.2</cxfVersion>
+        <geronimoSpecsWsMetadataVersion>1.1.2</geronimoSpecsWsMetadataVersion>
+        <jettyVersion>6.1.11</jettyVersion>
+        <xalanVersion>2.7.1</xalanVersion>
     </properties>
 
     <modules>
         <module>api</module>
         <module>admin-web</module>
         <module>bookstore-web</module>
-        <module>bookstore-console</module>
     </modules>
 
     <build>
+        <defaultGoal>install</defaultGoal>
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

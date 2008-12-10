@@ -16,7 +16,7 @@
             <dependency>
                 <groupId>org.apache.geronimo.specs</groupId>
                 <artifactId>geronimo-ws-metadata_2.0_spec</artifactId>
-                <version>1.1.2</version>
+                <version>${geronimoSpecsWsMetadataVersion}</version>
             </dependency>
     </dependencies>
 </project>
