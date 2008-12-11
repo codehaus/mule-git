@@ -37,9 +37,10 @@ public class TransactionDefinitionParser extends AbstractSingleParentFamilyDefin
 
     public TransactionDefinitionParser(String factoryClassName)
     {
+        Class factoryClass;
         try
         {
-            ClassUtils.loadClass(factoryClassName, getClass());
+            factoryClass = ClassUtils.loadClass(factoryClassName, getClass());
         }
         catch (Exception e)
         {
@@ -47,6 +48,10 @@ public class TransactionDefinitionParser extends AbstractSingleParentFamilyDefin
             throw new UnsupportedOperationException("Multi-transaction support is an EE-only feature. " +
                                                     "Please consider upgrading to Mule EE.");
         }
+        commonInit(factoryClass);
+        MuleDefinitionParser factoryParser = getDelegate(1);
+        // don't allow these if the class is specified in the constructor
+        factoryParser.registerPreProcessor(new BlockAttribute(new String[]{FACTORY_CLASS, FACTORY_REF}));
     }
 
     public TransactionDefinitionParser(Class factoryClass)
