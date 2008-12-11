@@ -42,9 +42,8 @@ public class TransactionDefinitionParser extends AbstractSingleParentFamilyDefin
         {
             factoryClass = ClassUtils.loadClass(factoryClassName, getClass());
         }
-        catch (Exception e)
+        catch (ClassNotFoundException e)
         {
-            logger.debug(e);
             throw new UnsupportedOperationException("Multi-transaction support is an EE-only feature. " +
                                                     "Please consider upgrading to Mule EE.");
         }
