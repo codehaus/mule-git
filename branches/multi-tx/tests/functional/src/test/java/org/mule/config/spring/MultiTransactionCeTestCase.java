@@ -32,7 +32,6 @@ public class MultiTransactionCeTestCase extends org.mule.tck.FunctionalTestCase
         {
             Throwable t = ExceptionUtils.getRootCause(e);
             assertNotNull(t);
-            assertTrue("Not an instance of UnsupportedOperationException", t instanceof UnsupportedOperationException);
             assertTrue("Wrong exception?", t.getMessage().contains("EE-only feature"));
         }
 
