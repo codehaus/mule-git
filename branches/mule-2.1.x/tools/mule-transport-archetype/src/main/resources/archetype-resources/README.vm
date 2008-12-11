@@ -1,11 +1,11 @@
 #* Common variables for all archetypes *#
-#set($ModuleName = "$artifactId")
 #if($transportId != "")
   #set($ModuleName = "$transportId")
 #else
   #set($ModuleName = "$artifactId")
 #end
 #set($ModuleName = $ModuleName.replaceAll("[-_!@#$%^&*()+:; ]", ""))
+#set($ModuleName = "${ModuleName.substring(0,1).toUpperCase()}${ModuleName.substring(1)}")
 #set($ModuleNameLower = "${ModuleName.toLowerCase()}")
 #set($MuleVersion = "$muleVersion")
 
