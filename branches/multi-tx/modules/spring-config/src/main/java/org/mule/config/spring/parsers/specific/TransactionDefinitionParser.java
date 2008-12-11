@@ -15,6 +15,7 @@ import org.mule.config.spring.parsers.MuleDefinitionParser;
 import org.mule.config.spring.parsers.delegate.AbstractSingleParentFamilyDefinitionParser;
 import org.mule.config.spring.parsers.generic.ChildDefinitionParser;
 import org.mule.config.spring.parsers.processors.BlockAttribute;
+import org.mule.util.ClassUtils;
 
 /**
  * Generates a transaction config with embedded factory.  If no factory is defined, it's taken from the
@@ -32,6 +33,20 @@ public class TransactionDefinitionParser extends AbstractSingleParentFamilyDefin
     public TransactionDefinitionParser()
     {
         commonInit(null);
+    }
+
+    public TransactionDefinitionParser(String factoryClassName)
+    {
+        try
+        {
+            ClassUtils.loadClass(factoryClassName, getClass());
+        }
+        catch (Exception e)
+        {
+            logger.debug(e);
+            throw new UnsupportedOperationException("Multi-transaction support is an EE-only feature. " +
+                                                    "Please consider upgrading to Mule EE.");
+        }
     }
 
     public TransactionDefinitionParser(Class factoryClass)
