@@ -10,6 +10,9 @@
 
 package org.mule.config.spring.parsers.specific;
 
+import org.mule.api.MuleRuntimeException;
+import org.mule.config.i18n.MessageFactory;
+import org.mule.config.spring.handlers.MuleNamespaceHandler;
 import org.mule.config.spring.parsers.AbstractMuleBeanDefinitionParser;
 import org.mule.config.spring.parsers.MuleDefinitionParser;
 import org.mule.config.spring.parsers.delegate.AbstractSingleParentFamilyDefinitionParser;
@@ -44,8 +47,16 @@ public class TransactionDefinitionParser extends AbstractSingleParentFamilyDefin
         }
         catch (ClassNotFoundException e)
         {
-            throw new UnsupportedOperationException("Multi-transaction support is an EE-only feature. " +
-                                                    "Please consider upgrading to Mule EE.");
+            if (MuleNamespaceHandler.TRANSACTION_COLLECTION_FACTORY_CLASSNAME.equals(factoryClassName))
+            {
+                throw new UnsupportedOperationException("Multi-transaction support is an EE-only feature. " +
+                                                        "Please consider upgrading to Mule EE.");
+            }
+            else
+            {
+                throw new MuleRuntimeException(
+                        MessageFactory.createStaticMessage("Failed to load factory class " + factoryClassName), e);
+            }
         }
         commonInit(factoryClass);
         MuleDefinitionParser factoryParser = getDelegate(1);

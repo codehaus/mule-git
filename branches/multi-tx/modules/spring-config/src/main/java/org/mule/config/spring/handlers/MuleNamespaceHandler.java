@@ -163,7 +163,7 @@ import org.mule.util.store.TextFileObjectStore;
 public class MuleNamespaceHandler extends AbstractMuleNamespaceHandler
 {
 
-    protected static final String TRANSACTION_COLLECTION_FACTORY_CLASSNAME = "org.mule.transaction.TransactionCollectionFactory";
+    public static final String TRANSACTION_COLLECTION_FACTORY_CLASSNAME = "org.mule.transaction.TransactionCollectionFactory";
 
     public void init()
     {
