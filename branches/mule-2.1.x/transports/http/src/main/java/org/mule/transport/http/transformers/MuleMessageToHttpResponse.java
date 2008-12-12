@@ -183,6 +183,19 @@ public class MuleMessageToHttpResponse extends AbstractMessageAwareTransformer
         String contentType = msg.getStringProperty(HttpConstants.HEADER_CONTENT_TYPE,
             HttpConstants.DEFAULT_CONTENT_TYPE);
 
+        // MULE-4047 Don't explicitly set the content-type to a default value here, 
+        // otherwise any settings on the servlet/transport will be happily ignored.
+        //if (contentType == null)
+        //{
+        //    contentType = HttpConstants.DEFAULT_CONTENT_TYPE;
+        //
+        //    if (encoding != null)
+        //    {
+        //        contentType += "; charset=" + encoding;
+        //    }
+        //    logger.warn("Content-Type was not set, defaulting to: " + contentType);
+        //}
+
         response.setStatusLine(HttpVersion.parse(version), status);
         response.setHeader(new Header(HttpConstants.HEADER_CONTENT_TYPE, contentType));
         response.setHeader(new Header(HttpConstants.HEADER_DATE, date));
