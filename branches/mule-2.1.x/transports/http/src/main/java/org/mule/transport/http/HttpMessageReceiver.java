@@ -254,12 +254,25 @@ public class HttpMessageReceiver extends TcpMessageReceiver
             MessageAdapter adapter = buildStandardAdapter(request, headers);
 
             MuleMessage message = new DefaultMuleMessage(adapter);
+            
 
+            String path = (String) message.getProperty(HttpConnector.HTTP_REQUEST_PROPERTY);
+            int i = path.indexOf('?');
+            if (i > -1)
+            {
+                path = path.substring(0, i);
+            }
+
+            message.setProperty(HttpConnector.HTTP_REQUEST_PATH_PROPERTY, path);
+            
             if (logger.isDebugEnabled())
             {
                 logger.debug(message.getProperty(HttpConnector.HTTP_REQUEST_PROPERTY));
             }
 
+            message.setProperty(HttpConnector.HTTP_CONTEXT_PATH_PROPERTY, 
+                HttpConnector.normalizeUrl(endpoint.getEndpointURI().getPath()));
+            
             // determine if the request path on this request denotes a different receiver
             MessageReceiver receiver = getTargetReceiver(message, endpoint);
 
@@ -396,7 +409,7 @@ public class HttpMessageReceiver extends TcpMessageReceiver
         {
             EndpointURI uri = endpoint.getEndpointURI();
             String failedPath = uri.getScheme() + "://" + uri.getHost() + ":" + uri.getPort()
-                    + getRequestPath(message);
+                    + message.getProperty(HttpConnector.HTTP_REQUEST_PATH_PROPERTY);
 
             if (logger.isDebugEnabled())
             {
@@ -473,17 +486,6 @@ public class HttpMessageReceiver extends TcpMessageReceiver
             conn.close();
             conn = null;
         }
-    }
-
-    protected String getRequestPath(MuleMessage message)
-    {
-        String path = (String) message.getProperty(HttpConnector.HTTP_REQUEST_PROPERTY);
-        int i = path.indexOf('?');
-        if (i > -1)
-        {
-            path = path.substring(0, i);
-        }
-        return path;
     }
 
     protected MessageReceiver getTargetReceiver(MuleMessage message, ImmutableEndpoint endpoint)

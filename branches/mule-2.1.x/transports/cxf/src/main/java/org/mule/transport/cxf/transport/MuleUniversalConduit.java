@@ -47,6 +47,7 @@ import org.apache.cxf.message.Message;
 import org.apache.cxf.message.MessageImpl;
 import org.apache.cxf.phase.AbstractPhaseInterceptor;
 import org.apache.cxf.phase.Phase;
+import org.apache.cxf.service.Service;
 import org.apache.cxf.service.model.EndpointInfo;
 import org.apache.cxf.transport.AbstractConduit;
 import org.apache.cxf.transport.Destination;
@@ -77,6 +78,8 @@ public class MuleUniversalConduit extends AbstractConduit
 
     private int decoupledDestinationRefCount;
 
+    private boolean closeInput;
+
     /**
      * @param ei The Endpoint being invoked by this destination.
      * @param t The EPR associated with this Conduit - i.e. the reply destination.
@@ -90,6 +93,24 @@ public class MuleUniversalConduit extends AbstractConduit
         this.transport = transport;
         this.endpoint = ei;
         this.connector = connector;
+    }
+    
+    public void close(Message msg) throws IOException
+    {
+        OutputStream os = msg.getContent(OutputStream.class);
+        if (os != null)
+        {
+            os.close();
+        }
+        
+        if (closeInput) 
+        {
+            InputStream in = msg.getContent(InputStream.class);
+            if (in != null)
+            {
+                in.close();
+            }
+        }
     }
 
     @Override
@@ -355,5 +376,25 @@ public class MuleUniversalConduit extends AbstractConduit
 
             incomingObserver.onMessage(inMessage);
         }
+    }
+    
+    public void setCloseInput(boolean closeInput)
+    {
+        this.closeInput = closeInput;
+    }
+
+    protected CxfConnector getConnector()
+    {
+        return connector;
+    }
+
+    protected EndpointInfo getEndpoint()
+    {
+        return endpoint;
+    }
+
+    protected MuleUniversalTransport getTransport()
+    {
+        return transport;
     }
 }
