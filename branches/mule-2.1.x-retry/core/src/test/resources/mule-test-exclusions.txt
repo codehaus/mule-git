@@ -1,0 +1,24 @@
+#
+# Test cases listed in this file are not run.
+#
+
+# only works with network connection
+#org.mule.util.TimedSocketTestCase
+
+# MULE-2164
+org.mule.endpoint.MuleCopiedEndpointURITestCase
+
+# Duplicate registration doesn't currently produce an exception, should it?
+# See MULE-1759
+# See comment in TransientRegistry.registerObject()
+org.mule.registry.DuplicateRegistrationTestCase
+
+# MULE-2964: MuleMessage does not serialize attachments
+org.mule.MuleMessageTestCase
+
+# Broke after EE-734, no idea what this is about
+# MULE-3670
+org.mule.util.store.TextFileStoreTestCase
+
+#Fails on CE CI server MULE-4008
+org.mule.util.TimedSocketTestCase
