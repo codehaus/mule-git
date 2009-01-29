@@ -53,7 +53,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class MultiConsumerJmsMessageReceiver extends AbstractMessageReceiver
 {
-    protected final BlockingDeque consumers;
+    protected BlockingDeque consumers;
 
     protected volatile int receiversCount;
 
@@ -81,8 +81,6 @@ public class MultiConsumerJmsMessageReceiver extends AbstractMessageReceiver
         {
             logger.debug("Creating " + receiversCount + " sub-receivers for " + endpoint.getEndpointURI());
         }
-
-        consumers = new LinkedBlockingDeque(receiversCount);
     }
 
     protected void doStart() throws MuleException
@@ -126,7 +124,7 @@ public class MultiConsumerJmsMessageReceiver extends AbstractMessageReceiver
     {
         logger.debug("doConnect()");
 
-        consumers.clear();
+        consumers = new LinkedBlockingDeque(receiversCount);
         for (int i = 0; i < receiversCount; i++)
         {
             SubReceiver sub = new SubReceiver();
@@ -166,6 +164,7 @@ public class MultiConsumerJmsMessageReceiver extends AbstractMessageReceiver
                 }
             }
             consumers.clear();
+            consumers = null;
         }
     }
 
