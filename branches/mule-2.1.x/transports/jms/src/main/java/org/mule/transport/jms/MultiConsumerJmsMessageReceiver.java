@@ -127,8 +127,19 @@ public class MultiConsumerJmsMessageReceiver extends AbstractMessageReceiver
         for (int i = 0; i < receiversCount; i++)
         {
             SubReceiver sub = new SubReceiver();
-            sub.doConnect();
-            consumers.addLast(sub);
+            try
+            {
+                sub.doConnect();
+            }
+            catch (FatalException fex)
+            {
+                sub.doDisconnect();
+                throw fex;
+            }
+            finally
+            {
+                consumers.addLast(sub);
+            }
         }
     }
 
