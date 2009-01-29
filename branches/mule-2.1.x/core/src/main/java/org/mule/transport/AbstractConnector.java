@@ -699,11 +699,9 @@ public abstract class AbstractConnector
      */
     public void handleException(Exception exception)
     {
-        boolean retry = 
-            exception instanceof ConnectException 
-            && !(retryPolicyTemplate instanceof NoRetryPolicyTemplate);
-            
-        if (retry)
+        if (isConnected() &&
+            exception instanceof ConnectException &&      
+            !(retryPolicyTemplate instanceof NoRetryPolicyTemplate))
         {
             logger.info("Exception caught is a ConnectException, attempting to reconnect...");
             try

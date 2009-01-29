@@ -21,6 +21,7 @@ import org.mule.api.retry.RetryContext;
 import org.mule.api.retry.RetryPolicyTemplate;
 import org.mule.api.transport.Connectable;
 import org.mule.api.transport.Connector;
+import org.mule.config.i18n.MessageFactory;
 import org.mule.context.notification.ConnectionNotification;
 import org.mule.util.ClassUtils;
 import org.mule.util.concurrent.WaitableBoolean;
@@ -102,31 +103,7 @@ public abstract class AbstractConnectable implements Connectable, ExceptionListe
 
     public void handleException(Exception exception)
     {
-        if (exception instanceof ConnectException)
-        {
-            logger.info("Exception caught is a ConnectException, disconnecting receiver and invoking ReconnectStrategy");
-            try
-            {
-                disconnect();
-            }
-            catch (Exception e)
-            {
-                connector.getExceptionListener().exceptionThrown(e);
-            }
-        }
-        connector.getExceptionListener().exceptionThrown(exception);
-        if (exception instanceof ConnectException)
-        {
-            try
-            {
-                logger.warn("Reconnecting after exception: " + exception.getMessage(), exception);
-                connect();
-            }
-            catch (Exception e)
-            {
-                connector.getExceptionListener().exceptionThrown(e);
-            }
-        }
+        connector.handleException(exception);
     }
 
     public boolean validate()
@@ -212,7 +189,7 @@ public abstract class AbstractConnectable implements Connectable, ExceptionListe
                     {
                         if (logger.isDebugEnabled())
                         {
-                            e.printStackTrace();
+                            logger.debug(e);
                         }
                         throw e;
                     }
