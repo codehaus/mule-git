@@ -14,6 +14,7 @@ import org.mule.api.MuleException;
 import org.mule.api.MuleRuntimeException;
 import org.mule.api.endpoint.InboundEndpoint;
 import org.mule.api.lifecycle.CreateException;
+import org.mule.api.lifecycle.FatalException;
 import org.mule.api.lifecycle.LifecycleException;
 import org.mule.api.service.Service;
 import org.mule.api.transaction.Transaction;
@@ -165,7 +166,6 @@ public class MultiConsumerJmsMessageReceiver extends AbstractMessageReceiver
                 }
             }
             consumers.clear();
-            consumers = null;
         }
     }
 
