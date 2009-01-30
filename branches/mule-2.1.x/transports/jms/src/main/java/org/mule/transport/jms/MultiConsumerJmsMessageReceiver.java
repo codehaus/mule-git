@@ -28,6 +28,7 @@ import org.mule.transport.jms.filters.JmsSelectorFilter;
 import org.mule.util.ClassUtils;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import javax.jms.Destination;
 import javax.jms.JMSException;
@@ -53,7 +54,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class MultiConsumerJmsMessageReceiver extends AbstractMessageReceiver
 {
-    protected BlockingDeque consumers;
+    protected final BlockingDeque consumers;
 
     protected volatile int receiversCount;
 
@@ -81,22 +82,17 @@ public class MultiConsumerJmsMessageReceiver extends AbstractMessageReceiver
         {
             logger.debug("Creating " + receiversCount + " sub-receivers for " + endpoint.getEndpointURI());
         }
+        consumers = new LinkedBlockingDeque(receiversCount);
     }
 
     protected void doStart() throws MuleException
     {
         logger.debug("doStart()");
-        for (int i = 0; i < receiversCount; i++)
+        SubReceiver sub;
+        for (Iterator<SubReceiver> it = consumers.iterator(); it.hasNext();)
         {
-            SubReceiver sub = (SubReceiver) consumers.removeFirst();
-            try
-            {
-                sub.doStart();
-            }
-            finally
-            {
-                consumers.addLast(sub);
-            }
+            sub = it.next();
+            sub.doStart();
         }
     }
 
@@ -105,17 +101,11 @@ public class MultiConsumerJmsMessageReceiver extends AbstractMessageReceiver
         logger.debug("doStop()");
         if (consumers != null)
         {
-            for (int i = 0; i < receiversCount; i++)
+            SubReceiver sub;
+            for (Iterator<SubReceiver> it = consumers.iterator(); it.hasNext();)
             {
-                SubReceiver sub = (SubReceiver) consumers.removeFirst();
-                try
-                {
-                    sub.doStop();
-                }
-                finally
-                {
-                    consumers.addLast(sub);
-                }
+                sub = it.next();
+                sub.doStop();
             }
         }
     }
@@ -124,21 +114,23 @@ public class MultiConsumerJmsMessageReceiver extends AbstractMessageReceiver
     {
         logger.debug("doConnect()");
 
-        consumers = new LinkedBlockingDeque(receiversCount);
+        SubReceiver sub;
         for (int i = 0; i < receiversCount; i++)
         {
-            SubReceiver sub = new SubReceiver();
+            sub = new SubReceiver();
             try
             {
                 sub.doConnect();
             }
             catch (FatalException fex)
             {
+                // Needed for EE-1174
                 sub.doDisconnect();
                 throw fex;
             }
             finally
             {
+                // Needed for EE-1174
                 consumers.addLast(sub);
             }
         }
@@ -148,24 +140,20 @@ public class MultiConsumerJmsMessageReceiver extends AbstractMessageReceiver
     {
         logger.debug("doDisconnect()");
 
-        if (consumers != null)
+        SubReceiver sub;
+        for (Iterator<SubReceiver> it = consumers.iterator(); it.hasNext();)
         {
-            SubReceiver sub;
-            for (int i = 0; i < receiversCount; i++)
+            sub = it.next();
+            try
             {
-                sub = (SubReceiver) consumers.removeFirst();
-                try
-                {
-                    sub.doDisconnect();
-                }
-                finally
-                {
-                    sub = null;
-                }
+                sub.doDisconnect();
             }
-            consumers.clear();
-            consumers = null;
+            finally
+            {
+                sub = null;
+            }
         }
+        consumers.clear();
     }
 
     protected void doDispose()
