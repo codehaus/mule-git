@@ -423,43 +423,29 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
             handleException(new ConnectException(jmsException, this));
         }
     }
-
-    protected void doConnect() throws ConnectException
+    
+    protected void doConnect() throws Exception
     {
-        try
+        if (jmsSupport == null)
         {
-            if (jmsSupport == null)
+            if (JmsConstants.JMS_SPECIFICATION_102B.equals(specification))
             {
-                if (JmsConstants.JMS_SPECIFICATION_102B.equals(specification))
-                {
-                    jmsSupport = new Jms102bSupport(this);
-                }
-                else
-                {
-                    jmsSupport = new Jms11Support(this);
-                }
+                jmsSupport = new Jms102bSupport(this);
+            }
+            else
+            {
+                jmsSupport = new Jms11Support(this);
             }
         }
-        catch (Exception e)
+            
+        connection = createConnection();
+        if (started.get())
         {
-            throw new ConnectException(CoreMessages.failedToCreate("Jms Connector"), e, this);
-        }
-
-        try
-        {
-            connection = createConnection();
-            if (started.get())
-            {
-                connection.start();
-            }
-        }
-        catch (Exception e)
-        {
-            throw new ConnectException(e, this);
+            connection.start();
         }
     }
 
-    protected void doDisconnect() throws ConnectException
+    protected void doDisconnect() throws Exception
     {
         try
         {
@@ -467,10 +453,6 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
             {
                 connection.close();
             }
-        }
-        catch (Exception e)
-        {
-            throw new ConnectException(e, this);
         }
         finally
         {
@@ -516,18 +498,14 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
         return null;
     }
 
-    public Session getSession(ImmutableEndpoint endpoint) throws ConnectException, JMSException
+    public Session getSession(ImmutableEndpoint endpoint) throws JMSException
     {
         final boolean topic = getTopicResolver().isTopic(endpoint);
         return getSession(endpoint.getTransactionConfig().isTransacted(), topic);
     }
 
-    public Session getSession(boolean transacted, boolean topic) throws ConnectException, JMSException
+    public Session getSession(boolean transacted, boolean topic) throws JMSException
     {
-        if (!isConnected())
-        {
-            throw new ConnectException(CoreMessages.notConnectedYet("JMS connector"), this);
-        }
         Session session = getSessionFromTransaction();
         if (session != null)
         {

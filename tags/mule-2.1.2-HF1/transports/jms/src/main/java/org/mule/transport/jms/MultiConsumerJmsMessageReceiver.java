@@ -14,6 +14,7 @@ import org.mule.api.MuleException;
 import org.mule.api.MuleRuntimeException;
 import org.mule.api.endpoint.InboundEndpoint;
 import org.mule.api.lifecycle.CreateException;
+import org.mule.api.lifecycle.FatalException;
 import org.mule.api.lifecycle.LifecycleException;
 import org.mule.api.service.Service;
 import org.mule.api.transaction.Transaction;
@@ -27,6 +28,7 @@ import org.mule.transport.jms.filters.JmsSelectorFilter;
 import org.mule.util.ClassUtils;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import javax.jms.Destination;
 import javax.jms.JMSException;
@@ -81,55 +83,77 @@ public class MultiConsumerJmsMessageReceiver extends AbstractMessageReceiver
             logger.debug("Creating " + receiversCount + " sub-receivers for " + endpoint.getEndpointURI());
         }
         consumers = new LinkedBlockingDeque(receiversCount);
-        for (int i = 0; i < receiversCount; i++)
-        {
-            consumers.addLast(new SubReceiver());
-        }
     }
 
     protected void doStart() throws MuleException
     {
         logger.debug("doStart()");
-        for (int i = 0; i < receiversCount; i++)
+        SubReceiver sub;
+        for (Iterator<SubReceiver> it = consumers.iterator(); it.hasNext();)
         {
-            SubReceiver sub = (SubReceiver) consumers.removeFirst();
+            sub = it.next();
             sub.doStart();
-            consumers.addLast(sub);
         }
     }
 
     protected void doStop() throws MuleException
     {
         logger.debug("doStop()");
-        for (int i = 0; i < receiversCount; i++)
+        if (consumers != null)
         {
-            SubReceiver sub = (SubReceiver) consumers.removeFirst();
-            sub.doStop();
-            consumers.addLast(sub);
+            SubReceiver sub;
+            for (Iterator<SubReceiver> it = consumers.iterator(); it.hasNext();)
+            {
+                sub = it.next();
+                sub.doStop();
+            }
         }
     }
 
     protected void doConnect() throws Exception
     {
         logger.debug("doConnect()");
+
+        SubReceiver sub;
         for (int i = 0; i < receiversCount; i++)
         {
-            SubReceiver sub = (SubReceiver) consumers.removeFirst();
-            sub.doConnect();
-            consumers.addLast(sub);
+            sub = new SubReceiver();
+            try
+            {
+                sub.doConnect();
+            }
+            catch (FatalException fex)
+            {
+                // Needed for EE-1174
+                sub.doDisconnect();
+                throw fex;
+            }
+            finally
+            {
+                // Needed for EE-1174
+                consumers.addLast(sub);
+            }
         }
     }
 
     protected void doDisconnect() throws Exception
     {
         logger.debug("doDisconnect()");
-        for (int i = 0; i < receiversCount; i++)
-        {
-            SubReceiver sub = (SubReceiver) consumers.removeFirst();
-            sub.doDisconnect();
-            consumers.addLast(sub);
-        }
 
+        SubReceiver sub;
+        for (Iterator<SubReceiver> it = consumers.iterator(); it.hasNext();)
+        {
+            sub = it.next();
+            try
+            {
+                sub.doDisconnect();
+            }
+            finally
+            {
+                sub = null;
+            }
+        }
+        consumers.clear();
     }
 
     protected void doDispose()
@@ -143,21 +167,33 @@ public class MultiConsumerJmsMessageReceiver extends AbstractMessageReceiver
 
         private volatile Session session;
         private volatile MessageConsumer consumer;
-        private volatile boolean startOnConnect = false;
 
-        protected void doConnect() throws Exception
+        protected volatile boolean connected;
+        protected volatile boolean started;
+        
+        protected void doConnect() throws MuleException
         {
             subLogger.debug("SUB doConnect()");
-            createConsumer();
-            if (startOnConnect)
+            try
             {
-                doStart();
+                createConsumer();
             }
+            catch (Exception e)
+            {
+                throw new LifecycleException(e, this);
+            }
+            connected = true;
         }
 
-        protected void doDisconnect() throws Exception
+        protected void doDisconnect() throws MuleException
         {
+            subLogger.debug("SUB doDisconnect()");
+            if (started)
+            {
+                doStop();
+            }
             closeConsumer();
+            connected = false;
         }
 
         protected void closeConsumer()
@@ -170,20 +206,16 @@ public class MultiConsumerJmsMessageReceiver extends AbstractMessageReceiver
 
         protected void doStart() throws MuleException
         {
+            subLogger.debug("SUB doStart()");
+            if (!connected)
+            {
+                doConnect();
+            }
+            
             try
             { 
-                // If the consumer is null it means that the connection strategy is being
-                // run in a separate thread (doThreading=true), and hasn't managed to connect 
-                // yet. This doStart will then be called from doConnect.
-                if (consumer == null)
-                {
-                    startOnConnect = true;
-                }
-                else
-                {
-                    startOnConnect = false;
-                    consumer.setMessageListener(this);
-                }
+                consumer.setMessageListener(this);
+                started = true;
             }
             catch (JMSException e)
             {
@@ -193,12 +225,15 @@ public class MultiConsumerJmsMessageReceiver extends AbstractMessageReceiver
 
         protected void doStop() throws MuleException
         {
+            subLogger.debug("SUB doStop()");
+
             try
             {
                 if (consumer != null)
                 {
                     consumer.setMessageListener(null);
                 }
+                started = false;
             }
             catch (JMSException e)
             {
@@ -212,6 +247,8 @@ public class MultiConsumerJmsMessageReceiver extends AbstractMessageReceiver
          */
         protected void createConsumer() throws Exception
         {
+            subLogger.debug("SUB createConsumer()");
+            
             try
             {
                 JmsSupport jmsSupport = jmsConnector.getJmsSupport();
