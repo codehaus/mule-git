@@ -25,12 +25,16 @@ public class ComponentStatistics implements Statistics
      */
     private static final long serialVersionUID = -2086999226732861674L;
 
+	private static final int DEFAULT_STAT_INTERVAL_TIME = 60000;
+
     private long minExecutionTime = 0;
     private long maxExecutionTime = 0;
     private long averageExecutionTime = 0;
     private long executedEvent = 0;
     private long totalExecTime = 0;
     private boolean enabled = false;
+    private long intervalTime = 0;
+    private long currentIntervalStartTime = 0;
 
     public void clear()
     {
@@ -75,6 +79,9 @@ public class ComponentStatistics implements Statistics
         return totalExecTime;
     }
 
+    /*
+     * executedEvents is since interval started
+     */
     public long getExecutedEvents()
     {
         return executedEvent;
@@ -82,6 +89,26 @@ public class ComponentStatistics implements Statistics
 
     public synchronized void addExecutionTime(long time)
     {
+    	long currentTime = System.currentTimeMillis();
+    	if(currentIntervalStartTime == 0)
+    	{
+    		currentIntervalStartTime = currentTime;
+    	}
+
+    	// initialize the interval time that stats are measured for
+    	if(intervalTime == 0)
+    		try {
+    			intervalTime = Integer.parseInt(System.getProperty("statIntervalTime", Integer.toString(DEFAULT_STAT_INTERVAL_TIME)));
+    		} catch (NumberFormatException e) {
+    			// if cannot parse the property, set to the default
+    			intervalTime = DEFAULT_STAT_INTERVAL_TIME;
+    		}
+
+    	if((currentTime - currentIntervalStartTime) > intervalTime)
+    	{
+    		clear();
+    		currentIntervalStartTime = currentTime;
+    	}
         executedEvent++;
 
         totalExecTime += (time == 0 ? 1 : time);
