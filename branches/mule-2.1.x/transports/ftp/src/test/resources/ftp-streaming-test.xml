@@ -11,6 +11,7 @@
                http://www.mulesource.org/schema/mule/tcp/2.1 http://www.mulesource.org/schema/mule/tcp/2.1/mule-tcp.xsd">
 
     <ftp:connector name="ftp" pollingFrequency="2000">
+        <spring:property name="streaming" value="true"/>
         <custom-exception-strategy class="org.mule.tck.functional.QuietExceptionStrategy"/>
     </ftp:connector>
 
