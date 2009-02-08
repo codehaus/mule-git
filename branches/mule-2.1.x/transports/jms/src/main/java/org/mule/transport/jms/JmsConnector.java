@@ -7,7 +7,6 @@
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
-
 package org.mule.transport.jms;
 
 import org.mule.api.MessagingException;
@@ -451,6 +450,8 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
         {
             if (connection != null)
             {
+                // Ignore exceptions while closing the connection
+                connection.setExceptionListener(null); 
                 connection.close();
             }
         }
