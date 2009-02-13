@@ -71,6 +71,10 @@ public class FtpMessageReceiver extends AbstractPollingMessageReceiver
     public void poll() throws Exception
     {
         FTPFile[] files = listFiles();
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("Poll encountered " + files.length + " new file(s)");
+        }
 
         synchronized (scheduledFiles)
         {
@@ -195,7 +199,10 @@ public class FtpMessageReceiver extends AbstractPollingMessageReceiver
             throw new IOException(MessageFormat.format("Failed to delete file {0}. Ftp error: {1}",
                     new Object[]{file.getName(), new Integer(client.getReplyCode())}));
         }
-        logger.debug("Deleted processed file " + file.getName());
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("Deleted processed file " + file.getName());
+        }
     }
     
     protected void doConnect() throws Exception
