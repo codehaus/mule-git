@@ -11,40 +11,35 @@
 package org.mule.transport.jms;
 
 import org.mule.api.MessagingException;
+import org.mule.api.MuleRuntimeException;
+import org.mule.config.i18n.MessageFactory;
 import org.mule.transport.jms.i18n.JmsMessages;
 
 import java.text.MessageFormat;
-import java.util.Collections;
-import java.util.Map;
 
 import javax.jms.JMSException;
 import javax.jms.Message;
 
-import org.apache.commons.collections.map.LRUMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-public class DefaultRedeliveryHandler implements RedeliveryHandler
+/**
+ * A redelivery handler which relies on JMS provider's redelivery count facilities.
+ * @see org.mule.transport.jms.JmsConstants#JMS_X_DELIVERY_COUNT
+ */
+public class JmsXRedeliveryHandler implements RedeliveryHandler
 {
     /**
      * logger used by this class
      */
-    protected static final Log logger = LogFactory.getLog(DefaultRedeliveryHandler.class);
-
-    private Map<String, Integer> messages = null;
+    protected static final Log logger = LogFactory.getLog(JmsXRedeliveryHandler.class);
 
     protected JmsConnector connector;
-
-    @SuppressWarnings("unchecked")
-    public DefaultRedeliveryHandler()
-    {
-        messages = Collections.synchronizedMap(new LRUMap(256));
-    }
 
     /**
      * The connector associated with this handler is set before
      * <code>handleRedelivery()</code> is called
-     * 
+     *
      * @param connector the connector associated with this handler
      */
     public void setConnector(JmsConnector connector)
@@ -66,36 +61,45 @@ public class DefaultRedeliveryHandler implements RedeliveryHandler
             return;
         }
 
-        String id = message.getJMSMessageID();
-        Integer i = messages.remove(id);
-        if (i == null)
+        String messageId = message.getJMSMessageID();
+        int deliveryCount = -1;
+        try
         {
-            if (logger.isDebugEnabled())
-            {
-                logger.debug("Message with id: " + id + " has been redelivered for the first time");
-            }
-            messages.put(id, 1);
+            deliveryCount = message.getIntProperty(JmsConstants.JMS_X_DELIVERY_COUNT);
         }
-        else if (i == connector.getMaxRedelivery())
+        catch (NumberFormatException nex)
+        {
+            throw new MuleRuntimeException(MessageFactory.createStaticMessage(String.format(
+                    "Invalid use of %s. Message is flagged with JMSRedelivered, but JMSXDeliveryCount is not set",
+                    getClass().getName())));
+        }
+
+        int redeliveryCount = deliveryCount - 1;
+
+        if (redeliveryCount == 1)
         {
             if (logger.isDebugEnabled())
             {
-                logger.debug(MessageFormat.format(
-                        "Message with id: {0} has been redelivered {1} times, which exceeds the maxRedelivery setting " +
-                        "of {2} on the connector {3}", id, connector.getMaxRedelivery(), connector.getName()));
+                logger.debug("Message with id: " + messageId + " has been redelivered for the first time");
             }
+        }
+        else if (redeliveryCount > connector.getMaxRedelivery())
+        {
+            logger.debug(MessageFormat.format(
+                    "Message with id: {0} has been redelivered {1} times, which exceeds the maxRedelivery setting " +
+                    "of {2} on the connector {3}", messageId, redeliveryCount, connector.getMaxRedelivery(), connector.getName()));
             JmsMessageAdapter adapter = (JmsMessageAdapter) connector.getMessageAdapter(message);
             throw new MessageRedeliveredException(
-                    JmsMessages.tooManyRedeliveries(id, String.valueOf(i + 1), connector.getMaxRedelivery(),
-                                                    connector.getName()), adapter);
+                JmsMessages.tooManyRedeliveries(messageId, String.valueOf(redeliveryCount),
+                                                connector.getMaxRedelivery(), connector.getName()), adapter);
 
         }
         else
         {
-            messages.put(id, i + 1);
             if (logger.isDebugEnabled())
             {
-                logger.debug("Message with id: " + id + " has been redelivered " + i + " times");
+                // re-delivery count is actually less by 1 than an actual delivery count
+                logger.debug("Message with id: " + messageId + " has been redelivered " + redeliveryCount + " times");
             }
         }
     }

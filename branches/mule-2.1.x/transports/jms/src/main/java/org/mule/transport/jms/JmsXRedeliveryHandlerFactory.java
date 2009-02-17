@@ -10,14 +10,13 @@
 
 package org.mule.transport.jms;
 
-public class DefaultRedeliveryHandlerFactory implements RedeliveryHandlerFactory
+
+public class JmsXRedeliveryHandlerFactory implements RedeliveryHandlerFactory
 {
 
     public RedeliveryHandler create()
     {
-        return new DefaultRedeliveryHandler();
+        return new JmsXRedeliveryHandler();
     }
 
 }
-
-
