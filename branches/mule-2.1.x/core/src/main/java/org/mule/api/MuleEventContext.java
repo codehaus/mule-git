@@ -124,7 +124,7 @@ public interface MuleEventContext
     /**
      * Mark the current transaction (if any) for rollback
      * 
-     * @throws TransactionException
+     * @throws TransactionException if operation failed
      */
     void markTransactionForRollback() throws TransactionException;
 
@@ -373,7 +373,7 @@ public interface MuleEventContext
      * dispached.
      * 
      * @return Returns true is the user has set stopFurtherProcessing.
-     * @see org.mule.api.context.UMOManager
+     * @see org.mule.api.MuleContext
      * @see MuleEventContext
      * @see org.mule.api.lifecycle.Callable
      */
