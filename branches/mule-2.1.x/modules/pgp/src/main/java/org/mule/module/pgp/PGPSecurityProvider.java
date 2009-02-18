@@ -79,21 +79,19 @@ public class PGPSecurityProvider implements SecurityProvider
 
         Message msg = (Message) auth.getCredentials();
 
-        if (!((msg != null) && msg instanceof SignedMessage))
+        if (msg instanceof SignedMessage)
         {
-            throw new UnauthorisedException(PGPMessages.noSignedMessageFound());
-        }
-
-        try
-        {
-            if (!((SignedMessage) msg).verify(userKeyBundle))
+            try
             {
-                throw new UnauthorisedException(PGPMessages.invalidSignature());
+                if (!((SignedMessage) msg).verify(userKeyBundle))
+                {
+                    throw new UnauthorisedException(PGPMessages.invalidSignature());
+                }
             }
-        }
-        catch (MessageException e)
-        {
-            throw new UnauthorisedException(PGPMessages.errorVerifySignature(), e);
+            catch (MessageException e)
+            {
+                throw new UnauthorisedException(PGPMessages.errorVerifySignature(), e);
+            }
         }
 
         auth.setAuthenticated(true);
