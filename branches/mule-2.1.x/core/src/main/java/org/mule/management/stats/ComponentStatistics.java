@@ -31,6 +31,32 @@ public class ComponentStatistics implements Statistics
     private long executedEvent = 0;
     private long totalExecTime = 0;
     private boolean enabled = false;
+    private long intervalTime = 0;
+    private long currentIntervalStartTime = 0;
+    private boolean isStatIntervalTimeEnabled = false; 
+
+    /**
+     * The constructor added to initialize the interval time in ms that stats   
+     * are measured for from the property statIntervalTime. If the property is 
+     * not set or cannot be parsed, disable interval time and just compute 
+     * stats from start of mule.
+     * TODO: The code to create and use an interval time for measuring average execution 
+     * time could be removed once a complete solution is available in MuleHQ to
+     * monitor this
+     */
+    public ComponentStatistics() 
+    {
+        String intervalTimeString = System.getProperty("statIntervalTime");
+        if (intervalTimeString == null) 
+        {
+            isStatIntervalTimeEnabled = false;
+        } 
+        else 
+        {
+            intervalTime = Integer.parseInt(intervalTimeString);
+            isStatIntervalTimeEnabled = true;
+        }
+    }
 
     public void clear()
     {
@@ -75,6 +101,9 @@ public class ComponentStatistics implements Statistics
         return totalExecTime;
     }
 
+    /*
+     * executedEvents is since interval started
+     */
     public long getExecutedEvents()
     {
         return executedEvent;
@@ -82,6 +111,21 @@ public class ComponentStatistics implements Statistics
 
     public synchronized void addExecutionTime(long time)
     {
+        if (isStatIntervalTimeEnabled) 
+        {
+            long currentTime = System.currentTimeMillis();
+            if (currentIntervalStartTime == 0)
+            {
+                currentIntervalStartTime = currentTime;
+            }
+
+            if ((currentTime - currentIntervalStartTime) > intervalTime)
+            {
+                clear();
+                currentIntervalStartTime = currentTime;
+            }
+        }
+
         executedEvent++;
 
         totalExecTime += (time == 0 ? 1 : time);
