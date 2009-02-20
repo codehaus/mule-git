@@ -1,0 +1,7 @@
+#
+# Test cases listed in this file are not run.
+#
+
+# MULE-4076
+org.mule.example.webapp.MockTestCase
+
