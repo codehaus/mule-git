@@ -9,7 +9,7 @@
     <description>Is a simple component example that demostrates how to expose a component over multiple transports (soap and stream).</description>
 
     <properties>
-        <muleVersion>2.2.0</muleVersion>
+        <muleVersion>2.2.1-SNAPSHOT</muleVersion>
     </properties>
 
     <dependencies>
