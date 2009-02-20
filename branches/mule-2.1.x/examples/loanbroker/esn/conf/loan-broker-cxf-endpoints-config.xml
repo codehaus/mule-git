@@ -4,9 +4,11 @@
        xmlns:spring="http://www.springframework.org/schema/beans"
        xmlns:cxf="http://www.mulesource.org/schema/mule/cxf/2.1"
        xmlns:vm="http://www.mulesource.org/schema/mule/vm/2.1"
+       xmlns:http="http://www.mulesource.org/schema/mule/http/2.1"
        xsi:schemaLocation="
                http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
                http://www.mulesource.org/schema/mule/core/2.1 http://www.mulesource.org/schema/mule/core/2.1/mule.xsd
+               http://www.mulesource.org/schema/mule/http/2.1 http://www.mulesource.org/schema/mule/http/2.1/mule-http.xsd
                http://www.mulesource.org/schema/mule/cxf/2.1 http://www.mulesource.org/schema/mule/cxf/2.1/mule-cxf.xsd
                http://www.mulesource.org/schema/mule/vm/2.1 http://www.mulesource.org/schema/mule/vm/2.1/mule-vm.xsd">
 
@@ -14,6 +16,11 @@
     This loan broker example is modeled on the Enterprise integration Patterns book sample.
     Here we define components and endpoints using the CXF transport.
     </description>
+
+    <http:connector name="http.connector">
+        <receiver-threading-profile maxThreadsActive="100"/>
+        <dispatcher-threading-profile maxThreadsActive="100"/>
+    </http:connector>
 
     <!-- 
       Tell the CXF connector to use the 'simple' frontend. This frontend does 
