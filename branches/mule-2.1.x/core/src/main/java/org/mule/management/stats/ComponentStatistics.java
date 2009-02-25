@@ -12,14 +12,21 @@ package org.mule.management.stats;
 
 import org.mule.api.management.stats.Statistics;
 import org.mule.management.stats.printers.SimplePrinter;
+import org.mule.util.StringUtils;
 
 import java.io.PrintWriter;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * 
  */
 public class ComponentStatistics implements Statistics
 {
+
+    protected final Log logger = LogFactory.getLog(getClass());
+
     /**
      * Serial version
      */
@@ -33,7 +40,7 @@ public class ComponentStatistics implements Statistics
     private boolean enabled = false;
     private long intervalTime = 0;
     private long currentIntervalStartTime = 0;
-    private boolean isStatIntervalTimeEnabled = false; 
+    private boolean statIntervalTimeEnabled = false;
 
     /**
      * The constructor added to initialize the interval time in ms that stats   
@@ -47,14 +54,23 @@ public class ComponentStatistics implements Statistics
     public ComponentStatistics() 
     {
         String intervalTimeString = System.getProperty("statIntervalTime");
-        if (intervalTimeString == null) 
+        if (StringUtils.isBlank(intervalTimeString))
         {
-            isStatIntervalTimeEnabled = false;
-        } 
-        else 
+            statIntervalTimeEnabled = false;
+        }
+        else
         {
-            intervalTime = Integer.parseInt(intervalTimeString);
-            isStatIntervalTimeEnabled = true;
+            try
+            {
+                intervalTime = Integer.parseInt(intervalTimeString);
+                statIntervalTimeEnabled = true;
+            }
+            catch (NumberFormatException e)
+            {
+                // just disable it
+                statIntervalTimeEnabled = false;
+                logger.warn("Couldn't parse statIntervalTime: " + intervalTimeString + ". Disabled.");
+            }
         }
     }
 
@@ -111,7 +127,7 @@ public class ComponentStatistics implements Statistics
 
     public synchronized void addExecutionTime(long time)
     {
-        if (isStatIntervalTimeEnabled) 
+        if (statIntervalTimeEnabled)
         {
             long currentTime = System.currentTimeMillis();
             if (currentIntervalStartTime == 0)
