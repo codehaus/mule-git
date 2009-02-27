@@ -101,7 +101,7 @@
             <lib dir="${dir.mule.home}/lib/boot">
                 <include name="*slf4j*"/>
                 <include name="log4j-*.jar"/>
-                <include name="commons-codec-*"/>
+                <include name="commons-codec*"/>
             </lib>
             <fileset dir="${dir.webapp}"/>
             <classes dir="${dir.classes}"/>
