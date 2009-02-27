@@ -22,7 +22,7 @@ import org.apache.commons.lang.SerializationUtils;
 /**
  * <code>SerializableToByteArray</code> converts a serializable object or a String
  * to a byte array. If <code>MuleMessage</code> is configured as a source type on this
- * transformer by calling <code>setAcceptUMOMessage(true)</code> then the MuleMessage
+ * transformer by calling <code>setAcceptMuleMessage(true)</code> then the MuleMessage
  * will be serialised. This is useful for transports such as TCP where the message
  * headers would normally be lost.
  */
@@ -37,12 +37,12 @@ public class SerializableToByteArray extends AbstractTransformer implements Disc
         this.setReturnClass(byte[].class);
     }
 
-    public boolean isAcceptUMOMessage()
+    public boolean isAcceptMuleMessage()
     {
         return this.isSourceTypeSupported(MuleMessage.class, true);
     }
 
-    public void setAcceptUMOMessage(boolean value)
+    public void setAcceptMuleMessage(boolean value)
     {
         if (value)
         {
@@ -52,6 +52,24 @@ public class SerializableToByteArray extends AbstractTransformer implements Disc
         {
             this.unregisterSourceType(MuleMessage.class);
         }
+    }
+
+    /**
+     * @deprecated use {@link #isAcceptMuleMessage}
+     */
+    @Deprecated
+    public boolean isAcceptUMOMessage()
+    {
+        return isAcceptMuleMessage();
+    }
+
+    /**
+     * @deprecated use {@link #setAcceptMuleMessage(boolean)}
+     */
+    @Deprecated
+    public void setAcceptUMOMessage(boolean value)
+    {
+        setAcceptMuleMessage(value);
     }
 
     public Object doTransform(Object src, String encoding) throws TransformerException
