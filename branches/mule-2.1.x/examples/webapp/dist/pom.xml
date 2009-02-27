@@ -102,7 +102,7 @@
         <dependency>
             <groupId>org.mule.examples</groupId>
             <artifactId>mule-example-echo</artifactId>
-            <version>${muleVersion}</version>
+            <version>1.0</version>
             <exclusions>
                 <exclusion>
                     <groupId>jetty</groupId>
@@ -113,7 +113,7 @@
         <dependency>
             <groupId>org.mule.examples</groupId>
             <artifactId>mule-example-hello</artifactId>
-            <version>${muleVersion}</version>
+            <version>1.0</version>
             <exclusions>
                 <exclusion>
                     <groupId>jetty</groupId>
@@ -124,7 +124,7 @@
         <dependency>
             <groupId>org.mule.examples</groupId>
             <artifactId>mule-example-stockquote</artifactId>
-            <version>${muleVersion}</version>
+            <version>1.0</version>
             <exclusions>
                 <exclusion>
                     <groupId>jetty</groupId>
@@ -135,7 +135,7 @@
         <dependency>
             <groupId>org.mule.examples</groupId>
             <artifactId>mule-example-loanbroker-esn</artifactId>
-            <version>${muleVersion}</version>
+            <version>1.0</version>
             <exclusions>
                 <exclusion>
                     <groupId>jetty</groupId>
