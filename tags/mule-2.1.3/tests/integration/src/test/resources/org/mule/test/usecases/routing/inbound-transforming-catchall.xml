@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesource.org/schema/mule/core/2.1"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:spring="http://www.springframework.org/schema/beans"
+       xmlns:vm="http://www.mulesource.org/schema/mule/vm/2.1"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+       http://www.mulesource.org/schema/mule/core/2.1 http://www.mulesource.org/schema/mule/core/2.1/mule.xsd
+       http://www.mulesource.org/schema/mule/vm/2.1 http://www.mulesource.org/schema/mule/vm/2.1/mule-vm.xsd">
+
+    <vm:connector name="vmQueue" queueEvents="true"/>
+
+    <model name="test" >
+        <service name="BridgeNoTransformer">
+            <inbound>
+                <inbound-endpoint address="vm://in1" connector-ref="vmQueue"/>
+
+                <selective-consumer-router>
+                    <payload-type-filter expectedType="java.lang.Integer"/>
+                </selective-consumer-router>
+
+                <custom-forwarding-catch-all-strategy class="org.mule.test.usecases.routing.InboundTransformingForwardingCatchAllStrategy">
+                    <outbound-endpoint address="vm://catchall" connector-ref="vmQueue"/>
+                </custom-forwarding-catch-all-strategy>
+            </inbound>
+            <outbound>
+                <pass-through-router>
+                    <outbound-endpoint address="vm://out" connector-ref="vmQueue"/>
+                </pass-through-router>
+            </outbound>
+        </service>
+
+        <service name="BridgeTransformed">
+            <inbound>
+                <inbound-endpoint address="vm://in2" connector-ref="vmQueue">
+                    <string-to-byte-array-transformer/>
+                </inbound-endpoint>
+
+                <selective-consumer-router>
+                    <payload-type-filter expectedType="java.lang.Integer"/>
+                </selective-consumer-router>
+
+                <custom-forwarding-catch-all-strategy class="org.mule.test.usecases.routing.InboundTransformingForwardingCatchAllStrategy">
+                    <outbound-endpoint address="vm://catchall" connector-ref="vmQueue">
+                        <string-to-byte-array-transformer/>
+                    </outbound-endpoint>
+                </custom-forwarding-catch-all-strategy>
+            </inbound>
+            
+            <outbound>
+                <pass-through-router>
+                    <outbound-endpoint address="vm://out" connector-ref="vmQueue"/>
+                </pass-through-router>
+            </outbound>
+        </service>
+    </model>
+</mule>
