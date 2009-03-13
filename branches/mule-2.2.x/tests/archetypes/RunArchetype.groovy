@@ -51,7 +51,9 @@ cmdline += " -DmuleVersion=" + project.version
 cmdline += " -Dinteractive=false"
 runMaven(cmdline, buildDir)
 
-cmdline = "verify"
+// now that the source is generated, compile it using Maven
+// Do not run "mvn test" here since the generated source is not testable as is
+cmdline = "test-compile"
 runMaven(cmdline, existingProjectDir)
 
 def runMaven(String commandline, File directory)
