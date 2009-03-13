@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<mule xmlns="http://www.mulesource.org/schema/mule/core/2.2"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:spring="http://www.springframework.org/schema/beans"
+       xmlns:axis="http://www.mulesource.org/schema/mule/axis/2.2"
+       xmlns:jms="http://www.mulesource.org/schema/mule/jms/2.2"
+    xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+       http://www.mulesource.org/schema/mule/core/2.2 http://www.mulesource.org/schema/mule/core/2.2/mule.xsd
+       http://www.mulesource.org/schema/mule/axis/2.2 http://www.mulesource.org/schema/mule/axis/2.2/mule-axis.xsd
+       http://www.mulesource.org/schema/mule/jms/2.2 http://www.mulesource.org/schema/mule/jms/2.2/mule-jms.xsd">
+
+    <jms:activemq-connector name="jmsConnector"/>
+    <!-- this is needed also, but does not work now -->
+    <!--                            brokerUrl="vm://localhost?broker.persistence=true"/> -->
+
+    <model name="test">
+        <service name="mycomponent">
+            <inbound>
+                <axis:inbound-endpoint address="jms://topic:mycomponent"/>
+            </inbound>
+            <component class="org.mule.tck.testmodels.services.TestServiceComponent"/>
+        </service>
+
+        <service name="mycomponent2">
+            <inbound>
+                <axis:inbound-endpoint address="jms://topic:mycomponent2">
+                    <axis:soap-service interface="org.mule.api.component.simple.EchoService"/>
+                    <axis:soap-service interface="org.mule.tck.testmodels.services.DateService"/>
+                </axis:inbound-endpoint>
+            </inbound>
+            <component class="org.mule.tck.testmodels.services.TestServiceComponent"/>
+        </service>
+
+        <service name="mycomponent3">
+            <inbound>
+                <inbound-endpoint address="axis:jms://topic:mycomponent3"/>
+            </inbound>
+            <component>
+                <singleton-object class="org.mule.tck.testmodels.services.TestServiceComponent"/>
+            </component>
+        </service>
+
+        <service name="mycomponent4">
+            <inbound>
+                <inbound-endpoint address="axis:jms://topic:mycomponent4" synchronous="false"/>
+            </inbound>
+            <component>
+                <singleton-object class="org.mule.tck.testmodels.services.TestServiceComponent"/>
+            </component>
+        </service>
+    </model>
+</mule>

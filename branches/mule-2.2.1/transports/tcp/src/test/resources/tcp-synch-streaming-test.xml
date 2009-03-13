@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesource.org/schema/mule/core/2.2"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tcp="http://www.mulesource.org/schema/mule/tcp/2.2"
+       xmlns:spring="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+       http://www.mulesource.org/schema/mule/tcp/2.2 http://www.mulesource.org/schema/mule/tcp/2.2/mule-tcp.xsd
+       http://www.mulesource.org/schema/mule/core/2.2 http://www.mulesource.org/schema/mule/core/2.2/mule.xsd">
+
+    <tcp:connector name="default" validateConnections="false">
+        <tcp:streaming-protocol/>
+    </tcp:connector>
+
+    <model name="main">
+        <service name="echo">
+            <inbound>
+                <tcp:inbound-endpoint address="tcp://localhost:65432?endpointName=myEndpoint"/>
+            </inbound>
+            <echo-component/>
+        </service>
+    </model>
+
+</mule>
