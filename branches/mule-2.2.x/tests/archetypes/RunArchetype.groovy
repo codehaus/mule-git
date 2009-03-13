@@ -51,8 +51,6 @@ cmdline += " -DmuleVersion=" + project.version
 cmdline += " -Dinteractive=false"
 runMaven(cmdline, buildDir)
 
-// now that the source is generated, compile it using Maven
-// Do not run "mvn test" here since the generated source is not testable as is
 cmdline = "verify"
 runMaven(cmdline, existingProjectDir)
 
