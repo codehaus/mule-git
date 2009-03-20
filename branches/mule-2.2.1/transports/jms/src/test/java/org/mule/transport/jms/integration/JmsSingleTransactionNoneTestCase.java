@@ -17,9 +17,21 @@ import org.junit.Test;
  */
 public class JmsSingleTransactionNoneTestCase extends AbstractJmsFunctionalTestCase
 {
+    private static final String CONNECTOR_NAME = "jmsConnector";
+
     protected String getConfigResources()
     {
         return "integration/jms-single-tx-NONE.xml";
+    }
+
+    @Override
+    protected void suitePreSetUp() throws Exception
+    {
+        super.suitePreSetUp();
+        
+        purge(getInboundQueueName());
+        purge(getJmsConfig().getMiddleDestinationName());
+        purge(getOutboundQueueName());
     }
 
     @Test

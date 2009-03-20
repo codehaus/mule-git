@@ -323,7 +323,7 @@ public abstract class AbstractJmsFunctionalTestCase extends FunctionalTestCase
     }
 
     /**
-     * Returns the {@link #getInboundDestinationName()} in the form of an endpoint URI i.e.
+     * Returns the {@link #getInboundQueueName()} in the form of an endpoint URI i.e.
      * jms://in.
      * <p/>
      * This calls through to {@link JmsVendorConfiguration#getInboundEndpoint()}
@@ -337,7 +337,7 @@ public abstract class AbstractJmsFunctionalTestCase extends FunctionalTestCase
     }
 
     /**
-     * Returns the {@link #getOutboundDestinationName()} in the form of an endpoint URI i.e.
+     * Returns the {@link #getOutboundQueueName()} in the form of an endpoint URI i.e.
      * jms://out.
      * <p/>
      * This calls through to {@link org.mule.transport.jms.integration.JmsVendorConfiguration#getOutboundEndpoint()}
@@ -431,13 +431,17 @@ public abstract class AbstractJmsFunctionalTestCase extends FunctionalTestCase
 
     protected MuleMessage receiveMessage() throws Exception
     {
+        return receiveMessage(DEFAULT_OUTPUT_MESSAGE);
+    }
+
+    protected MuleMessage receiveMessage(Object expected) throws Exception
+    {
         MuleMessage result = client.request(getOutboundEndpoint(), getTimeout());
         assertNotNull(result);
         assertNotNull(result.getPayload());
         assertNull(result.getExceptionPayload());
-        assertEquals(DEFAULT_OUTPUT_MESSAGE, result.getPayload());
+        assertEquals(expected, result.getPayload());
         return result;
-
     }
 
     public void runAsynchronousDispatching() throws Exception
@@ -451,7 +455,7 @@ public abstract class AbstractJmsFunctionalTestCase extends FunctionalTestCase
     protected void doSetUp() throws Exception
     {
         super.doSetUp();
-        client = new MuleClient();
+        client = new MuleClient(isStartContext());
     }
 
     protected void doTearDown() throws Exception
@@ -584,6 +588,50 @@ public abstract class AbstractJmsFunctionalTestCase extends FunctionalTestCase
                 connection.close();
             }
         }
+    }
+
+    /**
+     * Purge destinations for clean test setup. Especially applicable to WMQ tests, as messages from
+     * other tests may still exist from other tests' runs.
+     * <p/>
+     * Well-behaving tests should drain both inbound and outbound destinations, as well as any intermediary ones.
+     * Typically this method is called from {@link #suitePreSetUp()} and {@link #suitePostTearDown()}, with proper super calls.
+     * @param destination destination name without any protocol specifics
+     * @see #suitePreSetUp()
+     * @see #suitePostTearDown()
+     */
+    protected void purge(final String destination) throws Exception
+    {
+        Connection c = null;
+        Session s = null;
+        try
+        {
+            c = getConnection(false, false);
+            assertNotNull(c);
+            c.start();
+
+            s = c.createSession(false, Session.AUTO_ACKNOWLEDGE);
+            Destination d = s.createQueue(destination);
+            MessageConsumer consumer = s.createConsumer(d);
+
+            while (consumer.receiveNoWait() != null)
+            {
+                logger.warn("Destination " + destination + " isn't empty, draining it");
+            }
+        }
+        finally
+        {
+            if (c != null)
+            {
+                c.stop();
+                if (s != null)
+                {
+                    s.close();
+                }
+                c.close();
+            }
+        }
+
     }
 
     // /////////////////////////////////////////////////////////////////////////////////////////////////
