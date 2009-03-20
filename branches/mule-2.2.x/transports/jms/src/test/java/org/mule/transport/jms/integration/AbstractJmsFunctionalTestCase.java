@@ -117,6 +117,11 @@ public abstract class AbstractJmsFunctionalTestCase extends FunctionalTestCase
     private MuleClient client = null;
 
     /**
+     * This test case is refactored to support multiple JMS providers.
+     */
+    private boolean multipleProviders = true;
+    
+    /**
      * Finds the {@link org.mule.transport.jms.integration.JmsVendorConfiguration} instances to test with by looking
      * in a file called "jms-vendor-configs.txt" which contains one or more fuly qualified classnames of
      * {@link org.mule.transport.jms.integration.JmsVendorConfiguration} instances to load.
@@ -255,18 +260,25 @@ public abstract class AbstractJmsFunctionalTestCase extends FunctionalTestCase
     @Override
     protected ConfigurationBuilder getBuilder() throws Exception
     {
-        final String configResource = getConfigResources();
-        // multiple configs arent' supported by this mechanism, validate and fail if needed
-        if (StringUtils.splitAndTrim(configResource, ",; ").length > 1)
+        if (multipleProviders)
         {
-            throw new IllegalArgumentException("Parameterized tests don't support multiple " +
-                                               "config files as input: " + configResource);
+            final String configResource = getConfigResources();
+            // multiple configs arent' supported by this mechanism, validate and fail if needed
+            if (StringUtils.splitAndTrim(configResource, ",; ").length > 1)
+            {
+                throw new IllegalArgumentException("Parameterized tests don't support multiple " +
+                                                   "config files as input: " + configResource);
+            }
+            String resources = configResource.substring(configResource.lastIndexOf("/") + 1);
+            resources = String.format("integration/%s/connector-%s,%s", getJmsConfig().getProviderName(),
+                    resources, getConfigResources());
+            SpringXmlConfigurationBuilder builder = new SpringXmlConfigurationBuilder(resources);
+            return builder;
         }
-        String resources = configResource.substring(configResource.lastIndexOf("/") + 1);
-        resources = String.format("integration/%s/connector-%s,%s", getJmsConfig().getProviderName(),
-                resources, getConfigResources());
-        SpringXmlConfigurationBuilder builder = new SpringXmlConfigurationBuilder(resources);
-        return builder;
+        else
+        {
+            return super.getBuilder();
+        }            
     }
 
     /**
@@ -441,6 +453,21 @@ public abstract class AbstractJmsFunctionalTestCase extends FunctionalTestCase
         assertNotNull(result.getPayload());
         assertNull(result.getExceptionPayload());
         assertEquals(expected, result.getPayload());
+        return result;
+    }
+
+    protected MuleMessage receiveMessage(byte[] expected) throws Exception
+    {
+        MuleMessage result = client.request(getOutboundEndpoint(), getTimeout());
+        assertNotNull(result);
+        assertNotNull(result.getPayload());
+        assertNull(result.getExceptionPayload());
+        byte[] bytes = result.getPayloadAsBytes();
+        assertEquals("Wrong number of bytes", expected.length, bytes.length);
+        for (int i=0; i < expected.length; ++i)
+        {
+            assertEquals("Byte #" + i + " does not match", expected[i], bytes[i]);
+        }
         return result;
     }
 
@@ -632,6 +659,16 @@ public abstract class AbstractJmsFunctionalTestCase extends FunctionalTestCase
             }
         }
 
+    }
+
+    public boolean isMultipleProviders()
+    {
+        return multipleProviders;
+    }
+
+    public void setMultipleProviders(boolean multipleProviders)
+    {
+        this.multipleProviders = multipleProviders;
     }
 
     // /////////////////////////////////////////////////////////////////////////////////////////////////
