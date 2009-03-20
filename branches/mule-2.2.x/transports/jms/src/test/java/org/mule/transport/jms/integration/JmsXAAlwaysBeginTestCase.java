@@ -25,9 +25,6 @@ import org.junit.Test;
 
 public class JmsXAAlwaysBeginTestCase extends AbstractJmsFunctionalTestCase
 {
-
-    private static final String CONNECTOR_NAME = "jmsConnector";
-
     private static final List committedTx = new CopyOnWriteArrayList();
     private static final List rolledbackTx = new CopyOnWriteArrayList();
     protected static final Log logger = LogFactory.getLog(JmsXAAlwaysBeginTestCase.class);
@@ -35,14 +32,6 @@ public class JmsXAAlwaysBeginTestCase extends AbstractJmsFunctionalTestCase
     protected String getConfigResources()
     {
         return "integration/jms-xa-tx-ALWAYS_BEGIN.xml";
-    }
-
-    @Override
-    protected void suitePreSetUp() throws Exception
-    {
-        super.doSetUp();
-        purge(getInboundQueueName());
-        purge(getOutboundQueueName());
     }
 
     @Test

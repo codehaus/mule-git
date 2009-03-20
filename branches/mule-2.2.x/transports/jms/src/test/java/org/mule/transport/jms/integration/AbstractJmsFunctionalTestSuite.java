@@ -26,7 +26,6 @@ public abstract class AbstractJmsFunctionalTestSuite
         suite.addTestSuite(JmsMuleSideDurableTopicTestCase.class);
         suite.addTestSuite(JmsMuleSideDurableTopicXATxTestCase.class);
         suite.addTestSuite(JmsQueueTestCase.class);
-        suite.addTestSuite(JmsQueueMessageTypesTestCase.class);
         suite.addTestSuite(JmsQueueWithCompressionTestCase.class);
         suite.addTestSuite(JmsQueueWithTransactionTestCase.class);
         suite.addTestSuite(JmsRemoteSyncMule2868TestCase.class);

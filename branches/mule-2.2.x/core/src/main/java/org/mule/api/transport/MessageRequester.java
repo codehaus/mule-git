@@ -10,7 +10,6 @@
 
 package org.mule.api.transport;
 
-import org.mule.api.endpoint.InboundEndpoint;
 import org.mule.api.endpoint.OutboundEndpoint;
 
 
@@ -57,7 +56,7 @@ public interface MessageRequester extends Connectable, MessageRequesting
 
 
     /**
-     * @return the endpoint used for requesting events 
+     * @return the endpoint from which we are requesting events 
      */
-    InboundEndpoint getEndpoint();
+    OutboundEndpoint getEndpoint();
 }

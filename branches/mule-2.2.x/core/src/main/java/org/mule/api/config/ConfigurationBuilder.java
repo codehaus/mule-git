@@ -31,13 +31,10 @@ public interface ConfigurationBuilder
 {
 
     /**
-     * Will configure a MuleContext based on the configuration provided.  The configuration will be set on the
-     * {@link org.mule.api.config.ConfigurationBuilder} implementation as bean properties before this method
-     * has been called.
+     * Will configure a MuleContext based on the configuration provided
      * 
-     * @param muleContext The current {@link org.mule.api.MuleContext}
-     * @throws ConfigurationException if the configuration fails i.e. an object cannot be created or
-     * initialised properly
+     * @param muleContext
+     * @throws ConfigurationException
      */
     void configure(MuleContext muleContext) throws ConfigurationException;
 

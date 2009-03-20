@@ -29,15 +29,6 @@ public class JmsTemporaryReplyToTestCase extends AbstractJmsFunctionalTestCase
         return "integration/jms-temporary-replyTo.xml";
     }
 
-    @Override
-    protected void suitePreSetUp() throws Exception
-    {
-        super.suitePreSetUp();
-
-        purge(getInboundQueueName());
-        purge(getOutboundQueueName());
-    }
-
     @Test
     public void testTemporaryReplyEnabled() throws MuleException
     {
@@ -56,7 +47,7 @@ public class JmsTemporaryReplyToTestCase extends AbstractJmsFunctionalTestCase
     }
 
     @Test
-    public void testDisableTemporaryReplyOnTheConnector() throws MuleException
+    public void testDisableTempraryReplyOnTheConeector() throws MuleException
     {
         MuleClient muleClient = new MuleClient();
         MuleMessage response = muleClient.send("vm://in3", TEST_MESSAGE, null);

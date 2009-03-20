@@ -306,4 +306,8 @@ public class LoanBrokerEsbConfigurationBuilder extends AbstractConfigurationBuil
         registry.registerService(bank4Service);
     }
 
+    protected void applyLifecycle(LifecycleManager lifecycleManager) throws Exception 
+    {
+        // nothing to do
+    }
 }

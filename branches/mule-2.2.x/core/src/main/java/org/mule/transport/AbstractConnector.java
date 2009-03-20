@@ -93,7 +93,6 @@ import edu.emory.mathcs.backport.java.util.concurrent.ThreadFactory;
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicReference;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.pool.KeyedPoolableObjectFactory;
@@ -344,14 +343,7 @@ public abstract class AbstractConnector
             ((DefaultExceptionStrategy)exceptionListener).initialise();
         }
 
-        try
-        {
-            initWorkManagers();
-        }
-        catch (MuleException e)
-        {
-            throw new InitialisationException(e, this);
-        }
+
         initialised.set(true);
     }
 
@@ -392,6 +384,7 @@ public abstract class AbstractConnector
         {
             scheduler.set(this.getScheduler());
         }
+        initWorkManagers();
 
         this.doStart();
         started.set(true);
@@ -463,6 +456,11 @@ public abstract class AbstractConnector
         // shutdown our scheduler service
         ((ScheduledExecutorService) scheduler.get()).shutdown();
 
+        // Dispose work managers here to ensure that all jobs that are currently
+        // processing or waiting can complete so that all message flow completes in
+        // stop phase.  See MULE-4521
+        disposeWorkManagers();
+        
         this.doStop();
         started.set(false);
 
@@ -496,9 +494,6 @@ public abstract class AbstractConnector
 
         // make sure the scheduler is gone
         scheduler.set(null);
-
-        // we do not need to stop the work managers because they do no harm (will just be idle)
-        // and will be reused on restart without problems.
 
         //TODO RM* THis shouldn't be here this.initialised.set(false);
         // started=false already issued above right after doStop()
@@ -542,7 +537,6 @@ public abstract class AbstractConnector
         this.disposeReceivers();
         this.disposeDispatchers();
         this.disposeRequesters();
-        this.disposeWorkManagers();
 
         this.doDispose();
         disposed.set(true);
@@ -1458,7 +1452,7 @@ public abstract class AbstractConnector
                     }
                     else if (info.get(RetryContext.FAILED_REQUESTER) != null)
                     {
-                        InboundEndpoint endpoint = (InboundEndpoint) info.get(RetryContext.FAILED_REQUESTER);
+                        OutboundEndpoint endpoint = (OutboundEndpoint) info.get(RetryContext.FAILED_REQUESTER);
                         MessageRequester requester = (MessageRequester) requesters.borrowObject(endpoint);
                         try
                         {
