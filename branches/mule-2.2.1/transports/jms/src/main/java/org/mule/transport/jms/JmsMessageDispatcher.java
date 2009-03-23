@@ -22,6 +22,7 @@ import org.mule.api.transaction.Transaction;
 import org.mule.api.transport.Connector;
 import org.mule.api.transport.DispatchException;
 import org.mule.api.transport.MessageAdapter;
+import org.mule.api.transport.PropertyScope;
 import org.mule.transaction.TransactionCollection;
 import org.mule.transaction.TransactionCoordination;
 import org.mule.transport.AbstractMessageDispatcher;
@@ -153,6 +154,8 @@ public class JmsMessageDispatcher extends AbstractMessageDispatcher
             Destination dest = connector.getJmsSupport().createDestination(session, endpoint);
             producer = connector.getJmsSupport().createProducer(session, dest, topic);
 
+            preTransformMessage(event.getMessage());
+
             Object message = event.transformMessage();
             if (!(message instanceof Message))
             {
@@ -163,14 +166,6 @@ public class JmsMessageDispatcher extends AbstractMessageDispatcher
 
             Message msg = (Message) message;
 
-            //Allow overrides to alter the message if necessary
-            processMessage(msg, event);
-
-            if (event.getMessage().getCorrelationId() != null)
-            {
-                msg.setJMSCorrelationID(event.getMessage().getCorrelationId());
-            }
-
             MuleMessage eventMsg = event.getMessage();
 
             replyTo = getReplyToDestination(msg, session, event, useReplyToDestination, topic);
@@ -180,6 +175,9 @@ public class JmsMessageDispatcher extends AbstractMessageDispatcher
             {
                 msg.setJMSReplyTo(replyTo);
             }
+
+            //Allow overrides to alter the message if necessary
+            processMessage(msg, event);
 
             // QoS support
             String ttlString = (String) eventMsg.removeProperty(JmsConstants.TIME_TO_LIVE_PROPERTY);
@@ -196,26 +194,32 @@ public class JmsMessageDispatcher extends AbstractMessageDispatcher
                     ? BooleanUtils.toBoolean(persistentDeliveryString)
                     : connector.isPersistentDelivery();
 
+            // If we are honouring the current QoS message headers we need to use the ones set on the current message
             if (connector.isHonorQosHeaders())
             {
-                int priorityProp = eventMsg.getIntProperty(JmsConstants.JMS_PRIORITY, Connector.INT_VALUE_NOT_SET);
-                int deliveryModeProp = eventMsg.getIntProperty(JmsConstants.JMS_DELIVERY_MODE, Connector.INT_VALUE_NOT_SET);
+                Object priorityProp = eventMsg.getProperty(JmsConstants.JMS_PRIORITY);
+                Object deliveryModeProp = eventMsg.getProperty(JmsConstants.JMS_DELIVERY_MODE);
 
-                if (priorityProp != Connector.INT_VALUE_NOT_SET)
+                if (priorityProp != null)
                 {
-                    priority = priorityProp;
+                    priority = NumberUtils.toInt(priorityProp);
                 }
-                if (deliveryModeProp != Connector.INT_VALUE_NOT_SET)
+                if (deliveryModeProp != null)
                 {
-                    persistent = deliveryModeProp == DeliveryMode.PERSISTENT;
+                    persistent = NumberUtils.toInt(deliveryModeProp) == DeliveryMode.PERSISTENT;
                 }
             }
 
             if (logger.isDebugEnabled())
             {
                 logger.debug("Sending message of type " + ClassUtils.getSimpleName(msg.getClass()));
+                logger.debug("Sending JMS Message type " + msg.getJMSType() +
+                       "\n  JMSMessageID=" + msg.getJMSMessageID() +
+                       "\n  JMSCorrelationID=" + msg.getJMSCorrelationID() +
+                       "\n  JMSDeliveryMode=" + (persistent ? DeliveryMode.PERSISTENT : DeliveryMode.NON_PERSISTENT) +
+                       "\n  JMSPriority=" + priority +
+                       "\n  JMSReplyTo=" + msg.getJMSReplyTo());
             }
-
             connector.getJmsSupport().send(producer, msg, persistent, priority, ttl, topic);
 
             if (useReplyToDestination && replyTo != null)
@@ -314,6 +318,18 @@ public class JmsMessageDispatcher extends AbstractMessageDispatcher
         }
     }
 
+    /**
+     * This method is called before the current message is transformed.  It can be used to do any message body or
+     * header processing before the transformer is called.
+     *
+     * @param message the current MuleMessage Being processed
+     * @throws Exception
+     */
+    protected void preTransformMessage(MuleMessage message) throws Exception
+    {
+        // nothing to do
+    }
+    
     protected void handleMultiTx(Session session) throws Exception
     {
         logger.debug("Multi-transaction support is not available in Mule Community Edition.");
