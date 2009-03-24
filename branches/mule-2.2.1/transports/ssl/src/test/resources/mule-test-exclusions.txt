@@ -4,3 +4,4 @@
 
 # Failing intermittently due to port contention
 org.mule.transport.ssl.SslCertificatesTestCase
+org.mule.transport.http.issues.StreamingSpeedMule1389TestCase
