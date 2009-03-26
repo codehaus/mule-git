@@ -1,7 +1,0 @@
-#
-# Test cases listed in this file are not run.
-#
-
-# MULE-3682
-org.mule.transport.jms.integration.JmsXATransactionComponentTestCase
-
