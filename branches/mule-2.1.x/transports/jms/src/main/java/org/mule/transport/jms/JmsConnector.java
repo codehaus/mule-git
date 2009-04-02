@@ -40,6 +40,7 @@ import java.util.Map;
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
+import javax.jms.ExceptionListener;
 import javax.jms.JMSException;
 import javax.jms.MessageConsumer;
 import javax.jms.MessageProducer;
@@ -60,7 +61,7 @@ import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicInteger;
  * and queues, durable subscribers, acknowledgement modes and local transactions.
  */
 
-public class JmsConnector extends AbstractConnector implements ConnectionNotificationListener, javax.jms.ExceptionListener
+public class JmsConnector extends AbstractConnector implements ConnectionNotificationListener, ExceptionListener
 {
 
     public static final String JMS = "jms";
@@ -145,6 +146,11 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
     private JmsTopicResolver topicResolver;
 
     private RedeliveryHandlerFactory redeliveryHandlerFactory;
+
+    /**
+     * In-container embedded mode disables some features for strict Java EE compliance.
+     */
+    private boolean embeddedMode;
 
     ////////////////////////////////////////////////////////////////////////
     // Methods
@@ -383,7 +389,10 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
             {
                 connection.setClientID(getClientId());
             }
-            connection.setExceptionListener(this);
+            if (!embeddedMode)
+            {
+                connection.setExceptionListener(this);
+            }
         }
 
 
@@ -451,7 +460,10 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
             if (connection != null)
             {
                 // Ignore exceptions while closing the connection
-                connection.setExceptionListener(null); 
+                if (!embeddedMode)
+                {
+                    connection.setExceptionListener(null);
+                }
                 connection.close();
             }
         }
@@ -1137,4 +1149,14 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
    {
        this.recoverJmsConnections = recoverJmsConnections;
    }
+
+    public boolean isEmbeddedMode()
+    {
+        return embeddedMode;
+    }
+
+    public void setEmbeddedMode(boolean embeddedMode)
+    {
+        this.embeddedMode = embeddedMode;
+    }
 }
