@@ -13,9 +13,9 @@ import org.mule.MuleServer;
 import org.mule.api.MuleException;
 import org.mule.api.lifecycle.LifecycleException;
 import org.mule.api.lifecycle.LifecyclePhase;
+import org.mule.api.registry.Registry;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.util.ClassUtils;
-import org.mule.util.CollectionUtils;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -29,7 +29,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.collections.functors.InstanceofPredicate;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -67,7 +66,8 @@ public class DefaultLifecyclePhase implements LifecyclePhase
         this.oppositeLifecyclePhase = oppositeLifecyclePhase;
     }
 
-    public void applyLifecycle(Collection objects, String currentPhase) throws MuleException
+    // TODO currentPhase is never used in the method, drop it?
+    public void applyLifecycle(Registry registry) throws MuleException
     {
         if (logger.isDebugEnabled())
         {
@@ -84,7 +84,10 @@ public class DefaultLifecyclePhase implements LifecyclePhase
             // TODO dol: the following is incorrect as we explicitly order the elements from the registry
             // list so that ordering is preserved on retry
             //List targets = new LinkedList(MuleServer.getMuleContext().getRegistry().lookupObjects(lo.getType()));
-            List targets = new LinkedList(CollectionUtils.select(objects, new InstanceofPredicate(lo.getType())));
+            // TODO Colleciton -> List
+            Collection<?> targetsObj = registry.lookupObjects(lo.getType());
+            List targets = new LinkedList(targetsObj);
+            //List targets = new LinkedList(CollectionUtils.select(registry, new InstanceofPredicate(lo.getType())));
             if (targets.size() == 0)
             {
                 continue;
