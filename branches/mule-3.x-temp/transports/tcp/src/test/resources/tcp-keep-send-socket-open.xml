@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesource.org/schema/mule/core/2.2"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tcp="http://www.mulesource.org/schema/mule/tcp/2.2"
+       xmlns:test="http://www.mulesource.org/schema/mule/test/2.2"
+       xsi:schemaLocation="
+               http://www.mulesource.org/schema/mule/test/2.2 http://www.mulesource.org/schema/mule/test/2.2/mule-test.xsd
+               http://www.mulesource.org/schema/mule/core/2.2 http://www.mulesource.org/schema/mule/core/2.2/mule.xsd
+               http://www.mulesource.org/schema/mule/tcp/2.2 http://www.mulesource.org/schema/mule/tcp/2.2/mule-tcp.xsd">
+
+    <tcp:connector name="openConnector" keepSendSocketOpen="true"/>
+
+    <tcp:connector name="openConnectorLength" keepSendSocketOpen="true" validateConnections="false">
+        <tcp:length-protocol payloadOnly="true"/>
+    </tcp:connector>
+
+    <tcp:connector name="closeConnectorLength" validateConnections="false">
+        <tcp:length-protocol payloadOnly="true"/>
+    </tcp:connector>
+
+    <tcp:endpoint host="localhost" port="60198"
+                  connector-ref="openConnector" name="clientEndpoint" synchronous="true"/>
+
+    <model name="main">
+        <service name="testComponent">
+            <inbound>
+                <!-- legacy style -->
+                <inbound-endpoint ref="clientEndpoint"/>
+            </inbound>
+            <test:component appendString=" Received"/>
+        </service>
+    </model>
+
+</mule>
