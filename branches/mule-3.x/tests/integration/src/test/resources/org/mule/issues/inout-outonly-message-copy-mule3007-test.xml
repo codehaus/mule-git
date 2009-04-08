@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesource.org/schema/mule/core"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:spring="http://www.springframework.org/schema/beans"
+    xmlns:mule="http://www.mulesource.org/schema/mule/core"
+    xmlns:jms="http://www.mulesource.org/schema/mule/jms"
+    xmlns:http="http://www.mulesource.org/schema/mule/http"
+    xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+       http://www.mulesource.org/schema/mule/core http://www.mulesource.org/schema/mule/core/3.0/mule.xsd
+       http://www.mulesource.org/schema/mule/jms http://www.mulesource.org/schema/mule/jms/3.0/mule-jms.xsd
+       http://www.mulesource.org/schema/mule/http http://www.mulesource.org/schema/mule/http/3.0/mule-http.xsd">
+
+    <jms:activemq-connector name="activemqConnector" />
+
+<!--    <jms:object-to-jmsmessage-transformer name="ObjectToJmsMessage" />-->
+    <jms:jmsmessage-to-object-transformer name="JmsMessageToObject" />
+
+    <model name="StreamTest">
+        <service name="StreamTestService">
+            <inbound>
+                <inbound-endpoint address="http://localhost:38900/services" />
+            </inbound>
+            <outbound>
+                <pass-through-router>
+                    <jms:outbound-endpoint queue="queue" />
+                </pass-through-router>
+            </outbound>
+        </service>
+    </model>
+</mule>

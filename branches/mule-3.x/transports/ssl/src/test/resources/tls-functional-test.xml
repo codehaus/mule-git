@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesource.org/schema/mule/core"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tls="http://www.mulesource.org/schema/mule/tls"
+       xmlns:test="http://www.mulesource.org/schema/mule/test"
+    xsi:schemaLocation="
+       http://www.mulesource.org/schema/mule/test http://www.mulesource.org/schema/mule/test/3.0/mule-test.xsd
+       http://www.mulesource.org/schema/mule/core http://www.mulesource.org/schema/mule/core/3.0/mule.xsd
+       http://www.mulesource.org/schema/mule/tls http://www.mulesource.org/schema/mule/tls/3.0/mule-tls.xsd">
+
+    <!-- keepSendSocketOpen is required for the Async test case?  see TCP -->
+    <tls:connector name="tlsConnector" keepSendSocketOpen="true">
+        <tls:client path="clientKeyStore" storePassword="mulepassword"/>
+        <tls:key-store path="serverKeystore" storePassword="mulepassword" keyPassword="mulepassword"/>
+        <tls:server path="trustStore" storePassword="mulepassword"/>
+    </tls:connector>
+
+    <tls:endpoint name="sendEndpoint" connector-ref="tlsConnector" address="tls://localhost:60198" synchronous="true"/>
+
+    <endpoint name="sendManyEndpoint" connector-ref="tlsConnector" address="tls://localhost:60197" synchronous="true"/>
+
+    <tls:endpoint name="asyncEndpoint" connector-ref="tlsConnector" host="localhost" port="60196" synchronous="false"/>
+
+    <model name="main">
+
+        <custom-service name="testComponent1" class="org.mule.tck.testmodels.mule.TestSedaService">
+            <inbound>
+                <tls:inbound-endpoint ref="sendEndpoint"/>
+            </inbound>
+            <test:component appendString=" Received">
+                <test:callback class="org.mule.tck.functional.CounterCallback"/>
+            </test:component>
+        </custom-service>
+
+        <custom-service name="testComponent2" class="org.mule.tck.testmodels.mule.TestSedaService">
+            <inbound>
+                <tls:inbound-endpoint ref="sendManyEndpoint"/>
+            </inbound>
+            <test:component appendString=" Received">
+                <test:callback class="org.mule.tck.functional.CounterCallback"/>
+            </test:component>
+        </custom-service>
+
+        <custom-service name="testComponent3" class="org.mule.tck.testmodels.mule.TestSedaService">
+            <inbound>
+                <inbound-endpoint ref="asyncEndpoint"/>
+            </inbound>
+            <test:component appendString=" Received">
+                <test:callback class="org.mule.tck.functional.ResponseWriterCallback"/>
+            </test:component>
+        </custom-service>
+
+    </model>
+
+</mule>
