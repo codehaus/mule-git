@@ -32,7 +32,7 @@
              dest="${dir.user.lib}/jython-engine-1.1-jdk14.jar"
              verbose="true"
              usetimestamp="true"/>
-        <get src="${url.maven.repo}/org/python/jython/2.2.1/jython-2.2.1.jar"
+        <get src="${url.maven.repo}/org/python/jython.1/jython-2.2.1.jar"
              dest="${dir.user.lib}/jython-2.2.1.jar"
              verbose="true"
              usetimestamp="true"/>
