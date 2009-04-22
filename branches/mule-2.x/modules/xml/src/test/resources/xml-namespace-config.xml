@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesource.org/schema/mule/core/2.2"
+      xmlns:mulexml="http://www.mulesource.org/schema/mule/xml/2.2"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="
+       http://www.mulesource.org/schema/mule/xml/2.2 http://www.mulesource.org/schema/mule/xml/2.2/mule-xml.xsd
+       http://www.mulesource.org/schema/mule/core/2.2 http://www.mulesource.org/schema/mule/core/2.2/mule.xsd">
+
+    <mulexml:namespace-manager includeConfigNamespaces="true">
+        <mulexml:namespace prefix="foo" uri="http://foo.com"/>
+    </mulexml:namespace-manager>
+
+    <endpoint name="test.ep1" address="test://ep1">
+        <mulexml:jxpath-filter pattern="/bar:foo/bar:bar">
+            <mulexml:namespace prefix="bar" uri="http://bar.com"/>
+        </mulexml:jxpath-filter>
+    </endpoint>
+
+    <endpoint name="test.ep2" address="test://ep2">
+        <mulexml:jaxen-filter pattern="/car:foo/car:bar">
+            <mulexml:namespace prefix="car" uri="http://car.com"/>
+        </mulexml:jaxen-filter>
+    </endpoint>
+
+    <mulexml:jxpath-extractor-transformer name="jxpath-extractor">
+        <mulexml:namespace prefix="bar" uri="http://bar.com"/>
+    </mulexml:jxpath-extractor-transformer>
+</mule>
