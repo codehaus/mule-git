@@ -88,7 +88,7 @@ public abstract class AbstractOracleJmsConnector extends JmsConnector
             setJndiDestinations(false);
             setForceJndiDestinations(false);
 
-            setJmsSupport(new OracleJmsSupport(this, null, false, false));
+            setJmsSupport(new OracleJmsSupport(this, false, false));
         }
         catch (Exception e) {
             throw new ConnectException(CoreMessages.failedToCreate("Oracle Jms Connector"), 

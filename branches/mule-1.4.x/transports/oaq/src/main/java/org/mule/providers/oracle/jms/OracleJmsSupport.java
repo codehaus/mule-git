@@ -26,7 +26,6 @@ import javax.jms.QueueSession;
 import javax.jms.Session;
 import javax.jms.Topic;
 import javax.jms.TopicSession;
-import javax.naming.Context;
 
 import oracle.jms.AQjmsSession;
 
@@ -53,11 +52,10 @@ public class OracleJmsSupport extends Jms102bSupport
     private Map endpointProperties;
 
     public OracleJmsSupport(JmsConnector connector,
-                            Context context,
                             boolean jndiDestinations,
                             boolean forceJndiDestinations)
     {
-        super(connector, context, jndiDestinations, forceJndiDestinations);
+        super(connector, jndiDestinations, forceJndiDestinations);
     }
 
     /**
