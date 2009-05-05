@@ -48,7 +48,7 @@ import org.junit.After;
 import org.junit.Before;
 
 /**
- * This is the base class for all integration tests that are part of the JMS integration test suite.  this is
+ * This is the base class for all integration tests that are part of the JMS integration test suite.  This is
  * a suite that can be run on multiple JMS providers since all configuration for the provider is abstracted into
  * a single class which implements {@link org.mule.transport.jms.integration.JmsVendorConfiguration}.  The implementation
  * of this class is loaded by looking for the classname in a properties file called 'jms-vendor-configs.txt'in the root
@@ -64,7 +64,7 @@ import org.junit.Before;
  * {@link org.mule.transport.jms.integration.AbstractJmsFunctionalTestCase.ScenarioRollback}
  * {@link org.mule.transport.jms.integration.AbstractJmsFunctionalTestCase.NonTransactedScenario}
  * <p/>
- * This object will also add properties to the registry that can be accessed withn Xml config files using placeholders.
+ * This object will also add properties to the registry that can be accessed within XML config files using placeholders.
  * The following properties are made available -
  * <ul>
  * <li>${inbound.destination} - the URI of the inbound destination (retrieved from an {@link org.mule.transport.jms.integration.JmsVendorConfiguration} implementation)</li>

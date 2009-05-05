@@ -52,7 +52,6 @@ public class FileContentsMessageAdapterTestCase extends AbstractMessageAdapterTe
         }
         else
         {
-            // properly throw
             return new FileContentsMessageAdapter(payload);
         }
     }

@@ -10,15 +10,6 @@
 
 package org.mule.transport;
 
-import java.io.InputStream;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-
-import javax.activation.DataHandler;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.mule.DefaultMuleMessage;
 import org.mule.MuleServer;
 import org.mule.api.ExceptionPayload;
@@ -36,11 +27,21 @@ import org.mule.util.IOUtils;
 import org.mule.util.StringUtils;
 import org.mule.util.UUID;
 
+import java.io.InputStream;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+
+import javax.activation.DataHandler;
+
 import edu.emory.mathcs.backport.java.util.Collections;
 import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
 import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentMap;
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicReference;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * <code>AbstractMessageAdapter</code> provides a base implementation for simple
@@ -61,7 +62,7 @@ public abstract class AbstractMessageAdapter implements MessageAdapter, ThreadSa
     /** If an excpetion occurs while processing this message an exception payload will be attached here */
     protected ExceptionPayload exceptionPayload;
 
-    /** the default UUID for the message. If the underlying transport has the notion of a message id, this uuid will be ignorred */
+    /** the default UUID for the message. If the underlying transport has the notion of a message id, this uuid will be ignored */
     protected String id = UUID.getUUID();
 
     // these are transient because serisalisation generates a new instance

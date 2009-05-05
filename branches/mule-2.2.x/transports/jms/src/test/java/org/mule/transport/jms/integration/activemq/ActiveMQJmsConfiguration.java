@@ -81,8 +81,6 @@ public class ActiveMQJmsConfiguration implements JmsVendorConfiguration
 
     /**
      * Timeout used when checking that a message is NOT present
-     *
-     * @return
      */
     public long getSmallTimeout()
     {
@@ -91,8 +89,6 @@ public class ActiveMQJmsConfiguration implements JmsVendorConfiguration
 
     /**
      * The timeout used when waiting for a message to arrive
-     *
-     * @return
      */
     public long getTimeout()
     {
