@@ -26,10 +26,7 @@ import org.mule.transport.DefaultMessageAdapter;
 import org.mule.transport.NullPayload;
 import org.mule.util.ClassUtils;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,8 +51,8 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess
     private static final long serialVersionUID = 1541720810851984842L;
     private static Log logger = LogFactory.getLog(DefaultMuleMessage.class);
 
-    private transient MessageAdapter adapter;
-    private transient MessageAdapter originalAdapter = null;
+    private MessageAdapter adapter;
+    private MessageAdapter originalAdapter = null;
     private transient List<Integer> appliedTransformerHashCodes = new CopyOnWriteArrayList();
     private byte[] cache;
     
@@ -708,56 +705,6 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess
     public boolean isConsumable()
     {
         return isConsumedFromAdditional(this.getPayload().getClass());
-    }
-
-    private void writeObject(ObjectOutputStream out) throws IOException
-    {
-        out.defaultWriteObject();
-        adapter.marshalPayloadAsBytes(out);
-        marshalMessageAdapterProperties(out);
-    }
-
-    private void marshalMessageAdapterProperties(ObjectOutputStream out) throws IOException
-    {
-        Set propertyNames = adapter.getPropertyNames();
-        out.writeInt(propertyNames.size());
-        for (Object property : propertyNames)
-        {
-            String key = property.toString();
-            out.writeObject(key);
-            out.writeObject(getProperty(key));
-        }
-    }
-
-    private void readObject(ObjectInputStream in) throws Exception
-    {
-        in.defaultReadObject();
-        adapter = unmarshalMessageAdapter(in);
-        unmarshalMessageAdapterProperties(in, adapter);
-    }
-    
-    private MessageAdapter unmarshalMessageAdapter(ObjectInputStream in) throws IOException
-    {
-        int payloadSize = in.readInt();
-        byte[] payload = new byte[payloadSize];
-        in.read(payload);
-        return new DefaultMessageAdapter(payload);
-    }
-
-    private void unmarshalMessageAdapterProperties(ObjectInputStream in, MessageAdapter messageAdapter) throws Exception
-    {
-        int propertyCount = in.readInt();
-        for (int i = 0; i < propertyCount; i++)
-        {
-            String key = (String) in.readObject();
-            Object value = in.readObject();            
-            messageAdapter.setProperty(key, value);
-        }        
-    }
-
-    public void marshalPayloadAsBytes(ObjectOutputStream out) throws IOException
-    {
-        adapter.marshalPayloadAsBytes(out);
     }
 
 }

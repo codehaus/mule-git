@@ -27,9 +27,7 @@ import org.mule.util.IOUtils;
 import org.mule.util.StringUtils;
 import org.mule.util.UUID;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.ObjectOutputStream;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -668,10 +666,4 @@ public abstract class AbstractMessageAdapter implements MessageAdapter, ThreadSa
         return this;
     }
 
-    // TODO dirk: remove this method or make it abstract so that all subclasses properly have to implement it
-    public void marshalPayloadAsBytes(ObjectOutputStream out) throws IOException
-    {
-        throw new UnsupportedOperationException("not yet implemented");
-    }
-    
 }
