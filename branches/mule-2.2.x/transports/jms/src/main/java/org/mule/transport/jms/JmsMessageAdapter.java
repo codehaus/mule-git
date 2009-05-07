@@ -104,8 +104,8 @@ public class JmsMessageAdapter extends AbstractMessageAdapter
 
     /**
      * Decomposes the received message into a payload, properties (headers) and possibly attachements too.
-     * Important note: when adding properties you must assign them to the inbound scope.  this can be done in
-     * two ways-
+     * Important note: when adding properties you must assign them to the inbound scope. This can be done in
+     * two ways
      * <ol>
      * <li>use the method {@link #setProperty(String, Object, org.mule.api.transport.PropertyScope)} using the
      * {@link org.mule.api.transport.PropertyScope.INBOUND}</li>
@@ -272,7 +272,6 @@ public class JmsMessageAdapter extends AbstractMessageAdapter
         addInboundProperties(props);
     }
 
-
     /**
      * Sets a correlationId for this message. The correlation Id can be used by
      * components in the system to manage message relations <p/> transport protocol.
@@ -289,7 +288,6 @@ public class JmsMessageAdapter extends AbstractMessageAdapter
         super.setCorrelationId(id);
         setProperty(JmsConstants.JMS_CORRELATION_ID, id);
     }
-
 
     /**
      * Sets a replyTo address for this message. This is useful in an asynchronous
