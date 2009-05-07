@@ -12,6 +12,8 @@ package org.mule.api.transport;
 
 import org.mule.api.ExceptionPayload;
 
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Map;
 import java.util.Set;
@@ -359,4 +361,6 @@ public interface MessageAdapter extends Serializable
      * Typically this is used to esure that a message stream is closed
      */
     void release();
+
+    void marshalPayloadAsBytes(ObjectOutputStream out) throws IOException;
 }
