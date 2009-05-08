@@ -6,22 +6,20 @@
        http://www.mulesource.org/schema/mule/core/2.2 http://www.mulesource.org/schema/mule/core/2.2/mule.xsd">
 
     <mule:mule>
-
         <mule:custom-transaction-manager class="org.mule.tck.testmodels.mule.TestTransactionManagerFactory">
             <mule:environment>
                 <entry key="property1" value="true"/>
                 <entry key="property2" value="Test"/>
             </mule:environment>
         </mule:custom-transaction-manager>
-        
-        <!--
-    <mule:transaction-manager-weblogic>
-        <mule:environment>
-            <entry key="java.naming.factory.initial" value="weblogic.jndi.WLInitialContextFactory"/>
-            <entry key="java.naming.provider.url" value="t3://localhost:7001"/>
-        </mule:environment>
-    </mule:transaction-manager-weblogic>
--->
-    </mule:mule>
 
+        <!-- 
+        <mule:weblogic-transaction-manager>
+            <mule:environment>
+                <entry key="java.naming.factory.initial" value="weblogic.jndi.WLInitialContextFactory"/>
+                <entry key="java.naming.provider.url" value="t3://localhost:7001"/>
+            </mule:environment>
+        </mule:weblogic-transaction-manager>
+        -->
+    </mule:mule>
 </beans>
