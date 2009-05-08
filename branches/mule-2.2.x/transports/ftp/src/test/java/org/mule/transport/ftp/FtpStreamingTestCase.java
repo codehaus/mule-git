@@ -74,12 +74,12 @@ public class FtpStreamingTestCase extends AbstractFtpServerTestCase
 
         MuleClient client = new MuleClient();
 
-        Object ftc = getComponent("testComponent");
+        FunctionalStreamingTestComponent ftc = (FunctionalStreamingTestComponent)getComponent("testComponent");
         assertTrue("FunctionalStreamingTestComponent expected", ftc instanceof FunctionalStreamingTestComponent);
         assertNotNull(ftc);
-        // assertEquals(1, ftc.getNumber());
+        //assertEquals(1, ftc.getNumber());
 
-        ((FunctionalStreamingTestComponent) ftc).setEventCallback(callback, TEST_MESSAGE.length());
+        ftc.setEventCallback(callback, TEST_MESSAGE.length());
 
         // send out to FTP server via streaming model
         client.dispatch("tcp://localhost:60196", TEST_MESSAGE, new HashMap());

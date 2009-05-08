@@ -57,9 +57,9 @@ public abstract class AbstractFtpServerTestCase extends FunctionalTestCase
     }
 
     @Override
-    protected void suitePreSetUp() throws Exception
+    protected void doSetUp() throws Exception
     {
-        super.suitePreSetUp();
+        //super.suitePreSetUp();
         startServer();
     }
 

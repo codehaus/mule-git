@@ -3,5 +3,6 @@
 #
 
 # MULE-4138 Upgrade Apache FTP server library
-org.mule.transport.ftp.FtpStreamingTestCase
-org.mule.transport.ftp.issues.MultiStreamMule1696TestCase
+# tests are now passing but still using mule version of ftp server, so cannot close jira
+#org.mule.transport.ftp.FtpStreamingTestCase
+#org.mule.transport.ftp.issues.MultiStreamMule1696TestCase

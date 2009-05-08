@@ -64,11 +64,11 @@ public class MultiStreamMule1696TestCase extends AbstractFtpServerTestCase
     {
         MuleClient client = new MuleClient();
 
-        Object ftc = getComponent("testComponent");
+        FunctionalStreamingTestComponent ftc = (FunctionalStreamingTestComponent)getComponent("testComponent");
         assertTrue("FunctionalStreamingTestComponent expected", ftc instanceof FunctionalStreamingTestComponent);
 
         assertNotNull(ftc);
-//        assertEquals(1, ftc.getNumber());
+        assertEquals(1, ftc.getNumber());
 
         CountDownLatch latch = new CountDownLatch(1);
         AtomicReference message = new AtomicReference();
