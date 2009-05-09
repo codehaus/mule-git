@@ -16,6 +16,7 @@ import org.mule.transport.AbstractMessageAdapterTestCase;
 import org.mule.util.FileUtils;
 
 import java.io.File;
+import java.util.Arrays;
 
 public class FileContentsMessageAdapterTestCase extends AbstractMessageAdapterTestCase
 {
