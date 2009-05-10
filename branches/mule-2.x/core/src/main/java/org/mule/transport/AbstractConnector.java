@@ -74,6 +74,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -131,6 +132,8 @@ public abstract class AbstractConnector
      * Default number of concurrent transactional receivers.
      */
     public static final int DEFAULT_NUM_CONCURRENT_TX_RECEIVERS = 4;
+    
+    private static final long SCHEDULER_SHUTDOWN_TIMEOUT = 5000l;
 
     /**
      * logger used by this class
@@ -461,8 +464,8 @@ public abstract class AbstractConnector
         }
 
         // shutdown our scheduler service
-        ((ScheduledExecutorService) scheduler.get()).shutdown();
-
+        shutdownScheduler();
+        
         this.doStop();
         started.set(false);
 
@@ -505,6 +508,42 @@ public abstract class AbstractConnector
         if (logger.isInfoEnabled())
         {
             logger.info("Stopped: " + this);
+        }
+    }
+
+    protected void shutdownScheduler()
+    {
+        ScheduledExecutorService schedulerExecutor = ((ScheduledExecutorService) scheduler.get());
+        if (schedulerExecutor != null)
+        {
+            // Disable new tasks from being submitted
+            schedulerExecutor.shutdown();
+            try
+            {
+                // Wait a while for existing tasks to terminate
+                if (!schedulerExecutor.awaitTermination(SCHEDULER_SHUTDOWN_TIMEOUT, TimeUnit.MILLISECONDS))
+                {
+                    // Cancel currently executing tasks
+                    List outstanding = schedulerExecutor.shutdownNow();
+                    if (logger.isWarnEnabled())
+                    {
+                        logger.warn(MessageFormat.format(
+                            "Scheduler {0} did not terminate in time; {1} scheduled work items were cancelled.",
+                            name, outstanding.isEmpty() ? "No" : Integer.toString(outstanding.size())));
+                    }
+                }
+            }
+            catch (InterruptedException ie)
+            {
+                // (Re-)Cancel if current thread also interrupted
+                schedulerExecutor.shutdownNow();
+                // Preserve interrupt status
+                Thread.currentThread().interrupt();
+            }
+            finally
+            {
+                schedulerExecutor = null;
+            }
         }
     }
 

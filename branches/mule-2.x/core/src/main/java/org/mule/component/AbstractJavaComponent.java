@@ -104,6 +104,7 @@ public abstract class AbstractJavaComponent extends AbstractComponent implements
     protected LifecycleAdapter createLifeCycleAdaptor() throws MuleException, Exception
     {
         LifecycleAdapter lifecycleAdapter;
+        objectFactory.initialise();
         if (lifecycleAdapterFactory != null)
         {
             // Custom lifecycleAdapterFactory set on component
