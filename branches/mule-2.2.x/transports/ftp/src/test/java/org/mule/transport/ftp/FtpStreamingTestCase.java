@@ -74,8 +74,10 @@ public class FtpStreamingTestCase extends AbstractFtpServerTestCase
 
         MuleClient client = new MuleClient();
 
-        FunctionalStreamingTestComponent ftc = (FunctionalStreamingTestComponent)getComponent("testComponent");
-        assertTrue("FunctionalStreamingTestComponent expected", ftc instanceof FunctionalStreamingTestComponent);
+        Object component = getComponent("testComponent");
+        assertTrue("FunctionalStreamingTestComponent expected", 
+            component instanceof FunctionalStreamingTestComponent);
+        FunctionalStreamingTestComponent ftc = (FunctionalStreamingTestComponent) component;
         assertNotNull(ftc);
         //assertEquals(1, ftc.getNumber());
 
