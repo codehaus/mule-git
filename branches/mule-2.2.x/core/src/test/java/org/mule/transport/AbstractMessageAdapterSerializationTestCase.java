@@ -24,7 +24,7 @@ public abstract class AbstractMessageAdapterSerializationTestCase extends Abstra
     
     public void testMessageAdapterSerialization() throws Exception
     {
-        MessageAdapter messageAdapter = createMessageAdapter();
+        MessageAdapter messageAdapter = createAndCheckMessageAdapter();
         DefaultMuleMessage muleMessage = new DefaultMuleMessage(messageAdapter);
 
         byte[] serializedMessage = SerializationUtils.serialize(muleMessage);
@@ -42,6 +42,15 @@ public abstract class AbstractMessageAdapterSerializationTestCase extends Abstra
         doAdditionalAssertions(readAdapter);
     }
 
+    private MessageAdapter createAndCheckMessageAdapter() throws Exception
+    {
+        MessageAdapter messageAdapter = createMessageAdapter();
+        
+        assertEquals(STRING_PROPERTY_VALUE, messageAdapter.getProperty(STRING_PROPERTY_KEY));
+        
+        return messageAdapter;
+    }
+    
     protected abstract MessageAdapter createMessageAdapter() throws Exception;
 
     /**

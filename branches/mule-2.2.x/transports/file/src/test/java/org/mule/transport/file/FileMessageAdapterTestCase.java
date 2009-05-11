@@ -21,6 +21,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.util.Arrays;
 
+import org.apache.commons.lang.SerializationUtils;
+
 public class FileMessageAdapterTestCase extends AbstractMessageAdapterTestCase
 {
     private File message;
@@ -51,12 +53,12 @@ public class FileMessageAdapterTestCase extends AbstractMessageAdapterTestCase
 
     public void testMessageRetrieval2() throws Exception
     {
-        Object message = new ReceiverFileInputStream((File) getValidMessage(), false, null);
+        Object msg = new ReceiverFileInputStream((File) getValidMessage(), false, null);
 
-        MessageAdapter adapter = createAdapter(message);
+        MessageAdapter adapter = createAdapter(msg);
         MuleMessage muleMessage = new DefaultMuleMessage(adapter);
 
-        doTestMessageEqualsPayload(message, adapter.getPayload());
+        doTestMessageEqualsPayload(msg, adapter.getPayload());
 
         byte[] bytes = muleMessage.getPayloadAsBytes();
         assertNotNull(bytes);
@@ -67,21 +69,21 @@ public class FileMessageAdapterTestCase extends AbstractMessageAdapterTestCase
         assertNotNull(adapter.getPayload());
     }
 
-    protected void doTestMessageEqualsPayload(Object message, Object payload) throws Exception
+    protected void doTestMessageEqualsPayload(Object msg, Object payload) throws Exception
     {
 
-        if (message instanceof File)
+        if (msg instanceof File)
         {
-            File file = (File) message;
+            File file = (File) msg;
             assertTrue(payload instanceof File);
             assertEquals(file, payload);
         }
-        else if (message instanceof FileInputStream)
+        else if (msg instanceof FileInputStream)
         {
             byte[] messageBytes = null;
             byte[] payloadBytes = null;
 
-            FileInputStream fis = (FileInputStream) message;
+            FileInputStream fis = (FileInputStream) msg;
             FileInputStream payloadFis = (FileInputStream) payload;
             messageBytes = new byte[fis.available()];
             payloadBytes = new byte[payloadFis.available()];
@@ -94,4 +96,21 @@ public class FileMessageAdapterTestCase extends AbstractMessageAdapterTestCase
             fail("FileMessageAdaptor supports File or FileInputStream");
         }
     }
+    
+    public void testSerialization() throws Exception
+    {
+        MessageAdapter messageAdapter = createAdapter(getValidMessage());
+        DefaultMuleMessage muleMessage = new DefaultMuleMessage(messageAdapter);
+
+        byte[] serializedMessage = SerializationUtils.serialize(muleMessage);
+
+        DefaultMuleMessage readMessage = 
+            (DefaultMuleMessage) SerializationUtils.deserialize(serializedMessage);
+        assertNotNull(readMessage.getAdapter());
+
+        MessageAdapter readMessageAdapter = readMessage.getAdapter();
+        assertTrue(readMessageAdapter instanceof FileMessageAdapter);
+        assertEquals(getValidMessage(), readMessageAdapter.getPayload());
+    }
+
 }

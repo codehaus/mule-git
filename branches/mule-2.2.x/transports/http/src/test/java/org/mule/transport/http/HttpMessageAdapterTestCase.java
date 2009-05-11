@@ -10,14 +10,17 @@
 
 package org.mule.transport.http;
 
+import org.mule.DefaultMuleMessage;
 import org.mule.api.MessagingException;
 import org.mule.api.transport.MessageAdapter;
 import org.mule.transport.AbstractMessageAdapterTestCase;
-import org.mule.transport.http.HttpMessageAdapter;
+
+import edu.emory.mathcs.backport.java.util.Arrays;
+
+import org.apache.commons.lang.SerializationUtils;
 
 public class HttpMessageAdapterTestCase extends AbstractMessageAdapterTestCase
 {
-    protected static final String TEST_MESSAGE = "Hello";
 
     private byte[] message = TEST_MESSAGE.getBytes();
 
@@ -30,4 +33,21 @@ public class HttpMessageAdapterTestCase extends AbstractMessageAdapterTestCase
     {
         return new HttpMessageAdapter(payload);
     }
+    
+    public void testSerialization() throws Exception
+    {
+        MessageAdapter messageAdapter = createAdapter(getValidMessage());
+        DefaultMuleMessage muleMessage = new DefaultMuleMessage(messageAdapter);
+
+        byte[] serializedMessage = SerializationUtils.serialize(muleMessage);
+
+        DefaultMuleMessage readMessage = 
+            (DefaultMuleMessage) SerializationUtils.deserialize(serializedMessage);
+        assertNotNull(readMessage.getAdapter());
+
+        MessageAdapter readMessageAdapter = readMessage.getAdapter();
+        assertTrue(readMessageAdapter instanceof HttpMessageAdapter);
+        assertTrue(Arrays.equals(message, (byte[]) readMessageAdapter.getPayload()));
+    }
+
 }
