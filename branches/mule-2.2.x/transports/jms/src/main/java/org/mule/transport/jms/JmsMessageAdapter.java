@@ -16,6 +16,7 @@ import org.mule.api.config.MuleProperties;
 import org.mule.api.transport.MessageTypeNotSupportedException;
 import org.mule.api.transport.PropertyScope;
 import org.mule.transport.AbstractMessageAdapter;
+import org.mule.transport.MessageAdapterSerialization;
 
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -32,7 +33,7 @@ import javax.jms.Message;
  * IllegalArgumentException if the source message type is not compatible. The
  * JmsMessageAdapter should be suitable for all JMS Connector implementations.
  */
-public class JmsMessageAdapter extends AbstractMessageAdapter
+public class JmsMessageAdapter extends AbstractMessageAdapter implements MessageAdapterSerialization
 {
     /**
      * Serial version
@@ -283,6 +284,7 @@ public class JmsMessageAdapter extends AbstractMessageAdapter
      *
      * @param id the Id reference for this relationship
      */
+    @Override
     public void setCorrelationId(String id)
     {
         super.setCorrelationId(id);
@@ -297,6 +299,7 @@ public class JmsMessageAdapter extends AbstractMessageAdapter
      *
      * @param replyTo the endpointUri url to reply to
      */
+    @Override
     public void setReplyTo(Object replyTo)
     {
         if (replyTo instanceof Destination)
@@ -306,9 +309,15 @@ public class JmsMessageAdapter extends AbstractMessageAdapter
         super.setReplyTo(replyTo);
     }
 
+    @Override
     public ThreadSafeAccess newThreadCopy()
     {
         return new JmsMessageAdapter(this);
+    }
+
+    public byte[] getPayloadForSerialization() throws Exception
+    {
+        return JmsMessageUtils.toByteArray(jmsMessage, jmsSpec, getEncoding());
     }
 
 }
