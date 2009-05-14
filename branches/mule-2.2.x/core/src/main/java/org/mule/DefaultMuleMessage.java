@@ -58,7 +58,7 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess
     private transient MessageAdapter adapter;
     private transient MessageAdapter originalAdapter = null;
     private transient List<Integer> appliedTransformerHashCodes = new CopyOnWriteArrayList();
-    private byte[] cache;
+    private transient byte[] cache;
     
     private static final List<Class> consumableClasses = new ArrayList<Class>();
     
