@@ -23,27 +23,27 @@
                      </execution>
                  </executions>
              </plugin>
-            <plugin>
+             <!-- create a defined directory that's used by the unit tests -->
+             <plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
                 <executions>
-                <execution>
-                    <phase>test-compile</phase>
-                    <configuration>
-                        <tasks>
-                        <mkdir dir="target/ftpserver"/>
-                        </tasks>
-                    </configuration>
-                    <goals>
-                        <goal>run</goal>
-                    </goals>
-                </execution>
+                    <execution>
+                        <phase>test-compile</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+                                <mkdir dir="target/ftpserver"/>
+                            </tasks>
+                        </configuration>
+                    </execution>
                 </executions>
-            </plugin>             
+            </plugin>
          </plugins>
     </build>
 
     <dependencies>
-        
         <dependency>
             <groupId>commons-net</groupId>
             <artifactId>commons-net</artifactId>
@@ -54,7 +54,6 @@
             <artifactId>oro</artifactId>
             <version>${oroVersion}-osgi</version>
         </dependency>
-        
         <dependency>
             <groupId>org.mule.transports</groupId>
             <artifactId>mule-transport-file</artifactId>
@@ -79,7 +78,7 @@
             <artifactId>ftpserver-deprecated</artifactId>
             <version>1.0.0-M2</version>
             <scope>test</scope>
-        </dependency>        
+        </dependency>
         <dependency>
             <groupId>org.apache.ftpserver</groupId>
             <artifactId>ftpserver-core</artifactId>
