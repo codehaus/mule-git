@@ -230,65 +230,41 @@ public class HttpConnector extends TcpConnector
         return HTTP;
     }
 
-    /**
-     * @return
-     */
     public String getProxyHostname()
     {
         return proxyHostname;
     }
 
-    /**
-     * @return
-     */
     public String getProxyPassword()
     {
         return proxyPassword;
     }
 
-    /**
-     * @return
-     */
     public int getProxyPort()
     {
         return proxyPort;
     }
 
-    /**
-     * @return
-     */
     public String getProxyUsername()
     {
         return proxyUsername;
     }
 
-    /**
-     * @param host
-     */
     public void setProxyHostname(String host)
     {
         proxyHostname = host;
     }
 
-    /**
-     * @param string
-     */
     public void setProxyPassword(String string)
     {
         proxyPassword = string;
     }
 
-    /**
-     * @param port
-     */
     public void setProxyPort(int port)
     {
         proxyPort = port;
     }
 
-    /**
-     * @param string
-     */
     public void setProxyUsername(String string)
     {
         proxyUsername = string;
@@ -404,11 +380,15 @@ public class HttpConnector extends TcpConnector
      */
     public static String normalizeUrl(String url)
     {
-        if (url == null) {
+        if (url == null) 
+        {
             url = "/";
-        } else if (!url.startsWith("/")) {
+        } 
+        else if (!url.startsWith("/")) 
+        {
             url = "/" + url;
         }
         return url;
     }
+
 }
