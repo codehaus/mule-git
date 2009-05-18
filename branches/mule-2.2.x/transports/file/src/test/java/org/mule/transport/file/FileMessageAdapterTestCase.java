@@ -19,8 +19,11 @@ import org.mule.util.FileUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.NotSerializableException;
 import java.util.Arrays;
 
+import org.apache.commons.lang.SerializationException;
 import org.apache.commons.lang.SerializationUtils;
 
 public class FileMessageAdapterTestCase extends AbstractMessageAdapterTestCase
@@ -97,11 +100,32 @@ public class FileMessageAdapterTestCase extends AbstractMessageAdapterTestCase
         }
     }
     
-    public void testSerialization() throws Exception
+    public void testSerializationWithFile() throws Exception
     {
         MessageAdapter messageAdapter = createAdapter(getValidMessage());
         DefaultMuleMessage muleMessage = new DefaultMuleMessage(messageAdapter);
+        serializeMessage(muleMessage);
+    }
 
+    public void testSerializationWithInputStream() throws Exception
+    {        
+        try
+        {
+            InputStream inputStream = new ReceiverFileInputStream(message, false, message);
+            MessageAdapter messageAdapter = createAdapter(inputStream);
+            DefaultMuleMessage muleMessage = new DefaultMuleMessage(messageAdapter);
+
+            serializeMessage(muleMessage);
+            fail("serializing a ReceiverFileInputStream is not expected to work");
+        }
+        catch (SerializationException ex)
+        {
+            assertTrue(ex.getCause() instanceof NotSerializableException);
+        }
+    }
+    
+    private void serializeMessage(MuleMessage muleMessage) throws Exception
+    {
         byte[] serializedMessage = SerializationUtils.serialize(muleMessage);
 
         DefaultMuleMessage readMessage = 
@@ -112,5 +136,5 @@ public class FileMessageAdapterTestCase extends AbstractMessageAdapterTestCase
         assertTrue(readMessageAdapter instanceof FileMessageAdapter);
         assertEquals(getValidMessage(), readMessageAdapter.getPayload());
     }
-
+    
 }

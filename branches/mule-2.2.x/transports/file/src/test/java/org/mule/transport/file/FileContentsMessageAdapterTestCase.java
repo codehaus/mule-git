@@ -74,7 +74,7 @@ public class FileContentsMessageAdapterTestCase extends AbstractMessageAdapterTe
     
     public void testSerialization() throws Exception
     {
-        MessageAdapter messageAdapter = createAdapter(getValidMessage());
+        MessageAdapter messageAdapter = createAdapter(messageFile);        
         DefaultMuleMessage muleMessage = new DefaultMuleMessage(messageAdapter);
 
         byte[] serializedMessage = SerializationUtils.serialize(muleMessage);
