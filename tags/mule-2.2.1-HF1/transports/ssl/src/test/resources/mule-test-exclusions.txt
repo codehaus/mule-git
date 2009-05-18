@@ -1,0 +1,7 @@
+#
+# Test cases listed in this file are not run.
+#
+
+# Failing intermittently due to port contention
+org.mule.transport.ssl.SslCertificatesTestCase
+org.mule.transport.http.issues.StreamingSpeedMule1389TestCase
