@@ -38,8 +38,6 @@ import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.params.HttpConnectionManagerParams;
 
-import sun.rmi.transport.Endpoint;
-
 /**
  * <code>HttpConnector</code> provides a way of receiving and sending http requests
  * and responses. The Connector itself handles dispatching http requests. The
@@ -112,7 +110,7 @@ public class HttpConnector extends TcpConnector
         props.add(HTTP_STATUS_PROPERTY);
         props.add(HTTP_VERSION_PROPERTY);
         HTTP_INBOUND_PROPERTIES = props;
-    };
+    }
     
     public static final String HTTP_COOKIE_SPEC_PROPERTY = "cookieSpec";
     public static final String HTTP_COOKIES_PROPERTY = "cookies";
@@ -171,8 +169,9 @@ public class HttpConnector extends TcpConnector
     }
 
     /**
-     * @see Connector#registerListener(Service, Endpoint)
+     * @see Connector#registerListener(Service, InboundEndpoint)
      */
+    @Override
     public MessageReceiver registerListener(Service service, InboundEndpoint endpoint) throws Exception
     {
         if (endpoint != null)
@@ -210,6 +209,7 @@ public class HttpConnector extends TcpConnector
      * @param endpoint the endpoint being registered for the service
      * @return the key to store the newly created receiver against
      */
+    @Override
     protected Object getReceiverKey(Service service, InboundEndpoint endpoint)
     {
         String key = endpoint.getEndpointURI().toString();
@@ -224,6 +224,7 @@ public class HttpConnector extends TcpConnector
     /**
      * @see org.mule.api.transport.Connector#getProtocol()
      */
+    @Override
     public String getProtocol()
     {
         return HTTP;
@@ -293,6 +294,7 @@ public class HttpConnector extends TcpConnector
         proxyUsername = string;
     }
 
+    @Override
     public Map getReceivers()
     {
         return this.receivers;
@@ -399,8 +401,6 @@ public class HttpConnector extends TcpConnector
 
     /**
      * Ensures that the supplied URL starts with a '/'.
-     * @param url
-     * @return
      */
     public static String normalizeUrl(String url)
     {
