@@ -343,8 +343,7 @@ public class SedaService extends AbstractService implements Work, WorkListener
                 // before stopping
                 if (stopping.get())
                 {
-                    if (queueProfile.isPersistent() || queueSession == null || getQueueSize() <= 0
-                        || (threadingProfile.isDoThreading() && !workManager.isStarted()))
+                    if (isPersistent() || queueSession == null || getQueueSize() <= 0)
                     {
                         stopping.set(false);
                         break;
@@ -406,6 +405,12 @@ public class SedaService extends AbstractService implements Work, WorkListener
                 }
             }
         }
+    }
+
+    /** Are the events in the SEDA queue persistent? */
+    protected boolean isPersistent()
+    {
+        return queueProfile.isPersistent();
     }
 
     public void release()
