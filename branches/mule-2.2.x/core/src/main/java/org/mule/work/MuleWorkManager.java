@@ -236,15 +236,10 @@ public class MuleWorkManager implements WorkManager
      */
     public void execute(Runnable work)
     {
-        if (workExecutorService == null)
-        {
-            throw new IllegalStateException("This MuleWorkManager '" + name + "' was never started");
-        }
-        else if (workExecutorService.isShutdown())
+        if (!isStarted())
         {
             throw new IllegalStateException("This MuleWorkManager '" + name + "' is stopped");
         }
-
         workExecutorService.execute(work);
     }
 
@@ -257,7 +252,7 @@ public class MuleWorkManager implements WorkManager
      */
     private void executeWork(WorkerContext work, WorkExecutor workExecutor) throws WorkException
     {
-        if (workExecutorService == null || workExecutorService.isShutdown())
+        if (!isStarted())
         {
             throw new IllegalStateException("This MuleWorkManager '" + name + "' is stopped");
         }
@@ -280,4 +275,8 @@ public class MuleWorkManager implements WorkManager
         }
     }
 
+    public boolean isStarted()
+    {
+        return (workExecutorService != null && !workExecutorService.isShutdown());
+    }
 }

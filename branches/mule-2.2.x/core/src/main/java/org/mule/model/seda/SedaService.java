@@ -343,7 +343,8 @@ public class SedaService extends AbstractService implements Work, WorkListener
                 // before stopping
                 if (stopping.get())
                 {
-                    if (queueProfile.isPersistent() || queueSession == null || getQueueSize() <= 0)
+                    if (queueProfile.isPersistent() || queueSession == null || getQueueSize() <= 0
+                        || (threadingProfile.isDoThreading() && !workManager.isStarted()))
                     {
                         stopping.set(false);
                         break;
