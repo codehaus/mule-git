@@ -31,11 +31,13 @@ import javax.servlet.http.HttpServletRequest;
 
 public class HttpRequestMessageAdapterTestCase extends AbstractMessageAdapterTestCase
 {
+    
     public Object getValidMessage() throws Exception
     {
         return getMockRequest("test message");
     }
     
+    @Override
     protected void doTestMessageEqualsPayload(Object message, Object payload) throws Exception
     {
         assertTrue(payload instanceof InputStream);
@@ -102,6 +104,7 @@ public class HttpRequestMessageAdapterTestCase extends AbstractMessageAdapterTes
                     return null;
                 }
             });
-        return (HttpServletRequest)proxy;
+        return (HttpServletRequest) proxy;
     }
+    
 }

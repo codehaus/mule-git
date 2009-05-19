@@ -29,9 +29,8 @@ import javax.servlet.http.HttpSession;
 
 /**
  * <code>HttpRequestMessageAdapter</code> is a Mule message adapter for
- * javax.servletHttpServletRequest objects.
+ * {@link HttpServletRequest} objects.
  */
-
 public class HttpRequestMessageAdapter extends AbstractMessageAdapter
 {
     /**
@@ -48,7 +47,7 @@ public class HttpRequestMessageAdapter extends AbstractMessageAdapter
             setPayload((HttpServletRequest) message);
             setContentEncoding((HttpServletRequest) message);
 
-            Map headers = new HashMap();
+            Map<Object, Object> headers = new HashMap<Object, Object>();
             
             final Map parameterMap = request.getParameterMap();
             if (parameterMap != null && parameterMap.size() > 0)
@@ -111,6 +110,12 @@ public class HttpRequestMessageAdapter extends AbstractMessageAdapter
         }
     }
 
+    protected HttpRequestMessageAdapter(HttpRequestMessageAdapter template)
+    {
+        super(template);
+        request = template.request;
+    }
+
     protected void setContentEncoding(HttpServletRequest request)
     {
         String contentType = request.getContentType();
@@ -130,12 +135,6 @@ public class HttpRequestMessageAdapter extends AbstractMessageAdapter
                 }
             }
         }
-    }
-
-    protected HttpRequestMessageAdapter(HttpRequestMessageAdapter template)
-    {
-        super(template);
-        request = template.request;
     }
 
     public Object getPayload()
@@ -172,6 +171,7 @@ public class HttpRequestMessageAdapter extends AbstractMessageAdapter
         return request;
     }
 
+    @Override
     public String getUniqueId()
     {
         HttpSession session = null;
@@ -200,6 +200,7 @@ public class HttpRequestMessageAdapter extends AbstractMessageAdapter
      * 
      * @param replyTo the endpointUri url to reply to
      */
+    @Override
     public void setReplyTo(Object replyTo)
     {
         if (replyTo != null && replyTo.toString().startsWith("http"))
@@ -217,6 +218,7 @@ public class HttpRequestMessageAdapter extends AbstractMessageAdapter
      * 
      * @return the endpointUri url to reply to or null if one has not been set
      */
+    @Override
     public Object getReplyTo()
     {
         Object replyto = getProperty(MuleProperties.MULE_REPLY_TO_PROPERTY);
@@ -227,6 +229,7 @@ public class HttpRequestMessageAdapter extends AbstractMessageAdapter
         return replyto;
     }
 
+    @Override
     public ThreadSafeAccess newThreadCopy()
     {
         return new HttpRequestMessageAdapter(this);
