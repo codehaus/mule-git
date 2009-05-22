@@ -329,7 +329,7 @@ public class SedaService extends AbstractService implements Work, WorkListener
                     // If service is resumed as part of stopping 
                     if (stopping.get())
                     {
-                        if (!queueProfile.isPersistent() && (queueSession != null && getQueueSize() > 0))
+                        if (!isPersistent() && (queueSession != null && getQueueSize() > 0))
                         {
                             // Any messages in a non-persistent queue went paused service is stopped are lost
                             logger.warn(CoreMessages.stopPausedSedaServiceNonPeristentQueueMessageLoss(getQueueSize(), this));
