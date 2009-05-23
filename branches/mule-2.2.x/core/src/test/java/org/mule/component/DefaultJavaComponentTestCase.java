@@ -49,8 +49,8 @@ public class DefaultJavaComponentTestCase extends AbstractComponentTestCase
         component.start();
 
         assertNotSame(
-            ((DefaultLifecycleAdapter) component.borrowComponentLifecycleAdaptor()).componentObject.get(),
-            ((DefaultLifecycleAdapter) component.borrowComponentLifecycleAdaptor()).componentObject.get());
+            ((DefaultLifecycleAdapter) component.borrowComponentLifecycleAdaptor()).componentObject,
+            ((DefaultLifecycleAdapter) component.borrowComponentLifecycleAdaptor()).componentObject);
 
     }
 
@@ -68,7 +68,8 @@ public class DefaultJavaComponentTestCase extends AbstractComponentTestCase
         component.returnComponentLifecycleAdaptor(lifecycleAdapter);
         component.dispose();
 
-        assertNull(lifecycleAdapter.componentObject.get());
+        assertEquals("disposed",
+            ((WaterMelon) lifecycleAdapter.componentObject).getState());
     }
 
 }

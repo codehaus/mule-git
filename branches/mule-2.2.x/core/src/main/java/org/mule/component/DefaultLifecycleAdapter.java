@@ -36,7 +36,6 @@ import org.mule.model.resolvers.TooManySatisfiableMethodsException;
 import org.mule.routing.binding.BindingInvocationHandler;
 import org.mule.util.ClassUtils;
 
-import java.lang.ref.SoftReference;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.HashMap;
@@ -57,7 +56,7 @@ public class DefaultLifecycleAdapter implements LifecycleAdapter
     /** logger used by this class */
     protected static final Log logger = LogFactory.getLog(DefaultLifecycleAdapter.class);
 
-    protected SoftReference<?> componentObject;
+    protected Object componentObject;
     protected JavaComponent component;
     protected EntryPointResolverSet entryPointResolver;
     
@@ -78,7 +77,7 @@ public class DefaultLifecycleAdapter implements LifecycleAdapter
         {
             entryPointResolver = new LegacyEntryPointResolverSet();
         }
-        this.componentObject = new SoftReference<Object>(componentObject);
+        this.componentObject = componentObject;
         this.component = component;
         this.entryPointResolver = entryPointResolver;
     }
@@ -118,7 +117,7 @@ public class DefaultLifecycleAdapter implements LifecycleAdapter
         {
             try
             {
-                ((Startable) componentObject.get()).start();
+                ((Startable) componentObject).start();                
                 started = true;
             }
             catch (Exception e)
@@ -144,7 +143,7 @@ public class DefaultLifecycleAdapter implements LifecycleAdapter
         {
             try
             {
-                ((Stoppable) componentObject.get()).stop();
+                ((Stoppable) componentObject).stop();
                 started = false;
             }
             catch (Exception e)
@@ -170,9 +169,7 @@ public class DefaultLifecycleAdapter implements LifecycleAdapter
         {
             try
             {
-                ((Disposable) componentObject.get()).dispose();
-                componentObject.clear();
-                componentObject.enqueue();
+                ((Disposable) componentObject).dispose();
             }
             catch (Exception e)
             {
@@ -205,11 +202,11 @@ public class DefaultLifecycleAdapter implements LifecycleAdapter
             // Use the overriding entrypoint resolver if one is set
             if (component.getEntryPointResolverSet() != null)
             {
-                result = component.getEntryPointResolverSet().invoke(componentObject.get(), eventContext);
+                result = component.getEntryPointResolverSet().invoke(componentObject, eventContext);
             }
             else
             {
-                result = entryPointResolver.invoke(componentObject.get(), eventContext);
+                result = entryPointResolver.invoke(componentObject, eventContext);
             }
         }
         catch (Exception e)
@@ -231,9 +228,9 @@ public class DefaultLifecycleAdapter implements LifecycleAdapter
      */
     public void initialise() throws InitialisationException
     {
-        if (Initialisable.class.isInstance(componentObject.get()))
+        if (Initialisable.class.isInstance(componentObject))
         {
-            ((Initialisable) componentObject.get()).initialise();
+            ((Initialisable) componentObject).initialise();
         }
     }
 
@@ -255,13 +252,13 @@ public class DefaultLifecycleAdapter implements LifecycleAdapter
                     // and just routes away using a mule client
                     // ( using the high level Mule client is probably
                     // a bit agricultural but this is just POC stuff )
-                    proxy = interfaceBinding.createProxy(componentObject.get());
+                    proxy = interfaceBinding.createProxy(componentObject);
                     bindings.put(interfaceBinding.getInterface(), proxy);
 
                     // Now lets set the proxy on the Service object
                     Method setterMethod;
 
-                    List methods = ClassUtils.getSatisfiableMethods(componentObject.get().getClass(),
+                    List methods = ClassUtils.getSatisfiableMethods(componentObject.getClass(),
                         new Class[]{interfaceBinding.getInterface()}, true, false, null);
                     if (methods.size() == 1)
                     {
@@ -269,23 +266,23 @@ public class DefaultLifecycleAdapter implements LifecycleAdapter
                     }
                     else if (methods.size() > 1)
                     {
-                        throw new TooManySatisfiableMethodsException(componentObject.get().getClass(),
+                        throw new TooManySatisfiableMethodsException(componentObject.getClass(),
                             new Class[]{interfaceBinding.getInterface()});
                     }
                     else
                     {
-                        throw new NoSatisfiableMethodsException(componentObject.get().getClass(),
+                        throw new NoSatisfiableMethodsException(componentObject.getClass(),
                             new Class[]{interfaceBinding.getInterface()});
                     }
 
                     try
                     {
-                        setterMethod.invoke(componentObject.get(), proxy);
+                        setterMethod.invoke(componentObject, new Object[]{proxy});
                     }
                     catch (Exception e)
                     {
                         throw new InitialisationException(CoreMessages.failedToSetProxyOnService(interfaceBinding,
-                            componentObject.get().getClass()), e, this);
+                            componentObject.getClass()), e, this);
                     }
                 }
                 else

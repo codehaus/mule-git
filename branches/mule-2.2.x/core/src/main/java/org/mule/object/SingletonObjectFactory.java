@@ -13,7 +13,6 @@ package org.mule.object;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.config.i18n.MessageFactory;
 
-import java.lang.ref.SoftReference;
 import java.util.Map;
 
 /**
@@ -21,7 +20,7 @@ import java.util.Map;
  */
 public class SingletonObjectFactory extends AbstractObjectFactory
 {
-    private SoftReference instance;
+    private Object instance = null;
 
     /** For Spring only */
     public SingletonObjectFactory()
@@ -55,18 +54,18 @@ public class SingletonObjectFactory extends AbstractObjectFactory
     public SingletonObjectFactory(Object instance)
     {
         super(instance.getClass());
-        this.instance = new SoftReference<Object>(instance);
+        this.instance = instance;
     }
 
     // @Override
     public void initialise() throws InitialisationException
     {
         super.initialise();
-        if (instance == null || instance.get() == null)
+        if (instance == null)
         {
             try
             {
-                instance = new SoftReference<Object>(super.getInstance());
+                instance = super.getInstance();
             }
             catch (Exception e)
             {
@@ -78,8 +77,7 @@ public class SingletonObjectFactory extends AbstractObjectFactory
     // @Override
     public void dispose()
     {
-        instance.clear();
-        instance.enqueue();
+        instance = null;
         super.dispose();
     }
 
@@ -89,9 +87,9 @@ public class SingletonObjectFactory extends AbstractObjectFactory
     // @Override
     public Object getInstance() throws Exception
     {
-        if (instance != null && instance.get() != null)
+        if (instance != null)
         {
-            return instance.get();
+            return instance;
         }
         else
         {
@@ -103,9 +101,9 @@ public class SingletonObjectFactory extends AbstractObjectFactory
     // @Override
     public Class getObjectClass()
     {
-        if (instance != null && instance.get() != null)
+        if (instance != null)
         {
-            return instance.get().getClass();
+            return instance.getClass();
         }
         else
         {
