@@ -13,7 +13,6 @@ package org.mule.transport.jms.integration;
 import org.mule.RequestContext;
 import org.mule.transport.jms.transformers.AbstractJmsTransformer;
 import org.mule.transport.jms.transformers.JMSMessageToObject;
-import org.mule.transport.jms.transformers.ObjectToJMSMessage;
 import org.mule.util.FileUtils;
 import org.mule.util.compression.CompressionStrategy;
 import org.mule.util.compression.GZipCompression;
@@ -231,28 +230,6 @@ public class JmsTransformersTestCase extends AbstractJmsFunctionalTestCase
         assertTrue("Transformed object should be a byte[]", result instanceof byte[]);
         assertTrue("Result should be compressed", compressor.isCompressed((byte[]) result));
         assertTrue("Source and result should be equal", Arrays.equals(compressedBytes, (byte[]) result));
-    }
-
-    /*
-     * This class overrides getSession() to return the specified test MuleSession;
-     * otherwise we would need a full-fledged JMS connector with dispatchers etc.
-     * TODO check if we really need this stateful transformer now
-     */
-    public static class SessionEnabledObjectToJMSMessage extends ObjectToJMSMessage
-    {
-        private final Session transformerSession;
-
-        public SessionEnabledObjectToJMSMessage(Session session)
-        {
-            super();
-            transformerSession = session;
-        }
-
-        // @Override
-        protected Session getSession()
-        {
-            return transformerSession;
-        }
     }
 
 }
