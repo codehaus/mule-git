@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesource.org/schema/mule/core"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:file="http://www.mulesource.org/schema/mule/file"
+       xmlns:tcp="http://www.mulesource.org/schema/mule/tcp"
+       xmlns:stdio="http://www.mulesource.org/schema/mule/stdio"
+       xsi:schemaLocation="
+       http://www.mulesource.org/schema/mule/stdio http://www.mulesource.org/schema/mule/stdio/3.0/mule-stdio.xsd
+       http://www.mulesource.org/schema/mule/file http://www.mulesource.org/schema/mule/file/3.0/mule-file.xsd
+       http://www.mulesource.org/schema/mule/tcp http://www.mulesource.org/schema/mule/tcp/3.0/mule-tcp.xsd
+       http://www.mulesource.org/schema/mule/core http://www.mulesource.org/schema/mule/core/3.0/mule.xsd">
+    
+    <tcp:connector name="tcpConnector" validateConnections="false">
+        <tcp:streaming-protocol/>
+    </tcp:connector>
+    
+    <model name="main">
+        <service name="bridge1">
+            <inbound>
+                <file:inbound-endpoint path=".mule/test-data/in" moveToDirectory=".mule/test-data/processing" pollingFrequency="10000000"/>
+            </inbound>
+            <outbound>
+                <pass-through-router>
+                    <tcp:outbound-endpoint host="localhost" port="34561"/>
+                </pass-through-router>
+            </outbound>
+        </service>
+
+        <service name="bridge2">
+            <inbound>
+                <tcp:inbound-endpoint host="localhost" port="34561"/>
+            </inbound>
+            <component class="org.mule.test.integration.streaming.SimpleStreamingBean"/>
+            <outbound>
+                <multicasting-router>
+                    <stdio:outbound-endpoint system="OUT">
+                        <auto-transformer returnClass="java.lang.String"/>
+                    </stdio:outbound-endpoint>
+                    <file:outbound-endpoint path=".mule/test-data/out" encoding="UTF8" outputPattern="foo.txt.processed"/>
+                </multicasting-router>
+            </outbound>
+        </service>
+    </model>
+</mule>

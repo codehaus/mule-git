@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesource.org/schema/mule/core"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:spring="http://www.springframework.org/schema/beans"
+       xmlns:tcp="http://www.mulesource.org/schema/mule/tcp"
+       xsi:schemaLocation="
+               http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+               http://www.mulesource.org/schema/mule/core http://www.mulesource.org/schema/mule/core/3.0/mule.xsd
+               http://www.mulesource.org/schema/mule/tcp http://www.mulesource.org/schema/mule/tcp/3.0/mule-tcp.xsd">
+
+    <tcp:connector name="default" validateConnections="true">
+      <tcp:streaming-protocol />
+    </tcp:connector>
+
+    <model name="echoModel">
+        <service name="echo">
+            <inbound>
+                <inbound-endpoint address="tcp://localhost:60209"/>
+            </inbound>
+            <component>
+                <singleton-object class="org.mule.component.simple.BridgeComponent"/>
+            </component>
+            <outbound>
+                <pass-through-router>
+                    <outbound-endpoint address="http://localhost:60210"/>
+                </pass-through-router>
+            </outbound>
+        </service>
+
+        <service name="testComponent">
+            <inbound>
+                <inbound-endpoint address="tcp://localhost:60210"/>
+            </inbound>
+            <component>
+                <singleton-object class="org.mule.tck.functional.FunctionalStreamingTestComponent"/>
+            </component>
+        </service>
+
+    </model>
+</mule>
