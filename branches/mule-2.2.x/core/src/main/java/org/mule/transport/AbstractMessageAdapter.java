@@ -50,19 +50,31 @@ import org.apache.commons.logging.LogFactory;
  */
 public abstract class AbstractMessageAdapter implements MessageAdapter, ThreadSafeAccess
 {
-    /** logger used by this class */
+    /** 
+     * logger used by this class 
+     */
     protected static transient Log logger;
 
-    /** Scoped properties for this message */
+    /** 
+     * Scoped properties for this message 
+     */
     protected MessagePropertiesContext properties = new MessagePropertiesContext();
 
-    /** Collection of attachments associatated with this message */
+    /** 
+     * Collection of attachments associatated with this message 
+     */
     protected ConcurrentMap attachments = new ConcurrentHashMap();
 
-    /** If an excpetion occurs while processing this message an exception payload will be attached here */
+    /** 
+     * If an excpetion occurs while processing this message an exception payload 
+     * will be attached here 
+     */
     protected ExceptionPayload exceptionPayload;
 
-    /** the default UUID for the message. If the underlying transport has the notion of a message id, this uuid will be ignored */
+    /** 
+     * The default UUID for the message. If the underlying transport has the notion of a 
+     * message id, this uuid will be ignored 
+     */
     protected String id = UUID.getUUID();
 
     // these are transient because serisalisation generates a new instance
