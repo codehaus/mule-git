@@ -16,9 +16,13 @@ import org.mule.api.config.MuleProperties;
 import org.mule.api.transport.MessageTypeNotSupportedException;
 import org.mule.transport.AbstractMessageAdapter;
 import org.mule.transport.http.HttpConstants;
-import org.mule.util.UUID;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -26,6 +30,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
+import org.apache.commons.io.IOUtils;
 
 /**
  * <code>HttpRequestMessageAdapter</code> is a Mule message adapter for
@@ -38,15 +44,25 @@ public class HttpRequestMessageAdapter extends AbstractMessageAdapter
      */
     private static final long serialVersionUID = -4238448252206941125L;
 
-    private HttpServletRequest request;
+    private PayloadHolder payloadHolder;
+        
+    private String contentType;
 
+    private String characterEncoding;
+    
     public HttpRequestMessageAdapter(Object message) throws MessagingException
     {
         if (message instanceof HttpServletRequest)
         {
-            setPayload((HttpServletRequest) message);
+            HttpServletRequest request = (HttpServletRequest) message;
+            
+            setPayload(request);
             setContentEncoding((HttpServletRequest) message);
+            setupUniqueId(request);
 
+            contentType = request.getContentType();
+            characterEncoding = request.getCharacterEncoding();
+            
             Map<Object, Object> headers = new HashMap<Object, Object>();
             
             final Map parameterMap = request.getParameterMap();
@@ -113,7 +129,9 @@ public class HttpRequestMessageAdapter extends AbstractMessageAdapter
     protected HttpRequestMessageAdapter(HttpRequestMessageAdapter template)
     {
         super(template);
-        request = template.request;
+        payloadHolder = template.payloadHolder;
+        contentType = template.contentType;
+        characterEncoding = template.characterEncoding;
     }
 
     protected void setContentEncoding(HttpServletRequest request)
@@ -137,59 +155,37 @@ public class HttpRequestMessageAdapter extends AbstractMessageAdapter
         }
     }
 
+    private void setPayload(HttpServletRequest request) throws MessagingException
+    {
+        if ("GET".equalsIgnoreCase(request.getMethod())) 
+        {
+            payloadHolder = new GetPayloadHolder(request);
+        }
+        else 
+        {
+            payloadHolder = new PostPayloadHolder(request);
+        }
+    }
+
     public Object getPayload()
     {
-        try 
-        {
-            if ("GET".equalsIgnoreCase(request.getMethod())) 
-            {
-                return request.getRequestURI().toString() + "?" + request.getQueryString();
-            }
-            else 
-            {
-                return request.getInputStream();
-            }
-        }
-        catch (IOException e)
-        {
-            throw new RuntimeException(e);
-        }
+        return payloadHolder.getPayload();
     }
-
-    public boolean isBinary()
-    {
-        return !request.getContentType().startsWith("text");
-    }
-
-    private void setPayload(HttpServletRequest message) throws MessagingException
-    {
-        request = message;
-    }
-
-    public HttpServletRequest getRequest()
-    {
-        return request;
-    }
-
-    @Override
-    public String getUniqueId()
+    
+    private void setupUniqueId(HttpServletRequest request)
     {
         HttpSession session = null;
 
         try
         {
             // We wrap this call as on some App Servers (Websfear) it can cause an NPE
-            session = getRequest().getSession(false);
+            session = request.getSession(false);
+            id = session.getId();
         }
         catch (Exception e)
         {
-            return UUID.getUUID();
+            // super's default is good enough in this case
         }
-        if (session == null)
-        {
-            return UUID.getUUID();
-        }
-        return session.getId();
     }
 
     /**
@@ -229,10 +225,88 @@ public class HttpRequestMessageAdapter extends AbstractMessageAdapter
         return replyto;
     }
 
+    public String getContentType()
+    {
+        return contentType;
+    }
+    
+    public String getCharacterEncoding()
+    {
+        return characterEncoding;
+    }
+
+    public Enumeration<String> getParameterNames()
+    {
+        throw new UnsupportedOperationException("getParameterNames");
+    }
+
+    public String[] getParameterValues(String paramName)
+    {
+        throw new UnsupportedOperationException("getParameterValues");
+    }
+
     @Override
     public ThreadSafeAccess newThreadCopy()
     {
         return new HttpRequestMessageAdapter(this);
     }
 
+    private interface PayloadHolder extends Serializable
+    {
+        Object getPayload();
+    }
+    
+    private static class GetPayloadHolder implements PayloadHolder
+    {
+        private String payload;
+        
+        public GetPayloadHolder(HttpServletRequest request)
+        {
+            super();
+            payload = request.getRequestURI().toString() + "?" + request.getQueryString();
+        }
+        
+        public Object getPayload()
+        {
+            return payload;
+        }
+    }
+    
+    private static class PostPayloadHolder implements PayloadHolder
+    {
+        private transient InputStream payload;
+
+        public PostPayloadHolder(HttpServletRequest request)
+        {
+            super();
+            try
+            {
+                payload = request.getInputStream();
+            }
+            catch (IOException iox)
+            {
+                throw new RuntimeException(iox);
+            }
+        }
+
+        public Object getPayload()
+        {
+            return payload;
+        }
+        
+        private void writeObject(ObjectOutputStream out) throws IOException
+        {
+            byte[] payloadBytes = IOUtils.toByteArray(payload);
+            out.writeInt(payloadBytes.length);
+            out.write(payloadBytes);
+        }
+        
+        private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
+        {
+            int payloadSize = in.readInt();
+            byte[] payloadBytes = new byte[payloadSize];
+            in.read(payloadBytes);
+            payload = new ByteArrayInputStream(payloadBytes);
+        }
+    }
 }
