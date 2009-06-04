@@ -27,7 +27,9 @@
 
 package org.mule.work;
 
+import org.mule.MuleServer;
 import org.mule.api.MuleException;
+import org.mule.api.config.MuleConfiguration;
 import org.mule.api.config.ThreadingProfile;
 import org.mule.api.context.WorkManager;
 import org.mule.api.work.WorkExecutor;
@@ -45,6 +47,7 @@ import javax.resource.spi.work.WorkListener;
 import edu.emory.mathcs.backport.java.util.concurrent.Executor;
 import edu.emory.mathcs.backport.java.util.concurrent.ExecutorService;
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -61,9 +64,12 @@ public class MuleWorkManager implements WorkManager
     protected static final Log logger = LogFactory.getLog(MuleWorkManager.class);
 
     /**
-     * Graceful shutdown delay
+     * Forced shutdown delay. The time the workManager will wait while threads are being
+     * interrupted. The graceful shutdown timeout which is the amount of time that
+     * the workManager will wait while the workManager completed pending and
+     * currently executing jobs is configured using {@link MuleConfiguration}.
      */
-    private static final long SHUTDOWN_TIMEOUT = 5000L;
+    private static final long FORCEFUL_SHUTDOWN_TIMEOUT = 5000L;
 
     /**
      * The ThreadingProfile used for creation of the underlying ExecutorService
@@ -76,7 +82,9 @@ public class MuleWorkManager implements WorkManager
      */
     private volatile ExecutorService workExecutorService;
     private final String name;
+    private int gracefulShutdownTimeout;
 
+    
     /**
      * Various policies used for work execution
      */
@@ -99,6 +107,10 @@ public class MuleWorkManager implements WorkManager
 
     public synchronized void start() throws MuleException
     {
+        // TODO Set this value in constructor using MuleContext reference rather than
+        // from here using muleContext static
+        gracefulShutdownTimeout = MuleServer.getMuleContext().getConfiguration().getShutdownTimeout();
+        
         if (workExecutorService == null)
         {
             workExecutorService = threadingProfile.createPool(name);
@@ -114,18 +126,26 @@ public class MuleWorkManager implements WorkManager
             try
             {
                 // Wait a while for existing tasks to terminate
-                if (!workExecutorService.awaitTermination(SHUTDOWN_TIMEOUT, TimeUnit.MILLISECONDS))
+                if (!workExecutorService.awaitTermination(gracefulShutdownTimeout, TimeUnit.MILLISECONDS))
                 {
-                    // Cancel currently executing tasks
+                    // Cancel currently executing tasks and return list of pending
+                    // tasks
                     List outstanding = workExecutorService.shutdownNow();
                     // Wait a while for tasks to respond to being cancelled
-                    if (!workExecutorService.awaitTermination(SHUTDOWN_TIMEOUT, TimeUnit.MILLISECONDS))
+                    if (!workExecutorService.awaitTermination(FORCEFUL_SHUTDOWN_TIMEOUT,
+                        TimeUnit.MILLISECONDS))
                     {
-                        if (logger.isWarnEnabled())
+                        logger.warn(MessageFormat.format(
+                            "Pool {0} did not terminate in time; {1} work items were cancelled.", name,
+                            outstanding.isEmpty() ? "No" : Integer.toString(outstanding.size())));
+                    }
+                    else
+                    {
+                        if (!outstanding.isEmpty())
                         {
                             logger.warn(MessageFormat.format(
-                                "Pool {0} did not terminate in time; {1} work items were cancelled.", name,
-                                outstanding.isEmpty() ? "No" : Integer.toString(outstanding.size())));
+                                "Pool {0} terminated; {1} work items were cancelled.", name,
+                                Integer.toString(outstanding.size())));
                         }
                     }
                 }

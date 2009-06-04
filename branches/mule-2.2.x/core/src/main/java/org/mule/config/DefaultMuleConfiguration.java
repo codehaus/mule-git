@@ -66,6 +66,12 @@ public class DefaultMuleConfiguration implements MuleConfiguration
      */
     private int defaultQueueTimeout = 200;
 
+    /**
+     * The default graceful shutdown timeout used when shutting stopping mule cleanly
+     * without message loss.
+     */
+    private int shutdownTimeout = 5000;
+
     /** Where Mule stores any runtime files to disk */
     private String workingDirectory = "./.mule";
 
@@ -479,6 +485,19 @@ public class DefaultMuleConfiguration implements MuleConfiguration
         if (verifyContextNotStarted())
         {
             this.defaultQueueTimeout = defaultQueueTimeout;
+        }
+    }
+
+    public int getShutdownTimeout()
+    {
+        return shutdownTimeout;
+    }
+
+    public void setShutdownTimeout(int shutdownTimeout)
+    {
+        if (verifyContextNotStarted())
+        {
+            this.shutdownTimeout = shutdownTimeout;
         }
     }
     

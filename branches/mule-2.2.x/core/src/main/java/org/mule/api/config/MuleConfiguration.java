@@ -54,4 +54,6 @@ public interface MuleConfiguration
     boolean isEnableStreaming();
     
     int getDefaultQueueTimeout();
+    
+    int getShutdownTimeout();
 }
