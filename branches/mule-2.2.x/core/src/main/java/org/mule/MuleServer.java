@@ -388,17 +388,10 @@ public class MuleServer implements Runnable
 
     protected void doShutdown()
     {
-        if (muleContext != null && !muleContext.isDisposed())
+        if (muleContext != null)
         {
-            if (!muleContext.isDisposing())
-            {
-                muleContext.dispose();
-                muleContext = null;
-            }
-            else
-            {
-                // TODO Wait for MuleContext disposal to complete
-            }
+            muleContext.dispose();
+            muleContext = null;
         }
         System.exit(0);
     }
