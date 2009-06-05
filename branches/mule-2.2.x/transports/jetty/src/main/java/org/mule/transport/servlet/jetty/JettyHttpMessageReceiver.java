@@ -59,7 +59,6 @@ public class JettyHttpMessageReceiver extends AbstractMessageReceiver
             {
                 MuleContext muleContext = MuleServer.getMuleContext();
                 scon.setMuleContext(muleContext);
-                //muleContext.applyLifecycle(scon);
                 muleContext.getRegistry().registerConnector(scon);
 
                 String path = endpoint.getEndpointURI().getPath();
@@ -82,20 +81,17 @@ public class JettyHttpMessageReceiver extends AbstractMessageReceiver
                 throw new CreateException(e, this);
             }
         }
-
     }
 
     protected void doConnect() throws Exception
     {
-
-
+        // do nothing
     }
 
     protected void doDisconnect() throws Exception
     {
-
+        // do nothing
     }
-
 
     /**
      * Template method to dispose any resources associated with this receiver. There
@@ -103,7 +99,7 @@ public class JettyHttpMessageReceiver extends AbstractMessageReceiver
      */
     protected void doDispose()
     {
-        //Do nothing
+        // Do nothing
     }
 
     protected void doStart() throws MuleException
