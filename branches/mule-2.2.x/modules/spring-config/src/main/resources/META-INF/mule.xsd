@@ -389,7 +389,7 @@
         <xsd:attribute name="shutdownTimeout" type="substitutableInt" default="5000">
             <xsd:annotation>
                 <xsd:documentation>
-                    The time in milliseconds to wait for any in-progress messages to finish processing before Mule shuts down. You might want to increase this setting if you have components that take a long time to process, or if you are using large payloads and/or slower transports.
+                    (As of Mule 2.2.2) The time in milliseconds to wait for any in-progress messages to finish processing before Mule shuts down. You might want to increase this setting if you have a very large number of services in the same Mule instance, if you have components that take more than a couple seconds to process, or if you are using large payloads and/or slower transports.
                 </xsd:documentation>
             </xsd:annotation>
         </xsd:attribute>
