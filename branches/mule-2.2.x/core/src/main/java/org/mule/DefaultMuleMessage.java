@@ -57,7 +57,7 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess
 
     private transient MessageAdapter adapter;
     private transient MessageAdapter originalAdapter = null;
-    private transient List<Integer> appliedTransformerHashCodes = new CopyOnWriteArrayList();
+    private transient List<Integer> appliedTransformerHashCodes;
     private transient byte[] cache;
     
     private static final List<Class> consumableClasses = new ArrayList<Class>();
@@ -87,6 +87,11 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess
         consumableClasses.add(OutputHandler.class);
     }
 
+    private DefaultMuleMessage()
+    {
+        initAppliedTransformerHashCodes();
+    }
+    
     public DefaultMuleMessage(Object message)
     {
         this(message, (Map) null);
@@ -94,6 +99,7 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess
 
     public DefaultMuleMessage(Object message, Map properties)
     {
+        this();
         //Explicitly check for MuleMessage as a safeguard since MuleMessage is instance of MessageAdapter
         if (message instanceof MuleMessage)
         {
@@ -114,6 +120,7 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess
 
     public DefaultMuleMessage(Object message, MessageAdapter previous)
     {
+        this();
         if (message instanceof MessageAdapter)
         {
             adapter = (MessageAdapter) message;
@@ -144,6 +151,11 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess
             }
         }
         resetAccessControl();
+    }
+
+    private void initAppliedTransformerHashCodes()
+    {
+        appliedTransformerHashCodes = new CopyOnWriteArrayList();
     }
 
     /** {@inheritDoc} */
@@ -770,6 +782,11 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
     {
         in.defaultReadObject();
+        
+        // the appliedTransformerHashCodes are transient. To reconstruct a fully workable
+        // DefaultMuleMessage, it must be re-initialized here.
+        initAppliedTransformerHashCodes();
+        
         unmarshalMessageAdapter(in);
     }
     
