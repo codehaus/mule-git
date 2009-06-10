@@ -32,6 +32,7 @@ import org.mule.transport.AbstractConnector;
 import org.mule.transport.ConnectException;
 import org.mule.transport.jms.i18n.JmsMessages;
 import org.mule.transport.jms.xa.ConnectionFactoryWrapper;
+import org.mule.util.BeanUtils;
 
 import java.text.MessageFormat;
 import java.util.Hashtable;
@@ -107,6 +108,8 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
     private Connection connection;
 
     private ConnectionFactory connectionFactory;
+    
+    private Map connectionFactoryProperties;
 
     public String username = null;
 
@@ -176,6 +179,12 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
         catch (NamingException ne)
         {
             throw new InitialisationException(JmsMessages.errorCreatingConnectionFactory(), ne, this);
+        }
+        
+        if ((connectionFactoryProperties != null) && !connectionFactoryProperties.isEmpty())
+        {
+            // apply connection factory properties
+            BeanUtils.populateWithoutFail(connectionFactory, connectionFactoryProperties, true);
         }
         
         if (topicResolver == null)
@@ -1052,12 +1061,12 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
      *            <code>false</code> Default is <code>false</code>, meaning that
      *            connector settings will override message headers.
      */
-   public void setHonorQosHeaders(boolean honorQosHeaders)
-   {
-       this.honorQosHeaders = honorQosHeaders;
-   }
+    public void setHonorQosHeaders(boolean honorQosHeaders)
+    {
+        this.honorQosHeaders = honorQosHeaders;
+    }
 
-   /**
+    /**
      * Gets the value of <code>honorQosHeaders</code> property.
      * 
      * @return <code>true</code> if <code>JmsMessageDispatcher</code> should
@@ -1065,98 +1074,116 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
      *         Default is <code>false</code>, meaning that connector settings will
      *         override message headers.
      */
-   public boolean isHonorQosHeaders()
-   {
-       return honorQosHeaders;
-   }
+    public boolean isHonorQosHeaders()
+    {
+        return honorQosHeaders;
+    }
 
-   public Context getJndiContext()
-   {
-       return jndiContext;
-   }
+    public Context getJndiContext()
+    {
+        return jndiContext;
+    }
 
-   public void setJndiContext(Context jndiContext)
-   {
-       this.jndiContext = jndiContext;
-   }
+    public void setJndiContext(Context jndiContext)
+    {
+        this.jndiContext = jndiContext;
+    }
 
-   public String getJndiInitialFactory()
-   {
-       return jndiInitialFactory;
-   }
+    public String getJndiInitialFactory()
+    {
+        return jndiInitialFactory;
+    }
 
-   public void setJndiInitialFactory(String jndiInitialFactory)
-   {
-       this.jndiInitialFactory = jndiInitialFactory;
-   }
+    public void setJndiInitialFactory(String jndiInitialFactory)
+    {
+        this.jndiInitialFactory = jndiInitialFactory;
+    }
 
-   public String getJndiProviderUrl()
-   {
-       return jndiProviderUrl;
-   }
+    public String getJndiProviderUrl()
+    {
+        return jndiProviderUrl;
+    }
 
-   public void setJndiProviderUrl(String jndiProviderUrl)
-   {
-       this.jndiProviderUrl = jndiProviderUrl;
-   }
+    public void setJndiProviderUrl(String jndiProviderUrl)
+    {
+        this.jndiProviderUrl = jndiProviderUrl;
+    }
 
-   public Map getJndiProviderProperties()
-   {
-       return jndiProviderProperties;
-   }
+    public Map getJndiProviderProperties()
+    {
+        return jndiProviderProperties;
+    }
 
-   public void setJndiProviderProperties(Map jndiProviderProperties)
-   {
-       this.jndiProviderProperties = jndiProviderProperties;
-   }
+    public void setJndiProviderProperties(Map jndiProviderProperties)
+    {
+        this.jndiProviderProperties = jndiProviderProperties;
+    }
 
-   public String getConnectionFactoryJndiName()
-   {
-       return connectionFactoryJndiName;
-   }
+    public String getConnectionFactoryJndiName()
+    {
+        return connectionFactoryJndiName;
+    }
 
-   public void setConnectionFactoryJndiName(String connectionFactoryJndiName)
-   {
-       this.connectionFactoryJndiName = connectionFactoryJndiName;
-   }
+    public void setConnectionFactoryJndiName(String connectionFactoryJndiName)
+    {
+        this.connectionFactoryJndiName = connectionFactoryJndiName;
+    }
 
-   public boolean isJndiDestinations()
-   {
-       return jndiDestinations;
-   }
+    public boolean isJndiDestinations()
+    {
+        return jndiDestinations;
+    }
 
-   public void setJndiDestinations(boolean jndiDestinations)
-   {
-       this.jndiDestinations = jndiDestinations;
-   }
+    public void setJndiDestinations(boolean jndiDestinations)
+    {
+        this.jndiDestinations = jndiDestinations;
+    }
 
-   public boolean isForceJndiDestinations()
-   {
-       return forceJndiDestinations;
-   }
+    public boolean isForceJndiDestinations()
+    {
+        return forceJndiDestinations;
+    }
 
-   public void setForceJndiDestinations(boolean forceJndiDestinations)
-   {
-       this.forceJndiDestinations = forceJndiDestinations;
-   }
+    public void setForceJndiDestinations(boolean forceJndiDestinations)
+    {
+        this.forceJndiDestinations = forceJndiDestinations;
+    }
 
-   public boolean isRecoverJmsConnections()
-   {
-       return recoverJmsConnections;
-   }
-    
-   public void setRecoverJmsConnections(boolean recoverJmsConnections)
-   {
-       this.recoverJmsConnections = recoverJmsConnections;
-   }
+    public boolean isRecoverJmsConnections()
+    {
+        return recoverJmsConnections;
+    }
+
+    public void setRecoverJmsConnections(boolean recoverJmsConnections)
+    {
+        this.recoverJmsConnections = recoverJmsConnections;
+    }
 
     public boolean isEmbeddedMode()
     {
         return embeddedMode;
     }
-
+    
     public void setEmbeddedMode(boolean embeddedMode)
     {
         this.embeddedMode = embeddedMode;
     }
+
+    /**
+     * @return Returns underlying connection factory properties.
+     */
+    public Map getConnectionFactoryProperties()
+    {
+        return connectionFactoryProperties;
+    }
+
+    /**
+     * @param connectionFactoryProperties properties to be set on the underlying
+     *            ConnectionFactory.
+     */
+    public void setConnectionFactoryProperties(Map connectionFactoryProperties)
+    {
+        this.connectionFactoryProperties = connectionFactoryProperties;
+    }
+
 }
