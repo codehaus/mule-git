@@ -18,6 +18,7 @@ import org.mule.api.transformer.Transformer;
 import org.mule.api.transformer.TransformerException;
 import org.mule.api.transport.MessageAdapter;
 import org.mule.api.transport.MutableMessageAdapter;
+import org.mule.api.transport.OutputHandler;
 import org.mule.api.transport.PropertyScope;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.transport.AbstractMessageAdapter;
@@ -36,6 +37,7 @@ import java.util.Set;
 import javax.activation.DataHandler;
 
 import edu.emory.mathcs.backport.java.util.concurrent.CopyOnWriteArrayList;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -63,10 +65,22 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess
         {
             consumableClasses.add(ClassUtils.loadClass("javax.xml.stream.XMLStreamReader",
                 DefaultMuleMessage.class));
+
         }
         catch (ClassNotFoundException e)
         {
         }
+        
+        try
+        {
+            consumableClasses.add(ClassUtils.loadClass("javax.xml.transform.stream.StreamSource",
+                DefaultMuleMessage.class));
+        }
+        catch (ClassNotFoundException e)
+        {
+        }
+        
+        consumableClasses.add(OutputHandler.class);
     }
 
     public DefaultMuleMessage(Object message)
