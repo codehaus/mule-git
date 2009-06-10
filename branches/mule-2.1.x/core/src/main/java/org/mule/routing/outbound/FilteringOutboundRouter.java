@@ -200,4 +200,10 @@ public class FilteringOutboundRouter extends AbstractOutboundRouter
     {
         this.useTemplates = useTemplates;
     }
+    
+    public boolean isRequiresNewMessage()
+    {
+        return transformers.size() > 1;
+    }
+
 }

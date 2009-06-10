@@ -11,6 +11,7 @@
 package org.mule.routing.outbound;
 
 import org.mule.DefaultMuleMessage;
+import org.mule.api.MessagingException;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.MuleSession;
@@ -63,7 +64,13 @@ public class MulticastingRouter extends FilteringOutboundRouter
                 if (endpoint.getFilter() == null
                     || (endpoint.getFilter() != null && endpoint.getFilter().accept(message)))
                 {
-
+                    if (((DefaultMuleMessage) message).isConsumable())
+                    {
+                        throw new MessagingException(
+                            CoreMessages.cannotCopyStreamPayload(message.getPayload().getClass().getName()),
+                            message);
+                    }
+                    
                     MuleMessage clonedMessage = new DefaultMuleMessage(message.getPayload(), message);
 
                     if (endpoint.isSynchronous())

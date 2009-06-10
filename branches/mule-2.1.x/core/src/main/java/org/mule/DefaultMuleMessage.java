@@ -676,4 +676,10 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess
             ((AbstractMessageAdapter) adapter).assertAccess(write);
         }
     }
+
+    public boolean isConsumable()
+    {
+        return isConsumedFromAdditional(this.getPayload().getClass());
+    }
+
 }
