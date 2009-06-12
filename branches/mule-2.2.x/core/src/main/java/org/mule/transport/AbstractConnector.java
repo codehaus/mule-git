@@ -56,6 +56,7 @@ import org.mule.context.notification.EndpointMessageNotification;
 import org.mule.context.notification.OptimisedNotificationHandler;
 import org.mule.lifecycle.AlreadyInitialisedException;
 import org.mule.model.streaming.DelegatingInputStream;
+import org.mule.retry.asynch.AsynchronousRetryTemplate;
 import org.mule.retry.policies.NoRetryPolicyTemplate;
 import org.mule.routing.filters.WildcardFilter;
 import org.mule.transformer.TransformerUtils;
@@ -347,14 +348,7 @@ public abstract class AbstractConnector
             ((DefaultExceptionStrategy)exceptionListener).initialise();
         }
 
-        try
-        {
-            initWorkManagers();
-        }
-        catch (MuleException e)
-        {
-            throw new InitialisationException(e, this);
-        }
+
         initialised.set(true);
     }
 
@@ -395,6 +389,7 @@ public abstract class AbstractConnector
         {
             scheduler.set(this.getScheduler());
         }
+        initWorkManagers();
 
         this.doStart();
         started.set(true);
@@ -447,6 +442,16 @@ public abstract class AbstractConnector
 
     public final synchronized void stop() throws MuleException
     {
+        stop(true);
+    }
+
+    /**
+     * @param stopWorkManagers - This is a hack for 2.2.x so that we can implement the fix for MULE-4251 
+     * without breaking retry and without making large changes to the connector lifecycle.
+     * It should be removed for 3.x.
+     */
+    private final synchronized void stop(boolean disposeWorkManagers) throws MuleException
+    {
         if (!this.isStarted())
         {
             logger.warn("Attempting to stop a connector which is not started");
@@ -465,6 +470,14 @@ public abstract class AbstractConnector
 
         // shutdown our scheduler service
         shutdownScheduler();
+        
+        // Dispose work managers here to ensure that all jobs that are currently
+        // processing or waiting can complete so that all message flow completes in
+        // stop phase.  See MULE-4521
+        if (disposeWorkManagers)
+        {
+            disposeWorkManagers();
+        }
         
         this.doStop();
         started.set(false);
@@ -499,9 +512,6 @@ public abstract class AbstractConnector
 
         // make sure the scheduler is gone
         scheduler.set(null);
-
-        // we do not need to stop the work managers because they do no harm (will just be idle)
-        // and will be reused on restart without problems.
 
         //TODO RM* THis shouldn't be here this.initialised.set(false);
         // started=false already issued above right after doStop()
@@ -595,7 +605,6 @@ public abstract class AbstractConnector
         this.disposeReceivers();
         this.disposeDispatchers();
         this.disposeRequesters();
-        this.disposeWorkManagers();
 
         this.doDispose();
         disposed.set(true);
@@ -749,7 +758,7 @@ public abstract class AbstractConnector
             {
                 try
                 {
-                    disconnect();
+                    disconnect(false);
                 }
                 catch (Exception de)
                 {
@@ -1478,7 +1487,7 @@ public abstract class AbstractConnector
                                                    context.getLastFailure(), null);
                     }
                     doConnect();
-
+    
                     // Make sure the receiver or dispatcher which triggered the reconnection is now able to 
                     // connect successfully.  This info. was previously stored by the handleException() method, above.
                     Map info = context.getMetaInfo();
@@ -1543,7 +1552,7 @@ public abstract class AbstractConnector
                 {
                     return getConnectionDescription();
                 }
-            }, 
+            },
             muleContext.getWorkManager()
         );
     }
@@ -1563,6 +1572,16 @@ public abstract class AbstractConnector
     }
 
     public void disconnect() throws Exception
+    {
+        disconnect(true);
+    }
+
+    /**
+     * @param stopWorkManagers - This is a hack for 2.2.x so that we can implement the fix for MULE-4251 
+     * without breaking retry and without making large changes to the connector lifecycle.
+     * It should be removed for 3.x.
+     */
+    private void disconnect(boolean stopWorkManagers) throws Exception
     {
         startOnConnect = isStarted();
         
@@ -1609,7 +1628,7 @@ public abstract class AbstractConnector
             // TODO Shouldn't stop() come before disconnect(), not after ?
             if (this.isStarted())
             {
-                this.stop();
+                this.stop(stopWorkManagers);
             }
         }
 
