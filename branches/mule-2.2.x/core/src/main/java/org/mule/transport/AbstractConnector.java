@@ -56,7 +56,6 @@ import org.mule.context.notification.EndpointMessageNotification;
 import org.mule.context.notification.OptimisedNotificationHandler;
 import org.mule.lifecycle.AlreadyInitialisedException;
 import org.mule.model.streaming.DelegatingInputStream;
-import org.mule.retry.asynch.AsynchronousRetryTemplate;
 import org.mule.retry.policies.NoRetryPolicyTemplate;
 import org.mule.routing.filters.WildcardFilter;
 import org.mule.transformer.TransformerUtils;
