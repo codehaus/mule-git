@@ -78,6 +78,11 @@ public class SedaService extends AbstractService implements Work, WorkListener
     
     protected Queue queue;
 
+    /**
+     * A guarding object for queue statistics enqueue/dequeueing.
+     */
+    private final Object queueStatsGuard = new Object();
+
     /** For Spring only */
     public SedaService()
     {
@@ -201,10 +206,18 @@ public class SedaService extends AbstractService implements Work, WorkListener
         // Block until we can queue the next event
         try
         {
-            enqueue(event);
             if (stats.isEnabled())
             {
-                stats.incQueuedEvent();
+                synchronized (queueStatsGuard)
+                {
+                    enqueue(event);
+                    stats.incQueuedEvent();
+                }
+            }
+            else
+            {
+                // just enqueue without any hit for synchronization
+                enqueue(event);
             }
         }
         catch (Exception e)
@@ -322,14 +335,25 @@ public class SedaService extends AbstractService implements Work, WorkListener
                     }
                 }
 
-                event = (DefaultMuleEvent) dequeue();
+                if (stats.isEnabled())
+                {
+                    synchronized (queueStatsGuard)
+                    {
+                        event = (DefaultMuleEvent) dequeue();
+                        if (event != null)
+                        {
+                            stats.decQueuedEvent();
+                        }
+                    }
+                }
+                else
+                {
+                    // just dequeue without any hit for synchronization
+                    event = (DefaultMuleEvent) dequeue();
+                }
+
                 if (event != null)
                 {
-                    if (stats.isEnabled())
-                    {
-                        stats.decQueuedEvent();
-                    }
-
                     if (logger.isDebugEnabled())
                     {
                         logger.debug("Service: " + name + " dequeued event on: "
