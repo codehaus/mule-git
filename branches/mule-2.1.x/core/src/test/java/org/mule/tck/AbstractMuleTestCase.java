@@ -323,7 +323,7 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
 
     public void handleTimeout(long timeout, TimeUnit unit)
     {
-        String msg = "Timeout of " + unit.toMillis(timeout) + "ms exceeded - exiting VM!";
+        String msg = "Timeout of " + unit.toMillis(timeout) + "ms exceeded - exiting VM! (modify via -Dmule.test.timeoutSecs=XX)";
         
         if (failOnTimeout)
         {
