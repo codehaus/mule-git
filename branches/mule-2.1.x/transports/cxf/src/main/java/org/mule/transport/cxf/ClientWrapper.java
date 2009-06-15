@@ -68,9 +68,7 @@ import org.apache.cxf.transport.MessageObserver;
 
 public class ClientWrapper
 {
-
-    protected ImmutableEndpoint endpoint;
-    protected Bus bus;
+    protected final ImmutableEndpoint endpoint;
     protected Client client;
     protected String defaultMethodName;
 
@@ -81,19 +79,16 @@ public class ClientWrapper
 
     protected boolean proxy;
     
-    public Client getClient()
-    {
-        return client;
-    }
+     public ClientWrapper(ImmutableEndpoint endpoint) throws Exception
+     {
+         this.endpoint = endpoint;
+     }
+  
+	 @SuppressWarnings("unchecked")
+     public ClientWrapper(Bus bus, ImmutableEndpoint endpoint) throws Exception
+     {
+        this(endpoint);
 
-    public BindingProvider getClientProxy()
-    {
-        return clientProxy;
-    }
-
-    @SuppressWarnings("unchecked")
-    public void initialize() throws Exception
-    {
         String clientClass = (String) endpoint.getProperty(CxfConstants.CLIENT_CLASS);
         proxy = BooleanUtils.toBoolean((String) endpoint.getProperty(CxfConstants.PROXY));
         
@@ -143,6 +138,16 @@ public class ClientWrapper
         }
         
         addMuleInterceptors();
+    }
+
+    public Client getClient()
+    {
+        return client;
+    }
+
+    public BindingProvider getClientProxy()
+    {
+        return clientProxy;
     }
 
     @SuppressWarnings("unchecked")
@@ -405,16 +410,6 @@ public class ClientWrapper
         }
 
         return method;
-    }
-
-    public void setEndpoint(ImmutableEndpoint endpoint)
-    {
-        this.endpoint = endpoint;
-    }
-
-    public void setBus(Bus bus)
-    {
-        this.bus = bus;
     }
 
     public boolean isClientProxyAvailable()
