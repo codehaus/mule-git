@@ -13,9 +13,11 @@ package org.mule.test.integration.streaming;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.util.FileUtils;
 
+import java.io.File;
+
 public class FileToTcpStreamingTestCase extends FunctionalTestCase
 {
-    // @Override
+    @Override
     protected void doTearDown() throws Exception
     {
         FileUtils.deleteDirectory(FileUtils.newFile(muleContext.getConfiguration().getWorkingDirectory() + "/test-data"));
@@ -35,11 +37,14 @@ public class FileToTcpStreamingTestCase extends FunctionalTestCase
                 "\nblah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah\n\n";
 
         String basepath = muleContext.getConfiguration().getWorkingDirectory() + "/test-data";
+        
         FileUtils.stringToFile(basepath + "/in/foo.txt", text);
 
-        Thread.sleep(3000);
+        Thread.sleep(4000);
 
-        String result = FileUtils.readFileToString(FileUtils.newFile(basepath, "out/foo.txt.processed"), "UTF8");
+        File file = FileUtils.newFile(basepath, "out/foo.txt.processed");
+        System.out.println("reading " + file.getAbsolutePath());
+        String result = FileUtils.readFileToString(file, "UTF8");
         assertEquals(text, result);
     }
 }
