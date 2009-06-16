@@ -11,19 +11,15 @@
 package org.mule.test.integration.routing.replyto;
 
 import org.mule.api.MuleMessage;
-import org.mule.api.config.MuleProperties;
 import org.mule.module.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 
-import java.util.HashMap;
-import java.util.Map;
-
-public class ReplytoChainIntegration1TestCase extends FunctionalTestCase
+public class ReplyToChainIntegration4TestCase extends FunctionalTestCase
 {
 
     protected String getConfigResources()
     {
-        return "org/mule/test/integration/routing/replyto/replyto-chain-integration-test-1.xml";
+        return "org/mule/test/integration/routing/replyto/replyto-chain-integration-test-4.xml";
     }
 
     public void testReplyToChain() throws Exception
@@ -31,21 +27,9 @@ public class ReplytoChainIntegration1TestCase extends FunctionalTestCase
         String message = "test";
 
         MuleClient client = new MuleClient();
-        Map props = new HashMap();
-        props.put(MuleProperties.MULE_REMOTE_SYNC_PROPERTY, "false");
-        MuleMessage result = client.send("vm://pojo1", message, props);
-        assertNotNull(result);
-        assertEquals("Received: " + message, result.getPayloadAsString());
-    }
-    
-    public void testReplyToChainWithoutProps() throws Exception
-    {
-        String message = "test";
-
-        MuleClient client = new MuleClient();
         MuleMessage result = client.send("vm://pojo1", message, null);
         assertNotNull(result);
-        assertEquals("Received: " + message, result.getPayloadAsString());
+        assertEquals("Received: " + message, result.getPayload());
     }
 
 }

@@ -11,15 +11,19 @@
 package org.mule.test.integration.routing.replyto;
 
 import org.mule.api.MuleMessage;
+import org.mule.api.config.MuleProperties;
 import org.mule.module.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 
-public class ReplytoChainIntegration3TestCase extends FunctionalTestCase
+import java.util.HashMap;
+import java.util.Map;
+
+public class ReplyToChainIntegration2TestCase extends FunctionalTestCase
 {
 
     protected String getConfigResources()
     {
-        return "org/mule/test/integration/routing/replyto/replyto-chain-integration-test-3.xml";
+        return "org/mule/test/integration/routing/replyto/replyto-chain-integration-test-2.xml";
     }
 
     public void testReplyToChain() throws Exception
@@ -27,10 +31,10 @@ public class ReplytoChainIntegration3TestCase extends FunctionalTestCase
         String message = "test";
 
         MuleClient client = new MuleClient();
-        client.dispatch("vm://pojo1", message, null);
-        MuleMessage result = client.request("jms://response", 10000);
+        Map props = new HashMap();
+        props.put(MuleProperties.MULE_REMOTE_SYNC_PROPERTY, "false");
+        MuleMessage result = client.send("vm://pojo1", message, props);
         assertNotNull(result);
         assertEquals("Received: " + message, result.getPayload());
     }
-    
 }
