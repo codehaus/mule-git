@@ -528,7 +528,11 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
 
     public Session getSession(boolean transacted, boolean topic) throws JMSException
     {
-        Session session = getSessionFromTransaction();
+        Session session = null;
+        if (transacted)
+        {
+            session = getSessionFromTransaction();
+        }
         if (session != null)
         {
             return session;
@@ -545,7 +549,7 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
         }
 
         session = jmsSupport.createSession(connection, topic, transacted, acknowledgementMode, noLocal);
-        if (tx != null)
+        if (transacted && tx != null)
         {
             logger.debug("Binding session " + session + " to current transaction " + tx);
             try
