@@ -11,7 +11,6 @@
 package org.mule.transport;
 
 import org.mule.OptimizedRequestContext;
-import org.mule.RequestContext;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
@@ -28,8 +27,7 @@ import org.mule.api.transport.MessageDispatcher;
 import org.mule.context.notification.EndpointMessageNotification;
 import org.mule.context.notification.SecurityNotification;
 import org.mule.transaction.TransactionCoordination;
-
-import javax.resource.spi.work.Work;
+import org.mule.work.AbstractMuleEventWork;
 
 /**
  * Provide a default dispatch (client) support for handling threads lifecycle and validation.
@@ -74,8 +72,7 @@ public abstract class AbstractMessageDispatcher extends AbstractConnectable impl
         event.setSynchronous(false);
         event.getMessage().setProperty(MuleProperties.MULE_ENDPOINT_PROPERTY,
             event.getEndpoint().getEndpointURI().toString());
-        event = OptimizedRequestContext.criticalSetEvent(event); // MULE-2112
-
+        
         // Apply Security filter if one is set
         ImmutableEndpoint endpoint = event.getEndpoint();
         if (endpoint.getSecurityFilter() != null)
@@ -106,7 +103,7 @@ public abstract class AbstractMessageDispatcher extends AbstractConnectable impl
             Worker worker = new Worker(event);
             if (isDoThreading() && !event.isSynchronous() && tx == null)
             {
-                connector.getDispatcherWorkManager().scheduleWork(new Worker(event), WorkManager.INDEFINITE, null, connector);
+                connector.getDispatcherWorkManager().scheduleWork(worker, WorkManager.INDEFINITE, null, connector);
             }
             else
             {
@@ -245,26 +242,17 @@ public abstract class AbstractMessageDispatcher extends AbstractConnectable impl
         return remoteSync;
     }
 
-    private class Worker implements Work
+    private class Worker extends AbstractMuleEventWork
     {
-        private MuleEvent event;
-
         public Worker(MuleEvent event)
         {
-            this.event = event;
+            super(event);
         }
 
-        /*
-         * (non-Javadoc)
-         * 
-         * @see java.lang.Runnable#run()
-         */
-        public void run()
+        protected void doRun()
         {
             try
             {
-                event = RequestContext.setEvent(event);
-
                 // Make sure we are connected
                 doPreConnect(event);
                 connect();
@@ -293,11 +281,6 @@ public abstract class AbstractMessageDispatcher extends AbstractConnectable impl
             {
                 handleException(e);
             }
-        }
-
-        public void release()
-        {
-            // nothing to do
         }
     }
 
