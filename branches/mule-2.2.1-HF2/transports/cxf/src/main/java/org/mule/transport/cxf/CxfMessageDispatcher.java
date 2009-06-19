@@ -157,9 +157,8 @@ public class CxfMessageDispatcher extends AbstractMessageDispatcher
     {
         Method method = wrapper.getMethod(event);
 
-        Map<String, Object> props = new HashMap<String, Object>();
-        props.put(MuleProperties.MULE_EVENT_PROPERTY, event); 
-
+        Map<String, Object> props = getInovcationProperties(event);
+        
         Holder<MuleMessage> holder = new Holder<MuleMessage>();
         props.put("holder", holder); 
         // Set custom soap action if set on the event or endpoint
@@ -184,8 +183,7 @@ public class CxfMessageDispatcher extends AbstractMessageDispatcher
     {
         BindingOperationInfo bop = wrapper.getOperation(event);
         
-        Map<String, Object> props = new HashMap<String, Object>();
-        props.put(MuleProperties.MULE_EVENT_PROPERTY, event); 
+        Map<String, Object> props = getInovcationProperties(event);
         
         // Holds the response from the transport
         Holder<MuleMessage> holder = new Holder<MuleMessage>();
@@ -222,6 +220,17 @@ public class CxfMessageDispatcher extends AbstractMessageDispatcher
         MuleMessage muleRes = holder.value;
         return buildResponseMessage(muleRes, response);
     }
+
+	private Map<String, Object> getInovcationProperties(MuleEvent event) {
+		Map<String, Object> props = new HashMap<String, Object>();
+        props.put(MuleProperties.MULE_EVENT_PROPERTY, event); 
+        EndpointURI uri = endpoint.getEndpointURI();
+        if (uri.getUser() != null) {
+        	props.put(BindingProvider.USERNAME_PROPERTY, uri.getUser());
+        	props.put(BindingProvider.PASSWORD_PROPERTY, uri.getPassword());
+        }
+		return props;
+	}
 
     protected MuleMessage buildResponseMessage(MuleMessage transportResponse, Object[] response) 
     {
