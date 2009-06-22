@@ -71,8 +71,12 @@
         <coberturaVersion>2.2</coberturaVersion>
         <vmtype>org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType</vmtype>
         <jdk14Name>jdk1.4</jdk14Name>
-        <jdk5Name>jdk5</jdk5Name>
-        <jdk6Name>jdk6</jdk6Name>
+        <!-- 
+             Use the name of an Eclipse Java execution environment, Eclipse will
+             choose the right one by itself.
+        -->
+        <jdk5Name>J2SE-1.5</jdk5Name>
+        <jdk6Name>JavaSE-1.6</jdk6Name>
 
         <acegiVersion>1.0.7</acegiVersion>
         <antVersion>1.6.5</antVersion>
@@ -1497,7 +1501,6 @@
                 <configuration>
                     <!-- by default download all sources when generating project files -->
                     <downloadSources>true</downloadSources>
-                    <!-- configure a JDK named 'jdk5' for this project -->
                     <classpathContainers>
                         <classpathContainer>org.eclipse.jdt.launching.JRE_CONTAINER/${vmtype}/${jdk5Name}</classpathContainer>
                     </classpathContainers>
