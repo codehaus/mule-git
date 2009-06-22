@@ -36,8 +36,6 @@ import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.params.HttpConnectionManagerParams;
 
-import sun.rmi.transport.Endpoint;
-
 /**
  * <code>HttpConnector</code> provides a way of receiving and sending http requests
  * and responses. The Connector itself handles dispatching http requests. The
@@ -152,7 +150,7 @@ public class HttpConnector extends TcpConnector
     }
 
     /**
-     * @see Connector#registerListener(Service, Endpoint)
+     * @see Connector#registerListener(Service, InboundEndpoint)
      */
     public MessageReceiver registerListener(Service service, InboundEndpoint endpoint) throws Exception
     {
