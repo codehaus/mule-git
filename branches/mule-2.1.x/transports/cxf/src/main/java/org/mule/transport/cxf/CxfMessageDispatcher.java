@@ -67,20 +67,23 @@ public class CxfMessageDispatcher extends AbstractMessageDispatcher
 
     And the map method to operation
      */
+    @Override
     protected void doConnect() throws Exception
     {
         wrapper = new ClientWrapper(connector.getCxfBus(), endpoint);
     }
 
+    @Override
     protected void doDisconnect() throws Exception
-    {
-    }
-
-    protected void doDispose()
     {
         // nothing to do
     }
 
+    @Override
+    protected void doDispose()
+    {
+        // nothing to do
+    }
 
     protected Object[] getArgs(MuleEvent event) throws TransformerException
     {
@@ -134,8 +137,7 @@ public class CxfMessageDispatcher extends AbstractMessageDispatcher
     {
         Method method = wrapper.getMethod(event);
 
-        Map<String, Object> props = new HashMap<String, Object>();
-        props.put(MuleProperties.MULE_EVENT_PROPERTY, event); 
+        Map<String, Object> props = getInovcationProperties(event);
         
         // Set custom soap action if set on the event or endpoint
         String soapAction = (String)event.getMessage().getProperty(SoapConstants.SOAP_ACTION_PROPERTY);
@@ -159,8 +161,7 @@ public class CxfMessageDispatcher extends AbstractMessageDispatcher
     {
         BindingOperationInfo bop = wrapper.getOperation(event);
         
-        Map<String, Object> props = new HashMap<String, Object>();
-        props.put(MuleProperties.MULE_EVENT_PROPERTY, event); 
+        Map<String, Object> props = getInovcationProperties(event);
         
         // Set custom soap action if set on the event or endpoint
         String soapAction = (String)event.getMessage().getProperty(SoapConstants.SOAP_ACTION_PROPERTY);
@@ -191,6 +192,19 @@ public class CxfMessageDispatcher extends AbstractMessageDispatcher
         Object[] response = wrapper.getClient().invoke(bop, getArgs(event), ctx);
 
         return buildResponseMessage(event, response);
+    }
+    
+    private Map<String, Object> getInovcationProperties(MuleEvent event) 
+    {
+        Map<String, Object> props = new HashMap<String, Object>();
+        props.put(MuleProperties.MULE_EVENT_PROPERTY, event);
+        EndpointURI uri = endpoint.getEndpointURI();
+        if (uri.getUser() != null) 
+        {
+            props.put(BindingProvider.USERNAME_PROPERTY, uri.getUser());
+            props.put(BindingProvider.PASSWORD_PROPERTY, uri.getPassword());
+        }
+        return props;
     }
 
     protected MuleMessage buildResponseMessage(MuleEvent event, Object[] response) 

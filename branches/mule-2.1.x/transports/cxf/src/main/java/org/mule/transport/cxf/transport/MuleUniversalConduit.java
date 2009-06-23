@@ -43,6 +43,8 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.util.logging.Logger;
 
+import javax.xml.ws.BindingProvider;
+
 import org.apache.cxf.interceptor.Fault;
 import org.apache.cxf.message.Exchange;
 import org.apache.cxf.message.ExchangeImpl;
@@ -50,7 +52,6 @@ import org.apache.cxf.message.Message;
 import org.apache.cxf.message.MessageImpl;
 import org.apache.cxf.phase.AbstractPhaseInterceptor;
 import org.apache.cxf.phase.Phase;
-import org.apache.cxf.service.Service;
 import org.apache.cxf.service.model.EndpointInfo;
 import org.apache.cxf.transport.AbstractConduit;
 import org.apache.cxf.transport.Destination;
@@ -98,6 +99,7 @@ public class MuleUniversalConduit extends AbstractConduit
         this.connector = connector;
     }
     
+    @Override
     public void close(Message msg) throws IOException
     {
         OutputStream os = msg.getContent(OutputStream.class);
@@ -122,6 +124,7 @@ public class MuleUniversalConduit extends AbstractConduit
         return LOGGER;
     }
 
+    @Override
     public synchronized Destination getBackChannel()
     {
         if (decoupledDestination == null && decoupledEndpoint != null)
@@ -268,9 +271,21 @@ public class MuleUniversalConduit extends AbstractConduit
         String value = (String) message.get(Message.ENDPOINT_ADDRESS);
         String pathInfo = (String) message.get(Message.PATH_INFO);
         String queryString = (String) message.get(Message.QUERY_STRING);
+        String username = (String) message.get(BindingProvider.USERNAME_PROPERTY);
+        String password = (String) message.get(BindingProvider.PASSWORD_PROPERTY);
 
         String result = value != null ? value : getTargetOrEndpoint();
 
+        if (username != null) 
+        {
+            int slashIdx = result.indexOf("//");
+            if (slashIdx != -1) 
+            {
+                result = result.substring(0, slashIdx + 2) + username + ":" + password + "@" 
+                    + result.substring(slashIdx+2);
+            }
+        }
+        
         // REVISIT: is this really correct?
         if (null != pathInfo && !result.endsWith(pathInfo))
         {
@@ -295,6 +310,7 @@ public class MuleUniversalConduit extends AbstractConduit
 
     public void onClose(final Message m) throws IOException
     {
+        // nothing to do
     }
     
     protected MuleMessage sendStream(MessageAdapter sa, OutboundEndpoint ep) throws MuleException
@@ -319,6 +335,7 @@ public class MuleUniversalConduit extends AbstractConduit
         return ep.send(event);
     }
 
+    @Override
     public void close()
     {
         // in decoupled case, close response Destination if reference count
