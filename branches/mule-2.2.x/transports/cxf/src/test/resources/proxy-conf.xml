@@ -20,7 +20,7 @@
     
         <service name="jaxwsProxy">
             <inbound>
-                <cxf:inbound-endpoint address="http://localhost:63081/services/greeterProxy"
+                <cxf:inbound-endpoint address="http://localhost:63081/services/greeter-databinding-proxy"
                     serviceClass="org.apache.hello_world_soap_http.GreeterImpl"/>
                 <forwarding-router/>
             </inbound>
