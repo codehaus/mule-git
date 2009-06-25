@@ -52,7 +52,7 @@ public class Http10FunctionalTestCase extends FunctionalTestCase
         runHttpMethodAndAssertConnectionHeader(request, "close");
     }
     
-    public void testWithCloseConnectionHeader(String url) throws Exception
+    public void testWithCloseConnectionHeader() throws Exception
     {
         GetMethod request = new GetMethod(URL_WITHOUT_EP_OVERRIDE);
         request.setRequestHeader(HttpConstants.HEADER_CONNECTION, "close");
