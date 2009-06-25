@@ -188,6 +188,10 @@ public class HttpMessageReceiver extends TcpMessageReceiver
                     ((HttpConnector) connector).getKeepAliveMonitor().removeExpirable(this);
                     
                     conn.writeResponse(processRequest(request));
+                    if (request.getBody() != null) 
+                    {
+                        request.getBody().close();
+                    }
                 }
                 while (conn.isKeepAlive());
             }
@@ -242,7 +246,6 @@ public class HttpMessageReceiver extends TcpMessageReceiver
             MessageAdapter adapter = buildStandardAdapter(request, headers);
 
             MuleMessage message = new DefaultMuleMessage(adapter);
-            
 
             String path = (String) message.getProperty(HttpConnector.HTTP_REQUEST_PROPERTY);
             int i = path.indexOf('?');
@@ -292,22 +295,29 @@ public class HttpMessageReceiver extends TcpMessageReceiver
                     response = transformResponse(returnMessage);
                 }
                 
-                response.disableKeepAlive(!((HttpConnector) connector).isKeepAlive());
+                HttpConnector httpConnector = (HttpConnector) connector;
+                response.disableKeepAlive(!httpConnector.isKeepAlive());
                 
                 // Check if endpoint has a keep-alive property configured. Note the translation from
                 // keep-alive in the schema to keepAlive here.
-                boolean endpointOverride = Boolean.parseBoolean((String) endpoint.getProperty("keepAlive"));
+                boolean endpointOverride = true;
+                String keepAliveEndpointValue = (String) endpoint.getProperty("keepAlive");
+                if (keepAliveEndpointValue != null)
+                {
+                    endpointOverride = Boolean.parseBoolean(keepAliveEndpointValue);
+                }
                 
                 Header connectionHeader = request.getFirstHeader("Connection");
                 if (connectionHeader != null)
                 {
                     String value = connectionHeader.getValue();
-					if ("keep-alive".equalsIgnoreCase(value) && !endpointOverride) 
+					if ("keep-alive".equalsIgnoreCase(value) && endpointOverride) 
                     {
                     	response.setKeepAlive(true);
+                    	
                         Header header = new Header(HttpConstants.HEADER_KEEP_ALIVE, "timeout=" 
-                            + ((HttpConnector) connector).getKeepAliveTimeout());
-                        response.addHeader(header);   
+                            + httpConnector.getKeepAliveTimeout());
+                        response.addHeader(header); 
                     }
                     else if ("close".equalsIgnoreCase(value))
                     {
@@ -320,6 +330,18 @@ public class HttpMessageReceiver extends TcpMessageReceiver
                     else
                     {
                         response.setKeepAlive(false);
+                    }
+                }
+                
+                if (response.getHttpVersion().equals(HttpVersion.HTTP_1_0))
+                {
+                    for (Header header : response.getHeaders())
+                    {
+                        if (header.getName().equals(HttpConstants.HEADER_CONNECTION))
+                        {
+                            header.setValue("Keep-Alive");
+                            break;
+                        }
                     }
                 }
             }
