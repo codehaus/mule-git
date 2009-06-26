@@ -205,7 +205,11 @@ public abstract class AbstractJmsFunctionalTestCase extends FunctionalTestCase
     public AbstractJmsFunctionalTestCase(JmsVendorConfiguration config)
     {
         setJmsConfig(config);
-        System.out.print("\n===== Parameterized test using: " + config.getName() + " =====");
+        scenarioNoTx = new NonTransactedScenario();
+        scenarioCommit = new ScenarioCommit();
+        scenarioRollback = new ScenarioRollback();
+        scenarioNotReceive = new ScenarioNotReceive();
+        scenarioReceive = new ScenarioReceive();
     }
 
     /**
@@ -266,7 +270,7 @@ public abstract class AbstractJmsFunctionalTestCase extends FunctionalTestCase
                                                    "config files as input: " + configResource);
             }
             String resources = configResource.substring(configResource.lastIndexOf("/") + 1);
-            resources = String.format("integration/%s/connector-%s,%s", getJmsConfig().getName(),
+            resources = String.format("integration/%s/connector-%s,%s", getJmsConfig().getProviderName(),
                     resources, getConfigResources());
             SpringXmlConfigurationBuilder builder = new SpringXmlConfigurationBuilder(resources);
             return builder;

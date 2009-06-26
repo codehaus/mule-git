@@ -10,10 +10,9 @@
 
 package org.mule.transport.jms.integration;
 
-import org.mule.tck.ParameterizedConfiguration;
+import java.util.Map;
 
 import javax.jms.Connection;
-import javax.jms.ConnectionFactory;
 
 /**
  * Abstracts all the Jms Vendor specific configuration for the Jms integration test suite.
@@ -40,7 +39,7 @@ import javax.jms.ConnectionFactory;
  *
  * Fore more inforation about the JMS Integration tests see {@link AbstractJmsFunctionalTestCase}
  */
-public interface JmsVendorConfiguration extends ParameterizedConfiguration
+public interface JmsVendorConfiguration
 {
     /**
      * Create a connection factory for the Jms profider being tested
@@ -85,14 +84,6 @@ public interface JmsVendorConfiguration extends ParameterizedConfiguration
     public String getTopicBroadcastEndpoint();
 
     /**
-     * Returns the {@link #getDeadLetterDestinationName()} in the form of an endpoint URI i.e.
-     * jms://dlq
-      *
-     * @return the dead letter JMS endpoint
-     */
-    public String getDeadLetterEndpoint();
-
-    /**
      * The test inbound queue name.  For consistency this should always be 'in'. Note that you need to make
      * sure that this queue is available in the the JMS provider being tested.
      *
@@ -126,14 +117,6 @@ public interface JmsVendorConfiguration extends ParameterizedConfiguration
     public String getBroadcastDestinationName();
 
     /**
-     * The test dead letter queue name.  For consistency this should always be 'dlq'. Note that you need to make
-     * sure that this queue is available in the the JMS provider being tested.
-     *
-     * @return The test dead letterdestination name
-     */
-    public String getDeadLetterDestinationName();
-    
-    /**
      * Timeout in milliseconds used when checking that a message is NOT present. This is usually 1000-2000ms.
      * It is customizable so that slow connections i.e. over a wAN can be accounted for.
      * 
@@ -157,8 +140,22 @@ public interface JmsVendorConfiguration extends ParameterizedConfiguration
     public String getProtocol();
 
     /**
-     * @return a ConnectionFactory implementation used for unit testing of the provider, 
-     * usually consisting of some mocked-up methods.
+     * A string that identifies the Jms Provider i.e. WebsphereMQ
+     * @return the provider name
      */
-    public ConnectionFactory getTestConnectionFactory();
+    public String getProviderName();
+
+    /**
+     * These properties will get loaded into the registry. Good for adding property
+     * placeholders since provider or environment specific config info can be added as
+     * properties here and configuration files can use placeholders for these properties
+     * to make the tests portable. For example, if a property defined here was activemq.host=192.168.0.4
+     * an XML configuration file could access it using ${activemq.host} instead of putting the host name
+     * in the configuration file.
+     * It is good practice to prefix the property with a namespace just to ensure there are no conflicts, In
+     * this case the namespace is 'activemq'
+     * 
+     * @return a map of properties that will be made available in the registry
+     */
+    public Map getProperties();
 }

@@ -11,10 +11,10 @@ package org.mule.transport.jms.integration.activemq;
 
 import org.mule.transport.jms.integration.JmsVendorConfiguration;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.jms.Connection;
-import javax.jms.ConnectionFactory;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.ActiveMQXAConnectionFactory;
@@ -59,11 +59,6 @@ public class ActiveMQJmsConfiguration implements JmsVendorConfiguration
         return getProtocol() + "://topic:" + getBroadcastDestinationName();
     }
 
-    public String getDeadLetterEndpoint()
-    {
-        return getProtocol() + "://" + getDeadLetterDestinationName();
-    }
-
     public String getInboundDestinationName()
     {
         return "in";
@@ -82,11 +77,6 @@ public class ActiveMQJmsConfiguration implements JmsVendorConfiguration
     public String getBroadcastDestinationName()
     {
         return "broadcast";
-    }
-
-    public String getDeadLetterDestinationName()
-    {
-        return "dlq";
     }
 
     /**
@@ -110,23 +100,13 @@ public class ActiveMQJmsConfiguration implements JmsVendorConfiguration
         return "jms";
     }
 
-    public String getName()
+    public String getProviderName()
     {
         return "activemq";
     }
 
     public Map getProperties()
     {
-        return null;
-    }
-
-    public ConnectionFactory getTestConnectionFactory()
-    {
-        return new ActiveMQTestReconnectionConnectionFactoryWrapper();       
-    }
-    
-    public boolean isEnabled()
-    {
-        return true;
+        return new HashMap();
     }
 }
