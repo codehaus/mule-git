@@ -10,7 +10,7 @@
           http://www.mulesource.org/schema/mule/https/2.2 http://www.mulesource.org/schema/mule/https/2.2/mule-https.xsd
           http://www.mulesource.org/schema/mule/core/2.2 http://www.mulesource.org/schema/mule/core/2.2/mule.xsd">
 
-    <http:connector name="Http10Connector">
+    <http:connector name="HttpKeepAliveConnector">
         <spring:property name="keepAlive" value="true"/>
         <spring:property name="keepAliveTimeout" value="60000"/>
     </http:connector>
