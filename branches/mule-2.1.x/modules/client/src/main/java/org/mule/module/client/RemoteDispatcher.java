@@ -40,6 +40,7 @@ import org.mule.module.client.remoting.notification.RemoteDispatcherNotification
 import org.mule.security.MuleCredentials;
 import org.mule.transformer.TransformerUtils;
 import org.mule.transport.AbstractConnector;
+import org.mule.transport.NullPayload;
 import org.mule.util.ClassUtils;
 import org.mule.util.IOUtils;
 
@@ -384,30 +385,32 @@ public class RemoteDispatcher implements Disposable
                 return null;
             }
 
-            if (result != null)
+            if (result != null && result.getPayload() != null)
             {
-                if (result.getPayload() != null)
+                if (result.getPayload() instanceof NullPayload)
                 {
-                    Object response;
-                    if (result.getPayload() instanceof InputStream)
-                    {
-                        byte[] b = IOUtils.toByteArray((InputStream)result.getPayload());
-                        if(b.length==0) return null;
-                        ByteArrayInputStream in = new ByteArrayInputStream(b);
-                        response = wireFormat.read(in);
-                    }
-                    else
-                    {
-                        ByteArrayInputStream in = new ByteArrayInputStream(result.getPayloadAsBytes());
-                        response = wireFormat.read(in);
-                    }
-
-                    if (response instanceof RemoteDispatcherNotification)
-                    {
-                        response = ((RemoteDispatcherNotification)response).getMessage();
-                    }
-                    return (MuleMessage)response;
+                    return null;
                 }
+                
+                Object response;
+                if (result.getPayload() instanceof InputStream)
+                {
+                    byte[] b = IOUtils.toByteArray((InputStream)result.getPayload());
+                    if(b.length==0) return null;
+                    ByteArrayInputStream in = new ByteArrayInputStream(b);
+                    response = wireFormat.read(in);
+                }
+                else
+                {
+                    ByteArrayInputStream in = new ByteArrayInputStream(result.getPayloadAsBytes());
+                    response = wireFormat.read(in);
+                }
+
+                if (response instanceof RemoteDispatcherNotification)
+                {
+                    response = ((RemoteDispatcherNotification)response).getMessage();
+                }
+                return (MuleMessage)response;
             }
         }
         catch (Exception e)
