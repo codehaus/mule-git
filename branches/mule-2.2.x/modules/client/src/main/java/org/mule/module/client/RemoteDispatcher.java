@@ -10,14 +10,6 @@
 
 package org.mule.module.client;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.util.Map;
-
-import org.apache.commons.lang.SerializationUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.mule.DefaultMuleEvent;
 import org.mule.DefaultMuleMessage;
 import org.mule.DefaultMuleSession;
@@ -48,11 +40,21 @@ import org.mule.module.client.remoting.notification.RemoteDispatcherNotification
 import org.mule.security.MuleCredentials;
 import org.mule.transformer.TransformerUtils;
 import org.mule.transport.AbstractConnector;
+import org.mule.transport.NullPayload;
 import org.mule.util.ClassUtils;
 import org.mule.util.IOUtils;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.util.Map;
+
 import edu.emory.mathcs.backport.java.util.concurrent.Callable;
 import edu.emory.mathcs.backport.java.util.concurrent.Executor;
+
+import org.apache.commons.lang.SerializationUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * <code>RemoteDispatcher</code> is used to make and receive requests to a remote
@@ -383,30 +385,32 @@ public class RemoteDispatcher implements Disposable
                 return null;
             }
 
-            if (result != null)
+            if (result != null && result.getPayload() != null)
             {
-                if (result.getPayload() != null)
+                if (result.getPayload() instanceof NullPayload)
                 {
-                    Object response;
-                    if (result.getPayload() instanceof InputStream)
-                    {
-                        byte[] b = IOUtils.toByteArray((InputStream)result.getPayload());
-                        if(b.length==0) return null;
-                        ByteArrayInputStream in = new ByteArrayInputStream(b);
-                        response = wireFormat.read(in);
-                    }
-                    else
-                    {
-                        ByteArrayInputStream in = new ByteArrayInputStream(result.getPayloadAsBytes());
-                        response = wireFormat.read(in);
-                    }
-
-                    if (response instanceof RemoteDispatcherNotification)
-                    {
-                        response = ((RemoteDispatcherNotification)response).getMessage();
-                    }
-                    return (MuleMessage)response;
+                    return null;
                 }
+                
+                Object response;
+                if (result.getPayload() instanceof InputStream)
+                {
+                    byte[] b = IOUtils.toByteArray((InputStream)result.getPayload());
+                    if(b.length==0) return null;
+                    ByteArrayInputStream in = new ByteArrayInputStream(b);
+                    response = wireFormat.read(in);
+                }
+                else
+                {
+                    ByteArrayInputStream in = new ByteArrayInputStream(result.getPayloadAsBytes());
+                    response = wireFormat.read(in);
+                }
+
+                if (response instanceof RemoteDispatcherNotification)
+                {
+                    response = ((RemoteDispatcherNotification)response).getMessage();
+                }
+                return (MuleMessage)response;
             }
         }
         catch (Exception e)
