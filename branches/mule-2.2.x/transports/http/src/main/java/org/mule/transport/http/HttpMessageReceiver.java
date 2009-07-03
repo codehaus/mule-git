@@ -478,7 +478,7 @@ public class HttpMessageReceiver extends TcpMessageReceiver
             return headers;
         }
 
-        protected void preRouteMessage(MuleMessage message)
+        protected void preRouteMessage(MuleMessage message) throws MessagingException
         {
             message.setProperty(MuleProperties.MULE_REMOTE_CLIENT_ADDRESS, remoteClientAddress);
         }
