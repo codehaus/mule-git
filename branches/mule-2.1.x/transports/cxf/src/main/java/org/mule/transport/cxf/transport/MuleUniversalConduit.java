@@ -82,7 +82,7 @@ public class MuleUniversalConduit extends AbstractConduit
 
     private int decoupledDestinationRefCount;
 
-    private boolean closeInput;
+    private boolean closeInput = true;
 
     /**
      * @param ei The Endpoint being invoked by this destination.
