@@ -40,7 +40,7 @@ public class HttpRequestMessageAdapterTestCase extends AbstractMessageAdapterTes
     {
         assertTrue(payload instanceof InputStream);
     }
-    
+
     public MessageAdapter createAdapter(Object payload) throws MessagingException
     {
         return new HttpRequestMessageAdapter(payload);
@@ -48,7 +48,7 @@ public class HttpRequestMessageAdapterTestCase extends AbstractMessageAdapterTes
 
     public static HttpServletRequest getMockRequest(final String message)
     {
-        Object proxy = Proxy.newProxyInstance(ServletConnectorTestCase.class.getClassLoader(),
+        Object proxy = Proxy.newProxyInstance(HttpRequestMessageAdapterTestCase.class.getClassLoader(),
             new Class[]{HttpServletRequest.class}, new InvocationHandler()
             {
                 private String payload = message;

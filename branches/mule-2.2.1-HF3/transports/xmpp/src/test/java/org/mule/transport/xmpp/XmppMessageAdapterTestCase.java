@@ -8,25 +8,31 @@
  * LICENSE.txt file.
  */
 
-package org.mule.transport.http;
+package org.mule.transport.xmpp;
 
 import org.mule.api.MessagingException;
 import org.mule.api.transport.MessageAdapter;
 import org.mule.transport.AbstractMessageAdapterTestCase;
 
-public class HttpMessageAdapterTestCase extends AbstractMessageAdapterTestCase
+import org.jivesoftware.smack.packet.Message;
+
+public class XmppMessageAdapterTestCase extends AbstractMessageAdapterTestCase
 {
 
-    private byte[] message = TEST_MESSAGE.getBytes();
-
-    public Object getValidMessage() throws Exception
-    {
-        return message;
-    }
-
+    @Override
     public MessageAdapter createAdapter(Object payload) throws MessagingException
     {
-        return new HttpMessageAdapter(payload);
+        return new XmppMessageAdapter(payload);
     }
-    
+
+    @Override
+    public Object getValidMessage() throws Exception
+    {
+        Message msg = new Message();
+        msg.setBody(TEST_MESSAGE);
+        return msg;
+    }
+
 }
+
+

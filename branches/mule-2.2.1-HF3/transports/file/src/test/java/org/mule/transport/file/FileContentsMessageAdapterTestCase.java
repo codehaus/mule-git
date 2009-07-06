@@ -10,6 +10,7 @@
 
 package org.mule.transport.file;
 
+import org.mule.DefaultMuleMessage;
 import org.mule.api.MessagingException;
 import org.mule.api.transport.MessageAdapter;
 import org.mule.transport.AbstractMessageAdapterTestCase;
@@ -17,6 +18,8 @@ import org.mule.util.FileUtils;
 
 import java.io.File;
 import java.util.Arrays;
+
+import org.apache.commons.lang.SerializationUtils;
 
 
 public class FileContentsMessageAdapterTestCase extends AbstractMessageAdapterTestCase
@@ -73,19 +76,6 @@ public class FileContentsMessageAdapterTestCase extends AbstractMessageAdapterTe
         }
     }
 
-    // overridden to properly check the byte[] by content and not just by reference
-    public void doTestMessageEqualsPayload(Object message, Object payload) throws Exception
-    {
-        if (message instanceof byte[] && payload instanceof byte[])
-        {
-            assertTrue(Arrays.equals((byte[])message, (byte[])payload));
-        }
-        else
-        {
-            fail("message and payload must both be byte[]");
-        }
-    }
-
     public void testMessageContentsProperlyLoaded() throws Exception
     {
         // get new message adapter to test
@@ -97,31 +87,23 @@ public class FileContentsMessageAdapterTestCase extends AbstractMessageAdapterTe
         // slight detour for testing :)
         doTestMessageEqualsPayload(validMessage, adapter.getPayload());
     }
+    
+    public void testSerialization() throws Exception
+    {
+        MessageAdapter messageAdapter = createAdapter(getValidMessage());
+        DefaultMuleMessage muleMessage = new DefaultMuleMessage(messageAdapter);
 
-    /**
-     * This is not a valid use case since Transport adapters are immutable, hence a new one should be created
-     * for each messages
-     */
-//    public void testMultipleSetMessageCalls() throws Exception
-//    {
-//        // get new message adapter to test
-//        FileContentsMessageAdapter adapter = new FileContentsMessageAdapter(messageFile);
-//
-//        // access first payload
-//        doTestMessageEqualsPayload(validMessage, adapter.getPayload());
-//
-//        // create another source file
-//        String secondMessageContent = "Hooray";
-//        byte[] secondMessage = secondMessageContent.getBytes();
-//        File secondFile = File.createTempFile("simple2", ".mule", messageFile.getParentFile());
-//        FileUtils.writeStringToFile(secondFile, secondMessageContent, null);
-//
-//        // replace the first message content
-        //This shouln't even be visible
-//        adapter.setFileMessage(secondFile);
-//
-//        // make sure the file was properly read
-//        doTestMessageEqualsPayload(secondMessage, adapter.getPayload());
-//    }
+        byte[] serializedMessage = SerializationUtils.serialize(muleMessage);
+
+        DefaultMuleMessage readMessage = 
+            (DefaultMuleMessage) SerializationUtils.deserialize(serializedMessage);
+        assertNotNull(readMessage.getAdapter());
+
+        MessageAdapter readMessageAdapter = readMessage.getAdapter();
+        assertTrue(readMessageAdapter instanceof FileContentsMessageAdapter);
+        
+        assertTrue(Arrays.equals((byte[]) getValidMessage(), 
+            (byte[]) readMessageAdapter.getPayload()));
+    }
 
 }
