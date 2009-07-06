@@ -46,6 +46,11 @@ public class SslConnector extends TcpConnector
     // null initial keystore - see below
     private TlsConfiguration tls = new TlsConfiguration(null);
 
+    /**
+     * Timeout for establishing the SSL connection with the client.
+     */
+    private long sslHandshakeTimeout = 30000;
+    
     public SslConnector()
     {
         setSocketFactory(new SslSocketFactory(tls));
@@ -55,7 +60,7 @@ public class SslConnector extends TcpConnector
         setValidateConnections(false);
     }
 
-    // @Override
+    @Override
     protected void doInitialise() throws InitialisationException
     {
         super.doInitialise();
@@ -72,7 +77,7 @@ public class SslConnector extends TcpConnector
         }
     }
 
-    // @Override
+    @Override
     protected ServerSocket getServerSocket(URI uri) throws IOException
     {
         SSLServerSocket serverSocket = (SSLServerSocket) super.getServerSocket(uri);
@@ -80,7 +85,7 @@ public class SslConnector extends TcpConnector
         return serverSocket;
     }
 
-    // @Override
+    @Override
     public String getProtocol()
     {
         return SSL;
@@ -279,6 +284,16 @@ public class SslConnector extends TcpConnector
     public void setTrustStoreType(String trustStoreType)
     {
         tls.setTrustStoreType(trustStoreType);
+    }
+
+    public long getSslHandshakeTimeout()
+    {
+        return sslHandshakeTimeout;
+    }
+
+    public void setSslHandshakeTimeout(long sslHandshakeTimeout)
+    {
+        this.sslHandshakeTimeout = sslHandshakeTimeout;
     }
 
 }
