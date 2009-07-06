@@ -22,7 +22,7 @@ import java.io.Serializable;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -192,7 +192,7 @@ public class JmsMessageUtils
             }
             
             BytesMessage bMsg = session.createBytesMessage();
-            bMsg.writeBytes((byte[]) output.toByteArray());
+            bMsg.writeBytes(output.toByteArray());
             return bMsg;
         }
         else
@@ -211,7 +211,7 @@ public class JmsMessageUtils
         }
         else if (source instanceof MapMessage)
         {
-            Hashtable map = new Hashtable();
+            Map<String, Object> map = new HashMap<String, Object>();
             MapMessage m = (MapMessage) source;
 
             for (Enumeration e = m.getMapNames(); e.hasMoreElements();)
