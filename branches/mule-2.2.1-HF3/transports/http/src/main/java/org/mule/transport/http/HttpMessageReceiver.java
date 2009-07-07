@@ -188,6 +188,10 @@ public class HttpMessageReceiver extends TcpMessageReceiver
                     ((HttpConnector) connector).getKeepAliveMonitor().removeExpirable(this);
                     
                     conn.writeResponse(processRequest(request));
+                    if (request.getBody() != null) 
+                    {
+                        request.getBody().close();
+                    }
                 }
                 while (conn.isKeepAlive());
             }
@@ -242,7 +246,6 @@ public class HttpMessageReceiver extends TcpMessageReceiver
             MessageAdapter adapter = buildStandardAdapter(request, headers);
 
             MuleMessage message = new DefaultMuleMessage(adapter);
-            
 
             String path = (String) message.getProperty(HttpConnector.HTTP_REQUEST_PROPERTY);
             int i = path.indexOf('?');
@@ -258,17 +261,17 @@ public class HttpMessageReceiver extends TcpMessageReceiver
                 logger.debug(message.getProperty(HttpConnector.HTTP_REQUEST_PROPERTY));
             }
 
-            message.setProperty(HttpConnector.HTTP_CONTEXT_PATH_PROPERTY, 
-                HttpConnector.normalizeUrl(endpoint.getEndpointURI().getPath()));
-            
             // determine if the request path on this request denotes a different receiver
             MessageReceiver receiver = getTargetReceiver(message, endpoint);
-
+            
             HttpResponse response;
             // the response only needs to be transformed explicitly if
             // A) the request was not served or B) a null result was returned
             if (receiver != null)
             {
+            	message.setProperty(HttpConnector.HTTP_CONTEXT_PATH_PROPERTY, 
+    	                HttpConnector.normalizeUrl(receiver.getEndpointURI().getPath()));
+            	
                 preRouteMessage(message);
                 MuleMessage returnMessage = receiver.routeMessage(message, endpoint.isSynchronous(), null);
 
@@ -292,35 +295,29 @@ public class HttpMessageReceiver extends TcpMessageReceiver
                     response = transformResponse(returnMessage);
                 }
                 
-                response.disableKeepAlive(!((HttpConnector) connector).isKeepAlive());
-                
-                // Check if endpoint has a keep-alive property configured. Note the translation from
-                // keep-alive in the schema to keepAlive here.
-                boolean endpointOverride = Boolean.parseBoolean((String) endpoint.getProperty("keepAlive"));
+                response.setupKeepAliveFromRequestVersion(request.getRequestLine().getHttpVersion());
+                HttpConnector httpConnector = (HttpConnector) connector;
+                response.disableKeepAlive(!httpConnector.isKeepAlive());
                 
                 Header connectionHeader = request.getFirstHeader("Connection");
                 if (connectionHeader != null)
                 {
                     String value = connectionHeader.getValue();
-                    if ("keep-alive".equalsIgnoreCase(value) && !endpointOverride)
+                    boolean endpointOverride = getEndpointKeepAliveValue(endpoint);
+					if ("keep-alive".equalsIgnoreCase(value) && endpointOverride) 
                     {
                         response.setKeepAlive(true);
-                        Header header = new Header(HttpConstants.HEADER_KEEP_ALIVE, "timeout=" 
-                            + ((HttpConnector) connector).getKeepAliveTimeout());
-                        response.addHeader(header);   
+
+                        if (response.getHttpVersion().equals(HttpVersion.HTTP_1_0))
+                        {
+                            connectionHeader = new Header(HttpConstants.HEADER_CONNECTION, "Keep-Alive");
+                            response.setHeader(connectionHeader);
+                        }
                     }
                     else if ("close".equalsIgnoreCase(value))
                     {
                         response.setKeepAlive(false);
                     } 
-                    else if (response.getHttpVersion().greaterEquals(HttpVersion.HTTP_1_1))
-                    {
-                        response.setKeepAlive(true);
-                    }
-                    else
-                    {
-                        response.setKeepAlive(false);
-                    }
                 }
             }
             else
@@ -329,7 +326,21 @@ public class HttpMessageReceiver extends TcpMessageReceiver
             }
             return response;
         }
-
+        
+        /**
+         * Check if endpoint has a keep-alive property configured. Note the translation from
+         * keep-alive in the schema to keepAlive here.
+         */
+        private boolean getEndpointKeepAliveValue(ImmutableEndpoint endpoint)
+        {
+            String value = (String) endpoint.getProperty("keepAlive");
+            if (value != null)
+            {
+                return Boolean.parseBoolean(value);
+            }
+            return true;
+        }
+        
         protected HttpResponse doOtherValid(RequestLine requestLine, String method) throws MuleException
         {
             MuleMessage message = new DefaultMuleMessage(NullPayload.getInstance());
@@ -416,7 +427,7 @@ public class HttpMessageReceiver extends TcpMessageReceiver
         protected Map parseHeaders(HttpRequest request) throws MalformedCookieException
         {
             RequestLine requestLine = request.getRequestLine();
-            Map headers = new HashMap();
+            Map<String, Object> headers = new HashMap<String, Object>();
 
             for (Iterator rhi = request.getHeaderIterator(); rhi.hasNext();)
             {
