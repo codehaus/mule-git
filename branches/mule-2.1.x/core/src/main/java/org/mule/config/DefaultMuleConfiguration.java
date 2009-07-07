@@ -68,6 +68,11 @@ public class DefaultMuleConfiguration implements MuleConfiguration
      */
     private boolean remoteSync = false;
     
+    /**
+     * The default queue timeout value used when polling queues.
+     */
+    private int defaultQueueTimeout = 200;
+    
     /** Where Mule stores any runtime files to disk */
     private String workingDirectory = "./.mule";
 
@@ -489,4 +494,18 @@ public class DefaultMuleConfiguration implements MuleConfiguration
             return true;
         }
     }
+    
+    public int getDefaultQueueTimeout()
+    {
+        return defaultQueueTimeout;
+    }
+
+    public void setDefaultQueueTimeout(int defaultQueueTimeout)
+    {
+        if (verifyContextNotStarted())
+        {
+            this.defaultQueueTimeout = defaultQueueTimeout;
+        }
+    }
+
 }

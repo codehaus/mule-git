@@ -24,8 +24,8 @@ public class SedaModel extends AbstractModel
     /**
      * The time out used for taking from the Seda Queue.
      */
-    private int queueTimeout;
-
+    private Integer queueTimeout;
+    
     /**
      * the pooling configuration used when initialising the service described by
      * this descriptor.
@@ -50,7 +50,10 @@ public class SedaModel extends AbstractModel
 
     public void initialise() throws InitialisationException
     {
-        queueTimeout = muleContext.getConfiguration().getDefaultSynchronousEventTimeout();
+        if (queueTimeout == null)
+        {
+            queueTimeout = muleContext.getConfiguration().getDefaultQueueTimeout();
+        }
         if (queueProfile == null)
         {
             queueProfile = new QueueProfile();
