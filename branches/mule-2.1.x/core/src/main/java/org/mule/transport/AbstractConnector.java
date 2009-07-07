@@ -19,7 +19,6 @@ import org.mule.api.MuleEvent;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.MuleRuntimeException;
-import org.mule.api.config.ConfigurationException;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.config.ThreadingProfile;
 import org.mule.api.context.WorkManager;
@@ -51,7 +50,6 @@ import org.mule.api.transport.MessageRequesterFactory;
 import org.mule.api.transport.ReplyToHandler;
 import org.mule.api.transport.SessionHandler;
 import org.mule.config.i18n.CoreMessages;
-import org.mule.config.i18n.MessageFactory;
 import org.mule.context.notification.ConnectionNotification;
 import org.mule.context.notification.EndpointMessageNotification;
 import org.mule.context.notification.OptimisedNotificationHandler;
@@ -76,6 +74,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -94,6 +93,7 @@ import edu.emory.mathcs.backport.java.util.concurrent.ThreadFactory;
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicReference;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.pool.KeyedPoolableObjectFactory;
@@ -131,6 +131,10 @@ public abstract class AbstractConnector
      * Default number of concurrent transactional receivers.
      */
     public static final int DEFAULT_NUM_CONCURRENT_TX_RECEIVERS = 4;
+
+    private static final long SCHEDULER_SHUTDOWN_TIMEOUT = 5000l;
+    
+    private static final long SCHEDULER_FORCED_SHUTDOWN_TIMEOUT = 5000l;
 
     /**
      * logger used by this class
@@ -489,7 +493,7 @@ public abstract class AbstractConnector
         }
 
         // shutdown our scheduler service
-        ((ScheduledExecutorService) scheduler.get()).shutdown();
+        shutdownScheduler();
 
         // Dispose work managers here to ensure that all jobs that are currently
         // processing or waiting can complete so that all message flow completes in
@@ -541,6 +545,55 @@ public abstract class AbstractConnector
         }
     }
 
+    protected void shutdownScheduler()
+    {
+        ScheduledExecutorService schedulerExecutor = ((ScheduledExecutorService) scheduler.get());
+        if (schedulerExecutor != null)
+        {
+            // Disable new tasks from being submitted
+            schedulerExecutor.shutdown();
+            try
+            {
+                // Wait a while for existing tasks to terminate
+                if (!schedulerExecutor.awaitTermination(SCHEDULER_SHUTDOWN_TIMEOUT, TimeUnit.MILLISECONDS))
+                {
+                    // Cancel currently executing tasks and return list of pending
+                    // tasks
+                    List outstanding = schedulerExecutor.shutdownNow();
+                    // Wait a while for tasks to respond to being cancelled
+                    if (!schedulerExecutor.awaitTermination(SCHEDULER_FORCED_SHUTDOWN_TIMEOUT,
+                        TimeUnit.MILLISECONDS))
+                    {
+                        logger.warn(MessageFormat.format(
+                            "Pool {0} did not terminate in time; {1} work items were cancelled.", name,
+                            outstanding.isEmpty() ? "No" : Integer.toString(outstanding.size())));
+                    }
+                    else
+                    {
+                        if (!outstanding.isEmpty())
+                        {
+                            logger.warn(MessageFormat.format(
+                                "Pool {0} terminated; {1} work items were cancelled.", name,
+                                Integer.toString(outstanding.size())));
+                        }
+                    }
+
+                }
+            }
+            catch (InterruptedException ie)
+            {
+                // (Re-)Cancel if current thread also interrupted
+                schedulerExecutor.shutdownNow();
+                // Preserve interrupt status
+                Thread.currentThread().interrupt();
+            }
+            finally
+            {
+                schedulerExecutor = null;
+            }
+        }
+    }
+    
     /*
      * (non-Javadoc)
      *
