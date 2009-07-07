@@ -42,6 +42,7 @@ import javax.xml.namespace.QName;
 import org.apache.cxf.Bus;
 import org.apache.cxf.BusFactory;
 import org.apache.cxf.bus.spring.SpringBusFactory;
+import org.apache.cxf.endpoint.Endpoint;
 import org.apache.cxf.endpoint.Server;
 import org.apache.cxf.transport.ConduitInitiatorManager;
 import org.apache.cxf.transport.DestinationFactoryManager;
@@ -201,7 +202,10 @@ public class CxfConnector extends AbstractConnector implements MuleContextNotifi
         
         // TODO MULE-2228 Simplify this API
         SedaService c = new SedaService();
-        c.setName(CXF_SERVICE_COMPONENT_NAME + server.getEndpoint().getService().getName().getLocalPart() + c.hashCode());
+        
+        String uniqueServiceName = createServiceName(server.getEndpoint());
+        c.setName(uniqueServiceName);
+        
         c.setModel(muleContext.getRegistry().lookupSystemModel());
 
         CxfServiceComponent svcComponent = new CxfServiceComponent(this, (CxfMessageReceiver) receiver);
@@ -308,6 +312,22 @@ public class CxfConnector extends AbstractConnector implements MuleContextNotifi
         c.setInboundRouter(new DefaultInboundRouterCollection());
         c.getInboundRouter().addEndpoint(protocolEndpoint);
         services.add(c);
+    }
+    
+    /**
+     * Build a unique name for the endpoint that is well suited for exposure by JMX.
+     */
+    protected String createServiceName(Endpoint endpoint)
+    {
+        StringBuilder name = new StringBuilder(CXF_SERVICE_COMPONENT_NAME);
+        name.append("{");
+        
+        String address = endpoint.getEndpointInfo().getAddress();
+        name.append(address.replace(":", "|"));
+        name.append("}");
+        name.append(endpoint.getService().getName().getLocalPart());
+
+        return name.toString();
     }
 
     /**
