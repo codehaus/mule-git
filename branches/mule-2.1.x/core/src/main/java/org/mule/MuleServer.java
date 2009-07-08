@@ -29,7 +29,6 @@ import org.mule.util.SystemUtils;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -147,8 +146,6 @@ public class MuleServer implements Runnable
 
         try
         {
-            muleShutdownHook = new MuleShutdownHook(logger);
-            registerShutdownHook(muleShutdownHook);
             options = SystemUtils.getCommandLineOptions(args, CLI_OPTIONS);
         }
         catch (DefaultMuleException me)
@@ -231,7 +228,7 @@ public class MuleServer implements Runnable
     {
         if (registerShutdownHook)
         {
-            registerShutdownHook(muleShutdownHook);
+            registerShutdownHook();
         }
         if (ownThread)
         {
@@ -319,8 +316,6 @@ public class MuleServer implements Runnable
      */
     public void initialize() throws Exception
     {
-        Runtime.getRuntime().addShutdownHook(new ShutdownThread());
-
         if (configurationResources == null)
         {
             logger.warn("A configuration file was not set, using default: " + DEFAULT_CONFIGURATION);
@@ -375,21 +370,12 @@ public class MuleServer implements Runnable
         msgs.add(root.getMessage() + " (" + root.getClass().getName() + ")");
         msgs.add(" ");
         msgs.add(CoreMessages.fatalErrorInShutdown());
-        if (muleContext != null)
-        {
-            msgs.add(CoreMessages.serverStartedAt(muleContext.getStartDate()));
-        }
-        msgs.add(CoreMessages.serverShutdownAt(new Date()));
 
         String shutdownMessage = StringMessageUtils.getBoilerPlate(msgs, '*', 80);
         logger.fatal(shutdownMessage);
 
-        // make sure that Mule is shutdown correctly.
-        if (muleContext != null)
-        {
-            muleContext.dispose();
-        }
-        System.exit(0);
+        unregisterShutdownHook();
+        doShutdown();
     }
 
     /**
@@ -399,30 +385,46 @@ public class MuleServer implements Runnable
     {
         logger.info("Mule server shutting down due to normal shutdown request");
         
-        // Isn't this the same info. as DefaultMuleContext.getEndSplash() ?
-//        List msgs = new ArrayList();
-//        msgs.add(CoreMessages.normalShutdown());
-//        msgs.add(CoreMessages.serverStartedAt(muleContext.getStartDate()).getMessage());
-//        msgs.add(CoreMessages.serverShutdownAt(new Date()).getMessage());
-//        String shutdownMessage = StringMessageUtils.getBoilerPlate(msgs, '*', 80);
-//        logger.info(shutdownMessage);
-
-        // make sure that Mule is shutdown correctly.
-        muleContext.dispose();
-        System.exit(0);
+        unregisterShutdownHook();
+        doShutdown();
     }
 
+    protected void doShutdown()
+    {
+        if (muleContext != null)
+        {
+            muleContext.dispose();
+            muleContext = null;
+        }
+        System.exit(0);
+    }
+    
     public Log getLogger()
     {
         return logger;
     }
 
-    public void registerShutdownHook(MuleShutdownHook muleShutdownHook)
+    public void registerShutdownHook()
     {
-        Runtime.getRuntime().removeShutdownHook(muleShutdownHook);
+        if (muleShutdownHook == null)
+        {
+            muleShutdownHook = new MuleShutdownHook();
+        }
+        else
+        {
+            Runtime.getRuntime().removeShutdownHook(muleShutdownHook);
+        }
         Runtime.getRuntime().addShutdownHook(muleShutdownHook);
     }
 
+    public void unregisterShutdownHook()
+    {
+        if (muleShutdownHook != null)
+        {
+            Runtime.getRuntime().removeShutdownHook(muleShutdownHook);
+        }
+    }
+    
     // /////////////////////////////////////////////////////////////////
     // Getters and setters
     // /////////////////////////////////////////////////////////////////
@@ -472,14 +474,11 @@ public class MuleServer implements Runnable
      * clean Mule shutdown can be achieved by disposing the
      * {@link org.mule.DefaultMuleContext}.
      */
-    private static class ShutdownThread extends Thread
+    private class MuleShutdownHook extends Thread
     {
         public void run()
         {
-            if (muleContext !=null && !muleContext.isDisposed() && !muleContext.isDisposing())
-            {
-                muleContext.dispose();
-            }
+            doShutdown();
         }
     }
 }

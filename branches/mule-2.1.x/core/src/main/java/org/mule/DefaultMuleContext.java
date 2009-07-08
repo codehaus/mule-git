@@ -105,8 +105,13 @@ public class DefaultMuleContext implements MuleContext
         return new MuleRegistryHelper(registry);
     }
     
-    public void initialise() throws InitialisationException
+    public synchronized void initialise() throws InitialisationException
     {
+        if (isInitialised())
+        {
+            return;
+        }
+        
         lifecycleManager.checkPhase(Initialisable.PHASE_NAME);
 
         if (getNotificationManager() == null)
@@ -190,9 +195,9 @@ public class DefaultMuleContext implements MuleContext
         fireNotification(new MuleContextNotification(this, MuleContextNotification.CONTEXT_STOPPED));
     }
 
-    public void dispose()
+    public synchronized void dispose()
     {        
-        if (isDisposing())
+        if (isDisposed())
         {
             return;
         }
