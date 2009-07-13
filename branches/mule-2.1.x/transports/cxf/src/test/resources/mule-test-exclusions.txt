@@ -29,6 +29,3 @@ org.mule.transport.cxf.CxfConnectorVMFunctionalTestCase
 
 # MULE-3611
 org.mule.transport.cxf.issues.MultipleWsdlCxfCallsTestCase
-
-# this one still fails after backporting EE-1589
-org.mule.transport.cxf.HttpSecurityTestCase
