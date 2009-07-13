@@ -1610,10 +1610,6 @@
             </plugin>
 
             <!-- Javadoc settings -->
-            <!--
-                Attention!
-                Do not update to version 2.5, we've been there and it won't work.
-            -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
