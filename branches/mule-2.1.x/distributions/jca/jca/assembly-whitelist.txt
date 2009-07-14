@@ -6,7 +6,6 @@ aopalliance-1.0
 axiom-api-1.2.7
 axiom-impl-1.2.7
 axis.osgi-1.4
-bcprov-jdk15-140
 backport-util-concurrent.osgi-3.1
 bsh.osgi-2.0b4
 cglib-nodep.osgi-2.1_3

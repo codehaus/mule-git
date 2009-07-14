@@ -641,7 +641,7 @@
                 </exclusion>		
                 <exclusion>
                     <groupId>bouncycastle</groupId>
-                    <artifactId>bcprov-jdk14</artifactId>
+                    <artifactId>bcprov-jdk15</artifactId>
                 </exclusion>
                 <exclusion>
                     <groupId>org.apache.santuario</groupId>
