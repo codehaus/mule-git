@@ -249,6 +249,7 @@ public class CxfMessageReceiver extends AbstractMessageReceiver
 
             Bus bus = connector.getCxfBus();
             sfb.setBus(bus);
+            sfb.getServiceFactory().setBus(bus);
 
             initializeServerFactory(sfb);
             

@@ -94,7 +94,7 @@
         http://mirrors.ibiblio.org/pub/mirrors/maven2/cryptix/cryptix/3.2.0/cryptix-3.2.0.jar
         but the PGP module would need some work in order to use it -->
         <cryptixVersion>20050405</cryptixVersion>
-        <cxfVersion>2.1.2</cxfVersion>
+        <cxfVersion>2.1.5</cxfVersion>
         <dom4jVersion>1.6.1</dom4jVersion>
         <flatpackVersion>3.1.1</flatpackVersion>
         <geronimoSpecsVersion>1.1</geronimoSpecsVersion>
