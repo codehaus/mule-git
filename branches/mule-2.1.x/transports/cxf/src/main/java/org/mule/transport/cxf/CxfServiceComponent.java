@@ -272,7 +272,7 @@ public class CxfServiceComponent implements Callable, Lifecycle
                 }
                 
             };
-            DefaultMuleMessage muleResMsg = new DefaultMuleMessage(outputHandler);
+            DefaultMuleMessage muleResMsg = new DefaultMuleMessage(outputHandler, muleReqMsg);
             
             ExchangeImpl exchange = new ExchangeImpl();
             exchange.setInMessage(m);
