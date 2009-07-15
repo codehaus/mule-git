@@ -29,7 +29,7 @@ public class JmxStatisticsAsyncTestCase extends FunctionalTestCase
         super.doSetUp();
         MuleClient muleClient = new MuleClient(FunctionalTestCase.muleContext);
         muleClient.dispatch("vm://in", "Hello world", null);
-        muleClient.request("vm://out", 5000);
+        muleClient.request("vm://out", RECEIVE_TIMEOUT * 2);
     }
 
     @Override
