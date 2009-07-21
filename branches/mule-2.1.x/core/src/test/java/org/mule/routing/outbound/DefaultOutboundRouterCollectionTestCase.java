@@ -11,6 +11,7 @@ import org.mule.api.service.Service;
 import org.mule.api.transport.OutputHandler;
 import org.mule.component.simple.PassThroughComponent;
 import org.mule.tck.AbstractMuleTestCase;
+import org.mule.transformer.NoActionTransformer;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -283,6 +284,9 @@ public class DefaultOutboundRouterCollectionTestCase extends AbstractMuleTestCas
         public TestRequiresNewMessageOutboundRouter(boolean expectCopy)
         {
             this.expectCopy = expectCopy;
+            List transformers = new ArrayList();
+            transformers.add(new NoActionTransformer());
+            setTransformers(transformers);
         }
 
         @Override
@@ -314,13 +318,6 @@ public class DefaultOutboundRouterCollectionTestCase extends AbstractMuleTestCas
             latch.countDown();
             return false;
         }
-
-        @Override
-        public boolean isRequiresNewMessage()
-        {
-            return true;
-        }
-
     }
 
     private static class TestDoesNotRequireNewMessageOutboundRouter extends OutboundPassThroughRouter
