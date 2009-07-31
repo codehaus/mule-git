@@ -14,16 +14,30 @@
     <vm:connector name="vm" queueEvents="true"/>
     
     <model>
-        <service name="AsyncService">
+
+        <service name="AsyncPersistentQueueService">
             <inbound>
                 <http:inbound-endpoint host="localhost" port="8000" synchronous="false"/>
             </inbound>
             <test:component/>
             <outbound>
                 <pass-through-router>
-                    <vm:outbound-endpoint path="/tmp/mule/out" connector-ref="vm" />
+                    <vm:outbound-endpoint path="out" connector-ref="vm" />
                 </pass-through-router>
             </outbound>
+        </service>
+        
+        <service name="AsyncService">
+            <inbound>
+                <http:inbound-endpoint host="localhost" port="8001" synchronous="false"/>
+            </inbound>
+            <test:component/>
+            <outbound>
+                <pass-through-router>
+                    <vm:outbound-endpoint path="out" connector-ref="vm" />
+                </pass-through-router>
+            </outbound>
+            <queue-profile persistent="true"/>
         </service>
     </model>
     
