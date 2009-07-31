@@ -20,6 +20,8 @@ import org.mule.tck.functional.FunctionalTestComponent;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpVersion;
 import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.httpclient.methods.RequestEntity;
+import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.apache.commons.httpclient.params.HttpClientParams;
 
 public class HttpMessageReceiverMule4456TestCase extends FunctionalTestCase
@@ -27,7 +29,7 @@ public class HttpMessageReceiverMule4456TestCase extends FunctionalTestCase
     private static final String URL = "http://localhost:8000";
     private static final String MESSAGE = "test message";
 
-    private HttpClient http11Client;
+    private HttpClient httpClient;
     private MuleClient muleClient;
 
     @Override
@@ -42,7 +44,7 @@ public class HttpMessageReceiverMule4456TestCase extends FunctionalTestCase
         super.doSetUp();
         HttpClientParams params = new HttpClientParams();
         params.setVersion(HttpVersion.HTTP_1_1);
-        http11Client = new HttpClient(params);
+        httpClient = new HttpClient(params);
         muleClient = new MuleClient();
     }
 
@@ -54,18 +56,22 @@ public class HttpMessageReceiverMule4456TestCase extends FunctionalTestCase
 
     public void testAsyncPost() throws Exception
     {
-        ((FunctionalTestComponent) getComponent("AsyncService")).setEventCallback(new EventCallback()
+        FunctionalTestComponent component = (FunctionalTestComponent) getComponent("AsyncService");
+        component.setEventCallback(new EventCallback()
         {
-
             public void eventReceived(MuleEventContext context, Object component) throws Exception
             {
                 Thread.sleep(200);
                 context.getMessageAsString();
             }
         });
+        
         PostMethod request = new PostMethod(URL);
-        request.setRequestBody(MESSAGE);
-        http11Client.executeMethod(request);
+        RequestEntity entity = new StringRequestEntity(MESSAGE, "text/plain", 
+            muleContext.getConfiguration().getDefaultEncoding());
+        request.setRequestEntity(entity);
+        
+        httpClient.executeMethod(request);
         MuleMessage message = muleClient.request("vm:///tmp/mule/out", 1000);
         assertNotNull(message);
         assertEquals(MESSAGE + "2", message.getPayloadAsString());
