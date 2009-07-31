@@ -26,7 +26,6 @@ import org.apache.commons.httpclient.params.HttpClientParams;
 
 public class HttpMessageReceiverMule4456TestCase extends FunctionalTestCase
 {
-    private static final String URL = "http://localhost:8000";
     private static final String MESSAGE = "test message";
 
     private HttpClient httpClient;
@@ -54,9 +53,33 @@ public class HttpMessageReceiverMule4456TestCase extends FunctionalTestCase
         return "http-receiver-mule4456-config.xml";
     }
 
-    public void testAsyncPost() throws Exception
+//    SEE MULE-4456
+//    public void testAsyncPost() throws Exception
+//    {
+//        FunctionalTestComponent component = (FunctionalTestComponent) getComponent("AsyncService");
+//        component.setEventCallback(new EventCallback()
+//        {
+//            public void eventReceived(MuleEventContext context, Object component) throws Exception
+//            {
+//                Thread.sleep(200);
+//                context.getMessageAsString();
+//            }
+//        });
+//
+//        PostMethod request = new PostMethod("http://localhost:8000");
+//        RequestEntity entity = new StringRequestEntity(MESSAGE, "text/plain", muleContext.getConfiguration()
+//            .getDefaultEncoding());
+//        request.setRequestEntity(entity);
+//
+//        httpClient.executeMethod(request);
+//        MuleMessage message = muleClient.request("vm://out", 1000);
+//        assertNotNull(message);
+//        assertEquals(MESSAGE, message.getPayloadAsString());
+//    }
+
+    public void testAsyncPostWithPersistentSedaQueue() throws Exception
     {
-        FunctionalTestComponent component = (FunctionalTestComponent) getComponent("AsyncService");
+        FunctionalTestComponent component = (FunctionalTestComponent) getComponent("AsyncPersistentQueueService");
         component.setEventCallback(new EventCallback()
         {
             public void eventReceived(MuleEventContext context, Object component) throws Exception
@@ -65,15 +88,15 @@ public class HttpMessageReceiverMule4456TestCase extends FunctionalTestCase
                 context.getMessageAsString();
             }
         });
-        
-        PostMethod request = new PostMethod(URL);
-        RequestEntity entity = new StringRequestEntity(MESSAGE, "text/plain", 
-            muleContext.getConfiguration().getDefaultEncoding());
+
+        PostMethod request = new PostMethod("http://localhost:8001");
+        RequestEntity entity = new StringRequestEntity(MESSAGE, "text/plain", muleContext.getConfiguration()
+            .getDefaultEncoding());
         request.setRequestEntity(entity);
-        
+
         httpClient.executeMethod(request);
-        MuleMessage message = muleClient.request("vm:///tmp/mule/out", 1000);
+        MuleMessage message = muleClient.request("vm://out", 1000);
         assertNotNull(message);
-        assertEquals(MESSAGE + "2", message.getPayloadAsString());
+        assertEquals(MESSAGE, message.getPayloadAsString());
     }
 }
