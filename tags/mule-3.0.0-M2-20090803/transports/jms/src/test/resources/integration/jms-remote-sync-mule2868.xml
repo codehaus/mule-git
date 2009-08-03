@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesource.org/schema/mule/core"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:spring="http://www.springframework.org/schema/beans"
+      xmlns:vm="http://www.mulesource.org/schema/mule/vm"
+      xmlns:test="http://www.mulesource.org/schema/mule/test"
+      xsi:schemaLocation="
+       http://www.mulesource.org/schema/mule/test http://www.mulesource.org/schema/mule/test/3.0/mule-test.xsd
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+       http://www.mulesource.org/schema/mule/core http://www.mulesource.org/schema/mule/core/3.0/mule.xsd
+              http://www.mulesource.org/schema/mule/vm http://www.mulesource.org/schema/mule/vm/3.0/mule-vm.xsd">
+
+    <endpoint name="out" synchronous="true" address="${outbound.destination}"/>
+
+    <vm:connector name="vmConnector" queueEvents="true"/>
+
+    <model name="Model">
+
+        <service name="JmsQueueComponent">
+            <inbound>
+                <inbound-endpoint address="vm://in" synchronous="true"/>
+            </inbound>
+            <bridge-component/>
+            <outbound>
+                <pass-through-router>
+                    <outbound-endpoint ref="out"/>
+                </pass-through-router>
+            </outbound>
+        </service>
+
+        <service name="EchoComponent">
+            <inbound>
+                <inbound-endpoint ref="out"/>
+            </inbound>
+            <test:component appendString=" Received"/>
+        </service>
+
+    </model>
+</mule>
