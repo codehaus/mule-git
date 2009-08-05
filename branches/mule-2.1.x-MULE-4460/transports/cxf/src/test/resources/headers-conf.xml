@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesource.org/schema/mule/core/2.1"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:spring="http://www.springframework.org/schema/beans"
+      xmlns:cxf="http://www.mulesource.org/schema/mule/cxf/2.1"
+        xmlns:test="http://www.mulesource.org/schema/mule/test/2.1"
+      xsi:schemaLocation="
+        http://www.mulesource.org/schema/mule/test/2.1 http://www.mulesource.org/schema/mule/test/2.1/mule-test.xsd
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+        http://www.mulesource.org/schema/mule/core/2.1 http://www.mulesource.org/schema/mule/core/2.1/mule.xsd
+        http://www.mulesource.org/schema/mule/cxf/2.1 http://www.mulesource.org/schema/mule/cxf/2.1/mule-cxf.xsd">
+
+    <notifications dynamic="true">
+        <notification event="ENDPOINT-MESSAGE"/>
+    </notifications>
+
+    <cxf:connector name="cxf" defaultFrontend="simple"/>
+    
+     <model name="TestCxfHeaders">
+        <service name="TestComponent">
+            <inbound>
+                <inbound-endpoint address="cxf:http://localhost:63181/services/TestComponent"/>
+            </inbound>
+            <test:component appendString=" Received"/>
+        </service>
+     </model>
+
+</mule>

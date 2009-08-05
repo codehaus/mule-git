@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesource.org/schema/mule/core/2.1"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:spring="http://www.springframework.org/schema/beans"
+    xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+       http://www.mulesource.org/schema/mule/core/2.1 http://www.mulesource.org/schema/mule/core/2.1/mule.xsd">
+
+    <model name="model">
+        <service name="TestUMO">
+            <inbound>
+                <inbound-endpoint address="vm://filesend"/>
+                <forwarding-router/>
+            </inbound>
+            <outbound>
+                <chaining-router>
+                    <outbound-endpoint address="file://FirstWrite">
+                        <property key="outputPattern" value="export.txt"/>
+                    </outbound-endpoint>
+                    <outbound-endpoint address="file://SecondWrite">
+                        <property key="outputPattern" value="export.txt.OK"/>
+                    </outbound-endpoint>
+                </chaining-router>
+            </outbound>
+        </service>
+    </model>
+</mule>
+
