@@ -13,7 +13,6 @@ package org.mule.transport.http;
 import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
-import org.mule.api.MuleRuntimeException;
 import org.mule.api.endpoint.OutboundEndpoint;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.transformer.TransformerException;
@@ -22,19 +21,14 @@ import org.mule.api.transport.OutputHandler;
 import org.mule.api.transport.PropertyScope;
 import org.mule.message.DefaultExceptionPayload;
 import org.mule.transport.AbstractMessageDispatcher;
-import org.mule.transport.http.i18n.HttpMessages;
 import org.mule.transport.http.transformers.ObjectToHttpClientMethodRequest;
 import org.mule.util.StringUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import java.net.URISyntaxException;
-import java.security.GeneralSecurityException;
 import java.util.Iterator;
 import java.util.Map;
-
-import javax.net.ssl.SSLSocketFactory;
 
 import org.apache.commons.httpclient.Cookie;
 import org.apache.commons.httpclient.Header;
@@ -46,7 +40,6 @@ import org.apache.commons.httpclient.methods.ByteArrayRequestEntity;
 import org.apache.commons.httpclient.methods.EntityEnclosingMethod;
 import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.commons.httpclient.protocol.Protocol;
-import org.apache.commons.httpclient.protocol.ProtocolSocketFactory;
 
 /**
  * <code>HttpClientMessageDispatcher</code> dispatches Mule events over HTTP.
@@ -57,7 +50,8 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
      * Range start for http error status codes.
      */
     public static final int ERROR_STATUS_CODE_RANGE_START = 400;
-    private final HttpConnector connector;
+    
+    protected final HttpConnector connector;
     private volatile HttpClient client = null;
     //TODO should this really be hardcoded??
     private final ObjectToHttpClientMethodRequest sendTransformer;
@@ -114,8 +108,7 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
         }
     }
 
-    protected HttpMethod execute(MuleEvent event, HttpMethod httpMethod)
-        throws Exception
+    protected HttpMethod execute(MuleEvent event, HttpMethod httpMethod) throws Exception
     {
         // TODO set connection timeout buffer etc
         try
@@ -326,32 +319,14 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
         }
     }
 
-    protected HostConfiguration getHostConfig(URI uri) throws URISyntaxException
+    protected HostConfiguration getHostConfig(URI uri) throws Exception
     {
         Protocol protocol = Protocol.getProtocol(uri.getScheme().toLowerCase());
-        
-        if (connector instanceof HttpsConnector)
-        {
-            try
-            {
-                // that's the socketFactory of the connector ... TODO see if we can get that in a better way
-                HttpsConnector httpsConnector = (HttpsConnector) connector;
-                SSLSocketFactory factory = httpsConnector.getSslSocketFactory();
-                ProtocolSocketFactory protocolSocketFactory = new MuleSecureProtocolSocketFactory(factory);
-                protocol = new Protocol(uri.getScheme().toLowerCase(), protocolSocketFactory, 443);
-            }
-            catch (GeneralSecurityException e)
-            {
-                // TODO think about exception handling here
-                throw new MuleRuntimeException(HttpMessages.createStaticMessage("ouch"));
-            }
-        }
 
-        HostConfiguration config = new MuleHostConfiguration();
         String host = uri.getHost();
         int port = uri.getPort();
+        HostConfiguration config = new HostConfiguration();
         config.setHost(host, port, protocol);
-
         if (StringUtils.isNotBlank(connector.getProxyHostname()))
         {
             // add proxy support

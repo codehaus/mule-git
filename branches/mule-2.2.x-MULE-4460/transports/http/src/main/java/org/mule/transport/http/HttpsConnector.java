@@ -292,10 +292,9 @@ public class HttpsConnector extends HttpConnector
         this.sslHandshakeTimeout = sslHandshakeTimeout;
     }
 
-    // TODO think about this some more
     public SSLSocketFactory getSslSocketFactory() throws GeneralSecurityException
     {
         return tls.getSocketFactory();
     }
-
+    
 }
