@@ -24,6 +24,7 @@ import org.apache.commons.httpclient.URI;
 import org.apache.commons.httpclient.params.HttpConnectionParams;
 import org.apache.commons.httpclient.protocol.Protocol;
 import org.apache.commons.httpclient.protocol.ProtocolSocketFactory;
+import org.apache.commons.httpclient.protocol.SSLProtocolSocketFactory;
 import org.apache.commons.httpclient.protocol.SecureProtocolSocketFactory;
 
 public class MuleHostConfigurationTestCase extends AbstractMuleTestCase
@@ -88,6 +89,20 @@ public class MuleHostConfigurationTestCase extends AbstractMuleTestCase
         HostConfiguration hostConfig = createHostConfiguration();
         HostConfiguration clone = (HostConfiguration) hostConfig.clone();
         assertSocketFactory(clone);
+    }
+    
+    public void testSetDifferentProtocol()
+    {
+        HostConfiguration hostConfig = createHostConfiguration();
+
+        ProtocolSocketFactory factory = new SSLProtocolSocketFactory();
+        Protocol differentProtocol = new Protocol("httpx", factory, 81);
+        hostConfig.setHost("www.mulesource.org", 8181, differentProtocol);
+        
+        assertEquals("www.mulesource.org", hostConfig.getHost());
+        assertEquals(8181, hostConfig.getPort());
+        assertEquals("httpx", hostConfig.getProtocol().getScheme());
+        assertFalse(hostConfig.getProtocol().getSocketFactory() instanceof MockSecureProtocolFactory);
     }
 
     private MuleHostConfiguration createHostConfiguration()
