@@ -27,7 +27,6 @@ import org.mule.util.StringUtils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -51,7 +50,8 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
      * Range start for http error status codes.
      */
     public static final int ERROR_STATUS_CODE_RANGE_START = 400;
-    private final HttpConnector connector;
+    
+    protected final HttpConnector connector;
     private volatile HttpClient client = null;
     //TODO should this really be hardcoded??
     private final ObjectToHttpClientMethodRequest sendTransformer;
@@ -72,6 +72,7 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
         sendTransformer.initialise();
     }
 
+    @Override
     protected void doConnect() throws Exception
     {
         if (client == null)
@@ -80,6 +81,7 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
         }
     }
 
+    @Override
     protected void doDisconnect() throws Exception
     {
         client = null;
@@ -106,8 +108,7 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
         }
     }
 
-    protected HttpMethod execute(MuleEvent event, HttpMethod httpMethod)
-        throws Exception
+    protected HttpMethod execute(MuleEvent event, HttpMethod httpMethod) throws Exception
     {
         // TODO set connection timeout buffer etc
         try
@@ -318,7 +319,7 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
         }
     }
 
-    protected HostConfiguration getHostConfig(URI uri) throws URISyntaxException
+    protected HostConfiguration getHostConfig(URI uri) throws Exception
     {
         Protocol protocol = Protocol.getProtocol(uri.getScheme().toLowerCase());
 
@@ -334,6 +335,7 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
         return config;
     }
 
+    @Override
     protected void doDispose()
     {
         // template method
