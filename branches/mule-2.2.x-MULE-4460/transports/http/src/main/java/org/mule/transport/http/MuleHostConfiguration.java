@@ -39,13 +39,22 @@ public class MuleHostConfiguration extends HostConfiguration
     @Override
     public synchronized void setHost(URI uri)
     {
-        Protocol original = getProtocol();
-        Protocol newProtocol = new Protocol(uri.getScheme(), original.getSocketFactory(),
-            original.getDefaultPort());
-
         try
         {
-            super.setHost(uri.getHost(), uri.getPort(), newProtocol);
+            Protocol original = getProtocol();
+    
+            if (uri.getScheme().equals(original.getScheme()))
+            {
+                Protocol newProtocol = new Protocol(uri.getScheme(), original.getSocketFactory(),
+                    original.getDefaultPort());
+    
+                    super.setHost(uri.getHost(), uri.getPort(), newProtocol);
+            }
+            else
+            {
+                Protocol protoByName = Protocol.getProtocol(uri.getScheme());
+                super.setHost(uri.getHost(), uri.getPort(), protoByName);
+            }
         }
         catch (URIException uriException)
         {
@@ -94,8 +103,13 @@ public class MuleHostConfiguration extends HostConfiguration
     private Protocol cloneProtocolKeepingSocketFactory(Protocol protocol)
     {
         Protocol original = getProtocol();
-        return new Protocol(protocol.getScheme(), original.getSocketFactory(), 
-            protocol.getDefaultPort());
+        if (protocol.getScheme().equals(original.getScheme()))
+        {
+            // the protocol is the same, create a copy of it but keep the original socket factory
+            return new Protocol(protocol.getScheme(), original.getSocketFactory(), 
+                protocol.getDefaultPort());
+        }
+        return protocol;
     }
 
     @Override

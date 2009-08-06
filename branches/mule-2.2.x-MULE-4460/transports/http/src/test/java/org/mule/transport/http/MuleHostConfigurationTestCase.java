@@ -22,13 +22,15 @@ import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpHost;
 import org.apache.commons.httpclient.URI;
 import org.apache.commons.httpclient.params.HttpConnectionParams;
+import org.apache.commons.httpclient.protocol.DefaultProtocolSocketFactory;
 import org.apache.commons.httpclient.protocol.Protocol;
 import org.apache.commons.httpclient.protocol.ProtocolSocketFactory;
-import org.apache.commons.httpclient.protocol.SSLProtocolSocketFactory;
 import org.apache.commons.httpclient.protocol.SecureProtocolSocketFactory;
 
 public class MuleHostConfigurationTestCase extends AbstractMuleTestCase
 {
+    
+    private static final String HTTPX = "httpx";
     
     public void testSetHostViaUri() throws Exception
     {
@@ -36,7 +38,28 @@ public class MuleHostConfigurationTestCase extends AbstractMuleTestCase
         
         URI uri = new URI("http://www.mulesource.org:8080", false);
         hostConfig.setHost(uri);
-        assertNewHostValues(hostConfig);
+        
+        assertMockSocketFactory(hostConfig);
+        assertEquals("www.mulesource.org", hostConfig.getHost());
+        assertEquals(8080, hostConfig.getPort());
+    }
+
+    public void testSetHostViaUriWithDifferentProtocol() throws Exception
+    {
+        new DifferentProtocolTemplate()
+        {
+            protected void doTest() throws Exception
+            {
+                HostConfiguration hostConfig = createHostConfiguration();
+                
+                URI uri = new URI("httpx://www.mulesource.org:8080", false);
+                hostConfig.setHost(uri);
+                
+                assertTrue(hostConfig.getProtocol().getSocketFactory() instanceof DefaultProtocolSocketFactory);
+                assertEquals("www.mulesource.org", hostConfig.getHost());
+                assertEquals(8080, hostConfig.getPort());
+            }
+        }.test();
     }
 
     public void testSetHostViaHttpHost()
@@ -45,7 +68,10 @@ public class MuleHostConfigurationTestCase extends AbstractMuleTestCase
         
         HttpHost host = new HttpHost("www.mulesource.org", 8080);
         hostConfig.setHost(host);
-        assertNewHostValues(hostConfig);
+        
+        assertMockSocketFactory(hostConfig);
+        assertEquals("www.mulesource.org", hostConfig.getHost());
+        assertEquals(8080, hostConfig.getPort());
     }
 
     public void testSetHostViaHostAndPortAndProtocolName()
@@ -53,9 +79,29 @@ public class MuleHostConfigurationTestCase extends AbstractMuleTestCase
         HostConfiguration hostConfig = createHostConfiguration();
         
         hostConfig.setHost("www.mulesource.org", 8080, "http");
-        assertNewHostValues(hostConfig);
-    }
         
+        assertMockSocketFactory(hostConfig);
+        assertEquals("www.mulesource.org", hostConfig.getHost());
+        assertEquals(8080, hostConfig.getPort());
+    }
+
+    public void testSetHostViaHostAndPortAndProtocolNameWithDifferentProtocol() throws Exception
+    {
+        new DifferentProtocolTemplate()
+        {
+            protected void doTest() throws Exception
+            {
+                HostConfiguration hostConfig = createHostConfiguration();
+                
+                hostConfig.setHost("www.mulesource.org", 8080, "httpx");
+                
+                assertDefaultSocketFactory(hostConfig);
+                assertEquals("www.mulesource.org", hostConfig.getHost());
+                assertEquals(8080, hostConfig.getPort());
+            }
+        }.test();
+    }
+
     @SuppressWarnings("deprecation")
     public void testSetHostViaHostAndVirtualHostAndPortAndProtocol()
     {
@@ -63,16 +109,42 @@ public class MuleHostConfigurationTestCase extends AbstractMuleTestCase
 
         Protocol protocol = Protocol.getProtocol("http");
         hostConfig.setHost("www.mulesource.org", "www.mulesource.com", 8080, protocol);
-        assertNewHostValues(hostConfig);
+        
+        assertMockSocketFactory(hostConfig);
+        assertEquals("www.mulesource.org", hostConfig.getHost());
+        assertEquals(8080, hostConfig.getPort());
         assertEquals("www.mulesource.com", hostConfig.getVirtualHost());
     }
-    
+
+    @SuppressWarnings("deprecation")
+    public void testSetHostViaHostAndVirtualHostAndPortAndProtocolWithDifferentProtocol() throws Exception
+    {
+        new DifferentProtocolTemplate()
+        {
+            protected void doTest() throws Exception
+            {
+                HostConfiguration hostConfig = createHostConfiguration();
+
+                Protocol protocol = Protocol.getProtocol("httpx");
+                hostConfig.setHost("www.mulesource.org", "www.mulesource.com", 8080, protocol);
+                
+                assertDefaultSocketFactory(hostConfig);
+                assertEquals("www.mulesource.org", hostConfig.getHost());
+                assertEquals(8080, hostConfig.getPort());
+                assertEquals("www.mulesource.com", hostConfig.getVirtualHost());
+            }
+        }.test();
+    }
+
     public void testSetHostViaHostAndPort()
     {
         HostConfiguration hostConfig = createHostConfiguration();
 
         hostConfig.setHost("www.mulesource.org", 8080);
-        assertNewHostValues(hostConfig);
+
+        assertMockSocketFactory(hostConfig);
+        assertEquals("www.mulesource.org", hostConfig.getHost());
+        assertEquals(8080, hostConfig.getPort());
     }
 
     public void testSetHostViaHost()
@@ -80,31 +152,18 @@ public class MuleHostConfigurationTestCase extends AbstractMuleTestCase
         HostConfiguration hostConfig = createHostConfiguration();
         
         hostConfig.setHost("www.mulesource.org");
+        
         assertEquals("www.mulesource.org", hostConfig.getHost());
-        assertSocketFactory(hostConfig);
+        assertMockSocketFactory(hostConfig);
     }
 
     public void testClone()
     {
         HostConfiguration hostConfig = createHostConfiguration();
         HostConfiguration clone = (HostConfiguration) hostConfig.clone();
-        assertSocketFactory(clone);
+        assertMockSocketFactory(clone);
     }
     
-    public void testSetDifferentProtocol()
-    {
-        HostConfiguration hostConfig = createHostConfiguration();
-
-        ProtocolSocketFactory factory = new SSLProtocolSocketFactory();
-        Protocol differentProtocol = new Protocol("httpx", factory, 81);
-        hostConfig.setHost("www.mulesource.org", 8181, differentProtocol);
-        
-        assertEquals("www.mulesource.org", hostConfig.getHost());
-        assertEquals(8181, hostConfig.getPort());
-        assertEquals("httpx", hostConfig.getProtocol().getScheme());
-        assertFalse(hostConfig.getProtocol().getSocketFactory() instanceof MockSecureProtocolFactory);
-    }
-
     private MuleHostConfiguration createHostConfiguration()
     {
         MuleHostConfiguration hostConfig = new MuleHostConfiguration();
@@ -113,21 +172,44 @@ public class MuleHostConfigurationTestCase extends AbstractMuleTestCase
         hostConfig.setHost("localhost", 80, protocol);
         
         // since we're using a setHost variant here, too let's assert that it actually worked
-        assertSocketFactory(hostConfig);
+        assertMockSocketFactory(hostConfig);
         
         return hostConfig;
     }
     
-    private void assertSocketFactory(HostConfiguration hostConfig)
+    private void assertMockSocketFactory(HostConfiguration hostConfig)
     {
         assertTrue(hostConfig.getProtocol().getSocketFactory() instanceof MockSecureProtocolFactory);
     }
     
-    private void assertNewHostValues(HostConfiguration hostConfig)
+    private void assertDefaultSocketFactory(HostConfiguration hostConfig)
     {
-        assertSocketFactory(hostConfig);
-        assertEquals("www.mulesource.org", hostConfig.getHost());
-        assertEquals(8080, hostConfig.getPort());
+        assertTrue(hostConfig.getProtocol().getSocketFactory() instanceof DefaultProtocolSocketFactory);
+    }
+    
+    private static abstract class DifferentProtocolTemplate
+    {
+        public DifferentProtocolTemplate()
+        {
+            super();
+        }
+        
+        public void test() throws Exception
+        {
+            try
+            {
+                Protocol httpxProtocol = new Protocol(HTTPX, new DefaultProtocolSocketFactory(), 81);
+                Protocol.registerProtocol(HTTPX, httpxProtocol);
+                
+                doTest();
+            }
+            finally
+            {
+                Protocol.unregisterProtocol(HTTPX);
+            }
+        }
+        
+        protected abstract void doTest() throws Exception;
     }
 
     private static class MockSecureProtocolFactory implements SecureProtocolSocketFactory
