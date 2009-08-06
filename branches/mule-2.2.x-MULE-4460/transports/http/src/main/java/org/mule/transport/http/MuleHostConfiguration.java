@@ -11,6 +11,7 @@
 package org.mule.transport.http;
 
 import org.apache.commons.httpclient.HostConfiguration;
+import org.apache.commons.httpclient.HttpHost;
 import org.apache.commons.httpclient.URI;
 import org.apache.commons.httpclient.URIException;
 import org.apache.commons.httpclient.protocol.Protocol;
@@ -38,9 +39,9 @@ public class MuleHostConfiguration extends HostConfiguration
     @Override
     public synchronized void setHost(URI uri)
     {
-        Protocol originalProtocol = getProtocol();
-        Protocol newProtocol = new Protocol(uri.getScheme(), originalProtocol.getSocketFactory(),
-            originalProtocol.getDefaultPort());
+        Protocol original = getProtocol();
+        Protocol newProtocol = new Protocol(uri.getScheme(), original.getSocketFactory(),
+            original.getDefaultPort());
 
         try
         {
@@ -50,6 +51,51 @@ public class MuleHostConfiguration extends HostConfiguration
         {
             throw new IllegalArgumentException(uriException);
         }
+    }
+
+    @Override
+    public synchronized void setHost(HttpHost host)
+    {
+        Protocol newProtocol = cloneProtocolKeepingSocketFactory(host.getProtocol());
+        
+        HttpHost hostCopy = new HttpHost(host.getHostName(), host.getPort(), newProtocol);
+        super.setHost(hostCopy);
+    }
+
+    @Override
+    public synchronized void setHost(String host, int port, String protocolName)
+    {
+        Protocol protoByName = Protocol.getProtocol(protocolName);
+        Protocol newProtocol = cloneProtocolKeepingSocketFactory(protoByName);        
+
+        super.setHost(host, port, newProtocol);
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public synchronized void setHost(String host, String virtualHost, int port, Protocol protocol)
+    {
+        Protocol newProtocol = cloneProtocolKeepingSocketFactory(protocol);        
+        super.setHost(host, virtualHost, port, newProtocol);
+    }
+    
+    @Override
+    public synchronized void setHost(String host, int port)
+    {
+        super.setHost(host, port, getProtocol());
+    }
+    
+    @Override
+    public synchronized void setHost(String host)
+    {
+        super.setHost(host, getPort(), getProtocol());
+    }
+
+    private Protocol cloneProtocolKeepingSocketFactory(Protocol protocol)
+    {
+        Protocol original = getProtocol();
+        return new Protocol(protocol.getScheme(), original.getSocketFactory(), 
+            protocol.getDefaultPort());
     }
 
     @Override

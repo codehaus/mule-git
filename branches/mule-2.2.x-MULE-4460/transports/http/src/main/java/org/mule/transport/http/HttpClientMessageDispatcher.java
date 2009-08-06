@@ -334,6 +334,7 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
         {
             try
             {
+                // that's the socketFactory of the connector ... TODO see if we can get that in a better way
                 HttpsConnector httpsConnector = (HttpsConnector) connector;
                 SSLSocketFactory factory = httpsConnector.getSslSocketFactory();
                 ProtocolSocketFactory protocolSocketFactory = new MuleSecureProtocolSocketFactory(factory);
