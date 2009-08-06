@@ -40,6 +40,7 @@ import org.apache.commons.httpclient.methods.ByteArrayRequestEntity;
 import org.apache.commons.httpclient.methods.EntityEnclosingMethod;
 import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.commons.httpclient.protocol.Protocol;
+import org.apache.commons.lang.BooleanUtils;
 
 /**
  * <code>HttpClientMessageDispatcher</code> dispatches Mule events over HTTP.
@@ -94,7 +95,7 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
         {
             execute(event, httpMethod);
             
-            if (httpMethod.getStatusCode() >= ERROR_STATUS_CODE_RANGE_START)
+            if (returnException(event, httpMethod))
             {
                 logger.error(httpMethod.getResponseBodyAsString());
                 throw new DispatchException(event.getMessage(), event.getEndpoint(), new Exception(
@@ -265,7 +266,8 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
             httpMethod = execute(event, httpMethod);
 
             DefaultExceptionPayload ep = null;
-            if (httpMethod.getStatusCode() >= ERROR_STATUS_CODE_RANGE_START)
+            
+            if (returnException(event, httpMethod))
             {
                 ep = new DefaultExceptionPayload(new DispatchException(event.getMessage(), event.getEndpoint(),
                     new Exception("Http call returned a status of: " + httpMethod.getStatusCode() + " "
@@ -318,6 +320,12 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
             }
         }
     }
+
+	protected boolean returnException(MuleEvent event, HttpMethod httpMethod) 
+	{
+		return httpMethod.getStatusCode() >= ERROR_STATUS_CODE_RANGE_START 
+				&& !BooleanUtils.toBoolean((String)event.getMessage().getProperty(HttpConnector.HTTP_DISABLE_STATUS_CODE_EXCEPTION_CHECK));
+	}
 
     protected HostConfiguration getHostConfig(URI uri) throws Exception
     {
