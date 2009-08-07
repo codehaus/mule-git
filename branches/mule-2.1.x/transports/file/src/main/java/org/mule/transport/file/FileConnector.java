@@ -330,7 +330,7 @@ public class FileConnector extends AbstractConnector
         this.moveToDirectoryName = dir;
     }
 
-    public void setWorkDirectoryName(String workDirectoryName) throws IOException 
+    public void setWorkDirectory(String workDirectoryName) throws IOException 
     {
 		this.workDirectoryName = workDirectoryName;
         if (workDirectoryName != null)
@@ -344,7 +344,7 @@ public class FileConnector extends AbstractConnector
         }
     }
     
-	public String getWorkDirectoryName() 
+	public String getWorkDirectory() 
 	{
 		return workDirectoryName;
 	}

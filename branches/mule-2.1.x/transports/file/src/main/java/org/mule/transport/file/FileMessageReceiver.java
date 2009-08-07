@@ -75,7 +75,7 @@ public class FileMessageReceiver extends AbstractPollingMessageReceiver
         this.readDir = readDir;
         this.moveDir = moveDir;
         this.moveToPattern = moveToPattern;
-        this.workDir = ((FileConnector) connector).getWorkDirectoryName();
+        this.workDir = ((FileConnector) connector).getWorkDirectory();
         this.workFileNamePattern = ((FileConnector) connector).getWorkFileNamePattern();
 
         if (endpoint.getFilter() instanceof FilenameFilter)
