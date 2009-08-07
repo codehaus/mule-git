@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.mule.transports</groupId>
+        <artifactId>mule-transports</artifactId>
+        <version>2.1.4-SNAPSHOT</version>
+    </parent>
+    <artifactId>mule-transport-jbpm</artifactId>
+    <packaging>bundle</packaging>
+    <name>BPM Transport: JBoss jBPM</name>
+    <description>Classes which allow Mule to integrate with JBoss jBPM via the BPM Connector.</description>
+
+    <dependencies>
+        <!-- Generic BPM Transport -->
+        <dependency>
+            <groupId>org.mule.transports</groupId>
+            <artifactId>mule-transport-bpm</artifactId>
+            <version>${version}</version>
+        </dependency>
+        <!-- jBPM --> 
+        <dependency>
+            <groupId>org.jbpm</groupId>
+            <artifactId>jbpm-jpdl.osgi</artifactId>
+            <version>${jbpmVersion}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate.osgi</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>cglib</groupId>
+            <artifactId>cglib-nodep.osgi</artifactId>
+            <version>${cglibVersion}</version>
+        </dependency>
+        <dependency>
+            <groupId>antlr</groupId>
+            <artifactId>antlr.osgi</artifactId>
+            <version>${antlrVersion}</version>
+        </dependency>        
+        <dependency>
+            <groupId>javax.jcr</groupId>
+            <artifactId>jcr.osgi</artifactId>
+            <version>${jcrVersion}</version>
+        </dependency>        
+        <dependency>
+            <groupId>bsh</groupId>
+            <artifactId>bsh.osgi</artifactId>
+            <version>${bshVersion}</version>
+        </dependency>
+        <!-- Needed for org.mule.transport.bpm.jbpm.actions.SendMuleEvent -->
+        <dependency>
+            <groupId>commons-jxpath</groupId>
+            <artifactId>commons-jxpath.osgi</artifactId>
+        </dependency>
+        <!-- Only needed for Spring-based configuration -->
+        <dependency>
+            <groupId>org.springmodules</groupId>
+            <artifactId>spring-modules-jbpm31.osgi</artifactId>
+            <version>${springModulesVersion}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-orm</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
+        </dependency>
+        
+        <!-- Unit tests only -->
+        <dependency>
+            <!-- Simple Java DB for persistence -->
+            <groupId>org.apache.derby</groupId>
+            <artifactId>derby</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mule.transports</groupId>
+            <artifactId>mule-transport-bpm</artifactId>
+            <version>${version}</version>
+            <scope>test</scope>
+            <type>test-jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.mule.transports</groupId>
+            <artifactId>mule-transport-jdbc</artifactId>
+            <version>${version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mule.transports</groupId>
+            <artifactId>mule-transport-vm</artifactId>
+            <version>${version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+</project>

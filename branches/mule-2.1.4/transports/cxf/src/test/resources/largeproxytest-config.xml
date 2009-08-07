@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesource.org/schema/mule/core/2.1"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:spring="http://www.springframework.org/schema/beans"
+      xmlns:vm="http://www.mulesource.org/schema/mule/vm/2.1"
+      xmlns:cxf="http://www.mulesource.org/schema/mule/cxf/2.1"
+      xmlns:smtps="http://www.mulesource.org/schema/mule/smtps/2.1"
+      xmlns:cxf-core="http://cxf.apache.org/core"
+      xmlns:http="http://www.mulesource.org/schema/mule/http/2.1"
+      xmlns:jetty="http://www.mulesource.org/schema/mule/jetty/2.1"
+      xsi:schemaLocation="
+               http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+               http://www.mulesource.org/schema/mule/core/2.1 http://www.mulesource.org/schema/mule/core/2.1/mule.xsd
+               http://www.mulesource.org/schema/mule/vm/2.1 http://www.mulesource.org/schema/mule/vm/2.1/mule-vm.xsd
+               http://www.mulesource.org/schema/mule/cxf/2.1 http://www.mulesource.org/schema/mule/cxf/2.1/mule-cxf.xsd
+               http://www.mulesource.org/schema/mule/smtps/2.1 http://www.mulesource.org/schema/mule/smtps/2.1/mule-smtps.xsd
+               http://www.mulesource.org/schema/mule/http/2.1 http://www.mulesource.org/schema/mule/http/2.1/mule-http.xsd
+               http://www.mulesource.org/schema/mule/jetty/2.1 http://www.mulesource.org/schema/mule/jetty/2.1/mule-jetty.xsd
+               http://cxf.apache.org/core http://cxf.apache.org/schemas/core.xsd">
+
+  <!--<cxf:connector name="cxfConnector" configurationLocation="cxf.xml" initializeStaticBusInstance="false" /> -->
+  <http:connector name="HttpConnector" keepAlive="true" sendTcpNoDelay="false" receiveBufferSize="0" sendBufferSize="0" />
+  <jetty:connector name="jettyConnector"/>
+  
+  <model name="proxies">
+
+    <service name="echoProxy">
+      <inbound>
+        <cxf:inbound-endpoint address="jetty://localhost:63082/services/EchoProxy" proxy="true" remoteSync="true"
+        protocolConnector="jettyConnector"/>
+      </inbound>
+      <outbound>
+        <pass-through-router>
+          <cxf:outbound-endpoint address="http://localhost:63081/services/Echo" proxy="true" remoteSync="true"
+           protocolConnector="HttpConnector"/>
+        </pass-through-router>
+      </outbound>
+    </service>
+
+    <service name="echoService">
+      <inbound>
+        <cxf:inbound-endpoint
+          address="jetty://localhost:63081/services/Echo" frontend="simple" synchronous="true"  protocolConnector="jettyConnector"/>
+      </inbound>
+      <component class="org.mule.component.simple.EchoComponent" />
+    </service>
+
+  </model>
+</mule>

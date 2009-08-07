@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns="http://www.mulesource.org/schema/mule/xmpps/2.1"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:mule="http://www.mulesource.org/schema/mule/core/2.1"
+            xmlns:xmpp="http://www.mulesource.org/schema/mule/xmpp/2.1"
+            xmlns:schemadoc="http://www.mulesource.org/schema/mule/schemadoc/2.1"
+            targetNamespace="http://www.mulesource.org/schema/mule/xmpps/2.1"
+            elementFormDefault="qualified"
+            attributeFormDefault="unqualified">
+
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:import namespace="http://www.mulesource.org/schema/mule/core/2.1" 
+                schemaLocation="http://www.mulesource.org/schema/mule/core/2.1/mule.xsd" />
+    <xsd:import namespace="http://www.mulesource.org/schema/mule/xmpp/2.1"
+                schemaLocation="http://www.mulesource.org/schema/mule/xmpp/2.1/mule-xmpp.xsd" />
+    <xsd:import namespace = "http://www.mulesource.org/schema/mule/schemadoc/2.1"
+                schemaLocation = "http://www.mulesource.org/schema/mule/schemadoc/2.1/mule-schemadoc.xsd"/>
+
+    <xsd:element name="connector" type="xmppsConnectorType" substitutionGroup="mule:abstract-connector">
+        <xsd:annotation>
+            <xsd:documentation>
+                Connect Mule to an XMPPS (Jabber over SSL) server, to send or receive data via the network.
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    
+    <xsd:complexType name="xmppsConnectorType">
+        <xsd:complexContent>
+            <xsd:extension base="mule:connectorType"/>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <xsd:element name="inbound-endpoint" type="xmpp:inboundEndpointType" substitutionGroup="mule:abstract-inbound-endpoint"/>
+
+    <xsd:element name="outbound-endpoint" type="xmpp:outboundEndpointType" substitutionGroup="mule:abstract-outbound-endpoint"/>
+
+    <xsd:element name="endpoint" type="xmpp:globalEndpointType" substitutionGroup="mule:abstract-global-endpoint"/>
+
+</xsd:schema>
