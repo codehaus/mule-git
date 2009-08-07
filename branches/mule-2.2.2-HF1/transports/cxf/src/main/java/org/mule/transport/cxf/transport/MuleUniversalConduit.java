@@ -13,34 +13,6 @@ package org.mule.transport.cxf.transport;
 import static org.apache.cxf.message.Message.DECOUPLED_CHANNEL_MESSAGE;
 import static org.mule.api.config.MuleProperties.MULE_EVENT_PROPERTY;
 
-import org.mule.DefaultMuleEvent;
-import org.mule.DefaultMuleMessage;
-import org.mule.DefaultMuleSession;
-import org.mule.MuleServer;
-import org.mule.RequestContext;
-import org.mule.api.MuleContext;
-import org.mule.api.MuleEvent;
-import org.mule.api.MuleEventContext;
-import org.mule.api.MuleException;
-import org.mule.api.MuleMessage;
-import org.mule.api.MuleSession;
-import org.mule.api.config.MuleProperties;
-import org.mule.api.endpoint.ImmutableEndpoint;
-import org.mule.api.endpoint.OutboundEndpoint;
-import org.mule.api.registry.MuleRegistry;
-import org.mule.api.transformer.TransformerException;
-import org.mule.api.transport.MessageAdapter;
-import org.mule.api.transport.OutputHandler;
-import org.mule.api.transport.PropertyScope;
-import org.mule.endpoint.EndpointURIEndpointBuilder;
-import org.mule.transport.DefaultMessageAdapter;
-import org.mule.transport.NullPayload;
-import org.mule.transport.cxf.CxfConnector;
-import org.mule.transport.cxf.CxfConstants;
-import org.mule.transport.cxf.support.DelegatingOutputStream;
-import org.mule.transport.cxf.support.MuleProtocolHeadersOutInterceptor;
-import org.mule.transport.http.HttpConstants;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -72,6 +44,34 @@ import org.apache.cxf.transport.MessageObserver;
 import org.apache.cxf.ws.addressing.AttributedURIType;
 import org.apache.cxf.ws.addressing.EndpointReferenceType;
 import org.apache.cxf.wsdl.EndpointReferenceUtils;
+import org.mule.DefaultMuleEvent;
+import org.mule.DefaultMuleMessage;
+import org.mule.DefaultMuleSession;
+import org.mule.MuleServer;
+import org.mule.RequestContext;
+import org.mule.api.MuleContext;
+import org.mule.api.MuleEvent;
+import org.mule.api.MuleEventContext;
+import org.mule.api.MuleException;
+import org.mule.api.MuleMessage;
+import org.mule.api.MuleSession;
+import org.mule.api.config.MuleProperties;
+import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.api.endpoint.OutboundEndpoint;
+import org.mule.api.registry.MuleRegistry;
+import org.mule.api.transformer.TransformerException;
+import org.mule.api.transport.MessageAdapter;
+import org.mule.api.transport.OutputHandler;
+import org.mule.api.transport.PropertyScope;
+import org.mule.endpoint.EndpointURIEndpointBuilder;
+import org.mule.transport.DefaultMessageAdapter;
+import org.mule.transport.NullPayload;
+import org.mule.transport.cxf.CxfConnector;
+import org.mule.transport.cxf.CxfConstants;
+import org.mule.transport.cxf.support.DelegatingOutputStream;
+import org.mule.transport.cxf.support.MuleProtocolHeadersOutInterceptor;
+import org.mule.transport.http.HttpConnector;
+import org.mule.transport.http.HttpConstants;
 
 /**
  * A Conduit is primarily responsible for sending messages from CXF to somewhere
@@ -233,6 +233,7 @@ public class MuleUniversalConduit extends AbstractConduit
 
             MessageAdapter req = (MessageAdapter) m.getExchange().get(CxfConstants.MULE_MESSAGE);
             req.setProperty(MuleProperties.MULE_ENDPOINT_PROPERTY, uri, PropertyScope.INVOCATION);
+            req.setProperty(HttpConnector.HTTP_DISABLE_STATUS_CODE_EXCEPTION_CHECK, Boolean.TRUE.toString());
             
             MuleMessage result = sendStream(req, protocolEndpoint, m.getExchange());
 
