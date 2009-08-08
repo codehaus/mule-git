@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesource.org/schema/mule/core"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:vm="http://www.mulesource.org/schema/mule/vm"
+       xmlns:test="http://www.mulesource.org/schema/mule/test"
+       xsi:schemaLocation="
+               http://www.mulesource.org/schema/mule/test http://www.mulesource.org/schema/mule/test/3.0/mule-test.xsd
+               http://www.mulesource.org/schema/mule/core http://www.mulesource.org/schema/mule/core/3.0/mule.xsd
+               http://www.mulesource.org/schema/mule/vm http://www.mulesource.org/schema/mule/vm/3.0/mule-vm.xsd">
+
+    <vm:endpoint name="dispatch" path="bridge" />
+    <vm:endpoint name="receive" path="result" />
+
+    <model name="scribblingTestModel">
+
+        <service name="bridge">
+            <inbound>
+                <inbound-endpoint ref="dispatch"/>
+                <forwarding-router/>
+            </inbound>
+            <outbound>
+                <pass-through-router>
+                    <vm:outbound-endpoint path="responder"
+                                          synchronous="true" />
+                </pass-through-router>
+            </outbound>
+        </service>
+
+        <service name="responder">
+            <inbound>
+                <vm:inbound-endpoint path="responder" synchronous="false" />
+            </inbound>
+            <test:component appendString=" Received"/>
+        </service>
+
+    </model>
+
+</mule>
