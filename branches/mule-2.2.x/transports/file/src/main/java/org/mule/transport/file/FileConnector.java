@@ -47,8 +47,10 @@ import org.apache.commons.logging.LogFactory;
 public class FileConnector extends AbstractConnector
 {
 
-    public static final String FILE = "file";
     private static Log logger = LogFactory.getLog(FileConnector.class);
+
+    public static final String FILE = "file";
+    private static final String DEFAULT_WORK_FILENAME_PATTERN = "#[UUID].#[SYSTIME].#[ORIGINALNAME]";
 
     // These are properties that can be overridden on the Receiver by the endpoint declaration
     // inbound only
@@ -83,6 +85,10 @@ public class FileConnector extends AbstractConnector
     private String writeToDirectoryName = null;
 
     private String moveToDirectoryName = null;
+    
+    private String workDirectoryName = null;
+
+    private String workFileNamePattern = DEFAULT_WORK_FILENAME_PATTERN;
 
     private String readFromDirectoryName = null;
 
@@ -104,19 +110,13 @@ public class FileConnector extends AbstractConnector
 
     public FilenameParser filenameParser;
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.mule.transport.AbstractConnector#doInitialise()
-     */
     public FileConnector()
     {
         super();
         filenameParser = new SimpleFilenameParser();
     }
 
-
-    // @Override
+    @Override
     public void setMaxDispatchersActive(int value)
     {
         if (isOutputAppend() && value != 1)
@@ -129,7 +129,7 @@ public class FileConnector extends AbstractConnector
         }
     }
 
-    // @Override
+    @Override
     protected Object getReceiverKey(Service service, InboundEndpoint endpoint)
     {
         if (endpoint.getFilter() != null && endpoint.getFilter() instanceof FilenameWildcardFilter)
@@ -150,6 +150,7 @@ public class FileConnector extends AbstractConnector
      * <li>pollingFrequency</li>
      * </ul>
      */
+    @Override
     public MessageReceiver createReceiver(Service service, InboundEndpoint endpoint) throws Exception
     {
         String readDir = endpoint.getEndpointURI().getAddress();
@@ -272,7 +273,6 @@ public class FileConnector extends AbstractConnector
         }
     }
 
-
     protected void doInitialise() throws InitialisationException
     {
         // MULE-1773: limit the number of dispatchers per endpoint to 1 until
@@ -330,73 +330,75 @@ public class FileConnector extends AbstractConnector
         this.moveToDirectoryName = dir;
     }
 
-    /**
-     * @return Returns the outputAppend.
-     */
+    public void setWorkDirectory(String workDirectoryName) throws IOException 
+    {
+		this.workDirectoryName = workDirectoryName;
+        if (workDirectoryName != null)
+        {
+            File workDirectory = FileUtils.openDirectory(workDirectoryName);
+            if (!workDirectory.canWrite())
+            {
+                throw new IOException(
+                        "Error on initialization, Work Directory '" + workDirectory +"' is not writeable");
+            }
+        }
+    }
+    
+	public String getWorkDirectory() 
+	{
+		return workDirectoryName;
+	}
+
+	public void setWorkFileNamePattern(String workFileNamePattern) 
+	{
+		this.workFileNamePattern = workFileNamePattern;
+	}
+
+	public String getWorkFileNamePattern() 
+	{
+		return workFileNamePattern;
+	}
+
     public boolean isOutputAppend()
     {
         return outputAppend;
     }
 
-    /**
-     * @param outputAppend The outputAppend to set.
-     */
     public void setOutputAppend(boolean outputAppend)
     {
         this.outputAppend = outputAppend;
     }
 
-    /**
-     * @return Returns the outputPattern.
-     */
     public String getOutputPattern()
     {
         return outputPattern;
     }
 
-    /**
-     * @param outputPattern The outputPattern to set.
-     */
     public void setOutputPattern(String outputPattern)
     {
         this.outputPattern = outputPattern;
     }
 
-    /**
-     * @return Returns the outputStream.
-     */
     public FileOutputStream getOutputStream()
     {
         return outputStream;
     }
 
-    /**
-     * @param outputStream The outputStream to set.
-     */
     public void setOutputStream(FileOutputStream outputStream)
     {
         this.outputStream = outputStream;
     }
 
-    /**
-     * @return Returns the pollingFrequency.
-     */
     public long getPollingFrequency()
     {
         return pollingFrequency;
     }
 
-    /**
-     * @param pollingFrequency The pollingFrequency to set.
-     */
     public void setPollingFrequency(long pollingFrequency)
     {
         this.pollingFrequency = pollingFrequency;
     }
 
-    /**
-     * @return Returns the fileAge.
-     */
     public long getFileAge()
     {
         return fileAge;
@@ -407,62 +409,44 @@ public class FileConnector extends AbstractConnector
         return checkFileAge;
     }
 
-    /**
-     * @param fileAge The fileAge in milliseconds to set.
-     */
     public void setFileAge(long fileAge)
     {
         this.fileAge = fileAge;
         this.checkFileAge = true;
     }
 
-    /**
-     * @return Returns the writeToDirectory.
-     */
     public String getWriteToDirectory()
     {
         return writeToDirectoryName;
     }
 
-    /**
-     * @param dir The writeToDirectory to set.
-     */
     public void setWriteToDirectory(String dir) throws IOException
     {
         this.writeToDirectoryName = dir;
         if (writeToDirectoryName != null)
         {
             File writeToDirectory = FileUtils.openDirectory(writeToDirectoryName);
-            if (!(writeToDirectory.canRead()) || !writeToDirectory.canWrite())
+            if (!writeToDirectory.canWrite())
             {
                 throw new IOException(
-                        "Error on initialization, Write To directory does not exist or is not read/write");
+                        "Error on initialization, " + writeToDirectory 
+                        + " does not exist or is not writeable");
             }
         }
     }
 
-    /**
-     * @return Returns the readFromDirectory.
-     */
     public String getReadFromDirectory()
     {
         return readFromDirectoryName;
     }
 
-    /**
-     * @param dir The readFromDirectory to set.
-     */
     public void setReadFromDirectory(String dir) throws IOException
     {
         this.readFromDirectoryName = dir;
         if (readFromDirectoryName != null)
         {
-            File readFromDirectory = FileUtils.openDirectory((readFromDirectoryName));
-            if (!readFromDirectory.canRead())
-            {
-                throw new IOException(
-                        "Error on initialization, read from directory does not exist or is not readable");
-            }
+            // check if the directory exists/can be read
+            FileUtils.openDirectory((readFromDirectoryName));
         }
     }
 
