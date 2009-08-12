@@ -30,6 +30,7 @@ public abstract class AbstractJmsFunctionalTestSuite
         suite.addTestSuite(JmsQueueWithCompressionTestCase.class);
         suite.addTestSuite(JmsQueueWithTransactionTestCase.class);
         suite.addTestSuite(JmsRemoteSyncMule2868TestCase.class);
+        suite.addTestSuite(JmsReplyToPropertyTestCase.class);
         suite.addTestSuite(JmsSingleTransactionAlwaysBeginConfigurationTestCase.class);
         suite.addTestSuite(JmsSingleTransactionBeginOrJoinAndAlwaysBeginTestCase.class);
         suite.addTestSuite(JmsSingleTransactionComponentTestCase.class);
