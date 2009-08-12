@@ -16,32 +16,13 @@
 
     <model name="TestModel">
     
-        <service name="TestService1">
+        <service name="TestService">
             <inbound>
                 <inbound-endpoint ref="in"  />
             </inbound>
             <test:component>
                 <test:return-data>OUTPUT MESSAGE</test:return-data>
             </test:component>
-            <outbound>
-                <filtering-router>
-                    <outbound-endpoint ref="q1" />
-                    <message-property-filter pattern="JMSReplyTo=queue://middle"/>
-                </filtering-router>
-                <filtering-router>                
-                    <outbound-endpoint ref="q2" />
-                    <message-property-filter pattern="JMSReplyTo=queue://middle2"/>                                    
-                </filtering-router>
-                <pass-through-router>
-	                <vm:outbound-endpoint path="intermediate" />
-                </pass-through-router>
-            </outbound>
-         </service>
-
-        <service name="TestService2">
-            <inbound>
-                <inbound-endpoint ref="q2" />
-            </inbound>
             <outbound>
             	<pass-through-router>
 	                <outbound-endpoint ref="out" />

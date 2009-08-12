@@ -2,8 +2,6 @@ package org.mule.transport.jms.integration;
 import org.mule.api.MuleMessage;
 import org.mule.module.client.MuleClient;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
 
 /*
@@ -27,18 +25,16 @@ public class JmsReplyToPropertyTestCase extends AbstractJmsFunctionalTestCase
     public void testReplyTo() throws Exception
     {
         Properties props = new Properties();
-        props.put("JMSReplyTo", "middle2");
+        props.put("JMSReplyTo", "middle");
         dispatchMessage(DEFAULT_INPUT_MESSAGE, props);
 
-        // Check that the property-based routing worked
-        MuleMessage output = receiveMessage();
-        
         // Check that the property is still on the outbound message
-        assertEquals("queue://middle2", output.getProperty("JMSReplyTo").toString());
+        MuleMessage output = receiveMessage();
+        assertTrue(output.getProperty("JMSReplyTo").toString().contains("middle"));
         
         // Check that the reply message was generated
         MuleClient client = new MuleClient();
-        output = client.request("middle2", 2000);
+        output = client.request("middle", 2000);
         assertNotNull(output);
         assertEquals(DEFAULT_OUTPUT_MESSAGE, output.getPayload());
     }
