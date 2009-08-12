@@ -479,8 +479,10 @@ public class FileMessageReceiver extends AbstractPollingMessageReceiver
 		
 		if (destinationFile != null)
 		{
-			//move sourceFile to new destination
-			fileWasMoved = FileUtils.moveFile(sourceFile, destinationFile);
+			// move sourceFile to new destination. Do not use FileUtils here as it ultimately
+		    // falls back to copying the file which will cause problems on large files again -
+		    // which is what we're trying to avoid in the first place
+		    fileWasMoved = sourceFile.renameTo(destinationFile);
 			
 			// move didn't work - bail out
 			if (!fileWasMoved)
