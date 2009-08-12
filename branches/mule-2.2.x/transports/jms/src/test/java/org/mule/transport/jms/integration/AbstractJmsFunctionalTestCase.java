@@ -433,12 +433,17 @@ public abstract class AbstractJmsFunctionalTestCase extends FunctionalTestCase
 
     protected void dispatchMessage() throws Exception
     {
-        client.dispatch(getInboundEndpoint(), DEFAULT_INPUT_MESSAGE, null);
+        dispatchMessage(DEFAULT_INPUT_MESSAGE);
     }
 
     protected void dispatchMessage(Object payload) throws Exception
     {
-        client.dispatch(getInboundEndpoint(), payload, null);
+        dispatchMessage(payload, null);
+    }
+
+    protected void dispatchMessage(Object payload, Properties props) throws Exception
+    {
+        client.dispatch(getInboundEndpoint(), payload, props);
     }
 
     protected MuleMessage receiveMessage() throws Exception

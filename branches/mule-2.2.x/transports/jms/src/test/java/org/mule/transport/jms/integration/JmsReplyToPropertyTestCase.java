@@ -1,10 +1,10 @@
 package org.mule.transport.jms.integration;
 import org.mule.api.MuleMessage;
 import org.mule.module.client.MuleClient;
-import org.mule.tck.FunctionalTestCase;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 /*
  * $Id$
@@ -16,7 +16,7 @@ import java.util.Map;
  * LICENSE.txt file.
  */
 
-public class JmsReplyToPropertyTestCase extends FunctionalTestCase
+public class JmsReplyToPropertyTestCase extends AbstractJmsFunctionalTestCase
 {
     @Override
     protected String getConfigResources()
@@ -26,15 +26,20 @@ public class JmsReplyToPropertyTestCase extends FunctionalTestCase
 
     public void testReplyTo() throws Exception
     {
+        Properties props = new Properties();
+        props.put("JMSReplyTo", "middle2");
+        dispatchMessage(DEFAULT_INPUT_MESSAGE, props);
+
+        // Check that the property-based routing worked
+        MuleMessage output = receiveMessage();
+        
+        // Check that the property is still on the outbound message
+        assertEquals("queue://middle2", output.getProperty("JMSReplyTo").toString());
+        
+        // Check that the reply message was generated
         MuleClient client = new MuleClient();
-        Map props = new HashMap();
-        props.put("JMSReplyTo", "forQ2");
-        client.dispatch("jms://in", "TestMessage", props);
-        MuleMessage output = client.request("vm://out", 3000);
+        output = client.request("middle2", 2000);
         assertNotNull(output);
-        assertEquals("TestMessage", output.getPayload());
-        assertEquals("queue://forQ2", output.getProperty("JMSReplyTo").toString());
+        assertEquals(DEFAULT_OUTPUT_MESSAGE, output.getPayload());
     }
 }
-
-
