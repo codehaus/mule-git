@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema xmlns="http://www.mulesource.org/schema/mule/pop3"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:mule="http://www.mulesource.org/schema/mule/core"
+            xmlns:email="http://www.mulesource.org/schema/mule/email"
+            xmlns:schemadoc="http://www.mulesource.org/schema/mule/schemadoc"
+            targetNamespace="http://www.mulesource.org/schema/mule/pop3"
+            elementFormDefault="qualified"
+            attributeFormDefault="unqualified">
+
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:import namespace="http://www.mulesource.org/schema/mule/core"
+                schemaLocation="http://www.mulesource.org/schema/mule/core/3.0/mule.xsd" />
+    <xsd:import namespace="http://www.mulesource.org/schema/mule/email"
+                schemaLocation="http://www.mulesource.org/schema/mule/email/3.0/mule-email.xsd"/>
+    <xsd:import namespace = "http://www.mulesource.org/schema/mule/schemadoc"
+                schemaLocation = "http://www.mulesource.org/schema/mule/schemadoc/3.0/mule-schemadoc.xsd"/>
+
+    <xsd:annotation>
+        <xsd:documentation>The POP3 transport can be used for receiving messages from POP3 mail boxes. The [POP3S Transport] is similar but uses secure connections over SSL/TLS.</xsd:documentation>
+        <xsd:appinfo>
+            <schemadoc:short-name>POP3</schemadoc:short-name>
+            <schemadoc:page-title>POP3 Transport</schemadoc:page-title>
+            <schemadoc:transport-features receiveEvents="true" dispatchEvents="false" responseEvents="false"
+                                          requestEvents="true"
+                                          transactions="false" streaming="false">
+                <schemadoc:inboundMEPs in-only="true"/>
+                <schemadoc:outboundMEPs out-only="false"/>
+            </schemadoc:transport-features>
+        </xsd:appinfo>
+    </xsd:annotation>
+    <xsd:element name="connector" type="pop3ConnectorType" substitutionGroup="mule:abstract-connector"/>
+    <xsd:complexType name="pop3ConnectorType">
+        <xsd:complexContent>
+            <xsd:extension base="email:emailDownloadConnectorType">
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:element name="inbound-endpoint" type="inboundEndpointType" substitutionGroup="mule:abstract-inbound-endpoint"/>
+    <xsd:complexType name="inboundEndpointType">
+        <xsd:complexContent>
+            <xsd:extension base="mule:inboundEndpointType">
+                <xsd:attributeGroup ref="email:addressAttributes"/>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:element name="endpoint" type="globalEndpointType" substitutionGroup="mule:abstract-global-endpoint"/>
+    <xsd:complexType name="globalEndpointType">
+        <xsd:complexContent>
+            <xsd:extension base="mule:globalEndpointType">
+                <xsd:attributeGroup ref="email:addressAttributes"/>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+</xsd:schema>
