@@ -56,13 +56,13 @@ public abstract class AbstractFtpServerTestCase extends FunctionalTestCase
         }
     }
 
-    // @Override
+    @Override
     protected void doSetUp() throws Exception
     {
         startServer();
     }
 
-    // @Override
+    @Override
     protected void doTearDown() throws Exception
     {
         stopServer();

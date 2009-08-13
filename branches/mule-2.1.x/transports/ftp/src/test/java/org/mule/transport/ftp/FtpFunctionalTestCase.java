@@ -31,22 +31,19 @@ public class FtpFunctionalTestCase extends AbstractFtpServerTestCase
     {
         return "ftp-functional-test.xml";
     }
-
-    protected int getPort()
-    {
-        return PORT;
-    }
     
     public void testSendAndRequest() throws Exception
     {
+        String url = "ftp://anonymous:email@localhost:" + PORT;
+        
         Map properties = new HashMap();
         MuleClient client = new MuleClient();
-        client.dispatch("ftp://anonymous:email@localhost:" + getPort(), TEST_MESSAGE, properties);
+        client.dispatch(url, TEST_MESSAGE, properties);
         NamedPayload payload = awaitUpload();
         assertNotNull(payload);
         assertEquals(TEST_MESSAGE, new String(payload.getPayload()));
-        logger.info("received message OK!");
-        MuleMessage retrieved = client.request("ftp://anonymous:email@localhost:" + getPort(), getTimeout());
+
+        MuleMessage retrieved = client.request(url, getTimeout());
         assertNotNull(retrieved);
         assertNotNull(retrieved.getProperty(FileConnector.PROPERTY_ORIGINAL_FILENAME));
         assertNotNull(retrieved.getProperty(FileConnector.PROPERTY_FILE_SIZE));
