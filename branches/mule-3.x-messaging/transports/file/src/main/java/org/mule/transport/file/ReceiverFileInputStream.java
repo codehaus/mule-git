@@ -38,6 +38,7 @@ class ReceiverFileInputStream extends FileInputStream
         this.moveToOnClose = moveToOnClose;
     }
 
+    @Override
     public void close() throws IOException
     {
         super.close();
@@ -68,5 +69,4 @@ class ReceiverFileInputStream extends FileInputStream
     {
         return currentFile;
     }
-
 }
