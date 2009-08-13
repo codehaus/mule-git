@@ -1,9 +1,3 @@
-package org.mule.transport.jms.integration;
-import org.mule.api.MuleMessage;
-import org.mule.module.client.MuleClient;
-
-import java.util.Properties;
-
 /*
  * $Id$
  * --------------------------------------------------------------------------------------
@@ -13,6 +7,13 @@ import java.util.Properties;
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
+
+package org.mule.transport.jms.integration;
+
+import org.mule.api.MuleMessage;
+import org.mule.module.client.MuleClient;
+
+import java.util.Properties;
 
 public class JmsReplyToPropertyTestCase extends AbstractJmsFunctionalTestCase
 {
