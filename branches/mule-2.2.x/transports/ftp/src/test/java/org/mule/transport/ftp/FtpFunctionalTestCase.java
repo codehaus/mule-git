@@ -11,12 +11,9 @@
 package org.mule.transport.ftp;
 
 import org.mule.api.MuleEventContext;
-import org.mule.api.MuleMessage;
 import org.mule.module.client.MuleClient;
 import org.mule.tck.functional.EventCallback;
-import org.mule.tck.functional.FunctionalStreamingTestComponent;
 import org.mule.tck.functional.FunctionalTestComponent;
-import org.mule.transport.file.FileConnector;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -39,11 +36,6 @@ public class FtpFunctionalTestCase extends AbstractFtpServerTestCase
     {
         return "ftp-functional-test.xml";
     }
-
-    protected int getPort()
-    {
-        return PORT;
-    }
         
     public void testSendAndRequest() throws Exception
     {
@@ -59,6 +51,7 @@ public class FtpFunctionalTestCase extends AbstractFtpServerTestCase
                 {
                     logger.info("called " + loopCount.incrementAndGet() + " times");
                     FunctionalTestComponent ftc = (FunctionalTestComponent) component;
+                    
                     // without this we may have problems with the many repeats
                     if (1 == latch.getCount())
                     {
@@ -85,10 +78,8 @@ public class FtpFunctionalTestCase extends AbstractFtpServerTestCase
         
         ftc.setEventCallback(callback);
         
-        logger.debug("before dispatch");
         client.dispatch(getMuleFtpEndpoint(), TEST_MESSAGE, properties);
         //client.send(getMuleFtpEndpoint(), TEST_MESSAGE, properties);
-        logger.debug("before retrieve");
         
         // TODO DZ: need a reliable way to check the file once it's been written to
         // the ftp server. Currently, once mule processes the ftp'd file, it
@@ -97,6 +88,9 @@ public class FtpFunctionalTestCase extends AbstractFtpServerTestCase
         
         latch.await(getTimeout(), TimeUnit.MILLISECONDS);
         assertEquals(TEST_MESSAGE, message.get());                
+        
+        // give Mule some time to disconnect from the FTP server
+        Thread.sleep(500);
     }
 
 }

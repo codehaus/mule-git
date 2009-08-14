@@ -22,9 +22,11 @@ import java.io.IOException;
  */
 public abstract class AbstractFtpServerTestCase extends FunctionalTestCase
 {
-
     public static final String TEST_MESSAGE = "Test FTP message";
+    
+    private static final String DEFAULT_FTP_HOST = "localhost";
     private static int DEFAULT_TIMEOUT = 10000;
+    
     private int timeout;
     private int ftpPort;
     private Server server = null;
@@ -33,7 +35,7 @@ public abstract class AbstractFtpServerTestCase extends FunctionalTestCase
      * servers by changing this value. Some tests may start/stop the ftp server so
      * you will have to implement remote start/stop as well.
      */
-    private String ftpHost = "localhost";
+    private String ftpHost;
     private FTPTestClient ftpClient = null;
     private String ftpUser = "anonymous";
     private String ftpPassword = "password";
@@ -48,15 +50,12 @@ public abstract class AbstractFtpServerTestCase extends FunctionalTestCase
     
     public AbstractFtpServerTestCase(int port, int timeout)
     {
-        this.ftpPort = port;
-        this.timeout = timeout;
-        ftpClient = new FTPTestClient(this.ftpHost, this.ftpPort, this.ftpUser, this.ftpPassword);
+        this(DEFAULT_FTP_HOST, port, timeout);
     }
 
     public AbstractFtpServerTestCase(int port)
     {
         this(port, DEFAULT_TIMEOUT);
-        ftpClient = new FTPTestClient(this.ftpHost, this.ftpPort, this.ftpUser, this.ftpPassword);
     }
 
     protected void startServer() throws Exception
