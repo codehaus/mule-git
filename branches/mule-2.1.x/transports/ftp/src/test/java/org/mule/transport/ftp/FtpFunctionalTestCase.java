@@ -32,6 +32,14 @@ public class FtpFunctionalTestCase extends AbstractFtpServerTestCase
         return "ftp-functional-test.xml";
     }
     
+    /**
+     * Used by subclasses (in EE)
+     */
+    public int getPort()
+    {
+        return PORT;
+    }
+    
     public void testSendAndRequest() throws Exception
     {
         String url = "ftp://anonymous:email@localhost:" + PORT;
