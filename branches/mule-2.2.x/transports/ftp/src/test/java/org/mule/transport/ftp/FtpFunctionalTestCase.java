@@ -15,9 +15,6 @@ import org.mule.module.client.MuleClient;
 import org.mule.tck.functional.EventCallback;
 import org.mule.tck.functional.FunctionalTestComponent;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import edu.emory.mathcs.backport.java.util.concurrent.CountDownLatch;
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicInteger;
@@ -75,19 +72,16 @@ public class FtpFunctionalTestCase extends AbstractFtpServerTestCase
             }
         };
         
-        Map properties = new HashMap();
-        MuleClient client = new MuleClient();
         assertTrue(getFtpClient().expectFileCount("/", 0, 1000));
         
         Object component = getComponent("testComponent");
+        assertNotNull(component);
         assertTrue("FunctionalTestComponent expected", component instanceof FunctionalTestComponent);
         FunctionalTestComponent ftc = (FunctionalTestComponent) component;
-        assertNotNull(ftc);
-        
         ftc.setEventCallback(callback);
         
-        client.dispatch(getMuleFtpEndpoint(), TEST_MESSAGE, properties);
-        //client.send(getMuleFtpEndpoint(), TEST_MESSAGE, properties);
+        MuleClient client = new MuleClient();
+        client.dispatch(getMuleFtpEndpoint(), TEST_MESSAGE, null);
         
         // TODO DZ: need a reliable way to check the file once it's been written to
         // the ftp server. Currently, once mule processes the ftp'd file, it
