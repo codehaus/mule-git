@@ -17,7 +17,6 @@ import org.mule.tck.functional.FunctionalTestComponent;
 
 import edu.emory.mathcs.backport.java.util.concurrent.CountDownLatch;
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
-import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicInteger;
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicReference;
 
 public class FtpFunctionalTestCase extends AbstractFtpServerTestCase
@@ -44,41 +43,14 @@ public class FtpFunctionalTestCase extends AbstractFtpServerTestCase
     
     public void testSendAndRequest() throws Exception
     {
-        final CountDownLatch latch = new CountDownLatch(1);
-        final AtomicReference message = new AtomicReference();
-        final AtomicInteger loopCount = new AtomicInteger(0);
+        CountDownLatch latch = new CountDownLatch(1);
+        AtomicReference message = new AtomicReference();
 
-        EventCallback callback = new EventCallback()
-        {
-            public synchronized void eventReceived(MuleEventContext context, Object component)
-            {
-                try
-                {
-                    logger.info("called " + loopCount.incrementAndGet() + " times");
-                    FunctionalTestComponent ftc = (FunctionalTestComponent) component;
-                    
-                    // without this we may have problems with the many repeats
-                    if (1 == latch.getCount())
-                    {
-                        String o = new String((byte[])ftc.getLastReceivedMessage());
-                        message.set(o);
-                        latch.countDown();
-                    }
-                }
-                catch (Exception e)
-                {
-                    logger.error(e.getMessage(), e);
-                }
-            }
-        };
-        
-        assertTrue(getFtpClient().expectFileCount("/", 0, 1000));
-        
         Object component = getComponent("testComponent");
         assertNotNull(component);
         assertTrue("FunctionalTestComponent expected", component instanceof FunctionalTestComponent);
         FunctionalTestComponent ftc = (FunctionalTestComponent) component;
-        ftc.setEventCallback(callback);
+        ftc.setEventCallback(new FunctionalEventCallback(latch, message));
         
         MuleClient client = new MuleClient();
         client.dispatch(getMuleFtpEndpoint(), TEST_MESSAGE, null);
@@ -95,4 +67,36 @@ public class FtpFunctionalTestCase extends AbstractFtpServerTestCase
         Thread.sleep(500);
     }
 
+    protected static class FunctionalEventCallback implements EventCallback
+    {
+        private CountDownLatch latch;
+        private AtomicReference message;
+
+        public FunctionalEventCallback(CountDownLatch latch, AtomicReference message)
+        {
+            super();
+            this.latch = latch;
+            this.message = message;
+        }
+        
+        public synchronized void eventReceived(MuleEventContext context, Object component)
+        {
+            try
+            {
+                FunctionalTestComponent ftc = (FunctionalTestComponent) component;
+                
+                // without this we may have problems with the many repeats
+                if (1 == latch.getCount())
+                {
+                    String o = new String((byte[])ftc.getLastReceivedMessage());
+                    message.set(o);
+                    latch.countDown();
+                }
+            }
+            catch (Exception e)
+            {
+                fail();
+            }
+        }
+    }
 }

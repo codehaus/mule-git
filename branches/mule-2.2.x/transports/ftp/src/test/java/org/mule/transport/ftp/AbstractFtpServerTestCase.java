@@ -30,7 +30,7 @@ public abstract class AbstractFtpServerTestCase extends FunctionalTestCase
     
     private static final String DEFAULT_FTP_HOST = "localhost";
     private static int DEFAULT_TIMEOUT = 10000;
-    protected static final String FTP_SERVER_BASE_DIR = "target/ftpserver";
+    public static final String FTP_SERVER_BASE_DIR = "target/ftpserver";
     
     private int timeout;
     private int ftpPort;
