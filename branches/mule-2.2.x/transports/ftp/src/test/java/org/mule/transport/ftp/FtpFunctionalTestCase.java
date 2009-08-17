@@ -95,7 +95,7 @@ public class FtpFunctionalTestCase extends AbstractFtpServerTestCase
             }
             catch (Exception e)
             {
-                fail();
+                throw new IllegalStateException(e);
             }
         }
     }
