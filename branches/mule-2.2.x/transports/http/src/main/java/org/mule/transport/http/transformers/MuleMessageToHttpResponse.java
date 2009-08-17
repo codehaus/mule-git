@@ -14,11 +14,9 @@ import org.mule.api.MuleMessage;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.transformer.TransformerException;
-import org.mule.api.transport.OutputHandler;
 import org.mule.api.transport.PropertyScope;
 import org.mule.config.MuleManifest;
 import org.mule.transformer.AbstractMessageAwareTransformer;
-import org.mule.transformer.simple.ObjectToByteArray;
 import org.mule.transport.NullPayload;
 import org.mule.transport.http.HttpConnector;
 import org.mule.transport.http.HttpConstants;
@@ -43,8 +41,6 @@ public class MuleMessageToHttpResponse extends AbstractMessageAwareTransformer
 {
     public static final String CUSTOM_HEADER_PREFIX = "";
 
-    private static final ObjectToByteArray BYTE_ARRAY_TRANSFORMER = new ObjectToByteArray();
-    
     // @GuardedBy("itself")
     private SimpleDateFormat format;
     private String server;
