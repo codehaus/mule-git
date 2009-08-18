@@ -26,6 +26,3 @@ org.mule.transport.cxf.CxfConnectorVMFunctionalTestCase
 
 # MULE-3710
 # org.mule.transport.cxf.HttpSecurityTestCase
-
-# MULE-4469
-org.mule.transport.cxf.Http10TestCase
