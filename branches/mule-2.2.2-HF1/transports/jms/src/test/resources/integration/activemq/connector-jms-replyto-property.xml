@@ -15,10 +15,7 @@
     <jms:activemq-connector name="jmsConnector" />
     
     <jms:endpoint name="in" queue="in" />
-    <jms:endpoint name="q1" queue="q1" />
-    <jms:endpoint name="q2" queue="q2" />
     <jms:endpoint name="middle" queue="middle" />
-    <jms:endpoint name="middle2" queue="middle2" />
     <jms:endpoint name="out" queue="out" />
 
 </mule>
