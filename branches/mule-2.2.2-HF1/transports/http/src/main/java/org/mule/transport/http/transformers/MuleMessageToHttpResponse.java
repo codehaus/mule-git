@@ -14,9 +14,11 @@ import org.mule.api.MuleMessage;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.transformer.TransformerException;
+import org.mule.api.transport.OutputHandler;
 import org.mule.api.transport.PropertyScope;
 import org.mule.config.MuleManifest;
 import org.mule.transformer.AbstractMessageAwareTransformer;
+import org.mule.transformer.simple.ObjectToByteArray;
 import org.mule.transport.NullPayload;
 import org.mule.transport.http.HttpConnector;
 import org.mule.transport.http.HttpConstants;
@@ -41,6 +43,8 @@ public class MuleMessageToHttpResponse extends AbstractMessageAwareTransformer
 {
     public static final String CUSTOM_HEADER_PREFIX = "";
 
+    private static final ObjectToByteArray BYTE_ARRAY_TRANSFORMER = new ObjectToByteArray();
+    
     // @GuardedBy("itself")
     private SimpleDateFormat format;
     private String server;
@@ -116,11 +120,18 @@ public class MuleMessageToHttpResponse extends AbstractMessageAwareTransformer
                     {
                         if (response.getHttpVersion().lessEquals(HttpVersion.HTTP_1_0))
                         {
-                            throw new IOException("Chunked encoding not supported for HTTP version "
-                                    + response.getHttpVersion());
+                        	// Ensure that we convert the payload to an in memory representation
+                        	// so we don't end up with a chunked response
+                        	len = msg.getPayloadAsBytes().length;
+
+                        	response.setBody(msg);
+                        	
+                        	Header header = new Header(HttpConstants.HEADER_CONTENT_LENGTH, Long.toString(len));
+                            response.setHeader(header);
+                        } else {
+	                        Header header = new Header(HttpConstants.HEADER_TRANSFER_ENCODING, "chunked");
+	                        response.addHeader(header);
                         }
-                        Header header = new Header(HttpConstants.HEADER_TRANSFER_ENCODING, "chunked");
-                        response.addHeader(header);
                     }
                     else
                     {
@@ -156,7 +167,7 @@ public class MuleMessageToHttpResponse extends AbstractMessageAwareTransformer
             }
             return response;
         }
-        catch (IOException e)
+        catch (Exception e)
         {
             throw new TransformerException(this, e);
         }
