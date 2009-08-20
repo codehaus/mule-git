@@ -29,6 +29,8 @@ public class MuleFtplet extends DefaultFtplet
     public interface Callback
     {
         void fileUploadCompleted();
+        
+        void fileMoveCompleted();
     }
 
     private Callback callback;
@@ -43,6 +45,13 @@ public class MuleFtplet extends DefaultFtplet
     public FtpletResult onUploadEnd(FtpSession session, FtpRequest request) throws FtpException, IOException
     {
         callback.fileUploadCompleted();
+        return null;
+    }
+
+    @Override
+    public FtpletResult onRenameEnd(FtpSession session, FtpRequest request) throws FtpException, IOException
+    {
+        callback.fileMoveCompleted();
         return null;
     }
 }

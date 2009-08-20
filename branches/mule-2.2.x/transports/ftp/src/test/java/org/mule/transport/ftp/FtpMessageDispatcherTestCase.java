@@ -11,6 +11,7 @@
 package org.mule.transport.ftp;
 
 import org.mule.DefaultMuleMessage;
+import org.mule.api.MuleMessage;
 import org.mule.module.client.MuleClient;
 
 import java.io.File;
@@ -40,6 +41,19 @@ public class FtpMessageDispatcherTestCase extends AbstractFtpServerTestCase
     {
         MuleClient client = new MuleClient();
         client.dispatch(getMuleFtpEndpoint(), new DefaultMuleMessage(TEST_MESSAGE));
+        
+        // check that the message arrived on the FTP server
+        assertTrue(latch.await(getTimeout(), TimeUnit.MILLISECONDS));
+
+        String[] filesOnServer = new File(FTP_SERVER_BASE_DIR).list();
+        assertTrue(filesOnServer.length > 0);
+    }
+    
+    public void testSend() throws Exception
+    {
+        MuleClient client = new MuleClient();
+        MuleMessage result = client.send(getMuleFtpEndpoint(), new DefaultMuleMessage(TEST_MESSAGE));
+        assertNotNull(result);
         
         // check that the message arrived on the FTP server
         assertTrue(latch.await(getTimeout(), TimeUnit.MILLISECONDS));

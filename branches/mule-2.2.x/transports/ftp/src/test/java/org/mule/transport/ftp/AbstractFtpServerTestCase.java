@@ -167,4 +167,9 @@ public abstract class AbstractFtpServerTestCase extends FunctionalTestCase
     {
         // subclasses can override this method
     }
+
+    public void fileMoveCompleted()
+    {
+        // subclasses can override this method
+    }
 }
