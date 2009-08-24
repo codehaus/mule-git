@@ -136,7 +136,6 @@ public class DefaultMuleEvent extends EventObject implements MuleEvent, ThreadSa
      * @param message  the event payload
      * @param endpoint the endpoint to associate with the event
      * @param session  the previous event if any
-     * @see org.mule.api.transport.MessageAdapter
      */
     public DefaultMuleEvent(MuleMessage message,
                             ImmutableEndpoint endpoint,
@@ -160,7 +159,6 @@ public class DefaultMuleEvent extends EventObject implements MuleEvent, ThreadSa
      * @param message  the event payload
      * @param endpoint the endpoint to associate with the event
      * @param session  the previous event if any
-     * @see org.mule.api.transport.MessageAdapter
      */
     public DefaultMuleEvent(MuleMessage message,
                             ImmutableEndpoint endpoint,

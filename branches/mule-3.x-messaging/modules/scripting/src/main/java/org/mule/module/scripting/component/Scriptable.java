@@ -13,11 +13,11 @@ package org.mule.module.scripting.component;
 import org.mule.DefaultMuleEventContext;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleEvent;
+import org.mule.api.MuleMessage;
 import org.mule.api.context.MuleContextAware;
 import org.mule.api.lifecycle.Initialisable;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.transformer.TransformerException;
-import org.mule.api.transport.MessageAdapter;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.config.i18n.MessageFactory;
 import org.mule.transport.NullPayload;
@@ -192,7 +192,7 @@ public class Scriptable implements Initialisable, MuleContextAware
         bindings.put("src", payload);
     }
     
-    public void populateBindings(Bindings bindings, MessageAdapter message)
+    public void populateBindings(Bindings bindings, MuleMessage message)
     {
         populateDefaultBindings(bindings);
         bindings.put("message", message);
