@@ -35,7 +35,7 @@ public class MessageHeaderExpressionEvaluator implements ExpressionEvaluator
         boolean required;
         if (expression.endsWith("*"))
         {
-            expression = expression.substring(expression.length() - 1);
+            expression = expression.substring(0, expression.length() - 1);
             required = false;
         }
         else
