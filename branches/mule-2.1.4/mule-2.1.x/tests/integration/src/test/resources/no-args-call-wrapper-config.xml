@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesource.org/schema/mule/core/2.1"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:spring="http://www.springframework.org/schema/beans"
+       xmlns:vm="http://www.mulesource.org/schema/mule/vm/2.1"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+       http://www.mulesource.org/schema/mule/core/2.1 http://www.mulesource.org/schema/mule/core/2.1/mule.xsd
+       http://www.mulesource.org/schema/mule/vm/2.1 http://www.mulesource.org/schema/mule/vm/2.1/mule-vm.xsd">
+
+    <spring:bean name="containerDelegate" class="org.mule.tck.testmodels.fruit.Apple"/>
+
+    <vm:connector name="VMConnector" queueEvents="true"/>
+
+    <!-- NOTE - this test has been re-written to use entry point resolvers rather than the
+         no-args component -->
+
+    <model name="NoArgsWrapperModel">
+        <service name="WrapperUMO">
+            <inbound>
+                <inbound-endpoint address="vm://invoke"/>
+            </inbound>
+            <component>
+                <no-arguments-entry-point-resolver>
+                    <include-entry-point method="toString"/>
+                </no-arguments-entry-point-resolver>
+                <singleton-object class="org.mule.tck.testmodels.fruit.Apple"/>
+            </component>
+            <outbound>
+                <pass-through-router>
+                    <outbound-endpoint address="vm://out"/>
+                </pass-through-router>
+            </outbound>
+        </service>
+
+        <service name="WrapperUMOInjected">
+            <inbound>
+                <inbound-endpoint address="vm://invokeWithInjected"/>
+            </inbound>
+            <component>
+                <no-arguments-entry-point-resolver>
+                    <include-entry-point method="wash"/>
+                </no-arguments-entry-point-resolver>
+                <spring-object bean="containerDelegate"/>
+            </component>
+            <outbound>
+                <pass-through-router>
+                    <!--
+                        don't reuse the output queue, ensure we're the only sender
+                        for this one by providing a unique name
+                    -->
+                    <outbound-endpoint address="vm://outWithInjected"/>
+                </pass-through-router>
+            </outbound>
+        </service>
+    </model>
+</mule>
