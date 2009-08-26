@@ -12,7 +12,6 @@
     <name>Mule Tests</name>
 
     <modules>
-        <module>archetypes</module>
         <module>functional</module>
         <module>integration</module>
     </modules>

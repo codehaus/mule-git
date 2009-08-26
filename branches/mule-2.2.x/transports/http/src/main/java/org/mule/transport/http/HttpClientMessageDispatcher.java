@@ -290,25 +290,6 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
             Header[] headers = httpMethod.getResponseHeaders();
             HttpMessageAdapter adapter = new HttpMessageAdapter(new Object[]{body, headers});
             
-            // EE-1613 Propagate the Correlation-related properties from the previous message.
-            // TODO Ideally this should be handled in a transport-agnostic way (i.e., in the core Mule classes)
-            //      Perhaps this can be addressed as part of the MessageAdapter refactoring work for 3.0
-            Object p = event.getMessage().getProperty(MuleProperties.MULE_CORRELATION_ID_PROPERTY);
-            if (p != null)
-            {
-                adapter.setProperty(MuleProperties.MULE_CORRELATION_ID_PROPERTY, p);
-            }
-            p = event.getMessage().getProperty(MuleProperties.MULE_CORRELATION_GROUP_SIZE_PROPERTY);
-            if (p != null)
-            {
-                adapter.setProperty(MuleProperties.MULE_CORRELATION_GROUP_SIZE_PROPERTY, p);
-            }
-            p = event.getMessage().getProperty(MuleProperties.MULE_CORRELATION_SEQUENCE_PROPERTY);
-            if (p != null)
-            {
-                adapter.setProperty(MuleProperties.MULE_CORRELATION_SEQUENCE_PROPERTY, p);            
-            }
-
             String status = String.valueOf(httpMethod.getStatusCode());
 
             adapter.setProperty(HttpConnector.HTTP_STATUS_PROPERTY, status);

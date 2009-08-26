@@ -12,9 +12,15 @@ package org.mule.api.endpoint;
 
 import org.mule.api.transport.MessageDispatching;
 
-public interface OutboundEndpoint extends ImmutableEndpoint,  MessageDispatching
-{
+import java.util.List;
 
+public interface OutboundEndpoint extends ImmutableEndpoint,  MessageDispatching
+{    
+    /**
+     * @return a list of properties which should be carried over from the request message to the response message
+     * in the case of a synchronous call.
+     */
+    List<String> getResponseProperties();
 }
 
 
