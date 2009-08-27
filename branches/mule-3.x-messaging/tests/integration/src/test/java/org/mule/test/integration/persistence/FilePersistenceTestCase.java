@@ -27,7 +27,6 @@ public class FilePersistenceTestCase extends FunctionalTestCase
 
     public void testFilesStored() throws Exception
     {
-
         // Note that the FunctionalTestCase will remove the working directory after
         // each execution
         String path = muleContext.getConfiguration().getWorkingDirectory() + "/queuestore/test.queue";
@@ -35,7 +34,9 @@ public class FilePersistenceTestCase extends FunctionalTestCase
         assertFalse(store.exists());
 
         MuleClient client = new MuleClient();
-        client.send("vm://test.queue", "test", null);
+        client.dispatch("vm://test.queue", "test", null);
+        // Give the vm dispatcher chance to persist message.  Cannot use send because send does not use queue.
+        Thread.sleep(500);
         File[] files = store.listFiles();
         assertNotNull(files);
         assertEquals(1, files.length);
@@ -46,6 +47,5 @@ public class FilePersistenceTestCase extends FunctionalTestCase
         files = store.listFiles();
         assertNotNull(files);
         assertEquals(0, files.length);
-
     }
 }

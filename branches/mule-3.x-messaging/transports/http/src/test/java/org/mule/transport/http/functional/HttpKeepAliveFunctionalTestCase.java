@@ -27,7 +27,7 @@ import org.apache.commons.httpclient.params.HttpClientParams;
 public class HttpKeepAliveFunctionalTestCase extends FunctionalTestCase
 {
     private static final String URL_WITHOUT_EP_OVERRIDE = "http://localhost:60213/http-in";
-    private static final String URL_WITH_EP_OVERRIDE = "http://localhost:60214/http-in";
+    private static final String URL_WITH_EP_OVERRIDE = "http://localhost:60216/http-in";
     
     private HttpClient http10Client;
     private HttpClient http11Client;
@@ -113,7 +113,7 @@ public class HttpKeepAliveFunctionalTestCase extends FunctionalTestCase
         runHttp11MethodAndAssert(request);
         
         // the connection should be still open, send another request and terminate the connection
-        request = new GetMethod(URL_WITHOUT_EP_OVERRIDE);
+        request = new GetMethod(url);
         request.setRequestHeader(HttpConstants.HEADER_CONNECTION, "close");
         runHttp11MethodAndAssert(request);
         
