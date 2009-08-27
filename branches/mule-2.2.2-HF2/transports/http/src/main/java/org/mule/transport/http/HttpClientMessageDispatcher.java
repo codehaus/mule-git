@@ -13,6 +13,7 @@ package org.mule.transport.http;
 import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
+import org.mule.api.config.MuleProperties;
 import org.mule.api.endpoint.OutboundEndpoint;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.transformer.TransformerException;
@@ -288,7 +289,7 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
 
             Header[] headers = httpMethod.getResponseHeaders();
             HttpMessageAdapter adapter = new HttpMessageAdapter(new Object[]{body, headers});
-
+            
             String status = String.valueOf(httpMethod.getStatusCode());
 
             adapter.setProperty(HttpConnector.HTTP_STATUS_PROPERTY, status);
@@ -298,7 +299,6 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
             }
 
             MuleMessage m = new DefaultMuleMessage(adapter);
-
             m.setExceptionPayload(ep);
             return m;
         }

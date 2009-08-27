@@ -61,6 +61,7 @@ public abstract class AbstractEndpointBuilder implements EndpointBuilder
 {
 
     public static final String PROPERTY_RESPONSE_TIMEOUT = "responseTimeout";
+    public static final String PROPERTY_RESPONSE_PROPERTIES = "responseProperties";
 
     protected URIBuilder uriBuilder;
     protected Connector connector;
@@ -78,6 +79,7 @@ public abstract class AbstractEndpointBuilder implements EndpointBuilder
     protected String encoding;
     protected Integer createConnector;
     protected RetryPolicyTemplate retryPolicyTemplate;
+    protected String responsePropertiesList;
 
     // not included in equality/hash
     protected String registryId = null;
@@ -97,6 +99,7 @@ public abstract class AbstractEndpointBuilder implements EndpointBuilder
     {
         synchronous = getBooleanProperty(properties, MuleProperties.SYNCHRONOUS_PROPERTY, synchronous);
         responseTimeout = getIntegerProperty(properties, PROPERTY_RESPONSE_TIMEOUT, responseTimeout);
+        responsePropertiesList = (String) properties.get(PROPERTY_RESPONSE_PROPERTIES);
     }
 
     public static Boolean getBooleanProperty(Map properties, String name, Boolean dflt)
@@ -190,7 +193,7 @@ public abstract class AbstractEndpointBuilder implements EndpointBuilder
             getName(endpointURI), getProperties(), getTransactionConfig(), getFilter(connector),
             getDefaultDeleteUnacceptedMessages(connector), getSecurityFilter(), synchronous,
             getResponseTimeout(connector), getInitialState(connector), getEndpointEncoding(connector),
-            name, muleContext, getRetryPolicyTemplate(connector));
+            name, muleContext, getRetryPolicyTemplate(connector), responsePropertiesList);
 
     }
 
@@ -661,7 +664,7 @@ public abstract class AbstractEndpointBuilder implements EndpointBuilder
         this.retryPolicyTemplate = retryPolicyTemplate;
 
     }
-
+    
     public URIBuilder getEndpointBuilder()
     {
         return uriBuilder;

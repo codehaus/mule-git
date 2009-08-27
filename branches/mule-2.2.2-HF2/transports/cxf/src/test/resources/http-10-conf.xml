@@ -5,11 +5,13 @@
   xmlns:cxf="http://www.mulesource.org/schema/mule/cxf/2.2"
   xmlns:cxf-core="http://cxf.apache.org/core"
   xmlns:http="http://www.mulesource.org/schema/mule/http/2.2"
+  xmlns:vm="http://www.mulesource.org/schema/mule/vm/2.2"
   xsi:schemaLocation="
                http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
                http://www.mulesource.org/schema/mule/core/2.2 http://www.mulesource.org/schema/mule/core/2.2/mule.xsd
                http://www.mulesource.org/schema/mule/cxf/2.2 http://www.mulesource.org/schema/mule/cxf/2.2/mule-cxf.xsd
                http://www.mulesource.org/schema/mule/http/2.2 http://www.mulesource.org/schema/mule/http/2.2/mule-http.xsd
+               http://www.mulesource.org/schema/mule/vm/2.2 http://www.mulesource.org/schema/mule/vm/2.2/mule-vm.xsd
                http://cxf.apache.org/core http://cxf.apache.org/schemas/core.xsd">
 
   <cxf:endpoint 
@@ -46,6 +48,8 @@
         <add-message-property key="http.version" value="HTTP/1.0"/> 
       </message-properties-transformer>
   </cxf:endpoint>
+  
+  <vm:connector name="vmConnector" queueEvents="true" />
     
   <model name="TestCxfModel">
   
@@ -57,6 +61,11 @@
       <component>
         <singleton-object class="org.apache.hello_world_soap_http.GreeterImpl"/>
       </component>
+      <outbound>
+      	<pass-through-router>
+      		<vm:outbound-endpoint path="out" />
+      	</pass-through-router>
+      </outbound>
     </service> 
 
   </model>
