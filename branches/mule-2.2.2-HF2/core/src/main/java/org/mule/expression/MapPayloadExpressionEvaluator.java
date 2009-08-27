@@ -49,7 +49,7 @@ public class MapPayloadExpressionEvaluator implements ExpressionEvaluator
                 {
                     if (s.endsWith("*"))
                     {
-                        s = s.substring(s.length() - 1);
+                        s = s.substring(0, s.length() - 1);
                     }
                     result.put(s, val);
                 }
