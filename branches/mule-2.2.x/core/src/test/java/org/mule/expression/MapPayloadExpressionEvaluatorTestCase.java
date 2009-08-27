@@ -15,8 +15,11 @@ import org.mule.api.MuleMessage;
 import org.mule.api.expression.RequiredValueException;
 import org.mule.tck.AbstractMuleTestCase;
 
+import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.activation.DataHandler;
 
 public class MapPayloadExpressionEvaluatorTestCase extends AbstractMuleTestCase
 {
@@ -67,5 +70,22 @@ public class MapPayloadExpressionEvaluatorTestCase extends AbstractMuleTestCase
 
 
     }
+    
+    public void testMultipleExpressions() throws Exception
+    {
+        MapPayloadExpressionEvaluator eval = new MapPayloadExpressionEvaluator();
+        MuleMessage message = new DefaultMuleMessage(props, (Map) null);
+
+        // direct match
+        Object result = eval.evaluate("foo,bar*,ba*z,fool*", message);        
+        assertNotNull(result);
+        assertTrue(result instanceof Map);
+        assertEquals(3, ((Map)result).size());
+
+        assertEquals("moo", ((Map)result).get("foo"));
+        assertEquals("mar", ((Map)result).get("bar"));
+        assertEquals("maz", ((Map)result).get("ba*z"));
+        assertNull(((Map)result).get("fool*"));        
+    }    
 
 }

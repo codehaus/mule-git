@@ -60,7 +60,7 @@ public class MessageAttachmentsListExpressionEvaluator implements ExpressionEval
                 s = s.trim();
                 if (s.endsWith("*"))
                 {
-                    s = s.substring(s.length() - 1);
+                    s = s.substring(0, s.length() - 1);
                     required = false;
                 }
                 else
