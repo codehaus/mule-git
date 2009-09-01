@@ -32,6 +32,7 @@ import org.mule.api.routing.RoutingException;
 import org.mule.api.service.Service;
 import org.mule.api.transaction.Transaction;
 import org.mule.api.transaction.TransactionException;
+import org.mule.api.transport.DispatchException;
 import org.mule.api.util.StreamCloserService;
 import org.mule.config.ExceptionHelper;
 import org.mule.config.i18n.CoreMessages;
@@ -324,44 +325,12 @@ public abstract class AbstractExceptionListener
                     OutboundRouter router = createOutboundRouter();
                     router.route(exceptionMessage, new DefaultMuleSession(exceptionMessage,
                         new MuleSessionHandler(), ctx.getService(), muleContext));
-
                 }
                 else
                 {
-                    // We don't always have the service available which is currently
-                    // required to use an outbound router to route the exception
-                    // message so we have to send in a more direct way. This doesn't
-                    // support everything, but its the best we can do for now.
-                    for (int i = 0; i < endpoints.size(); i++)
-                    {
-                        OutboundEndpoint endpoint = (OutboundEndpoint) endpoints.get(i);
-                        if (((DefaultMuleMessage) message).isConsumable())
-                        {
-                            throw new MessagingException(
-                                CoreMessages.cannotCopyStreamPayload(message.getPayload().getClass().getName()),
-                                message);
-                        }
-                        
-                        MuleMessage clonedMessage = new DefaultMuleMessage(exceptionMessage.getPayload(), exceptionMessage);
-                        MuleEvent exceptionEvent = new DefaultMuleEvent(clonedMessage, endpoint,
-                            new DefaultMuleSession(clonedMessage, new MuleSessionHandler(), muleContext),
-                            true);
-                        exceptionEvent = RequestContext.setEvent(exceptionEvent);
-                        
-                        if (endpoint.isSynchronous())
-                        {
-                            endpoint.send(exceptionEvent);
-                        }
-                        else
-                        {
-                            endpoint.dispatch(exceptionEvent);
-                        }                                       
-
-                        if (logger.isDebugEnabled())
-                        {
-                            logger.debug("routed Exception message via " + endpoint);
-                        }
-                    }
+                    // As the service is not available an outbound router cannot be
+                    // used to route the exception message.
+                    customRouteExceptionMessage(exceptionMessage);
                 }
             }
             catch (Exception e)
@@ -374,6 +343,44 @@ public abstract class AbstractExceptionListener
         {
             handleTransaction(t);
             closeStream(message);
+        }
+    }
+
+    private void customRouteExceptionMessage(MuleMessage exceptionMessage)
+        throws MessagingException, MuleException, DispatchException
+    {
+        // This is required because we don't always have the service available which
+        // is required to use an outbound route. This approach doesn't
+        // support everything but rather is an intermediate improvement.
+        for (int i = 0; i < endpoints.size(); i++)
+        {
+            OutboundEndpoint endpoint = (OutboundEndpoint) endpoints.get(i);
+            if (((DefaultMuleMessage) exceptionMessage).isConsumable())
+            {
+                throw new MessagingException(
+                    CoreMessages.cannotCopyStreamPayload(exceptionMessage.getPayload().getClass().getName()),
+                    exceptionMessage);
+            }
+
+            MuleMessage clonedMessage = new DefaultMuleMessage(exceptionMessage.getPayload(),
+                exceptionMessage);
+            MuleEvent exceptionEvent = new DefaultMuleEvent(clonedMessage, endpoint, new DefaultMuleSession(
+                clonedMessage, new MuleSessionHandler(), muleContext), true);
+            exceptionEvent = RequestContext.setEvent(exceptionEvent);
+
+            if (endpoint.isSynchronous())
+            {
+                endpoint.send(exceptionEvent);
+            }
+            else
+            {
+                endpoint.dispatch(exceptionEvent);
+            }
+
+            if (logger.isDebugEnabled())
+            {
+                logger.debug("routed Exception message via " + endpoint);
+            }
         }
     }
 
