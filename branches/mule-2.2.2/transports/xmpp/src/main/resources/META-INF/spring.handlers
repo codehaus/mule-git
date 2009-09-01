@@ -1,2 +1,0 @@
-http\://www.mulesource.org/schema/mule/xmpp/2.2=org.mule.transport.xmpp.config.XmppNamespaceHandler
-http\://www.mulesource.org/schema/mule/xmpps/2.2=org.mule.transport.xmpp.config.XmppsNamespaceHandler
