@@ -19,13 +19,11 @@ import org.mule.api.transaction.TransactionCallback;
 import org.mule.api.transport.Connector;
 import org.mule.transaction.TransactionTemplate;
 
-import java.util.Iterator;
 import java.util.List;
 
 import javax.resource.spi.work.Work;
 
 import edu.emory.mathcs.backport.java.util.concurrent.CountDownLatch;
-import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 
 /**
  * The TransactedPollingMessageReceiver is an abstract receiver that handles polling
@@ -120,9 +118,9 @@ public abstract class TransactedPollingMessageReceiver extends AbstractPollingMe
                     List messages = getMessages();
                     if (messages != null && messages.size() > 0)
                     {
-                        for (Iterator it = messages.iterator(); it.hasNext();)
+                        for (Object message : messages)
                         {
-                            TransactedPollingMessageReceiver.this.processMessage(it.next());
+                            TransactedPollingMessageReceiver.this.processMessage(message);
                         }
                     }
                     return null;
@@ -137,12 +135,12 @@ public abstract class TransactedPollingMessageReceiver extends AbstractPollingMe
             if (messages != null && messages.size() > 0)
             {
                 final CountDownLatch countdown = new CountDownLatch(messages.size());
-                for (Iterator it = messages.iterator(); it.hasNext();)
+                for (Object message : messages)
                 {
                     try
                     {
                         this.getWorkManager().scheduleWork(
-                                new MessageProcessorWorker(tt, countdown, it.next()));
+                                new MessageProcessorWorker(tt, countdown, message));
                     }
                     catch (Exception e)
                     {
