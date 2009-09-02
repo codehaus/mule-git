@@ -42,7 +42,8 @@ public class HttpsConnector extends HttpConnector
     public static final String PEER_CERTIFICATES = "PEER_CERTIFICATES";
     public static final String LOCAL_CERTIFICATES = "LOCAL_CERTIFICATES";
 
-    private TlsConfiguration tls = new TlsConfiguration(TlsConfiguration.DEFAULT_KEYSTORE);
+    // null initial keystore - see below
+    private TlsConfiguration tls = new TlsConfiguration(null);
     
     /**
      * Timeout for establishing the SSL connection with the client.
@@ -68,9 +69,11 @@ public class HttpsConnector extends HttpConnector
     @Override
     protected void doInitialise() throws InitialisationException
     {
+        // if a keystore is not provided, the connector will only be used for
+        // client connections, and can work in anon mode.
         try
         {
-            tls.initialise(false, TlsConfiguration.JSSE_NAMESPACE);
+            tls.initialise(null == getKeyStore(), TlsConfiguration.JSSE_NAMESPACE);
         }
         catch (CreateException e)
         {
