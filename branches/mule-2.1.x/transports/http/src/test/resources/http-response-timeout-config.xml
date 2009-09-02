@@ -5,7 +5,6 @@
       xmlns:spring="http://www.springframework.org/schema/beans"
       xmlns:http="http://www.mulesource.org/schema/mule/http/2.1"
       xmlns:test="http://www.mulesource.org/schema/mule/test/2.1"
-      
       xsi:schemaLocation="
             http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
             http://www.mulesource.org/schema/mule/core/2.1 http://www.mulesource.org/schema/mule/core/2.1/mule.xsd
@@ -13,27 +12,23 @@
             http://www.mulesource.org/schema/mule/http/2.1 http://www.mulesource.org/schema/mule/http/2.1/mule-http.xsd
             http://www.mulesource.org/schema/mule/test/2.1 http://www.mulesource.org/schema/mule/test/2.1/mule-test.xsd">
 	
-
     <model name="responeTimeout">
-
     	<service name="TestTimeout">
 			<inbound>
 				<vm:inbound-endpoint path="request" synchronous="true"/>
 			</inbound>
 			<outbound>
 				<pass-through-router>
-					<http:outbound-endpoint address="http://localhost:8080/TimeoutWebservice" synchronous="true" remoteSyncTimeout="5000"/>
+					<http:outbound-endpoint address="http://localhost:60216/TimeoutWebservice" synchronous="true" remoteSyncTimeout="5000"/>
 				</pass-through-router>
 			</outbound>
 		</service>
 		
 		<service name="SampleWebService">
 			<inbound>
-				<http:inbound-endpoint address="http://localhost:8080/TimeoutWebservice" synchronous="true"/>
+				<http:inbound-endpoint address="http://localhost:60216/TimeoutWebservice" synchronous="true"/>
 			</inbound>
             <test:component waitTime="30000"/>
 		</service>
-			
     </model>
-
 </mule>
