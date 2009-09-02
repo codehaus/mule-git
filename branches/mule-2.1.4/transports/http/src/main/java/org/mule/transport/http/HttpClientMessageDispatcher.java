@@ -66,6 +66,9 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
         if (client == null)
         {
             client = connector.doClientConnect();
+            client.getHttpConnectionManager().getParams().setConnectionTimeout(
+                endpoint.getRemoteSyncTimeout());
+            client.getHttpConnectionManager().getParams().setSoTimeout(endpoint.getRemoteSyncTimeout());
         }
     }
 
