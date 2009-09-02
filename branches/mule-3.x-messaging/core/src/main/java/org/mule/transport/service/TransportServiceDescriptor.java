@@ -10,7 +10,9 @@
 
 package org.mule.transport.service;
 
+import org.mule.api.MuleContext;
 import org.mule.api.MuleException;
+import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.EndpointURIBuilder;
 import org.mule.api.endpoint.InboundEndpoint;
 import org.mule.api.registry.ServiceDescriptor;
@@ -38,11 +40,15 @@ public interface TransportServiceDescriptor extends ServiceDescriptor
 {
     public static final String OSGI_HEADER_TRANSPORT = "Mule-Transport";
         
+    @Deprecated
     public MessageAdapter createMessageAdapter(Object message) throws TransportServiceException;
 
+    @Deprecated
     public MessageAdapter createMessageAdapter(Object message, MessageAdapter originalMessageAdapter)
         throws TransportServiceException;
 
+    public MuleMessage createMessage(Object payload, MuleContext muleContext) throws TransportServiceException;
+    
     public SessionHandler createSessionHandler() throws TransportServiceException;
 
     public MessageReceiver createMessageReceiver(Connector connector,

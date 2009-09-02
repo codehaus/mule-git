@@ -11,7 +11,9 @@
 package org.mule.transport.service;
 
 import org.mule.MuleSessionHandler;
+import org.mule.api.MuleContext;
 import org.mule.api.MuleException;
+import org.mule.api.MuleMessage;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.endpoint.EndpointURIBuilder;
 import org.mule.api.endpoint.InboundEndpoint;
@@ -22,6 +24,7 @@ import org.mule.api.transaction.TransactionFactory;
 import org.mule.api.transformer.Transformer;
 import org.mule.api.transport.Connector;
 import org.mule.api.transport.MessageAdapter;
+import org.mule.api.transport.MessageCreator;
 import org.mule.api.transport.MessageDispatcherFactory;
 import org.mule.api.transport.MessageReceiver;
 import org.mule.api.transport.MessageRequesterFactory;
@@ -43,7 +46,9 @@ public class DefaultTransportServiceDescriptor extends AbstractServiceDescriptor
     private String dispatcherFactory;
     private String requesterFactory;
     private String transactionFactory;
+    // TODO MessageAdapterRemoval: delete me
     private String messageAdapter;
+    private String messageCreator;
     private String messageReceiver;
     private String transactedMessageReceiver;
     private String xaTransactedMessageReceiver;
@@ -56,7 +61,6 @@ public class DefaultTransportServiceDescriptor extends AbstractServiceDescriptor
     private Transformer inboundTransformer;
     private Transformer outboundTransformer;
     private Transformer responseTransformer;
-    // private EndpointBuilder endpointBuilderImpl;
 
     private Properties exceptionMappings = new Properties();
     private Registry registry;
@@ -75,6 +79,7 @@ public class DefaultTransportServiceDescriptor extends AbstractServiceDescriptor
         transactedMessageReceiver = removeProperty(MuleProperties.CONNECTOR_TRANSACTED_MESSAGE_RECEIVER_CLASS, props);
         xaTransactedMessageReceiver = removeProperty(MuleProperties.CONNECTOR_XA_TRANSACTED_MESSAGE_RECEIVER_CLASS, props);
         messageAdapter = removeProperty(MuleProperties.CONNECTOR_MESSAGE_ADAPTER, props);
+        messageCreator = removeProperty(MuleProperties.CONNECTOR_MESSAGE_CREATOR, props);
         defaultInboundTransformer = removeProperty(MuleProperties.CONNECTOR_INBOUND_TRANSFORMER, props);
         defaultOutboundTransformer = removeProperty(MuleProperties.CONNECTOR_OUTBOUND_TRANSFORMER, props);
         defaultResponseTransformer = removeProperty(MuleProperties.CONNECTOR_RESPONSE_TRANSFORMER, props);
@@ -84,7 +89,6 @@ public class DefaultTransportServiceDescriptor extends AbstractServiceDescriptor
 
         this.classLoader = classLoader;
     }
-
 
     public void setOverrides(Properties props)
     {
@@ -131,11 +135,13 @@ public class DefaultTransportServiceDescriptor extends AbstractServiceDescriptor
         }
     }
 
+    @Deprecated
     public MessageAdapter createMessageAdapter(Object message) throws TransportServiceException
     {
         return createMessageAdapter(message, null, messageAdapter);
     }
     
+    @Deprecated
     public MessageAdapter createMessageAdapter(Object message, MessageAdapter originalMessageAdapter)
         throws TransportServiceException
     {
@@ -172,6 +178,26 @@ public class DefaultTransportServiceDescriptor extends AbstractServiceDescriptor
         else
         {
             throw new TransportServiceException(CoreMessages.objectNotSetInService("Message Adapter", getService()));
+        }
+    }
+
+    public MuleMessage createMessage(Object payload, MuleContext muleContext) throws TransportServiceException
+    {
+        if (messageCreator == null)
+        {
+            throw new TransportServiceException(CoreMessages.objectNotSetInService("Message Creator", getService()));
+        }
+        
+        try
+        {
+            MessageCreator creator = (MessageCreator) ClassUtils.instanciateClass(messageCreator, 
+                muleContext);
+            return creator.create(payload);
+        }
+        catch (Exception e)
+        {
+            throw new TransportServiceException(
+                CoreMessages.failedToCreateObjectWith("Message Creator", payload));
         }
     }
 

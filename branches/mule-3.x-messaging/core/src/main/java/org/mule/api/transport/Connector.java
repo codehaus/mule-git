@@ -10,6 +10,7 @@
 
 package org.mule.api.transport;
 
+import org.mule.api.MessagingException;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleException;
@@ -77,9 +78,17 @@ public interface Connector extends Lifecycle, MuleContextAware, NamedObject
      * @throws MessageTypeNotSupportedException if the message parameter is not supported
      * @throws MuleException if there is a problem creating the Adapter
      * @see MessageAdapter
+     * 
+     * @deprecated use getMessage(Object) instead
      */
+    @Deprecated
     MessageAdapter getMessageAdapter(Object message) throws MuleException;
 
+    /**
+     * Gets a {@link MuleMessage} from the connector for the given payload.
+     */
+    MuleMessage getMessage(Object payload) throws MessagingException;
+    
     /**
      * @return the primary protocol name for endpoints of this connector
      */

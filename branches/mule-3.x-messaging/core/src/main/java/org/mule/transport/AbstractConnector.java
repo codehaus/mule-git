@@ -94,6 +94,7 @@ import edu.emory.mathcs.backport.java.util.concurrent.ThreadFactory;
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicReference;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.pool.KeyedPoolableObjectFactory;
@@ -2269,6 +2270,7 @@ public abstract class AbstractConnector
      *             supported
      * @see org.mule.api.transport.MessageAdapter
      */
+    @Deprecated
     public MessageAdapter getMessageAdapter(Object message) throws MuleException
     {
         try
@@ -2281,7 +2283,8 @@ public abstract class AbstractConnector
                 new DefaultMuleMessage(message, muleContext), e);
         }
     }
-    
+
+    @Deprecated
     public MessageAdapter getMessageAdapter(Object message, MessageAdapter originalMessageAdapter)
         throws MessagingException
     {
@@ -2293,6 +2296,19 @@ public abstract class AbstractConnector
         {
             throw new MessagingException(CoreMessages.failedToCreate("Message Adapter"),
                 new DefaultMuleMessage(message, muleContext), tse);
+        }
+    }
+    
+    public MuleMessage getMessage(Object payload) throws MessagingException
+    {
+        try
+        {
+            return serviceDescriptor.createMessage(payload, muleContext);
+        }
+        catch (TransportServiceException tse)
+        {
+            MuleMessage msg = new DefaultMuleMessage(payload, muleContext);
+            throw new MessagingException(CoreMessages.failedToCreate("MuleMessage"), msg);
         }
     }
     

@@ -80,7 +80,9 @@ public class MuleProperties
     public static final String CONNECTOR_DISPATCHER_FACTORY = "dispatcher.factory";
     public static final String CONNECTOR_REQUESTER_FACTORY = "requester.factory";
     public static final String CONNECTOR_TRANSACTION_FACTORY = "transaction.factory";
+    // TODO MessageAdapterRemoval: delete me
     public static final String CONNECTOR_MESSAGE_ADAPTER = "message.adapter";
+    public static final String CONNECTOR_MESSAGE_CREATOR = "message.creator";
     public static final String CONNECTOR_INBOUND_TRANSFORMER = "inbound.transformer";
     public static final String CONNECTOR_OUTBOUND_TRANSFORMER = "outbound.transformer";
     public static final String CONNECTOR_RESPONSE_TRANSFORMER = "response.transformer";
@@ -94,7 +96,6 @@ public class MuleProperties
     public static final String MULE_HOME_DIRECTORY_PROPERTY = "mule.home";
 
     // Object Name Keys
-
     public static final String OBJECT_SYSTEM_MODEL = "_muleSystemModel";
     public static final String OBJECT_MULE_CONTEXT_PROCESSOR = "_muleContextProcessor";
     public static final String OBJECT_PROPERTY_PLACEHOLDER_PROCESSOR = "_mulePropertyPlaceholderProcessor";
