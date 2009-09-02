@@ -307,10 +307,6 @@ public class JmsMessageAdapter extends AbstractMessageAdapter
         {
             setProperty(JmsConstants.JMS_REPLY_TO, replyTo, PropertyScope.INVOCATION);
         }
-        else
-        {
-            removeProperty(JmsConstants.JMS_REPLY_TO);
-        }
         super.setReplyTo(replyTo);
     }
 
