@@ -15,6 +15,7 @@ import org.mule.module.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 
 import java.util.Date;
+
 /**
  * See MULE-4491 "Http outbound endpoint does not use responseTimeout attribute"
  */
@@ -31,9 +32,11 @@ public class HttpResponseTimeoutTestCase extends FunctionalTestCase
     {
         MuleClient client = new MuleClient();
         Date beforeCall = new Date();
+        
         MuleMessage message = client.send("vm://request", "Eugene", null);
+        assertNotNull(message);
+        
         Date afterCall = new Date();
-        System.out.println(">>>>>>>>>> TIME ELAPSED: " + (afterCall.getTime() - beforeCall.getTime()));
         // If everything is good the connection will timeout after 5s and throw an exception.
         assertTrue((afterCall.getTime() - beforeCall.getTime()) < 10000);
     }
