@@ -36,11 +36,13 @@ import org.mule.transport.NullPayload;
 import org.mule.transport.http.i18n.HttpMessages;
 import org.mule.transport.tcp.TcpConnector;
 import org.mule.transport.tcp.TcpMessageReceiver;
+import org.mule.util.IOUtils;
 import org.mule.util.MapUtils;
 import org.mule.util.ObjectUtils;
 import org.mule.util.monitor.Expirable;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.Socket;
 import java.net.SocketAddress;
 import java.util.HashMap;
@@ -374,6 +376,18 @@ public class HttpMessageReceiver extends TcpMessageReceiver
             if (body == null)
             {
                 body = requestLine.getUri();
+            }
+            else
+            {
+                // If we are running async we need to read stream into a byte[].
+                // Passing along the InputStream doesn't work because the
+                // HttpConnection gets closed and closes the InputStream, often
+                // before it can be read.
+                if (!endpoint.isSynchronous())
+                {
+                    logger.debug("Reading HTTP POST InputStream into byte[] for asynchronous messaging.");
+                    body = IOUtils.toByteArray((InputStream) body);
+                }
             }
 
             return connector.getMessageAdapter(new Object[]{body, headers});
