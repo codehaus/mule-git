@@ -19,8 +19,7 @@ import org.apache.ftpserver.ftplet.Configuration;
 import org.apache.ftpserver.interfaces.FtpServerContext;
 
 /**
- * An initial wrapper for the Apache ftpServer.  This will progress into a provider of its own,
- * but for now is necessary to avoid duplicating code in FTP tests using FTPClient.
+ * A wrapper for the Apache {@link FtpServer}.
  */
 public class Server
 {
@@ -51,7 +50,6 @@ public class Server
 
         Configuration config = new PropertiesConfiguration(properties);
         FtpServerContext context = new ConfigurableFtpServerContext(config);
-
 
         server = new FtpServer(context);
         server.start();
