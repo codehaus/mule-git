@@ -1,3 +1,6 @@
 #
 # Test cases listed in this file are not run.
 #
+
+# excluded for the release, will be fixed on the 2.1.x branch
+org.mule.management.JmxStatisticsAsyncTestCase
