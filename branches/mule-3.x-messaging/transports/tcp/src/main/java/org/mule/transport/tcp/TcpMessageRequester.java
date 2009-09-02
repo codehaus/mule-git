@@ -10,7 +10,6 @@
 
 package org.mule.transport.tcp;
 
-import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.InboundEndpoint;
 import org.mule.api.retry.RetryContext;
@@ -58,7 +57,7 @@ public class TcpMessageRequester extends AbstractMessageRequester
             {
                 return null;
             }
-            return new DefaultMuleMessage(connector.getMessageAdapter(result), connector.getMuleContext());
+            return connector.getMessage(result);
         }
         catch (SocketTimeoutException e)
         {

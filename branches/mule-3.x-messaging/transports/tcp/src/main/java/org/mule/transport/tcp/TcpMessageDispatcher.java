@@ -10,7 +10,6 @@
 
 package org.mule.transport.tcp;
 
-import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.ImmutableEndpoint;
@@ -75,7 +74,7 @@ public class TcpMessageDispatcher extends AbstractMessageDispatcher
                         return (MuleMessage) result;
                     }
                     
-                    return new DefaultMuleMessage(connector.getMessageAdapter(result), connector.getMuleContext());
+                    return connector.getMessage(result);
                 }
                 catch (SocketTimeoutException e)
                 {
