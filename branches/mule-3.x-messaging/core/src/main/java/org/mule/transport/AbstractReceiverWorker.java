@@ -107,7 +107,7 @@ public abstract class AbstractReceiverWorker implements Work
                             adapter = endpoint.getConnector().getMessageAdapter(o);
                         }
 
-                        DefaultMuleMessage muleMessage = new DefaultMuleMessage(adapter, muleContext);
+                        MuleMessage muleMessage = new DefaultMuleMessage(adapter, muleContext);
                         preRouteMuleMessage(muleMessage);
                         MuleMessage result = receiver.routeMessage(muleMessage, tx,  tx != null || endpoint.isSynchronous(), out);
                         if (result != null)
@@ -146,7 +146,7 @@ public abstract class AbstractReceiverWorker implements Work
      * @param message the next message to be processed
      * @throws Exception
      */
-    protected void preRouteMuleMessage(DefaultMuleMessage message) throws Exception
+    protected void preRouteMuleMessage(MuleMessage message) throws Exception
     {
         //no op
     }
