@@ -1,6 +1,0 @@
-#
-# Test cases listed in this file are not run.
-#
-
-# This test is actually empty - do we still need it?
-org.mule.test.spring.NestExampleTestCase
