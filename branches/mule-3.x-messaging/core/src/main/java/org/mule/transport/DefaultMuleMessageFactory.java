@@ -13,13 +13,13 @@ package org.mule.transport;
 import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleMessage;
-import org.mule.api.transport.MessageCreator;
+import org.mule.api.transport.MuleMessageFactory;
 
-public class DefaultMessageCreator implements MessageCreator
+public class DefaultMuleMessageFactory implements MuleMessageFactory
 {
     private MuleContext muleContext;
 
-    public DefaultMessageCreator(MuleContext context)
+    public DefaultMuleMessageFactory(MuleContext context)
     {
         super();
         muleContext = context;

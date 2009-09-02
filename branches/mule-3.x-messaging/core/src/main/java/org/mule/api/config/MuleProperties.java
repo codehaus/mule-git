@@ -82,7 +82,7 @@ public class MuleProperties
     public static final String CONNECTOR_TRANSACTION_FACTORY = "transaction.factory";
     // TODO MessageAdapterRemoval: delete me
     public static final String CONNECTOR_MESSAGE_ADAPTER = "message.adapter";
-    public static final String CONNECTOR_MESSAGE_CREATOR = "message.creator";
+    public static final String CONNECTOR_MESSAGE_FACTORY = "message.factory";
     public static final String CONNECTOR_INBOUND_TRANSFORMER = "inbound.transformer";
     public static final String CONNECTOR_OUTBOUND_TRANSFORMER = "outbound.transformer";
     public static final String CONNECTOR_RESPONSE_TRANSFORMER = "response.transformer";

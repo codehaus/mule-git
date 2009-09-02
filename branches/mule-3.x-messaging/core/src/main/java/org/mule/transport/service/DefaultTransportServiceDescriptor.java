@@ -24,10 +24,10 @@ import org.mule.api.transaction.TransactionFactory;
 import org.mule.api.transformer.Transformer;
 import org.mule.api.transport.Connector;
 import org.mule.api.transport.MessageAdapter;
-import org.mule.api.transport.MessageCreator;
 import org.mule.api.transport.MessageDispatcherFactory;
 import org.mule.api.transport.MessageReceiver;
 import org.mule.api.transport.MessageRequesterFactory;
+import org.mule.api.transport.MuleMessageFactory;
 import org.mule.api.transport.SessionHandler;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.endpoint.UrlEndpointURIBuilder;
@@ -48,7 +48,7 @@ public class DefaultTransportServiceDescriptor extends AbstractServiceDescriptor
     private String transactionFactory;
     // TODO MessageAdapterRemoval: delete me
     private String messageAdapter;
-    private String messageCreator;
+    private String messageFactory;
     private String messageReceiver;
     private String transactedMessageReceiver;
     private String xaTransactedMessageReceiver;
@@ -79,7 +79,7 @@ public class DefaultTransportServiceDescriptor extends AbstractServiceDescriptor
         transactedMessageReceiver = removeProperty(MuleProperties.CONNECTOR_TRANSACTED_MESSAGE_RECEIVER_CLASS, props);
         xaTransactedMessageReceiver = removeProperty(MuleProperties.CONNECTOR_XA_TRANSACTED_MESSAGE_RECEIVER_CLASS, props);
         messageAdapter = removeProperty(MuleProperties.CONNECTOR_MESSAGE_ADAPTER, props);
-        messageCreator = removeProperty(MuleProperties.CONNECTOR_MESSAGE_CREATOR, props);
+        messageFactory = removeProperty(MuleProperties.CONNECTOR_MESSAGE_FACTORY, props);
         defaultInboundTransformer = removeProperty(MuleProperties.CONNECTOR_INBOUND_TRANSFORMER, props);
         defaultOutboundTransformer = removeProperty(MuleProperties.CONNECTOR_OUTBOUND_TRANSFORMER, props);
         defaultResponseTransformer = removeProperty(MuleProperties.CONNECTOR_RESPONSE_TRANSFORMER, props);
@@ -183,21 +183,21 @@ public class DefaultTransportServiceDescriptor extends AbstractServiceDescriptor
 
     public MuleMessage createMessage(Object payload, MuleContext muleContext) throws TransportServiceException
     {
-        if (messageCreator == null)
+        if (messageFactory == null)
         {
-            throw new TransportServiceException(CoreMessages.objectNotSetInService("Message Creator", getService()));
+            throw new TransportServiceException(CoreMessages.objectNotSetInService("Message Factory", getService()));
         }
         
         try
         {
-            MessageCreator creator = (MessageCreator) ClassUtils.instanciateClass(messageCreator, 
-                muleContext);
-            return creator.create(payload);
+            MuleMessageFactory factory = (MuleMessageFactory) ClassUtils.instanciateClass(
+                messageFactory, muleContext);
+            return factory.create(payload);
         }
         catch (Exception e)
         {
             throw new TransportServiceException(
-                CoreMessages.failedToCreateObjectWith("Message Creator", payload));
+                CoreMessages.failedToCreateObjectWith("Message Factory", payload));
         }
     }
 

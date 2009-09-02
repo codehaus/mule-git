@@ -13,13 +13,13 @@ package org.mule.api.transport;
 import org.mule.api.MuleMessage;
 
 /**
- * <code>MessageCreator</code> is a helper to create a {@link MuleMessage} from a transport's
+ * <code>MuleMessageFactory</code> is a helper to create a {@link MuleMessage} from a transport's
  * native message format (e.g. JMS message).
  */
-public interface MessageCreator
+public interface MuleMessageFactory
 {
     /**
-     * Create a new {@link MuleMessage} instance from <code>transportMessage</code> by copying
+     * Creates a {@link MuleMessage} instance from <code>transportMessage</code> by copying
      * its payload to the new {@link MuleMessage} and, if available, any relevant message properties
      * and attachments.
      */
