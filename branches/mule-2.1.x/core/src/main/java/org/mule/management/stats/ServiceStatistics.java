@@ -19,23 +19,23 @@ import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicLong;
 
 public class ServiceStatistics implements Statistics
 {
-    /**
-     * Serial version
-     */
-    private static final long serialVersionUID = -2086999226732861674L;
+    private static final long serialVersionUID = -2086999226732861675L;
 
     private String name;
     private AtomicLong receivedEventSync = new AtomicLong(0);
     private AtomicLong receivedEventASync = new AtomicLong(0);
-    private long queuedEvent = 0;
-    private long maxQueuedEvent = 0;
-    private long averageQueueSize = 0;
-    private long totalQueuedEvent = 0;
     private AtomicLong sentEventSync = new AtomicLong(0);
     private AtomicLong sentReplyToEvent = new AtomicLong(0);
     private AtomicLong sentEventASync = new AtomicLong(0);
     private AtomicLong executionError = new AtomicLong(0);
     private AtomicLong fatalError = new AtomicLong(0);
+
+    // these can't sensibly converted to AtomicLong as they are processed together
+    // in incQueuedEvent
+    private long queuedEvent = 0;
+    private long maxQueuedEvent = 0;
+    private long averageQueueSize = 0;
+    private long totalQueuedEvent = 0;
 
     private int threadPoolSize = 0;
     private long samplePeriod = 0;
