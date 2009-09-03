@@ -15,6 +15,8 @@ import org.mule.management.stats.printers.SimplePrinter;
 
 import java.io.PrintWriter;
 
+import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicLong;
+
 public class ServiceStatistics implements Statistics
 {
     /**
@@ -23,17 +25,17 @@ public class ServiceStatistics implements Statistics
     private static final long serialVersionUID = -2086999226732861674L;
 
     private String name;
-    private long receivedEventSync = 0;
-    private long receivedEventASync = 0;
+    private AtomicLong receivedEventSync = new AtomicLong(0);
+    private AtomicLong receivedEventASync = new AtomicLong(0);
     private long queuedEvent = 0;
     private long maxQueuedEvent = 0;
     private long averageQueueSize = 0;
     private long totalQueuedEvent = 0;
-    private long sentEventSync = 0;
-    private long sentReplyToEvent = 0;
-    private long sentEventASync = 0;
-    private long executionError = 0;
-    private long fatalError = 0;
+    private AtomicLong sentEventSync = new AtomicLong(0);
+    private AtomicLong sentReplyToEvent = new AtomicLong(0);
+    private AtomicLong sentEventASync = new AtomicLong(0);
+    private AtomicLong executionError = new AtomicLong(0);
+    private AtomicLong fatalError = new AtomicLong(0);
 
     private int threadPoolSize = 0;
     private long samplePeriod = 0;
@@ -86,39 +88,39 @@ public class ServiceStatistics implements Statistics
         }
     }
 
-    public synchronized void incReceivedEventSync()
+    public void incReceivedEventSync()
     {
-        receivedEventSync++;
+        receivedEventSync.addAndGet(1);
     }
 
-    public synchronized void incReceivedEventASync()
+    public void incReceivedEventASync()
     {
-        receivedEventASync++;
+        receivedEventASync.addAndGet(1);
     }
 
-    public synchronized void incExecutionError()
+    public void incExecutionError()
     {
-        executionError++;
+        executionError.addAndGet(1);
     }
 
-    public synchronized void incFatalError()
+    public void incFatalError()
     {
-        fatalError++;
+        fatalError.addAndGet(1);
     }
 
-    public synchronized void incSentEventSync()
+    public void incSentEventSync()
     {
-        sentEventSync++;
+        sentEventSync.addAndGet(1);
     }
 
-    public synchronized void incSentEventASync()
+    public void incSentEventASync()
     {
-        sentEventASync++;
+        sentEventASync.addAndGet(1);
     }
 
-    public synchronized void incSentReplyToEvent()
+    public void incSentReplyToEvent()
     {
-        sentReplyToEvent++;
+        sentReplyToEvent.addAndGet(1);
     }
 
     public synchronized void incQueuedEvent()
@@ -129,7 +131,7 @@ public class ServiceStatistics implements Statistics
         {
             maxQueuedEvent = queuedEvent;
         }
-        averageQueueSize = Math.round(receivedEventASync / totalQueuedEvent);
+        averageQueueSize = Math.round(receivedEventASync.get() / totalQueuedEvent);
     }
 
     public synchronized void decQueuedEvent()
@@ -160,9 +162,9 @@ public class ServiceStatistics implements Statistics
         return componentStat.getMaxExecutionTime();
     }
 
-    public synchronized long getFatalErrors()
+    public long getFatalErrors()
     {
-        return fatalError;
+        return fatalError.get();
     }
 
     /**
@@ -186,29 +188,29 @@ public class ServiceStatistics implements Statistics
         return queuedEvent;
     }
 
-    public synchronized long getAsyncEventsReceived()
+    public long getAsyncEventsReceived()
     {
-        return receivedEventASync;
+        return receivedEventASync.get();
     }
 
-    public synchronized long getSyncEventsReceived()
+    public long getSyncEventsReceived()
     {
-        return receivedEventSync;
+        return receivedEventSync.get();
     }
 
-    public synchronized long getReplyToEventsSent()
+    public long getReplyToEventsSent()
     {
-        return sentReplyToEvent;
+        return sentReplyToEvent.get();
     }
 
-    public synchronized long getSyncEventsSent()
+    public long getSyncEventsSent()
     {
-        return sentEventSync;
+        return sentEventSync.get();
     }
 
-    public synchronized long getAsyncEventsSent()
+    public long getAsyncEventsSent()
     {
-        return sentEventASync;
+        return sentEventASync.get();
     }
 
     public long getTotalEventsSent()
@@ -226,9 +228,9 @@ public class ServiceStatistics implements Statistics
         return componentStat.getExecutedEvents();
     }
 
-    public synchronized long getExecutionErrors()
+    public long getExecutionErrors()
     {
-        return executionError;
+        return executionError.get();
     }
 
     public synchronized String getName()
@@ -253,19 +255,19 @@ public class ServiceStatistics implements Statistics
 
     public synchronized void clear()
     {
-        receivedEventSync = 0;
-        receivedEventASync = 0;
+        receivedEventSync.set(0);
+        receivedEventASync.set(0);
         queuedEvent = 0;
         maxQueuedEvent = 0;
         totalQueuedEvent = 0;
         averageQueueSize = 0;
 
-        sentEventSync = 0;
-        sentEventASync = 0;
-        sentReplyToEvent = 0;
+        sentEventSync.set(0);
+        sentEventASync.set(0);
+        sentReplyToEvent.set(0);
 
-        executionError = 0;
-        fatalError = 0;
+        executionError.set(0);
+        fatalError.set(0);
 
         if (getInboundRouterStat() != null)
         {
