@@ -20,6 +20,6 @@ public class MuleClientRemotingHttpTestCase extends AbstractClientRemotingTestCa
 
     public String getRemoteEndpointUri()
     {
-        return "http://localhost:60505";
+        return "http://localhost:60505?remoteSyncTimeout=30000";
     }
 }
