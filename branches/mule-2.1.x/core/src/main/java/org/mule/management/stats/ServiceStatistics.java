@@ -129,7 +129,7 @@ public class ServiceStatistics implements Statistics
         {
             maxQueuedEvent = queuedEvent;
         }
-        averageQueueSize = Math.round(getAsyncEventsReceived() / totalQueuedEvent);
+        averageQueueSize = Math.round(receivedEventASync / totalQueuedEvent);
     }
 
     public synchronized void decQueuedEvent()
