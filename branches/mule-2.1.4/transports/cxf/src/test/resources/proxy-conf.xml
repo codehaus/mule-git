@@ -6,7 +6,6 @@
        xmlns:cxf-core="http://cxf.apache.org/core"
        xmlns:mule-xml="http://www.mulesource.org/schema/mule/xml/2.1"
        xmlns:vm="http://www.mulesource.org/schema/mule/vm/2.1"
-       xmlns:http="http://www.mulesource.org/schema/mule/http/2.1"
        xmlns:test="http://www.mulesource.org/schema/mule/test/2.1"
        xsi:schemaLocation="
                http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
@@ -14,13 +13,10 @@
                http://www.mulesource.org/schema/mule/cxf/2.1 http://www.mulesource.org/schema/mule/cxf/2.1/mule-cxf.xsd
                http://www.mulesource.org/schema/mule/xml/2.1 http://www.mulesource.org/schema/mule/xml/2.1/mule-xml.xsd
                http://www.mulesource.org/schema/mule/vm/2.1 http://www.mulesource.org/schema/mule/vm/2.1/mule-vm.xsd
-               http://www.mulesource.org/schema/mule/http/2.1 http://www.mulesource.org/schema/mule/http/2.1/mule-http.xsd
                http://www.mulesource.org/schema/mule/test/2.1 http://www.mulesource.org/schema/mule/test/2.1/mule-test.xsd
                http://cxf.apache.org/core http://cxf.apache.org/schemas/core.xsd">
 
     <mule-xml:xslt-transformer xsl-file="proxy.xsl" name="TestXslt" returnClass="org.mule.module.xml.transformer.DelayedResult"/>
-
-    <http:connector name="httpConnector" clientSoTimeout="30000"/>
 
     <model name="BridgeTest">
     
