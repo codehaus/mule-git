@@ -13,7 +13,6 @@ package org.mule.model.seda;
 import org.mule.DefaultMuleEvent;
 import org.mule.DefaultMuleMessage;
 import org.mule.FailedToQueueEventException;
-import org.mule.OptimizedRequestContext;
 import org.mule.RequestContext;
 import org.mule.api.ExceptionPayload;
 import org.mule.api.MessagingException;
@@ -84,11 +83,6 @@ public class SedaService extends AbstractService implements Work, WorkListener
     
     protected Queue queue;
 
-    /**
-     * A guarding object for queue statistics enqueue/dequeueing.
-     */
-    private final Object queueStatsGuard = new Object();
-
     /** For Spring only */
     public SedaService()
     {
@@ -103,6 +97,7 @@ public class SedaService extends AbstractService implements Work, WorkListener
      * @throws org.mule.api.lifecycle.InitialisationException if the service fails
      *             to initialise
      */
+    @Override
     protected synchronized void doInitialise() throws InitialisationException
     {
         if (threadingProfile == null)
@@ -154,11 +149,13 @@ public class SedaService extends AbstractService implements Work, WorkListener
         }
     }
 
+    @Override
     protected void doForceStop() throws MuleException
     {
         doStop();
     }
 
+    @Override
     protected void doStop() throws MuleException
     {
         // Resume if paused. (This is required to unblock the "ticker" thread)
@@ -182,6 +179,7 @@ public class SedaService extends AbstractService implements Work, WorkListener
         workManager.dispose();
     }
 
+    @Override
     protected void doStart() throws MuleException
     {
         try
@@ -196,6 +194,7 @@ public class SedaService extends AbstractService implements Work, WorkListener
         }
     }
 
+    @Override
     protected void doDispose()
     {
         queue = null;
@@ -206,6 +205,7 @@ public class SedaService extends AbstractService implements Work, WorkListener
         }
     }
 
+    @Override
     protected void doDispatch(MuleEvent event) throws MuleException
     {
         if (logger.isDebugEnabled())
@@ -219,17 +219,9 @@ public class SedaService extends AbstractService implements Work, WorkListener
         {
             if (stats.isEnabled())
             {
-                enqueue(event);
-                synchronized (queueStatsGuard)
-                {
-                    stats.incQueuedEvent();
-                }
+                stats.incQueuedEvent();
             }
-            else
-            {
-                // just enqueue without any hit for synchronization
-                enqueue(event);
-            }
+            enqueue(event);
         }
         catch (Exception e)
         {
@@ -244,6 +236,7 @@ public class SedaService extends AbstractService implements Work, WorkListener
         }
     }
 
+    @Override
     protected MuleMessage doSend(MuleEvent event) throws MuleException
     {
         MuleMessage result = null;
@@ -353,25 +346,14 @@ public class SedaService extends AbstractService implements Work, WorkListener
                     }
                 }
 
-                if (stats.isEnabled())
-                {
-                    event = (DefaultMuleEvent) dequeue();
-                    if (event != null)
-                    {
-                        synchronized (queueStatsGuard)
-                        {
-                            stats.decQueuedEvent();
-                        }
-                    }
-                }
-                else
-                {
-                    // just dequeue without any hit for synchronization
-                    event = (DefaultMuleEvent) dequeue();
-                }
-
+                event = (DefaultMuleEvent) dequeue();
                 if (event != null)
                 {
+                    if (stats.isEnabled())
+                    {
+                        stats.decQueuedEvent();
+                    }
+
                     if (logger.isDebugEnabled())
                     {
                         logger.debug(MessageFormat.format("Service: {0} dequeued event on: {1}",
@@ -506,6 +488,7 @@ public class SedaService extends AbstractService implements Work, WorkListener
         }
     }
 
+    @Override
     protected ServiceStatistics createStatistics()
     {
         return new ServiceStatistics(getName(), threadingProfile.getMaxThreadsActive());
@@ -556,6 +539,7 @@ public class SedaService extends AbstractService implements Work, WorkListener
         this.workManager = workManager;
     }
 
+    @Override
     protected void dispatchToOutboundRouter(MuleEvent event, MuleMessage result) throws MessagingException
     {
         super.dispatchToOutboundRouter(event, result);
