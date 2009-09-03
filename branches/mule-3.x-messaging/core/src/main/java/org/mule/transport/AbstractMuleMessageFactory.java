@@ -1,0 +1,47 @@
+/*
+ * $Id$
+ * --------------------------------------------------------------------------------------
+ * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
+ *
+ * The software in this package is published under the terms of the CPAL v1.0
+ * license, a copy of which has been included with this distribution in the
+ * LICENSE.txt file.
+ */
+
+package org.mule.transport;
+
+import org.mule.DefaultMuleMessage;
+import org.mule.api.MuleContext;
+import org.mule.api.MuleMessage;
+import org.mule.api.transport.MessageTypeNotSupportedException;
+import org.mule.api.transport.MuleMessageFactory;
+
+public abstract class AbstractMuleMessageFactory implements MuleMessageFactory
+{
+    protected MuleContext muleContext;
+
+    public AbstractMuleMessageFactory(MuleContext context)
+    {
+        super();
+        muleContext = context;
+    }
+
+    public MuleMessage create(Object transportMessage) throws Exception
+    {
+        if (transportMessage == null)
+        {
+            return new DefaultMuleMessage(NullPayload.getInstance(), muleContext);
+        }
+        
+        return doCreate(transportMessage);
+    }
+    
+    protected void cannotHandlePayload(Object transportMessage) throws MessageTypeNotSupportedException
+    {
+        throw new MessageTypeNotSupportedException(transportMessage, getClass());
+    }
+    
+    protected abstract MuleMessage doCreate(Object transportMessage) throws Exception;
+}
+
+

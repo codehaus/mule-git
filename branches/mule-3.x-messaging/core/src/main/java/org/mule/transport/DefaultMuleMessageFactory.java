@@ -13,25 +13,17 @@ package org.mule.transport;
 import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleMessage;
-import org.mule.api.transport.MuleMessageFactory;
 
-public class DefaultMuleMessageFactory implements MuleMessageFactory
+public class DefaultMuleMessageFactory extends AbstractMuleMessageFactory
 {
-    private MuleContext muleContext;
-
     public DefaultMuleMessageFactory(MuleContext context)
     {
-        super();
-        muleContext = context;
+        super(context);
     }
     
-    public MuleMessage create(Object transportMessage) throws Exception
+    @Override
+    protected MuleMessage doCreate(Object transportMessage) throws Exception
     {
-        if (transportMessage == null)
-        {
-            transportMessage = NullPayload.getInstance();
-        }
-        
         return new DefaultMuleMessage(transportMessage, muleContext);
     }
 }

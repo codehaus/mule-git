@@ -71,7 +71,7 @@ public abstract class AbstractConnectorTestCase extends AbstractMuleTestCase
         return muleContext.getRegistry().lookupConnector(connectorName);
     }
     
-    private Connector getConnectorAndAssert()
+    protected Connector getConnectorAndAssert()
     {
         Connector connector = getConnector();
         assertNotNull(connector);
