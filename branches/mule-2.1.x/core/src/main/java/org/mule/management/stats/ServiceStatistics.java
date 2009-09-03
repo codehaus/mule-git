@@ -22,13 +22,13 @@ public class ServiceStatistics implements Statistics
     private static final long serialVersionUID = -2086999226732861675L;
 
     private String name;
-    private AtomicLong receivedEventSync = new AtomicLong(0);
-    private AtomicLong receivedEventASync = new AtomicLong(0);
-    private AtomicLong sentEventSync = new AtomicLong(0);
-    private AtomicLong sentReplyToEvent = new AtomicLong(0);
-    private AtomicLong sentEventASync = new AtomicLong(0);
-    private AtomicLong executionError = new AtomicLong(0);
-    private AtomicLong fatalError = new AtomicLong(0);
+    private final AtomicLong receivedEventSync = new AtomicLong(0);
+    private final AtomicLong receivedEventASync = new AtomicLong(0);
+    private final AtomicLong sentEventSync = new AtomicLong(0);
+    private final AtomicLong sentReplyToEvent = new AtomicLong(0);
+    private final AtomicLong sentEventASync = new AtomicLong(0);
+    private final AtomicLong executionError = new AtomicLong(0);
+    private final AtomicLong fatalError = new AtomicLong(0);
 
     // these can't sensibly converted to AtomicLong as they are processed together
     // in incQueuedEvent
