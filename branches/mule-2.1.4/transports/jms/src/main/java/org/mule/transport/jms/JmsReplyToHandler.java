@@ -17,11 +17,11 @@ import org.mule.api.transaction.Transaction;
 import org.mule.api.transformer.Transformer;
 import org.mule.api.transport.DispatchException;
 import org.mule.service.AbstractService;
+import org.mule.transaction.TransactionCoordination;
 import org.mule.transport.DefaultReplyToHandler;
 import org.mule.transport.jms.i18n.JmsMessages;
 import org.mule.util.StringMessageUtils;
 import org.mule.util.StringUtils;
-import org.mule.transaction.TransactionCoordination;
 
 import java.util.Iterator;
 import java.util.List;
@@ -119,6 +119,8 @@ public class JmsReplyToHandler extends DefaultReplyToHandler
             String correlationIDString = (String)eventMsg.getProperty(JmsConstants.JMS_MESSAGE_ID);
             replyToMessage.setJMSCorrelationID(correlationIDString);
             
+            ((AbstractService) event.getService()).getStatistics().incSentReplyToEvent();
+
             if (ttlString == null && priorityString == null && persistentDeliveryString == null)
             {
                 connector.getJmsSupport().send(replyToProducer, replyToMessage, topic);
@@ -145,7 +147,6 @@ public class JmsReplyToHandler extends DefaultReplyToHandler
             }
 
             logger.info("Reply Message sent to: " + replyToDestination);
-            ((AbstractService) event.getService()).getStatistics().incSentReplyToEvent();
         }
         catch (Exception e)
         {
