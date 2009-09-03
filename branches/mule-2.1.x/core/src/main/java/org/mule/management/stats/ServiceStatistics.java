@@ -48,11 +48,6 @@ public class ServiceStatistics implements Statistics
         this(name, 0);
     }
 
-    /**
-     * The constructor
-     *
-     * @param name
-     */
     public ServiceStatistics(String name, int threadPoolSize)
     {
         super();
@@ -134,9 +129,7 @@ public class ServiceStatistics implements Statistics
         {
             maxQueuedEvent = queuedEvent;
         }
-        // if(queuedEvent > 1) {
         averageQueueSize = Math.round(getAsyncEventsReceived() / totalQueuedEvent);
-        // }
     }
 
     public synchronized void decQueuedEvent()
@@ -149,33 +142,31 @@ public class ServiceStatistics implements Statistics
         return componentStat.getAverageExecutionTime();
     }
 
-    public long getAverageQueueSize()
+    public synchronized long getAverageQueueSize()
     {
         return averageQueueSize;
     }
 
-    public long getMaxQueueSize()
+    public synchronized long getMaxQueueSize()
     {
         return maxQueuedEvent;
     }
 
     /**
      * @deprecated
-     * @return
      */
     public long getMaxExecutionTime()
     {
         return componentStat.getMaxExecutionTime();
     }
 
-    public long getFatalErrors()
+    public synchronized long getFatalErrors()
     {
         return fatalError;
     }
 
     /**
      * @deprecated
-     * @return
      */
     public long getMinExecutionTime()
     {
@@ -184,39 +175,38 @@ public class ServiceStatistics implements Statistics
 
     /**
      * @deprecated
-     * @return
      */
     public long getTotalExecutionTime()
     {
         return componentStat.getTotalExecutionTime();
     }
 
-    public long getQueuedEvents()
+    public synchronized long getQueuedEvents()
     {
         return queuedEvent;
     }
 
-    public long getAsyncEventsReceived()
+    public synchronized long getAsyncEventsReceived()
     {
         return receivedEventASync;
     }
 
-    public long getSyncEventsReceived()
+    public synchronized long getSyncEventsReceived()
     {
         return receivedEventSync;
     }
 
-    public long getReplyToEventsSent()
+    public synchronized long getReplyToEventsSent()
     {
         return sentReplyToEvent;
     }
 
-    public long getSyncEventsSent()
+    public synchronized long getSyncEventsSent()
     {
         return sentEventSync;
     }
 
-    public long getAsyncEventsSent()
+    public synchronized long getAsyncEventsSent()
     {
         return sentEventASync;
     }
@@ -236,7 +226,7 @@ public class ServiceStatistics implements Statistics
         return componentStat.getExecutedEvents();
     }
 
-    public long getExecutionErrors()
+    public synchronized long getExecutionErrors()
     {
         return executionError;
     }
@@ -251,9 +241,6 @@ public class ServiceStatistics implements Statistics
         this.name = name;
     }
 
-    /**
-     * log in info level the main statistics
-     */
     public void logSummary()
     {
         logSummary(new SimplePrinter(System.out));
@@ -290,54 +277,35 @@ public class ServiceStatistics implements Statistics
         }
 
         samplePeriod = System.currentTimeMillis();
-
     }
 
-    /**
-     * @return Returns the inboundRouterStat.
-     */
     public RouterStatistics getInboundRouterStat()
     {
         return inboundRouterStat;
     }
 
-    /**
-     * @param inboundRouterStat The inboundRouterStat to set.
-     */
     public void setInboundRouterStat(RouterStatistics inboundRouterStat)
     {
         this.inboundRouterStat = inboundRouterStat;
         this.inboundRouterStat.setEnabled(enabled);
     }
 
-    /**
-     * @return Returns the outboundRouterStat.
-     */
     public RouterStatistics getOutboundRouterStat()
     {
         return outboundRouterStat;
     }
 
-    /**
-     * @param outboundRouterStat The outboundRouterStat to set.
-     */
     public void setOutboundRouterStat(RouterStatistics outboundRouterStat)
     {
         this.outboundRouterStat = outboundRouterStat;
         this.outboundRouterStat.setEnabled(enabled);
     }
     
-    /**
-     * @return Returns the outboundRouterStat.
-     */
     public ComponentStatistics getComponentStat()
     {
         return componentStat;
     }
 
-    /**
-     * @param outboundRouterStat The outboundRouterStat to set.
-     */
     public void setComponentStat(ComponentStatistics componentStat)
     {
         this.componentStat = componentStat;
