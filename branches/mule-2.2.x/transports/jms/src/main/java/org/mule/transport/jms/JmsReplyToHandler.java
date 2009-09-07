@@ -126,8 +126,6 @@ public class JmsReplyToHandler extends DefaultReplyToHandler
 
             ((AbstractService) event.getService()).getStatistics().incSentReplyToEvent();
 
-            ((AbstractService) event.getService()).getStatistics().incSentReplyToEvent();
-
             if (ttlString == null && priorityString == null && persistentDeliveryString == null)
             {
                 connector.getJmsSupport().send(replyToProducer, replyToMessage, topic);
