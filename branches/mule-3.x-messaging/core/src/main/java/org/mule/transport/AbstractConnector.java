@@ -37,6 +37,7 @@ import org.mule.api.retry.RetryCallback;
 import org.mule.api.retry.RetryContext;
 import org.mule.api.retry.RetryPolicyTemplate;
 import org.mule.api.service.Service;
+import org.mule.api.transformer.Transformer;
 import org.mule.api.transport.Connectable;
 import org.mule.api.transport.Connector;
 import org.mule.api.transport.ConnectorException;
@@ -1352,7 +1353,7 @@ public abstract class AbstractConnector
      */
     protected abstract void doStop() throws MuleException;
 
-    public List getDefaultInboundTransformers()
+    public List<Transformer> getDefaultInboundTransformers()
     {
         if (serviceDescriptor == null)
         {
@@ -1361,7 +1362,7 @@ public abstract class AbstractConnector
         return TransformerUtils.getDefaultInboundTransformers(serviceDescriptor);
     }
 
-    public List getDefaultResponseTransformers()
+    public List<Transformer> getDefaultResponseTransformers()
     {
         if (serviceDescriptor == null)
         {
@@ -1370,7 +1371,7 @@ public abstract class AbstractConnector
         return TransformerUtils.getDefaultResponseTransformers(serviceDescriptor);
     }
 
-    public List getDefaultOutboundTransformers()
+    public List<Transformer> getDefaultOutboundTransformers()
     {
         if (serviceDescriptor == null)
         {
