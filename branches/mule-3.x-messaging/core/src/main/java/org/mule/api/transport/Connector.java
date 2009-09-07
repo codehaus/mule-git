@@ -87,7 +87,7 @@ public interface Connector extends Lifecycle, MuleContextAware, NamedObject
     /**
      * Gets a {@link MuleMessage} from the connector for the given payload.
      */
-    MuleMessage getMessage(Object payload) throws MessagingException;
+    MuleMessage getMessage(Object payload) throws MessagingException, MessageTypeNotSupportedException;
     
     /**
      * @return the primary protocol name for endpoints of this connector
