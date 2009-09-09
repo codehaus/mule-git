@@ -708,7 +708,7 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
         }
         else if (logger.isDebugEnabled())
         {
-            logger.debug("Producer is null, nothis to close");
+            logger.debug("Producer is null, nothing to close");
         }
     }
 
