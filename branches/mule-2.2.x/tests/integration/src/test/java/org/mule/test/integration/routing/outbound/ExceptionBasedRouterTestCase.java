@@ -14,7 +14,9 @@ import org.mule.api.MuleMessage;
 import org.mule.module.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ExceptionBasedRouterTestCase extends FunctionalTestCase
@@ -25,7 +27,7 @@ public class ExceptionBasedRouterTestCase extends FunctionalTestCase
         return "org/mule/test/integration/routing/outbound/exception-based-router.xml";
     }
 
-    public void testStaticEndpoints() throws Exception
+    public void testStaticEndpointsByName() throws Exception
     {
         MuleClient client = new MuleClient();
         
@@ -34,13 +36,37 @@ public class ExceptionBasedRouterTestCase extends FunctionalTestCase
         assertEquals("success", reply.getPayload());
     }
 
-    public void testDynamicEndpoints() throws Exception
+    public void testStaticEndpointsByURI() throws Exception
+    {
+        MuleClient client = new MuleClient();
+        
+        MuleMessage reply = client.send("vm://in2", "request", null);
+        assertNotNull(reply);
+        assertEquals("success", reply.getPayload());
+    }
+
+    public void testDynamicEndpointsByName() throws Exception
     {
         MuleClient client = new MuleClient();
         
         Map props = new HashMap();
         props.put("recipients", "service1,service2,service3");
-        MuleMessage reply = client.send("vm://in2", "request", props);
+        MuleMessage reply = client.send("vm://in3", "request", props);
+        assertNotNull(reply);
+        assertEquals("success", reply.getPayload());
+    }
+
+    public void testDynamicEndpointsByURI() throws Exception
+    {
+        MuleClient client = new MuleClient();
+        
+        Map props = new HashMap();
+        List recipients = new ArrayList();
+        recipients.add("vm://service4?responseTransformers=validateResponse");
+        recipients.add("vm://service5?responseTransformers=validateResponse");
+        recipients.add("vm://service6?responseTransformers=validateResponse");
+        props.put("recipients", recipients);
+        MuleMessage reply = client.send("vm://in3", "request", props);
         assertNotNull(reply);
         assertEquals("success", reply.getPayload());
     }

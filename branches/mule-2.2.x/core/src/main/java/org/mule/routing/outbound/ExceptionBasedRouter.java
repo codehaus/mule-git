@@ -101,6 +101,10 @@ public class ExceptionBasedRouter extends ExpressionRecipientList
                 try
                 {
                     result = send(session, message, endpoint);
+                    if (result != null)
+                    {
+                        result.applyTransformers(endpoint.getResponseTransformers());
+                    }
                     if (!exceptionPayloadAvailable(result))
                     {
                         if (logger.isDebugEnabled())
