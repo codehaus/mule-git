@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesource.org/schema/mule/core/2.2"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:vm="http://www.mulesource.org/schema/mule/vm/2.2"
+       xmlns:test="http://www.mulesource.org/schema/mule/test/2.2"
+    xsi:schemaLocation="
+       http://www.mulesource.org/schema/mule/core/2.2 http://www.mulesource.org/schema/mule/core/2.2/mule.xsd
+       http://www.mulesource.org/schema/mule/vm/2.2 http://www.mulesource.org/schema/mule/vm/2.2/mule-vm.xsd
+       http://www.mulesource.org/schema/mule/test/2.2 http://www.mulesource.org/schema/mule/test/2.2/mule-test.xsd">
+
+    <endpoint name="service1" address="vm://service1" synchronous="true" responseTransformer-refs="validateResponse" />
+    <endpoint name="service2" address="vm://service2" synchronous="true" responseTransformer-refs="validateResponse" />
+    <endpoint name="service3" address="vm://service3" synchronous="true" responseTransformer-refs="validateResponse" />
+
+	<custom-transformer name="validateResponse" class="org.mule.tck.transformer.ValidateResponse" />
+	
+    <model>
+        <service name="StaticEndpoints">
+            <inbound>
+                <vm:inbound-endpoint path="in1" />
+            </inbound>
+            <outbound>
+            	<exception-based-router>
+            		<outbound-endpoint ref="service1" />
+            		<outbound-endpoint ref="service2" />
+            		<outbound-endpoint ref="service2" />
+            	</exception-based-router>
+            </outbound>
+        </service>
+
+        <service name="DynamicEndpoints">
+            <inbound>
+                <vm:inbound-endpoint path="in2" />
+            </inbound>
+            <outbound>
+            	<recipient-list-exception-based-router evaluator="header" expression="recipients" />
+            </outbound>
+        </service>
+
+        <service name="Service1">
+            <inbound>
+                <inbound-endpoint ref="service1" />
+            </inbound>
+            <test:component>
+            	<test:return-data>error</test:return-data>
+            </test:component>
+        </service>
+
+        <service name="Service2">
+            <inbound>
+                <inbound-endpoint ref="service2" />
+            </inbound>
+            <test:component>
+            	<test:return-data>success</test:return-data>
+            </test:component>
+        </service>
+
+        <service name="Service3">
+            <inbound>
+                <inbound-endpoint ref="service3" />
+            </inbound>
+            <test:component>
+            	<test:return-data>error</test:return-data>
+            </test:component>
+        </service>
+    </model>
+</mule>
