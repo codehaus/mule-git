@@ -16,12 +16,17 @@ import org.mule.api.MuleMessage;
 import org.mule.api.MuleSession;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.endpoint.OutboundEndpoint;
+import org.mule.api.expression.RequiredValueException;
 import org.mule.api.routing.CouldNotRouteOutboundMessageException;
 import org.mule.api.routing.RoutePathNotFoundException;
 import org.mule.api.routing.RoutingException;
 import org.mule.config.ExceptionHelper;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.transaction.TransactionTemplate;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * <code>ExceptionBasedRouter</code> Will send the current event to the first
@@ -30,18 +35,36 @@ import org.mule.transaction.TransactionTemplate;
  * endpoint and force the sync mode for all endpoints except the last one.
  */
 
-public class ExceptionBasedRouter extends FilteringOutboundRouter
+public class ExceptionBasedRouter extends ExpressionRecipientList
 {
-
+    @Override
     public MuleMessage route(MuleMessage message, MuleSession session)
         throws RoutingException
     {
-        if (endpoints == null || endpoints.size() == 0)
+        List recipients = null;
+        try
+        {
+            recipients = getRecipients(message);
+        }
+        catch (RequiredValueException e)
+        {
+            // ignore because the recipient list is optional for this router
+        }
+
+        if (recipients == null)
+        {
+            int endpointsCount = endpoints.size();
+            recipients = new ArrayList(endpointsCount);
+            for (int i = 0; i < endpointsCount; i++)
+            {
+                recipients.add(getEndpoint(i, message));
+            }
+        }        
+        
+        if (recipients == null || recipients.size() == 0)
         {
             throw new RoutePathNotFoundException(CoreMessages.noEndpointsForRouter(), message, null);
         }
-
-        final int endpointsCount = endpoints.size();
 
         if (enableCorrelation != ENABLE_CORRELATION_NEVER)
         {
@@ -53,7 +76,7 @@ public class ExceptionBasedRouter extends FilteringOutboundRouter
             else
             {
                 // the correlationId will be set by the AbstractOutboundRouter
-                message.setCorrelationGroupSize(endpointsCount);
+                message.setCorrelationGroupSize(recipients.size());
             }
         }
 
@@ -62,58 +85,54 @@ public class ExceptionBasedRouter extends FilteringOutboundRouter
         OutboundEndpoint endpoint = null;
         boolean success = false;
 
-        synchronized (endpoints)
+        for (Iterator iterator = recipients.iterator(); iterator.hasNext();)
         {
-            for (int i = 0; i < endpointsCount; i++)
+            endpoint = getRecipientEndpoint(message, iterator.next());
+            boolean lastEndpoint = !iterator.hasNext();
+
+            if (!lastEndpoint)
             {
-                // apply endpoint URI templates if any
-                endpoint = getEndpoint(i, message);
-                boolean lastEndpoint = (i == endpointsCount - 1);
+                logger.info("Sync mode will be forced for " + endpoint.getEndpointURI()
+                            + ", as there are more endpoints available.");
+            }
 
-                if (!lastEndpoint)
+            if (!lastEndpoint || endpoint.isSynchronous())
+            {
+                try
                 {
-                    logger.info("Sync mode will be forced for " + endpoint.getEndpointURI()
-                                + ", as there are more endpoints available.");
-                }
-
-                if (!lastEndpoint || endpoint.isSynchronous())
-                {
-                    try
+                    result = send(session, message, endpoint);
+                    if (!exceptionPayloadAvailable(result))
                     {
-                        result = send(session, message, endpoint);
-                        if (!exceptionPayloadAvailable(result))
+                        if (logger.isDebugEnabled())
                         {
-                            if (logger.isDebugEnabled())
-                            {
-                                logger.debug("Successful invocation detected, stopping further processing.");
-                            }
-                            success = true;
-                            break;
+                            logger.debug("Successful invocation detected, stopping further processing.");
                         }
-                    }
-                    catch (MuleException e)
-                    {
-                        if(logger.isWarnEnabled())
-                        {
-                            Throwable t = ExceptionHelper.getRootException(e);
-                            logger.warn("Failed to send to endpoint: " + endpoint.getEndpointURI().toString()
-                                    + ". Error was: " + t + ". Trying next endpoint", t);
-                        }
-                    }
-                }
-                else
-                {
-                    try
-                    {
-                        dispatch(session, message, endpoint);
                         success = true;
                         break;
                     }
-                    catch (MuleException e)
+                }
+                catch (MuleException e)
+                {
+                    if(logger.isWarnEnabled())
                     {
-                        logger.info("Failed to dispatch to endpoint: " + endpoint.getEndpointURI().toString()
-                                    + ". Error was: " + e.getMessage() + ". Trying next endpoint");
+                        Throwable t = ExceptionHelper.getRootException(e);
+                        logger.warn("Failed to send to endpoint: " + endpoint.getEndpointURI().toString()
+                                + ". Error was: " + t + ". Trying next endpoint", t);
                     }
+                }
+            }
+            else
+            {
+                try
+                {
+                    dispatch(session, message, endpoint);
+                    success = true;
+                    break;
+                }
+                catch (MuleException e)
+                {
+                    logger.info("Failed to dispatch to endpoint: " + endpoint.getEndpointURI().toString()
+                                + ". Error was: " + e.getMessage() + ". Trying next endpoint");
                 }
             }
         }
@@ -125,18 +144,6 @@ public class ExceptionBasedRouter extends FilteringOutboundRouter
 
         return result;
     }
-
-//    public void addEndpoint(Endpoint endpoint)
-//    {
-//        if (!endpoint.isRemoteSync())
-//        {
-//            logger.debug("Endpoint: "
-//                         + endpoint.getEndpointURI()
-//                         + " registered on ExceptionBasedRouter needs to be RemoteSync enabled. Setting this property now.");
-//            endpoint.setRemoteSync(true);
-//        }
-//        super.addEndpoint(endpoint);
-//    }
 
     /**
      * @param message message to check
@@ -161,6 +168,7 @@ public class ExceptionBasedRouter extends FilteringOutboundRouter
         }
     }
     
+    @Override
     protected TransactionTemplate createTransactionTemplate(MuleSession session, ImmutableEndpoint endpoint)
     {
         return new TransactionTemplate(endpoint.getTransactionConfig(), null, muleContext);

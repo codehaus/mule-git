@@ -32,7 +32,6 @@ import java.util.List;
 
 public class ExceptionBasedRouterTestCase extends AbstractMuleTestCase
 {
-
     /**
      * Multiple endpoints, no failures. MuleEvent dispatched asynchronously, but forced
      * into sync mode. Test case ends here.
@@ -58,6 +57,7 @@ public class ExceptionBasedRouterTestCase extends AbstractMuleTestCase
             .getOutboundEndpoint("test://Dummy3");
 
         ExceptionBasedRouter router = new ExceptionBasedRouter();
+        router.setMuleContext(muleContext);
         RegExFilter filter = new RegExFilter("(.*) event");
         router.setFilter(filter);
         List endpoints = new ArrayList();
@@ -101,6 +101,7 @@ public class ExceptionBasedRouterTestCase extends AbstractMuleTestCase
             .getOutboundEndpoint("test://Dummy3?synchronous=true");
 
         ExceptionBasedRouter router = new ExceptionBasedRouter();
+        router.setMuleContext(muleContext);
         RegExFilter filter = new RegExFilter("(.*) event");
         router.setFilter(filter);
         List endpoints = new ArrayList();
@@ -140,6 +141,7 @@ public class ExceptionBasedRouterTestCase extends AbstractMuleTestCase
             .getOutboundEndpoint("test://AlwaysFail");
 
         ExceptionBasedRouter router = new ExceptionBasedRouter();
+        router.setMuleContext(muleContext);
         RegExFilter filter = new RegExFilter("(.*) event");
         router.setFilter(filter);
         List endpoints = new ArrayList();
@@ -188,6 +190,7 @@ public class ExceptionBasedRouterTestCase extends AbstractMuleTestCase
         OutboundEndpoint endpoint2 = getTestOutboundEndpoint("TestSuccessEndpoint", "test://Success?synchronous=true");
 
         ExceptionBasedRouter router = new ExceptionBasedRouter();
+        router.setMuleContext(muleContext);
         router.addEndpoint(endpoint1);
         router.addEndpoint(endpoint2);
 
@@ -223,6 +226,7 @@ public class ExceptionBasedRouterTestCase extends AbstractMuleTestCase
         OutboundEndpoint endpoint2 = getTestOutboundEndpoint("TestSuccessEndpoint", "test://Success?synchronous=false");
 
         ExceptionBasedRouter router = new ExceptionBasedRouter();
+        router.setMuleContext(muleContext);
         router.addEndpoint(endpoint1);
         router.addEndpoint(endpoint2);
 
@@ -257,6 +261,7 @@ public class ExceptionBasedRouterTestCase extends AbstractMuleTestCase
         OutboundEndpoint endpoint2 = getTestOutboundEndpoint("TestSuccessEndpoint", "test://Success?synchronous=true");
 
         ExceptionBasedRouter router = new ExceptionBasedRouter();
+        router.setMuleContext(muleContext);
         router.addEndpoint(endpoint1);
         router.addEndpoint(endpoint2);
 
