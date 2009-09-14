@@ -10,6 +10,7 @@
 
 package org.mule.routing.outbound;
 
+import org.mule.DefaultMuleMessage;
 import org.mule.api.ExceptionPayload;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
@@ -81,13 +82,14 @@ public class ExceptionBasedRouter extends ExpressionRecipientList
         }
 
         MuleMessage result = null;
-        // need that ref for an error message
         OutboundEndpoint endpoint = null;
+        MuleMessage request = null;
         boolean success = false;
 
         for (Iterator iterator = recipients.iterator(); iterator.hasNext();)
         {
-            endpoint = getRecipientEndpoint(message, iterator.next());
+            request = new DefaultMuleMessage(message.getPayload(), message);
+            endpoint = getRecipientEndpoint(request, iterator.next());
             boolean lastEndpoint = !iterator.hasNext();
 
             if (!lastEndpoint)
@@ -100,7 +102,7 @@ public class ExceptionBasedRouter extends ExpressionRecipientList
             {
                 try
                 {
-                    result = send(session, message, endpoint);
+                    result = send(session, request, endpoint);
                     if (result != null)
                     {
                         result.applyTransformers(endpoint.getResponseTransformers());
@@ -143,7 +145,7 @@ public class ExceptionBasedRouter extends ExpressionRecipientList
 
         if (!success)
         {
-            throw new CouldNotRouteOutboundMessageException(message, endpoint);
+            throw new CouldNotRouteOutboundMessageException(request, endpoint);
         }
 
         return result;
