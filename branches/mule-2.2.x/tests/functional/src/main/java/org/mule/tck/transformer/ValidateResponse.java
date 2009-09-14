@@ -28,7 +28,7 @@ public class ValidateResponse extends AbstractTransformer
         }
         else
         {
-            throw new TransformerException(MessageFactory.createStaticMessage("Invalid response from service"));
+            throw new TransformerException(MessageFactory.createStaticMessage("Invalid response from service: " + src));
         }
     }
 }
