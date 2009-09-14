@@ -70,6 +70,24 @@ public class ExceptionBasedRouterTestCase extends FunctionalTestCase
         assertNotNull(reply);
         assertEquals("success", reply.getPayload());
     }
+
+    /**
+     * Test endpoints which generate a natural exception because they don't even exist.
+     */
+    public void testIllegalEndpoint() throws Exception
+    {
+        MuleClient client = new MuleClient();
+        
+        Map props = new HashMap();
+        List recipients = new ArrayList();
+        recipients.add("vm://service998");
+        recipients.add("vm://service5");
+        recipients.add("vm://service999");
+        props.put("recipients", recipients);
+        MuleMessage reply = client.send("vm://in3", "request", props);
+        assertNotNull(reply);
+        assertEquals("success", reply.getPayload());
+    }
 }
 
 
