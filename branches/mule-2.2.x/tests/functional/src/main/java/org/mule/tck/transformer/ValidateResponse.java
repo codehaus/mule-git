@@ -13,6 +13,9 @@ package org.mule.tck.transformer;
 import org.mule.api.transformer.TransformerException;
 import org.mule.config.i18n.MessageFactory;
 import org.mule.transformer.AbstractTransformer;
+import org.mule.util.IOUtils;
+
+import java.io.InputStream;
 
 /**
  * Throws an exception if the message does not contain "success".
@@ -22,13 +25,23 @@ public class ValidateResponse extends AbstractTransformer
     @Override
     protected Object doTransform(Object src, String encoding) throws TransformerException
     {
-        if (src instanceof String && ((String) src).contains("success"))
+        String response = null;
+        if (src instanceof String)
         {
-            return src;
+            response = (String) src;
+        }
+        else if (src instanceof InputStream)
+        {
+            response = IOUtils.toString((InputStream) src);
+        }
+        
+        if (response != null && response.contains("success"))
+        {
+            return response;
         }
         else
         {
-            throw new TransformerException(MessageFactory.createStaticMessage("Invalid response from service: " + src));
+            throw new TransformerException(MessageFactory.createStaticMessage("Invalid response from service: " + response));
         }
     }
 }
