@@ -131,7 +131,7 @@ public class ExceptionBasedRouter extends ExpressionRecipientList
             {
                 try
                 {
-                    dispatch(session, message, endpoint);
+                    dispatch(session, request, endpoint);
                     success = true;
                     break;
                 }
