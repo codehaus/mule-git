@@ -1,0 +1,57 @@
+<mule xmlns="http://www.mulesource.org/schema/mule/core/2.2"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:spring="http://www.springframework.org/schema/beans"
+    xmlns:cxf="http://www.mulesource.org/schema/mule/cxf/2.2"
+    xmlns:mule-ss="http://www.mulesource.org/schema/mule/spring-security/2.2"
+    xmlns:ss="http://www.springframework.org/schema/security"
+    xmlns:quartz="http://www.mulesource.org/schema/mule/quartz/2.2"
+    xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+       http://www.mulesource.org/schema/mule/core/2.2 http://www.mulesource.org/schema/mule/core/2.2/mule.xsd
+       http://www.mulesource.org/schema/mule/quartz/2.2 http://www.mulesource.org/schema/mule/quartz/2.2/mule-quartz.xsd
+       http://www.mulesource.org/schema/mule/cxf/2.2 http://www.mulesource.org/schema/mule/cxf/2.2/mule-cxf.xsd
+       http://www.mulesource.org/schema/mule/spring-security/2.2 http://www.mulesource.org/schema/mule/spring-security/2.2/mule-spring-security.xsd
+       http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-2.0.xsd">
+    
+    <spring:beans>	    
+	    <spring:bean name="wss4jOutConfiguration"
+			class="org.springframework.beans.factory.config.MapFactoryBean">
+			<spring:property name="sourceMap">
+		      <spring:map>
+	              <spring:entry key="action" value="UsernameToken" />
+	              <spring:entry key="user" value="joe" />
+	              <spring:entry key="passwordType" value="PasswordText" />
+	              <!-- The callback supplies the password so its not stored in our config file -->
+	              <spring:entry key="passwordCallbackRef">
+				  		<spring:bean class="org.mule.transport.cxf.wssec.ClientPasswordCallback"/>
+	              </spring:entry>
+		      </spring:map>
+			</spring:property>
+		</spring:bean>
+	
+ 	    <spring:bean name="wss4jInConfiguration"
+			class="org.springframework.beans.factory.config.MapFactoryBean">
+			<spring:property name="sourceMap">
+				<spring:map>
+	                <spring:entry key="action" value="UsernameToken" />
+	                <spring:entry key="passwordCallbackRef">
+					    <cxf:security-manager-callback id="serverCallback"/>
+	              </spring:entry>
+				</spring:map>
+			</spring:property>
+		</spring:bean>
+
+	    <mule-ss:security-manager>
+	        <mule-ss:delegate-security-provider name="memory-dao" delegate-ref="authenticationManager"/>
+	    </mule-ss:security-manager>
+	    
+        <ss:authentication-manager alias="authenticationManager"/>
+
+        <ss:authentication-provider>
+            <ss:user-service id="userService">
+                <ss:user name="joe" password="password" authorities="ROLE_ADMIN" />
+                <ss:user name="anon" password="anon" authorities="ROLE_ANON" />
+            </ss:user-service>
+        </ss:authentication-provider>        
+    </spring:beans>
+</mule>
