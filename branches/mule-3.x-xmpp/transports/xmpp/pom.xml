@@ -12,11 +12,6 @@
     <name>XMPP Transport</name>
     <description>A Mule transport that enables event sending and receiving over XMPP (Jabber).</description>
 
-    <!--  TODO xmpp: remove me -->
-    <properties>
-        <smackVersion>3.1.0</smackVersion>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>jivesoftware</groupId>
