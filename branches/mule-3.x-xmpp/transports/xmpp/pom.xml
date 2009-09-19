@@ -12,16 +12,36 @@
     <name>XMPP Transport</name>
     <description>A Mule transport that enables event sending and receiving over XMPP (Jabber).</description>
 
+    <!--  TODO xmpp: remove me -->
+    <properties>
+        <smackVersion>3.1.0</smackVersion>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>jivesoftware</groupId>
             <artifactId>smack</artifactId>
-            <version>${smackVersion}-osgi</version>
+            <!--  TODO xmpp: osgify -->
+<!--            <version>${smackVersion}-osgi</version>-->
+            <version>${smackVersion}</version>
+        </dependency>
+        <dependency>
+            <groupId>jivesoftware</groupId>
+            <artifactId>smackx</artifactId>
+            <!--  TODO xmpp: osgify -->
+<!--            <version>${smackVersion}-osgi</version>-->
+            <version>${smackVersion}</version>
         </dependency>
 
         <dependency>
             <groupId>mockobjects</groupId>
             <artifactId>mockobjects-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mule.transports</groupId>
+            <artifactId>mule-transport-vm</artifactId>
+            <version>${version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

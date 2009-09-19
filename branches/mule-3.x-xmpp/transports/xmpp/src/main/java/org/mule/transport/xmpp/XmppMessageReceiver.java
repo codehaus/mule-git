@@ -46,6 +46,7 @@ public class XmppMessageReceiver extends AbstractMessageReceiver implements Pack
         super(connector, service, endpoint);
     }
 
+    @Override
     protected void doConnect() throws Exception
     {
         try
@@ -73,7 +74,7 @@ public class XmppMessageReceiver extends AbstractMessageReceiver implements Pack
         if (xmppConnection != null)
         {
             xmppConnection.removePacketListener(this);
-            xmppConnection.close();
+            xmppConnection.disconnect();
         }
     }
 

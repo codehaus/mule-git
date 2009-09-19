@@ -14,8 +14,6 @@ import org.mule.api.MuleMessage;
 import org.mule.api.transformer.TransformerException;
 import org.mule.transformer.AbstractMessageAwareTransformer;
 
-import java.util.Iterator;
-
 import org.jivesoftware.smack.packet.Message;
 
 public class XmppPacketToObject extends AbstractMessageAwareTransformer
@@ -31,9 +29,8 @@ public class XmppPacketToObject extends AbstractMessageAwareTransformer
     {
         Message xmppMessage = (Message) message.getPayload();
 
-        for (Iterator iterator = xmppMessage.getPropertyNames(); iterator.hasNext();)
+        for (String name : xmppMessage.getPropertyNames())
         {
-            String name = (String) iterator.next();
             message.setProperty(name, xmppMessage.getProperty(name));
         }
 

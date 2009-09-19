@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesource.org/schema/mule/core"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:spring="http://www.springframework.org/schema/beans"
+       xmlns:xmpp="http://www.mulesource.org/schema/mule/xmpp"
+       xmlns:vm="http://www.mulesource.org/schema/mule/vm"
+       xmlns:context="http://www.springframework.org/schema/context"
+    xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+       http://www.mulesource.org/schema/mule/core http://www.mulesource.org/schema/mule/core/3.0/mule.xsd
+       http://www.mulesource.org/schema/mule/vm http://www.mulesource.org/schema/mule/vm/3.0/mule-vm.xsd
+       http://www.mulesource.org/schema/mule/xmpp http://www.mulesource.org/schema/mule/xmpp/3.0/mule-xmpp.xsd">
+
+    <!-- send via normal message -->
+    <model>
+        <service name="sendViaMessage">
+            <inbound>
+                <vm:inbound-endpoint path="in" synchronous="true"/>
+            </inbound>
+            <outbound>
+                <pass-through-router>
+                    <xmpp:outbound-endpoint type="MESSAGE" recipient="${recipient}"
+                        synchronous="true"/>
+                </pass-through-router>
+            </outbound>
+        </service>
+    </model>
+</mule>

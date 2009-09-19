@@ -53,7 +53,7 @@ public class XmppMessageRequester extends AbstractMessageRequester
         {
             if (xmppConnection != null)
             {
-                xmppConnection.close();
+                xmppConnection.disconnect();
             }
         }
         finally
@@ -86,19 +86,27 @@ public class XmppMessageRequester extends AbstractMessageRequester
         {
             throw new MalformedEndpointException(endpoint.getEndpointURI().toString());
         }
-        Chat chat = xmppConnection.createChat(to);
+        
+        // TODO xmpp: who's the chat listener here
+//        Chat chat = xmppConnection.createChat(to);
+//        Chat chat = xmppConnection.getChatManager().createChat(userJID, listener);
+        Chat chat = null;
+        
         Message message = null;
         if (timeout == MuleEvent.TIMEOUT_WAIT_FOREVER)
         {
-            message = chat.nextMessage();
+            // TODO xmpp: get the next message from a chat listener
+//            message = chat.nextMessage();
         }
         else if (timeout == MuleEvent.TIMEOUT_DO_NOT_WAIT)
         {
-            message = chat.nextMessage(1);
+            // TODO xmpp: get the next message from a chat listener
+//            message = chat.nextMessage(1);
         }
         else
         {
-            message = chat.nextMessage(timeout);
+            // TODO xmpp: get the next message from a chat listener
+//            message = chat.nextMessage(timeout);
         }
         if (message != null)
         {

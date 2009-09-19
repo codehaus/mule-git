@@ -15,6 +15,7 @@ import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.tck.FunctionalTestCase;
 
+// TODO xmpp: remove me
 public abstract class AbstractNamespaceHandlerTestCase extends FunctionalTestCase
 {
 

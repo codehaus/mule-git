@@ -13,13 +13,9 @@ package org.mule.transport.xmpp;
 import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
-import org.mule.api.endpoint.EndpointURI;
 import org.mule.api.endpoint.OutboundEndpoint;
 import org.mule.transport.AbstractMessageDispatcher;
 
-import org.jivesoftware.smack.Chat;
-import org.jivesoftware.smack.GroupChat;
-import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.packet.Message;
 
 /**
@@ -29,47 +25,36 @@ import org.jivesoftware.smack.packet.Message;
 public class XmppMessageDispatcher extends AbstractMessageDispatcher
 {
     private final XmppConnector connector;
-    private volatile XMPPConnection xmppConnection = null;
-    private volatile Chat chat;
-    private volatile GroupChat groupChat;
+    private XmppConversation conversation;
 
     public XmppMessageDispatcher(OutboundEndpoint endpoint)
     {
         super(endpoint);
-        this.connector = (XmppConnector)endpoint.getConnector();
+        connector = (XmppConnector) endpoint.getConnector();
+        conversation = connector.getConversationFactory().create(endpoint);
     }
 
+    @Override
     protected void doConnect() throws Exception
     {
-        if (xmppConnection == null)
-        {
-            EndpointURI uri = endpoint.getEndpointURI();
-            xmppConnection = connector.createXmppConnection(uri);
-        }
+        conversation.connect();
     }
 
+    @Override
     protected void doDisconnect() throws Exception
     {
-        try
-        {
-            if (groupChat != null)
-            {
-                groupChat.leave();
-            }
-            if (xmppConnection != null)
-            {
-                xmppConnection.close();
-            }
-        }
-        finally
-        {
-            xmppConnection = null;
-        }
+        conversation.disconnect();
+        
+//            if (groupChat != null)
+//            {
+//                groupChat.leave();
+//            }
     }
 
+    @Override
     protected void doDispose()
     {
-        // template method
+        conversation = null;
     }
 
     protected void doDispatch(MuleEvent event) throws Exception
@@ -83,24 +68,17 @@ public class XmppMessageDispatcher extends AbstractMessageDispatcher
 
         if (returnResponse(event))
         {
-            Message response;
+            Message response = conversation.receive(event.getTimeout());
 
-            if (groupChat != null)
-            {
-                response = groupChat.nextMessage(event.getTimeout());
-            }
-            else
-            {
-                response = chat.nextMessage(event.getTimeout());
-            }
+//            if (groupChat != null)
+//            {
+//                response = groupChat.nextMessage(event.getTimeout());
+//            }
 
             if (response != null)
             {
-                if (logger.isDebugEnabled())
-                {
-                    logger.debug("Got a response from chat: " + chat);
-                }
-                return new DefaultMuleMessage(connector.getMessageAdapter(response), connector.getMuleContext());
+                return new DefaultMuleMessage(connector.getMessageAdapter(response), 
+                    connector.getMuleContext());
             }
         }
         return null;
@@ -108,62 +86,25 @@ public class XmppMessageDispatcher extends AbstractMessageDispatcher
 
     protected void sendMessage(MuleEvent event) throws Exception
     {
-        if (chat == null && groupChat == null)
+        Object payload = event.getMessage().getPayload();
+        
+        Message jabberMessage = null;
+        if (payload instanceof Message)
         {
-            MuleMessage msg = event.getMessage();
-            boolean group = msg.getBooleanProperty(XmppConnector.XMPP_GROUP_CHAT, false);
-            String nickname = msg.getStringProperty(XmppConnector.XMPP_NICKNAME, "mule");
-            String recipient = event.getEndpoint().getEndpointURI().getPath().substring(1);
-
-            if (group)
-            {
-                groupChat = new GroupChat(xmppConnection, recipient);
-                if (!groupChat.isJoined())
-                {
-                    groupChat.join(nickname);
-                }
-            }
-            else
-            {
-                chat = new Chat(xmppConnection, recipient);
-            }
-        }
-
-        Object msgObj = event.getMessage().getPayload();
-        Message message;
-        // avoid duplicate transformation
-        if (!(msgObj instanceof Message))
-        {
-            message = (Message)event.transformMessage();
+            jabberMessage = (Message) payload;
         }
         else
         {
-            message = (Message)msgObj;
+            jabberMessage = (Message) event.transformMessage();
         }
 
-        if (logger.isTraceEnabled())
-        {
-            logger.trace("Transformed packet: " + message.toXML());
-        }
-
-        // if the endpoint specified a designated recipient, use that
-        if (message.getTo() != null)
-        {
-            xmppConnection.sendPacket(message);
-        }
-        else if (chat != null)
-        {
-            chat.sendMessage(message);
-        }
-        else
-        {
-            groupChat.sendMessage(message);
-        }
-
+        conversation.dispatch(jabberMessage);
+        
         if (logger.isDebugEnabled())
         {
-            logger.debug("Packet successfully sent");
+            String recipient = XmppConnector.getRecipient(endpoint);
+            logger.debug("Message \"" + jabberMessage.getBody() 
+                + "\" successfully sent to " + recipient);
         }
     }
-
 }

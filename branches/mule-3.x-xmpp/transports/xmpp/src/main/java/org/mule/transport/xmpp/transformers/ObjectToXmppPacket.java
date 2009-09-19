@@ -47,12 +47,14 @@ public class ObjectToXmppPacket extends AbstractMessageAwareTransformer
 
         if (msg.getExceptionPayload() != null)
         {
-            result.setError(new XMPPError(503, msg.getExceptionPayload().getMessage()));
+            result.setError(
+                new XMPPError(XMPPError.Condition.service_unavailable, 
+                    msg.getExceptionPayload().getMessage()));
         }
 
-        for (Iterator iterator = msg.getPropertyNames().iterator(); iterator.hasNext();)
+        for (Iterator<String> iterator = msg.getPropertyNames().iterator(); iterator.hasNext();)
         {
-            String name = (String) iterator.next();
+            String name = iterator.next();
             if (name.equals(XmppConnector.XMPP_THREAD))
             {
                 result.setThread((String) msg.getProperty(name));
