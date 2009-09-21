@@ -12,7 +12,6 @@ package org.mule.transport.soap.axis;
 
 import org.mule.api.MuleException;
 import org.mule.api.context.notification.MuleContextNotificationListener;
-import org.mule.api.context.notification.ServerNotification;
 import org.mule.api.endpoint.EndpointBuilder;
 import org.mule.api.endpoint.EndpointURI;
 import org.mule.api.endpoint.ImmutableEndpoint;
@@ -65,7 +64,7 @@ import org.apache.axis.wsdl.fromJava.Types;
  * Some of the Axis specific service initialisation code was adapted from the Ivory
  * project (http://ivory.codehaus.org). Thanks guys :)
  */
-public class AxisConnector extends AbstractConnector implements MuleContextNotificationListener
+public class AxisConnector extends AbstractConnector implements MuleContextNotificationListener<MuleContextNotification>
 {
     /* Register the AxisFault Exception reader if this class gets loaded */
     static
@@ -451,7 +450,6 @@ public class AxisConnector extends AbstractConnector implements MuleContextNotif
             Map props = new HashMap();
             props.put(AXIS, axis);
             SingletonObjectFactory of = new SingletonObjectFactory(AxisServiceComponent.class, props);
-            of.initialise();
             final DefaultJavaComponent component = new DefaultJavaComponent(of);
             component.setMuleContext(muleContext);
             service.setComponent(component);
@@ -618,7 +616,7 @@ public class AxisConnector extends AbstractConnector implements MuleContextNotif
         this.treatMapAsNamedParams = treatMapAsNamedParams;
     }
 
-    public void onNotification(ServerNotification notification)
+    public void onNotification(MuleContextNotification notification)
     {
         if (notification.getAction() == MuleContextNotification.CONTEXT_STARTED)
         {

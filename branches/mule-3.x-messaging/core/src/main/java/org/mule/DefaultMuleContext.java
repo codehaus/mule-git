@@ -29,7 +29,6 @@ import org.mule.api.lifecycle.Stoppable;
 import org.mule.api.registry.MuleRegistry;
 import org.mule.api.registry.RegistrationException;
 import org.mule.api.registry.Registry;
-import org.mule.api.registry.RegistryBroker;
 import org.mule.api.security.SecurityManager;
 import org.mule.api.transaction.TransactionManagerFactory;
 import org.mule.config.DefaultMuleConfiguration;
@@ -60,7 +59,7 @@ public class DefaultMuleContext implements MuleContext
     private static transient Log logger = LogFactory.getLog(DefaultMuleContext.class);
 
     /** Internal registry facade which delegates to other registries. */
-    private RegistryBroker registryBroker;
+    private DefaultRegistryBroker registryBroker;
 
     /** Simplified Mule configuration interface */
     private MuleRegistry muleRegistryHelper;
@@ -87,7 +86,7 @@ public class DefaultMuleContext implements MuleContext
 
     private ExpressionManager expressionManager;
 
-    private static MuleContext staticInsntace;
+    private static MuleContext staticInstance;
 
     private SplashScreen startupScreen;
     private SplashScreen shutdownScreen;
@@ -109,20 +108,20 @@ public class DefaultMuleContext implements MuleContext
         this.expressionManager = new DefaultExpressionManager();
 
         //TODO URGENT remove - currently used by the MuleClient only
-        staticInsntace = this;
+        staticInstance = this;
     }
 
     public static MuleContext getContext()
     {
-        return staticInsntace;
+        return staticInstance;
     }
 
-    protected RegistryBroker createRegistryBroker()
+    protected DefaultRegistryBroker createRegistryBroker()
     {
         return new DefaultRegistryBroker(this);
     }
     
-    protected MuleRegistry createRegistryHelper(Registry registry)
+    protected MuleRegistry createRegistryHelper(DefaultRegistryBroker registry)
     {
         return new MuleRegistryHelper(registry);
     }
@@ -192,6 +191,8 @@ public class DefaultMuleContext implements MuleContext
             lifecycleManager.firePhase(this, Initialisable.PHASE_NAME);
 
             fireNotification(new MuleContextNotification(this, MuleContextNotification.CONTEXT_INITIALISED));
+
+            initSplashScreens();
         }
         catch (Exception e)
         {
@@ -221,7 +222,6 @@ public class DefaultMuleContext implements MuleContext
 
             fireNotification(new MuleContextNotification(this, MuleContextNotification.CONTEXT_STARTED));
 
-            initSplashScreens();
             if (logger.isInfoEnabled())
             {
                 logger.info(startupScreen.toString());
@@ -287,7 +287,7 @@ public class DefaultMuleContext implements MuleContext
             logger.info(shutdownScreen.toString());
         }
 
-        staticInsntace = null;
+        staticInstance = null;
         // SplashScreen holds static variables which need to be cleared in case we restart the server.
         SplashScreen.dispose();
     }

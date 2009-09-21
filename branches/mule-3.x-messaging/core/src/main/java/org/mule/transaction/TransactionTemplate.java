@@ -115,6 +115,7 @@ public class TransactionTemplate
         }
         catch (Exception e)
         {
+            tx = TransactionCoordination.getInstance().getTransaction();
             if (exceptionListener != null)
             {
                 logger.info("Exception Caught in Transaction template.  Handing off to exception handler: "
@@ -148,7 +149,7 @@ public class TransactionTemplate
                 // the context delimited by XA's ALWAYS_BEGIN
                 return null;
             }
-            else if (exceptionListener != null)
+            else if (exceptionListener != null && tx != null)
             {
                 // if there's an exception listener, it has been handled already, don't loop
                 return null;

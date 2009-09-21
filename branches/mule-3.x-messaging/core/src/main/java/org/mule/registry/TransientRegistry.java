@@ -14,7 +14,6 @@ import org.mule.api.MuleException;
 import org.mule.api.agent.Agent;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.Disposable;
-import org.mule.api.lifecycle.Initialisable;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.model.Model;
 import org.mule.api.registry.MuleRegistry;
@@ -79,10 +78,18 @@ public class TransientRegistry extends AbstractRegistry
             for (Iterator iterator = allObjects.iterator(); iterator.hasNext();)
             {
                 obj = iterator.next();
-                if (obj instanceof Initialisable)
+                try
                 {
-                    ((Initialisable) obj).initialise();
-                }        
+                    applyLifecycle(obj);
+                }
+                catch (InitialisationException e)
+                {
+                    throw e;
+                } 
+                catch (MuleException e)
+                {
+                    throw new InitialisationException(e, this);
+                }
             }
         }
     }
@@ -97,9 +104,13 @@ public class TransientRegistry extends AbstractRegistry
             for (Iterator iterator = allObjects.iterator(); iterator.hasNext();)
             {
                 obj = iterator.next();
-                if (obj instanceof Disposable)
+                try
                 {
-                    ((Disposable) obj).dispose();
+                    applyLifecycle(obj);
+                }
+                catch (MuleException e)
+                {
+                    logger.warn("Object '" + obj + "'disposed with error: " + e.getDetailedMessage());
                 }
             }
         }
@@ -160,7 +171,24 @@ public class TransientRegistry extends AbstractRegistry
         }
     }
 
-    protected Object applyProcessors(Object object)
+    /**
+     * Will fire any lifecycle methods according to the current lifecycle without actually
+     * registering the object in the registry.  This is useful for prototype objects that are created per request and would
+     * clutter the registry with single use objects.
+     *
+     * @param object the object to process
+     * @return the same object with lifecycle methods called (if it has any)
+     * @throws org.mule.api.MuleException if the registry fails to perform the lifecycle change for the object.
+     */
+    Object applyLifecycle(Object object) throws MuleException
+    {
+        context.getLifecycleManager().applyCompletedPhases(object);
+        return object;
+    }
+
+
+
+    Object applyProcessors(Object object)
     {
         Object theObject = object;
         // this may be an incorrect hack.  the problem is that if we try to lookup objects in spring before
@@ -201,8 +229,11 @@ public class TransientRegistry extends AbstractRegistry
         {
             throw new RegistrationException("Attempt to register object with no key");
         }
-        
-        logger.debug("registering object");
+
+        if (logger.isDebugEnabled())
+        {
+            logger.debug(String.format("registering key/object %s/%s", key, object));
+        }
         if (!MuleRegistry.LIFECYCLE_BYPASS_FLAG.equals(metadata))
         {
             if (context.isInitialised() || context.isInitialising())
@@ -210,7 +241,7 @@ public class TransientRegistry extends AbstractRegistry
                 logger.debug("applying processors");
                 object = applyProcessors(object);
                 //Don't add the object if the processor returns null
-                if(object==null)
+                if (object==null)
                 {
                     return;
                 }
