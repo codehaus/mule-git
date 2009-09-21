@@ -18,14 +18,13 @@ public class UsernameTokenTestCase extends FunctionalTestCase
     @Override
     protected String getConfigResources()
     {
-        return "org/mule/transport/cxf/wssec/cxf-security-conf.xml, org/mule/transport/cxf/wssec/username-token-conf.xml";
+        return "org/mule/transport/cxf/wssec/cxf-secure-service.xml, org/mule/transport/cxf/wssec/username-token-conf.xml";
     }
     
     @Override
     protected void doSetUp() throws Exception
     {
-        ClientPasswordCallback.setPassword("password");
-        
+        ClientPasswordCallback.setPassword("password");        
         super.doSetUp();
     }
 

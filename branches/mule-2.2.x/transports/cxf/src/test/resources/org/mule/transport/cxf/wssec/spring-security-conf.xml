@@ -21,8 +21,8 @@
 	              <spring:entry key="action" value="UsernameToken" />
 	              <spring:entry key="user" value="joe" />
 	              <spring:entry key="passwordType" value="PasswordText" />
-	              <!-- The callback supplies the password so its not stored in our config file -->
 	              <spring:entry key="passwordCallbackRef">
+	 	                <!-- This callback simply supplies the password so that it's not stored in our config file -->
 				  		<spring:bean class="org.mule.transport.cxf.wssec.ClientPasswordCallback"/>
 	              </spring:entry>
 		      </spring:map>
