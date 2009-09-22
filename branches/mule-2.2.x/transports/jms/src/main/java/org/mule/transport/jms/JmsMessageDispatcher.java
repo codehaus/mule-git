@@ -19,13 +19,12 @@ import org.mule.api.endpoint.EndpointException;
 import org.mule.api.endpoint.OutboundEndpoint;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.transaction.Transaction;
-import org.mule.api.transport.Connector;
 import org.mule.api.transport.DispatchException;
 import org.mule.api.transport.MessageAdapter;
-import org.mule.api.transport.PropertyScope;
 import org.mule.transaction.TransactionCollection;
 import org.mule.transaction.TransactionCoordination;
 import org.mule.transport.AbstractMessageDispatcher;
+import org.mule.transport.NullPayload;
 import org.mule.transport.jms.i18n.JmsMessages;
 import org.mule.util.ClassUtils;
 import org.mule.util.NumberUtils;
@@ -45,6 +44,7 @@ import javax.jms.TemporaryQueue;
 import javax.jms.TemporaryTopic;
 
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
+
 import org.apache.commons.lang.BooleanUtils;
 
 /**
@@ -253,7 +253,7 @@ public class JmsMessageDispatcher extends AbstractMessageDispatcher
                     if (result == null)
                     {
                         logger.debug("No message was returned via replyTo destination");
-                        return null;
+                        return new DefaultMuleMessage(NullPayload.getInstance());
                     }
                     else
                     {
@@ -275,7 +275,7 @@ public class JmsMessageDispatcher extends AbstractMessageDispatcher
                     if (result == null)
                     {
                         logger.debug("No message was returned via replyTo destination " + replyTo);
-                        return null;
+                        return new DefaultMuleMessage(NullPayload.getInstance());
                     }
                     else
                     {
@@ -286,7 +286,7 @@ public class JmsMessageDispatcher extends AbstractMessageDispatcher
                 }
             }
 
-            return null;
+            return new DefaultMuleMessage(NullPayload.getInstance());
         }
         finally
         {

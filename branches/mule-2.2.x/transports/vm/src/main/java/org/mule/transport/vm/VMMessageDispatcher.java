@@ -10,6 +10,7 @@
 
 package org.mule.transport.vm;
 
+import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.EndpointURI;
@@ -20,6 +21,7 @@ import org.mule.api.transport.NoReceiverForEndpointException;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.transaction.TransactionTemplate;
 import org.mule.transport.AbstractMessageDispatcher;
+import org.mule.transport.NullPayload;
 import org.mule.transport.vm.i18n.VMMessages;
 import org.mule.util.queue.Queue;
 import org.mule.util.queue.QueueSession;
@@ -73,7 +75,7 @@ public class VMMessageDispatcher extends AbstractMessageDispatcher
                 public Object doInTransaction() throws Exception
                 {
                     receiver.onMessage(event.getMessage());
-                    return null;
+                    return new DefaultMuleMessage(NullPayload.getInstance());
                 }
             };
             tt.execute(cb);
@@ -102,7 +104,7 @@ public class VMMessageDispatcher extends AbstractMessageDispatcher
                             + event.getEndpoint().getEndpointURI());
                 }
                 doDispatch(event);
-                return null;
+                return new DefaultMuleMessage(NullPayload.getInstance());
             }
             else
             {
