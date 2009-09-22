@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesource.org/schema/mule/core"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:jms="http://www.mulesource.org/schema/mule/jms"
+    xmlns:vm="http://www.mulesource.org/schema/mule/vm"
+    xmlns:spring="http://www.springframework.org/schema/beans" 
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xsi:schemaLocation="http://www.mulesource.org/schema/mule/core http://www.mulesource.org/schema/mule/core/3.0/mule.xsd
+        http://www.mulesource.org/schema/mule/jms http://www.mulesource.org/schema/mule/jms/3.0/mule-jms.xsd
+               http://www.mulesource.org/schema/mule/vm http://www.mulesource.org/schema/mule/vm/3.0/mule-vm.xsd
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
+
+    <vm:connector name="VMQueue"/>
+
+    <endpoint name="in" address="${inbound.destination}">
+
+    </endpoint>
+    
+    <!-- see MULE-3342 for what this test is supposed to check -->
+    <model name="model">
+        <service name="vm-to-jms-queue">
+            <inbound>
+                <inbound-endpoint address="vm://in"/>
+            </inbound>
+            <outbound>
+                <pass-through-router>
+                    <outbound-endpoint ref="in" >
+                        <jms:transaction action="ALWAYS_BEGIN" timeout="3000"/>
+                    </outbound-endpoint>
+                </pass-through-router>
+            </outbound>
+        </service>
+        
+        <service name="jms-to-vm">
+            <inbound>
+                <inbound-endpoint ref="in"/>
+            </inbound>
+            <outbound>
+                <pass-through-router>
+                    <outbound-endpoint address="vm://out"/>
+                </pass-through-router>
+            </outbound>
+        </service>
+    </model>
+</mule>

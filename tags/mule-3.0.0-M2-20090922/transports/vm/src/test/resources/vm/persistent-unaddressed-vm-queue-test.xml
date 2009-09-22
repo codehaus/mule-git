@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesource.org/schema/mule/core"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:spring="http://www.springframework.org/schema/beans"
+       xmlns:vm="http://www.mulesource.org/schema/mule/vm"
+       xsi:schemaLocation="
+               http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+               http://www.mulesource.org/schema/mule/core http://www.mulesource.org/schema/mule/core/3.0/mule.xsd
+               http://www.mulesource.org/schema/mule/vm http://www.mulesource.org/schema/mule/vm/3.0/mule-vm.xsd">
+
+
+    <vm:connector name="Connector1">
+        <vm:queueProfile persistent="true" maxOutstandingMessages="100000"/>
+    </vm:connector>
+
+    <vm:connector name="Connector2">
+        <vm:queueProfile persistent="true" maxOutstandingMessages="100000"/>
+    </vm:connector>
+
+    <vm:endpoint name="VmReceiver1" path="receiver1"/>
+    <vm:endpoint name="VmReceiver2" path="receiver2"/>
+
+    <model name="echoSample">
+
+        <service name="EchoUMO1">
+            <inbound>
+                <vm:inbound-endpoint ref="VmReceiver1" connector-ref="Connector1"/>
+                <vm:inbound-endpoint ref="VmReceiver2" connector-ref="Connector2"/>
+            </inbound>
+            <outbound>
+                <pass-through-router>
+                    <vm:outbound-endpoint address="vm://out" connector-ref="Connector2"/>
+                </pass-through-router>
+            </outbound>
+        </service>
+
+    </model>
+
+</mule>
+
