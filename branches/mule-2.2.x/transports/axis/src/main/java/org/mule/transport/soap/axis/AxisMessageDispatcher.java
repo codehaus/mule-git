@@ -141,7 +141,7 @@ public class AxisMessageDispatcher extends AbstractMessageDispatcher
         result = call.invoke(args);
         if (result == null)
         {
-            return null;
+            return new DefaultMuleMessage(NullPayload.getInstance());
         }
         else
         {
