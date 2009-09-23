@@ -395,7 +395,7 @@ public class XaTransactedJmsMessageReceiver extends TransactedPollingMessageRece
 
             // Create consumer
             MessageConsumer consumer = jmsSupport.createConsumer(session, dest, selector, connector.isNoLocal(),
-                durableName, topic);
+                durableName, topic, endpoint);
             if (reuseConsumer)
             {
                 ctx.consumer = consumer;
