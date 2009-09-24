@@ -1,0 +1,39 @@
+<mule xmlns="http://www.mulesource.org/schema/mule/core/2.2"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:spring="http://www.springframework.org/schema/beans"
+    xmlns:cxf="http://www.mulesource.org/schema/mule/cxf/2.2"
+    xmlns:quartz="http://www.mulesource.org/schema/mule/quartz/2.2"
+    xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+       http://www.mulesource.org/schema/mule/core/2.2 http://www.mulesource.org/schema/mule/core/2.2/mule.xsd
+       http://www.mulesource.org/schema/mule/quartz/2.2 http://www.mulesource.org/schema/mule/quartz/2.2/mule-quartz.xsd
+       http://www.mulesource.org/schema/mule/cxf/2.2 http://www.mulesource.org/schema/mule/cxf/2.2/mule-cxf.xsd">
+
+    <spring:bean name="wss4jOutConfiguration"
+		class="org.springframework.beans.factory.config.MapFactoryBean">
+		<spring:property name="sourceMap">
+	      <spring:map>
+              <spring:entry key="action" value="Signature" />
+              <spring:entry key="user" value="joe" />
+              <spring:entry key="signaturePropFile" value="org/mule/transport/cxf/wssec/wssecurity.properties" />
+              <!-- The callback supplies the password so its not stored in our config file -->
+              <spring:entry key="passwordCallbackRef">
+			  		<spring:bean class="org.mule.transport.cxf.wssec.ClientPasswordCallback"/>
+              </spring:entry>
+	      </spring:map>
+		</spring:property>
+	</spring:bean>
+
+    <spring:bean name="wss4jInConfiguration"
+		class="org.springframework.beans.factory.config.MapFactoryBean">
+		<spring:property name="sourceMap">
+			<spring:map>
+                <spring:entry key="action" value="Signature" />
+                <spring:entry key="signaturePropFile" value="org/mule/transport/cxf/wssec/wssecurity.properties" />
+                <spring:entry key="passwordCallbackRef">
+    				<spring:bean class="org.mule.transport.cxf.wssec.ServerPasswordCallback"/>
+                </spring:entry>
+			</spring:map>
+		</spring:property>
+	</spring:bean>
+</mule>
