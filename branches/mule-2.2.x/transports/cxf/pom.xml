@@ -346,11 +346,12 @@
                     <groupId>commons-logging</groupId>
                     <artifactId>commons-logging</artifactId>
                 </exclusion>
-                <!-- This should be endorsed -->
+                <!-- This should be endorsed 
                 <exclusion>
                     <groupId>bouncycastle</groupId>
                     <artifactId>bcprov-jdk15</artifactId>
                 </exclusion>
+				-->
                 <exclusion>
                     <groupId>xalan</groupId>
                     <artifactId>xalan</artifactId>
