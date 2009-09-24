@@ -30,7 +30,7 @@ public class ServerPasswordCallback implements CallbackHandler
         if (pc.getIdentifer().equals("joe")) {
             // set the password on the callback. This will be compared to the
             // password which was sent from the client.
-            pc.setPassword("password");
+            pc.setPassword("secret");
         }
     }
 }

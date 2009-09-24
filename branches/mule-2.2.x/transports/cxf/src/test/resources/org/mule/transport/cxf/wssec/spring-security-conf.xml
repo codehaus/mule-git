@@ -49,7 +49,7 @@
 
         <ss:authentication-provider>
             <ss:user-service id="userService">
-                <ss:user name="joe" password="password" authorities="ROLE_ADMIN" />
+                <ss:user name="joe" password="secret" authorities="ROLE_ADMIN" />
                 <ss:user name="anon" password="anon" authorities="ROLE_ANON" />
             </ss:user-service>
         </ss:authentication-provider>        

@@ -8,7 +8,7 @@
 				wsu:Id="UsernameToken-27785692">
 				<wsse:Username>joe</wsse:Username>
 				<wsse:Password
-					Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText">password</wsse:Password>
+					Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText">secret</wsse:Password>
 			</wsse:UsernameToken>
 		</wsse:Security>
 		<name>Joe Schmoe</name>

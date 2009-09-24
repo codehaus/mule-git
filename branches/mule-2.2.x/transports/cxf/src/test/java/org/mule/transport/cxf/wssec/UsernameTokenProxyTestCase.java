@@ -29,7 +29,7 @@ public class UsernameTokenProxyTestCase extends FunctionalTestCase
     @Override
     protected void doSetUp() throws Exception
     {
-        ClientPasswordCallback.setPassword("password");        
+        ClientPasswordCallback.setPassword("secret");        
         super.doSetUp();
     }
 
