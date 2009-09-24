@@ -29,7 +29,6 @@
 		    						  proxy="true"
 		    						  payload="envelope">		 	        	
 		        	 <cxf:inInterceptors> 
-                        <spring:bean class="org.apache.cxf.binding.soap.saaj.SAAJInInterceptor" />
                         <spring:bean class="org.apache.cxf.ws.security.wss4j.WSS4JInInterceptor">
  							  <spring:property name="properties" ref="wss4jInConfiguration" />
                         </spring:bean>
@@ -40,7 +39,6 @@
 				<pass-through-router>
 					<cxf:outbound-endpoint address="http://localhost:63081/echo" proxy="true" payload="envelope">
 						<cxf:outInterceptors>
-				          <spring:bean class="org.apache.cxf.binding.soap.saaj.SAAJOutInterceptor" />
 				          <spring:bean class="org.apache.cxf.ws.security.wss4j.WSS4JOutInterceptor">
  							  <spring:property name="properties" ref="wss4jOutConfiguration" />
 				          </spring:bean>    
@@ -58,7 +56,6 @@
 		    	<cxf:inbound-endpoint address="http://localhost:63081/proxy-body"
 		    						  proxy="true">		 	        	
 		        	 <cxf:inInterceptors> 
-                        <spring:bean class="org.apache.cxf.binding.soap.saaj.SAAJInInterceptor" />
                         <spring:bean class="org.apache.cxf.ws.security.wss4j.WSS4JInInterceptor">
  							  <spring:property name="properties" ref="wss4jInConfiguration" />
                         </spring:bean>
@@ -69,7 +66,6 @@
 				<pass-through-router>
 					<cxf:outbound-endpoint address="http://localhost:63081/echo" proxy="true">
 						<cxf:outInterceptors>
-				          <spring:bean class="org.apache.cxf.binding.soap.saaj.SAAJOutInterceptor" />
 				          <spring:bean class="org.apache.cxf.ws.security.wss4j.WSS4JOutInterceptor">
  							  <spring:property name="properties" ref="wss4jOutConfiguration" />
 				          </spring:bean>    
