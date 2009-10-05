@@ -11,19 +11,17 @@
 package org.mule.transport.http.functional;
 
 import org.mule.module.client.MuleClient;
-import org.mule.tck.FunctionalTestCase;
 
 import java.io.BufferedReader;
 
 import edu.emory.mathcs.backport.java.util.concurrent.CountDownLatch;
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 
-public class HttpCookieTestCase extends FunctionalTestCase
+public class HttpCookieTestCase extends AbstractMockHttpServerTestCase
 {
     private static final int LISTEN_PORT = 60212;
     private static final String COOKIE_HEADER = "Cookie:";
     
-    private CountDownLatch simpleServerLatch = new CountDownLatch(1);
     private CountDownLatch latch = new CountDownLatch(1);
     private boolean cookieFound = false;
 
@@ -32,19 +30,13 @@ public class HttpCookieTestCase extends FunctionalTestCase
         return "http-cookie-test.xml";
     }
 
-    protected void doSetUp() throws Exception
+    protected MockHttpServer getHttpServer(CountDownLatch serverStartLatch)
     {
-        super.doSetUp();
-
-        // start a simple HTTP server that parses the request sent from Mule
-        new Thread(new SimpleHttpServer(LISTEN_PORT, simpleServerLatch, latch)).start();
+        return new SimpleHttpServer(LISTEN_PORT, serverStartLatch, latch);
     }
 
     public void testCookies() throws Exception
-    {
-        // wait for the simple server thread started in doSetUp to come up
-        assertTrue(simpleServerLatch.await(RECEIVE_TIMEOUT, TimeUnit.MILLISECONDS));
-        
+    {        
         MuleClient client = new MuleClient();
         client.send("vm://vm-in", "foobar", null);
     
