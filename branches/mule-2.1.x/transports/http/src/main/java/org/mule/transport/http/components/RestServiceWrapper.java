@@ -20,9 +20,10 @@ import org.mule.component.AbstractComponent;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.routing.filters.MessagePropertyFilter;
 import org.mule.transport.NullPayload;
+import org.mule.transport.http.HttpConstants;
+import org.mule.util.StringUtils;
 import org.mule.util.expression.ExpressionEvaluator;
 import org.mule.util.expression.ExpressionEvaluatorManager;
-import org.mule.util.StringUtils;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -42,7 +43,8 @@ import org.apache.commons.logging.LogFactory;
 public class RestServiceWrapper extends AbstractComponent
 {
 
-    public static final String GET = "GET";
+    public static final String DELETE = HttpConstants.METHOD_DELETE;
+    public static final String GET = HttpConstants.METHOD_GET;
     public static final String CONTENT_TYPE = "Content-Type";
     public static final String CONTENT_TYPE_VALUE = "application/x-www-form-urlencoded";
     public static final String HTTP_METHOD = "http.method";
@@ -55,7 +57,7 @@ public class RestServiceWrapper extends AbstractComponent
     private String serviceUrl;
     private Map requiredParams = new HashMap();
     private Map optionalParams = new HashMap();
-    private String httpMethod = "GET";
+    private String httpMethod = GET;
     private List payloadParameterNames;
     private Filter errorFilter;
 
@@ -135,7 +137,7 @@ public class RestServiceWrapper extends AbstractComponent
         this.errorFilter = errorFilter;
     }
 
-
+    @Override
     protected void doInitialise() throws InitialisationException
     {
         if (serviceUrl == null)
@@ -162,7 +164,7 @@ public class RestServiceWrapper extends AbstractComponent
         }
     }
 
-    //@Override
+    @Override
     public Object doInvoke(MuleEvent event) throws Exception
     {
         Object requestBody;
@@ -177,7 +179,7 @@ public class RestServiceWrapper extends AbstractComponent
 
         StringBuffer urlBuffer = new StringBuffer(tempUrl);
 
-        if (GET.equalsIgnoreCase(this.httpMethod))
+        if (GET.equalsIgnoreCase(this.httpMethod) || DELETE.equalsIgnoreCase(this.httpMethod))
         {
             requestBody = NullPayload.getInstance();
 
