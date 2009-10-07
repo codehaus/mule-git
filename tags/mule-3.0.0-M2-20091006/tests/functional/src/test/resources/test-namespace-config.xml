@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesource.org/schema/mule/core"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:spring="http://www.springframework.org/schema/beans"
+      xmlns:mule="http://www.mulesource.org/schema/mule/core"
+      xmlns:test="http://www.mulesource.org/schema/mule/test"
+      xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+       http://www.mulesource.org/schema/mule/test http://www.mulesource.org/schema/mule/test/3.0/mule-test.xsd
+       http://www.mulesource.org/schema/mule/core http://www.mulesource.org/schema/mule/core/3.0/mule.xsd">
+
+    <spring:bean name="exceptionBean" class="java.io.IOException"/>
+
+    <model>
+        <service name="testService1">
+            <test:component enableNotifications="false" enableMessageHistory="false">
+                <test:return-data>Foo Bar Car Jar</test:return-data>
+                <test:callback class="org.mule.tck.functional.CounterCallback"/>
+            </test:component>
+        </service>
+
+        <service name="testService2">
+            <test:component throwException="true" exceptionToThrow="java.io.IOException">
+                <test:return-data file="test-data.txt"/>
+                <test:callback class="org.mule.tck.functional.ResponseWriterCallback"/>
+            </test:component>
+        </service>
+
+        <service name="testService3">
+            <test:component enableMessageHistory="false" appendString=" #[mule:context.serviceName]"/>
+        </service>
+    </model>
+</mule>
