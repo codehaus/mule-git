@@ -36,7 +36,6 @@ import org.mule.transport.ConnectException;
 import org.mule.transport.jms.i18n.JmsMessages;
 import org.mule.transport.jms.xa.ConnectionFactoryWrapper;
 import org.mule.util.BeanUtils;
-import org.mule.util.concurrent.WorkerThread;
 
 import java.text.MessageFormat;
 import java.util.Hashtable;
@@ -79,8 +78,6 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
 
     private AtomicInteger receiverReportedExceptionCount = new AtomicInteger();
     
-    public static final int DEFAULT_CONNECTION_LOST_TIMEOUT = 5000;
-    
     ////////////////////////////////////////////////////////////////////////
     // Properties
     ////////////////////////////////////////////////////////////////////////
@@ -104,9 +101,6 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
     /** Whether to create a consumer on connect. */
     private boolean eagerConsumer = true;
 
-    /** Timeout (in ms) after which we assume the connection to the JMS provider has been lost */
-    private int connectionLostTimeout = DEFAULT_CONNECTION_LOST_TIMEOUT;
-    
     ////////////////////////////////////////////////////////////////////////
     // JMS Connection
     ////////////////////////////////////////////////////////////////////////
@@ -299,37 +293,15 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
     {
         if (connection != null)
         {
-            WorkerThread thread = new WorkerThread()
-            {
-                @Override
-                protected void doWork() throws Exception
-                {
-                    connection.close();
-                }
-            };
-            thread.start();
-            
             try
             {
-                thread.join(getConnectionLostTimeout());
+                connection.close();
             }
-            catch (InterruptedException e)
+            catch (JMSException e)
             {
-                logger.warn("Timer interrupted: " + e.getMessage());
+                logger.error("Jms connector failed to dispose properly: ", e);
             }
-            finally
-            {
-                connection = null;
-            }
-            
-            if (thread.isAlive())
-            {
-                logger.info("Timed out while attempting to close the JMS connection");
-            }
-            else if (thread.getException() != null)
-            {
-                logger.error("Jms connector failed to dispose properly: ", thread.getException());
-            }
+            connection = null;
         }
         
         if (jndiContext != null)
@@ -484,6 +456,37 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
         }
     }
 
+      // TODO This might make retry work a bit better w/ JMS
+//    @Override
+//    public boolean validateConnection() throws Exception
+//    {
+//        logger.debug("Creating a temporary session to verify that we have a healthy connection...");
+//
+//        Connection connection;
+//        Session session;
+//        try
+//        {
+//            connection = createConnection();
+//            if (connection == null)
+//            {
+//                return false;
+//            }
+//            session = connection.createSession(false, 1);
+//            if (session == null)
+//            {
+//                return false;
+//            }
+//            session.close();
+//            connection.close();
+//            return true;
+//        }
+//        finally
+//        {
+//            session = null;
+//            connection = null;
+//        }
+//    }
+    
     @Override
     protected void doConnect() throws Exception
     {
@@ -497,44 +500,22 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
     @Override
     protected void doDisconnect() throws Exception
     {
-        if (connection != null)
+        try
         {
-            WorkerThread thread = new WorkerThread()
+            if (connection != null)
             {
-                @Override
-                protected void doWork() throws Exception
+                // Ignore exceptions while closing the connection
+                if (!embeddedMode)
                 {
-                    // Ignore exceptions while closing the connection
-                    if (!embeddedMode)
-                    {
-                        connection.setExceptionListener(null);
-                    }
-                    connection.close();
+                    connection.setExceptionListener(null);
                 }
-            };
-            thread.start();
-            
-            try
-            {
-                thread.join(getConnectionLostTimeout());
+                connection.close();
             }
-            catch (InterruptedException e)
-            {
-                logger.warn("Timer interrupted: " + e.getMessage());
-            }
-            finally
-            {
-                connection = null;
-            }
-            
-            if (thread.isAlive())
-            {
-                logger.info("Timed out while attempting to close the JMS connection");
-            }
-            else if (thread.getException() != null)
-            {
-                throw thread.getException();
-            }
+        }
+        finally
+        {
+            // connectionFactory = null;
+            connection = null;
         }
     }
 
@@ -575,13 +556,13 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
         return null;
     }
 
-    public Session getSession(ImmutableEndpoint endpoint) throws JMSException, ConnectException
+    public Session getSession(ImmutableEndpoint endpoint) throws JMSException
     {
         final boolean topic = getTopicResolver().isTopic(endpoint);
         return getSession(endpoint.getTransactionConfig().isTransacted(), topic);
     }
 
-    public Session getSession(boolean transacted, boolean topic) throws JMSException, ConnectException
+    public Session getSession(boolean transacted, boolean topic) throws JMSException
     {
         Session session = getSessionFromTransaction();
         if (session != null)
@@ -591,14 +572,7 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
 
         Transaction tx = TransactionCoordination.getInstance().getTransaction();
 
-        try
-        {
-            session = jmsSupport.createSession(connection, topic, transacted, acknowledgementMode, noLocal);
-        }
-        catch (JMSException e)
-        {
-            throw new ConnectException(MessageFactory.createStaticMessage("Unable to create a new JMS session"), e, this);
-        }
+        session = jmsSupport.createSession(connection, topic, transacted, acknowledgementMode, noLocal);
 
         if (logger.isDebugEnabled())
         {
@@ -712,7 +686,6 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
                 logger.debug("Closing producer: " + producer);
             }
             producer.close();
-            producer = null;
         }
         else if (logger.isDebugEnabled())
         {
@@ -753,7 +726,6 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
                 logger.debug("Closing consumer: " + consumer);
             }
             consumer.close();
-            consumer = null;
         }
         else if (logger.isDebugEnabled())
         {
@@ -794,7 +766,6 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
                 logger.debug("Closing session " + session);
             }
             session.close();
-			session = null;
         }
     }
 
@@ -1271,15 +1242,5 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
     public void setEmbeddedMode(boolean embeddedMode)
     {
         this.embeddedMode = embeddedMode;
-    }
-
-    public int getConnectionLostTimeout()
-    {
-        return connectionLostTimeout;
-    }
-
-    public void setConnectionLostTimeout(int connectionLostTimeout)
-    {
-        this.connectionLostTimeout = connectionLostTimeout;
     }
 }

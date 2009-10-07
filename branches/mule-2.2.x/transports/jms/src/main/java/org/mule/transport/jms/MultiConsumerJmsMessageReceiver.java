@@ -26,7 +26,6 @@ import org.mule.transport.AbstractReceiverWorker;
 import org.mule.transport.ConnectException;
 import org.mule.transport.jms.filters.JmsSelectorFilter;
 import org.mule.util.ClassUtils;
-import org.mule.util.concurrent.WorkerThread;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -101,37 +100,11 @@ public class MultiConsumerJmsMessageReceiver extends AbstractMessageReceiver
         logger.debug("doStop()");
         if (consumers != null)
         {
-            WorkerThread thread = new WorkerThread()
+            SubReceiver sub;
+            for (Iterator<SubReceiver> it = consumers.iterator(); it.hasNext();)
             {
-                @Override
-                protected void doWork() throws Exception
-                {            
-                    SubReceiver sub;
-                    for (Iterator<SubReceiver> it = consumers.iterator(); it.hasNext();)
-                    {
-                        sub = it.next();
-                        sub.doStop(true);
-                    }
-                }
-            };
-            thread.start();
-            
-            try
-            {
-                thread.join(((JmsConnector) connector).getConnectionLostTimeout());
-            }
-            catch (InterruptedException e)
-            {
-                logger.warn("Timer interrupted: " + e.getMessage());
-            }
-            
-            if (thread.isAlive())
-            {
-                logger.info("Timed out while attempting to stop subreceivers");
-            }
-            else if (thread.getException() != null)
-            {
-                throw (MuleException) thread.getException();
+                sub = it.next();
+                sub.doStop(true);
             }
         }
     }
@@ -155,49 +128,20 @@ public class MultiConsumerJmsMessageReceiver extends AbstractMessageReceiver
     {
         logger.debug("doDisconnect()");
 
-        WorkerThread thread = new WorkerThread()
+        SubReceiver sub;
+        for (Iterator<SubReceiver> it = consumers.iterator(); it.hasNext();)
         {
-            @Override
-            protected void doWork() throws Exception
+            sub = it.next();
+            try
             {
-                SubReceiver sub;
-                for (Iterator<SubReceiver> it = consumers.iterator(); it.hasNext();)
-                {
-                    sub = it.next();
-                    try
-                    {
-                        sub.doDisconnect();
-                    }
-                    finally
-                    {
-                        sub = null;
-                    }
-                }
+                sub.doDisconnect();
             }
-        };
-        thread.start();
-        
-        try
-        {
-            thread.join(((JmsConnector) connector).getConnectionLostTimeout());
+            finally
+            {
+                sub = null;
+            }
         }
-        catch (InterruptedException e)
-        {
-            logger.warn("Timer interrupted: " + e.getMessage());
-        }
-        finally
-        {
-            consumers.clear();
-        }
-        
-        if (thread.isAlive())
-        {
-            logger.info("Timed out while attempting to disconnect subreceivers");
-        }
-        else if (thread.getException() != null)
-        {
-            throw (MuleException) thread.getException();
-        }
+        consumers.clear();
     }
 
     @Override

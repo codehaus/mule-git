@@ -11,9 +11,6 @@
 package org.mule.transport.jms;
 
 import org.mule.api.endpoint.ImmutableEndpoint;
-import org.mule.api.transaction.Transaction;
-import org.mule.transaction.TransactionCoordination;
-import org.mule.util.concurrent.WorkerThread;
 
 import java.text.MessageFormat;
 
@@ -52,136 +49,34 @@ public class Jms11Support implements JmsSupport
         this.connector = connector;
     }
 
-    public Connection createConnection(ConnectionFactory connectionFactory, 
-                                       String username, 
-                                       String password) throws JMSException
+    public Connection createConnection(ConnectionFactory connectionFactory, String username, String password)
+        throws JMSException
     {
         if (connectionFactory == null)
         {
             throw new IllegalArgumentException("connectionFactory cannot be null");
         }
-        
-        CreateConnectionThread thread = new CreateConnectionThread(connectionFactory, username, password);
-        thread.start();
-        try
-        {
-            thread.join(connector.getConnectionLostTimeout());
-        }
-        catch (InterruptedException e)
-        {
-            logger.warn("Timer interrupted: " + e.getMessage());
-        }
-
-        if (thread.isAlive())
-        {
-            throw new JMSException("Timed out while attempting to create a JMS connection");
-        }
-        else if (thread.getException() != null)
-        {
-            throw (JMSException) thread.getException();
-        }
-        else
-        {
-            return (Connection) thread.getResult();
-        }
+        return connectionFactory.createConnection(username, password);
     }
 
     public Connection createConnection(ConnectionFactory connectionFactory) throws JMSException
     {
-        return createConnection(connectionFactory, null, null);
+        if (connectionFactory == null)
+        {
+            throw new IllegalArgumentException("connectionFactory cannot be null");
+        }
+        return connectionFactory.createConnection();
     }
 
-    class CreateConnectionThread extends WorkerThread
-    {
-        private ConnectionFactory connectionFactory;
-        private String username;
-        private String password;
-        
-        public CreateConnectionThread(ConnectionFactory connectionFactory, String username, String password)
-        {
-            super();
-            this.connectionFactory = connectionFactory;
-            this.username = username;
-            this.password = password;
-        }
-        
-        @Override
-        protected void doWork() throws Exception
-        {
-            if (username != null)
-            {
-                setResult(connectionFactory.createConnection(username, password));
-            }
-            else
-            {
-                setResult(connectionFactory.createConnection());
-            }
-        }
-    };
-    
     public Session createSession(Connection connection,
                                  boolean topic,
                                  boolean transacted,
                                  int ackMode,
                                  boolean noLocal) throws JMSException
     {
-        CreateSessionThread thread = new CreateSessionThread(connection, transacted, (transacted ? Session.SESSION_TRANSACTED : ackMode));
-
-        // Creating the session in another thread does not work with XA for some reason
-        Transaction tx = TransactionCoordination.getInstance().getTransaction();
-        if (tx != null && tx.isXA())
-        {
-            // Just run in the same thread
-            thread.run();
-        }
-        else
-        {        
-            thread.start();
-            
-            try
-            {
-                thread.join(connector.getConnectionLostTimeout());
-            }
-            catch (InterruptedException e)
-            {
-                logger.warn("Timer interrupted: " + e.getMessage());
-            }
-        }
-        if (thread.isAlive())
-        {
-            throw new JMSException("Timed out while attempting to create a JMS session");
-        }
-        else if (thread.getException() != null)
-        {
-            throw (JMSException) thread.getException();
-        }
-        else
-        {
-            return (Session) thread.getResult();
-        }
+        return connection.createSession(transacted, (transacted ? Session.SESSION_TRANSACTED : ackMode));
     }
 
-    class CreateSessionThread extends WorkerThread
-    {
-        private Connection connection;
-        private boolean transacted;
-        private int acknowledgeMode;
-        
-        public CreateSessionThread(Connection connection, boolean transacted, int acknowledgeMode)
-        {
-            super();
-            this.connection = connection;
-            this.transacted = transacted;
-            this.acknowledgeMode = acknowledgeMode;
-        }
-        
-        @Override
-        protected void doWork() throws Exception
-        {
-            setResult(connection.createSession(transacted, acknowledgeMode));
-        }
-    };
-    
     public MessageProducer createProducer(Session session, Destination destination, boolean topic)
         throws JMSException
     {
