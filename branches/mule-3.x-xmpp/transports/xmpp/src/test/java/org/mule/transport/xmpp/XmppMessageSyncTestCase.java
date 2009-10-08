@@ -27,9 +27,9 @@ public class XmppMessageSyncTestCase extends AbstractXmppTestCase
     }
     
     @Override
-    protected String getConfigResources()
+    protected String getXmppConfigResources()
     {
-        return "xmpp-connector-config.xml, xmpp-message-sync-config.xml";
+        return "xmpp-message-sync-config.xml";
     }
 
     public void testSendSync() throws Exception

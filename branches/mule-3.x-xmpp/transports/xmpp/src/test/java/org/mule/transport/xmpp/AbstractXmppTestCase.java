@@ -10,14 +10,12 @@
 
 package org.mule.transport.xmpp;
 
-import org.mule.tck.FunctionalTestCase;
-
 import java.util.Properties;
 
 import edu.emory.mathcs.backport.java.util.concurrent.CountDownLatch;
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 
-public abstract class AbstractXmppTestCase extends FunctionalTestCase
+public abstract class AbstractXmppTestCase extends XmppEnableDisableTestCase
 {
     private static final long STARTUP_TIMEOUT = 5000;
 
@@ -32,6 +30,17 @@ public abstract class AbstractXmppTestCase extends FunctionalTestCase
         jabberLatch = new CountDownLatch(1);
         createAndConnectJabberClient();
     }
+    
+    @Override
+    protected final String getConfigResources()
+    {
+        return "xmpp-connector-config.xml," + getXmppConfigResources();
+    }
+
+    /**
+     * Subclasses implmement this method and return the name of their config file.
+     */
+    protected abstract String getXmppConfigResources();
 
     private void createAndConnectJabberClient() throws Exception
     {
@@ -59,5 +68,3 @@ public abstract class AbstractXmppTestCase extends FunctionalTestCase
     }
 
 }
-
-

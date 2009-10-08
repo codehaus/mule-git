@@ -25,9 +25,9 @@ public class XmppMessageAsyncTestCase extends AbstractXmppTestCase
     private CountDownLatch latch = new CountDownLatch(1);
     
     @Override
-    protected String getConfigResources()
+    protected String getXmppConfigResources()
     {
-        return "xmpp-connector-config.xml, xmpp-message-async-config.xml";
+        return "xmpp-message-async-config.xml";
     }
 
     @Override

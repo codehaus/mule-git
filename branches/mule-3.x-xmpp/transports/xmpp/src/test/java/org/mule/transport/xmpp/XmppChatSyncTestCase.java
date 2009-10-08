@@ -15,9 +15,9 @@ import org.jivesoftware.smack.packet.Message;
 public class XmppChatSyncTestCase extends XmppMessageSyncTestCase
 {
     @Override
-    protected String getConfigResources()
+    protected String getXmppConfigResources()
     {
-        return "xmpp-connector-config.xml, xmpp-chat-sync-config.xml";
+        return "xmpp-chat-sync-config.xml";
     }
 
     @Override

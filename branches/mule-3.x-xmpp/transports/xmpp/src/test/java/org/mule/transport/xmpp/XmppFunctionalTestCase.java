@@ -12,10 +12,9 @@ package org.mule.transport.xmpp;
 
 import org.mule.api.MuleMessage;
 import org.mule.module.client.MuleClient;
-import org.mule.tck.FunctionalTestCase;
 import org.mule.transport.NullPayload;
 
-public class XmppFunctionalTestCase extends FunctionalTestCase
+public class XmppFunctionalTestCase extends XmppEnableDisableTestCase
 {
     @Override
     protected String getConfigResources()

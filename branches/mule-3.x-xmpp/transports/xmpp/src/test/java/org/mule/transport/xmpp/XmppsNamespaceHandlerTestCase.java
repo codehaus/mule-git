@@ -10,8 +10,8 @@
 
 package org.mule.transport.xmpp;
 
-import org.mule.transport.xmpp.XmppsConnector;
 
+// TODO xmpp: remove me
 public class XmppsNamespaceHandlerTestCase extends AbstractNamespaceHandlerTestCase
 {
 

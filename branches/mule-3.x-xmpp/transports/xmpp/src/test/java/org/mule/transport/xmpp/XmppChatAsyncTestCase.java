@@ -15,9 +15,9 @@ import org.jivesoftware.smack.packet.Message;
 public class XmppChatAsyncTestCase extends XmppMessageAsyncTestCase
 {
     @Override
-    protected String getConfigResources()
+    protected String getXmppConfigResources()
     {
-        return "xmpp-connector-config.xml, xmpp-chat-async-config.xml";
+        return "xmpp-chat-async-config.xml";
     }
     
     @Override
