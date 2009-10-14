@@ -520,6 +520,9 @@ public abstract class AbstractConnector
                 mr.stop();
             }
         }
+        
+        // Workaround for MULE-4553
+        dispatchers.clear();
 
         if (this.isConnected())
         {
