@@ -212,6 +212,16 @@ public abstract class AbstractJmsFunctionalTestCase extends FunctionalTestCase
         scenarioReceive = new ScenarioReceive();
     }
 
+    @Override
+    protected void suitePreSetUp() throws Exception
+    {
+        super.suitePreSetUp();
+
+        purge(getInboundQueueName());
+        purge(getOutboundQueueName());
+        // TODO Add other queues if necessary
+    }
+
     /**
      * Adds the following properties to the registry so that the Xml configuration files can reference them.
      * <p/>
