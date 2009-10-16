@@ -22,6 +22,7 @@ import org.mule.transport.quartz.i18n.QuartzMessages;
 import org.mule.transport.quartz.jobs.CustomJob;
 import org.mule.transport.quartz.jobs.CustomJobConfig;
 import org.mule.transport.quartz.jobs.CustomJobFromMessageConfig;
+import org.mule.transport.quartz.jobs.ScheduledDispatchJobConfig;
 
 import java.util.Date;
 import java.util.Iterator;
@@ -47,11 +48,13 @@ public class QuartzMessageDispatcher extends AbstractMessageDispatcher
         super(endpoint);
     }
 
+    @Override
     protected void doDispose()
     {
         // template method
     }
 
+    @Override
     protected void doDispatch(MuleEvent event) throws Exception
     {
         JobConfig jobConfig = (JobConfig) endpoint.getProperty(QuartzConnector.PROPERTY_JOB_CONFIG);
@@ -70,6 +73,15 @@ public class QuartzMessageDispatcher extends AbstractMessageDispatcher
         {
             String propertyKey = (String) iterator.next();
             jobDataMap.put(propertyKey, msg.getProperty(propertyKey));
+        }
+        
+        if (jobConfig instanceof ScheduledDispatchJobConfig) 
+        {
+            ScheduledDispatchJobConfig scheduledDispatchJobConfig = (ScheduledDispatchJobConfig) jobConfig;
+            String endpointRef = event.getMuleContext().getExpressionManager().parse(
+                scheduledDispatchJobConfig.getEndpointRef(), event.getMessage());
+
+            jobDataMap.put("endpointRef", endpointRef);
         }
         jobDetail.setJobDataMap(jobDataMap);
 
@@ -156,22 +168,25 @@ public class QuartzMessageDispatcher extends AbstractMessageDispatcher
         trigger.setJobName(jobDetail.getName());
         trigger.setJobGroup(jobGroupName);
 
-        Scheduler scheduler = ((QuartzConnector)this.getConnector()).getQuartzScheduler();
+        Scheduler scheduler = ((QuartzConnector) this.getConnector()).getQuartzScheduler();
         scheduler.scheduleJob(jobDetail, trigger);
        // scheduler.start();
     }
 
+    @Override
     protected MuleMessage doSend(MuleEvent event) throws Exception
     {
         doDispatch(event);
         return new DefaultMuleMessage(NullPayload.getInstance());
     }
 
+    @Override
     protected void doConnect() throws Exception
     {
         // template method
     }
 
+    @Override
     protected void doDisconnect() throws Exception
     {
         // template method
