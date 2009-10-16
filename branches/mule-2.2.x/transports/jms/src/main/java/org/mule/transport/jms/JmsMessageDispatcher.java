@@ -286,7 +286,7 @@ public class JmsMessageDispatcher extends AbstractMessageDispatcher
                 }
             }
 
-            return new DefaultMuleMessage(msg);
+            return new DefaultMuleMessage(NullPayload.getInstance());
         }
         finally
         {
