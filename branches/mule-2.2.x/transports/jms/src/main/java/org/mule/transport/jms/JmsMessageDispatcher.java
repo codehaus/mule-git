@@ -59,13 +59,20 @@ public class JmsMessageDispatcher extends AbstractMessageDispatcher
     private JmsConnector connector;
     private Session cachedSession;
     private boolean disableTemporaryDestinations = false;
+    private boolean returnOriginalMessageAsReply = false;
 
     public JmsMessageDispatcher(OutboundEndpoint endpoint)
     {
         super(endpoint);
         this.connector = (JmsConnector) endpoint.getConnector();
         disableTemporaryDestinations = connector.isDisableTemporaryReplyToDestinations() ||
-                ("true".equals(endpoint.getProperty(JmsConstants.DISABLE_TEMP_DESTINATIONS_PROPERTY)));
+            ("true".equals(endpoint.getProperty(JmsConstants.DISABLE_TEMP_DESTINATIONS_PROPERTY)));
+        returnOriginalMessageAsReply = connector.isReturnOriginalMessageAsReply() ||
+            ("true".equals(endpoint.getProperty(JmsConstants.RETURN_ORIGINAL_MESSAGE_PROPERTY)));
+        if (returnOriginalMessageAsReply && !disableTemporaryDestinations)
+        {
+            logger.warn("The returnOriginalMessageAsReply property will be ignored because disableTemporaryReplyToDestinations=false.  You need to disable temporary ReplyTo destinations in order for this propery to take effect.");
+        }
     }
 
     protected void doDispatch(MuleEvent event) throws Exception
@@ -286,7 +293,7 @@ public class JmsMessageDispatcher extends AbstractMessageDispatcher
                 }
             }
 
-            return new DefaultMuleMessage(NullPayload.getInstance());
+            return new DefaultMuleMessage(returnOriginalMessageAsReply ? msg : NullPayload.getInstance());
         }
         finally
         {

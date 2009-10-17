@@ -38,11 +38,22 @@ public class JmsSynchronousResponseTestCase extends AbstractJmsFunctionalTestCas
         assertTrue("JMSMessageID is missing", StringUtils.isNotBlank(messageId));
     }
 
-    public void testResponseWithReplyTo() throws Exception
+    public void testResponseWithoutReplyToEndointProperties() throws Exception
     {
         MuleClient client = new MuleClient();
         
         MuleMessage response = client.send("out2", "TEST_MESSAGE", null);
+        assertNotNull(response);
+        assertTrue("Response is not a JMS Message", response.getPayload() instanceof javax.jms.Message);
+        String messageId = ((javax.jms.Message) response.getPayload()).getJMSMessageID();
+        assertTrue("JMSMessageID is missing", StringUtils.isNotBlank(messageId));
+    }
+
+    public void testResponseWithReplyTo() throws Exception
+    {
+        MuleClient client = new MuleClient();
+        
+        MuleMessage response = client.send("out3", "TEST_MESSAGE", null);
         assertNotNull(response);
         assertTrue("Response should be NullPayload", response.getPayload() instanceof NullPayload);
     }
