@@ -10,6 +10,8 @@
 
 package org.mule.transport.jms;
 
+import org.mule.api.endpoint.ImmutableEndpoint;
+
 import java.text.MessageFormat;
 
 import javax.jms.Connection;
@@ -114,7 +116,7 @@ public class Jms102bSupport extends Jms11Support
                                           String messageSelector,
                                           boolean noLocal,
                                           String durableName,
-                                          boolean topic) throws JMSException
+                                          boolean topic, ImmutableEndpoint endpoint) throws JMSException
     {
         if (topic && session instanceof TopicSession)
         {
@@ -141,7 +143,7 @@ public class Jms102bSupport extends Jms11Support
         }
         else
         {
-            throw new IllegalArgumentException("MuleSession and domain type do not match");
+            throw new IllegalArgumentException("Session and domain type do not match");
         }
     }
 
@@ -157,11 +159,11 @@ public class Jms102bSupport extends Jms11Support
         }
         else
         {
-            throw new IllegalArgumentException("MuleSession and domain type do not match");
+            throw new IllegalArgumentException("Session and domain type do not match");
         }
     }
 
-    public Destination createDestination(Session session, String name, boolean topic) throws JMSException
+    public Destination createDestination(Session session, String name, boolean topic, ImmutableEndpoint endpoint) throws JMSException
     {
         if (connector.isJndiDestinations())
         {
@@ -201,7 +203,7 @@ public class Jms102bSupport extends Jms11Support
 
         if (session == null)
         {
-            throw new IllegalArgumentException("MuleSession cannot be null when creating a destination");
+            throw new IllegalArgumentException("Session cannot be null when creating a destination");
         }
         if (name == null)
         {
@@ -224,7 +226,7 @@ public class Jms102bSupport extends Jms11Support
     {
         if (session == null)
         {
-            throw new IllegalArgumentException("MuleSession cannot be null when creating a destination");
+            throw new IllegalArgumentException("Session cannot be null when creating a destination");
         }
 
         if (topic)
@@ -239,7 +241,7 @@ public class Jms102bSupport extends Jms11Support
         }
     }
 
-    public void send(MessageProducer producer, Message message, boolean persistent, int priority, long ttl, boolean topic)
+    public void send(MessageProducer producer, Message message, boolean persistent, int priority, long ttl, boolean topic, ImmutableEndpoint endpoint)
             throws JMSException
     {
         if (topic && producer instanceof TopicPublisher)
@@ -271,7 +273,7 @@ public class Jms102bSupport extends Jms11Support
                      boolean persistent,
                      int priority,
                      long ttl,
-                     boolean topic) throws JMSException
+                     boolean topic, ImmutableEndpoint endpoint) throws JMSException
     {
         if (topic && producer instanceof TopicPublisher)
         {
