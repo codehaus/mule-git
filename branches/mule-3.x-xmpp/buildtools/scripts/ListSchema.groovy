@@ -15,11 +15,11 @@
 
   Example schema and their locations:
     transports/file/src/main/resources/META-INF/mule-file.xsd
-     -> http://www.mulesource.org/schema/mule/file/3.0/mule-file.xsd
+     -> http://www.mulesoft.org/schema/mule/file/3.0/mule-file.xsd
     modules/acegi/src/main/resources/META-INF/mule-acegi.xsd
-     -> http://www.mulesource.org/schema/mule/acegi/3.0/mule-acegi.xsd
+     -> http://www.mulesoft.org/schema/mule/acegi/3.0/mule-acegi.xsd
     core/src/main/resources/META-INF/mule.xsd
-     -> http://www.mulesource.org/schema/mule/core/3.0/mule.xsd
+     -> http://www.mulesoft.org/schema/mule/core/3.0/mule.xsd
 
   $Id$
 */
@@ -45,7 +45,7 @@ def schemaDestinationPaths = [:]
 def root = "../.."
 
 // destination base
-def base = "http://www.mulesource.org/schema/mule/"
+def base = "http://www.mulesoft.org/schema/mule/"
 
 // the structure of xsd locations
 def corexsd = /.*(\/|\\)spring-config(\/|\\).*(\/|\\)mule\.xsd/
@@ -114,7 +114,7 @@ def checkSchema = {
     for (element in parser.value) {
       if (element.name.localPart == "import") {
         namespace = element.attributes["namespace"]
-        if (namespace.contains("mulesource") && ! namespace.contains("core") && ! element.attributes.keySet().contains("schemaLocation")) {
+        if (namespace.contains("mulesoft") && ! namespace.contains("core") && ! element.attributes.keySet().contains("schemaLocation")) {
           println "# WARNING: missing schema location"
           println "# in " + file
           println "# for " + namespace
@@ -144,7 +144,7 @@ def scanAndCheckConfigs = {
                     while (tokens.hasMoreTokens()) {
                         id = tokens.nextToken()
                         uri = tokens.nextToken()
-                        match = (id =~ /.*mulesource\.org.*mule\/([^\/]+)\/.*/)
+                        match = (id =~ /.*mulesoft\.org.*mule\/([^\/]+)\/.*/)
                         if (match.matches()) {
                             name = match[0][1]
                             // we should really scan for test schema too, 
