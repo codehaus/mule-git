@@ -9,10 +9,10 @@
  */
 package org.mule.transport.cxf;
 
-import org.mule.api.MuleContext;
-import org.mule.api.security.tls.TlsConfiguration;
+import org.mule.DefaultMuleMessage;
+import org.mule.api.MuleMessage;
+import org.mule.module.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.util.IOUtils;
 
 import org.apache.commons.httpclient.Credentials;
 import org.apache.commons.httpclient.HttpClient;
@@ -20,9 +20,6 @@ import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
-import org.apache.commons.httpclient.protocol.Protocol;
-import org.apache.commons.httpclient.protocol.ProtocolSocketFactory;
-import org.apache.commons.httpclient.protocol.SSLProtocolSocketFactory;
 
 
 public class HttpSecurityTestCase extends FunctionalTestCase 
@@ -68,14 +65,14 @@ public class HttpSecurityTestCase extends FunctionalTestCase
         assertEquals(401, result);
     }
 
-//    public void testBasicAuthWithCxfClient() throws Exception
-//    {
-//    	MuleClient client = new MuleClient();
-//    	
-//    	String payload = "Hello";
-//    	MuleMessage result = client.send("cxfOutbound", new DefaultMuleMessage(payload));    	
-//    	assertEquals(payload, result.getPayloadAsString());
-//    }
+    public void testBasicAuthWithCxfClient() throws Exception
+    {
+    	MuleClient client = new MuleClient();
+    	
+    	String payload = "Hello";
+    	MuleMessage result = client.send("cxfOutbound", new DefaultMuleMessage(payload));    	
+    	assertEquals(payload, result.getPayloadAsString());
+    }
 
     @Override
     protected String getConfigResources()
