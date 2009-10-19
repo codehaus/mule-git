@@ -9,10 +9,10 @@
  */
 package org.mule.transport.cxf;
 
-import org.mule.DefaultMuleMessage;
-import org.mule.api.MuleMessage;
-import org.mule.module.client.MuleClient;
+import org.mule.api.MuleContext;
+import org.mule.api.security.tls.TlsConfiguration;
 import org.mule.tck.FunctionalTestCase;
+import org.mule.util.IOUtils;
 
 import org.apache.commons.httpclient.Credentials;
 import org.apache.commons.httpclient.HttpClient;
@@ -20,6 +20,9 @@ import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
+import org.apache.commons.httpclient.protocol.Protocol;
+import org.apache.commons.httpclient.protocol.ProtocolSocketFactory;
+import org.apache.commons.httpclient.protocol.SSLProtocolSocketFactory;
 
 
 public class HttpSecurityTestCase extends FunctionalTestCase 
@@ -39,11 +42,12 @@ public class HttpSecurityTestCase extends FunctionalTestCase
      * This test doesn't work in Maven because Mule can't load the keystores from the jars
      * @throws Exception
      */
-    public void xtestBasicAuth() throws Exception
+    public void testBasicAuth() throws Exception
     {
         HttpClient client = new HttpClient();
         Credentials credentials = new UsernamePasswordCredentials("admin", "admin");
         client.getState().setCredentials(AuthScope.ANY, credentials);
+        client.getState().setAuthenticationPreemptive(true);
 
         PostMethod method = new PostMethod("https://localhost:60443/services/Echo");
         method.setDoAuthentication(true);
@@ -57,21 +61,21 @@ public class HttpSecurityTestCase extends FunctionalTestCase
 
         credentials = new UsernamePasswordCredentials("admin", "adminasd");
         client.getState().setCredentials(AuthScope.ANY, credentials);
+        client.getState().setAuthenticationPreemptive(true);
+
         result = client.executeMethod(method);
 
-//        // this causes an error because mule tries to return the request as the response
-//        // and its already been read. Need to figure out how to configure Acegi differently...
-//        assertEquals(401, result);
+        assertEquals(401, result);
     }
 
-    public void testBasicAuthWithCxfClient() throws Exception
-    {
-    	MuleClient client = new MuleClient();
-    	
-    	String payload = "Hello";
-    	MuleMessage result = client.send("cxfOutbound", new DefaultMuleMessage(payload));    	
-    	assertEquals(payload, result.getPayloadAsString());
-    }
+//    public void testBasicAuthWithCxfClient() throws Exception
+//    {
+//    	MuleClient client = new MuleClient();
+//    	
+//    	String payload = "Hello";
+//    	MuleMessage result = client.send("cxfOutbound", new DefaultMuleMessage(payload));    	
+//    	assertEquals(payload, result.getPayloadAsString());
+//    }
 
     @Override
     protected String getConfigResources()
