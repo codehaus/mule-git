@@ -73,9 +73,8 @@ public class HttpSecurityFilterFunctionalTestCase extends FunctionalTestCase
         {
             int status = client.executeMethod(post);
             assertEquals(HttpConstants.SC_UNAUTHORIZED, status);
-            // TODO MULE-4556 Stream is closed too early when request message fails
-            // authorization
-            // assertEquals("/services/Echo", post.getResponseBodyAsString());
+            // TODO MULE-4561 Why do we return request and not an error?
+            assertEquals("testPaylod", post.getResponseBodyAsString());
         }
         finally
         {
@@ -198,9 +197,8 @@ public class HttpSecurityFilterFunctionalTestCase extends FunctionalTestCase
         {
             int status = client.executeMethod(post);
             assertEquals(result, status);
-            // TODO MULE-4556 Stream is closed too early when request message fails
-            // authorization
-            // assertNotNull(post.getResponseBodyAsString());
+            // TODO MULE-4561 Why do we return request and not an error?
+            assertEquals("testPaylod", post.getResponseBodyAsString());
         }
         finally
         {
