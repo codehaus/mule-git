@@ -10,6 +10,7 @@
 
 package org.mule.module.jca;
 
+import org.mule.MuleServer;
 import org.mule.module.jca.i18n.JcaMessages;
 import org.mule.security.MuleCredentials;
 
@@ -114,7 +115,7 @@ public class MuleManagedConnection implements ManagedConnection
             creds = new MuleCredentials(user, password.toCharArray());
         }
 
-        MuleConnection connection = new DefaultMuleConnection(this, info.getMuleContext(), creds);
+        MuleConnection connection = new DefaultMuleConnection(this, MuleServer.getMuleContext(), creds);
         addConnection(connection);
         return connection;
     }
