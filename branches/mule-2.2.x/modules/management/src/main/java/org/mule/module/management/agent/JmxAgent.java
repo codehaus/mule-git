@@ -67,6 +67,7 @@ import javax.management.remote.JMXServiceURL;
 import javax.management.remote.rmi.RMIConnectorServer;
 
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -145,7 +146,8 @@ public class JmxAgent extends AbstractAgent
 
     /**
      * The JmxAgent needs a RmiRegistryAgent to be started before it can properly work.
-     */    
+     */
+    @Override
     public List getDependentAgents()
     {
         return Arrays.asList(new Class[] { RmiRegistryAgent.class });
@@ -196,17 +198,14 @@ public class JmxAgent extends AbstractAgent
             muleContext.registerListener(new MuleContextStartedListener());
             // and unregister once context stopped
             muleContext.registerListener(new MuleContextStoppedListener());
-        } catch (NotificationException e) {
+        } 
+        catch (NotificationException e) 
+        {
             throw new InitialisationException(e, this);
         }
         initialized.compareAndSet(false, true);
     }
 
-    /**
-     * {@inheritDoc} (non-Javadoc)
-     *
-     * @see org.mule.api.lifecycle.Startable#start()
-     */
     public void start() throws MuleException
     {
         try
@@ -302,7 +301,6 @@ public class JmxAgent extends AbstractAgent
            muleContext.getRegistry().registerAgent(wmAgent);
         }
     }
-
 
     protected void registerStatisticsService() throws NotCompliantMBeanException, MBeanRegistrationException,
                                                       InstanceAlreadyExistsException, MalformedObjectNameException
