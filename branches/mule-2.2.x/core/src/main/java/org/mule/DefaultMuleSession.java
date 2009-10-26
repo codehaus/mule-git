@@ -33,9 +33,11 @@ import org.mule.util.UUID;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -59,6 +61,8 @@ public final class DefaultMuleSession implements MuleSession
 
     /**
      * The Mule service associated with the session
+     * 
+     * Note: This object uses custom serialization via the writeObject()/readObject() methods.
      */
     private transient Service service = null;
 
@@ -69,16 +73,25 @@ public final class DefaultMuleSession implements MuleSession
 
     private String id;
 
+    /**
+     * The security context associated with the session.  
+     * Note that this context will only be serialized if the SecurityContext object is Serializable.
+     */
     private SecurityContext securityContext;
 
     private Map properties = null;
 
+    /**
+     * The Mule context
+     * 
+     * Note: This object uses custom serialization via the readObject() method.
+     */
     private transient MuleContext muleContext;
     
     public DefaultMuleSession(Service service, MuleContext muleContext)
     {
         this.muleContext = muleContext;
-        properties = new HashMap();
+        properties = new HashMap<String, Object>();
         id = UUID.getUUID();
         this.service = service;
     }
@@ -111,7 +124,7 @@ public final class DefaultMuleSession implements MuleSession
                 CoreMessages.propertiesNotSet("message").toString());
         }
 
-        properties = new HashMap();
+        properties = new HashMap<String, Object>();
         requestSessionHandler.retrieveSessionInfoFromMessage(message, this);
         id = (String) getProperty(requestSessionHandler.getSessionIDKey());
         if (id == null)
@@ -469,7 +482,7 @@ public final class DefaultMuleSession implements MuleSession
         return service;
     }
 
-    void setService(Service service)
+    public void setService(Service service)
     {
         this.service = service;
     }
@@ -537,24 +550,36 @@ public final class DefaultMuleSession implements MuleSession
      * 
      * @return an iterater of property keys for the session properties on this
      *         session
+     * @deprecated Use getPropertyNamesAsSet() instead
      */
     public Iterator getPropertyNames()
     {
         return properties.keySet().iterator();
     }
+
+    public Set getPropertyNamesAsSet()
+    {
+        return Collections.unmodifiableSet(properties.keySet());
+    }
+
+    ////////////////////////////
+    // Serialization methods
+    ////////////////////////////
     
     private void writeObject(ObjectOutputStream out) throws IOException
     {
         out.defaultWriteObject();
-        out.writeObject(getService().getName());
+        out.writeObject(getService() != null ? getService().getName() : "null");
     }
 
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
     {
         in.defaultReadObject();
         String serviceName = (String) in.readObject();
-        service = RegistryContext.getRegistry().lookupService(serviceName);
+        if (!serviceName.equals("null"))
+        {
+            service = RegistryContext.getRegistry().lookupService(serviceName);
+        }
         muleContext = MuleServer.getMuleContext();
     }
-
 }

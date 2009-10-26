@@ -13,11 +13,14 @@ package org.mule.transport.http;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.MuleSession;
+import org.mule.api.config.MuleProperties;
+import org.mule.api.model.SessionException;
 import org.mule.api.transport.SessionHandler;
+import org.mule.config.i18n.MessageFactory;
+import org.mule.util.Base64;
+import org.mule.util.IOUtils;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.io.IOException;
 
 import org.apache.commons.httpclient.Cookie;
 import org.apache.commons.logging.Log;
@@ -34,42 +37,68 @@ public class HttpSessionHandler implements SessionHandler
      */
     protected transient Log logger = LogFactory.getLog(getClass());
 
-    public void retrieveSessionInfoFromMessage(MuleMessage message, MuleSession session) throws MuleException
+    public MuleSession retrieveSessionInfoFromMessage(MuleMessage message) throws MuleException
     {
-        Cookie[] cookies = (Cookie[])message.getProperty(HttpConnector.HTTP_COOKIES_PROPERTY);
-        if (cookies != null)
+        MuleSession session = null;
+        
+        Cookie[] cookies = (Cookie[]) message.getProperty(HttpConnector.HTTP_COOKIES_PROPERTY);
+        if (cookies != null && cookies.length > 0)
         {
-            for (int i = 0; i < cookies.length; i++)
+            byte[] serializedSession = Base64.decode(cookies[0].getValue());
+            
+            if (serializedSession != null)
             {
-                Cookie cookie = cookies[i];
-                session.setProperty(cookie.getName(), cookie.getValue());
-                if (logger.isDebugEnabled())
+                try
                 {
-                    logger.debug("Added cookie to session: " + cookie.toString());
+                    session = (MuleSession) IOUtils.deserialize(serializedSession);
+                }
+                catch (IOException e)
+                {
+                    throw new SessionException(MessageFactory.createStaticMessage("Unable to deserialize MuleSession"), e);
+                }
+                catch (ClassNotFoundException e)
+                {
+                    throw new SessionException(MessageFactory.createStaticMessage("Unable to deserialize MuleSession"), e);
                 }
             }
         }
+        return session;
     }
+
+    /**
+     * @deprecated Use retrieveSessionInfoFromMessage(MuleMessage message) instead
+     */
+    public void retrieveSessionInfoFromMessage(MuleMessage message, MuleSession session) throws MuleException
+    {
+		session = retrieveSessionInfoFromMessage(message);
+	}
 
     public void storeSessionInfoToMessage(MuleSession session, MuleMessage message) throws MuleException
     {
-        Object name;
-        Object value;
-        List cookies = new ArrayList();
-        for (Iterator iterator = session.getPropertyNames(); iterator.hasNext();)
+        String serializedEncodedSession;
+        try
         {
-            name = iterator.next();
-            value = session.getProperty(name);
+            byte[] serializedSession = IOUtils.serialize(session);
+            serializedEncodedSession = Base64.encodeBytes(serializedSession, Base64.DONT_BREAK_LINES);
+        }
+        catch (Exception e)
+        {
+            throw new SessionException(MessageFactory.createStaticMessage("Unable to serialize MuleSession"), e);
+        }
+        
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("Adding serialized and base64-encoded Session header to message: " + serializedEncodedSession);
+        }
+
+        message.setProperty(HttpConnector.HTTP_COOKIES_PROPERTY, new Cookie[] {
             // TODO handle domain, path, secure (https) and expiry
-            cookies.add(new Cookie(null, name.toString(), value.toString()));
-        }
-        if (cookies.size() > 0)
-        {
-            message.setProperty(HttpConnector.HTTP_COOKIES_PROPERTY,
-                cookies.toArray(new Cookie[cookies.size()]));
-        }
+            new Cookie(null, MuleProperties.MULE_SESSION_PROPERTY, serializedEncodedSession)});
     }
 
+    /**
+     * @deprecated This method is no longer needed and will be removed in the next major release
+     */
     public String getSessionIDKey()
     {
         return "ID";
