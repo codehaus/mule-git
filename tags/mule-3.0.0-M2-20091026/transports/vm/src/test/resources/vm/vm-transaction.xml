@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:spring="http://www.springframework.org/schema/beans"
+      xmlns:vm="http://www.mulesoft.org/schema/mule/vm"
+      xsi:schemaLocation="
+                       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+                       http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/3.0/mule.xsd
+                       http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/3.0/mule-vm.xsd">
+
+    <vm:connector name="vm" numberOfConcurrentTransactedReceivers="1"/>
+
+    <model name="main">
+        <service name="dispatchService">
+            <inbound>
+                <vm:inbound-endpoint address="vm://dispatchIn" synchronous="false"/>
+            </inbound>
+
+            <component class="org.mule.transport.vm.functional.VmTransactionTestCase$TestComponent"/>
+
+            <outbound>
+                <pass-through-router>
+                    <outbound-endpoint address="vm://out" synchronous="false"/>
+                </pass-through-router>
+            </outbound>
+        </service>
+
+        <service name="sendRequestService">
+            <inbound>
+                <vm:inbound-endpoint address="vm://sendRequestIn" synchronous="true">
+                    <vm:transaction action="BEGIN_OR_JOIN"/>
+                </vm:inbound-endpoint>
+            </inbound>
+
+            <component class="org.mule.transport.vm.functional.VmTransactionTestCase$TestComponent"/>
+        </service>
+    </model>
+</mule>

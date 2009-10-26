@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:spring="http://www.springframework.org/schema/beans"
+       xmlns:jms="http://www.mulesoft.org/schema/mule/jms"
+       xmlns:jdbc="http://www.mulesoft.org/schema/mule/jdbc"
+       xmlns:jbossts="http://www.mulesoft.org/schema/mule/jbossts"
+       xmlns:vm="http://www.mulesoft.org/schema/mule/vm"
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+           http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/3.0/mule.xsd
+           http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/3.0/mule-jms.xsd
+           http://www.mulesoft.org/schema/mule/jdbc http://www.mulesoft.org/schema/mule/jdbc/3.0/mule-jdbc.xsd
+           http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/3.0/mule-vm.xsd
+           http://www.mulesoft.org/schema/mule/jbossts http://www.mulesoft.org/schema/mule/jbossts/3.0/mule-jbossts.xsd">
+
+
+    <configuration defaultSynchronousEndpoints="false" defaultResponseTimeout="5000"/>
+    
+    <jms:activemq-connector name="jmsConnector" specification="1.1"/>
+    
+    <model>
+        <service name="component1">
+            <inbound>
+                <vm:inbound-endpoint path="component1"/>
+            </inbound>
+            <component class="org.mule.tck.testmodels.services.TestReceiver"/>
+            <outbound>
+                <multicasting-router>
+                    <jms:outbound-endpoint queue="my.queue1">
+                        <jms:transaction action="ALWAYS_JOIN"/>
+                    </jms:outbound-endpoint>
+                    <jms:outbound-endpoint queue="my.queue2">
+                        <jms:transaction action="ALWAYS_JOIN"/>
+                    </jms:outbound-endpoint>
+                    <jms:transaction action="ALWAYS_BEGIN"/>
+                </multicasting-router>
+            </outbound>
+        </service>
+        
+        <service name="component2">
+            <inbound>
+                <jms:inbound-endpoint queue="component2">
+                    <jms:transaction action="ALWAYS_BEGIN"/>
+                </jms:inbound-endpoint>
+            </inbound>
+            <component class="org.mule.tck.testmodels.services.TestReceiver"/>
+            <outbound>
+                <multicasting-router>
+                    <jms:outbound-endpoint queue="my.queue3">
+                        <jms:transaction action="NONE"/>
+                    </jms:outbound-endpoint>
+                    <jms:outbound-endpoint queue="my.queue4">
+                        <jms:transaction action="NONE"/>
+                    </jms:outbound-endpoint>
+                </multicasting-router>
+            </outbound>
+        </service>
+    </model>
+</mule>
