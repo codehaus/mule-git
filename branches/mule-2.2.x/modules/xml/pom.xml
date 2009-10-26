@@ -34,7 +34,6 @@
             <groupId>dom4j</groupId>
             <artifactId>dom4j</artifactId>
             <version>${dom4jVersion}</version>
-            
             <exclusions>
                 <!-- no XML -->
                 <exclusion>
@@ -85,12 +84,11 @@
             <groupId>jaxen</groupId>
             <artifactId>jaxen</artifactId>
             <version>${jaxenVersion}-osgi</version>
-            
             <!-- see http://jira.codehaus.org/browse/MNG-3007
                  depending on whether jaxen is resolved via dist.codehaus.org
                  or the central repo we get transitive dependencies that we
                  don't want here
-                 -->
+            -->
             <exclusions>
                 <exclusion>
                     <groupId>com.ibm.icu</groupId>
@@ -160,6 +158,17 @@
             <artifactId>mockobjects-core</artifactId>
             <scope>test</scope>
         </dependency>
-    
+        <dependency>
+            <groupId>xalan</groupId>
+            <artifactId>xalan</artifactId>
+            <version>2.7.1</version>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>xerces</groupId>
+                    <artifactId>xercesImpl</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
     </dependencies>
 </project>

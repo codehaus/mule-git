@@ -10,15 +10,18 @@
 
 package org.mule.module.xml.filters;
 
-import com.sun.org.apache.xpath.internal.jaxp.XPathFactoryImpl;
-import junit.framework.TestCase;
 import org.mule.DefaultMuleMessage;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
 
-import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.InputStream;
 import java.util.HashMap;
+
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import junit.framework.TestCase;
+
+import org.apache.xpath.jaxp.XPathFactoryImpl;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 
 /**
  * @author Ryan Heaton
@@ -90,7 +93,6 @@ public class XPathFilterTestCase extends TestCase
         assertFalse(filter.accept(document));
         filter.setExpectedValue("another");
         assertTrue(filter.accept(document));
-
     }
 
     /**
