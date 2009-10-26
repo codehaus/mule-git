@@ -325,8 +325,7 @@ public abstract class AbstractExceptionListener
                 if (service != null)
                 {
                     OutboundRouter router = createOutboundRouter();
-                    router.route(exceptionMessage, new DefaultMuleSession(exceptionMessage,
-                        new MuleSessionHandler(), ctx.getService(), muleContext));
+                    router.route(exceptionMessage, new DefaultMuleSession(ctx.getService(), muleContext));
                 }
                 else
                 {
@@ -366,8 +365,8 @@ public abstract class AbstractExceptionListener
 
             MuleMessage clonedMessage = new DefaultMuleMessage(exceptionMessage.getPayload(),
                 exceptionMessage);
-            MuleEvent exceptionEvent = new DefaultMuleEvent(clonedMessage, endpoint, new DefaultMuleSession(
-                clonedMessage, new MuleSessionHandler(), muleContext), true);
+            MuleEvent exceptionEvent = new DefaultMuleEvent(clonedMessage, endpoint, 
+                new DefaultMuleSession(muleContext), true);
             exceptionEvent = RequestContext.setEvent(exceptionEvent);
 
             if (endpoint.isSynchronous())

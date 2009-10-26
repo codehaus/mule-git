@@ -88,6 +88,11 @@ public final class DefaultMuleSession implements MuleSession
      */
     private transient MuleContext muleContext;
     
+    public DefaultMuleSession(MuleContext muleContext)
+    {
+        this(null, muleContext);
+    }
+
     public DefaultMuleSession(Service service, MuleContext muleContext)
     {
         this.muleContext = muleContext;
@@ -96,50 +101,21 @@ public final class DefaultMuleSession implements MuleSession
         this.service = service;
     }
 
+    /**
+     * @deprecated Use DefaultMuleSession(Service service, MuleContext muleContext) instead
+     */
     public DefaultMuleSession(MuleMessage message, SessionHandler requestSessionHandler, Service service, MuleContext muleContext)
         throws MuleException
     {
-        this(message, requestSessionHandler, muleContext);
-        if (service == null)
-        {
-            throw new IllegalArgumentException(
-                CoreMessages.propertiesNotSet("service").toString());
-        }
-        this.service = service;
+        this(service, muleContext);
     }
 
+    /**
+     * @deprecated Use DefaultMuleSession(MuleContext muleContext) instead
+     */
     public DefaultMuleSession(MuleMessage message, SessionHandler requestSessionHandler, MuleContext muleContext) throws MuleException
     {
-        this.muleContext = muleContext;
-        
-        if (requestSessionHandler == null)
-        {
-            throw new IllegalArgumentException(
-                CoreMessages.propertiesNotSet("requestSessionHandler").toString());
-        }
-
-        if (message == null)
-        {
-            throw new IllegalArgumentException(
-                CoreMessages.propertiesNotSet("message").toString());
-        }
-
-        properties = new HashMap<String, Object>();
-        requestSessionHandler.retrieveSessionInfoFromMessage(message, this);
-        id = (String) getProperty(requestSessionHandler.getSessionIDKey());
-        if (id == null)
-        {
-            id = UUID.getUUID();
-            if (logger.isDebugEnabled())
-            {
-                logger.debug("There is no session id on the request using key: "
-                             + requestSessionHandler.getSessionIDKey() + ". Generating new session id: " + id);
-            }
-        }
-        else if (logger.isDebugEnabled())
-        {
-            logger.debug("Got session with id: " + id);
-        }
+        this(muleContext);
     }
 
     public void dispatchEvent(MuleMessage message) throws MuleException

@@ -27,7 +27,7 @@ public class MuleSessionHandlerTestCase extends AbstractMuleTestCase
     {
         MuleMessage message = new DefaultMuleMessage("Test Message");
         MuleSessionHandler handler = new MuleSessionHandler();
-        MuleSession session = new DefaultMuleSession(message, handler, muleContext);
+        MuleSession session = new DefaultMuleSession(muleContext);
         
         String string = "bar";
         session.setProperty("fooString", string);

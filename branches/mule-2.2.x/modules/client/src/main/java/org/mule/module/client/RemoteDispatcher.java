@@ -14,8 +14,6 @@ import org.mule.DefaultMuleEvent;
 import org.mule.DefaultMuleMessage;
 import org.mule.DefaultMuleSession;
 import org.mule.MuleServer;
-import org.mule.MuleSessionHandler;
-import org.mule.NullSessionHandler;
 import org.mule.RegistryContext;
 import org.mule.RequestContext;
 import org.mule.api.FutureMessageResult;
@@ -39,7 +37,6 @@ import org.mule.module.client.remoting.UnsupportedWireFormatException;
 import org.mule.module.client.remoting.notification.RemoteDispatcherNotification;
 import org.mule.security.MuleCredentials;
 import org.mule.transformer.TransformerUtils;
-import org.mule.transport.AbstractConnector;
 import org.mule.transport.NullPayload;
 import org.mule.util.ClassUtils;
 import org.mule.util.IOUtils;
@@ -110,7 +107,7 @@ public class RemoteDispatcher implements Disposable
     {
         MuleMessage msg = new DefaultMuleMessage(ServerHandshake.SERVER_HANDSHAKE_PROPERTY);
         MuleMessage result = syncServerEndpoint.send(new DefaultMuleEvent(msg, syncServerEndpoint,
-                new DefaultMuleSession(msg, new NullSessionHandler(), MuleServer.getMuleContext()), true));
+                new DefaultMuleSession(MuleServer.getMuleContext()), true));
 
         if(result==null)
         {
@@ -360,8 +357,7 @@ public class RemoteDispatcher implements Disposable
         }
 
         message.addProperties(action.getProperties());
-        MuleSession session = new DefaultMuleSession(message,
-            ((AbstractConnector)serverEndpoint.getConnector()).getSessionHandler(), MuleServer.getMuleContext());
+        MuleSession session = new DefaultMuleSession(MuleServer.getMuleContext());
 
         MuleEvent event = new DefaultMuleEvent(message, serverEndpoint, session, true);
         event.setTimeout(timeout);
@@ -455,7 +451,6 @@ public class RemoteDispatcher implements Disposable
         throws MuleException
     {
 
-        RequestContext.setEvent(new DefaultMuleEvent(message, endpoint, new DefaultMuleSession(message,
-            new MuleSessionHandler(), MuleServer.getMuleContext()), synchronous));
+        RequestContext.setEvent(new DefaultMuleEvent(message, endpoint, new DefaultMuleSession(MuleServer.getMuleContext()), synchronous));
     }
 }

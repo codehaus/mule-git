@@ -12,7 +12,6 @@ package org.mule.transport;
 
 import org.mule.DefaultMuleEvent;
 import org.mule.DefaultMuleSession;
-import org.mule.NullSessionHandler;
 import org.mule.OptimizedRequestContext;
 import org.mule.RequestContext;
 import org.mule.ResponseOutputStream;
@@ -245,7 +244,7 @@ public abstract class AbstractMessageReceiver extends AbstractConnectable implem
                 //Maybe the filter should be checked in the MessageListener...
                 message = handleUnacceptedFilter(message);
                 RequestContext.setEvent(new DefaultMuleEvent(message, endpoint,
-                        new DefaultMuleSession(message, new NullSessionHandler(), connector.getMuleContext()), synchronous));
+                        new DefaultMuleSession(connector.getMuleContext()), synchronous));
                 return message;
             }
         }
@@ -324,7 +323,7 @@ public abstract class AbstractMessageReceiver extends AbstractConnectable implem
             }
             else
             {
-                session = new DefaultMuleSession(message, connector.getSessionHandler(), service, connector.getMuleContext());
+                session = new DefaultMuleSession(service, connector.getMuleContext());
             }
             MuleEvent muleEvent = new DefaultMuleEvent(message, endpoint, session, synchronous, ros);
             muleEvent = OptimizedRequestContext.unsafeSetEvent(muleEvent);
