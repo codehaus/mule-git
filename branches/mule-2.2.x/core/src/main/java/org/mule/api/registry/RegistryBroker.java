@@ -18,6 +18,10 @@ public interface RegistryBroker extends Registry
     void addRegistry(long id, Registry registry);
 
     void removeRegistry(long id);
+    
+    void addRegistry(Registry registry);
+
+    void removeRegistry(Registry registry);
 }
 
 

@@ -13,32 +13,41 @@ package org.mule.registry;
 import org.mule.api.MuleContext;
 import org.mule.api.registry.Registry;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Map;
-
-import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
+import java.util.List;
 
 public class DefaultRegistryBroker extends AbstractRegistryBroker
 {
-    private Map/*<Registry>*/ registries = new ConcurrentHashMap();
+    private List<Registry> registries = new ArrayList<Registry>();
 
     public DefaultRegistryBroker(MuleContext context)
     {
-        addRegistry(-1, new TransientRegistry(context));
+        registries.add(0, new TransientRegistry(context));
     }
 
     public void addRegistry(long id, Registry registry)
     {
-        registries.put(new Long(id), registry);
+        registries.add((int) id, registry);
     }
 
     public void removeRegistry(long id)
     {
-        registries.remove(new Long(id));
+        registries.remove(id);
     }
 
-    protected Collection/*<Registry>*/ getRegistries()
+    public void addRegistry(Registry registry)
     {
-        return registries.values();
+        registries.add(registry);
+    }
+
+    public void removeRegistry(Registry registry)
+    {
+        registries.remove(registry);
+    }
+
+    protected Collection<Registry> getRegistries()
+    {
+        return registries;
     }
 }

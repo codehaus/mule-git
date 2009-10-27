@@ -603,4 +603,15 @@ public class DefaultMuleContext implements MuleContext
     {
         return expressionManager;
     }
+
+    public void addRegistry(Registry registry)
+    {
+        registryBroker.addRegistry(registry);
+        
+    }
+
+    public void removeRegistry(Registry registry)
+    {
+        registryBroker.removeRegistry(registry);
+    }
 }

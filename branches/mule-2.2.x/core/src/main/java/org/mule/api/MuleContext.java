@@ -199,6 +199,12 @@ public interface MuleContext extends Lifecycle
     // TODO This should ideally only be available via an Admin interface
     void removeRegistry(long id);
 
+    // TODO This should ideally only be available via an Admin interface
+    void addRegistry(Registry registry);
+
+    // TODO This should ideally only be available via an Admin interface
+    void removeRegistry(Registry registry);
+    
     /**
      * Returns the date when the server was started.
      * @return the date when the server was started.
