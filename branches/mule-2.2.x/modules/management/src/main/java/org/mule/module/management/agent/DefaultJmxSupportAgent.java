@@ -24,13 +24,13 @@ import java.util.Map;
 
 import javax.management.remote.rmi.RMIConnectorServer;
 
-
 public class DefaultJmxSupportAgent extends AbstractAgent
 {
 
     public static final String DEFAULT_HOST = "localhost";
     public static final String DEFAULT_PORT = "1099";
 
+    private boolean loadLog4jAgent = true;
     private boolean loadJdmkAgent = false;
     private boolean loadMx4jAgent = false;
     private boolean loadProfilerAgent = false;
@@ -114,21 +114,28 @@ public class DefaultJmxSupportAgent extends AbstractAgent
             {
                 RegistryContext.getRegistry().registerAgent(agent);
             }
+            
             agent = createJmxAgent();
             if (!isAgentRegistered(agent))
             {
                 RegistryContext.getRegistry().registerAgent(agent);
             }
-            agent = createLog4jAgent();
-            if (!isAgentRegistered(agent))
+            
+            if (loadLog4jAgent)
             {
-                RegistryContext.getRegistry().registerAgent(agent);
+                agent = createLog4jAgent();
+                if (!isAgentRegistered(agent))
+                {
+                    RegistryContext.getRegistry().registerAgent(agent);
+                }
             }
+            
             agent = createJmxNotificationAgent();
             if (!isAgentRegistered(agent))
             {
                 RegistryContext.getRegistry().registerAgent(agent);
             }
+            
             if (loadJdmkAgent)
             {
                 agent = createJdmkAgent();
@@ -242,110 +249,66 @@ public class DefaultJmxSupportAgent extends AbstractAgent
         return muleContext.getRegistry().lookupAgent(agent.getName()) != null;
     }
 
-    /**
-     * Getter for property 'loadJdmkAgent'.
-     *
-     * @return Value for property 'loadJdmkAgent'.
-     */
+    public boolean isLoadLog4jAgent()
+    {
+        return loadLog4jAgent;
+    }
+
+    public void setLoadLog4jAgent(boolean loadLog4jAgent)
+    {
+        this.loadLog4jAgent = loadLog4jAgent;
+    }
+
     public boolean isLoadJdmkAgent()
     {
         return loadJdmkAgent;
     }
 
-    /**
-     * Setter for property 'loadJdmkAgent'.
-     *
-     * @param loadJdmkAgent Value to set for property 'loadJdmkAgent'.
-     */
     public void setLoadJdmkAgent(boolean loadJdmkAgent)
     {
         this.loadJdmkAgent = loadJdmkAgent;
     }
 
-    /**
-     * Getter for property 'loadMx4jAgent'.
-     *
-     * @return Value for property 'loadMx4jAgent'.
-     */
     public boolean isLoadMx4jAgent()
     {
         return loadMx4jAgent;
     }
 
-    /**
-     * Setter for property 'loadMx4jAgent'.
-     *
-     * @param loadMx4jAgent Value to set for property 'loadMx4jAgent'.
-     */
     public void setLoadMx4jAgent(boolean loadMx4jAgent)
     {
         this.loadMx4jAgent = loadMx4jAgent;
     }
 
-    /**
-     * Getter for property 'loadProfilerAgent'.
-     * @return Value for property 'loadProfilerAgent'.
-     */
     public boolean isLoadProfilerAgent()
     {
         return loadProfilerAgent;
     }
 
-    /**
-     * Setter for property 'loadProfilerAgent'.
-     * @param loadProfilerAgent Value to set for property 'loadProfilerAgent'.
-     */
     public void setLoadProfilerAgent(boolean loadProfilerAgent)
     {
         this.loadProfilerAgent = loadProfilerAgent;
     }
 
-    /**
-     * Getter for property 'port'.
-     *
-     * @return Value for property 'port'.
-     */
     public String getPort()
     {
         return port;
     }
 
-    /**
-     * Setter for property 'port'.
-     *
-     * @param port Value to set for property 'port'.
-     */
     public void setPort(final String port)
     {
         this.port = port;
     }
 
-    /**
-     * Getter for property 'host'.
-     *
-     * @return Value for property 'host'.
-     */
     public String getHost()
     {
         return host;
     }
 
-    /**
-     * Setter for property 'host'.
-     *
-     * @param host Value to set for property 'host'.
-     */
     public void setHost(final String host)
     {
         this.host = host;
     }
 
-
-    /**
-     * Setter for property 'credentials'.
-     *
-     * @param credentials Value to set for property 'credentials'.
-     */
     public void setCredentials(final Map credentials)
     {
         this.credentials = credentials;
