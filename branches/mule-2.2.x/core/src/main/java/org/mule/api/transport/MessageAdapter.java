@@ -75,16 +75,18 @@ public interface MessageAdapter extends Serializable
      * Removes a property on this message
      * 
      * @param key the property key to remove
+     * @return the removed property value or null if the property did not exist
      */
-    void removeProperty(String key);
+    Object removeProperty(String key);
 
     /**
      * Removes a property on this message from the specified scope only.
      * 
      * @param key the property key to remove
      * @param scope The scope at which to set the property at
+     * @return the removed property value or null if the property did not exist
      */
-    void removeProperty(String key, PropertyScope scope);
+    Object removeProperty(String key, PropertyScope scope);
 
     /**
      * @return all property keys on this message

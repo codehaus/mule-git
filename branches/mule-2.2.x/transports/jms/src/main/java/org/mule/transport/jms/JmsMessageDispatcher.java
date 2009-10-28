@@ -191,12 +191,9 @@ public class JmsMessageDispatcher extends AbstractMessageDispatcher
             processMessage(msg, event);
 
             // QoS support
-            String ttlString = (String) eventMsg.getProperty(JmsConstants.TIME_TO_LIVE_PROPERTY);
-            eventMsg.removeProperty(JmsConstants.TIME_TO_LIVE_PROPERTY);
-            String priorityString = (String) eventMsg.getProperty(JmsConstants.PRIORITY_PROPERTY);
-            eventMsg.removeProperty(JmsConstants.PRIORITY_PROPERTY);
-            String persistentDeliveryString = (String) eventMsg.getProperty(JmsConstants.PERSISTENT_DELIVERY_PROPERTY);
-            eventMsg.removeProperty(JmsConstants.PERSISTENT_DELIVERY_PROPERTY);
+            String ttlString = (String) eventMsg.removeProperty(JmsConstants.TIME_TO_LIVE_PROPERTY);
+            String priorityString = (String) eventMsg.removeProperty(JmsConstants.PRIORITY_PROPERTY);
+            String persistentDeliveryString = (String) eventMsg.removeProperty(JmsConstants.PERSISTENT_DELIVERY_PROPERTY);
 
             long ttl = StringUtils.isNotBlank(ttlString)
                     ? NumberUtils.toLong(ttlString)
@@ -444,15 +441,13 @@ public class JmsMessageDispatcher extends AbstractMessageDispatcher
         if (isHandleReplyTo(message, event))
         {
 
-            Object tempReplyTo = event.getMessage().getProperty(JmsConstants.JMS_REPLY_TO);
-            event.getMessage().removeProperty(JmsConstants.JMS_REPLY_TO);
+            Object tempReplyTo = event.getMessage().removeProperty(JmsConstants.JMS_REPLY_TO);
             if (tempReplyTo == null)
             {
                 //It may be a Mule URI or global endpoint Ref
-                tempReplyTo = event.getMessage().getProperty(MuleProperties.MULE_REPLY_TO_PROPERTY);
+                tempReplyTo = event.getMessage().removeProperty(MuleProperties.MULE_REPLY_TO_PROPERTY);
                 if (tempReplyTo != null)
                 {
-	                event.getMessage().removeProperty(MuleProperties.MULE_REPLY_TO_PROPERTY);
                     int i = tempReplyTo.toString().indexOf("://");
                     if(i > -1)
                     {

@@ -205,8 +205,7 @@ public class RmiConnector extends AbstractJndiConnector
 
         if (null == methodName)
         {
-            methodName = (String)event.getMessage().getProperty(MuleProperties.MULE_METHOD_PROPERTY);
-            event.getMessage().removeProperty(MuleProperties.MULE_METHOD_PROPERTY);
+            methodName = (String)event.getMessage().removeProperty(MuleProperties.MULE_METHOD_PROPERTY);
 
             if (null == methodName)
             {

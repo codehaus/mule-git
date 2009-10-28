@@ -524,14 +524,15 @@ public class AxisMessageDispatcher extends AbstractMessageDispatcher
             }
         }
 
-        SoapMethod soapMethod = (SoapMethod)event.getMessage().getProperty(MuleProperties.MULE_SOAP_METHOD);
+        SoapMethod soapMethod = (SoapMethod)event.getMessage()
+            .removeProperty(MuleProperties.MULE_SOAP_METHOD);
         if (soapMethod == null)
         {
             soapMethod = (SoapMethod)callParameters.get(method.getLocalPart());
         }
-        else
+
+        if (soapMethod != null)
         {
-	        event.getMessage().removeProperty(MuleProperties.MULE_SOAP_METHOD);
             for (Iterator iterator = soapMethod.getNamedParameters().iterator(); iterator.hasNext();)
             {
                 NamedParameter parameter = (NamedParameter)iterator.next();

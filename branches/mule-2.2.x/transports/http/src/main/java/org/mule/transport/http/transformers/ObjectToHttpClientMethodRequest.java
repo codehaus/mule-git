@@ -258,10 +258,9 @@ public class ObjectToHttpClientMethodRequest extends AbstractMessageAwareTransfo
             }
 
             // Allow the user to set HttpMethodParams as an object on the message
-            HttpMethodParams params = (HttpMethodParams) msg.getProperty(HttpConnector.HTTP_PARAMS_PROPERTY);
+            HttpMethodParams params = (HttpMethodParams) msg.removeProperty(HttpConnector.HTTP_PARAMS_PROPERTY);
             if (params != null)
             {
-	            msg.removeProperty(HttpConnector.HTTP_PARAMS_PROPERTY);
                 httpMethod.setParams(params);
             }
             else

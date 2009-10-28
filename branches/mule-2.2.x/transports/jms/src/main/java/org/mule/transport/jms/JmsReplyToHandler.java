@@ -114,12 +114,9 @@ public class JmsReplyToHandler extends DefaultReplyToHandler
 
             // QoS support
             MuleMessage eventMsg = event.getMessage();
-            String ttlString = (String)eventMsg.getProperty(JmsConstants.TIME_TO_LIVE_PROPERTY);
-            eventMsg.removeProperty(JmsConstants.TIME_TO_LIVE_PROPERTY);
-            String priorityString = (String)eventMsg.getProperty(JmsConstants.PRIORITY_PROPERTY);
-            eventMsg.removeProperty(JmsConstants.PRIORITY_PROPERTY);
-            String persistentDeliveryString = (String)eventMsg.getProperty(JmsConstants.PERSISTENT_DELIVERY_PROPERTY);
-            eventMsg.removeProperty(JmsConstants.PERSISTENT_DELIVERY_PROPERTY);
+            String ttlString = (String)eventMsg.removeProperty(JmsConstants.TIME_TO_LIVE_PROPERTY);
+            String priorityString = (String)eventMsg.removeProperty(JmsConstants.PRIORITY_PROPERTY);
+            String persistentDeliveryString = (String)eventMsg.removeProperty(JmsConstants.PERSISTENT_DELIVERY_PROPERTY);
 
             String correlationIDString = replyToMessage.getJMSCorrelationID();
             if (StringUtils.isBlank(correlationIDString))

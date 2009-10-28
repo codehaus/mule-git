@@ -212,17 +212,17 @@ public abstract class AbstractMessageAdapter implements MessageAdapter, ThreadSa
     }
 
     /** {@inheritDoc} */
-    public void removeProperty(String key)
+    public Object removeProperty(String key)
     {
         assertAccess(WRITE);
-        properties.removeProperty(key);
+        return properties.removeProperty(key);
     }
 
     /** {@inheritDoc} */
-    public void removeProperty(String key, PropertyScope scope)
+    public Object removeProperty(String key, PropertyScope scope)
     {
         assertAccess(WRITE);
-        properties.removeProperty(key, scope);
+        return properties.removeProperty(key, scope);
     }
 
     /** {@inheritDoc} */

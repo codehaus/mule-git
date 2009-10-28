@@ -142,10 +142,8 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
     {
         MuleMessage msg = event.getMessage();
 
-        Object cookiesProperty = msg.getProperty(HttpConnector.HTTP_COOKIES_PROPERTY);
-        msg.removeProperty(HttpConnector.HTTP_COOKIES_PROPERTY);
-        String cookieSpecProperty = (String) msg.getProperty(HttpConnector.HTTP_COOKIE_SPEC_PROPERTY);
-        msg.removeProperty(HttpConnector.HTTP_COOKIE_SPEC_PROPERTY);
+        Object cookiesProperty = msg.removeProperty(HttpConnector.HTTP_COOKIES_PROPERTY);
+        String cookieSpecProperty = (String) msg.removeProperty(HttpConnector.HTTP_COOKIE_SPEC_PROPERTY);
         processCookies(cookiesProperty, cookieSpecProperty, event);
 
         cookiesProperty = endpoint.getProperty(HttpConnector.HTTP_COOKIES_PROPERTY);
