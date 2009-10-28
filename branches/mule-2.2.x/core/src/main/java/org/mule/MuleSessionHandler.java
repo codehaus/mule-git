@@ -39,7 +39,8 @@ public class MuleSessionHandler implements SessionHandler
     public MuleSession retrieveSessionInfoFromMessage(MuleMessage message) throws MuleException
     {
         MuleSession session = null;
-        byte[] serializedSession = (byte[]) message.removeProperty(MuleProperties.MULE_SESSION_PROPERTY);
+        byte[] serializedSession = (byte[]) message.getProperty(MuleProperties.MULE_SESSION_PROPERTY);
+        message.removeProperty(MuleProperties.MULE_SESSION_PROPERTY);
 
         if (serializedSession != null)
         {

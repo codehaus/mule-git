@@ -245,18 +245,10 @@ public class MessagePropertiesContext implements Serializable
      * You may explicitly remove a session property by calling removeProperty(key, PropertyScope.SESSION)
      *
      * @param key the property key to remove
-     * @return the removed property value or null if the property did not exist
      */
-    public Object removeProperty(String key)
+    public void removeProperty(String key)
     {
-        Object value = getScopedProperties(PropertyScope.OUTBOUND).remove(key);
-        Object inv = getScopedProperties(PropertyScope.INVOCATION).remove(key);
-    
-        keySet.remove(key);
-      
-        if (value == null) value = inv;
-        
-        return value;
+        removeProperty(key, null);
     }
 
     /**
@@ -265,24 +257,21 @@ public class MessagePropertiesContext implements Serializable
      * @param key the property key to remove
      * @return the removed property value or null if the property did not exist
      */
-    public Object removeProperty(String key, PropertyScope scope)
+    public void removeProperty(String key, PropertyScope scope)
     {
         if (scope == null)
         {
-            return removeProperty(key);
+            // Remove from all read/write scopes
+            getScopedProperties(PropertyScope.OUTBOUND).remove(key);
+            getScopedProperties(PropertyScope.INVOCATION).remove(key);
         }
         
-        Object value = null;
-        if (PropertyScope.SESSION.equals(scope))
+        else if (PropertyScope.SESSION.equals(scope))
         {
             if (RequestContext.getEvent() != null)
             {
-                value = RequestContext.getEvent().getSession().removeProperty(key);
+                RequestContext.getEvent().getSession().removeProperty(key);
             }
-        }
-        else
-        {
-            value = getScopedProperties(scope).remove(key);
         }
 
         // Only remove the property from the keySet if it does not exist in any other scope besides this one.
@@ -292,8 +281,6 @@ public class MessagePropertiesContext implements Serializable
         {
             keySet.remove(key);
         }
-        
-        return value;
     }
 
     /**

@@ -43,8 +43,9 @@ public class MethodHeaderPropertyEntryPointResolver extends AbstractEntryPointRe
     {
         //TODO: RM* This is a hack that can be fixed by introducing property scoping on the message
         // Transports such as SOAP need to ignore the method property
-        boolean ignoreMethod = BooleanUtils.toBoolean((Boolean) context.getMessage().removeProperty(
-                MuleProperties.MULE_IGNORE_METHOD_PROPERTY));
+        boolean ignoreMethod = 
+            BooleanUtils.toBoolean((Boolean) context.getMessage().getProperty(MuleProperties.MULE_IGNORE_METHOD_PROPERTY));
+        context.getMessage().removeProperty(MuleProperties.MULE_IGNORE_METHOD_PROPERTY);
 
         if (ignoreMethod)
         {
@@ -55,9 +56,10 @@ public class MethodHeaderPropertyEntryPointResolver extends AbstractEntryPointRe
         }
 
         //TODO: with scoped properties we wouldn't need to remove the property here
-        Object methodProp = context.getMessage().removeProperty(getMethodProperty());
+        Object methodProp = context.getMessage().getProperty(getMethodProperty());
         if (methodProp == null)
         {
+            context.getMessage().removeProperty(getMethodProperty());
             InvocationResult result = new InvocationResult(InvocationResult.STATE_INVOKED_FAILED);
             // no method for the explicit method header
             result.setErrorMessage(CoreMessages.propertyIsNotSetOnEvent(getMethodProperty()).toString());

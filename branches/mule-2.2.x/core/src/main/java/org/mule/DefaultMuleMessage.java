@@ -293,15 +293,15 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess
     }
 
     /** {@inheritDoc} */
-    public Object removeProperty(String key)
+    public void removeProperty(String key)
     {
-        return adapter.removeProperty(key);
+        adapter.removeProperty(key);
     }
 
     /** {@inheritDoc} */
-    public Object removeProperty(String key, PropertyScope scope)
+    public void removeProperty(String key, PropertyScope scope)
     {
-        return adapter.removeProperty(key, scope);
+        adapter.removeProperty(key, scope);
     }
 
     /** {@inheritDoc} */
