@@ -13,18 +13,17 @@ package org.mule.test.integration.message;
 import org.mule.api.MuleMessage;
 import org.mule.module.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.transport.NullPayload;
 
-public class MessagePropertyScopesTestCase extends FunctionalTestCase {
-
+public class MessagePropertyScopesTestCase extends FunctionalTestCase 
+{
 	@Override
 	protected String getConfigResources() 
 	{
 		return "org/mule/test/integration/messaging/message-property-scopes-config.xml";
 	}
 
-	public void testSessionProperty() throws Exception {
-		
+	public void testSessionProperty() throws Exception 
+	{
 		MuleClient client = new MuleClient();
 		MuleMessage response = client.send("vm://in1", "Hello World", null);
 		assertNotNull(response);
@@ -34,7 +33,8 @@ public class MessagePropertyScopesTestCase extends FunctionalTestCase {
 	}
 
 	/* Test fails
-    public void testInvocationProperty() throws Exception {
+    public void testInvocationProperty() throws Exception 
+    {
         
         MuleClient client = new MuleClient();
         MuleMessage response = client.send("vm://in2", "Hello World", null);
