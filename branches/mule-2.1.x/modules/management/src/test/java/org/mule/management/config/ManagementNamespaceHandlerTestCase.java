@@ -18,7 +18,6 @@ import org.mule.module.management.agent.JmxAgent;
 import org.mule.module.management.agent.JmxServerNotificationAgent;
 import org.mule.module.management.agent.Log4jAgent;
 import org.mule.module.management.agent.Mx4jAgent;
-import org.mule.module.management.agent.YourKitProfilerAgent;
 import org.mule.module.management.support.AutoDiscoveryJmxSupportFactory;
 import org.mule.module.management.support.JmxSupport;
 import org.mule.module.management.support.JmxSupportFactory;
@@ -33,6 +32,14 @@ public class ManagementNamespaceHandlerTestCase extends FunctionalTestCase
     private static final int CHAINSAW_PORT = 8080;
     protected JmxSupportFactory jmxSupportFactory = AutoDiscoveryJmxSupportFactory.getInstance();
     protected JmxSupport jmxSupport = jmxSupportFactory.getJmxSupport();
+
+    
+    public ManagementNamespaceHandlerTestCase()
+    {
+        super();
+        // do not start the muleContext, we're only doing registry lookups in this test case
+        setStartContext(false);
+    }
 
     protected String getConfigResources()
     {
@@ -97,19 +104,20 @@ public class ManagementNamespaceHandlerTestCase extends FunctionalTestCase
         assertNotNull(registry);
         Collection agents = registry.lookupObjects(Agent.class);
         assertEquals(agents.size(), 8);
+        
         Iterator iter = agents.iterator();
         assertTrue(iter.next() instanceof JmxAgent);
         assertTrue(iter.next() instanceof Log4jAgent);
         assertTrue(iter.next() instanceof Mx4jAgent);
         assertTrue(iter.next() instanceof TestAgent);
         assertTrue(iter.next() instanceof JmxServerNotificationAgent);
+        
         Log4jNotificationLoggerAgent log4jAgent = (Log4jNotificationLoggerAgent) iter.next();
         assertEquals(log4jAgent.getName(), "log4j-notifications");
+        
         log4jAgent = (Log4jNotificationLoggerAgent) iter.next();
         assertEquals(log4jAgent.getName(), "chainsaw-notifications");
         assertTrue(iter.next() instanceof EndpointNotificationLoggerAgent);
     }
 
 }
-
-
