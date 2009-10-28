@@ -18,11 +18,11 @@ import org.mule.api.model.SessionException;
 import org.mule.api.transport.SessionHandler;
 import org.mule.config.i18n.MessageFactory;
 import org.mule.util.Base64;
-import org.mule.util.IOUtils;
 
 import java.io.IOException;
 
 import org.apache.commons.httpclient.Cookie;
+import org.apache.commons.lang.SerializationUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -48,18 +48,7 @@ public class HttpSessionHandler implements SessionHandler
             
             if (serializedSession != null)
             {
-                try
-                {
-                    session = (MuleSession) IOUtils.deserialize(serializedSession);
-                }
-                catch (IOException e)
-                {
-                    throw new SessionException(MessageFactory.createStaticMessage("Unable to deserialize MuleSession"), e);
-                }
-                catch (ClassNotFoundException e)
-                {
-                    throw new SessionException(MessageFactory.createStaticMessage("Unable to deserialize MuleSession"), e);
-                }
+                session = (MuleSession) SerializationUtils.deserialize(serializedSession);
             }
         }
         return session;
@@ -75,13 +64,13 @@ public class HttpSessionHandler implements SessionHandler
 
     public void storeSessionInfoToMessage(MuleSession session, MuleMessage message) throws MuleException
     {
+        byte[] serializedSession = SerializationUtils.serialize(session);
         String serializedEncodedSession;
         try
         {
-            byte[] serializedSession = IOUtils.serialize(session);
             serializedEncodedSession = Base64.encodeBytes(serializedSession, Base64.DONT_BREAK_LINES);
         }
-        catch (Exception e)
+        catch (IOException e)
         {
             throw new SessionException(MessageFactory.createStaticMessage("Unable to serialize MuleSession"), e);
         }

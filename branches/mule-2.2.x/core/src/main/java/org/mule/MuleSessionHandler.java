@@ -17,10 +17,8 @@ import org.mule.api.config.MuleProperties;
 import org.mule.api.model.SessionException;
 import org.mule.api.transport.SessionHandler;
 import org.mule.config.i18n.MessageFactory;
-import org.mule.util.IOUtils;
 
-import java.io.IOException;
-
+import org.apache.commons.lang.SerializationUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -43,18 +41,7 @@ public class MuleSessionHandler implements SessionHandler
 
         if (serializedSession != null)
         {
-            try
-            {
-                session = (MuleSession) IOUtils.deserialize(serializedSession);
-            }
-            catch (IOException e)
-            {
-                throw new SessionException(MessageFactory.createStaticMessage("Unable to deserialize MuleSession"), e);
-            }
-            catch (ClassNotFoundException e)
-            {
-                throw new SessionException(MessageFactory.createStaticMessage("Unable to deserialize MuleSession"), e);
-            }
+            session = (MuleSession) SerializationUtils.deserialize(serializedSession);
         }
         return session;
     }
@@ -72,7 +59,7 @@ public class MuleSessionHandler implements SessionHandler
         byte[] serializedSession;
         try
         {
-            serializedSession = IOUtils.serialize(session);
+            serializedSession = SerializationUtils.serialize(session);
         }
         catch (Exception e)
         {

@@ -12,16 +12,9 @@ package org.mule.util;
 
 import org.mule.config.i18n.CoreMessages;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.ObjectInput;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutput;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.AccessController;
@@ -286,20 +279,5 @@ public class IOUtils extends org.apache.commons.io.IOUtils
         {
             throw new RuntimeException(iox);
         }
-    }
-    
-    public static byte[] serialize(Serializable obj) throws IOException
-    {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        ObjectOutput serialStream = new ObjectOutputStream(stream);
-        serialStream.writeObject(obj);
-        return stream.toByteArray();
-    }
-
-    public static Object deserialize(byte[] bytes) throws IOException, ClassNotFoundException
-    {
-        InputStream stream = new ByteArrayInputStream(bytes);
-        ObjectInput serialStream = new ObjectInputStream(stream);
-        return serialStream.readObject();
     }
 }
