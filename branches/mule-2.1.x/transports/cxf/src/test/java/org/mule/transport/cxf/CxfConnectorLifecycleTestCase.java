@@ -11,6 +11,7 @@
 package org.mule.transport.cxf;
 
 import org.mule.api.MuleException;
+import org.mule.api.service.Service;
 import org.mule.tck.FunctionalTestCase;
 
 public class CxfConnectorLifecycleTestCase extends FunctionalTestCase
@@ -32,23 +33,18 @@ public class CxfConnectorLifecycleTestCase extends FunctionalTestCase
      */
     public void testStopService() throws MuleException
     {
-        muleContext.getRegistry().lookupService(SERVICE_NAME).stop();
-        assertFalse(muleContext.getRegistry().lookupService(SERVICE_NAME).isStarted());
-        assertFalse(muleContext.getRegistry().lookupService(PROTOCOL_SERVICE_NAME).isStarted());
+        Service service = muleContext.getRegistry().lookupService(SERVICE_NAME);
+        Service protocolService = muleContext.getRegistry().lookupService(PROTOCOL_SERVICE_NAME);
+        assertNotNull(service);
+        assertTrue(service.isStarted());
+        assertNotNull(protocolService);
+        assertTrue(protocolService.isStarted());
 
-    }
+        service.stop();
 
-    /**
-     * MULE-4570
-     * 
-     * @throws MuleException
-     */
-    public void testDisposeService() throws MuleException
-    {
-        muleContext.getRegistry().lookupService(SERVICE_NAME).dispose();
-        assertFalse(muleContext.getRegistry().lookupService(SERVICE_NAME).isStarted());
+        assertFalse(service.isStarted());
+        assertFalse(protocolService.isStarted());
         assertNull(muleContext.getRegistry().lookupService(PROTOCOL_SERVICE_NAME));
-
     }
 
     /**
@@ -58,12 +54,18 @@ public class CxfConnectorLifecycleTestCase extends FunctionalTestCase
      */
     public void testRestartService() throws MuleException
     {
-        muleContext.getRegistry().lookupService(SERVICE_NAME).stop();
-        assertFalse(muleContext.getRegistry().lookupService(SERVICE_NAME).isStarted());
-        assertFalse(muleContext.getRegistry().lookupService(PROTOCOL_SERVICE_NAME).isStarted());
-        muleContext.getRegistry().lookupService(SERVICE_NAME).start();
-        assertTrue(muleContext.getRegistry().lookupService(SERVICE_NAME).isStarted());
-        assertTrue(muleContext.getRegistry().lookupService(PROTOCOL_SERVICE_NAME).isStarted());
+        Service service = muleContext.getRegistry().lookupService(SERVICE_NAME);
+        Service protocolService = muleContext.getRegistry().lookupService(PROTOCOL_SERVICE_NAME);
+
+        service.stop();
+        service.start();
+
+        // protocolService is recreated when service is restarted
+        protocolService = muleContext.getRegistry().lookupService(PROTOCOL_SERVICE_NAME);
+
+        assertTrue(service.isStarted());
+        assertTrue(protocolService.isStarted());
+        assertNotNull(muleContext.getRegistry().lookupService(PROTOCOL_SERVICE_NAME));
 
     }
 
