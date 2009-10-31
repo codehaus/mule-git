@@ -33,7 +33,9 @@ import org.mule.transport.http.HttpConstants;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import javax.xml.namespace.QName;
 
@@ -63,7 +65,7 @@ public class CxfConnector extends AbstractConnector implements ServiceNotificati
     private Bus bus;
     private String configurationLocation;
     private String defaultFrontend = CxfConstants.JAX_WS_FRONTEND;
-    private Map<Service, Service> serviceToProtocolService = Collections.synchronizedMap(new HashMap<Service, Service>());
+    private Map<Service, Set<Service>> serviceToProtocolServices = Collections.synchronizedMap(new HashMap<Service, Set<Service>>());
     private Map<String, Server> uriToServer = new HashMap<String, Server>();
     private boolean initializeStaticBusInstance = true;
     
@@ -326,7 +328,15 @@ public class CxfConnector extends AbstractConnector implements ServiceNotificati
         
         outerProtocolService.setInboundRouter(new DefaultInboundRouterCollection());
         outerProtocolService.getInboundRouter().addEndpoint(protocolEndpoint);
-        serviceToProtocolService.put(receiver.getService(), outerProtocolService);
+        
+        // Add outer services to map so that we can easily look them on on user
+        // service lifecycle notifications
+        if (!serviceToProtocolServices.containsKey(receiver.getService()))
+        {
+            serviceToProtocolServices.put(receiver.getService(), new HashSet());
+        }
+        serviceToProtocolServices.get(receiver.getService()).add(outerProtocolService);
+
     }
     
     /**
@@ -368,48 +378,40 @@ public class CxfConnector extends AbstractConnector implements ServiceNotificati
 
     public void onNotification(ServerNotification event)
     {
-        // Only register/start the outer (CxfServiceComponent/protocol) service once
+        // Only register/start the outer (CxfServiceComponent/protocol) services once
         // the inner (user) service is started
         if (event.getAction() == ServiceNotification.SERVICE_STARTED
-            && serviceToProtocolService.get(event.getSource()) != null)
+            && serviceToProtocolServices.get(event.getSource()) != null)
         {
             try
             {
-                muleContext.getRegistry().registerService(serviceToProtocolService.get(event.getSource()));
+                for (Service outerService : serviceToProtocolServices.get(event.getSource()))
+                {
+                    muleContext.getRegistry().registerService(outerService);
+                }
             }
             catch (MuleException e)
             {
                 handleException(e);
             }
         }
-        // We need to stop the outer service first if it's not already stopped to
-        // avoid request failures.
+        // We need to stop the outer services first if they are not already stopped
+        // to avoid request failures.
         else if (event.getAction() == ServiceNotification.SERVICE_STOPPING
-                 && serviceToProtocolService.get(event.getSource()) != null)
+                 && serviceToProtocolServices.get(event.getSource()) != null)
         {
             try
             {
-                serviceToProtocolService.get(event.getSource()).stop();
+                for (Service outerService : serviceToProtocolServices.get(event.getSource()))
+                {
+                    muleContext.getRegistry().unregisterService(outerService.getName());
+                    serviceToProtocolServices.remove(event.getSource());
+                }
             }
             catch (MuleException e)
             {
                 handleException(e);;
             }
-        }
-        // Clean up once the user service has been disposed.
-        else if (event.getAction() == ServiceNotification.SERVICE_DISPOSED
-                 && serviceToProtocolService.get(event.getSource()) != null)
-        {
-            Service service = serviceToProtocolService.remove(event.getSource());
-            try
-            {
-                muleContext.getRegistry().unregisterService(service.getName());
-            }
-            catch (MuleException e)
-            {
-                handleException(e);
-            }
-            service = null;
         }
     }
     
