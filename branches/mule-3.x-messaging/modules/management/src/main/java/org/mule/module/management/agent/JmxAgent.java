@@ -66,6 +66,7 @@ import javax.management.remote.JMXServiceURL;
 import javax.management.remote.rmi.RMIConnectorServer;
 
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -77,7 +78,7 @@ public class JmxAgent extends AbstractAgent
 
     public static final String DEFAULT_REMOTING_URI = "service:jmx:rmi:///jndi/rmi://localhost:1099/server";
     // populated with values below in a static initializer
-    public static final Map DEFAULT_CONNECTOR_SERVER_PROPERTIES;
+    public static final Map<String, Object> DEFAULT_CONNECTOR_SERVER_PROPERTIES;
 
     /**
      * Default JMX Authenticator to use for securing remote access.
@@ -98,7 +99,7 @@ public class JmxAgent extends AbstractAgent
     private String connectorServerUrl;
     private MBeanServer mBeanServer;
     private JMXConnectorServer connectorServer;
-    private Map connectorServerProperties = null;
+    private Map<String, Object> connectorServerProperties = null;
     private boolean enableStatistics = true;
     private final AtomicBoolean serverCreated = new AtomicBoolean(false);
     private final AtomicBoolean initialized = new AtomicBoolean(false);
@@ -110,11 +111,11 @@ public class JmxAgent extends AbstractAgent
     /**
      * Username/password combinations for JMX Remoting authentication.
      */
-    private Map credentials = new HashMap();
+    private Map<String, Object> credentials = new HashMap<String, Object>();
 
     static
     {
-        Map props = new HashMap(1);
+        Map<String, Object> props = new HashMap<String, Object>(1);
         props.put(RMIConnectorServer.JNDI_REBIND_ATTRIBUTE, "true");
         DEFAULT_CONNECTOR_SERVER_PROPERTIES = Collections.unmodifiableMap(props);
     }
@@ -122,14 +123,10 @@ public class JmxAgent extends AbstractAgent
     public JmxAgent()
     {
         super("jmx-agent");
-        connectorServerProperties = new HashMap(DEFAULT_CONNECTOR_SERVER_PROPERTIES);
+        connectorServerProperties = new HashMap<String, Object>(DEFAULT_CONNECTOR_SERVER_PROPERTIES);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @see org.mule.api.agent.Agent#getDescription()
-     */
+    @Override
     public String getDescription()
     {
         if (connectorServerUrl != null)
@@ -144,7 +141,8 @@ public class JmxAgent extends AbstractAgent
 
     /**
      * The JmxAgent needs a RmiRegistryAgent to be started before it can properly work.
-     */    
+     */
+    @Override
     public List getDependentAgents()
     {
         return Arrays.asList(new Class[] { RmiRegistryAgent.class });
@@ -195,17 +193,14 @@ public class JmxAgent extends AbstractAgent
             muleContext.registerListener(new MuleContextStartedListener());
             // and unregister once context stopped
             muleContext.registerListener(new MuleContextStoppedListener());
-        } catch (NotificationException e) {
+        } 
+        catch (NotificationException e) 
+        {
             throw new InitialisationException(e, this);
         }
         initialized.compareAndSet(false, true);
     }
 
-    /**
-     * {@inheritDoc} (non-Javadoc)
-     *
-     * @see org.mule.api.lifecycle.Startable#start()
-     */
     public void start() throws MuleException
     {
         try
@@ -216,7 +211,7 @@ public class JmxAgent extends AbstractAgent
                 JMXServiceURL url = new JMXServiceURL(connectorServerUrl);
                 if (connectorServerProperties == null)
                 {
-                    connectorServerProperties = new HashMap(DEFAULT_CONNECTOR_SERVER_PROPERTIES);
+                    connectorServerProperties = new HashMap<String, Object>(DEFAULT_CONNECTOR_SERVER_PROPERTIES);
                 }
                 // TODO custom authenticator may have its own security config,
                 // refactor
@@ -290,6 +285,7 @@ public class JmxAgent extends AbstractAgent
 
     /**
      * Register a Java Service Wrapper agent.
+     * 
      * @throws MuleException if registration failed
      */
     protected void registerWrapperService() throws MuleException
@@ -301,7 +297,6 @@ public class JmxAgent extends AbstractAgent
            muleContext.getRegistry().registerAgent(wmAgent);
         }
     }
-
 
     protected void registerStatisticsService() throws NotCompliantMBeanException, MBeanRegistrationException,
                                                       InstanceAlreadyExistsException, MalformedObjectNameException
@@ -398,7 +393,6 @@ public class JmxAgent extends AbstractAgent
                 logger.warn("Connector: " + connector
                             + " is not an istance of AbstractConnector, cannot obtain Endpoint MBeans from it");
             }
-
         }
     }
 
@@ -506,56 +500,34 @@ public class JmxAgent extends AbstractAgent
         this.mBeanServer = mBeanServer;
     }
 
-    /**
-     * Getter for property 'connectorServerProperties'.
-     *
-     * @return Value for property 'connectorServerProperties'.
-     */
-    public Map getConnectorServerProperties()
+    public Map<String, Object> getConnectorServerProperties()
     {
         return connectorServerProperties;
     }
 
     /**
      * Setter for property 'connectorServerProperties'. Set to {@code null} to use defaults ({@link
-     * #DEFAULT_CONNECTOR_SERVER_PROPERTIES}). Pass in an empty map to use no parameters. Passing a non-empty map will
-     * replace defaults.
+     * #DEFAULT_CONNECTOR_SERVER_PROPERTIES}). Pass in an empty map to use no parameters. 
+     * Passing a non-empty map will replace defaults.
      *
      * @param connectorServerProperties Value to set for property 'connectorServerProperties'.
      */
-    public void setConnectorServerProperties(Map connectorServerProperties)
+    public void setConnectorServerProperties(Map<String, Object> connectorServerProperties)
     {
         this.connectorServerProperties = connectorServerProperties;
     }
 
-
-    /**
-     * Getter for property 'jmxSupportFactory'.
-     *
-     * @return Value for property 'jmxSupportFactory'.
-     */
     public JmxSupportFactory getJmxSupportFactory()
     {
         return jmxSupportFactory;
     }
 
-    /**
-     * Setter for property 'jmxSupportFactory'.
-     *
-     * @param jmxSupportFactory Value to set for property 'jmxSupportFactory'.
-     */
     public void setJmxSupportFactory(JmxSupportFactory jmxSupportFactory)
     {
         this.jmxSupportFactory = jmxSupportFactory;
     }
 
-
-    /**
-     * Setter for property 'credentials'.
-     *
-     * @param newCredentials Value to set for property 'credentials'.
-     */
-    public void setCredentials(final Map newCredentials)
+    public void setCredentials(Map<String, Object> newCredentials)
     {
         this.credentials.clear();
         if (newCredentials != null && !newCredentials.isEmpty())
