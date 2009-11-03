@@ -38,11 +38,13 @@ public class ProxyTestCase extends FunctionalTestCase
         + "<soap:Header>"
         + "<!-- comment 2 -->"
         + "</soap:Header>"
-        + "<soap:Body>"
         + "<!-- comment 3 -->"
+        + "<soap:Body>"
+        + "<!-- comment 4 -->"
         + doGoogleSearch
         + "<!-- this comment breaks it -->"
         + "<key>1</key>"
+        + "<!-- comment 5 -->"
         + "<q>a</q>"
         + "<start>0</start>"
         + "<maxResults>1</maxResults>"
@@ -53,7 +55,9 @@ public class ProxyTestCase extends FunctionalTestCase
         + "<ie>b</ie>"
         + "<oe>c</oe>"
         + "</urn:doGoogleSearch>"
+        + "<!-- comment 6 -->"
         + "</soap:Body>"
+        + "<!-- comment 7 -->"
         + "</soap:Envelope>";
     
     public void testServerWithEcho() throws Exception
