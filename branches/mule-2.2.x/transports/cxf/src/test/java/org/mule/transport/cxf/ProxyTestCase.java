@@ -31,6 +31,8 @@ public class ProxyTestCase extends FunctionalTestCase
     String msg = "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
                  + "<soap:Body><test xmlns=\"http://foo\"> foo </test>" + "</soap:Body>" + "</soap:Envelope>";
 
+    String doGoogleSearch = "<urn:doGoogleSearch xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:urn=\"urn:GoogleSearch\">";
+    
     String msgWithComment = "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
         + "<!-- comment 1 -->"
         + "<soap:Header>"
@@ -38,7 +40,7 @@ public class ProxyTestCase extends FunctionalTestCase
         + "</soap:Header>"
         + "<soap:Body>"
         + "<!-- comment 3 -->"
-        + "<urn:doGoogleSearch xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:urn=\"urn:GoogleSearch\">"
+        + doGoogleSearch
         + "<!-- this comment breaks it -->"
         + "<key>1</key>"
         + "<q>a</q>"
@@ -262,7 +264,7 @@ public class ProxyTestCase extends FunctionalTestCase
         MuleClient client = new MuleClient();
         MuleMessage result = client.send("http://localhost:63081/services/envelope-proxy", msgWithComment, null);
         String resString = result.getPayloadAsString();
-        assertTrue(resString.indexOf("<test xmlns=\"http://foo\"> foo </test>") != -1);
+        assertTrue(resString.contains(doGoogleSearch));
     }
     
     protected String prepareOneWayTestMessage()
