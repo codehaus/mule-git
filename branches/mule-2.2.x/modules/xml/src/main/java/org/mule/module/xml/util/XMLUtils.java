@@ -211,8 +211,9 @@ public class XMLUtils extends org.mule.util.XMLUtils
             final InputStream is = (java.io.InputStream) obj;
             
             XMLStreamReader xsr = factory.createXMLStreamReader(is);
-            return new DelegateXMLStreamReader(xsr) {
-
+            return new DelegateXMLStreamReader(xsr) 
+            {
+                @Override
                 public void close() throws XMLStreamException
                 {
                     super.close();
