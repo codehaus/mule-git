@@ -31,9 +31,28 @@ public class ProxyTestCase extends FunctionalTestCase
     String msg = "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
                  + "<soap:Body><test xmlns=\"http://foo\"> foo </test>" + "</soap:Body>" + "</soap:Envelope>";
 
-    String msgWithComment = "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\"><!-- This is a comment -->"
-                            + "<soap:Body><!-- This is a comment --><test xmlns=\"http://foo\"> foo </test>"
-                            + "</soap:Body>" + "</soap:Envelope>";
+    String msgWithComment = "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
+        + "<!-- comment 1 -->"
+        + "<soap:Header>"
+        + "<!-- comment 2 -->"
+        + "</soap:Header>"
+        + "<soap:Body>"
+        + "<!-- comment 3 -->"
+        + "<urn:doGoogleSearch xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:urn=\"urn:GoogleSearch\">"
+        + "<!-- this comment breaks it -->"
+        + "<key>1</key>"
+        + "<q>a</q>"
+        + "<start>0</start>"
+        + "<maxResults>1</maxResults>"
+        + "<filter>false</filter>"
+        + "<restrict>a</restrict>"
+        + "<safeSearch>true</safeSearch>"
+        + "<lr>a</lr>"
+        + "<ie>b</ie>"
+        + "<oe>c</oe>"
+        + "</urn:doGoogleSearch>"
+        + "</soap:Body>"
+        + "</soap:Envelope>";
     
     public void testServerWithEcho() throws Exception
     {
