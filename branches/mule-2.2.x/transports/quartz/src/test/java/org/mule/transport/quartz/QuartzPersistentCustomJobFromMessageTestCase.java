@@ -13,27 +13,29 @@ package org.mule.transport.quartz;
 import org.mule.api.MuleMessage;
 import org.mule.module.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
-import org.mule.transport.NullPayload;
+import org.mule.transport.quartz.jobs.ScheduledDispatchJobConfig;
 
-public class QuartzPersistentQueueEventGeneratorTestCase extends FunctionalTestCase
+public class QuartzPersistentCustomJobFromMessageTestCase extends FunctionalTestCase
 {
-    private static final long TIMEOUT = 30000;
+//    private static final long TIMEOUT = 30000;
+    private static final long TIMEOUT = 3000000;
 
     @Override
     protected String getConfigResources()
     {
-        return "quartz-persistent-event-generator.xml";
+        return "quartz-persistent-custom-job-generator.xml";
     }
-    
-    public void testReceiveEvent() throws Exception
+
+    public void testSendToCustomEventScheduler() throws Exception
     {
         MuleClient client = new MuleClient();
+
+        ScheduledDispatchJobConfig jobConfig = new ScheduledDispatchJobConfig();
+        jobConfig.setEndpointRef("vm://resultQueue");
+        client.send("vm://customJobQueue", jobConfig, null);
         
         MuleMessage result = client.request("vm://resultQueue", TIMEOUT);
         assertNotNull(result);
-        assertFalse(result.getPayload() instanceof NullPayload);
-        assertEquals(TEST_MESSAGE, result.getPayload());
-    }    
+        assertTrue(result.getPayload() instanceof ScheduledDispatchJobConfig);
+    }
 }
-
-

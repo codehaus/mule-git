@@ -13,7 +13,7 @@
     <vm:connector name="vmConnector" queueEvents="true"/>
 
     <model>
-        <service name="quartzService">
+        <service name="QuartzEventGenerator">
             <inbound>
                 <quartz:inbound-endpoint jobName="eventTimer" repeatInterval="1000" repeatCount="1">
                     <quartz:event-generator-job>
