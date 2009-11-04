@@ -69,6 +69,14 @@ public class SpringXmlConfigurationBuilder extends AbstractResourceConfiguration
         createSpringRegistry(muleContext, createApplicationContext(muleContext, allResources));
     }
 
+    public void unconfigure(MuleContext muleContext)
+    {
+        registry.dispose();
+        muleContext.removeRegistry(registry);
+        registry = null;
+        configured = false;
+    }
+    
     protected ApplicationContext createApplicationContext(MuleContext muleContext, ConfigResource[] configResources) throws Exception
     {
         return new MuleApplicationContext(muleContext, configResources);
@@ -94,7 +102,7 @@ public class SpringXmlConfigurationBuilder extends AbstractResourceConfiguration
 
         // Note: The SpringRegistry must be created before applicationContext.refresh() gets called because
         // some beans may try to look up other beans via the Registry during preInstantiateSingletons().
-        muleContext.addRegistry(1, registry);
+        muleContext.addRegistry(registry);
         registry.initialise();
     }
     
@@ -126,4 +134,5 @@ public class SpringXmlConfigurationBuilder extends AbstractResourceConfiguration
     {
         this.parentContext = parentContext;
     }
+
 }

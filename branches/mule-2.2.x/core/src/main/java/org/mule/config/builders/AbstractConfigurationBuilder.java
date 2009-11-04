@@ -30,7 +30,7 @@ public abstract class AbstractConfigurationBuilder implements ConfigurationBuild
 {
     protected transient final Log logger = LogFactory.getLog(getClass());
 
-    private boolean configured = false;
+    protected boolean configured = false;
 
     public void configure(MuleContext muleContext) throws ConfigurationException
     {
