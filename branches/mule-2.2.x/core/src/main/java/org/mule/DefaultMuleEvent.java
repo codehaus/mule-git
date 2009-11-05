@@ -60,10 +60,12 @@ public class DefaultMuleEvent extends EventObject implements MuleEvent, ThreadSa
      * Serial version
      */
     private static final long serialVersionUID = 1L;
+    
     /**
      * logger used by this class
      */
-    protected Log logger = LogFactory.getLog(getClass());
+    protected transient Log logger = LogFactory.getLog(getClass());
+
     /**
      * The endpoint associated with the event
      */
@@ -597,12 +599,16 @@ public class DefaultMuleEvent extends EventObject implements MuleEvent, ThreadSa
 
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException, MuleException
     {
-        MuleContext muleContext = MuleServer.getMuleContext();
         in.defaultReadObject();
+
         int endpointHashCode = in.readInt();
         boolean isEndpointInbound = in.readBoolean();
         String endpointbBuilderName = (String) in.readObject();
         String endpointUri = (String) in.readObject();
+
+        logger = LogFactory.getLog(getClass());
+
+        MuleContext muleContext = MuleServer.getMuleContext();
 
         // 1) First attempt to get same endpoint instance from registry using
         // hashcode, this will work if registry hasn't been disposed.
@@ -649,7 +655,6 @@ public class DefaultMuleEvent extends EventObject implements MuleEvent, ThreadSa
             }
         }
     }
-
 
     private void marshallTransformers(List transformers, ObjectOutputStream out) throws IOException
     {
