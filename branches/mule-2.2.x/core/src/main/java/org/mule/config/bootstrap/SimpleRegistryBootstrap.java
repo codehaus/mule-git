@@ -116,7 +116,6 @@ public class SimpleRegistryBootstrap implements Initialisable, MuleContextAware
         registerUnnamedObjects(props, context.getRegistry());
         //this must be called last as it clears the properties map
         registerObjects(props, context.getRegistry());
-
     }
 
     private void registerTransformers(Properties props, MuleRegistry registry) throws Exception
@@ -142,7 +141,6 @@ public class SimpleRegistryBootstrap implements Initialisable, MuleContextAware
             final String transClass = (x == -1 ? transString : transString.substring(0, x));
             try
             {
-
                 if (returnClassString != null)
                 {
                     if (returnClassString.equals("byte[]"))
