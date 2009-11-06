@@ -59,11 +59,13 @@ public class ConnectorLifecycleTestCase extends AbstractMuleTestCase
         assertEquals(0, connector.getDisposeCount());
 
         // Initialising the connector again should not throw an exception.
-        try {
-            System.out.println("Initialising connector again...");
+        try 
+        {
             connector.initialise();
             Assert.fail("Expected AlreadyInitialisedException not thrown.");
-        } catch (AlreadyInitialisedException ex) {
+        } 
+        catch (AlreadyInitialisedException ex) 
+        {
             // ignore since expected
         }
     }
@@ -104,7 +106,6 @@ public class ConnectorLifecycleTestCase extends AbstractMuleTestCase
     {
         // Starting the connector should leave it uninitialised,
         // but connected and started.
-        System.out.println("Starting connector...");
         connector.start();
         assertEquals(1, connector.getInitialiseCount());
         assertEquals(1, connector.getConnectCount());
@@ -116,7 +117,6 @@ public class ConnectorLifecycleTestCase extends AbstractMuleTestCase
         assertTrue(connector.isStarted());
 
         // Stopping the connector should stop and disconnect it.
-        System.out.println("Stopping connector...");
         connector.stop();
         assertEquals(1, connector.getInitialiseCount());
         assertEquals(1, connector.getConnectCount());
@@ -126,7 +126,6 @@ public class ConnectorLifecycleTestCase extends AbstractMuleTestCase
         assertEquals(0, connector.getDisposeCount());
 
         // Stopping the connector again should not affect it.
-        System.out.println("Stopping connector again...");
         connector.stop();
         assertEquals(1, connector.getInitialiseCount());
         assertEquals(1, connector.getConnectCount());
@@ -142,16 +141,13 @@ public class ConnectorLifecycleTestCase extends AbstractMuleTestCase
      */
     public void testDoubleDisposeConnectorStartStop() throws Exception
     {
-        System.out.println("Starting connector...");
         connector.start();
         assertTrue(connector.isStarted());
         
-        System.out.println("Stopping connector...");
         connector.stop();
         assertFalse(connector.isStarted());
         
         // Disposing the connector should leave it uninitialised.
-        System.out.println("Disposing connector...");
         connector.dispose();
         assertEquals(1, connector.getInitialiseCount());
         assertEquals(1, connector.getConnectCount());
@@ -161,7 +157,6 @@ public class ConnectorLifecycleTestCase extends AbstractMuleTestCase
         assertEquals(1, connector.getDisposeCount());
 
         // Disposing the connector again should not affect it.
-        System.out.println("Disposing connector again...");
         connector.dispose();
         assertEquals(1, connector.getInitialiseCount());
         assertEquals(1, connector.getConnectCount());
@@ -177,12 +172,10 @@ public class ConnectorLifecycleTestCase extends AbstractMuleTestCase
      */
     public void testDoubleDisposeConnectorStartOnly() throws Exception 
     {
-        System.out.println("Starting connector...");
         connector.start();
         assertTrue(connector.isStarted());
         
         // Disposing the connector should leave it uninitialised.
-        System.out.println("Disposing connector...");
         connector.dispose();
         assertEquals(1, connector.getInitialiseCount());
         assertEquals(1, connector.getConnectCount());
@@ -193,7 +186,6 @@ public class ConnectorLifecycleTestCase extends AbstractMuleTestCase
         assertEquals(1, connector.getDisposeCount());
 
         // Disposing the connector again should not affect it.
-        System.out.println("Disposing connector again...");
         connector.dispose();
         assertEquals(1, connector.getInitialiseCount());
         assertEquals(1, connector.getConnectCount());
@@ -211,7 +203,6 @@ public class ConnectorLifecycleTestCase extends AbstractMuleTestCase
     public void testDoubleDisposeConnector() throws Exception 
     {
         // Disposing the connector should leave it uninitialised.
-        System.out.println("Disposing connector...");
         connector.dispose();
         assertEquals(1, connector.getInitialiseCount());
         assertEquals(0, connector.getConnectCount());
@@ -221,7 +212,6 @@ public class ConnectorLifecycleTestCase extends AbstractMuleTestCase
         assertEquals(1, connector.getDisposeCount());
 
         // Disposing the connector again should not affect it.
-        System.out.println("Disposing connector again...");
         connector.dispose();
         assertEquals(1, connector.getInitialiseCount());
         assertEquals(0, connector.getConnectCount());
@@ -400,6 +390,7 @@ public class ConnectorLifecycleTestCase extends AbstractMuleTestCase
 
             public void release()
             {
+                // nothing to do
             }
         };
     }
@@ -412,5 +403,4 @@ public class ConnectorLifecycleTestCase extends AbstractMuleTestCase
         assertEquals(connected, dispatcher.isConnected());
         connector.dispatchers.returnObject(out, dispatcher);
     }
-
 }
