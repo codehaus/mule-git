@@ -137,8 +137,6 @@ public class HttpConnector extends TcpConnector
 
     protected HttpConnectionManager clientConnectionManager;
 
-    private boolean followRedirects = false;
-
     @Override
     protected void doInitialise() throws InitialisationException
     {
@@ -315,17 +313,7 @@ public class HttpConnector extends TcpConnector
         this.clientConnectionManager = clientConnectionManager;
     }
 
-    public boolean isFollowRedirects()
-    {
-        return followRedirects;
-    }
-    
-    public void setFollowRedirects(boolean followRedirects)
-    {
-        this.followRedirects = followRedirects;
-    }
-    
-    protected HttpClient doClientConnect() throws Exception
+    HttpClient doClientConnect() throws Exception
     {
         HttpState state = new HttpState();
 
@@ -343,7 +331,7 @@ public class HttpConnector extends TcpConnector
         return client;
     }
 
-    protected void setupClientAuthorization(MuleEvent event, HttpMethod httpMethod,
+    void setupClientAuthorization(MuleEvent event, HttpMethod httpMethod,
                                             HttpClient client, ImmutableEndpoint endpoint)
             throws UnsupportedEncodingException
     {

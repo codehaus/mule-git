@@ -10,9 +10,12 @@
 package org.mule.api.registry;
 
 /**
- * TODO
+ * The parent interface for all object processors. Object processors can be registered in the Mule regisrty and fired
+ * at the correct time.
+ *
+ * Developers must not implement this interface directly. Instead use either {@link org.mule.api.registry.InjectProcessor} or
+ * {@link org.mule.api.registry.PreInitProcessor}. 
  */
-
 public interface ObjectProcessor
 {
     Object process(Object object);

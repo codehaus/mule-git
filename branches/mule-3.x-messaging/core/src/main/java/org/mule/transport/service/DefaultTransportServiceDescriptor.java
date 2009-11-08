@@ -409,6 +409,8 @@ public class DefaultTransportServiceDescriptor extends AbstractServiceDescriptor
             {
                 inboundTransformer = (Transformer) ClassUtils.instanciateClass(
                         defaultInboundTransformer, ClassUtils.NO_ARGS, classLoader);
+                inboundTransformer.setName(inboundTransformer.getName() + "#" + hashCode());
+
                 registry.registerObject(inboundTransformer.getName(), inboundTransformer);
                 return CollectionUtils.singletonList(inboundTransformer);
             }
@@ -434,6 +436,7 @@ public class DefaultTransportServiceDescriptor extends AbstractServiceDescriptor
             {
                 outboundTransformer = (Transformer) ClassUtils.instanciateClass(
                         defaultOutboundTransformer, ClassUtils.NO_ARGS, classLoader);
+                outboundTransformer.setName(outboundTransformer.getName() + "#" + hashCode());
                 registry.registerObject(outboundTransformer.getName(), outboundTransformer);
                 return CollectionUtils.singletonList(outboundTransformer);
             }
@@ -459,6 +462,8 @@ public class DefaultTransportServiceDescriptor extends AbstractServiceDescriptor
             {
                 responseTransformer = (Transformer) ClassUtils.instanciateClass(
                         defaultResponseTransformer, ClassUtils.NO_ARGS, classLoader);
+                responseTransformer.setName(responseTransformer.getName() + "#" + hashCode());
+
                 registry.registerObject(responseTransformer.getName(), responseTransformer);                
                 return CollectionUtils.singletonList(responseTransformer);
             }
