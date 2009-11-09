@@ -56,7 +56,8 @@ public class MuleTomcatListener implements LifecycleListener {
         try {
             muleContext.stop();
         } catch (MuleException e) {
-            log.error("Failed to stop Mule", e);
+            // sigh, ridiculous juli bugs - logger would have already been disposed by a shutdown handler by now
+            System.err.println("Failed to stop Mule: " + e);
         }
         muleContext.dispose();
     }
