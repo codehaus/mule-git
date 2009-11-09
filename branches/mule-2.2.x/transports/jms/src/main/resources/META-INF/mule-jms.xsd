@@ -1,492 +1,734 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <xsd:schema xmlns="http://www.mulesource.org/schema/mule/jms/2.2"
-            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-            xmlns:mule="http://www.mulesource.org/schema/mule/core/2.2"
-            xmlns:schemadoc="http://www.mulesource.org/schema/mule/schemadoc/2.2"
-            targetNamespace="http://www.mulesource.org/schema/mule/jms/2.2"
-            elementFormDefault="qualified"
-            attributeFormDefault="unqualified">
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:mule="http://www.mulesource.org/schema/mule/core/2.2"
+	xmlns:schemadoc="http://www.mulesource.org/schema/mule/schemadoc/2.2"
+	targetNamespace="http://www.mulesource.org/schema/mule/jms/2.2"
+	elementFormDefault="qualified" attributeFormDefault="unqualified">
 
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
-    <xsd:import namespace="http://www.mulesource.org/schema/mule/core/2.2"
-                schemaLocation="http://www.mulesource.org/schema/mule/core/2.2/mule.xsd" />
-    <xsd:import namespace = "http://www.mulesource.org/schema/mule/schemadoc/2.2"
-                schemaLocation = "http://www.mulesource.org/schema/mule/schemadoc/2.2/mule-schemadoc.xsd"/>
+	<xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+	<xsd:import namespace="http://www.mulesource.org/schema/mule/core/2.2"
+		schemaLocation="http://www.mulesource.org/schema/mule/core/2.2/mule.xsd" />
+	<xsd:import namespace="http://www.mulesource.org/schema/mule/schemadoc/2.2"
+		schemaLocation="http://www.mulesource.org/schema/mule/schemadoc/2.2/mule-schemadoc.xsd" />
 
-    <xsd:annotation>
-        <xsd:documentation>The JMS transport provides support for sending messages via JMS queues.</xsd:documentation>
-        <xsd:appinfo>
-            <schemadoc:short-name>JMS</schemadoc:short-name>
-            <schemadoc:page-title>JMS Transport</schemadoc:page-title>
-            <schemadoc:transport-features receiveEvents="true" dispatchEvents="true" responseEvents="true"
-                                          requestEvents="true"
-                                          transactions="true" streaming="true">
-                <schemadoc:inboundMEPs in-only="true" in-optional-out="true" in-out="true"/>
-                <schemadoc:outboundMEPs out-only="true" out-in="true" out-optional-in="true"/>
-            </schemadoc:transport-features>
-        </xsd:appinfo>
-    </xsd:annotation>
+	<xsd:annotation>
+		<xsd:documentation>The JMS transport provides support for sending
+			messages via JMS queues.</xsd:documentation>
+		<xsd:appinfo>
+			<schemadoc:short-name>JMS</schemadoc:short-name>
+			<schemadoc:page-title>JMS Transport</schemadoc:page-title>
+			<schemadoc:transport-features
+				receiveEvents="true" dispatchEvents="true" responseEvents="true"
+				requestEvents="true" transactions="true" streaming="true">
+				<schemadoc:inboundMEPs in-only="true"
+					in-optional-out="true" in-out="true" />
+				<schemadoc:outboundMEPs out-only="true"
+					out-in="true" out-optional-in="true" />
+			</schemadoc:transport-features>
+		</xsd:appinfo>
+	</xsd:annotation>
 
-    <!-- Generic JMS Connector -->
-    <xsd:element name="connector" type="genericConnectorType" substitutionGroup="mule:abstract-connector">
-        <xsd:annotation>
-            <xsd:documentation>
-                The connector element configures a generic connector for sending and receiving messages over JMS queues.
+	<!-- Generic JMS Connector -->
+	<xsd:element name="connector" type="genericConnectorType"
+		substitutionGroup="mule:abstract-connector">
+		<xsd:annotation>
+			<xsd:documentation>
+				The connector element configures a generic connector for sending and
+				receiving messages over JMS queues.
             </xsd:documentation>
-        </xsd:annotation>
-    </xsd:element>
-    <xsd:complexType name="genericConnectorType">
-        <xsd:complexContent>
-            <xsd:extension base="mule:connectorType">
-                <!-- The ConnectionFactory is required for non-vendor JMS configs -->
-                <xsd:attribute name="connectionFactory-ref" type="xsd:NMTOKEN">
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:complexType name="genericConnectorType">
+		<xsd:complexContent>
+			<xsd:extension base="mule:connectorType">
+				<!-- The ConnectionFactory is required for non-vendor JMS configs -->
+				<xsd:attribute name="connectionFactory-ref" type="xsd:NMTOKEN">
+					<xsd:annotation>
+						<xsd:documentation>
+							Reference to the connection factory, which is required for non-vendor JMS
+							configurations.
+                        </xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attributeGroup ref="jmsConnectorAttributes" />
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<!-- Custom JMS Connector -->
+	<xsd:element name="custom-connector" substitutionGroup="mule:abstract-connector">
+		<xsd:annotation>
+			<xsd:documentation>
+				The custom-connector element configures a custom connector for sending
+				and receiving messages over JMS queues.
+            </xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="mule:customConnectorType">
+					<xsd:attributeGroup ref="jmsConnectorAttributes" />
+				</xsd:extension>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:attributeGroup name="jmsConnectorAttributes">
+		<xsd:attribute name="redeliveryHandlerFactory-ref" type="xsd:NMTOKEN">
+			<xsd:annotation>
+				<xsd:documentation>
+					Reference to the redelivery handler.
+                </xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="acknowledgementMode" default="AUTO_ACKNOWLEDGE">
+			<xsd:annotation>
+				<xsd:documentation>
+					The acknowledgement mode to use: AUTO_ACKNOWLEDGE, CLIENT_ACKNOWLEDGE,
+					or DUPS_OK_ACKNOWLEDGE.
+                </xsd:documentation>
+			</xsd:annotation>
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:NMTOKEN">
+					<xsd:enumeration value="AUTO_ACKNOWLEDGE" />
+					<xsd:enumeration value="CLIENT_ACKNOWLEDGE" />
+					<xsd:enumeration value="DUPS_OK_ACKNOWLEDGE" />
+				</xsd:restriction>
+			</xsd:simpleType>
+		</xsd:attribute>
+		<xsd:attribute name="clientId" type="xsd:string">
+			<xsd:annotation>
+				<xsd:documentation>
+					The ID of the JMS client.
+                </xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="durable" type="mule:substitutableBoolean">
+			<xsd:annotation>
+				<xsd:documentation>
+					Whether to make all topic subscribers durable.
+                </xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="noLocal" type="mule:substitutableBoolean">
+			<xsd:annotation>
+				<xsd:documentation>
+					If set to true, a subscriber will not receive messages that were
+					published by its own connection.
+                </xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="persistentDelivery" type="mule:substitutableBoolean">
+			<xsd:annotation>
+				<xsd:documentation>
+					If set to true, the JMS provider logs the message to stable storage
+					as it is sent so that it can be recovered if delivery is
+					unsuccessful.
+
+					A client marks a message as persistent if it feels that the
+					application will have problems if the message is lost in transit. A
+					client marks a message as non-persistent if an occasional lost
+					message is tolerable. Clients use delivery mode to tell a JMS
+					provider how to balance message transport reliability/throughput.
+
+					Delivery mode only covers the transport of the message to its
+					destination. Retention of a message at the destination until its
+					receipt is acknowledged is not guaranteed by a PERSISTENT delivery
+					mode. Clients should assume that message retention policies are set
+					administratively. Message retention policy governs the reliability
+					of message delivery from destination to message consumer. For
+					example, if a client's message storage space is exhausted, some
+					messages as defined by a site specific message retention policy may
+					be dropped.
+
+					A message is guaranteed to be delivered once-and-only-once by a JMS
+					Provider if the delivery mode of the messge is persistent and if
+					the destination has a sufficient message retention policy.
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="honorQosHeaders" type="mule:substitutableBoolean">
+			<xsd:annotation>
+				<xsd:documentation>
+					If set to true, the message's QoS headers are honored. If false (the
+					default), the connector settings override the message headers.
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="maxRedelivery" type="mule:substitutableInt">
+			<xsd:annotation>
+				<xsd:documentation>
+					The maximum number of times to try to redeliver a message.
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="cacheJmsSessions" type="mule:substitutableBoolean">
+			<xsd:annotation>
+				<xsd:documentation>
+					Whether to cache and re-use the JMS session object instead of recreating
+					the connection each time.
+                </xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="eagerConsumer" type="mule:substitutableBoolean">
+			<xsd:annotation>
+				<xsd:documentation>
+					Whether to create a consumer right when the connection is created instead
+					of using lazy instantiation in the poll loop. 
+                </xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<!--
+			Defaults to
+			org.mule.transport.jms.JmsConstants.JMS_SPECIFICATION_102B
+		-->
+		<xsd:attribute name="specification" default="1.0.2b">
+			<xsd:annotation>
+				<xsd:documentation>
+					The JMS specification to use: 1.0.2b (the default) or 1.1
+				</xsd:documentation>
+			</xsd:annotation>
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:NMTOKEN">
+					<xsd:enumeration value="1.0.2b" />
+					<xsd:enumeration value="1.1" />
+				</xsd:restriction>
+			</xsd:simpleType>
+		</xsd:attribute>
+		<xsd:attribute name="username" type="xsd:string">
+			<xsd:annotation>
+				<xsd:documentation>
+					The user name for the connection
+                </xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="password" type="xsd:string">
+			<xsd:annotation>
+				<xsd:documentation>
+					The password for the connection
+                </xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="numberOfConsumers" type="mule:substitutableInt">
+			<xsd:annotation>
+				<xsd:documentation>
+					The number of concurrent consumers that will be used to receive JMS
+					messages. (Note: If you use this attribute, you should not
+					configure the 'numberOfConcurrentTransactedReceivers', which has
+					the same effect.)
+                </xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="jndiInitialFactory" type="xsd:string">
+			<xsd:annotation>
+				<xsd:documentation>
+					The initial factory class to use when connecting to JNDI.
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="jndiProviderUrl" type="xsd:string">
+			<xsd:annotation>
+				<xsd:documentation>
+					The URL to use when connecting to JNDI.
+                </xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="jndiProviderProperties-ref" type="xsd:string">
+			<xsd:annotation>
+				<xsd:documentation>
+					Reference to a Map that contains additional provider properties.
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="connectionFactoryJndiName" type="xsd:string">
+			<xsd:annotation>
+				<xsd:documentation>
+					The name to use when looking up the connection factory from JNDI.
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="jndiDestinations" type="xsd:boolean">
+			<xsd:annotation>
+				<xsd:documentation>
+					Set this attribute to true if you want to look up queues or topics
+					from JNDI instead of creating them from the session.
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="forceJndiDestinations" type="xsd:boolean">
+			<xsd:annotation>
+				<xsd:documentation>
+					If set to true, Mule fails when a topic or queue cannot be retrieved
+					from JNDI. If set to false, Mule will create a topic or queue from
+					the JMS session if the JNDI lookup fails.
+                </xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="disableTemporaryReplyToDestinations"
+			type="xsd:boolean">
+			<xsd:annotation>
+				<xsd:documentation>
+					If this is set to false (the default), when Mule performs
+					request/response calls a temporary destination
+					will automatically be set up to receive a response from the remote JMS
+					call.
+                </xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:attributeGroup>
+
+
+	<!-- Vendor-specific JMS Connectors -->
+
+	<xsd:complexType name="vendorJmsConnectorType">
+		<xsd:complexContent>
+			<xsd:extension base="mule:connectorType">
+				<!--
+					Optional, a default ConnectionFactory is provided for vendor JMS
+					configs
+				-->
+				<xsd:attribute name="connectionFactory-ref" type="xsd:NMTOKEN"
+					use="optional">
+					<xsd:annotation>
+						<xsd:documentation>
+							Optional reference to the connection factory. A default connection
+							factory is provided for vendor-specific JMS configurations.
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attributeGroup ref="jmsConnectorAttributes" />
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<xsd:element name="activemq-connector" type="activeMqConnectorType"
+		substitutionGroup="mule:abstract-connector">
+		<xsd:annotation>
+			<xsd:documentation>
+				The activemq-connector element configures an ActiveMQ version of the
+				JMS connector.
+            </xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="activemq-xa-connector" type="activeMqConnectorType"
+		substitutionGroup="mule:abstract-connector">
+		<xsd:annotation>
+			<xsd:documentation>
+				The activemq-xa-connector element configures an ActiveMQ version of the
+				JMS connector with XA transaction support.
+            </xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:complexType name="activeMqConnectorType">
+		<xsd:complexContent>
+			<xsd:extension base="vendorJmsConnectorType">
+				<xsd:attribute name="brokerURL" type="xsd:string">
+					<xsd:annotation>
+						<xsd:documentation>
+							The URL used to connect to the JMS server. If not set, the default
+							is
+							vm://localhost?broker.persistent=false&amp;broker.useJmx=false.
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<xsd:element name="mulemq-connector" type="muleMqConnectorType"
+		substitutionGroup="mule:abstract-connector">
+		<xsd:annotation>
+			<xsd:documentation>
+				The mulemq-connector element configures a MuleMQ version of the JMS
+				connector.
+            </xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	
+	<xsd:element name="mulemq-xa-connector" type="muleMqConnectorType"
+		substitutionGroup="mule:abstract-connector">
+		<xsd:annotation>
+			<xsd:documentation>
+				The mulemq-connector element configures a MuleMQ version of the JMS
+				connector.
+            </xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+
+	<xsd:complexType name="muleMqConnectorType">
+		<xsd:complexContent>
+			<xsd:extension base="vendorJmsConnectorType">
+				<xsd:attribute name="realmURL" type="xsd:string">
+					<xsd:annotation>
+						<xsd:documentation>
+							The URL used to connect to the JMS server. If not set, the default
+							is nsp://localhost:9000.
+                        </xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="bufferOutput" type="xsd:string">
+					<xsd:annotation>
+						<xsd:documentation>
+							
+                        </xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="syncWrites" type="mule:substitutableBoolean">
+					<xsd:annotation>
+						<xsd:documentation>
+							
+                        </xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="syncBatchSize" type="mule:substitutableInt">
+					<xsd:annotation>
+						<xsd:documentation>
+							
+                        </xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="syncTime" type="mule:substitutableInt">
+					<xsd:annotation>
+						<xsd:documentation>
+							
+                        </xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="globalStoreCapacity" type="mule:substitutableInt">
+					<xsd:annotation>
+						<xsd:documentation>
+							
+                        </xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="maxUnackedSize" type="mule:substitutableInt">
+					<xsd:annotation>
+						<xsd:documentation>
+							
+                        </xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="useJMSEngine" type="mule:substitutableBoolean">
+					<xsd:annotation>
+						<xsd:documentation>
+							
+                        </xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="queueWindowSize" type="mule:substitutableInt">
+					<xsd:annotation>
+						<xsd:documentation>
+							
+                        </xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="autoAckCount" type="mule:substitutableInt">
+					<xsd:annotation>
+						<xsd:documentation>
+							
+                        </xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="enableSharedDurable" type="mule:substitutableBoolean">
+					<xsd:annotation>
+						<xsd:documentation>
+							
+                        </xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="randomiseRNames" type="mule:substitutableBoolean">
+					<xsd:annotation>
+						<xsd:documentation>
+							
+                        </xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="messageThreadPoolSize" type="mule:substitutableInt">
+					<xsd:annotation>
+						<xsd:documentation>
+							
+                        </xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="discOnClusterFailure" type="mule:substitutableBoolean">
+					<xsd:annotation>
+						<xsd:documentation>
+							
+                        </xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="initialRetryCount" type="mule:substitutableInt">
+					<xsd:annotation>
+						<xsd:documentation>
+							
+                        </xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+                <xsd:attribute name="muleMqMaxRedelivery" type="mule:substitutableInt">
                     <xsd:annotation>
                         <xsd:documentation>
-                            Reference to the connection factory, which is required for non-vendor JMS configurations.
+                            
                         </xsd:documentation>
                     </xsd:annotation>
                 </xsd:attribute>
-                <xsd:attributeGroup ref="jmsConnectorAttributes"/>
-            </xsd:extension>
-        </xsd:complexContent>
-    </xsd:complexType>
-
-    <!-- Custom JMS Connector -->
-    <xsd:element name="custom-connector" substitutionGroup="mule:abstract-connector">
-        <xsd:annotation>
-            <xsd:documentation>
-                The custom-connector element configures a custom connector for sending and receiving messages over JMS queues.
-            </xsd:documentation>
-        </xsd:annotation>
-        <xsd:complexType>
-            <xsd:complexContent>
-                <xsd:extension base="mule:customConnectorType">
-                    <xsd:attributeGroup ref="jmsConnectorAttributes"/>
-                </xsd:extension>
-            </xsd:complexContent>
-        </xsd:complexType>
-    </xsd:element>
-
-    <xsd:attributeGroup name="jmsConnectorAttributes">
-        <xsd:attribute name="redeliveryHandlerFactory-ref" type="xsd:NMTOKEN">
-            <xsd:annotation>
-                <xsd:documentation>
-                    Reference to the redelivery handler.
-                </xsd:documentation>
-            </xsd:annotation>
-        </xsd:attribute>
-        <xsd:attribute name="acknowledgementMode" default="AUTO_ACKNOWLEDGE">
-            <xsd:annotation>
-                <xsd:documentation>
-                    The acknowledgement mode to use: AUTO_ACKNOWLEDGE, CLIENT_ACKNOWLEDGE, or DUPS_OK_ACKNOWLEDGE.
-                </xsd:documentation>
-            </xsd:annotation>
-            <xsd:simpleType>
-                <xsd:restriction base="xsd:NMTOKEN">
-                    <xsd:enumeration value="AUTO_ACKNOWLEDGE"/>
-                    <xsd:enumeration value="CLIENT_ACKNOWLEDGE"/>
-                    <xsd:enumeration value="DUPS_OK_ACKNOWLEDGE"/>
-                </xsd:restriction>
-            </xsd:simpleType>
-        </xsd:attribute>
-        <xsd:attribute name="clientId" type="xsd:string">
-            <xsd:annotation>
-                <xsd:documentation>
-                    The ID of the JMS client.
-                </xsd:documentation>
-            </xsd:annotation>
-        </xsd:attribute>
-        <xsd:attribute name="durable" type="mule:substitutableBoolean">
-            <xsd:annotation>
-                <xsd:documentation>
-                    Whether to make all topic subscribers durable.
-                </xsd:documentation>
-            </xsd:annotation>
-        </xsd:attribute>
-        <xsd:attribute name="noLocal" type="mule:substitutableBoolean">
-            <xsd:annotation>
-                <xsd:documentation>
-                    If set to true, a subscriber will not receive messages that were published by its own connection.
-                </xsd:documentation>
-            </xsd:annotation>
-        </xsd:attribute>
-        <xsd:attribute name="persistentDelivery" type="mule:substitutableBoolean">
-            <xsd:annotation>
-                <xsd:documentation>
-                    If set to true, the JMS provider logs the message to stable storage as it is sent so that it can be recovered if delivery is unsuccessful.
-
-                    A client marks a message as persistent if it feels that the application will have problems if the message is lost in transit. A client marks a message as non-persistent if an occasional lost message is tolerable. Clients use delivery mode to tell a JMS provider how to balance message transport reliability/throughput.
-
-                    Delivery mode only covers the transport of the message to its destination. Retention of a message at the destination until its receipt is acknowledged is not guaranteed by a PERSISTENT delivery mode. Clients should assume that message retention policies are set administratively. Message retention policy governs the reliability of message delivery from destination to message consumer. For example, if a client's message storage space is exhausted, some messages as defined by a site specific message retention policy may be dropped.
-
-                    A message is guaranteed to be delivered once-and-only-once by a JMS Provider if the delivery mode of the messge is persistent and if the destination has a sufficient message retention policy.
-                </xsd:documentation>
-            </xsd:annotation>
-        </xsd:attribute>
-        <xsd:attribute name="honorQosHeaders" type="mule:substitutableBoolean">
-            <xsd:annotation>
-                <xsd:documentation>
-                    If set to true, the message's QoS headers are honored. If false (the default), the connector settings override the message headers.
-                </xsd:documentation>
-            </xsd:annotation>
-        </xsd:attribute>
-        <xsd:attribute name="maxRedelivery" type="mule:substitutableInt">
-            <xsd:annotation>
-                <xsd:documentation>
-                    The maximum number of times to try to redeliver a message.
-                </xsd:documentation>
-            </xsd:annotation>
-        </xsd:attribute>
-        <xsd:attribute name="cacheJmsSessions" type="mule:substitutableBoolean">
-            <xsd:annotation>
-                <xsd:documentation>
-                    Whether to cache and re-use the JMS session object instead of recreating the connection each time.
-                </xsd:documentation>
-            </xsd:annotation>
-        </xsd:attribute>
-        <xsd:attribute name="eagerConsumer" type="mule:substitutableBoolean">
-            <xsd:annotation>
-                <xsd:documentation>
-                    Whether to create a consumer right when the connection is created instead of using lazy instantiation in the poll loop. 
-                </xsd:documentation>
-            </xsd:annotation>
-        </xsd:attribute>
-        <!-- Defaults to org.mule.transport.jms.JmsConstants.JMS_SPECIFICATION_102B  -->
-        <xsd:attribute name="specification" default="1.0.2b">
-            <xsd:annotation>
-                <xsd:documentation>
-                    The JMS specification to use: 1.0.2b (the default) or 1.1
-                </xsd:documentation>
-            </xsd:annotation>
-            <xsd:simpleType>
-                <xsd:restriction base="xsd:NMTOKEN">
-                    <xsd:enumeration value="1.0.2b"/>
-                    <xsd:enumeration value="1.1"/>
-                </xsd:restriction>
-            </xsd:simpleType>
-        </xsd:attribute>
-        <xsd:attribute name="username" type="xsd:string">
-            <xsd:annotation>
-                <xsd:documentation>
-                    The user name for the connection
-                </xsd:documentation>
-            </xsd:annotation>
-        </xsd:attribute>
-        <xsd:attribute name="password" type="xsd:string">
-            <xsd:annotation>
-                <xsd:documentation>
-                    The password for the connection
-                </xsd:documentation>
-            </xsd:annotation>
-        </xsd:attribute>
-        <xsd:attribute name="numberOfConsumers" type="mule:substitutableInt">
-            <xsd:annotation>
-                <xsd:documentation>
-                    The number of concurrent consumers that will be used to receive JMS messages. (Note: If you use this attribute, you should not configure the 'numberOfConcurrentTransactedReceivers', which has the same effect.)
-                </xsd:documentation>
-            </xsd:annotation>
-        </xsd:attribute>
-        <xsd:attribute name="jndiInitialFactory" type="xsd:string">
-            <xsd:annotation>
-                <xsd:documentation>
-                    The initial factory class to use when connecting to JNDI.
-                </xsd:documentation>
-            </xsd:annotation>
-        </xsd:attribute>
-        <xsd:attribute name="jndiProviderUrl" type="xsd:string">
-            <xsd:annotation>
-                <xsd:documentation>
-                    The URL to use when connecting to JNDI.
-                </xsd:documentation>
-            </xsd:annotation>
-        </xsd:attribute>
-        <xsd:attribute name="jndiProviderProperties-ref" type="xsd:string">
-            <xsd:annotation>
-                <xsd:documentation>
-                    Reference to a Map that contains additional provider properties.
-                </xsd:documentation>
-            </xsd:annotation>
-        </xsd:attribute>
-        <xsd:attribute name="connectionFactoryJndiName" type="xsd:string">
-            <xsd:annotation>
-                <xsd:documentation>
-                    The name to use when looking up the connection factory from JNDI.
-                </xsd:documentation>
-            </xsd:annotation>
-        </xsd:attribute>
-        <xsd:attribute name="jndiDestinations" type="xsd:boolean">
-            <xsd:annotation>
-                <xsd:documentation>
-                    Set this attribute to true if you want to look up queues or topics from JNDI instead of creating them from the session.
-                </xsd:documentation>
-            </xsd:annotation>
-        </xsd:attribute>
-        <xsd:attribute name="forceJndiDestinations" type="xsd:boolean">
-            <xsd:annotation>
-                <xsd:documentation>
-                    If set to true, Mule fails when a topic or queue cannot be retrieved from JNDI. If set to false, Mule will create a topic or queue from the JMS session if the JNDI lookup fails.
-                </xsd:documentation>
-            </xsd:annotation>
-        </xsd:attribute>
-        <xsd:attribute name="disableTemporaryReplyToDestinations" type="xsd:boolean">
-            <xsd:annotation>
-                <xsd:documentation>
-                    If this is set to false (the default), when Mule performs request/response calls a temporary destination
-                    will automatically be set up to receive a response from the remote JMS call.
-                </xsd:documentation>
-            </xsd:annotation>
-        </xsd:attribute>
-    </xsd:attributeGroup>
-
-
-    <!-- Vendor-specific JMS Connectors -->
-
-    <xsd:complexType name="vendorJmsConnectorType">
-        <xsd:complexContent>
-            <xsd:extension base="mule:connectorType">
-                <!-- Optional, a default ConnectionFactory is provided for vendor JMS configs -->
-                <xsd:attribute name="connectionFactory-ref" type="xsd:NMTOKEN" use="optional">
-                    <xsd:annotation>
-                        <xsd:documentation>
-                            Optional reference to the connection factory. A default connection factory is provided for vendor-specific JMS configurations.
+				<xsd:attribute name="muleMqCustomProperties-ref" type="xsd:NMTOKEN">
+					<xsd:annotation>
+						<xsd:documentation>
+							
                         </xsd:documentation>
-                    </xsd:annotation>
-                </xsd:attribute>
-                <xsd:attributeGroup ref="jmsConnectorAttributes"/>
-            </xsd:extension>
-        </xsd:complexContent>
-    </xsd:complexType>
+					</xsd:annotation>
+				</xsd:attribute>
+				
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
 
-    <xsd:element name="activemq-connector" type="activeMqConnectorType" substitutionGroup="mule:abstract-connector">
-        <xsd:annotation>
-            <xsd:documentation>
-                The activemq-connector element configures an ActiveMQ version of the JMS connector.
+	<xsd:element name="weblogic-connector" type="vendorJmsConnectorType"
+		substitutionGroup="mule:abstract-connector">
+		<xsd:annotation>
+			<xsd:documentation>
+				The weblogic-connector element configures a WebLogic version of the JMS
+				connector.
             </xsd:documentation>
-        </xsd:annotation>
-    </xsd:element>
-    <xsd:element name="activemq-xa-connector" type="activeMqConnectorType" substitutionGroup="mule:abstract-connector">
-        <xsd:annotation>
-            <xsd:documentation>
-                The activemq-xa-connector element configures an ActiveMQ version of the JMS connector with XA transaction support.
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="websphere-connector" type="vendorJmsConnectorType"
+		substitutionGroup="mule:abstract-connector">
+		<xsd:annotation>
+			<xsd:documentation>
+				The websphere-connector element configures a WebSphere version of the
+				JMS connector.
             </xsd:documentation>
-        </xsd:annotation>
-    </xsd:element>
-    <xsd:complexType name="activeMqConnectorType">
-        <xsd:complexContent>
-            <xsd:extension base="vendorJmsConnectorType">
-                <xsd:attribute name="brokerURL" type="xsd:string">
-                    <xsd:annotation>
-                        <xsd:documentation>
-                        The URL used to connect to the JMS server. If not set, the default is vm://localhost?broker.persistent=false&amp;broker.useJmx=false.
+		</xsd:annotation>
+	</xsd:element>
+
+	<xsd:element name="transaction" type="mule:baseTransactionType"
+		substitutionGroup="mule:abstract-transaction">
+		<xsd:annotation>
+			<xsd:documentation>
+				The transaction element configures a transaction. Transactions allow a
+				series of operations to be grouped together so that they can be
+				rolled back if a failure occurs. Set the action (such as
+				ALWAYS_BEGIN or JOIN_IF_POSSIBLE) and the timeout setting for the
+				transaction.
+            </xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="client-ack-transaction" type="mule:baseTransactionType"
+		substitutionGroup="mule:abstract-transaction">
+		<xsd:annotation>
+			<xsd:documentation>
+				The client-ack-transaction element configures a client acknowledgment
+				transaction, which is identical to a transaction but with message
+				acknowledgements. There is no notion of rollback with client
+				acknowledgement, but this transaction can be useful for controlling
+				how messages are consumed from a destination.
+            </xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+
+	<xsd:element name="jmsmessage-to-object-transformer" type="mule:abstractTransformerType"
+		substitutionGroup="mule:abstract-transformer">
+		<xsd:annotation>
+			<xsd:documentation>
+				The jmsmessage-to-object-transformer element configures a transformer
+				that converts a JMS message into an object by extracting the message
+				payload.
+            </xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="object-to-jmsmessage-transformer" type="mule:abstractTransformerType"
+		substitutionGroup="mule:abstract-transformer">
+		<xsd:annotation>
+			<xsd:documentation>
+				The object-to-jmsmessage-transformer element configures a transformer
+				that converts an object into one of five types of JMS messages,
+				depending on the object passed in: java.lang.String ->
+				javax.jms.TextMessage, byte[] -> javax.jms.BytesMessage,
+				java.util.Map -> javax.jms.MapMessage, java.io.InputStream ->
+				javax.jms.StreamMessage, and java.lang.Object ->
+				javax.jms.ObjectMessage.
+            </xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+
+	<xsd:element name="inbound-endpoint" type="inboundEndpointType"
+		substitutionGroup="mule:abstract-inbound-endpoint">
+		<xsd:annotation>
+			<xsd:documentation>
+				The inbound-endpoint element configures an endpoint on which JMS
+				messages are received.
+            </xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:complexType name="inboundEndpointType">
+		<xsd:complexContent>
+			<xsd:extension base="mule:abstractInboundEndpointType">
+				<xsd:group ref="defaultEndpointElements" />
+				<xsd:attributeGroup ref="mule:defaultEndpointAttributes" />
+				<xsd:attributeGroup ref="addressAttributes" />
+				<xsd:attribute name="durableName" type="xsd:string">
+					<xsd:annotation>
+						<xsd:documentation>
+							(As of 2.2.2) Allows the name for the durable topic subscription to
+							be specified.
                         </xsd:documentation>
-                    </xsd:annotation>
-                </xsd:attribute>
-            </xsd:extension>
-        </xsd:complexContent>
-    </xsd:complexType>
+					</xsd:annotation>
+				</xsd:attribute>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
 
-    <xsd:element name="weblogic-connector" type="vendorJmsConnectorType" substitutionGroup="mule:abstract-connector">
-        <xsd:annotation>
-            <xsd:documentation>
-                The weblogic-connector element configures a WebLogic version of the JMS connector.
+	<xsd:element name="outbound-endpoint" type="outboundEndpointType"
+		substitutionGroup="mule:abstract-outbound-endpoint">
+		<xsd:annotation>
+			<xsd:documentation>
+				The inbound-endpoint element configures an endpoint to which JMS
+				messages are sent.
             </xsd:documentation>
-        </xsd:annotation>
-    </xsd:element>
-    <xsd:element name="websphere-connector" type="vendorJmsConnectorType" substitutionGroup="mule:abstract-connector">
-        <xsd:annotation>
-            <xsd:documentation>
-                The websphere-connector element configures a WebSphere version of the JMS connector.
-            </xsd:documentation>
-        </xsd:annotation>
-    </xsd:element>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:complexType name="outboundEndpointType">
+		<xsd:complexContent>
+			<xsd:extension base="mule:abstractOutboundEndpointType">
+				<xsd:group ref="defaultEndpointElements" />
+				<xsd:attributeGroup ref="mule:defaultEndpointAttributes" />
+				<xsd:attributeGroup ref="addressAttributes" />
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
 
-    <xsd:element name="transaction" type="mule:baseTransactionType" substitutionGroup="mule:abstract-transaction">
-        <xsd:annotation>
-            <xsd:documentation>
-                The transaction element configures a transaction. Transactions allow a series of operations to be grouped together so that they can be rolled back if a failure occurs. Set the action (such as ALWAYS_BEGIN or JOIN_IF_POSSIBLE) and the timeout setting for the transaction.
-            </xsd:documentation>
-        </xsd:annotation>
-    </xsd:element>
-    <xsd:element name="client-ack-transaction" type="mule:baseTransactionType" substitutionGroup="mule:abstract-transaction">
-        <xsd:annotation>
-            <xsd:documentation>
-                The client-ack-transaction element configures a client acknowledgment transaction, which is identical to a transaction but with message acknowledgements. There is no notion of rollback with client acknowledgement, but this transaction can be useful for controlling how messages are consumed from a destination.
-            </xsd:documentation>
-        </xsd:annotation>
-    </xsd:element>
+	<xsd:element name="endpoint" type="globalEndpointType"
+		substitutionGroup="mule:abstract-global-endpoint">
+		<xsd:annotation>
+			<xsd:documentation>
+				The endpoint element configures a global JMS endpoint definition.
+			</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:complexType name="globalEndpointType">
+		<xsd:complexContent>
+			<xsd:extension base="mule:abstractGlobalEndpointType">
+				<xsd:group ref="defaultEndpointElements" />
+				<xsd:attributeGroup ref="mule:defaultEndpointAttributes" />
+				<xsd:attributeGroup ref="addressAttributes" />
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
 
-    <xsd:element name="jmsmessage-to-object-transformer" type="mule:abstractTransformerType" substitutionGroup="mule:abstract-transformer">
-        <xsd:annotation>
-            <xsd:documentation>
-                The jmsmessage-to-object-transformer element configures a transformer that converts a JMS message into an object by extracting the message payload.
-            </xsd:documentation>
-        </xsd:annotation>
-    </xsd:element>
-    <xsd:element name="object-to-jmsmessage-transformer" type="mule:abstractTransformerType" substitutionGroup="mule:abstract-transformer">
-        <xsd:annotation>
-            <xsd:documentation>
-                The object-to-jmsmessage-transformer element configures a transformer that converts an object into one of five types of JMS messages, depending on the object passed in: java.lang.String -> javax.jms.TextMessage, byte[] -> javax.jms.BytesMessage, java.util.Map -> javax.jms.MapMessage, java.io.InputStream -> javax.jms.StreamMessage, and java.lang.Object -> javax.jms.ObjectMessage.
-            </xsd:documentation>
-        </xsd:annotation>
-    </xsd:element>
-
-    <xsd:element name="inbound-endpoint" type="inboundEndpointType" substitutionGroup="mule:abstract-inbound-endpoint">
-        <xsd:annotation>
-            <xsd:documentation>
-                The inbound-endpoint element configures an endpoint on which JMS messages are received.
-            </xsd:documentation>
-        </xsd:annotation>
-    </xsd:element>
-    <xsd:complexType name="inboundEndpointType">
-        <xsd:complexContent>
-            <xsd:extension base="mule:abstractInboundEndpointType">
-                <xsd:group ref="defaultEndpointElements"/>
-                <xsd:attributeGroup ref="mule:defaultEndpointAttributes"/>
-                <xsd:attributeGroup ref="addressAttributes"/>
-                <xsd:attribute name="durableName" type="xsd:string">
-                    <xsd:annotation>
-                        <xsd:documentation>
-                            (As of 2.2.2) Allows the name for the durable topic subscription to be specified.
-                        </xsd:documentation>
-                    </xsd:annotation>
-                </xsd:attribute>
-            </xsd:extension>
-        </xsd:complexContent>
-    </xsd:complexType>
-
-    <xsd:element name="outbound-endpoint" type="outboundEndpointType" substitutionGroup="mule:abstract-outbound-endpoint">
-        <xsd:annotation>
-            <xsd:documentation>
-                The inbound-endpoint element configures an endpoint to which JMS messages are sent.
-            </xsd:documentation>
-        </xsd:annotation>
-    </xsd:element>
-    <xsd:complexType name="outboundEndpointType">
-        <xsd:complexContent>
-            <xsd:extension base="mule:abstractOutboundEndpointType">
-                <xsd:group ref="defaultEndpointElements"/>
-                <xsd:attributeGroup ref="mule:defaultEndpointAttributes"/>
-                <xsd:attributeGroup ref="addressAttributes"/>
-            </xsd:extension>
-        </xsd:complexContent>
-    </xsd:complexType>
-
-    <xsd:element name="endpoint" type="globalEndpointType" substitutionGroup="mule:abstract-global-endpoint">
-        <xsd:annotation>
-            <xsd:documentation>
-                The endpoint element configures a global JMS endpoint definition.
-            </xsd:documentation>
-        </xsd:annotation>
-    </xsd:element>
-    <xsd:complexType name="globalEndpointType">
-        <xsd:complexContent>
-            <xsd:extension base="mule:abstractGlobalEndpointType">
-                <xsd:group ref="defaultEndpointElements"/>
-                <xsd:attributeGroup ref="mule:defaultEndpointAttributes"/>
-                <xsd:attributeGroup ref="addressAttributes"/>
-            </xsd:extension>
-        </xsd:complexContent>
-    </xsd:complexType>
-
-    <xsd:attributeGroup name="addressAttributes">
-        <xsd:attribute name="queue" type="xsd:string">
-            <xsd:annotation>
-                <xsd:documentation>
-                    The queue name. This attribute cannot be used with the topic attribute (the two are exclusive).
+	<xsd:attributeGroup name="addressAttributes">
+		<xsd:attribute name="queue" type="xsd:string">
+			<xsd:annotation>
+				<xsd:documentation>
+					The queue name. This attribute cannot be used with the topic attribute
+					(the two are exclusive).
                 </xsd:documentation>
-            </xsd:annotation>
-        </xsd:attribute>
-        <xsd:attribute name="topic" type="xsd:string">
-            <xsd:annotation>
-                <xsd:documentation>
-                    The topic name. The "topic:" prefix will be added automatically. This attribute cannot be used with the queue attribute (the two are exclusive).
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="topic" type="xsd:string">
+			<xsd:annotation>
+				<xsd:documentation>
+					The topic name. The "topic:" prefix will be added automatically. This
+					attribute cannot be used with the queue attribute (the two are
+					exclusive).
                 </xsd:documentation>
-            </xsd:annotation>
-        </xsd:attribute>
-        <xsd:attribute name="disableTemporaryReplyToDestinations" type="xsd:boolean">
-            <xsd:annotation>
-                <xsd:documentation>
-                    If this is set to false (the default), when Mule performs request/response calls a temporary destination
-                    will automatically be set up to receive a response from the remote JMS call.
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="disableTemporaryReplyToDestinations"
+			type="xsd:boolean">
+			<xsd:annotation>
+				<xsd:documentation>
+					If this is set to false (the default), when Mule performs
+					request/response calls a temporary destination
+					will automatically be set up to receive a response from the remote JMS
+					call.
                 </xsd:documentation>
-            </xsd:annotation>
-        </xsd:attribute>
-    </xsd:attributeGroup>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:attributeGroup>
 
-    <!-- these include option/repeats - should be embedded once -->
-    <!-- this is a modified version of what is in mule.xsd, allowing either a selector or a
-         normal filter to be set -->
-    <xsd:group name="defaultEndpointElements">
-        <xsd:sequence>
-            <xsd:sequence minOccurs="0" maxOccurs="unbounded">
-                <xsd:group ref="mule:endpointTransformers"/>
-                <xsd:element ref="mule:abstract-transaction" minOccurs="0"/>
-                <xsd:element ref="mule:abstract-xa-transaction" minOccurs="0"/>
-                <xsd:choice>
-                    <xsd:element ref="mule:abstract-filter" minOccurs="0"/>
-                    <xsd:element name="selector" type="jmsSelectorFilter" minOccurs="0"/>
-                </xsd:choice>
-                <xsd:element ref="mule:abstract-security-filter" minOccurs="0"/>
-                <xsd:group ref="mule:propertiesGroup"/>
-            </xsd:sequence>
-        </xsd:sequence>
-    </xsd:group>
+	<!-- these include option/repeats - should be embedded once -->
+	<!--
+		this is a modified version of what is in mule.xsd, allowing either a
+		selector or a normal filter to be set
+	-->
+	<xsd:group name="defaultEndpointElements">
+		<xsd:sequence>
+			<xsd:sequence minOccurs="0" maxOccurs="unbounded">
+				<xsd:group ref="mule:endpointTransformers" />
+				<xsd:element ref="mule:abstract-transaction" minOccurs="0" />
+				<xsd:element ref="mule:abstract-xa-transaction"
+					minOccurs="0" />
+				<xsd:choice>
+					<xsd:element ref="mule:abstract-filter" minOccurs="0" />
+					<xsd:element name="selector" type="jmsSelectorFilter"
+						minOccurs="0" />
+				</xsd:choice>
+				<xsd:element ref="mule:abstract-security-filter"
+					minOccurs="0" />
+				<xsd:group ref="mule:propertiesGroup" />
+			</xsd:sequence>
+		</xsd:sequence>
+	</xsd:group>
 
-    <xsd:complexType name="jmsSelectorFilter">
-        <xsd:annotation>
-            <xsd:documentation>
-                Sets a selector on the underlying JMS transport. It is not a standard Mule filter and cannot be combined with other filters.
+	<xsd:complexType name="jmsSelectorFilter">
+		<xsd:annotation>
+			<xsd:documentation>
+				Sets a selector on the underlying JMS transport. It is not a standard
+				Mule filter and cannot be combined with other filters.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:attribute name="expression" type="xsd:string" use="required">
+			<xsd:annotation>
+				<xsd:documentation>
+					The expression to search for in the property.
+                </xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+
+	<xsd:element name="property-filter" substitutionGroup="mule:abstract-filter">
+		<xsd:annotation>
+			<xsd:documentation>
+				The property-filter element configures a filter that allows you to
+				filter messages based on a JMS property.
             </xsd:documentation>
-        </xsd:annotation>
-        <xsd:attribute name="expression" type="xsd:string" use="required">
-            <xsd:annotation>
-                <xsd:documentation>
-                    The expression to search for in the property.
-                </xsd:documentation>
-            </xsd:annotation>
-        </xsd:attribute>
-    </xsd:complexType>
-
-    <xsd:element name="property-filter" substitutionGroup="mule:abstract-filter">
-        <xsd:annotation>
-            <xsd:documentation>
-                The property-filter element configures a filter that allows you to filter messages based on a JMS property.
-            </xsd:documentation>
-        </xsd:annotation>
-        <xsd:complexType>
-            <xsd:complexContent>
-                <xsd:extension base="mule:abstractFilterType">
-                    <xsd:attribute name="propertyName" type="xsd:string">
-                        <xsd:annotation>
-                            <xsd:documentation>
-                                The name of the JMS property.
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="mule:abstractFilterType">
+					<xsd:attribute name="propertyName" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>
+								The name of the JMS property.
                             </xsd:documentation>
-                        </xsd:annotation>
-                    </xsd:attribute>
-                    <xsd:attribute name="propertyClass" type="xsd:string">
-                        <xsd:annotation>
-                            <xsd:documentation>
-                                The class type of the JMS property.
+						</xsd:annotation>
+					</xsd:attribute>
+					<xsd:attribute name="propertyClass" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>
+								The class type of the JMS property.
                             </xsd:documentation>
-                        </xsd:annotation>
-                    </xsd:attribute>
-                    <xsd:attribute name="expression" type="xsd:string">
-                        <xsd:annotation>
-                            <xsd:documentation>
-                                The expression to search for in the property.
+						</xsd:annotation>
+					</xsd:attribute>
+					<xsd:attribute name="expression" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>
+								The expression to search for in the property.
                             </xsd:documentation>
-                        </xsd:annotation>
-                    </xsd:attribute>
-                    <xsd:attribute name="pattern" type="xsd:string">
-                        <xsd:annotation>
-                            <xsd:documentation>
-                                The regular expression pattern to search for in the property. In most cases, if you set both the expression and pattern attributes, only the pattern is used.
+						</xsd:annotation>
+					</xsd:attribute>
+					<xsd:attribute name="pattern" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>
+								The regular expression pattern to search for in the property. In
+								most cases, if you set both the expression and pattern
+								attributes, only the pattern is used.
                             </xsd:documentation>
-                        </xsd:annotation>
-                    </xsd:attribute>
-                </xsd:extension>
-            </xsd:complexContent>
-        </xsd:complexType>
-    </xsd:element>
+						</xsd:annotation>
+					</xsd:attribute>
+				</xsd:extension>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
 
 </xsd:schema>
