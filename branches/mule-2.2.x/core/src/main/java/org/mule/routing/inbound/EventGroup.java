@@ -10,10 +10,10 @@
 
 package org.mule.routing.inbound;
 
-import org.mule.DefaultMessageCollection;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessageCollection;
 import org.mule.util.ClassUtils;
+import org.mule.DefaultMessageCollection;
 
 import java.io.Serializable;
 import java.util.ArrayList;
