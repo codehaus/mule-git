@@ -84,14 +84,13 @@ public class MuleMQJmsConnector extends JmsConnector
     protected static final String DISC_ON_CLUSTER_FAILURE = "nirvana.discOnClusterFailure";
     protected static final String INITIAL_RETRY_COUNT = "nirvana.initialRetryCount";
     
-    private static final String JMS_SPEC_ERROR = "MuleMQ does not support JMS spec 1.02b. Consider adding the specification attribute to the JMS connector and set it to 1.1";
 
     @Override
     protected void doInitialise() throws InitialisationException
     {
         if (getSpecification().equals(JmsConstants.JMS_SPECIFICATION_102B))
         {
-            throw new InitialisationException(JmsMessages.createStaticMessage(JMS_SPEC_ERROR), this);
+            throw new InitialisationException(JmsMessages.errorMuleMqJmsSpecification(), this);
         }
         super.doInitialise();
     }
