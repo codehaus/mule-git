@@ -20,7 +20,6 @@ import java.lang.reflect.Method;
 import java.util.Hashtable;
 
 import javax.jms.ConnectionFactory;
-import javax.jms.JMSException;
 
 public class MuleMQJmsConnector extends JmsConnector
 {
@@ -149,13 +148,6 @@ public class MuleMQJmsConnector extends JmsConnector
         {
             logger.error("Can not set properties on the MuleMQ connection factory " + e);
         }
-    }
-
-    @Override
-    public void onException(JMSException jmsException)
-    {
-        logger.error(jmsException);
-        super.onException(jmsException);
     }
 
     // returns the connection factory class name as a string. This method will be
