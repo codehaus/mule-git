@@ -1240,8 +1240,14 @@ public abstract class AbstractConnector
             if (receiver != null)
             {
                 destroyReceiver(receiver, endpoint);
+                doUnregisterListener(service, endpoint, receiver);
             }
         }
+    }
+
+    protected void doUnregisterListener(Service service, InboundEndpoint endpoint, MessageReceiver receiver)
+    {
+        // Template method
     }
 
     /**
