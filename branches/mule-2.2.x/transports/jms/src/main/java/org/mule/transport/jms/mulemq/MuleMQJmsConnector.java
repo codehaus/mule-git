@@ -10,20 +10,18 @@
 
 package org.mule.transport.jms.mulemq;
 
-import org.mule.api.lifecycle.InitialisationException;
 import org.mule.transport.jms.JmsConnector;
-import org.mule.transport.jms.JmsConstants;
-import org.mule.transport.jms.i18n.JmsMessages;
 import org.mule.util.ClassUtils;
 
 import java.lang.reflect.Method;
 import java.util.Hashtable;
+import java.util.Map;
 
 import javax.jms.ConnectionFactory;
 
 public class MuleMQJmsConnector extends JmsConnector
 {
-    public static final String MULEMQ_CONNECTION_FACTORY_CLASS = "com.pcbsys.nirvana.nJMS.ConnectionFactoryImpl";
+    public static final String MULEMQ_CONNECTION_FACTORY_CLASS = "com.pcbsys.nirvana.nJMS.XAConnectionFactoryImpl";
 
     // The default values for the connection factory properties
     public static final String DEFAULT_REALM_URL = "nsp://localhost:9000";
@@ -62,11 +60,6 @@ public class MuleMQJmsConnector extends JmsConnector
     private boolean discOnClusterFailure = DEFAULT_DISC_ON_CLUSTER_FAILURE;
     private int initialRetryCount = DEFAULT_INITIAL_RETRY_COUNT;
 
-    // Property map for other custom properties. Values defined in this map will
-    // override the values set on the connector itself. Also properties which are not
-    // configurable on the connector can be configured from this map
-    private Hashtable<String, String> muleMqCustomProperties = new Hashtable<String, String>();
-
     // property names
     protected static final String BUFFER_OUTPUT = "BufferOutput";
     protected static final String SYNC_WRITES = "nirvana.syncWrites";
@@ -83,17 +76,6 @@ public class MuleMQJmsConnector extends JmsConnector
     protected static final String MESSAGE_THREAD_POOL_SIZE = "nirvana.messageThreadPoolSize";
     protected static final String DISC_ON_CLUSTER_FAILURE = "nirvana.discOnClusterFailure";
     protected static final String INITIAL_RETRY_COUNT = "nirvana.initialRetryCount";
-    
-
-    @Override
-    protected void doInitialise() throws InitialisationException
-    {
-        if (getSpecification().equals(JmsConstants.JMS_SPECIFICATION_102B))
-        {
-            throw new InitialisationException(JmsMessages.errorMuleMqJmsSpecification(), this);
-        }
-        super.doInitialise();
-    }
 
     @Override
     protected ConnectionFactory getDefaultConnectionFactory()
@@ -132,9 +114,13 @@ public class MuleMQJmsConnector extends JmsConnector
         props.put(DISC_ON_CLUSTER_FAILURE, Boolean.toString(discOnClusterFailure));
         props.put(INITIAL_RETRY_COUNT, Integer.toString(initialRetryCount));
 
-        // if the user used the custom properties map, these will override the
-        // properties on the connector
-        props.putAll(muleMqCustomProperties);
+        // if the user used the connectionFactoryProperties map, these will override
+        // the properties on the connector
+        Map connectionFactoryProperties = getConnectionFactoryProperties();
+        if (connectionFactoryProperties != null)
+        {
+            props.putAll(connectionFactoryProperties);
+        }
 
         try
         {
@@ -305,16 +291,6 @@ public class MuleMQJmsConnector extends JmsConnector
     public void setInitialRetryCount(int initialRetryCount)
     {
         this.initialRetryCount = initialRetryCount;
-    }
-
-    public Hashtable<String, String> getMuleMqCustomProperties()
-    {
-        return muleMqCustomProperties;
-    }
-
-    public void setMuleMqCustomProperties(Hashtable<String, String> muleMqCustomProperties)
-    {
-        this.muleMqCustomProperties = muleMqCustomProperties;
     }
 
     public int getMuleMqMaxRedelivery()

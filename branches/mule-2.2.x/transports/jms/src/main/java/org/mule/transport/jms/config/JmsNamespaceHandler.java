@@ -30,7 +30,6 @@ import org.mule.transport.jms.activemq.ActiveMQXAJmsConnector;
 import org.mule.transport.jms.filters.JmsPropertyFilter;
 import org.mule.transport.jms.filters.JmsSelectorFilter;
 import org.mule.transport.jms.mulemq.MuleMQJmsConnector;
-import org.mule.transport.jms.mulemq.MuleMQXAJmsConnector;
 import org.mule.transport.jms.transformers.JMSMessageToObject;
 import org.mule.transport.jms.transformers.ObjectToJMSMessage;
 import org.mule.transport.jms.weblogic.WeblogicJmsConnector;
@@ -63,7 +62,6 @@ public class JmsNamespaceHandler extends AbstractMuleNamespaceHandler
         registerBeanDefinitionParser("activemq-xa-connector", new JmsConnectorDefinitionParser(ActiveMQXAJmsConnector.class));
         
         registerBeanDefinitionParser("mulemq-connector", new JmsConnectorDefinitionParser(MuleMQJmsConnector.class));
-        registerBeanDefinitionParser("mulemq-xa-connector", new JmsConnectorDefinitionParser(MuleMQXAJmsConnector.class));
         
         registerBeanDefinitionParser("weblogic-connector", new JmsConnectorDefinitionParser(WeblogicJmsConnector.class));
         registerBeanDefinitionParser("websphere-connector", new JmsConnectorDefinitionParser(WebsphereJmsConnector.class));
