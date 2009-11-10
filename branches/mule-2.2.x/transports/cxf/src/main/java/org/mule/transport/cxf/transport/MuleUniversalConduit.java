@@ -277,19 +277,26 @@ public class MuleUniversalConduit extends AbstractConduit
         if (ep == null)
         {
             ep = initializeProtocolEndpoint(uri);
-            protocolEndpoints.put(uri, ep);
         }
         return ep;
     }
 
     protected synchronized OutboundEndpoint initializeProtocolEndpoint(String uri) throws MuleException
     {
+
+        if (protocolEndpoints.get(uri) != null)
+        {
+            return protocolEndpoints.get(uri);
+        }
+
         MuleRegistry registry = connector.getMuleContext().getRegistry();
+        OutboundEndpoint protocolEndpoint;
 
         if (muleEndpoint == null)
         {
-            // Someone is using a JAX-WS client directly and not going through MuleClient
-            return registry.lookupEndpointFactory().getOutboundEndpoint(uri);
+            // Someone is using a JAX-WS client directly and not going through
+            // MuleClient
+            protocolEndpoint = registry.lookupEndpointFactory().getOutboundEndpoint(uri);
         }
         else
         {
@@ -303,9 +310,10 @@ public class MuleUniversalConduit extends AbstractConduit
             }
             // Propagate responseTimeout to http endpoint.
             builder.setResponseTimeout(muleEndpoint.getResponseTimeout());
-
-            return registry.lookupEndpointFactory().getOutboundEndpoint(builder);
+            protocolEndpoint = registry.lookupEndpointFactory().getOutboundEndpoint(builder);
         }
+        protocolEndpoints.put(uri, protocolEndpoint);
+        return protocolEndpoint;
     }
 
     protected InputStream getResponseBody(Message m, MuleMessage result) throws TransformerException, IOException
