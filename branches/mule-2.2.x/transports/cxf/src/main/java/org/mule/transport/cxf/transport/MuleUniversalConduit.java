@@ -277,34 +277,35 @@ public class MuleUniversalConduit extends AbstractConduit
         if (ep == null)
         {
             ep = initializeProtocolEndpoint(uri);
+            protocolEndpoints.put(uri, ep);
         }
         return ep;
     }
 
     protected synchronized OutboundEndpoint initializeProtocolEndpoint(String uri) throws MuleException
     {
-        OutboundEndpoint ep = protocolEndpoints.get(uri);
-        if (ep != null) return ep;
-        
-        MuleContext muleContext = MuleServer.getMuleContext();
-        MuleRegistry registry = muleContext.getRegistry();
+        MuleRegistry registry = connector.getMuleContext().getRegistry();
 
-        // Someone is using a JAX-WS client directly and not going through MuleClient
         if (muleEndpoint == null)
         {
+            // Someone is using a JAX-WS client directly and not going through MuleClient
             return registry.lookupEndpointFactory().getOutboundEndpoint(uri);
         }
-        
-        // MuleClient/Dispatcher case
-        EndpointURIEndpointBuilder builder = new EndpointURIEndpointBuilder(uri, muleContext);
-        String connectorName = (String)muleEndpoint.getProperty("protocolConnector");
-        if (connectorName != null) 
+        else
         {
-            builder.setConnector(registry.lookupConnector(connectorName));
+            // MuleClient/Dispatcher case
+            EndpointURIEndpointBuilder builder = new EndpointURIEndpointBuilder(uri,
+                connector.getMuleContext());
+            String connectorName = (String) muleEndpoint.getProperty("protocolConnector");
+            if (connectorName != null)
+            {
+                builder.setConnector(registry.lookupConnector(connectorName));
+            }
+            // Propagate responseTimeout to http endpoint.
+            builder.setResponseTimeout(muleEndpoint.getResponseTimeout());
+
+            return registry.lookupEndpointFactory().getOutboundEndpoint(builder);
         }
-        ep = registry.lookupEndpointFactory().getOutboundEndpoint(builder);
-        protocolEndpoints.put(uri, ep);
-        return ep;
     }
 
     protected InputStream getResponseBody(Message m, MuleMessage result) throws TransformerException, IOException

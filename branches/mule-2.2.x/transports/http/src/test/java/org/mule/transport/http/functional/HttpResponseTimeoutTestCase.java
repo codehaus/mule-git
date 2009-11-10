@@ -14,6 +14,7 @@ import org.mule.api.MuleMessage;
 import org.mule.module.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 
+import java.net.SocketTimeoutException;
 import java.util.Date;
 
 /**
@@ -38,6 +39,7 @@ public class HttpResponseTimeoutTestCase extends FunctionalTestCase
         
         Date afterCall = new Date();
         // If everything is good the connection will timeout after 5s and throw an exception.
+        assertTrue(message.getExceptionPayload().getRootException() instanceof SocketTimeoutException);
         assertTrue((afterCall.getTime() - beforeCall.getTime()) < 10000);
     }
 

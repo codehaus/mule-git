@@ -14,10 +14,11 @@ import org.mule.api.MuleMessage;
 import org.mule.module.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 
+import java.net.SocketTimeoutException;
 import java.util.Date;
 
 /**
- * See MULE-4491 "Http outbound endpoint does not use responseTimeout attribute"
+ * See MULE-4490 "Outbound CXF endpoint does not propagate any properties to "protocol" endpoint"
  */
 public class HttpResponseTimeoutTestCase extends FunctionalTestCase
 {
@@ -37,8 +38,8 @@ public class HttpResponseTimeoutTestCase extends FunctionalTestCase
         assertNotNull(message);
 
         Date afterCall = new Date();
-        // If everything is good the connection will timeout after 5s and throw an
-        // exception.
+        // If everything is good the connection will timeout after 5s and throw an exception.
+        assertTrue(message.getExceptionPayload().getRootException() instanceof SocketTimeoutException);
         assertTrue((afterCall.getTime() - beforeCall.getTime()) < 10000);
     }
 

@@ -25,4 +25,4 @@ org.mule.transport.cxf.WSProxyTestCase
 org.mule.transport.cxf.CxfConnectorVMFunctionalTestCase
 
 # MULE-4490
-org.mule.transport.cxf.functional.HttpResponseTimeoutTestCase
+#org.mule.transport.cxf.functional.HttpResponseTimeoutTestCase
