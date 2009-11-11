@@ -15,6 +15,7 @@ import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.OutboundEndpoint;
 import org.mule.transport.AbstractMessageDispatcher;
+import org.mule.transport.NullPayload;
 
 import org.jivesoftware.smack.packet.Message;
 
@@ -81,7 +82,7 @@ public class XmppMessageDispatcher extends AbstractMessageDispatcher
                     connector.getMuleContext());
             }
         }
-        return null;
+        return new DefaultMuleMessage(NullPayload.getInstance(), connector.getMuleContext());
     }
 
     protected void sendMessage(MuleEvent event) throws Exception

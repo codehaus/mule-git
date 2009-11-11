@@ -160,7 +160,7 @@ public class DefaultMuleContext implements MuleContext
     
     public synchronized void initialise() throws InitialisationException
     {
-        if (isInitialised())
+        if (lifecycleManager.getCurrentPhase().equals(Initialisable.PHASE_NAME))
         {
             return;
         }
@@ -204,30 +204,33 @@ public class DefaultMuleContext implements MuleContext
 
     public synchronized void start() throws MuleException
     {
-        lifecycleManager.checkPhase(Startable.PHASE_NAME);
-        if (!isStarted())
+        if (isStarted())
         {
-            if (getSecurityManager() == null)
-            {
-                throw new MuleRuntimeException(CoreMessages.objectIsNull("securityManager"));
-            }
-            if (getQueueManager() == null)
-            {
-                throw new MuleRuntimeException(CoreMessages.objectIsNull("queueManager"));
-            }
+            return;
+        }
 
-            startDate = System.currentTimeMillis();
+        lifecycleManager.checkPhase(Startable.PHASE_NAME);
 
-            fireNotification(new MuleContextNotification(this, MuleContextNotification.CONTEXT_STARTING));
+        if (getSecurityManager() == null)
+        {
+            throw new MuleRuntimeException(CoreMessages.objectIsNull("securityManager"));
+        }
+        if (getQueueManager() == null)
+        {
+            throw new MuleRuntimeException(CoreMessages.objectIsNull("queueManager"));
+        }
 
-            lifecycleManager.firePhase(this, Startable.PHASE_NAME);
+        startDate = System.currentTimeMillis();
 
-            fireNotification(new MuleContextNotification(this, MuleContextNotification.CONTEXT_STARTED));
+        fireNotification(new MuleContextNotification(this, MuleContextNotification.CONTEXT_STARTING));
 
-            if (logger.isInfoEnabled())
-            {
-                logger.info(startupScreen.toString());
-            }
+        lifecycleManager.firePhase(this, Startable.PHASE_NAME);
+
+        fireNotification(new MuleContextNotification(this, MuleContextNotification.CONTEXT_STARTED));
+
+        if (logger.isInfoEnabled())
+        {
+            logger.info(startupScreen.toString());
         }
     }
 
@@ -251,9 +254,10 @@ public class DefaultMuleContext implements MuleContext
         {
             return;
         }
-             
-        ServerNotificationManager notificationManager = getNotificationManager();
+
         lifecycleManager.checkPhase(Disposable.PHASE_NAME);
+        
+        ServerNotificationManager notificationManager = getNotificationManager();
         fireNotification(new MuleContextNotification(this, MuleContextNotification.CONTEXT_DISPOSING));
 
         try
@@ -615,18 +619,6 @@ public class DefaultMuleContext implements MuleContext
         return (ThreadingProfile) getRegistry().lookupObject(MuleProperties.OBJECT_DEFAULT_THREADING_PROFILE);
     }
 
-    // TODO This should ideally only be available via an Admin interface
-    public void addRegistry(long id, Registry registry)
-    {
-        registryBroker.addRegistry(id, registry);
-    }
-
-    // TODO This should ideally only be available via an Admin interface
-    public void removeRegistry(long id)
-    {
-        registryBroker.removeRegistry(id);
-    }
-
     /**
      * Returns the long date when the server was started
      *
@@ -646,5 +638,15 @@ public class DefaultMuleContext implements MuleContext
     public ExpressionManager getExpressionManager()
     {
         return expressionManager;
+    }
+
+    public void addRegistry(Registry registry)
+    {
+        registryBroker.addRegistry(registry);
+    }
+
+    public void removeRegistry(Registry registry)
+    {
+        registryBroker.removeRegistry(registry);
     }
 }

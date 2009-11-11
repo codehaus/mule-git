@@ -229,7 +229,7 @@ public abstract class AbstractConnector
     /**
      * A generic scheduling service for tasks that need to be performed periodically.
      */
-    private final AtomicReference/*<ScheduledExecutorService>*/ scheduler = new AtomicReference();
+    private ScheduledExecutorService scheduler;
 
     /**
      * Holds the service configuration for this connector
@@ -349,7 +349,6 @@ public abstract class AbstractConnector
             ((DefaultExceptionStrategy)exceptionListener).initialise();
         }
 
-
         initialised.set(true);
     }
 
@@ -383,20 +382,24 @@ public abstract class AbstractConnector
             {
                 throw new LifecycleException(e, this);
             }
-            return;
+        }
+        else
+        {
+            startAfterConnect();
         }
 
+    }
+
+    protected synchronized void startAfterConnect() throws MuleException
+    {
         if (logger.isInfoEnabled())
         {
             logger.info("Starting: " + this);
         }
 
         // the scheduler is recreated after stop()
-        ScheduledExecutorService currentScheduler = (ScheduledExecutorService) scheduler.get();
-        if (currentScheduler == null || currentScheduler.isShutdown())
-        {
-            scheduler.set(this.getScheduler());
-        }
+        scheduler = createScheduler();
+
         initWorkManagers();
 
         this.doStart();
@@ -462,7 +465,7 @@ public abstract class AbstractConnector
     {
         if (!this.isStarted())
         {
-            logger.warn("Attempting to stop a connector which is not started");
+            logger.warn("Attempting to stop a connector which is not started: " + getName());
             return;
         }
         
@@ -506,7 +509,8 @@ public abstract class AbstractConnector
         }
         
         // Workaround for MULE-4553
-        dispatchers.clear();
+        this.disposeDispatchers();
+        this.disposeRequesters();
 
         if (this.isConnected())
         {
@@ -522,7 +526,7 @@ public abstract class AbstractConnector
         }
 
         // make sure the scheduler is gone
-        scheduler.set(null);
+        scheduler = null;
 
         // we do not need to stop the work managers because they do no harm (will just be idle)
         // and will be reused on restart without problems.
@@ -536,22 +540,21 @@ public abstract class AbstractConnector
 
     protected void shutdownScheduler()
     {
-        ScheduledExecutorService schedulerExecutor = ((ScheduledExecutorService) scheduler.get());
-        if (schedulerExecutor != null)
+        if (scheduler != null)
         {
             // Disable new tasks from being submitted
-            schedulerExecutor.shutdown();
+            scheduler.shutdown();
             try
             {
                 // Wait a while for existing tasks to terminate
-                if (!schedulerExecutor.awaitTermination(muleContext.getConfiguration().getShutdownTimeout(),
+                if (!scheduler.awaitTermination(muleContext.getConfiguration().getShutdownTimeout(),
                     TimeUnit.MILLISECONDS))
                 {
                     // Cancel currently executing tasks and return list of pending
                     // tasks
-                    List outstanding = schedulerExecutor.shutdownNow();
+                    List outstanding = scheduler.shutdownNow();
                     // Wait a while for tasks to respond to being cancelled
-                    if (!schedulerExecutor.awaitTermination(SCHEDULER_FORCED_SHUTDOWN_TIMEOUT,
+                    if (!scheduler.awaitTermination(SCHEDULER_FORCED_SHUTDOWN_TIMEOUT,
                         TimeUnit.MILLISECONDS))
                     {
                         logger.warn(MessageFormat.format(
@@ -573,13 +576,13 @@ public abstract class AbstractConnector
             catch (InterruptedException ie)
             {
                 // (Re-)Cancel if current thread also interrupted
-                schedulerExecutor.shutdownNow();
+                scheduler.shutdownNow();
                 // Preserve interrupt status
                 Thread.currentThread().interrupt();
             }
             finally
             {
-                schedulerExecutor = null;
+                scheduler = null;
             }
         }
     }
@@ -616,8 +619,6 @@ public abstract class AbstractConnector
         }
 
         this.disposeReceivers();
-        this.disposeDispatchers();
-        this.disposeRequesters();
 
         this.doDispose();
         disposed.set(true);
@@ -722,7 +723,10 @@ public abstract class AbstractConnector
         if (dispatchers != null)
         {
             logger.debug("Disposing Dispatchers");
-            dispatchers.clear();
+            synchronized (dispatchers)
+            {
+                dispatchers.clear();
+            }
             logger.debug("Dispatchers Disposed");
         }
     }
@@ -1567,7 +1571,7 @@ public abstract class AbstractConnector
                     
                     if (startOnConnect)
                     {
-                        start();
+                        startAfterConnect();
                     }                
                 }
     
@@ -1888,23 +1892,17 @@ public abstract class AbstractConnector
      */
     public ScheduledExecutorService getScheduler()
     {
-        if (scheduler.get() == null)
-        {
-            ThreadFactory threadFactory = new NamedThreadFactory(this.getName() + ".scheduler");
-            ScheduledThreadPoolExecutor newExecutor = new ScheduledThreadPoolExecutor(4, threadFactory);
-            newExecutor.setExecuteExistingDelayedTasksAfterShutdownPolicy(false);
-            newExecutor.setKeepAliveTime(this.getReceiverThreadingProfile().getThreadTTL(),
-                TimeUnit.MILLISECONDS);
-            newExecutor.allowCoreThreadTimeOut(true);
+        return scheduler;
+    }
 
-            if (!scheduler.compareAndSet(null, newExecutor))
-            {
-                // someone else was faster, ditch our copy.
-                newExecutor.shutdown();
-            }
-        }
-
-        return (ScheduledExecutorService) scheduler.get();
+    protected ScheduledExecutorService createScheduler()
+    {
+        ThreadFactory threadFactory = new NamedThreadFactory(this.getName() + ".scheduler");
+        ScheduledThreadPoolExecutor newExecutor = new ScheduledThreadPoolExecutor(4, threadFactory);
+        newExecutor.setExecuteExistingDelayedTasksAfterShutdownPolicy(false);
+        newExecutor.setKeepAliveTime(this.getReceiverThreadingProfile().getThreadTTL(), TimeUnit.MILLISECONDS);
+        newExecutor.allowCoreThreadTimeOut(true);
+        return newExecutor;
     }
 
     /**
@@ -2224,22 +2222,7 @@ public abstract class AbstractConnector
                 logger.debug("Transport '" + getProtocol() + "' will not support requests: ");
             }
 
-
             sessionHandler = serviceDescriptor.createSessionHandler();
-
-            // TODO Do we still need to support this for 2.x?
-            // Set any manager default properties for the connector. These are set on
-            // the Manager with a protocol e.g. jms.specification=1.1
-            // This provides a really convenient way to set properties on an object
-            // from unit tests
-//            Map props = new HashMap();
-//            PropertiesUtils.getPropertiesWithPrefix(muleContext.getRegistry().lookupProperties(), getProtocol()
-//                .toLowerCase(), props);
-//            if (props.size() > 0)
-//            {
-//                props = PropertiesUtils.removeNamespaces(props);
-//                org.mule.util.BeanUtils.populateWithoutFail(this, props, true);
-//            }
         }
         catch (Exception e)
         {

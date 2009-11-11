@@ -18,9 +18,12 @@ import org.mule.api.endpoint.EndpointURI;
 import org.mule.api.endpoint.OutboundEndpoint;
 import org.mule.api.transformer.TransformerException;
 import org.mule.transport.AbstractMessageDispatcher;
+import org.mule.transport.NullPayload;
+import org.mule.transport.cxf.security.WebServiceSecurityException;
 import org.mule.transport.soap.SoapConstants;
 import org.mule.util.TemplateParser;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -172,7 +175,24 @@ public class CxfMessageDispatcher extends AbstractMessageDispatcher
         BindingProvider bp = wrapper.getClientProxy();
         bp.getRequestContext().putAll(props);
         
-        Object response = method.invoke(wrapper.getClientProxy(), getArgs(event));
+        Object response;
+        try
+        {
+            response = method.invoke(wrapper.getClientProxy(), getArgs(event));
+        }
+        catch (InvocationTargetException e)
+        {
+            Throwable ex = ((InvocationTargetException) e).getTargetException();
+
+            if (ex != null && ex.getMessage().contains("Security"))
+            {
+                throw new WebServiceSecurityException(event, e);
+            }
+            else
+            {
+                throw e;
+            }
+        }        
         
         // TODO: handle holders
         MuleMessage muleRes = holder.value;
@@ -239,7 +259,7 @@ public class CxfMessageDispatcher extends AbstractMessageDispatcher
         // One way dispatches over an async transport result in this
         if (transportResponse == null) 
         {
-            return null;
+            return new DefaultMuleMessage(NullPayload.getInstance(), connector.getMuleContext());
         }
         
         // Otherwise we may have a response!

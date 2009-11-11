@@ -30,10 +30,35 @@ public class ProxyTestCase extends FunctionalTestCase
     String msg = "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
         + "<soap:Body><test xmlns=\"http://foo\"> foo </test>" + "</soap:Body>" + "</soap:Envelope>";
 
-    String msgWithComment = "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\"><!-- This is a comment -->"
-                            + "<soap:Body><!-- This is a comment --><test xmlns=\"http://foo\"> foo </test>"
-                            + "</soap:Body>" + "</soap:Envelope>";
-    
+    String doGoogleSearch = "<urn:doGoogleSearch xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:urn=\"urn:GoogleSearch\">";
+
+    String msgWithComment = "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
+        + "<!-- comment 1 -->"
+        + "<soap:Header>"
+        + "<!-- comment 2 -->"
+        + "</soap:Header>"
+        + "<!-- comment 3 -->"
+        + "<soap:Body>"
+        + "<!-- comment 4 -->"
+        + doGoogleSearch
+        + "<!-- this comment breaks it -->"
+        + "<key>1</key>"
+        + "<!-- comment 5 -->"
+        + "<q>a</q>"
+        + "<start>0</start>"
+        + "<maxResults>1</maxResults>"
+        + "<filter>false</filter>"
+        + "<restrict>a</restrict>"
+        + "<safeSearch>true</safeSearch>"
+        + "<lr>a</lr>"
+        + "<ie>b</ie>"
+        + "<oe>c</oe>"
+        + "</urn:doGoogleSearch>"
+        + "<!-- comment 6 -->"
+        + "</soap:Body>"
+        + "<!-- comment 7 -->"
+        + "</soap:Envelope>";
+
     public void testServerWithEcho() throws Exception
     {
         MuleClient client = new MuleClient();
@@ -42,7 +67,7 @@ public class ProxyTestCase extends FunctionalTestCase
 //        System.out.println(resString);
         assertTrue(resString.indexOf("<test xmlns=\"http://foo\"> foo </test>") != -1);
     }
-    
+
     public void testServerClientProxy() throws Exception
     {
         String msg = "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
@@ -195,7 +220,7 @@ public class ProxyTestCase extends FunctionalTestCase
         MuleClient client = new MuleClient();
         MuleMessage result = client.send("http://localhost:63081/services/envelope-proxy", msgWithComment, null);
         String resString = result.getPayloadAsString();
-        assertTrue(resString.indexOf("<test xmlns=\"http://foo\"> foo </test>") != -1);
+        assertTrue(resString.contains(doGoogleSearch));
     }
     
     protected String prepareOneWayTestMessage()
@@ -213,7 +238,7 @@ public class ProxyTestCase extends FunctionalTestCase
         props.put(HttpConnector.HTTP_CUSTOM_HEADERS_MAP_PROPERTY, httpHeaders);
         props.put("SOAPAction", "http://acme.com/oneway");
         return props;
-    }   
+    }
     
     protected String getConfigResources()
     {

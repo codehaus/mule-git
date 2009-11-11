@@ -15,8 +15,6 @@ import org.mule.api.MuleException;
 import org.mule.api.context.MuleContextAware;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.lifecycle.Lifecycle;
-import org.mule.api.service.Service;
-import org.mule.api.service.ServiceAware;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +23,7 @@ import java.util.List;
  * @author David Dossot (david@dossot.net)
  */
 public abstract class AbstractLifecycleTracker implements Lifecycle,
-        MuleContextAware, ServiceAware {
+        MuleContextAware {
 
     private final List<String> tracker = new ArrayList<String>();
 
@@ -39,11 +37,6 @@ public abstract class AbstractLifecycleTracker implements Lifecycle,
 
     public void setMuleContext(final MuleContext context) {
         tracker.add("setMuleContext");
-    }
-
-    public void setService(final Service service)
-    {
-        tracker.add("setService");
     }
 
     public void initialise() throws InitialisationException {
