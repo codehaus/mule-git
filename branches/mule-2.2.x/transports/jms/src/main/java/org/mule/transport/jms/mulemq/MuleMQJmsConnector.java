@@ -10,7 +10,10 @@
 
 package org.mule.transport.jms.mulemq;
 
+import org.mule.api.lifecycle.InitialisationException;
 import org.mule.transport.jms.JmsConnector;
+import org.mule.transport.jms.JmsConstants;
+import org.mule.transport.jms.i18n.JmsMessages;
 import org.mule.util.ClassUtils;
 
 import java.lang.reflect.Method;
@@ -21,7 +24,7 @@ import javax.jms.ConnectionFactory;
 
 public class MuleMQJmsConnector extends JmsConnector
 {
-    public static final String MULEMQ_CONNECTION_FACTORY_CLASS = "com.pcbsys.nirvana.nJMS.XAConnectionFactoryImpl";
+    public static final String MULEMQ_CONNECTION_FACTORY_CLASS = "com.pcbsys.nirvana.nJMS.ConnectionFactoryImpl";
 
     // The default values for the connection factory properties
     public static final String DEFAULT_REALM_URL = "nsp://localhost:9000";
@@ -76,6 +79,16 @@ public class MuleMQJmsConnector extends JmsConnector
     protected static final String MESSAGE_THREAD_POOL_SIZE = "nirvana.messageThreadPoolSize";
     protected static final String DISC_ON_CLUSTER_FAILURE = "nirvana.discOnClusterFailure";
     protected static final String INITIAL_RETRY_COUNT = "nirvana.initialRetryCount";
+    
+    @Override
+    protected void doInitialise() throws InitialisationException
+    {
+        if (getSpecification().equals(JmsConstants.JMS_SPECIFICATION_102B))
+        {
+            throw new InitialisationException(JmsMessages.errorMuleMqJmsSpecification(), this);
+        }
+        super.doInitialise();
+    }
 
     @Override
     protected ConnectionFactory getDefaultConnectionFactory()
