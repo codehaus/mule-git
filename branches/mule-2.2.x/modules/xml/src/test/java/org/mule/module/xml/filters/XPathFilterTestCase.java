@@ -16,10 +16,10 @@ import java.io.InputStream;
 import java.util.HashMap;
 
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.xpath.XPathFactory;
 
 import junit.framework.TestCase;
 
-import org.apache.xpath.jaxp.XPathFactoryImpl;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
@@ -75,9 +75,7 @@ public class XPathFilterTestCase extends TestCase
         assertNotNull(testXml);
         XPathFilter filter = new XPathFilter();
 
-        // todo: test fails if using intel's xpath evaluator.
-        // comment this out to demonstrate.
-        filter.setXpath(new XPathFactoryImpl().newXPath());
+        filter.setXpath(XPathFactory.newInstance().newXPath());
 
         filter.setPattern("/some/unknown/path");
         filter.setExpectedValue("bogus");
@@ -104,7 +102,7 @@ public class XPathFilterTestCase extends TestCase
         assertNotNull(soapEnvelope);
         XPathFilter filter = new XPathFilter();
 
-        filter.setXpath(new XPathFactoryImpl().newXPath());
+        filter.setXpath(XPathFactory.newInstance().newXPath());
 
         filter.setPattern("/soap:Envelope/soap:Body/mule:echo/mule:echo");
         filter.setExpectedValue("Hello!");
