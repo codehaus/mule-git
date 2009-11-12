@@ -21,7 +21,7 @@ public class CheckRequiredAttributesTestCase extends AbstractPreProcessorTestCas
         String[][] groups = new String[][] {
             new String[]{ "a1" }
         };
-        String text = "must have all attributes for one of the sets: a1";
+        String text = "must have all attributes for one of the sets: [a1]";
         
         // no attributes
         assertBad(groups, "", text);
@@ -40,7 +40,7 @@ public class CheckRequiredAttributesTestCase extends AbstractPreProcessorTestCas
         String[][] groups = new String[][] {
             new String[] { "b1", "b2" }
         };
-        String text = "must have all attributes for one of the sets: b1, b2";
+        String text = "must have all attributes for one of the sets: [b1, b2]";
 
         // no attributes
         assertBad(groups, "", text);
@@ -69,7 +69,7 @@ public class CheckRequiredAttributesTestCase extends AbstractPreProcessorTestCas
             new String[] { "a1" }, 
             new String[] { "b1" }
         };
-        String text = "must have all attributes for one of the sets: a1; b1";
+        String text = "must have all attributes for one of the sets: [a1] [b1]";
         
         // empty set
         assertBad(groups, "", text);
@@ -98,7 +98,7 @@ public class CheckRequiredAttributesTestCase extends AbstractPreProcessorTestCas
             new String[] { "a1" },
             new String[] {}
         };
-        String text = "must have all attributes for one of the sets: a1";
+        String text = "must have all attributes for one of the sets: [a1]";
         
         // no attributes
         assertBad(groups, "", text);
@@ -119,7 +119,7 @@ public class CheckRequiredAttributesTestCase extends AbstractPreProcessorTestCas
             new String[] { "a1", "a2" },
             new String[] { "b1", "b2" }
         };
-        String text = "must have all attributes for one of the sets: a1, a2; b1, b2";
+        String text = "must have all attributes for one of the sets: [a1, a2] [b1, b2]";
         
         // no attributes
         assertBad(groups, "", text);
@@ -181,10 +181,10 @@ public class CheckRequiredAttributesTestCase extends AbstractPreProcessorTestCas
             new String[] { "a1", "a2" },
             new String[] { "a1", "b1" }
         };
-        String text = "must have all attributes for one of the sets: a1, a2; b1, b2";
+        String text = "must have all attributes for one of the sets: [a1, a2] [a1, b1]";
         
-        // no attributes -> OK
-        assertOk(groups, "");
+        // no attributes
+        assertBad(groups, "", text);
         
         // only optional attributes
         assertBad(groups, "x", text);
@@ -202,7 +202,7 @@ public class CheckRequiredAttributesTestCase extends AbstractPreProcessorTestCas
         assertOk(groups, "a1 b1 x");
         
         // attributes from both groups
-        assertBad(groups, "a1 a2 b1", text);
+        assertOk(groups, "a1 a2 b1");
     }
     
     public void testRealWorld() throws ParserConfigurationException
