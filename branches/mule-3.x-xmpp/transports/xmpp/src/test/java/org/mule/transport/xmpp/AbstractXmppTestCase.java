@@ -21,6 +21,7 @@ public abstract class AbstractXmppTestCase extends XmppEnableDisableTestCase
 
     private CountDownLatch jabberLatch;
     protected JabberClient jabberClient;
+    protected String recipient;
 
     @Override
     protected void doSetUp() throws Exception
@@ -48,10 +49,10 @@ public abstract class AbstractXmppTestCase extends XmppEnableDisableTestCase
         // that this info is stored is in the config
         Properties properties = (Properties) muleContext.getRegistry().lookupObject("properties");
         String host = properties.getProperty("host");
-        String user = properties.getProperty("recipient");
+        recipient = properties.getProperty("recipient");
         String password = properties.getProperty("recipientPassword");
         
-        jabberClient = new JabberClient(host, user, password);
+        jabberClient = new JabberClient(host, recipient, password);
         configureJabberClient(jabberClient);
         jabberClient.connect(jabberLatch);
         

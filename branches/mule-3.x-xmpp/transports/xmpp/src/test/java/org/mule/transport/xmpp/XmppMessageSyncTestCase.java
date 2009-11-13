@@ -48,4 +48,17 @@ public class XmppMessageSyncTestCase extends AbstractXmppTestCase
         assertEquals(Message.Type.normal, xmppReply.getType());
         assertEquals(REPLY, xmppReply.getBody());
     }
+    
+    public void testReceiveSync() throws Exception
+    {
+        jabberClient.sendMessage(recipient, TEST_MESSAGE);
+        
+        MuleClient client = new MuleClient();
+        MuleMessage muleMessage = client.request("vm://fromJabber", RECEIVE_TIMEOUT);
+        assertNotNull(muleMessage);
+        
+        Message xmppMessage = (Message) muleMessage.getPayload();
+        assertEquals(Message.Type.normal, xmppMessage.getType());
+        assertEquals(TEST_MESSAGE, xmppMessage.getBody());
+    }
 }

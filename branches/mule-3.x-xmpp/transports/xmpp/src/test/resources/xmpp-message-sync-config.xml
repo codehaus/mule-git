@@ -25,5 +25,15 @@
                 </pass-through-router>
             </outbound>
         </service>
+        <service name="receiveMessage">
+            <inbound>
+                <xmpp:inbound-endpoint type="MESSAGE" from="${recipient}" synchronous="true"/>
+            </inbound>
+            <outbound>
+                <pass-through-router>
+                    <vm:outbound-endpoint path="fromJabber" synchronous="true"/>
+                </pass-through-router>
+            </outbound>
+        </service>
     </model>
 </mule>

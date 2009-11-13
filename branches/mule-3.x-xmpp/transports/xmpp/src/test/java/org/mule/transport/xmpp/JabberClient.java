@@ -190,4 +190,14 @@ public class JabberClient implements PacketListener
     {
         messageLatch = latch;
     }
+
+    public void sendMessage(String recipient, String payload)
+    {
+        Message message = new Message();
+        message.setType(Message.Type.normal);
+        message.setTo(recipient);
+        message.setBody(payload);
+        
+        connection.sendPacket(message);
+    }
 }
