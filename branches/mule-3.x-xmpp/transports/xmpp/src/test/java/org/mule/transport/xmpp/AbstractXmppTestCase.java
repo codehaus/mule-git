@@ -66,5 +66,4 @@ public abstract class AbstractXmppTestCase extends XmppEnableDisableTestCase
         jabberClient.disconnect();
         super.doTearDown();
     }
-
 }

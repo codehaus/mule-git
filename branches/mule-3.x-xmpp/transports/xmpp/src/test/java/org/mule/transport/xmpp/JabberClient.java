@@ -153,6 +153,11 @@ public class JabberClient implements PacketListener
             message.setBody(replyPayload);
             
             connection.sendPacket(message);
+            
+            if (logger.isDebugEnabled())
+            {
+                logger.debug("sent autoreply message with payload: \"" + replyPayload + "\"");
+            }
         }
     }
 
