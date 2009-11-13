@@ -79,11 +79,45 @@ public class MuleMQJmsConnector extends JmsConnector
     protected static final String MESSAGE_THREAD_POOL_SIZE = "nirvana.messageThreadPoolSize";
     protected static final String DISC_ON_CLUSTER_FAILURE = "nirvana.discOnClusterFailure";
     protected static final String INITIAL_RETRY_COUNT = "nirvana.initialRetryCount";
-    
+
+    public boolean supportJms102bSpec = false;
+
+    public MuleMQJmsConnector()
+    {
+        super();
+        super.setSpecification(JmsConstants.JMS_SPECIFICATION_11);
+    }
+
+    public boolean isSupportJms102bSpec()
+    {
+        return supportJms102bSpec;
+    }
+
+    public void setSupportJms102bSpec(boolean supportJms102bSpec)
+    {
+        this.supportJms102bSpec = supportJms102bSpec;
+    }
+
+    /*
+     * We need to default the specification to 1.1, the xsd defaults to 1.0.2b, we
+     * wouldn't have to do this here if the default was set in JmsConnector only, In
+     * that case setting the default in the constructor would have been sufficient.
+     */
+    @Override
+    public void setSpecification(String specification)
+    {
+        if (!isSupportJms102bSpec() && specification.equals(JmsConstants.JMS_SPECIFICATION_102B))
+        {
+            logger.warn(JmsMessages.errorMuleMqJmsSpecification());
+            specification = JmsConstants.JMS_SPECIFICATION_11;
+        }
+        super.setSpecification(specification);
+    }
+
     @Override
     protected void doInitialise() throws InitialisationException
     {
-        if (getSpecification().equals(JmsConstants.JMS_SPECIFICATION_102B))
+        if (!isSupportJms102bSpec() && getSpecification().equals(JmsConstants.JMS_SPECIFICATION_102B))
         {
             throw new InitialisationException(JmsMessages.errorMuleMqJmsSpecification(), this);
         }
