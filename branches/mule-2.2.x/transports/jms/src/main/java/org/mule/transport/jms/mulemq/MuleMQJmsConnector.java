@@ -163,7 +163,7 @@ public class MuleMQJmsConnector extends JmsConnector
 
         // if the user used the connectionFactoryProperties map, these will override
         // the properties on the connector
-        Map connectionFactoryProperties = getConnectionFactoryProperties();
+        Map<String, Object> connectionFactoryProperties = getConnectionFactoryProperties();
         if (connectionFactoryProperties != null)
         {
             props.putAll(connectionFactoryProperties);

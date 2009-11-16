@@ -10,31 +10,14 @@
 
 package org.mule.transport.jms.mulemq;
 
-import org.mule.transport.jms.JmsConstants;
 
 public class MuleMQXAJmsConnector extends MuleMQJmsConnector
 {
-
     public static final String MULEMQ_XA_CONNECTION_FACTORY_CLASS = "com.pcbsys.nirvana.nJMS.XAConnectionFactoryImpl";
-
-    public boolean supportJms102bSpec = true;
 
     @Override
     protected String getMuleMQFactoryClass()
     {
         return MULEMQ_XA_CONNECTION_FACTORY_CLASS;
     }
-
-    @Override
-    public boolean isSupportJms102bSpec()
-    {
-        return supportJms102bSpec;
-    }
-
-    @Override
-    public void setSupportJms102bSpec(boolean supportJms102bSpec)
-    {
-        this.supportJms102bSpec = supportJms102bSpec;
-    }
-
 }
