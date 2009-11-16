@@ -119,7 +119,14 @@ public class MultiConsumerJmsMessageReceiver extends AbstractMessageReceiver
         {
             sub = new SubReceiver();
             sub.doConnect();
-            consumers.add(sub);
+            if (consumers.remainingCapacity() > 0)
+            {
+                consumers.add(sub);
+            }
+            else
+            {
+                logger.debug("Unable to add more subreceivers, deque is full");
+            }
         }
     }
 
