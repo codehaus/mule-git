@@ -13,7 +13,6 @@ package org.mule.transport.servlet.jetty;
 import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
-import org.mule.api.config.MuleProperties;
 import org.mule.api.transport.MessageReceiver;
 import org.mule.transport.http.HttpConnector;
 import org.mule.transport.servlet.HttpRequestMessageAdapter;
@@ -37,8 +36,6 @@ public class JettyContinuationsReceiverServlet extends JettyReceiverServlet
 
             MuleMessage requestMessage = new DefaultMuleMessage(new HttpRequestMessageAdapter(request));
             requestMessage.setProperty(HttpConnector.HTTP_METHOD_PROPERTY, method);
-            //Need to remove this if set, we'll be returning a result but we need to make the request async
-            requestMessage.removeProperty(MuleProperties.MULE_REMOTE_SYNC_PROPERTY);
             //This will allow Mule to continue the response once the service has do its processing
             requestMessage.setReplyTo(continuation);
             setupRequestMessage(request, requestMessage, receiver);

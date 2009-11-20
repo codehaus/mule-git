@@ -73,9 +73,7 @@ public abstract class AbstractMessageBuilder implements ServiceAware, Callable, 
                 OutboundEndpoint endpoint = (OutboundEndpoint) iterator.next();
                 Object request = requestMessage.getPayload();
 
-                boolean rsync = eventContext.getMessage().getBooleanProperty(
-                    MuleProperties.MULE_REMOTE_SYNC_PROPERTY, endpoint.isSynchronous());
-                if (!rsync)
+                if (!endpoint.isSynchronous())
                 {
                     logger.info("Endpoint: " + endpoint
                                 + " is not remoteSync enabled. Message builder finishing");

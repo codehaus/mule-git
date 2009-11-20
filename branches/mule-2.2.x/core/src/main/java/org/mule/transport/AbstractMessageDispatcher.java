@@ -223,9 +223,7 @@ public abstract class AbstractMessageDispatcher extends AbstractConnectable impl
         boolean remoteSync = false;
         if (event.getEndpoint().getConnector().isResponseEnabled())
         {
-            remoteSync = event.getEndpoint().isSynchronous()
-                            || event.getMessage().getBooleanProperty(
-                                MuleProperties.MULE_REMOTE_SYNC_PROPERTY, false);
+            remoteSync = event.getEndpoint().isSynchronous();
             if (remoteSync)
             {
                 // service will be null for client calls
@@ -242,10 +240,6 @@ public abstract class AbstractMessageDispatcher extends AbstractConnectable impl
                     }
                 }
             }
-        }
-        if (!remoteSync)
-        {
-            event.getMessage().removeProperty(MuleProperties.MULE_REMOTE_SYNC_PROPERTY);
         }
         return remoteSync;
     }
