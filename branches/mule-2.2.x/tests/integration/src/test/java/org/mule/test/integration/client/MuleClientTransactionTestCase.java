@@ -11,7 +11,6 @@
 package org.mule.test.integration.client;
 
 import org.mule.api.MuleMessage;
-import org.mule.api.config.MuleProperties;
 import org.mule.api.endpoint.EndpointBuilder;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.transaction.Transaction;
@@ -42,7 +41,6 @@ public class MuleClientTransactionTestCase extends FunctionalTestCase
         final MuleClient client = new MuleClient();
         final Map props = new HashMap();
         props.put("JMSReplyTo", "replyTo.queue");
-        props.put(MuleProperties.MULE_REMOTE_SYNC_PROPERTY, "false");
 
         // Empty reply queue
         while (client.request("jms://replyTo.queue", 2000) != null)
@@ -91,7 +89,6 @@ public class MuleClientTransactionTestCase extends FunctionalTestCase
         final MuleClient client = new MuleClient();
         final Map props = new HashMap();
         props.put("JMSReplyTo", "replyTo.queue");
-        props.put(MuleProperties.MULE_REMOTE_SYNC_PROPERTY, "false");
 
         // Empty reply queue
         while (client.request("jms://replyTo.queue", 2000) != null)
@@ -145,7 +142,6 @@ public class MuleClientTransactionTestCase extends FunctionalTestCase
         final MuleClient client = new MuleClient();
         final Map props = new HashMap();
         props.put("JMSReplyTo", "replyTo.queue");
-        props.put(MuleProperties.MULE_REMOTE_SYNC_PROPERTY, "false");
         props.put("transacted", "true");
 
         // Empty reply queue

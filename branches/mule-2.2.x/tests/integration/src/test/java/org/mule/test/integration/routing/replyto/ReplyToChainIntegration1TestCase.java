@@ -11,7 +11,6 @@
 package org.mule.test.integration.routing.replyto;
 
 import org.mule.api.MuleMessage;
-import org.mule.api.config.MuleProperties;
 import org.mule.module.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 
@@ -32,7 +31,6 @@ public class ReplyToChainIntegration1TestCase extends FunctionalTestCase
 
         MuleClient client = new MuleClient();
         Map props = new HashMap();
-        props.put(MuleProperties.MULE_REMOTE_SYNC_PROPERTY, "false");
         MuleMessage result = client.send("vm://pojo1", message, props);
         assertNotNull(result);
         assertEquals("Received: " + message, result.getPayloadAsString());
