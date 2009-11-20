@@ -166,7 +166,7 @@ public class ResponseTransformerScenariosTestCase extends FunctionalTestCase
         MuleClient client = new MuleClient();
         MuleMessage message = client.send("vm://chainedRouterOutboundEndpointResponseTransformer", "request", null);
         assertNotNull(message);
-        assertEquals("request" + VM_OUTBOUND + VM_INBOUND + VM_OUT_IN_RESP + VM_OUT_IN_RESP + CUSTOM_RESPONSE + CUSTOM_RESPONSE
+        assertEquals("request" + VM_OUTBOUND + VM_INBOUND + VM_OUT_IN_RESP + VM_OUT_IN_RESP + CUSTOM_RESPONSE
                       + VM_RESPONSE, message.getPayloadAsString());
     }
 

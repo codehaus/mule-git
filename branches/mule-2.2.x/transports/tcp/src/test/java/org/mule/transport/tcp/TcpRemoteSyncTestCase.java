@@ -11,6 +11,7 @@ package org.mule.transport.tcp;
 
 import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleMessage;
+import org.mule.api.config.MuleProperties;
 import org.mule.module.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 
@@ -32,6 +33,8 @@ public class TcpRemoteSyncTestCase extends FunctionalTestCase
        MuleClient client = new MuleClient();
        Map props = new HashMap();
        
+       //must notify the client to wait for a response from the server
+       props.put(MuleProperties.MULE_REMOTE_SYNC_PROPERTY, Boolean.TRUE);
        MuleMessage reply = client.send("tcp://localhost:6161", new DefaultMuleMessage(message), props);
 
        assertNotNull(reply);
@@ -44,6 +47,9 @@ public class TcpRemoteSyncTestCase extends FunctionalTestCase
     {
         MuleClient client = new MuleClient();
         Map props = new HashMap();
+        
+        //must notify the client to wait for a response from the server
+        props.put(MuleProperties.MULE_REMOTE_SYNC_PROPERTY, Boolean.TRUE);
         
         MuleMessage reply = client.send("tcp://localhost:6163", new DefaultMuleMessage(message), props);
 

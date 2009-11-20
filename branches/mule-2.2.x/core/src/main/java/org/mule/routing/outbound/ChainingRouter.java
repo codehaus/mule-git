@@ -122,8 +122,6 @@ public class ChainingRouter extends FilteringOutboundRouter
                     }
                     else
                     {
-                        // When dispatching from last endpoint remoteSync should be false not true (MULE-4619)
-                        intermediaryResult.setProperty(MuleProperties.MULE_REMOTE_SYNC_PROPERTY, false);
                         // reset the previous call result to avoid confusion
                         resultToReturn = null;
                         dispatch(session, intermediaryResult, endpoint);

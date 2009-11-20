@@ -269,6 +269,7 @@ public class RemoteDispatcher implements Disposable
     public MuleMessage receiveRemote(String endpoint, int timeout) throws MuleException
     {
         RemoteDispatcherNotification action = new RemoteDispatcherNotification(null, RemoteDispatcherNotification.ACTION_RECEIVE, endpoint);
+        action.setProperty(MuleProperties.MULE_REMOTE_SYNC_PROPERTY, "true");
         action.setProperty(MuleProperties.MULE_EVENT_TIMEOUT_PROPERTY, new Long(timeout));
         return dispatchAction(action, true, timeout);
     }
@@ -301,6 +302,7 @@ public class RemoteDispatcher implements Disposable
                                              boolean synchronous) throws MuleException
     {
         MuleMessage message = new DefaultMuleMessage(payload, messageProperties);
+        message.setBooleanProperty(MuleProperties.MULE_REMOTE_SYNC_PROPERTY, synchronous);
         setCredentials(message);
         RemoteDispatcherNotification action = new RemoteDispatcherNotification(message, RemoteDispatcherNotification.ACTION_INVOKE,
             "mule://" + component);
@@ -315,6 +317,7 @@ public class RemoteDispatcher implements Disposable
                                     int timeout) throws MuleException
     {
         MuleMessage message = new DefaultMuleMessage(payload, messageProperties);
+        message.setProperty(MuleProperties.MULE_REMOTE_SYNC_PROPERTY, String.valueOf(synchronous));
         setCredentials(message);
         RemoteDispatcherNotification action = new RemoteDispatcherNotification(message, (synchronous
                         ? RemoteDispatcherNotification.ACTION_SEND : RemoteDispatcherNotification.ACTION_DISPATCH), endpoint);

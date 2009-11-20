@@ -47,6 +47,7 @@ import org.mule.endpoint.MuleEndpointURI;
 import org.mule.module.client.i18n.ClientMessages;
 import org.mule.security.MuleCredentials;
 import org.mule.transformer.TransformerUtils;
+import org.mule.transport.AbstractConnector;
 import org.mule.transport.NullPayload;
 import org.mule.util.StringUtils;
 
@@ -60,7 +61,6 @@ import java.util.Map;
 import edu.emory.mathcs.backport.java.util.concurrent.Callable;
 import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
 import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentMap;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -618,6 +618,10 @@ public class MuleClient implements Disposable
         {
             messageProperties = new HashMap();
         }
+        if (messageProperties.get(MuleProperties.MULE_REMOTE_SYNC_PROPERTY) == null)
+        {
+            messageProperties.put(MuleProperties.MULE_REMOTE_SYNC_PROPERTY, "true");
+        }
         MuleMessage message = new DefaultMuleMessage(payload, messageProperties);
         return send(url, message, timeout);
     }
@@ -741,7 +745,7 @@ public class MuleClient implements Disposable
     protected MuleEvent getEvent(MuleMessage message, String uri, boolean synchronous)
         throws MuleException
     {
-        ImmutableEndpoint endpoint = getOutboundEndpoint(uri, synchronous);
+        ImmutableEndpoint endpoint = getOutboundEndpoint(uri);
         if (!endpoint.getConnector().isStarted() && muleContext.isStarted())
         {
             endpoint.getConnector().start();
@@ -785,7 +789,7 @@ public class MuleClient implements Disposable
         return endpoint;
     }
 
-    protected OutboundEndpoint getOutboundEndpoint(String uri, boolean synchronous) throws MuleException
+    protected OutboundEndpoint getOutboundEndpoint(String uri) throws MuleException
     {
         // There was a potential leak here between get() and putIfAbsent(). This
         // would cause the endpoint that was created to be used rather an endpoint
@@ -793,13 +797,11 @@ public class MuleClient implements Disposable
         // thread. To avoid this we test for the result of putIfAbsent result and if
         // it is non-null then an endpoint was created and added concurrently and we
         // return this instance instead.
-        OutboundEndpoint endpoint = (OutboundEndpoint) outboundEndpointCache.get(uri+":"+synchronous);
+        OutboundEndpoint endpoint = (OutboundEndpoint) outboundEndpointCache.get(uri);
         if (endpoint == null)
         {
-            EndpointBuilder endpointBuilder = muleContext.getRegistry().lookupEndpointFactory().getEndpointBuilder(uri);
-            endpointBuilder.setSynchronous(synchronous);
-            endpoint = muleContext.getRegistry().lookupEndpointFactory().getOutboundEndpoint(endpointBuilder);
-            OutboundEndpoint concurrentlyAddedEndpoint = (OutboundEndpoint) outboundEndpointCache.putIfAbsent(uri+":"+synchronous, endpoint);
+            endpoint = muleContext.getRegistry().lookupEndpointFactory().getOutboundEndpoint(uri);
+            OutboundEndpoint concurrentlyAddedEndpoint = (OutboundEndpoint) outboundEndpointCache.putIfAbsent(uri, endpoint);
             if (concurrentlyAddedEndpoint != null)
             {
                 return concurrentlyAddedEndpoint;
@@ -863,6 +865,7 @@ public class MuleClient implements Disposable
         {
             messageProperties = new HashMap();
         }
+        messageProperties.put(MuleProperties.MULE_REMOTE_SYNC_PROPERTY, "false");
         MuleMessage message = new DefaultMuleMessage(payload, messageProperties);
         MuleEvent event = getEvent(message, url, true);
         try
