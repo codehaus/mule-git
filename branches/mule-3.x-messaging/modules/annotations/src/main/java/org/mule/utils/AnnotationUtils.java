@@ -16,7 +16,11 @@ import org.mule.api.transformer.TransformerException;
 import org.mule.config.annotations.i18n.AnnotationsMessages;
 import org.mule.expression.transformers.ExpressionArgument;
 import org.mule.expression.transformers.ExpressionTransformer;
+import org.mule.util.scan.annotations.AnnotationInfo;
+import org.mule.util.scan.annotations.AnnotationsScanner;
+import org.mule.util.scan.annotations.ClosableClassReader;
 
+import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
 import java.lang.reflect.Field;
@@ -27,6 +31,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
+import org.objectweb.asm.ClassReader;
 
 /**
  * A helper class for reading annotations.
@@ -213,6 +219,16 @@ public class AnnotationUtils
         return anno;
     }
 
+    public static List<AnnotationMetaData> getClassAnnotationInHeirarchy(Class bottom)
+    {
+        List<AnnotationMetaData> annos = new ArrayList<AnnotationMetaData>();
+
+        getClassAnnotationForSuperClasses(bottom, annos);
+        getClassAnnotationForInterfaces(bottom, annos);
+
+        return annos;
+    }
+
     protected static AnnotationMetaData getClassAnnotationForSuperClasses(Class<? extends Annotation> annotation, Class bottom)
     {
         if (bottom.isAnnotationPresent(annotation))
@@ -224,6 +240,30 @@ public class AnnotationUtils
             return getClassAnnotationForSuperClasses(annotation, bottom.getSuperclass());
         }
         return null;
+    }
+
+    protected static void getClassAnnotationForSuperClasses(Class bottom, List<AnnotationMetaData> annos)
+    {
+        for (Annotation annotation : bottom.getAnnotations())
+        {
+            annos.add(new AnnotationMetaData(bottom, null, ElementType.TYPE, annotation));
+        }
+
+        if (bottom.getSuperclass() != null && !bottom.getSuperclass().equals(Object.class))
+        {
+            getClassAnnotationForSuperClasses(bottom.getSuperclass(), annos);
+        }
+    }
+
+    protected static void getClassAnnotationForInterfaces(Class bottom, List<AnnotationMetaData> annos)
+    {
+        for (Class aClass : bottom.getInterfaces())
+        {
+            for (Annotation annotation : aClass.getAnnotations())
+            {
+                annos.add(new AnnotationMetaData(bottom, null, ElementType.TYPE, annotation));
+            }
+        }
     }
 
     public static Set<AnnotationMetaData> getFieldAnnotationsForHeirarchy(Class bottom)
@@ -254,7 +294,7 @@ public class AnnotationUtils
         }
     }
 
-    
+
     public static Set<AnnotationMetaData> getFieldAnnotationsForHeirarchy(Class bottom, Class<? extends Annotation> annotation)
     {
         Set<AnnotationMetaData> annos = new HashSet<AnnotationMetaData>();
@@ -281,6 +321,39 @@ public class AnnotationUtils
         {
             getFieldAnnotationsForSuperClasses(bottom.getSuperclass(), annos, annotation);
         }
+    }
+
+
+    public static boolean hasAnnotation(Class<? super Annotation> annotation, Class clazz) throws IOException
+    {
+        ClassReader r = new ClosableClassReader(clazz.getName());
+        AnnotationsScanner scanner = new AnnotationsScanner();
+
+        r.accept(scanner, 0);
+        for (AnnotationInfo info : scanner.getAllAnnotations())
+        {
+            if (info.getClassName().equals(annotation.getClass().getName()))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean hasAnnotationWithPackage(String packageName, Class clazz) throws IOException
+    {
+        ClassReader r = new ClosableClassReader(clazz.getName());
+        AnnotationsScanner scanner = new AnnotationsScanner();
+
+        r.accept(scanner, 0);
+        for (AnnotationInfo info : scanner.getAllAnnotations())
+        {
+            if (info.getClassName().startsWith(packageName))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

@@ -7,17 +7,12 @@
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
-
-package org.mule.transport.cxf.wssec;
+package org.mule.config.bootstrap;
 
 /**
- *
+ * A simple factory interface that can be listed in a registry-bootstrap.properties file
  */
-public class MuleSecurityManagerTest extends UsernameTokenTestCase
+public interface BootstrapObjectFactory
 {
-
-    protected String getConfigResources()
-    {
-        return "org/mule/transport/cxf/wssec/mule-username-token-conf.xml";
-    }
+    Object create();
 }
