@@ -12,8 +12,11 @@ package org.mule.transport;
 
 
 import org.mule.api.MuleException;
+import org.mule.api.endpoint.InboundEndpoint;
 import org.mule.api.endpoint.OutboundEndpoint;
+import org.mule.api.service.Service;
 import org.mule.lifecycle.AlreadyInitialisedException;
+import org.mule.routing.inbound.DefaultInboundRouterCollection;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.tck.testmodels.mule.TestConnector;
 
@@ -230,14 +233,14 @@ public class ConnectorLifecycleTestCase extends AbstractMuleTestCase
         assertFalse(((AbstractMessageReceiver) connector.receivers.get("in")).isStarted());
 
         connector.start();
-        assertTrue(((AbstractMessageReceiver) connector.receivers.get("in")).isConnected());
-        assertTrue(((AbstractMessageReceiver) connector.receivers.get("in")).isStarted());
+        assertFalse(((AbstractMessageReceiver) connector.receivers.get("in")).isConnected());
+        assertFalse(((AbstractMessageReceiver) connector.receivers.get("in")).isStarted());
 
         connector.registerListener(getTestService(), getTestInboundEndpoint("in2", "test://in2"));
 
         assertEquals(2, connector.receivers.size());
-        assertTrue(((AbstractMessageReceiver) connector.receivers.get("in")).isConnected());
-        assertTrue(((AbstractMessageReceiver) connector.receivers.get("in")).isStarted());
+        assertFalse(((AbstractMessageReceiver) connector.receivers.get("in")).isConnected());
+        assertFalse(((AbstractMessageReceiver) connector.receivers.get("in")).isStarted());
 
         // TODO MULE-4554 Receivers that are created (when new listener is registered) while connector is started are not started or connected
         // assertTrue(((AbstractMessageReceiver)connector.receivers.get("in2")).isConnected());
@@ -252,12 +255,48 @@ public class ConnectorLifecycleTestCase extends AbstractMuleTestCase
 
         connector.start();
         assertEquals(2, connector.receivers.size());
-        assertTrue(((AbstractMessageReceiver) connector.receivers.get("in")).isConnected());
-        assertTrue(((AbstractMessageReceiver) connector.receivers.get("in")).isStarted());
-        assertTrue(((AbstractMessageReceiver) connector.receivers.get("in2")).isConnected());
-        assertTrue(((AbstractMessageReceiver) connector.receivers.get("in2")).isStarted());
+        assertFalse(((AbstractMessageReceiver) connector.receivers.get("in")).isConnected());
+        assertFalse(((AbstractMessageReceiver) connector.receivers.get("in")).isStarted());
+        assertFalse(((AbstractMessageReceiver) connector.receivers.get("in2")).isConnected());
+        assertFalse(((AbstractMessageReceiver) connector.receivers.get("in2")).isStarted());
 
         connector.dispose();
+        assertEquals(0, connector.receivers.size());
+
+    }
+    
+    public void testReceiversServiceLifecycle() throws Exception
+    {
+        Service service = getTestService();
+        service.setInboundRouter(new DefaultInboundRouterCollection());
+        InboundEndpoint endpoint = getTestInboundEndpoint("in", "test://in");
+        service.getInboundRouter().addEndpoint(endpoint);
+        connector = (TestConnector) endpoint.getConnector();
+        
+        assertEquals(0, connector.receivers.size());
+
+        connector.start();
+        assertEquals(0, connector.receivers.size());
+        
+        service.start();
+        assertEquals(1, connector.receivers.size());
+        assertTrue(((AbstractMessageReceiver) connector.receivers.get("in")).isConnected());
+        assertTrue(((AbstractMessageReceiver) connector.receivers.get("in")).isStarted());
+
+        connector.stop();
+        assertEquals(1, connector.receivers.size());
+        assertFalse(((AbstractMessageReceiver) connector.receivers.get("in")).isConnected());
+        assertFalse(((AbstractMessageReceiver) connector.receivers.get("in")).isStarted());
+
+        connector.start();
+        assertEquals(1, connector.receivers.size());
+        assertTrue(((AbstractMessageReceiver) connector.receivers.get("in")).isConnected());
+        assertTrue(((AbstractMessageReceiver) connector.receivers.get("in")).isStarted());
+        
+        service.stop();
+        assertEquals(0, connector.receivers.size());
+
+        connector.stop();
         assertEquals(0, connector.receivers.size());
 
     }
