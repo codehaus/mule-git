@@ -14,6 +14,7 @@ import org.mule.api.MuleException;
 import org.mule.api.context.WorkManager;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.InitialisationException;
+import org.mule.api.lifecycle.LifecycleException;
 import org.mule.api.retry.RetryCallback;
 import org.mule.api.retry.RetryContext;
 import org.mule.api.retry.RetryPolicyTemplate;
@@ -42,6 +43,7 @@ public abstract class AbstractConnectable implements Connectable, ExceptionListe
     protected RetryPolicyTemplate retryTemplate;
 
     protected final WaitableBoolean connected = new WaitableBoolean(false);
+    protected final WaitableBoolean connecting = new WaitableBoolean(false);
     protected final WaitableBoolean started = new WaitableBoolean(false);
     protected final AtomicBoolean disposed = new AtomicBoolean(false);
 
@@ -154,7 +156,7 @@ public abstract class AbstractConnectable implements Connectable, ExceptionListe
     {
         // This method may be called to ensure transport is connected, if it is
         // already connected then just return.
-        if (connected.get())
+        if (connected.get() || connecting.get())
         {
             return;
         }
@@ -163,6 +165,8 @@ public abstract class AbstractConnectable implements Connectable, ExceptionListe
         {
             throw new IllegalStateException("Requester/dispatcher has been disposed; cannot connect to resource");
         }
+        
+        connecting.set(true);
         
         if (logger.isDebugEnabled())
         {
@@ -178,6 +182,7 @@ public abstract class AbstractConnectable implements Connectable, ExceptionListe
                     {
                         doConnect();
                         connected.set(true);
+                        connecting.set(false);
 
                         logger.info("Connected: " + getWorkDescription());
                         // TODO Make this work somehow inside the RetryTemplate
@@ -244,6 +249,11 @@ public abstract class AbstractConnectable implements Connectable, ExceptionListe
         return connected.get();
     }
 
+    public final boolean isConnecting()
+    {
+        return connecting.get();
+    }
+
     protected boolean isDoThreading ()
     {
         return connector.getDispatcherThreadingProfile().isDoThreading();
@@ -261,15 +271,22 @@ public abstract class AbstractConnectable implements Connectable, ExceptionListe
 
     public final void start() throws MuleException
     {
-        if(!connected.get())
+        if(!connected.get() && !connecting.get())
         {
-            if (logger.isDebugEnabled())
+            startOnConnect = true;
+
+            // Make sure we are connected
+            try
             {
-                logger.debug("Attempt to start is ignored because we are not yet connected");
+                connect();
+            }
+            catch (Exception e)
+            {
+                throw new LifecycleException(e, this);
             }
             return;
         }
-
+        
         if (started.compareAndSet(false, true))
         {
             if (logger.isDebugEnabled())
