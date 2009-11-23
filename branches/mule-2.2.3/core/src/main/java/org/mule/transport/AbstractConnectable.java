@@ -14,13 +14,11 @@ import org.mule.api.MuleException;
 import org.mule.api.context.WorkManager;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.InitialisationException;
-import org.mule.api.lifecycle.LifecycleException;
 import org.mule.api.retry.RetryCallback;
 import org.mule.api.retry.RetryContext;
 import org.mule.api.retry.RetryPolicyTemplate;
 import org.mule.api.transport.Connectable;
 import org.mule.api.transport.Connector;
-import org.mule.config.i18n.MessageFactory;
 import org.mule.context.notification.ConnectionNotification;
 import org.mule.util.ClassUtils;
 import org.mule.util.concurrent.WaitableBoolean;
@@ -28,6 +26,7 @@ import org.mule.util.concurrent.WaitableBoolean;
 import java.beans.ExceptionListener;
 
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -264,16 +263,9 @@ public abstract class AbstractConnectable implements Connectable, ExceptionListe
     {
         if(!connected.get())
         {
-            startOnConnect = true;
-
-            // Make sure we are connected
-            try
+            if (logger.isDebugEnabled())
             {
-                connect();
-            }
-            catch (Exception e)
-            {
-                throw new LifecycleException(e, this);
+                logger.debug("Attempt to start is ignored because we are not yet connected");
             }
             return;
         }
