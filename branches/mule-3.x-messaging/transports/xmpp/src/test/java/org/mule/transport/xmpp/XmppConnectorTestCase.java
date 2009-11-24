@@ -12,7 +12,6 @@ package org.mule.transport.xmpp;
 
 import org.mule.api.transport.Connector;
 import org.mule.transport.AbstractConnectorTestCase;
-import org.mule.transport.xmpp.XmppConnector;
 
 import org.jivesoftware.smack.packet.Message;
 
@@ -28,7 +27,9 @@ public class XmppConnectorTestCase extends AbstractConnectorTestCase
 
     public Object getValidMessage() throws Exception
     {
-        return new Message("Hello");
+        Message message = new Message("ross@jabber.org");
+        message.setBody("Hello");
+        return message;
     }
 
     protected String getProtocol()
@@ -40,5 +41,4 @@ public class XmppConnectorTestCase extends AbstractConnectorTestCase
     {
         return this.getProtocol() + "://mule1:mule@jabber.org.au/ross@jabber.org";
     }
-
 }
