@@ -130,22 +130,9 @@ public class InMemoryObjectStore extends AbstractMonitoredObjectStore
     {
         // this is not guaranteed to be precise, but we don't mind
         int currentSize = store.size();
-
+        
         // first trim to maxSize if necessary
-        int excess = (currentSize - maxEntries);
-        if (excess > 0)
-        {
-            while (currentSize > maxEntries)
-            {
-                store.pollFirstEntry();
-                currentSize--;
-            }
-
-            if (logger.isDebugEnabled())
-            {
-                logger.debug("Expired " + excess + " excess entries");
-            }
-        }
+        currentSize = trimToMaxSize(currentSize);
 
         // expire further if entry TTLs are enabled
         if ((entryTTL > 0) && (currentSize != 0))
@@ -176,6 +163,30 @@ public class InMemoryObjectStore extends AbstractMonitoredObjectStore
                 logger.debug("Expired " + expiredEntries + " old entries");
             }
         }
+    }
+
+    private int trimToMaxSize(int currentSize)
+    {
+        if (maxEntries < 0)
+        {
+            return currentSize;
+        }
+        
+        int excess = (currentSize - maxEntries);
+        if (excess > 0)
+        {
+            while (currentSize > maxEntries)
+            {
+                store.pollFirstEntry();
+                currentSize--;
+            }
+
+            if (logger.isDebugEnabled())
+            {
+                logger.debug("Expired " + excess + " excess entries");
+            }
+        }
+        return currentSize;
     }
 
     /**

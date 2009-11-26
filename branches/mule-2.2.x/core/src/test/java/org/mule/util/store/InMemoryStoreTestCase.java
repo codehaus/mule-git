@@ -63,20 +63,6 @@ public class InMemoryStoreTestCase extends AbstractMuleTestCase
         assertObjectsInStore("2");
     }
 
-    private void createTimedObjectStore(int timeToLive) throws InitialisationException
-    {
-        int expireInterval = 1000;
-        assertTrue("objects' time to live must be greater than the expire interval", 
-            timeToLive > expireInterval);
-        
-        store = new InMemoryObjectStore();
-        store.setName("timed");
-        store.setMaxEntries(3);
-        store.setEntryTTL(timeToLive);
-        store.setExpirationInterval(expireInterval);
-        store.initialise();
-    }
-
     public void testStoreAndRetrieve() throws Exception
     {
         String key = "key";
@@ -94,30 +80,19 @@ public class InMemoryStoreTestCase extends AbstractMuleTestCase
         assertObjectsExpired(key);
     }
     
-    private void storeObjects(String... objects) throws Exception
+    public void testExpiringUnboundedStore() throws Exception
     {
-        for (String entry : objects)
-        {
-            assertTrue(store.storeObject(entry, entry));
-        }
+        createUnboundedObjectStore();
+        
+        // put some items into the store
+        storeObjects("1", "2", "3");
+        
+        // expire ... this should keep all objects in the store
+        store.expire();
+        
+        assertObjectsInStore("1", "2", "3");
     }
-    
-    private void assertObjectsInStore(String... identifiers) throws Exception
-    {
-        for (String id : identifiers)
-        {
-            assertTrue(store.containsObject(id));
-        }
-    }
-    
-    private void assertObjectsExpired(String... identifiers) throws Exception
-    {
-        for (String id : identifiers)
-        {
-            assertFalse(store.containsObject(id));
-        }
-    }
-    
+        
     public void testMaxSize() throws Exception
     {
         int maxEntries = 3;
@@ -150,15 +125,65 @@ public class InMemoryStoreTestCase extends AbstractMuleTestCase
         assertObjectsExpired("3", "4", "5", "6");
     }
 
+    private void storeObjects(String... objects) throws Exception
+    {
+        for (String entry : objects)
+        {
+            assertTrue(store.storeObject(entry, entry));
+        }
+    }
+    
+    private void assertObjectsInStore(String... identifiers) throws Exception
+    {
+        for (String id : identifiers)
+        {
+            assertTrue(store.containsObject(id));
+        }
+    }
+    
+    private void assertObjectsExpired(String... identifiers) throws Exception
+    {
+        for (String id : identifiers)
+        {
+            assertFalse(store.containsObject(id));
+        }
+    }
+
+    private void createTimedObjectStore(int timeToLive) throws InitialisationException
+    {
+        int expireInterval = 1000;
+        assertTrue("objects' time to live must be greater than the expire interval", 
+            timeToLive > expireInterval);
+        
+        store = new InMemoryObjectStore();
+        store.setName("timed");
+        store.setMaxEntries(3);
+        store.setEntryTTL(timeToLive);
+        store.setExpirationInterval(expireInterval);
+        store.initialise();
+    }
+
     private void createBoundedObjectStore(int numberOfEntries) throws InitialisationException
     {
-        store = new InMemoryObjectStore();
+        createNonexpiringObjectStore();
         store.setName("bounded");
         store.setMaxEntries(numberOfEntries);
+        store.initialise();
+    }
+    
+    private void createUnboundedObjectStore() throws InitialisationException
+    {
+        createNonexpiringObjectStore();
+        store.setMaxEntries(-1);
+        store.initialise();
+    }
+
+    private void createNonexpiringObjectStore()
+    {
+        store = new InMemoryObjectStore();
         // entryTTL=-1 means we will have to expire manually
         store.setEntryTTL(-1);
         // run the expire thread in very, very large intervals (irreleavent to this test)
         store.setExpirationInterval(Integer.MAX_VALUE);
-        store.initialise();
     }
 }
