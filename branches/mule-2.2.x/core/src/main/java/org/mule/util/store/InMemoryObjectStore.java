@@ -11,6 +11,7 @@ package org.mule.util.store;
 
 import org.mule.config.i18n.CoreMessages;
 
+import java.util.Iterator;
 import java.util.Map;
 
 import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentSkipListMap;
@@ -22,11 +23,11 @@ import edu.emory.mathcs.backport.java.util.concurrent.helpers.Utils;
  * in-memory store for message IDs with periodic expiry of old entries. The bounded size
  * is a <i>soft</i> limit and only enforced periodically by the expiry process; this
  * means that the store may temporarily exceed its maximum size between expiry runs, but
- * will eventually shrink to its configured size.DO
+ * will eventually shrink to its configured size.
  */
 public class InMemoryObjectStore extends AbstractMonitoredObjectStore
 {
-    protected ConcurrentSkipListMap store;
+    protected ConcurrentSkipListMap/*<Long, StoredObject>*/ store;
 
     public InMemoryObjectStore()
     {
@@ -34,14 +35,7 @@ public class InMemoryObjectStore extends AbstractMonitoredObjectStore
     }
 
     /**
-     * Check whether the given Object is already registered with this store.
-     *
-     * @param id the ID to check
-     * @return <code>true</code> if the ID is stored or <code>false</code> if it could
-     *         not be found
-     * @throws IllegalArgumentException if the given ID is <code>null</code>
-     * @throws Exception                if any implementation-specific error occured, e.g. when the store
-     *                                  is not available
+     * {@inheritDoc}
      */
     public boolean containsObject(String id) throws Exception
     {
@@ -55,15 +49,7 @@ public class InMemoryObjectStore extends AbstractMonitoredObjectStore
     }
 
     /**
-     * Store the given Object.
-     *
-     * @param id the ID to store
-     * @return <code>true</code> if the ID was stored properly, or <code>false</code>
-     *         if it already existed
-     * @throws IllegalArgumentException if the given ID cannot be stored or is
-     *                                  <code>null</code>
-     * @throws Exception                if the store is not available or any other
-     *                                  implementation-specific error occured
+     * {@inheritDoc}
      */
     public boolean storeObject(String id, Object item) throws Exception
     {
@@ -73,9 +59,7 @@ public class InMemoryObjectStore extends AbstractMonitoredObjectStore
         }
 
         // this block is unfortunately necessary to counter a possible race condition
-        // between multiple nonatomic calls to containsId/storeId, which are
-        // only necessary because of the nonatomic calls to isMatch/process by
-        // DefaultInboundRouterCollection.route().
+        // between multiple nonatomic calls to containsObject/storeObject
         StoredObject obj = new StoredObject(id, item);
         synchronized (store)
         {
@@ -87,7 +71,8 @@ public class InMemoryObjectStore extends AbstractMonitoredObjectStore
             boolean written = false;
             while (!written)
             {
-                written = (store.putIfAbsent(new Long(Utils.nanoTime()), obj) == null);
+                Long key = Long.valueOf(Utils.nanoTime());
+                written = (store.putIfAbsent(key, obj) == null);
             }
 
             return true;
@@ -95,33 +80,50 @@ public class InMemoryObjectStore extends AbstractMonitoredObjectStore
     }
 
     /**
-     * Retrieve the given Object.
-     *
-     * @param id the ID to store
-     * @return the object instance associated with this id or null if there was no entry for the supplied id.
-     * @throws IllegalArgumentException if the given ID cannot be stored or is
-     *                                  <code>null</code>
-     * @throws Exception                if the store is not available or any other
-     *                                  implementation-specific error occured
+     * {@inheritDoc}
      */
     public Object retrieveObject(String id) throws Exception
     {
-        StoredObject obj = (StoredObject)store.get(id);
-        if(obj!=null)
+        synchronized (store)
         {
-            return obj.getItem();
+            Map.Entry<?, ?> entry = findEntry(id);
+            if (entry != null)
+            {
+                StoredObject object = (StoredObject) entry.getValue();
+                return object.getItem();
+            }
         }
         return null;
     }
 
     public boolean removeObject(String id) throws Exception
     {
-        StoredObject obj = (StoredObject)store.get(id);
-        if(obj!=null)
+        synchronized (store)
         {
-            return store.remove(obj) !=null;
+            Map.Entry<?, ?> entry = findEntry(id);
+            if (entry != null)
+            {
+                Object removedObject = store.remove(entry.getKey());
+                return (removedObject != null);
+            }
         }
         return true;
+    }
+    
+    private Map.Entry<?, ?> findEntry(String id)
+    {
+        Iterator<?> entryIterator = store.entrySet().iterator();
+        while (entryIterator.hasNext())
+        {
+            Map.Entry<?, ?> entry = (Map.Entry<?, ?>) entryIterator.next();
+            
+            StoredObject object = (StoredObject) entry.getValue();
+            if (object.getId().equals(id))
+            {
+                return entry;
+            }
+        }
+        return null;
     }
 
     public final void expire()
@@ -146,11 +148,11 @@ public class InMemoryObjectStore extends AbstractMonitoredObjectStore
         }
 
         // expire further if entry TTLs are enabled
-        if (entryTTL > 0 && currentSize != 0)
+        if ((entryTTL > 0) && (currentSize != 0))
         {
             final long now = Utils.nanoTime();
             int expiredEntries = 0;
-            Map.Entry oldestEntry;
+            Map.Entry<?, ?> oldestEntry;
 
             purge:
             while ((oldestEntry = store.firstEntry()) != null)
@@ -200,6 +202,7 @@ public class InMemoryObjectStore extends AbstractMonitoredObjectStore
             return item;
         }
 
+        @Override
         public boolean equals(Object o)
         {
             if (this == o)
@@ -221,12 +224,13 @@ public class InMemoryObjectStore extends AbstractMonitoredObjectStore
             return true;
         }
 
+        @Override
         public int hashCode()
         {
             return id.hashCode();
         }
 
-
+        @Override
         public String toString()
         {
             final StringBuffer sb = new StringBuffer();
@@ -237,7 +241,4 @@ public class InMemoryObjectStore extends AbstractMonitoredObjectStore
             return sb.toString();
         }
     }
-
-
-
 }
