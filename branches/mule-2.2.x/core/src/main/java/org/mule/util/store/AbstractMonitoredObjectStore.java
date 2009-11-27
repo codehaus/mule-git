@@ -42,8 +42,8 @@ public abstract class AbstractMonitoredObjectStore implements ObjectStore, Runna
     protected int maxEntries = 4000;
     
     /**
-     * The time-to-live for each message ID, specified in seconds, or <em>-1</em> for entries that 
-     * should never expire. <b>DO NOT</b> combine this with an unbounded store!
+     * The time-to-live for each message ID, specified in milliseconds, or <em>-1</em> for entries 
+     * that should never expire. <b>DO NOT</b> combine this with an unbounded store!
      */
     protected int entryTTL = -1;
     
