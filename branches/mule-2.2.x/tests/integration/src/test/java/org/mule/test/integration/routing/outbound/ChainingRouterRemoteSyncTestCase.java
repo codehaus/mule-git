@@ -15,6 +15,7 @@ import org.mule.api.MuleMessage;
 import org.mule.api.config.MuleProperties;
 import org.mule.module.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
+import org.mule.transport.NullPayload;
 
 /**
  */
@@ -46,7 +47,8 @@ public class ChainingRouterRemoteSyncTestCase extends FunctionalTestCase
         MuleMessage result = muleClient.send("vm://in2", new DefaultMuleMessage("test"));
 
         assertNull("Shouldn't have any exceptions", result.getExceptionPayload());
-        assertEquals("test", result.getPayloadAsString());
+        // When last endpoint on chaining router is async the outbound phase behaves as out-only and null is returned
+        assertEquals(NullPayload.getInstance(), result.getPayload());
 
         MuleMessage jmsMessage = muleClient.request("jms://out2", FunctionalTestCase.RECEIVE_TIMEOUT);
         assertEquals("test [REMOTESYNC RESPONSE] [REMOTESYNC RESPONSE 2]", jmsMessage.getPayloadAsString());
