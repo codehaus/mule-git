@@ -44,8 +44,10 @@ public class InMemoryObjectStore extends AbstractMonitoredObjectStore
             throw new IllegalArgumentException(CoreMessages.objectIsNull("id").toString());
         }
 
-        // this is a relaxed check so we don't need to synchronize on the store.
-        return store.values().contains(new StoredObject(id, null));
+        synchronized (store)
+        {
+            return store.values().contains(new StoredObject(id, null));
+        }
     }
 
     /**
@@ -72,7 +74,7 @@ public class InMemoryObjectStore extends AbstractMonitoredObjectStore
             while (!written)
             {
                 Long key = Long.valueOf(Utils.nanoTime());
-                written = (store.putIfAbsent(key, obj) == null);
+                written = (store.put(key, obj) == null);
             }
 
             return true;
