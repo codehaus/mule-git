@@ -1,0 +1,37 @@
+/*
+ * $Id$
+ * --------------------------------------------------------------------------------------
+ * Copyright (c) MuleSource, Inc.  All rights reserved.  http://www.mulesource.com
+ *
+ * The software in this package is published under the terms of the CPAL v1.0
+ * license, a copy of which has been included with this distribution in the
+ * LICENSE.txt file.
+ */
+
+package org.mule.api.retry;
+
+import org.mule.api.context.WorkManager;
+
+import java.util.Map;
+
+
+/**
+ * A RetryPolicyTemplate creates a new {@link RetryPolicy} instance each time the retry goes into effect, 
+ * thereby resetting any state the policy may have (counters, etc.)
+ * 
+ * A {@link RetryNotifier} may be set in order to take action upon each retry attempt.
+ */
+public interface RetryPolicyTemplate
+{
+    RetryPolicy createRetryInstance();
+
+    Map getMetaInfo();
+    
+    void setMetaInfo(Map metaInfo);
+    
+    RetryNotifier getNotifier();
+
+    void setNotifier(RetryNotifier retryNotifier);
+
+    RetryContext execute(RetryCallback callback, WorkManager workManager) throws Exception;
+}
