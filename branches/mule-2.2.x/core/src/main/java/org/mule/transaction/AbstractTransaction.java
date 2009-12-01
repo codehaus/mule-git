@@ -11,6 +11,7 @@
 package org.mule.transaction;
 
 import org.mule.MuleServer;
+import org.mule.api.MuleContext;
 import org.mule.api.transaction.Transaction;
 import org.mule.api.transaction.TransactionException;
 import org.mule.config.i18n.CoreMessages;
@@ -154,8 +155,15 @@ public abstract class AbstractTransaction implements Transaction
      */
     protected void fireNotification(TransactionNotification notification)
     {
-        // TODO profile this piece of code
-        MuleServer.getMuleContext().fireNotification(notification);
+        MuleContext ctx = MuleServer.getMuleContext();
+        if (ctx != null)
+        {
+            ctx.fireNotification(notification);
+        }
+        else if (logger.isWarnEnabled())
+        {
+            logger.warn("TransactionNotification NOT delivered, Mule context not available: " + notification);
+        }
     }
 
     public boolean isXA()
