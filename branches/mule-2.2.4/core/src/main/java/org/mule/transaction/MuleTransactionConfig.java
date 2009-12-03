@@ -10,7 +10,9 @@
 
 package org.mule.transaction;
 
+import org.mule.api.MuleContext;
 import org.mule.api.MuleRuntimeException;
+import org.mule.api.context.MuleContextAware;
 import org.mule.api.transaction.Transaction;
 import org.mule.api.transaction.TransactionConfig;
 import org.mule.api.transaction.TransactionFactory;
@@ -25,7 +27,7 @@ import org.apache.commons.logging.LogFactory;
  * <p/> <code>MuleTransactionConfig</code> defines transaction configuration for a
  * transactional endpoint.
  */
-public class MuleTransactionConfig implements TransactionConfig
+public class MuleTransactionConfig implements TransactionConfig, MuleContextAware
 {
     /**
      * logger used by this class
@@ -45,11 +47,15 @@ public class MuleTransactionConfig implements TransactionConfig
 
     private ConstraintFilter constraint = null;
 
-    private int timeout;
+    private Integer timeout;
     
-    public MuleTransactionConfig()
+    public void setMuleContext(MuleContext context)
     {
-        // todo timeout = RegistryContext.getConfiguration().getDefaultTransactionTimeout();
+        // override only if not set in config
+        if (this.timeout == null)
+        {
+            this.timeout = context.getConfiguration().getDefaultTransactionTimeout();
+        }
     }
 
     public TransactionFactory getFactory()
@@ -157,7 +163,7 @@ public class MuleTransactionConfig implements TransactionConfig
         }
         catch (CloneNotSupportedException e)
         {
-            logger.fatal("Failed to clone ContraintFilter: " + e.getMessage(), e);
+            logger.fatal("Failed to clone ConstraintFilter: " + e.getMessage(), e);
             return constraint;
         }
     }
@@ -169,7 +175,7 @@ public class MuleTransactionConfig implements TransactionConfig
 
     public int getTimeout()
     {
-        return timeout;
+        return timeout == null ? 0 : timeout;
     }
 
     public void setTimeout(int timeout)
@@ -185,14 +191,14 @@ public class MuleTransactionConfig implements TransactionConfig
             .append(", action=")
             .append(getActionAsString())
             .append(", timeout=")
-            .append(timeout)
+            .append(timeout == null ? 0 : timeout)
             .append("}");
         return buf.toString();
     }
     
     public int hashCode()
     {
-        return ClassUtils.hash(new Object[]{factory, new Byte(action), constraint, new Integer(timeout)});
+        return ClassUtils.hash(new Object[]{factory, action, constraint, timeout == null ? 0 : timeout});
     }
 
     public boolean equals(Object obj)
@@ -202,9 +208,9 @@ public class MuleTransactionConfig implements TransactionConfig
 
         final MuleTransactionConfig other = (MuleTransactionConfig) obj;
         return ClassUtils.equal(factory, other.factory)
-               && ClassUtils.equal(new Byte(action), new Byte(other.action))
+               && ClassUtils.equal(action, other.action)
                && ClassUtils.equal(constraint, other.constraint)
-               && ClassUtils.equal(new Integer(timeout), new Integer(other.timeout));
+               && ClassUtils.equal(timeout, other.timeout);
 
     }
     

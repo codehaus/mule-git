@@ -30,19 +30,20 @@ public class MuleMQJmsConnector extends JmsConnector
     public static final String DEFAULT_REALM_URL = "nsp://localhost:9000";
     public static final String DEFAULT_BUFFER_OUTPUT = "queued";
     public static final boolean DEFAULT_SYNC_WRITES = false;
-    public static final int DEFAULT_SYNC_BATCH_SIZE = 5;
-    public static final int DEFAULT_SYNC_TIME = 10;
+    public static final int DEFAULT_SYNC_BATCH_SIZE = 50;
+    public static final int DEFAULT_SYNC_TIME = 20;
     public static final int DEFAULT_GLOBAL_STORE_CAPACITY = 1000;
-    public static final int DEFAULT_MAX_UNACKED_SIZE = 500;
+    public static final int DEFAULT_MAX_UNACKED_SIZE = 100;
     public static final boolean DEFAULT_USE_JMS_ENGINE = true;
     public static final int DEFAULT_QUEUE_WINDOW_SIZE = 1000;
     public static final int DEFAULT_AUTO_ACK_COUNT = 500;
     public static final boolean DEFAULT_ENABLE_SHARED_DURABLE = false;
-    public static final boolean DEFAULT_RANDOMISE_R_NAMES = true;
-    public static final int DEFAULT_MAX_REDELIVERY = 500;
-    public static final int DEFAULT_MESSAGE_THREAD_POOL_SIZE = 20;
+    public static final boolean DEFAULT_RANDOMISE_R_NAMES = false;
+    public static final int DEFAULT_MAX_REDELIVERY = 100;
+    public static final int DEFAULT_MESSAGE_THREAD_POOL_SIZE = 30;
     public static final boolean DEFAULT_DISC_ON_CLUSTER_FAILURE = true;
-    public static final int DEFAULT_INITIAL_RETRY_COUNT = 5;
+    public static final int DEFAULT_INITIAL_RETRY_COUNT = 2;
+    public static final boolean DEFAULT_RETRY_COMMIT = false;
 
     // properties to be set on the connector all initialised to their respective
     // default value
@@ -62,6 +63,7 @@ public class MuleMQJmsConnector extends JmsConnector
     private int messageThreadPoolSize = DEFAULT_MESSAGE_THREAD_POOL_SIZE;
     private boolean discOnClusterFailure = DEFAULT_DISC_ON_CLUSTER_FAILURE;
     private int initialRetryCount = DEFAULT_INITIAL_RETRY_COUNT;
+    private boolean retryCommit = DEFAULT_RETRY_COMMIT;
 
     // property names
     protected static final String BUFFER_OUTPUT = "BufferOutput";
@@ -79,6 +81,7 @@ public class MuleMQJmsConnector extends JmsConnector
     protected static final String MESSAGE_THREAD_POOL_SIZE = "nirvana.messageThreadPoolSize";
     protected static final String DISC_ON_CLUSTER_FAILURE = "nirvana.discOnClusterFailure";
     protected static final String INITIAL_RETRY_COUNT = "nirvana.initialRetryCount";
+    protected static final String RETRY_COMMIT = "nirvana.retryCommit";
 
     public boolean supportJms102bSpec = false;
 
@@ -160,6 +163,7 @@ public class MuleMQJmsConnector extends JmsConnector
         props.put(MESSAGE_THREAD_POOL_SIZE, Integer.toString(messageThreadPoolSize));
         props.put(DISC_ON_CLUSTER_FAILURE, Boolean.toString(discOnClusterFailure));
         props.put(INITIAL_RETRY_COUNT, Integer.toString(initialRetryCount));
+        props.put(RETRY_COMMIT, Boolean.toString(retryCommit));
 
         // if the user used the connectionFactoryProperties map, these will override
         // the properties on the connector
@@ -348,5 +352,15 @@ public class MuleMQJmsConnector extends JmsConnector
     public void setMuleMqMaxRedelivery(int mulqMqMaxRedelivery)
     {
         this.muleMqMaxRedelivery = mulqMqMaxRedelivery;
+    }
+
+    public void setRetryCommit(boolean retryCommit)
+    {
+        this.retryCommit = retryCommit;
+    }
+
+    public boolean isRetryCommit()
+    {
+        return retryCommit;
     }
 }
