@@ -359,7 +359,6 @@ public class JmxAgent extends AbstractAgent
             logger.debug("Registering service with name: " + on);
             mBeanServer.registerMBean(serviceMBean, on);
         }
-
     }
 
     protected void registerEndpointServices() throws NotCompliantMBeanException, MBeanRegistrationException,
@@ -375,21 +374,19 @@ public class JmxAgent extends AbstractAgent
                 for (Iterator iterator = ((AbstractConnector) connector).getReceivers().values().iterator(); iterator.hasNext();)
                 {
                     EndpointServiceMBean mBean = new EndpointService((MessageReceiver) iterator.next());
-                    final String rawName = mBean.getName();
-                    final String name = jmxSupport.escape(rawName);
-                    if (logger.isInfoEnabled()) {
-                        logger.info("Attempting to register service with name: " + jmxSupport.getDomainName(muleContext) +
-                                                    ":type=org.mule.Endpoint,service=" +
-                                                    jmxSupport.escape(mBean.getComponentName()) +
-                                                    ",name=" + name);
+                    
+                    String fullName = buildFullyQualifiedEndpointName(mBean, connector);
+                    if (logger.isInfoEnabled()) 
+                    {
+                        logger.info("Attempting to register service with name: " + fullName);
                     }
-                    ObjectName on = jmxSupport.getObjectName(
-                                                    jmxSupport.getDomainName(muleContext) +
-                                                    ":type=org.mule.Endpoint,service=" +
-                                                    jmxSupport.escape(mBean.getComponentName()) +
-                                                    ",name=" + name);
+                    
+                    ObjectName on = jmxSupport.getObjectName(fullName);
                     mBeanServer.registerMBean(mBean, on);
-                    logger.info("Registered Endpoint Service with name: " + on);
+                    if (logger.isInfoEnabled())
+                    {
+                        logger.info("Registered Endpoint Service with name: " + on);
+                    }
                 }
             }
             else
@@ -397,8 +394,22 @@ public class JmxAgent extends AbstractAgent
                 logger.warn("Connector: " + connector
                             + " is not an istance of AbstractConnector, cannot obtain Endpoint MBeans from it");
             }
-
         }
+    }
+
+    protected String buildFullyQualifiedEndpointName(EndpointServiceMBean mBean, Connector connector)
+    {
+        String rawName = jmxSupport.escape(mBean.getName());
+        
+        StringBuilder fullName = new StringBuilder(128);
+        fullName.append(jmxSupport.getDomainName(muleContext));
+        fullName.append(":type=org.mule.Endpoint,service=");
+        fullName.append(jmxSupport.escape(mBean.getComponentName()));
+        fullName.append(",connector=");
+        fullName.append(connector.getName());
+        fullName.append(",name=");
+        fullName.append(rawName);
+        return fullName.toString();
     }
 
     protected void registerConnectorServices() throws
