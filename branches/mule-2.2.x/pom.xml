@@ -932,7 +932,6 @@
             <groupId>org.codehaus.groovy</groupId>
             <artifactId>groovy-all</artifactId>
             <version>1.5.6-osgi</version>
-            
             <exclusions>
                 <!--  Exclude openejb-loader as it is not needed and there are currently version inconsistancies in openejb-core pom-->
                 <exclusion>
@@ -1361,7 +1360,7 @@
 
     <build>
         <defaultGoal>install</defaultGoal>
-        
+
         <extensions>
             <!-- WebDAV for remote deployment -->
             <extension>
@@ -1385,9 +1384,9 @@
                     <version>2.0-beta-7</version>
                 </plugin>
                 <plugin>
-                    <groupId>org.codehaus.mojo.groovy</groupId>
-                    <artifactId>groovy-maven-plugin</artifactId>
-                    <version>1.0-beta-3</version>
+                    <groupId>org.codehaus.groovy.maven</groupId>
+                    <artifactId>gmaven-plugin</artifactId>
+                    <version>1.0</version>
                 </plugin>
             </plugins>
         </pluginManagement>
