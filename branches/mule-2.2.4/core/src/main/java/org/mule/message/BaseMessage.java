@@ -25,13 +25,26 @@ public class BaseMessage implements Serializable
      */
     private static final long serialVersionUID = -6105691921086093748L;
 
-    protected Object message;
+    protected Serializable message;
 
     protected Map context;
 
-    public BaseMessage(Object message)
+    public BaseMessage(Serializable message)
     {
         this.message = message;
+        context = new HashMap();
+    }
+
+    /**
+     * @deprecated Use BaseMessage(Serializable message) instead
+     */
+    public BaseMessage(Object message)
+    {
+        if (!(message instanceof Serializable))
+        {
+            throw new RuntimeException("Message needs to be serializable");
+        }
+        this.message = (Serializable) message;
         context = new HashMap();
     }
 
@@ -41,7 +54,7 @@ public class BaseMessage implements Serializable
      * @return String representation of the message payload
      * @throws Exception Implementation may throw an endpoint specific exception
      */
-    public String getPayloadAsString(String encoding) throws Exception
+    public String getPayloadAsString() throws Exception
     {
         return message.toString();
     }
@@ -49,8 +62,33 @@ public class BaseMessage implements Serializable
     /**
      * Converts the message implementation into a String representation
      * 
+     * @return String representation of the message payload
+     * @throws Exception Implementation may throw an endpoint specific exception
+     * @deprecated Use getPayloadAsString() instead
+     */
+    public String getPayloadAsString(String encoding) throws Exception
+    {
+        return getPayloadAsString();
+    }
+
+    /**
+     * Converts the message implementation into a String representation
+     * 
+     * @param encoding - character set to use when converting to bytes
      * @return String representation of the message
      * @throws Exception Implemetation may throw an endpoint specific exception
+     */
+    public byte[] getPayloadAsBytes(String encoding) throws Exception
+    {
+        return getPayloadAsString().getBytes(encoding);
+    }
+
+    /**
+     * Converts the message implementation into a String representation
+     * 
+     * @return String representation of the message
+     * @throws Exception Implemetation may throw an endpoint specific exception
+     * @deprecated Use getPayloadAsBytes(String encoding) instead
      */
     public byte[] getPayloadAsBytes() throws Exception
     {
