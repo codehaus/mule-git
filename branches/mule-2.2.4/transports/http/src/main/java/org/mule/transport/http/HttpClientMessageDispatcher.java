@@ -62,6 +62,7 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
         super(endpoint);
         this.connector = (HttpConnector) endpoint.getConnector();
         this.sendTransformer = new ObjectToHttpClientMethodRequest();
+        this.sendTransformer.setEndpoint(endpoint);
     }
 
     @Override

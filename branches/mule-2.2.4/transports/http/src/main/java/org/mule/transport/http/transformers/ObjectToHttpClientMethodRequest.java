@@ -11,7 +11,6 @@
 package org.mule.transport.http.transformers;
 
 import org.mule.RequestContext;
-import org.mule.api.MuleContext;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.config.MuleProperties;
@@ -60,8 +59,6 @@ import org.apache.commons.lang.SerializationUtils;
 public class ObjectToHttpClientMethodRequest extends AbstractMessageAwareTransformer
 {
     
-    private MuleContext muleContext;
-
     public ObjectToHttpClientMethodRequest()
     {
         setReturnClass(HttpMethod.class);
