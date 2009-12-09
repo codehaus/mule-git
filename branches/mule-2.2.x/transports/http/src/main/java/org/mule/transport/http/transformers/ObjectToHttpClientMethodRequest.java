@@ -105,46 +105,8 @@ public class ObjectToHttpClientMethodRequest extends AbstractMessageAwareTransfo
             {
                 paramName = currentParam.substring(0, equals);
                 paramValue = currentParam.substring(equals + 1);
-                //Run query params through the expression evaluator
-//                Object temp = DefaultExpressionManager.evaluate(paramValue, msg, "$[", true);
-//                if (temp != null)
-//                {
-//                    //Process param collections
-//                    if (temp instanceof List)
-//                    {
-//                        StringBuffer buf = new StringBuffer();
-//                        List list = (List) temp;
-//                        for (Iterator iterator = list.iterator(); iterator.hasNext();)
-//                        {
-//                            Object object = iterator.next();
-//                            buf.append(object).append(",");
-//                        }
-//                        parameterIndex++;
-//                        postMethod.addParameter(paramName, buf.toString());
-//                    }
-//                    else if (temp instanceof Map)
-//                    {
-//                        Map map = (Map) temp;
-//                        for (Iterator iterator = map.entrySet().iterator(); iterator.hasNext();)
-//                        {
-//                            Map.Entry entry = (Map.Entry) iterator.next();
-//                            parameterIndex++;
-//                            postMethod.addParameter(entry.getKey().toString(), entry.getValue().toString());
-//                        }
-//                    }
-//                    else
-//                    {
-//                        parameterIndex++;
-//                        postMethod.addParameter(paramName, temp.toString());
-//                    }
-//                }
-//                else
-//                {
-                    parameterIndex++;
-                    postMethod.addParameter(paramName, paramValue);
-                //}
-
-
+                parameterIndex++;
+                postMethod.addParameter(paramName, paramValue);
             }
             equals = queryString.indexOf("&");
             if (equals > -1)
