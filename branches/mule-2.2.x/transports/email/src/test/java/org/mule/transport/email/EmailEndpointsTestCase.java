@@ -29,7 +29,7 @@ public class EmailEndpointsTestCase extends AbstractMuleTestCase
         assertEquals(-1, endpointUri.getPort());
         assertEquals("pop3.lotsofmail.org", endpointUri.getHost());
         assertEquals("username:password", endpointUri.getUserInfo());
-        assertEquals("pop3://username:password@pop3.lotsofmail.org", endpointUri.toString());
+        assertEquals("pop3://username:****@pop3.lotsofmail.org", endpointUri.toString());
         assertEquals(0, endpointUri.getParams().size());
     }
 
@@ -43,7 +43,7 @@ public class EmailEndpointsTestCase extends AbstractMuleTestCase
         assertEquals(-1, endpointUri.getPort());
         assertEquals("smtp.lotsofmail.org", endpointUri.getHost());
         assertEquals("username:password", endpointUri.getUserInfo());
-        assertEquals("smtp://username:password@smtp.lotsofmail.org", endpointUri.toString());
+        assertEquals("smtp://username:****@smtp.lotsofmail.org", endpointUri.toString());
         assertEquals(0, endpointUri.getParams().size());
     }
 
@@ -57,7 +57,7 @@ public class EmailEndpointsTestCase extends AbstractMuleTestCase
         assertEquals(PORT, endpointUri.getPort());
         assertEquals("hostname", endpointUri.getHost());
         assertEquals("user:password", endpointUri.getUserInfo());
-        assertEquals("smtp://user:password@hostname:" + PORT, endpointUri.toString());
+        assertEquals("smtp://user:****@hostname:" + PORT, endpointUri.toString());
         assertEquals(0, endpointUri.getParams().size());
     }
 
@@ -72,7 +72,7 @@ public class EmailEndpointsTestCase extends AbstractMuleTestCase
         assertEquals(-1, endpointUri.getPort());
         assertEquals("imap.lotsofmail.org", endpointUri.getHost());
         assertEquals("username:password", endpointUri.getUserInfo());
-        assertEquals("imap://username:password@imap.lotsofmail.org/MyMail", endpointUri.toString());
+        assertEquals("imap://username:****@imap.lotsofmail.org/MyMail", endpointUri.toString());
         assertEquals(0, endpointUri.getParams().size());
         assertEquals("/MyMail", endpointUri.getPath());
 
