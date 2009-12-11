@@ -362,14 +362,15 @@ public class MuleEndpointURI implements EndpointURI
     @Override
     public String toString()
     {
-        int index = userInfo.indexOf(":");
-        if (StringUtils.isNotEmpty(userInfo) && (index > 0))
+        if (StringUtils.isEmpty(userInfo))
         {
-            // Mask passwords in the logs
-            String maskinfo = userInfo.substring(0, index) + ":****";
-            return uri.toASCIIString().replace(userInfo, maskinfo);
+            return uri.toASCIIString();
         }
-        return uri.toASCIIString();
+        
+        int index = userInfo.indexOf(":");
+        // Mask passwords in the logs
+        String maskinfo = userInfo.substring(0, index) + ":****";
+        return uri.toASCIIString().replace(userInfo, maskinfo);
     }
 
     public String getTransformers()
