@@ -19,9 +19,23 @@ import org.mule.util.IOUtils;
 import java.io.InputStream;
 import java.util.List;
 
+import javax.xml.stream.XMLInputFactory;
+
 public class IsXmlFilterTestCase extends AbstractMuleTestCase
 {
     private IsXmlFilter filter;
+
+    @Override
+    protected boolean isDisabledInThisEnvironment()
+    {
+        // MULE-4673: if we run on a JDK that uses jaxp in the endorsed dir, disable the test
+        String factoryName = XMLInputFactory.newInstance().getClass().getName();
+        if (factoryName.equals("com.sun.xml.internal.stream.XMLInputFactoryImpl"))
+        {
+            return true;
+        }
+        return false;
+    }
 
     @Override
     protected void doSetUp() throws Exception
