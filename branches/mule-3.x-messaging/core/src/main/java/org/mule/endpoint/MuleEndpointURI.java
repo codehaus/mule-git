@@ -363,11 +363,12 @@ public class MuleEndpointURI implements EndpointURI
         return uri.getFragment();
     }
 
+    @Override
     public String toString()
     {
-        if(StringUtils.isNotEmpty(userInfo) && userInfo.indexOf(":") > 0)
+        if (StringUtils.isNotEmpty(userInfo) && (userInfo.indexOf(":") > 0))
         {
-            //Mask passwords in the logs
+            // Mask passwords in the logs
             String maskinfo = userInfo.substring(0, userInfo.indexOf(":")) + ":****";
             return uri.toASCIIString().replace(userInfo, maskinfo);
         }
@@ -444,6 +445,7 @@ public class MuleEndpointURI implements EndpointURI
         return muleContext;
     }
 
+    @Override
     public boolean equals(Object o)
     {
         if (this == o)
@@ -467,6 +469,7 @@ public class MuleEndpointURI implements EndpointURI
                 ClassUtils.equal(uri, muleEndpointURI.uri);
     }
 
+    @Override
     public int hashCode()
     {
         return ClassUtils.hash(new Object[]{
