@@ -21,7 +21,6 @@ import org.mule.api.config.MuleProperties;
 import org.mule.api.context.MuleContextAware;
 import org.mule.api.endpoint.EndpointURI;
 import org.mule.api.endpoint.ImmutableEndpoint;
-import org.mule.api.endpoint.InvalidEndpointTypeException;
 import org.mule.api.endpoint.OutboundEndpoint;
 import org.mule.api.lifecycle.Disposable;
 import org.mule.api.lifecycle.Initialisable;
@@ -47,7 +46,6 @@ import org.mule.util.CollectionUtils;
 
 import java.beans.ExceptionListener;
 import java.io.Serializable;
-import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -70,7 +68,8 @@ public abstract class AbstractExceptionListener
      */
     protected transient Log logger = LogFactory.getLog(getClass());
 
-    protected List endpoints = new CopyOnWriteArrayList();
+    @SuppressWarnings("unchecked")
+    protected List<OutboundEndpoint> endpoints = new CopyOnWriteArrayList();
 
     protected AtomicBoolean initialised = new AtomicBoolean(false);
 
@@ -91,27 +90,16 @@ public abstract class AbstractExceptionListener
         this.muleContext = context;
     }
 
-    public List getEndpoints()
+    public List<OutboundEndpoint> getEndpoints()
     {
         return endpoints;
     }
 
-    public void setEndpoints(List endpoints)
+    public void setEndpoints(List<OutboundEndpoint> endpoints)
     {
         if (endpoints != null)
         {
             this.endpoints.clear();
-            // Ensure all endpoints are outbound endpoints
-            // This will go when we start dropping suport for 1.4 and start using 1.5
-            for (Iterator it = endpoints.iterator(); it.hasNext();)
-            {
-                ImmutableEndpoint endpoint = (ImmutableEndpoint) it.next();
-                if (!(endpoint instanceof OutboundEndpoint))
-                {
-                    throw new InvalidEndpointTypeException(
-                        CoreMessages.exceptionListenerMustUseOutboundEndpoint(this, endpoint));
-                }
-            }
             this.endpoints.addAll(endpoints);
         }
         else
@@ -303,10 +291,13 @@ public abstract class AbstractExceptionListener
                 {
                     endpointUri = failedEndpoint.getEndpointURI();
                 }
-                Object payload;
+                
+                // The payload needs to be serializable so that we can send it over the wire 
+                // if necessary (depends on the transport used).
+                Serializable payload;
                 if (message.getPayload() instanceof Serializable)
                 {
-                    payload = message.getPayload();
+                    payload = (Serializable) message.getPayload();
                 }
                 else
                 {
@@ -332,8 +323,7 @@ public abstract class AbstractExceptionListener
                 if (service != null)
                 {
                     OutboundRouter router = createOutboundRouter();
-                    router.route(exceptionMessage, new DefaultMuleSession(exceptionMessage,
-                        new MuleSessionHandler(), ctx.getService(), muleContext));
+                    router.route(exceptionMessage, new DefaultMuleSession(ctx.getService(), muleContext));
                 }
                 else
                 {
@@ -373,8 +363,8 @@ public abstract class AbstractExceptionListener
 
             MuleMessage clonedMessage = new DefaultMuleMessage(exceptionMessage.getPayload(),
                 exceptionMessage, muleContext);
-            MuleEvent exceptionEvent = new DefaultMuleEvent(clonedMessage, endpoint, new DefaultMuleSession(
-                clonedMessage, new MuleSessionHandler(), muleContext), true);
+            MuleEvent exceptionEvent = new DefaultMuleEvent(clonedMessage, endpoint, 
+                new DefaultMuleSession(muleContext), true);
             exceptionEvent = RequestContext.setEvent(exceptionEvent);
 
             if (endpoint.isSynchronous())
@@ -454,7 +444,7 @@ public abstract class AbstractExceptionListener
      * @return The endpoint used to dispatch an exception message on or null if there
      *         are no endpoints registered
      */
-    protected List getEndpoints(Throwable t)
+    protected List<OutboundEndpoint> getEndpoints(Throwable t)
     {
         if (!endpoints.isEmpty())
         {
