@@ -14,6 +14,7 @@ import org.mule.api.transport.MessageAdapter;
 import org.mule.api.transport.PropertyScope;
 import org.mule.transport.DefaultMessageAdapter;
 
+import java.io.Serializable;
 import java.util.Iterator;
 
 /**
@@ -29,14 +30,14 @@ public class DefaultMuleMessageDTO extends BaseMessageDTO
         super();
     }
 
-    public DefaultMuleMessageDTO(Object message)
+    public DefaultMuleMessageDTO(Serializable message)
     {
         super(message);
     }
 
     public DefaultMuleMessageDTO(MuleMessage message)
     {
-        super(message.getPayload());
+        super((Serializable) message.getPayload());
         encodePropertiesForScope(PropertyScope.INBOUND, message);
         encodePropertiesForScope(PropertyScope.OUTBOUND, message);
         encodePropertiesForScope(PropertyScope.INVOCATION, message);
@@ -52,7 +53,7 @@ public class DefaultMuleMessageDTO extends BaseMessageDTO
         for (Iterator iterator = message.getPropertyNames(scope).iterator(); iterator.hasNext();)
         {
             String key = (String)iterator.next();
-            setProperty(scope.getScope() + "#" + key, message.getProperty(key));
+            setProperty(scope.getScopeName() + "#" + key, message.getProperty(key));
         }
     }
 
@@ -74,15 +75,15 @@ public class DefaultMuleMessageDTO extends BaseMessageDTO
         {
             i = s.indexOf("#");
             prefix = s.substring(0, i);
-            if(prefix.equals(PropertyScope.INBOUND.getScope()))
+            if(prefix.equals(PropertyScope.INBOUND.getScopeName()))
             {
                 message.setProperty(s.substring(i+1), getProperty(s), PropertyScope.INBOUND);
             }
-            else if(prefix.equals(PropertyScope.OUTBOUND.getScope()))
+            else if(prefix.equals(PropertyScope.OUTBOUND.getScopeName()))
             {
                 message.setProperty(s.substring(i+1), getProperty(s), PropertyScope.OUTBOUND);
             }
-            else if(prefix.equals(PropertyScope.SESSION.getScope()))
+            else if(prefix.equals(PropertyScope.SESSION.getScopeName()))
             {
                 message.setProperty(s.substring(i+1), getProperty(s), PropertyScope.SESSION);
             }

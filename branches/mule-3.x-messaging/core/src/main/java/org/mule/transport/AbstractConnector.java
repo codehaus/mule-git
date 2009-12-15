@@ -418,7 +418,10 @@ public abstract class AbstractConnector
                     {
                         logger.debug("Starting receiver on endpoint: " + mr.getEndpoint().getEndpointURI());
                     }
-                    mr.start();
+                    if (mr.getService().isStarted())
+                    {
+                        mr.start();
+                    }
                 }
                 catch (MuleException e)
                 {
@@ -795,7 +798,7 @@ public abstract class AbstractConnector
                 
                 // Store some info. about the receiver/dispatcher which threw the ConnectException so 
                 // that we can make sure that problem has been resolved when we go to reconnect.
-                Map info = new HashMap();
+                Map<Object, Object> info = new HashMap<Object, Object>();
                 if (failed instanceof MessageReceiver)
                 {
                     info.put(RetryContext.FAILED_RECEIVER, ((MessageReceiver) failed).getReceiverKey());
@@ -1524,7 +1527,7 @@ public abstract class AbstractConnector
 
                     // Make sure the receiver or dispatcher which triggered the reconnection is now able to 
                     // connect successfully.  This info. was previously stored by the handleException() method, above.
-                    Map info = context.getMetaInfo();
+                    Map<Object, Object> info = context.getMetaInfo();
                     if (info.get(RetryContext.FAILED_RECEIVER) != null)
                     {
                         String receiverKey = (String) info.get(RetryContext.FAILED_RECEIVER);
@@ -2026,6 +2029,7 @@ public abstract class AbstractConnector
         {
             DelegatingInputStream is = new DelegatingInputStream((InputStream)result.getPayload())
             {
+                @Override
                 public void close() throws IOException
                 {
                     try
@@ -2087,6 +2091,7 @@ public abstract class AbstractConnector
         {
             DelegatingInputStream is = new DelegatingInputStream((InputStream)result.getPayload())
             {
+                @Override
                 public void close() throws IOException
                 {
                     try
