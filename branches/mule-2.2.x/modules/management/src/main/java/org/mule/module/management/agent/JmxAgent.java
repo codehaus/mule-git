@@ -44,6 +44,7 @@ import org.mule.transport.AbstractConnector;
 import org.mule.util.ClassUtils;
 import org.mule.util.StringUtils;
 
+import java.lang.management.ManagementFactory;
 import java.rmi.server.ExportException;
 import java.util.Arrays;
 import java.util.Collections;
@@ -96,7 +97,8 @@ public class JmxAgent extends AbstractAgent
      */
     protected boolean locateServer = true;
 
-    private boolean createServer = true;
+    // don't create mbean server by default, use a platform mbean server
+    private boolean createServer = false;
     private String connectorServerUrl;
     private MBeanServer mBeanServer;
     private JMXConnectorServer connectorServer;
@@ -163,23 +165,19 @@ public class JmxAgent extends AbstractAgent
         {
             return;
         }
-        if (mBeanServer == null && !locateServer && !createServer)
-        {
-            throw new InitialisationException(ManagementMessages.createOrLocateShouldBeSet(), this);
-        }
-        if (mBeanServer == null && locateServer)
-        {
-            List l = MBeanServerFactory.findMBeanServer(null);
-            if (l != null && l.size() > 0)
-            {
-                mBeanServer = (MBeanServer) l.get(0);
-            }
-        }
+
         if (mBeanServer == null && createServer)
         {
+            // here we create a new mbean server, not using a platform one
             mBeanServer = MBeanServerFactory.createMBeanServer();
             serverCreated.set(true);
         }
+
+        if (mBeanServer == null && locateServer)
+        {
+            mBeanServer = ManagementFactory.getPlatformMBeanServer();
+        }
+
         if (mBeanServer == null)
         {
             throw new InitialisationException(ManagementMessages.cannotLocateOrCreateServer(), this);

@@ -86,11 +86,4 @@ public class JmxSupportTestCase extends AbstractMuleJmxTestCase
         assertTrue("Should have contained a new domain.", domains.contains(TEST_DOMAIN + ".2"));
     }
     
-    @Override
-    protected void doTearDown() throws Exception
-    {
-        // This MBean was registered manually so needs to be unregistered manually in tearDown()
-        unregisterMBeansByMask(TEST_DOMAIN + ":name=TestDuplicates");
-        super.doTearDown();
-    }
 }

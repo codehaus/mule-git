@@ -21,6 +21,9 @@ import javax.management.ObjectName;
 
 public class ConnectorServiceTestCase extends AbstractMuleJmxTestCase
 {
+
+    protected String domainName;
+
     public void testUndeploy() throws Exception
     {
         final Connector connector = new TestConnector();
@@ -30,7 +33,8 @@ public class ConnectorServiceTestCase extends AbstractMuleJmxTestCase
         muleContext.getRegistry().registerAgent(jmxAgent);
         muleContext.start();
 
-        final String query = jmxSupport.getDomainName(muleContext) + ":*";
+        domainName = jmxSupport.getDomainName(muleContext);
+        final String query = domainName + ":*";
         final ObjectName objectName = jmxSupport.getObjectName(query);
         Set mbeans = mBeanServer.queryMBeans(objectName, null);
 
@@ -45,5 +49,11 @@ public class ConnectorServiceTestCase extends AbstractMuleJmxTestCase
 
         mbeans = mBeanServer.queryMBeans(objectName, null);
         assertEquals("There should be no MBeans left in the domain", 0, mbeans.size());
+    }
+
+    @Override
+    protected void doTearDown() throws Exception
+    {
+        unregisterMBeansByMask(domainName + ":*");
     }
 }
