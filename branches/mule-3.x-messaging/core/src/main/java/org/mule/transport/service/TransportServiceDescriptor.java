@@ -13,6 +13,8 @@ package org.mule.transport.service;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
+import org.mule.api.context.MuleContextAware;
+import org.mule.api.endpoint.EndpointBuilder;
 import org.mule.api.endpoint.EndpointURIBuilder;
 import org.mule.api.endpoint.InboundEndpoint;
 import org.mule.api.registry.ServiceDescriptor;
@@ -36,29 +38,29 @@ import java.util.Properties;
  * string key value pairs and supports a number of properties, descriptions of which
  * can be found here: http://www.muledocs.org/Transport+Service+Descriptors.
  */
-public interface TransportServiceDescriptor extends ServiceDescriptor
+public interface TransportServiceDescriptor extends ServiceDescriptor, MuleContextAware
 {
     public static final String OSGI_HEADER_TRANSPORT = "Mule-Transport";
-        
+
     @Deprecated
     public MessageAdapter createMessageAdapter(Object message) throws TransportServiceException;
 
     @Deprecated
     public MessageAdapter createMessageAdapter(Object message, MessageAdapter originalMessageAdapter)
-        throws TransportServiceException;
+            throws TransportServiceException;
 
     public MuleMessage createMessage(Object payload, MuleContext muleContext) throws TransportServiceException;
     
     public SessionHandler createSessionHandler() throws TransportServiceException;
 
     public MessageReceiver createMessageReceiver(Connector connector,
-                                                             Service service,
-                                                             InboundEndpoint endpoint) throws MuleException;
+                                                 Service service,
+                                                 InboundEndpoint endpoint) throws MuleException;
 
     public MessageReceiver createMessageReceiver(Connector connector,
-                                                             Service service,
-                                                             InboundEndpoint endpoint,
-                                                             Object[] args) throws MuleException;
+                                                 Service service,
+                                                 InboundEndpoint endpoint,
+                                                 Object[] args) throws MuleException;
 
     public MessageDispatcherFactory createDispatcherFactory() throws TransportServiceException;
 
@@ -74,7 +76,9 @@ public interface TransportServiceDescriptor extends ServiceDescriptor
 
     public List createResponseTransformers() throws TransportFactoryException;
 
-    public EndpointURIBuilder createEndpointBuilder() throws TransportFactoryException;
+    public EndpointURIBuilder createEndpointURIBuilder() throws TransportFactoryException;
+
+    public EndpointBuilder createEndpointBuilder(String uri) throws TransportFactoryException;
 
     public void setExceptionMappings(Properties props);
 

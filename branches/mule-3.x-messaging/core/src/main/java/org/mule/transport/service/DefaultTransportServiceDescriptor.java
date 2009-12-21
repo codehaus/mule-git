@@ -15,10 +15,10 @@ import org.mule.api.MuleContext;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.config.MuleProperties;
+import org.mule.api.endpoint.EndpointBuilder;
 import org.mule.api.endpoint.EndpointURIBuilder;
 import org.mule.api.endpoint.InboundEndpoint;
 import org.mule.api.registry.AbstractServiceDescriptor;
-import org.mule.api.registry.Registry;
 import org.mule.api.service.Service;
 import org.mule.api.transaction.TransactionFactory;
 import org.mule.api.transformer.Transformer;
@@ -30,6 +30,7 @@ import org.mule.api.transport.MessageRequesterFactory;
 import org.mule.api.transport.MuleMessageFactory;
 import org.mule.api.transport.SessionHandler;
 import org.mule.config.i18n.CoreMessages;
+import org.mule.endpoint.EndpointURIEndpointBuilder;
 import org.mule.endpoint.UrlEndpointURIBuilder;
 import org.mule.transaction.XaTransactionFactory;
 import org.mule.transport.NullPayload;
@@ -52,7 +53,7 @@ public class DefaultTransportServiceDescriptor extends AbstractServiceDescriptor
     private String messageReceiver;
     private String transactedMessageReceiver;
     private String xaTransactedMessageReceiver;
-    private String endpointBuilder;
+    private String endpointUriBuilder;
     private String sessionHandler;
     private String defaultInboundTransformer;
     private String defaultOutboundTransformer;
@@ -61,16 +62,22 @@ public class DefaultTransportServiceDescriptor extends AbstractServiceDescriptor
     private Transformer inboundTransformer;
     private Transformer outboundTransformer;
     private Transformer responseTransformer;
+    private String endpointBuilder;
 
     private Properties exceptionMappings = new Properties();
-    private Registry registry;
+    private MuleContext muleContext;
 
     private ClassLoader classLoader;
-    
-    public DefaultTransportServiceDescriptor(String service, Properties props, Registry registry, ClassLoader classLoader)
+
+    public DefaultTransportServiceDescriptor(String service, Properties props, ClassLoader classLoader)
     {
         super(service);
+        this.classLoader = classLoader;
+        init(props);
+    }
 
+    protected void init(Properties props)
+    {
         connector = removeProperty(MuleProperties.CONNECTOR_CLASS, props);
         dispatcherFactory = removeProperty(MuleProperties.CONNECTOR_DISPATCHER_FACTORY, props);
         requesterFactory = removeProperty(MuleProperties.CONNECTOR_REQUESTER_FACTORY, props);
@@ -83,11 +90,9 @@ public class DefaultTransportServiceDescriptor extends AbstractServiceDescriptor
         defaultInboundTransformer = removeProperty(MuleProperties.CONNECTOR_INBOUND_TRANSFORMER, props);
         defaultOutboundTransformer = removeProperty(MuleProperties.CONNECTOR_OUTBOUND_TRANSFORMER, props);
         defaultResponseTransformer = removeProperty(MuleProperties.CONNECTOR_RESPONSE_TRANSFORMER, props);
-        endpointBuilder = removeProperty(MuleProperties.CONNECTOR_ENDPOINT_BUILDER, props);
+        endpointBuilder = removeProperty(MuleProperties.CONNECTOR_META_ENDPOINT_BUILDER, props);
+        endpointUriBuilder = removeProperty(MuleProperties.CONNECTOR_ENDPOINT_BUILDER, props);
         sessionHandler = removeProperty(MuleProperties.CONNECTOR_SESSION_HANDLER, props);
-        this.registry = registry;
-
-        this.classLoader = classLoader;
     }
 
     public void setOverrides(Properties props)
@@ -106,6 +111,8 @@ public class DefaultTransportServiceDescriptor extends AbstractServiceDescriptor
         xaTransactedMessageReceiver = props.getProperty(
                 MuleProperties.CONNECTOR_XA_TRANSACTED_MESSAGE_RECEIVER_CLASS, xaTransactedMessageReceiver);
         messageAdapter = props.getProperty(MuleProperties.CONNECTOR_MESSAGE_ADAPTER, messageAdapter);
+        endpointBuilder = props.getProperty(MuleProperties.CONNECTOR_META_ENDPOINT_BUILDER, endpointBuilder);
+
 
         String temp = props.getProperty(MuleProperties.CONNECTOR_INBOUND_TRANSFORMER);
         if (temp != null)
@@ -131,8 +138,13 @@ public class DefaultTransportServiceDescriptor extends AbstractServiceDescriptor
         temp = props.getProperty(MuleProperties.CONNECTOR_ENDPOINT_BUILDER);
         if (temp != null)
         {
-            endpointBuilder = temp;
+            endpointUriBuilder = temp;
         }
+    }
+
+    public void setMuleContext(MuleContext context)
+    {
+        this.muleContext = context;
     }
 
     @Deprecated
@@ -140,34 +152,34 @@ public class DefaultTransportServiceDescriptor extends AbstractServiceDescriptor
     {
         return createMessageAdapter(message, null, messageAdapter);
     }
-    
+
     @Deprecated
     public MessageAdapter createMessageAdapter(Object message, MessageAdapter originalMessageAdapter)
-        throws TransportServiceException
+            throws TransportServiceException
     {
         return createMessageAdapter(message, originalMessageAdapter, messageAdapter);
     }
 
     protected MessageAdapter createMessageAdapter(Object message, MessageAdapter originalMessageAdapter,
-        String clazz) throws TransportServiceException
+                                                  String clazz) throws TransportServiceException
     {
         if (message == null)
         {
             message = NullPayload.getInstance();
         }
         if (messageAdapter != null)
-        {   
+        {
             try
             {
                 if (originalMessageAdapter != null)
                 {
-                    return (MessageAdapter) ClassUtils.instanciateClass(clazz, 
-                        new Object[] {message, originalMessageAdapter}, classLoader);
+                    return (MessageAdapter) ClassUtils.instanciateClass(clazz,
+                            new Object[]{message, originalMessageAdapter}, classLoader);
                 }
                 else
                 {
-                    return (MessageAdapter) 
-                        ClassUtils.instanciateClass(clazz, new Object[]{message}, classLoader);
+                    return (MessageAdapter)
+                            ClassUtils.instanciateClass(clazz, new Object[]{message}, classLoader);
                 }
             }
             catch (Exception e)
@@ -223,8 +235,8 @@ public class DefaultTransportServiceDescriptor extends AbstractServiceDescriptor
     }
 
     public MessageReceiver createMessageReceiver(Connector connector,
-                                                    Service service,
-                                                    InboundEndpoint endpoint) throws MuleException
+                                                 Service service,
+                                                 InboundEndpoint endpoint) throws MuleException
     {
 
         MessageReceiver mr = createMessageReceiver(connector, service, endpoint, null);
@@ -232,9 +244,9 @@ public class DefaultTransportServiceDescriptor extends AbstractServiceDescriptor
     }
 
     public MessageReceiver createMessageReceiver(Connector connector,
-                                                    Service service,
-                                                    InboundEndpoint endpoint,
-                                                    Object[] args) throws MuleException
+                                                 Service service,
+                                                 InboundEndpoint endpoint,
+                                                 Object[] args) throws MuleException
     {
         String receiverClass = messageReceiver;
 
@@ -411,7 +423,7 @@ public class DefaultTransportServiceDescriptor extends AbstractServiceDescriptor
                         defaultInboundTransformer, ClassUtils.NO_ARGS, classLoader);
                 inboundTransformer.setName(inboundTransformer.getName() + "#" + hashCode());
 
-                registry.registerObject(inboundTransformer.getName(), inboundTransformer);
+                muleContext.getRegistry().registerObject(inboundTransformer.getName(), inboundTransformer);
                 return CollectionUtils.singletonList(inboundTransformer);
             }
             catch (Exception e)
@@ -437,7 +449,7 @@ public class DefaultTransportServiceDescriptor extends AbstractServiceDescriptor
                 outboundTransformer = (Transformer) ClassUtils.instanciateClass(
                         defaultOutboundTransformer, ClassUtils.NO_ARGS, classLoader);
                 outboundTransformer.setName(outboundTransformer.getName() + "#" + hashCode());
-                registry.registerObject(outboundTransformer.getName(), outboundTransformer);
+                muleContext.getRegistry().registerObject(outboundTransformer.getName(), outboundTransformer);
                 return CollectionUtils.singletonList(outboundTransformer);
             }
             catch (Exception e)
@@ -464,7 +476,7 @@ public class DefaultTransportServiceDescriptor extends AbstractServiceDescriptor
                         defaultResponseTransformer, ClassUtils.NO_ARGS, classLoader);
                 responseTransformer.setName(responseTransformer.getName() + "#" + hashCode());
 
-                registry.registerObject(responseTransformer.getName(), responseTransformer);                
+                muleContext.getRegistry().registerObject(responseTransformer.getName(), responseTransformer);
                 return CollectionUtils.singletonList(responseTransformer);
             }
             catch (Exception e)
@@ -475,9 +487,9 @@ public class DefaultTransportServiceDescriptor extends AbstractServiceDescriptor
         return Collections.emptyList();
     }
 
-    public EndpointURIBuilder createEndpointBuilder() throws TransportFactoryException
+    public EndpointURIBuilder createEndpointURIBuilder() throws TransportFactoryException
     {
-        if (endpointBuilder == null)
+        if (endpointUriBuilder == null)
         {
             logger.debug("Endpoint resolver not set, Loading default resolver: "
                     + UrlEndpointURIBuilder.class.getName());
@@ -485,10 +497,32 @@ public class DefaultTransportServiceDescriptor extends AbstractServiceDescriptor
         }
         else
         {
-            logger.debug("Loading endpointUri resolver: " + endpointBuilder);
+            logger.debug("Loading endpointUri resolver: " + endpointUriBuilder);
             try
             {
-                return (EndpointURIBuilder) ClassUtils.instanciateClass(endpointBuilder, ClassUtils.NO_ARGS, classLoader);
+                return (EndpointURIBuilder) ClassUtils.instanciateClass(endpointUriBuilder, ClassUtils.NO_ARGS, classLoader);
+            }
+            catch (Exception e)
+            {
+                throw new TransportFactoryException(CoreMessages.failedToLoad("EndpointURI Builder: " + endpointUriBuilder), e);
+            }
+        }
+    }
+
+    public EndpointBuilder createEndpointBuilder(String uri) throws TransportFactoryException
+    {
+        if (endpointBuilder == null)
+        {
+            logger.debug("Endpoint builder not set, Loading default builder: "
+                    + EndpointURIEndpointBuilder.class.getName());
+            return new EndpointURIEndpointBuilder(uri, muleContext);
+        }
+        else
+        {
+            logger.debug("Loading endpoint builder: " + endpointBuilder);
+            try
+            {
+                return (EndpointBuilder) ClassUtils.instanciateClass(endpointBuilder, new Object[]{uri, muleContext}, classLoader);
             }
             catch (Exception e)
             {
