@@ -10,7 +10,6 @@
 
 package org.mule.transport.stdio;
 
-import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.InboundEndpoint;
 import org.mule.api.lifecycle.CreateException;
@@ -73,11 +72,13 @@ public class StdioMessageReceiver extends AbstractPollingMessageReceiver
         this.sendStream = BooleanUtils.toBoolean((String) endpoint.getProperties().get("sendStream"));
     }
 
+    @Override
     protected void doDispose()
     {
         // template method
     }
 
+    @Override
     public void doConnect() throws Exception
     {
         if (connector instanceof PromptStdioConnector)
@@ -88,16 +89,13 @@ public class StdioMessageReceiver extends AbstractPollingMessageReceiver
         }
     }
 
+    @Override
     public void doDisconnect() throws Exception
     {
         // noop
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mule.util.timer.TimeEventListener#timeExpired(org.mule.util.timer.TimeEvent)
-     */
+    @Override
     public void poll()
     {
         try
@@ -110,7 +108,7 @@ public class StdioMessageReceiver extends AbstractPollingMessageReceiver
                 int i = in.read();
                 //Roll back our read
                 in.unread(i);
-                MuleMessage message = new DefaultMuleMessage(connector.getMessageAdapter(in), connector.getMuleContext());
+                MuleMessage message = connector.getMessage(in);
                 routeMessage(message, endpoint.isSynchronous());
             }
             else
@@ -138,8 +136,8 @@ public class StdioMessageReceiver extends AbstractPollingMessageReceiver
                 String[] lines = fullBuffer.toString().split(SystemUtils.LINE_SEPARATOR);
                 for (int i = 0; i < lines.length; ++i)
                 {                
-                    routeMessage(new DefaultMuleMessage(connector.getMessageAdapter(lines[i]), connector.getMuleContext()), 
-                                 endpoint.isSynchronous());
+                    MuleMessage message = connector.getMessage(lines[i]);
+                    routeMessage(message, endpoint.isSynchronous());
                 }
             }
 
@@ -182,6 +180,7 @@ public class StdioMessageReceiver extends AbstractPollingMessageReceiver
             this.ssc = ssc;
         }
 
+        @Override
         public void run()
         {
             if (delay > 0)

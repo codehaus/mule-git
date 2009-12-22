@@ -40,6 +40,7 @@ public class XmppMessageDispatcher extends AbstractMessageDispatcher
         this.connector = (XmppConnector)endpoint.getConnector();
     }
 
+    @Override
     protected void doConnect() throws Exception
     {
         if (xmppConnection == null)
@@ -49,6 +50,7 @@ public class XmppMessageDispatcher extends AbstractMessageDispatcher
         }
     }
 
+    @Override
     protected void doDisconnect() throws Exception
     {
         try
@@ -68,16 +70,19 @@ public class XmppMessageDispatcher extends AbstractMessageDispatcher
         }
     }
 
+    @Override
     protected void doDispose()
     {
         // template method
     }
 
+    @Override
     protected void doDispatch(MuleEvent event) throws Exception
     {
         sendMessage(event);
     }
 
+    @Override
     protected MuleMessage doSend(MuleEvent event) throws Exception
     {
         sendMessage(event);
@@ -101,7 +106,7 @@ public class XmppMessageDispatcher extends AbstractMessageDispatcher
                 {
                     logger.debug("Got a response from chat: " + chat);
                 }
-                return new DefaultMuleMessage(connector.getMessageAdapter(response), connector.getMuleContext());
+                connector.getMessage(response);
             }
         }
         return new DefaultMuleMessage(NullPayload.getInstance(), connector.getMuleContext());

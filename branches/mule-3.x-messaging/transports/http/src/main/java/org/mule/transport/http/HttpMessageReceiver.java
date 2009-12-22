@@ -13,7 +13,6 @@ package org.mule.transport.http;
 import org.mule.DefaultMuleEvent;
 import org.mule.DefaultMuleMessage;
 import org.mule.DefaultMuleSession;
-import org.mule.NullSessionHandler;
 import org.mule.OptimizedRequestContext;
 import org.mule.RequestContext;
 import org.mule.api.MessagingException;
@@ -395,7 +394,7 @@ public class HttpMessageReceiver extends TcpMessageReceiver
                 }
             }
 
-            return connector.getMessageAdapter(new Object[]{body, headers});
+            return connector.getMessage(new Object[]{ body, headers });
         }
 
         private void sendExpect100(Map headers, RequestLine requestLine)

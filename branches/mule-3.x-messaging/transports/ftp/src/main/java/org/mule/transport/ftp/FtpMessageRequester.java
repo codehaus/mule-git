@@ -10,7 +10,6 @@
 
 package org.mule.transport.ftp;
 
-import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.EndpointURI;
 import org.mule.api.endpoint.InboundEndpoint;
@@ -74,6 +73,7 @@ public class FtpMessageRequester extends AbstractMessageRequester
      *          returned if no data was avaialable
      * @throws Exception if the call to the underlying protocol cuases an exception
      */
+    @Override
     protected MuleMessage doRequest(long timeout) throws Exception
     {
         FTPClient client = null;
@@ -91,8 +91,7 @@ public class FtpMessageRequester extends AbstractMessageRequester
             
             byte[] payload = retriveFileContents(client, fileToProcess);
             
-            MuleMessage reply = new DefaultMuleMessage(connector.getMessageAdapter(payload), 
-                connector.getMuleContext());
+            MuleMessage reply = connector.getMessage(payload);
             reply.setProperty(FileConnector.PROPERTY_ORIGINAL_FILENAME, originalFileName);
             reply.setProperty(FileConnector.PROPERTY_FILE_SIZE, new Long(fileToProcess.getSize()));
             return reply;

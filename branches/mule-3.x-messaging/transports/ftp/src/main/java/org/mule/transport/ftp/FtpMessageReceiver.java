@@ -10,7 +10,6 @@
 
 package org.mule.transport.ftp;
 
-import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.InboundEndpoint;
 import org.mule.api.lifecycle.CreateException;
@@ -70,6 +69,7 @@ public class FtpMessageReceiver extends AbstractPollingMessageReceiver
         }
     }
 
+    @Override
     public void poll() throws Exception
     {
         FTPFile[] files = listFiles();
@@ -170,7 +170,7 @@ public class FtpMessageReceiver extends AbstractPollingMessageReceiver
                     throw new IOException(MessageFormat.format("Failed to retrieve file {0}. Ftp error: {1}",
                                                                file.getName(), client.getReplyCode()));
                 }
-                message = new DefaultMuleMessage(connector.getMessageAdapter(stream), connector.getMuleContext());
+                message = connector.getMessage(stream);
             }
             else
             {
@@ -183,7 +183,7 @@ public class FtpMessageReceiver extends AbstractPollingMessageReceiver
                 byte[] bytes = baos.toByteArray();
                 if (bytes.length > 0)
                 {
-                    message = new DefaultMuleMessage(connector.getMessageAdapter(bytes), connector.getMuleContext());            
+                    message = connector.getMessage(bytes);
                 }
                 else
                 {
@@ -229,6 +229,7 @@ public class FtpMessageReceiver extends AbstractPollingMessageReceiver
         }
     }
     
+    @Override
     protected void doConnect() throws Exception
     {
         // no op
@@ -272,11 +273,13 @@ public class FtpMessageReceiver extends AbstractPollingMessageReceiver
         return retryContext;
     }
         
+    @Override
     protected void doDisconnect() throws Exception
     {
         // no op
     }
 
+    @Override
     protected void doDispose()
     {
         // template method

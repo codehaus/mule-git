@@ -10,10 +10,10 @@
 
 package org.mule.transport.servlet;
 
-import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.InboundEndpoint;
+import org.mule.api.transport.Connector;
 import org.mule.api.transport.MessageReceiver;
 
 import java.io.IOException;
@@ -48,6 +48,7 @@ public class MuleRESTReceiverServlet extends MuleReceiverServlet
      */
     private static final long serialVersionUID = -2395763805839859649L;
 
+    @Override
     protected void doGet(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse)
         throws ServletException, IOException
     {
@@ -77,8 +78,9 @@ public class MuleRESTReceiverServlet extends MuleReceiverServlet
             {
                 MessageReceiver receiver = getReceiverForURI(httpServletRequest);
                 httpServletRequest.setAttribute(PAYLOAD_PARAMETER_NAME, payloadParameterName);
-                MuleMessage message = new DefaultMuleMessage(receiver.getEndpoint().getConnector().getMessageAdapter(
-                    httpServletRequest), muleContext);
+                
+                Connector connector = receiver.getEndpoint().getConnector();
+                MuleMessage message = connector.getMessage(httpServletRequest);
                 MuleMessage returnMessage = receiver.routeMessage(message, true);
                 writeResponse(httpServletResponse, returnMessage);
             }
@@ -89,6 +91,7 @@ public class MuleRESTReceiverServlet extends MuleReceiverServlet
         }
     }
 
+    @Override
     protected void doPost(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse)
         throws ServletException, IOException
     {
@@ -96,11 +99,12 @@ public class MuleRESTReceiverServlet extends MuleReceiverServlet
         {
             MessageReceiver receiver = getReceiverForURI(httpServletRequest);
             httpServletRequest.setAttribute(PAYLOAD_PARAMETER_NAME, payloadParameterName);
-            MuleMessage message = new DefaultMuleMessage(receiver.getEndpoint().getConnector()
-                .getMessageAdapter(httpServletRequest), muleContext);
+
+            Connector connector = receiver.getEndpoint().getConnector();
+            MuleMessage message = connector.getMessage(httpServletRequest);
+            
             MuleMessage returnMessage = receiver.routeMessage(message, true);
             writeResponse(httpServletResponse, returnMessage);
-
         }
         catch (Exception e)
         {
@@ -108,6 +112,7 @@ public class MuleRESTReceiverServlet extends MuleReceiverServlet
         }
     }
 
+    @Override
     protected void doPut(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse)
         throws ServletException, IOException
     {
@@ -115,8 +120,9 @@ public class MuleRESTReceiverServlet extends MuleReceiverServlet
         {
             MessageReceiver receiver = getReceiverForURI(httpServletRequest);
             httpServletRequest.setAttribute(PAYLOAD_PARAMETER_NAME, payloadParameterName);
-            MuleMessage message = new DefaultMuleMessage(receiver.getEndpoint().getConnector()
-                .getMessageAdapter(httpServletRequest), muleContext);
+
+            Connector connector = receiver.getEndpoint().getConnector();
+            MuleMessage message = connector.getMessage(httpServletRequest);
             receiver.routeMessage(message, muleContext.getConfiguration().isDefaultSynchronousEndpoints());
 
             httpServletResponse.setStatus(HttpServletResponse.SC_CREATED);
@@ -132,6 +138,7 @@ public class MuleRESTReceiverServlet extends MuleReceiverServlet
         }
     }
 
+    @Override
     protected void doDelete(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse)
         throws ServletException, IOException
     {

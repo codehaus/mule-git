@@ -10,13 +10,11 @@
 
 package org.mule.transport.xmpp;
 
-import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.InboundEndpoint;
 import org.mule.api.lifecycle.CreateException;
 import org.mule.api.service.Service;
-import org.mule.api.transport.MessageAdapter;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.transport.AbstractConnector;
 import org.mule.transport.AbstractMessageReceiver;
@@ -46,6 +44,7 @@ public class XmppMessageReceiver extends AbstractMessageReceiver implements Pack
         super(connector, service, endpoint);
     }
 
+    @Override
     protected void doConnect() throws Exception
     {
         try
@@ -68,6 +67,7 @@ public class XmppMessageReceiver extends AbstractMessageReceiver implements Pack
         }
     }
 
+    @Override
     protected void doDisconnect() throws Exception
     {
         if (xmppConnection != null)
@@ -77,16 +77,19 @@ public class XmppMessageReceiver extends AbstractMessageReceiver implements Pack
         }
     }
 
+    @Override
     protected void doStart() throws MuleException
     {
         // nothing to do
     }
 
+    @Override
     protected void doStop() throws MuleException
     {
         // nothing to do
     }
 
+    @Override
     protected void doDispose()
     {
         // nothing to do
@@ -130,15 +133,13 @@ public class XmppMessageReceiver extends AbstractMessageReceiver implements Pack
         {
             try
             {
-                MessageAdapter adapter = connector.getMessageAdapter(packet);
-
                 if (logger.isDebugEnabled())
                 {
                     logger.debug("Processing XMPP packet from: " + packet.getFrom());
-                    logger.debug("MessageAdapter is a: " + adapter.getClass().getName());
                 }
 
-                MuleMessage returnMessage = routeMessage(new DefaultMuleMessage(adapter, connector.getMuleContext()), endpoint.isSynchronous());
+                MuleMessage message = connector.getMessage(packet);
+                MuleMessage returnMessage = routeMessage(message, endpoint.isSynchronous());
 
                 if (returnMessage != null && packet instanceof Message)
                 {

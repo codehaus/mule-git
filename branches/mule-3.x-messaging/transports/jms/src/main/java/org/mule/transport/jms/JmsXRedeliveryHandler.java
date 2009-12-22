@@ -10,8 +10,8 @@
 
 package org.mule.transport.jms;
 
-import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleException;
+import org.mule.api.MuleMessage;
 import org.mule.api.MuleRuntimeException;
 import org.mule.config.i18n.MessageFactory;
 import org.mule.transport.jms.i18n.JmsMessages;
@@ -92,12 +92,11 @@ public class JmsXRedeliveryHandler implements RedeliveryHandler
 
             if (connectorRedelivery == JmsConnector.REDELIVERY_FAIL_ON_FIRST)
             {
-                JmsMessageAdapter adapter = (JmsMessageAdapter) connector.getMessageAdapter(message);
+                MuleMessage msg = connector.getMessage(message);
                 throw new MessageRedeliveredException(
-                        JmsMessages.tooManyRedeliveries(messageId, String.valueOf(redeliveryCount),
-                                                        connectorRedelivery, connector.getName()), new DefaultMuleMessage(adapter, connector.getMuleContext()));
+                    JmsMessages.tooManyRedeliveries(messageId, String.valueOf(redeliveryCount),
+                        connectorRedelivery, connector.getName()), msg);
             }
-
         }
         else if (redeliveryCount > connectorRedelivery)
         {
@@ -105,11 +104,10 @@ public class JmsXRedeliveryHandler implements RedeliveryHandler
                     "Message with id: {0} has been redelivered {1} times, which exceeds the maxRedelivery setting " +
                     "of {2} on the connector {3}", messageId, redeliveryCount, connectorRedelivery, connector.getName()));
 
-            JmsMessageAdapter adapter = (JmsMessageAdapter) connector.getMessageAdapter(message);
+            MuleMessage msg = connector.getMessage(message);
             throw new MessageRedeliveredException(
                 JmsMessages.tooManyRedeliveries(messageId, String.valueOf(redeliveryCount),
-                                                connectorRedelivery, connector.getName()), new DefaultMuleMessage(adapter, connector.getMuleContext()));
-
+                    connectorRedelivery, connector.getName()), msg);
         }
         else
         {

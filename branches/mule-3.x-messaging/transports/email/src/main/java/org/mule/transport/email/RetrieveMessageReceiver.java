@@ -10,7 +10,6 @@
 
 package org.mule.transport.email;
 
-import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.InboundEndpoint;
@@ -75,6 +74,7 @@ public class RetrieveMessageReceiver extends AbstractPollingMessageReceiver
         return (AbstractRetrieveMailConnector) getConnector();
     }
 
+    @Override
     protected void doConnect() throws Exception
     {
         SessionDetails session = castConnector().getSessionDetails(endpoint);
@@ -101,11 +101,13 @@ public class RetrieveMessageReceiver extends AbstractPollingMessageReceiver
         }
     }
 
+    @Override
     protected void doDisconnect() throws Exception
     {
         // nothing to do here
     }
 
+    @Override
     protected void doStop()
     {
         if (folder != null)
@@ -114,6 +116,7 @@ public class RetrieveMessageReceiver extends AbstractPollingMessageReceiver
         }
     }
 
+    @Override
     protected void doStart() throws MuleException
     {
         super.doStart();
@@ -134,7 +137,7 @@ public class RetrieveMessageReceiver extends AbstractPollingMessageReceiver
                     {
                         MimeMessage mimeMessage = new MimeMessage((MimeMessage) messages[i]);
                         storeMessage(mimeMessage);
-                        message = new DefaultMuleMessage(castConnector().getMessageAdapter(mimeMessage), connector.getMuleContext());
+                        message = castConnector().getMessage(mimeMessage);
 
                         if (castConnector().isDeleteReadMessages())
                         {
@@ -291,6 +294,7 @@ public class RetrieveMessageReceiver extends AbstractPollingMessageReceiver
         }
     }
 
+    @Override
     public synchronized void poll()
     {
         try
@@ -341,6 +345,7 @@ public class RetrieveMessageReceiver extends AbstractPollingMessageReceiver
         }
     }
 
+    @Override
     protected void doDispose()
     {
         if (null != folder)

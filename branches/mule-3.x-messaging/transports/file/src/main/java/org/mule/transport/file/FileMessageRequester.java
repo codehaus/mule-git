@@ -10,14 +10,12 @@
 
 package org.mule.transport.file;
 
-import org.mule.DefaultMuleMessage;
 import org.mule.api.DefaultMuleException;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.InboundEndpoint;
 import org.mule.api.lifecycle.CreateException;
 import org.mule.api.routing.filter.Filter;
-import org.mule.api.transport.MessageAdapter;
 import org.mule.transport.AbstractMessageRequester;
 import org.mule.transport.DefaultMessageAdapter;
 import org.mule.transport.file.i18n.FileMessages;
@@ -80,6 +78,7 @@ public class FileMessageRequester extends AbstractMessageRequester
      * @throws Exception
      */
 
+    @Override
     protected MuleMessage doRequest(long timeout) throws Exception
     {
         File file = FileUtils.newFile(endpoint.getEndpointURI().getAddress());
@@ -151,17 +150,18 @@ public class FileMessageRequester extends AbstractMessageRequester
                     destinationFile = FileUtils.newFile(movDir, destinationFileName);
                 }
 
-                MessageAdapter msgAdapter = null;
+                MuleMessage returnMessage = null;
                 try
                 {
                     if (connector.isStreaming())
                     {
-                        msgAdapter = connector.getMessageAdapter(new ReceiverFileInputStream(result, connector.isAutoDelete(),
-                            destinationFile));
+                        ReceiverFileInputStream receiverStream = new ReceiverFileInputStream(result, 
+                            connector.isAutoDelete(), destinationFile);
+                        returnMessage = connector.getMessage(receiverStream);
                     }
                     else
                     {
-                        msgAdapter = connector.getMessageAdapter(result);
+                        returnMessage = connector.getMessage(result);
                     }
                 }
                 catch (FileNotFoundException e)
@@ -171,19 +171,16 @@ public class FileMessageRequester extends AbstractMessageRequester
                     logger.error("File being read disappeared!", e);
                     return null;
                 }
-                msgAdapter.setProperty(FileConnector.PROPERTY_ORIGINAL_FILENAME, sourceFileOriginalName);
+                returnMessage.setProperty(FileConnector.PROPERTY_ORIGINAL_FILENAME, sourceFileOriginalName);
 
                 if (!connector.isStreaming())
                 {
                     moveOrDelete(result, destinationFile);
-                    return new DefaultMuleMessage(msgAdapter, connector.getMuleContext());
                 }
-                else
-                {
-                    // If we are streaming no need to move/delete now, that will be
-                    // done when stream is closed
-                    return new DefaultMuleMessage(msgAdapter, connector.getMuleContext());
-                }
+
+                // If we are streaming no need to move/delete now, that will be
+                // done when stream is closed
+                return returnMessage;
             }
         }
         return null;

@@ -10,7 +10,6 @@
 
 package org.mule.transport.xmpp;
 
-import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.EndpointURI;
@@ -38,6 +37,7 @@ public class XmppMessageRequester extends AbstractMessageRequester
         this.connector = (XmppConnector)endpoint.getConnector();
     }
 
+    @Override
     protected void doConnect() throws Exception
     {
         if (xmppConnection == null)
@@ -47,6 +47,7 @@ public class XmppMessageRequester extends AbstractMessageRequester
         }
     }
 
+    @Override
     protected void doDisconnect() throws Exception
     {
         try
@@ -62,6 +63,7 @@ public class XmppMessageRequester extends AbstractMessageRequester
         }
     }
 
+    @Override
     protected void doDispose()
     {
         // template method
@@ -78,6 +80,7 @@ public class XmppMessageRequester extends AbstractMessageRequester
      *         returned if no data was avaialable
      * @throws Exception if the call to the underlying protocal cuases an exception
      */
+    @Override
     protected MuleMessage doRequest(long timeout) throws Exception
     {
         // Should be in the form of xmpp://user:pass@host:[port]/folder
@@ -102,7 +105,7 @@ public class XmppMessageRequester extends AbstractMessageRequester
         }
         if (message != null)
         {
-            return new DefaultMuleMessage(connector.getMessageAdapter(message), connector.getMuleContext());
+            return connector.getMessage(message);
         }
         else
         {
