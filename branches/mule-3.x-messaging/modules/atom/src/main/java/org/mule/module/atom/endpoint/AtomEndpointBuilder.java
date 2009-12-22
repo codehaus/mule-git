@@ -15,6 +15,7 @@ import org.mule.api.endpoint.EndpointURI;
 import org.mule.api.endpoint.InboundEndpoint;
 import org.mule.api.endpoint.OutboundEndpoint;
 import org.mule.api.lifecycle.InitialisationException;
+import org.mule.endpoint.AbstractMetaEndpointBuilder;
 import org.mule.endpoint.EndpointURIEndpointBuilder;
 import org.mule.endpoint.URIBuilder;
 import org.mule.transport.http.HttpPollingConnector;
@@ -27,9 +28,9 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * An endpoont factory used for creating an ATOM endpoint
+ * An endpoint factory used for creating an ATOM endpoint
  */
-public class AtomEndpointBuilder extends EndpointURIEndpointBuilder
+public class AtomEndpointBuilder extends AbstractMetaEndpointBuilder
 {
     public static final String DATE_FORMAT = "yyyy-MM-dd hh:mm:ss";
     public static final String SHORT_DATE_FORMAT = "yyyy-MM-dd";
@@ -109,7 +110,7 @@ public class AtomEndpointBuilder extends EndpointURIEndpointBuilder
     @Override
     public OutboundEndpoint buildOutboundEndpoint() throws EndpointException, InitialisationException
     {
-        throw new UnsupportedOperationException("buildOutboundEndpoint");
+        throw new UnsupportedOperationException("Outbound ATOM endpoints not supported");
     }
 
     public String getLastUpdate()

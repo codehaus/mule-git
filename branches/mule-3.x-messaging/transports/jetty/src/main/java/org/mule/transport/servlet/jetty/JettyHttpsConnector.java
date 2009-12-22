@@ -18,6 +18,7 @@ import org.mule.api.security.TlsIndirectKeyStore;
 import org.mule.api.security.TlsProtocolHandler;
 import org.mule.api.security.provider.SecurityProviderFactory;
 import org.mule.api.security.tls.TlsConfiguration;
+import org.mule.util.SystemUtils;
 
 import java.io.IOException;
 import java.security.Provider;
@@ -263,19 +264,25 @@ public class JettyHttpsConnector extends JettyHttpConnector implements TlsDirect
         tls.setTrustStoreType(trustStoreType);
     }
 
+    @Override
     protected AbstractConnector createJettyConnector()
     {
         SslSocketConnector cnn = new SslSocketConnector();
+        
+        if (SystemUtils.isIbmJDK())
+        {
+            cnn.setProtocol("SSL_TLS");
+        }
        
-        if(tls.getKeyStore() !=null) cnn.setKeystore(tls.getKeyStore());
-        if(tls.getKeyPassword() !=null) cnn.setKeyPassword(tls.getKeyPassword());
-        if(tls.getKeyStoreType() !=null) cnn.setKeystoreType(tls.getKeyStoreType());
-        if(tls.getKeyManagerAlgorithm() !=null) cnn.setSslKeyManagerFactoryAlgorithm(tls.getKeyManagerAlgorithm());
-        if(tls.getProvider() !=null) cnn.setProvider(tls.getProvider().getName());
-        if(tls.getTrustStorePassword() !=null) cnn.setTrustPassword(tls.getTrustStorePassword());
-        if(tls.getTrustStore() !=null) cnn.setTruststore(tls.getTrustStore());
-        if(tls.getTrustStoreType() !=null) cnn.setTruststoreType(tls.getTrustStoreType());
-        if(tls.getTrustManagerAlgorithm() !=null) cnn.setSslTrustManagerFactoryAlgorithm(tls.getTrustManagerAlgorithm());
+        if (tls.getKeyStore() != null) cnn.setKeystore(tls.getKeyStore());
+        if (tls.getKeyPassword() != null) cnn.setKeyPassword(tls.getKeyPassword());
+        if (tls.getKeyStoreType() != null) cnn.setKeystoreType(tls.getKeyStoreType());
+        if (tls.getKeyManagerAlgorithm() != null) cnn.setSslKeyManagerFactoryAlgorithm(tls.getKeyManagerAlgorithm());
+        if (tls.getProvider() != null) cnn.setProvider(tls.getProvider().getName());
+        if (tls.getTrustStorePassword() != null) cnn.setTrustPassword(tls.getTrustStorePassword());
+        if (tls.getTrustStore() != null) cnn.setTruststore(tls.getTrustStore());
+        if (tls.getTrustStoreType() != null) cnn.setTruststoreType(tls.getTrustStoreType());
+        if (tls.getTrustManagerAlgorithm() != null) cnn.setSslTrustManagerFactoryAlgorithm(tls.getTrustManagerAlgorithm());
         return cnn;
     }
 }
