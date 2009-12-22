@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:spring="http://www.springframework.org/schema/beans"
+       xmlns:vm="http://www.mulesoft.org/schema/mule/vm"
+       xsi:schemaLocation="
+               http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+               http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/3.0/mule.xsd
+               http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/3.0/mule-vm.xsd">
+
+    <model name="model1">
+        <service name="service1">
+            <inbound>
+                <vm:inbound-endpoint path="test1-in">
+                    <append-string-transformer message="1"/>
+                    <append-string-transformer message="2"/>
+                    <append-string-transformer message="3"/>
+                </vm:inbound-endpoint>
+            </inbound>
+            <outbound>
+                <pass-through-router>
+                    <vm:outbound-endpoint path="test1-out"/>
+                </pass-through-router>
+            </outbound>
+        </service>
+    </model>
+
+    <append-string-transformer message="1" name="1"/>
+    <append-string-transformer message="2" name="2"/>
+    <append-string-transformer message="3" name="3"/>
+
+    <model name="model2">
+        <service name="service2">
+            <inbound>
+                <vm:inbound-endpoint path="test2-in">
+                    <transformer ref="1"/>
+                    <transformer ref="2"/>
+                    <transformer ref="3"/>
+                </vm:inbound-endpoint>
+            </inbound>
+            <outbound>
+                <pass-through-router>
+                    <vm:outbound-endpoint path="test2-out"/>
+                </pass-through-router>
+            </outbound>
+        </service>
+    </model>
+
+    <model name="model3">
+        <service name="service3">
+            <inbound>
+                <vm:inbound-endpoint path="test3-in">
+                    <append-string-transformer message="1"/>
+                    <append-string-transformer message="2"/>
+                    <append-string-transformer message="3"/>
+                </vm:inbound-endpoint>
+            </inbound>
+            <outbound>
+                <pass-through-router>
+                    <vm:outbound-endpoint path="test3-out">
+                        <append-string-transformer message="a"/>
+                        <append-string-transformer message="b"/>
+                        <append-string-transformer message="c"/>
+                    </vm:outbound-endpoint>
+                </pass-through-router>
+            </outbound>
+        </service>
+    </model>
+
+</mule>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:spring="http://www.springframework.org/schema/beans"
+       xmlns:jms="http://www.mulesoft.org/schema/mule/jms"
+       xmlns:vm="http://www.mulesoft.org/schema/mule/vm"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+       http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/3.0/mule.xsd
+       http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/3.0/mule-jms.xsd
+       http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/3.0/mule-vm.xsd">
+
+    <jms:activemq-connector name="jmsConnector" specification="1.1"/>
+
+    <model name="InjectionProblem">
+        <service name="pojo1">
+            <inbound>
+                <vm:inbound-endpoint path="pojo1" synchronous="true" responseTimeout="10000"/>
+            </inbound>
+            <echo-component/>
+            <outbound>
+                <pass-through-router>
+                    <jms:outbound-endpoint queue="pojo2" synchronous="true"/>
+                </pass-through-router>
+            </outbound>
+        </service>
+        
+        <service name="pojo2">
+            <inbound>
+                <jms:inbound-endpoint queue="pojo2" synchronous="true"/>
+            </inbound>
+            <echo-component/>
+            <outbound>
+                <pass-through-router>
+                    <vm:outbound-endpoint path="pojo3" synchronous="true"/>
+                </pass-through-router>
+            </outbound>
+        </service>
+        
+        <!-- This service will append " Received" to the message so we know we're getting the correct one -->
+        <service name="pojo3">
+            <inbound>
+                <vm:inbound-endpoint path="pojo3"/>
+            </inbound>
+            <component class="org.mule.tck.testmodels.services.TestReceiver"/>
+        </service>
+    </model>
+</mule>
