@@ -154,7 +154,7 @@ public class FileRequestorMoveDeleteTestCase extends AbstractFileMoveDeleteTestC
         assertNotNull(message);
 
         assertNotNull(message.getAdapter());
-        assertEquals(inFile.getName(), message.getAdapter().getProperty(FileConnector.PROPERTY_ORIGINAL_FILENAME));
+        assertEquals(inFile.getName(), message.getProperty(FileConnector.PROPERTY_ORIGINAL_FILENAME));
         if (streaming)
         {
             // Adaptor gets wrapped by requester because FileMessageAdaptor does not

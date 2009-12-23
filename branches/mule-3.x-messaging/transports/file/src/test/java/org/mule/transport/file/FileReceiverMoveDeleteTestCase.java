@@ -244,10 +244,11 @@ public class FileReceiverMoveDeleteTestCase extends AbstractFileMoveDeleteTestCa
             this.expectedPayload = expectedPayload;
         }
 
+        @Override
         public Object transform(MuleMessage message, String outputEncoding) throws TransformerException
         {
             assertEquals(expectedMessageAdaptor, message.getAdapter().getClass());
-            assertEquals(expectedPayload, message.getAdapter().getPayload().getClass());
+            assertEquals(expectedPayload, message.getPayload().getClass());
 
             // If we are streaming, copy/delete shouldn't have happened yet
             if (expectedMessageAdaptor.equals(FileMessageAdapter.class))
