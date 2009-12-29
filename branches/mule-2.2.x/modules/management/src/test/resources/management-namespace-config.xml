@@ -9,6 +9,7 @@
        http://www.mulesource.org/schema/mule/management/2.2 http://www.mulesource.org/schema/mule/management/2.2/mule-management.xsd">
 
     <management:jmx-server>
+        <management:connector-server url="some://test.url"/>
         <management:credentials>
             <spring:entry key="a" value="b"/>
             <spring:entry key="c" value="c"/>

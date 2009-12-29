@@ -21,6 +21,8 @@ import java.lang.management.ManagementFactory;
 import java.util.Iterator;
 import java.util.Set;
 
+import javax.management.InstanceNotFoundException;
+import javax.management.MBeanRegistrationException;
 import javax.management.MBeanServer;
 import javax.management.ObjectInstance;
 
@@ -51,7 +53,14 @@ public abstract class AbstractMuleJmxTestCase extends AbstractMuleTestCase
         for (Iterator it = objectInstances.iterator(); it.hasNext();)
         {
             ObjectInstance instance = (ObjectInstance) it.next();
-            mBeanServer.unregisterMBean(instance.getObjectName());
+            try
+            {
+                mBeanServer.unregisterMBean(instance.getObjectName());
+            }
+            catch (Exception e)
+            {
+                // ignore
+            }
         }
     }
 

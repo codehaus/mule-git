@@ -23,14 +23,21 @@ public class ConnectorServiceTestCase extends AbstractMuleJmxTestCase
 {
 
     protected String domainName;
+    protected JmxAgent jmxAgent;
+
+    @Override
+    protected void doSetUp() throws Exception
+    {
+        super.doSetUp();
+        jmxAgent = (JmxAgent) muleContext.getRegistry().lookupObject(JmxAgent.class);
+
+    }
 
     public void testUndeploy() throws Exception
     {
         final Connector connector = new TestConnector();
         connector.setName("TEST_CONNECTOR");
-        final JmxAgent jmxAgent = new JmxAgent();
         muleContext.getRegistry().registerConnector(connector);
-        muleContext.getRegistry().registerAgent(jmxAgent);
         muleContext.start();
 
         domainName = jmxSupport.getDomainName(muleContext);

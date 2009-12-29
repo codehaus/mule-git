@@ -16,6 +16,7 @@ import org.mule.api.context.notification.MuleContextNotificationListener;
 import org.mule.api.context.notification.ServerNotification;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.model.Model;
+import org.mule.api.registry.RegistrationException;
 import org.mule.api.service.Service;
 import org.mule.api.transport.Connector;
 import org.mule.api.transport.MessageReceiver;
@@ -166,6 +167,24 @@ public class JmxAgent extends AbstractAgent
             return;
         }
 
+        try
+        {
+            Object agent = muleContext.getRegistry().lookupObject(this.getClass());
+            // if we find ourselves, but not initialized yet - proceed with init, otherwise return
+            if (agent == this && this.initialized.get())
+            {
+                if (logger.isDebugEnabled())
+                {
+                    logger.debug("Found an existing JMX agent in the registry, we're done here.");
+                }
+                return;
+            }
+        }
+        catch (RegistrationException e)
+        {
+            throw new InitialisationException(e, this);
+        }
+
         if (mBeanServer == null && createServer)
         {
             // here we create a new mbean server, not using a platform one
@@ -197,7 +216,7 @@ public class JmxAgent extends AbstractAgent
             // and unregister once context stopped
             muleContext.registerListener(new MuleContextStoppedListener());
         } 
-        catch (NotificationException e) 
+        catch (NotificationException e)
         {
             throw new InitialisationException(e, this);
         }
