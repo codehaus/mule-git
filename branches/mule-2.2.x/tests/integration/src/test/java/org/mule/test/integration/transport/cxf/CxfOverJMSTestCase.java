@@ -49,15 +49,14 @@ public class CxfOverJMSTestCase extends FunctionalTestCase
         assertTrue(message.getPayloadAsString().equals("hello"));
     }
 
-    // TODO MULE-4677
-    // public void testCxfOverJMSSyncProxy() throws Exception
-    // {
-    // MuleClient client = new MuleClient();
-    // MuleMessage result = client.send("http://localhost:63081/services/testBridge",
-    // new DefaultMuleMessage(req));
-    // System.out.println(result.getPayloadAsString());
-    // assertNotNull(result.getPayload());
-    // assertTrue(result.getPayloadAsString().equals("hello"));
-    // }
+    // MULE-4677
+    public void testCxfOverJMSSyncProxy() throws Exception
+    {
+        MuleClient client = new MuleClient();
+        MuleMessage result = client.send("http://localhost:63081/services/testBridge",
+            new DefaultMuleMessage(req));
+        assertNotNull(result.getPayload());
+        assertTrue(result.getPayloadAsString().contains("<ns2:echo>hello</ns2:echo>"));
+    }
 
 }
