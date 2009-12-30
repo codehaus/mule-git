@@ -237,16 +237,6 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
     }
 
     @Override
-    public String getName()
-    {
-        if (verbose && super.getName() != null)
-        {
-            return super.getName().substring(4).replaceAll("([A-Z])", " $1").toLowerCase() + " ";
-        }
-        return super.getName();
-    }
-
-    @Override
     public void run(TestResult result)
     {
         if (this.isExcluded())
@@ -380,11 +370,6 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
         // start a watchdog thread
         watchdog = createWatchdog();
         watchdog.start();
-
-        if (verbose)
-        {
-            System.out.println(StringMessageUtils.getBoilerPlate("Testing: " + toString(), '=', 80));
-        }
 
         try
         {
