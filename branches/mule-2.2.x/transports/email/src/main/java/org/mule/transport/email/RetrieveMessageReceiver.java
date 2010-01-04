@@ -16,8 +16,6 @@ import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.InboundEndpoint;
 import org.mule.api.lifecycle.CreateException;
-import org.mule.api.lifecycle.Startable;
-import org.mule.api.lifecycle.Stoppable;
 import org.mule.api.routing.RoutingException;
 import org.mule.api.service.Service;
 import org.mule.api.transport.Connector;
@@ -48,9 +46,7 @@ import javax.mail.internet.MimeMessage;
  * <p/>
  * This contains a reference to a mail folder (and also the endpoint and connector, via superclasses)
  */
-
-public class RetrieveMessageReceiver extends AbstractPollingMessageReceiver
-        implements MessageCountListener, Startable, Stoppable
+public class RetrieveMessageReceiver extends AbstractPollingMessageReceiver implements MessageCountListener
 {
     private Folder folder = null;
     private boolean backupEnabled;
