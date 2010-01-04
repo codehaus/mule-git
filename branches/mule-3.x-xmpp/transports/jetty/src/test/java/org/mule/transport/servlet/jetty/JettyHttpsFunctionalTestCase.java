@@ -18,7 +18,6 @@ import org.mule.tck.functional.FunctionalTestComponent;
 import org.mule.tck.testmodels.mule.TestSedaService;
 import org.mule.transport.http.HttpConstants;
 import org.mule.transport.http.functional.HttpFunctionalTestCase;
-import org.mule.util.SystemUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,14 +26,6 @@ import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
 
 public class JettyHttpsFunctionalTestCase extends HttpFunctionalTestCase
 {
-    
-    @Override
-    protected boolean isDisabledInThisEnvironment()
-    {
-        // MULE-4665
-        return SystemUtils.isIbmJDK();
-    }
-
     @Override
     protected String getConfigResources()
     {
@@ -54,13 +45,13 @@ public class JettyHttpsFunctionalTestCase extends HttpFunctionalTestCase
             public void eventReceived(MuleEventContext context, Object component) throws Exception
             {
                 assertTrue(callbackMade.compareAndSet(false, true));
-//                MuleMessage msg = context.getMessage();
-//                assertNotNull(msg.getProperty(HttpsConnector.LOCAL_CERTIFICATES));
+                MuleMessage msg = context.getMessage();
+                assertEquals(TEST_MESSAGE, msg.getPayloadAsString());
             }
         };
 
         testComponent.setEventCallback(callback);
-
+        
         MuleClient client = new MuleClient();
         Map<String, String> props = new HashMap<String, String>();
         props.put(HttpConstants.HEADER_CONTENT_TYPE, "text/plain;charset=UTF-8");

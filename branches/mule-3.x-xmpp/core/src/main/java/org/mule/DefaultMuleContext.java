@@ -136,7 +136,7 @@ public class DefaultMuleContext implements MuleContext
 
     protected MuleRegistry createRegistryHelper(DefaultRegistryBroker registry)
     {
-        return new MuleRegistryHelper(registry);
+        return new MuleRegistryHelper(registry, this);
     }
 
     public void setSplash(SplashScreen startup, SplashScreen shutdown)
@@ -285,7 +285,9 @@ public class DefaultMuleContext implements MuleContext
 
         try
         {
+            //MULE-4690 dispose lifecycle is called twice, once here and once on the registryBroker.dispose
             lifecycleManager.firePhase(this, Disposable.PHASE_NAME);
+
             // Dispose internal registries
             registryBroker.dispose();
             muleRegistryHelper.dispose();
