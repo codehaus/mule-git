@@ -49,6 +49,7 @@ public class ServiceNotification extends ServerNotification implements BlockingS
         resourceIdentifier = message.getName();
     }
 
+    @Override
     protected String getPayloadToString()
     {
         return ((Service) source).getName();

@@ -39,11 +39,13 @@ public class SecurityNotification extends ServerNotification
         resourceIdentifier = message.toString();
     }
 
+    @Override
     protected String getPayloadToString()
     {
         return source.toString();
     }
 
+    @Override
     public String getType()
     {
         return TYPE_WARNING;

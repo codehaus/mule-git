@@ -56,6 +56,7 @@ public class ComponentMessageNotification extends ServerNotification
         }
     }
 
+    @Override
     protected String getPayloadToString()
     {
         try
@@ -76,6 +77,7 @@ public class ComponentMessageNotification extends ServerNotification
         return component;
     }
 
+    @Override
     public String toString()
     {
         return EVENT_NAME + "{action=" + getActionName(action) + ", message: " + source + ", resourceId="

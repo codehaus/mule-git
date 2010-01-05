@@ -39,6 +39,7 @@ public class ConnectionNotification extends ServerNotification
         resourceIdentifier = identifier;
     }
 
+    @Override
     protected String getPayloadToString()
     {
         if (source instanceof Connectable)
@@ -48,6 +49,7 @@ public class ConnectionNotification extends ServerNotification
         return source.toString();
     }
 
+    @Override
     public String getType()
     {
         if (action == CONNECTION_DISCONNECTED)
