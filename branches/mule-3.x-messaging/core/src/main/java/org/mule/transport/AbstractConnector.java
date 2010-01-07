@@ -49,6 +49,7 @@ import org.mule.api.transport.MessageDispatcherFactory;
 import org.mule.api.transport.MessageReceiver;
 import org.mule.api.transport.MessageRequester;
 import org.mule.api.transport.MessageRequesterFactory;
+import org.mule.api.transport.MuleMessageFactory;
 import org.mule.api.transport.ReplyToHandler;
 import org.mule.api.transport.SessionHandler;
 import org.mule.config.i18n.CoreMessages;
@@ -269,6 +270,8 @@ public abstract class AbstractConnector
      * Whether to test a connection on each take.
      */
     private boolean validateConnections = true;
+
+    protected MuleMessageFactory messageFactory;
 
     public AbstractConnector()
     {
@@ -2252,6 +2255,8 @@ public abstract class AbstractConnector
             {
                 logger.debug("Transport '" + getProtocol() + "' will not support requests: ");
             }
+            
+            messageFactory = serviceDescriptor.createMessageFactory();
 
             sessionHandler = serviceDescriptor.createSessionHandler();
         }
@@ -2342,12 +2347,12 @@ public abstract class AbstractConnector
     {
         try
         {
-            return serviceDescriptor.createMessage(payload, muleContext);
+            return messageFactory.create(payload);
         }
-        catch (TransportServiceException tse)
+        catch (Exception e)
         {
-            MuleMessage msg = new DefaultMuleMessage(payload, muleContext);
-            throw new MessagingException(CoreMessages.failedToCreate("MuleMessage"), msg);
+            throw new MessagingException(CoreMessages.failedToBuildMessage(), new DefaultMuleMessage(payload,
+                muleContext));
         }
     }
     

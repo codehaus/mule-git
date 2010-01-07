@@ -13,7 +13,6 @@ package org.mule.transport.service;
 import org.mule.MuleSessionHandler;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleException;
-import org.mule.api.MuleMessage;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.endpoint.EndpointBuilder;
 import org.mule.api.endpoint.EndpointURIBuilder;
@@ -193,23 +192,21 @@ public class DefaultTransportServiceDescriptor extends AbstractServiceDescriptor
         }
     }
 
-    public MuleMessage createMessage(Object payload, MuleContext muleContext) throws TransportServiceException
+    public MuleMessageFactory createMessageFactory() throws TransportServiceException
     {
         if (messageFactory == null)
         {
-            throw new TransportServiceException(CoreMessages.objectNotSetInService("Message Factory", getService()));
+            throw new TransportServiceException(CoreMessages.objectNotSetInService("Message Factory",
+                getService()));
         }
-        
+
         try
         {
-            MuleMessageFactory factory = (MuleMessageFactory) ClassUtils.instanciateClass(
-                messageFactory, muleContext);
-            return factory.create(payload);
+            return (MuleMessageFactory) ClassUtils.instanciateClass(messageFactory, muleContext);
         }
         catch (Exception e)
         {
-            throw new TransportServiceException(
-                CoreMessages.failedToCreateObjectWith("Message Factory", payload));
+            throw new TransportServiceException(CoreMessages.failedToCreate("Message Factory"));
         }
     }
 

@@ -10,9 +10,7 @@
 
 package org.mule.transport.service;
 
-import org.mule.api.MuleContext;
 import org.mule.api.MuleException;
-import org.mule.api.MuleMessage;
 import org.mule.api.context.MuleContextAware;
 import org.mule.api.endpoint.EndpointBuilder;
 import org.mule.api.endpoint.EndpointURIBuilder;
@@ -25,6 +23,7 @@ import org.mule.api.transport.MessageAdapter;
 import org.mule.api.transport.MessageDispatcherFactory;
 import org.mule.api.transport.MessageReceiver;
 import org.mule.api.transport.MessageRequesterFactory;
+import org.mule.api.transport.MuleMessageFactory;
 import org.mule.api.transport.SessionHandler;
 
 import java.util.List;
@@ -49,7 +48,7 @@ public interface TransportServiceDescriptor extends ServiceDescriptor, MuleConte
     public MessageAdapter createMessageAdapter(Object message, MessageAdapter originalMessageAdapter)
             throws TransportServiceException;
 
-    public MuleMessage createMessage(Object payload, MuleContext muleContext) throws TransportServiceException;
+    public MuleMessageFactory createMessageFactory() throws TransportServiceException;
     
     public SessionHandler createSessionHandler() throws TransportServiceException;
 
