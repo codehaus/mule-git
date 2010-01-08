@@ -31,6 +31,12 @@ public class FileMuleMessageFactory extends AbstractMuleMessageFactory
     }
 
     @Override
+    protected Class<?>[] getSupportedTransportMessageTypes()
+    {
+        return new Class[]{File.class, ReceiverFileInputStream.class};
+    }
+
+    @Override
     protected Object extractPayload(Object transportMessage) throws Exception
     {
         return transportMessage;
@@ -56,10 +62,6 @@ public class FileMuleMessageFactory extends AbstractMuleMessageFactory
         {
             file = ((ReceiverFileInputStream) transportMessage).getCurrentFile();
         }
-        else
-        {
-            throw new IllegalArgumentException("Invalid Transport Message " + transportMessage.getClass());
-        }
 
         return file;
     }
@@ -69,5 +71,4 @@ public class FileMuleMessageFactory extends AbstractMuleMessageFactory
         message.setProperty(FileConnector.PROPERTY_ORIGINAL_FILENAME, file.getName());
         message.setProperty(FileConnector.PROPERTY_DIRECTORY, file.getParent());
     }
-
 }

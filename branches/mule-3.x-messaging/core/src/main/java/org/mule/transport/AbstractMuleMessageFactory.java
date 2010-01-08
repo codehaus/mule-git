@@ -33,12 +33,19 @@ public abstract class AbstractMuleMessageFactory implements MuleMessageFactory
             return new DefaultMuleMessage(NullPayload.getInstance(), muleContext);
         }
 
+        if (!isTransportMessageTypeSupported(transportMessage))
+        {
+            throw new MessageTypeNotSupportedException(transportMessage, getClass());
+        }
+
         Object payload = extractPayload(transportMessage);
         MuleMessage message = new DefaultMuleMessage(payload, muleContext);
         addProperties(message, transportMessage);
         addAttachments(message, transportMessage);
         return message;
     }
+
+    protected abstract Class<?>[] getSupportedTransportMessageTypes();
 
     protected abstract Object extractPayload(Object transportMessage) throws Exception;
 
@@ -51,9 +58,19 @@ public abstract class AbstractMuleMessageFactory implements MuleMessageFactory
     {
         // Template method
     }
-    
-    protected void cannotHandlePayload(Object transportMessage) throws MessageTypeNotSupportedException
+
+    private boolean isTransportMessageTypeSupported(Object transportMessage)
     {
-        throw new MessageTypeNotSupportedException(transportMessage, getClass());
+        Class<?> transportMessageType = transportMessage.getClass();
+        boolean match = false;
+        for (Class<?> type : getSupportedTransportMessageTypes())
+        {
+            if (type.isAssignableFrom(transportMessageType))
+            {
+                match = true;
+                break;
+            }
+        }
+        return match;
     }
 }

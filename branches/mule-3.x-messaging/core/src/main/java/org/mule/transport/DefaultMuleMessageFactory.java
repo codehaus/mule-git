@@ -20,6 +20,12 @@ public class DefaultMuleMessageFactory extends AbstractMuleMessageFactory
     }
 
     @Override
+    protected Class<?>[] getSupportedTransportMessageTypes()
+    {
+        return new Class[]{Object.class};
+    }
+
+    @Override
     protected Object extractPayload(Object transportMessage) throws Exception
     {
         return transportMessage;

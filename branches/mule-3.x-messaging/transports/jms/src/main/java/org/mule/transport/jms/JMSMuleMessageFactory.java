@@ -31,20 +31,17 @@ public class JMSMuleMessageFactory extends AbstractMuleMessageFactory
     }
 
     @Override
+    protected Class<?>[] getSupportedTransportMessageTypes()
+    {
+        return new Class[]{Message.class};
+    }
+
+    @Override
     protected Object extractPayload(Object transportMessage) throws Exception
     {
-        Message jmsMessage = null;
-        if (transportMessage instanceof Message)
-        {
-            jmsMessage = (Message) transportMessage;
-        }
-        else
-        {
-            cannotHandlePayload(transportMessage);
-        }
+        Message jmsMessage = (Message) transportMessage;
 
         // TODO MessageAdapterRemoval: what about encoding set on the endpoint?
-        // Answer: we set it on message here, but then the exchange implementation determines if endpoint or message encoding should be used.
         String encoding = muleContext.getConfiguration().getDefaultEncoding();
         return JmsMessageUtils.toObject(jmsMessage, specification, encoding);
     }

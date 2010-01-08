@@ -31,6 +31,12 @@ public class FileContentsMuleMessageFactory extends FileMuleMessageFactory
     }
 
     @Override
+    protected Class<?>[] getSupportedTransportMessageTypes()
+    {
+        return new Class[]{InputStream.class, File.class};
+    }
+
+    @Override
     protected Object extractPayload(Object transportMessage) throws Exception
     {
         InputStream inputStream = convertToInputStream(transportMessage);
@@ -50,10 +56,6 @@ public class FileContentsMuleMessageFactory extends FileMuleMessageFactory
         else if (transportMessage instanceof File)
         {
             stream = new FileInputStream((File) transportMessage);
-        }
-        else
-        {
-            cannotHandlePayload(transportMessage);
         }
 
         return stream;
