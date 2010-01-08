@@ -21,6 +21,7 @@ import org.mule.api.service.Service;
 import org.mule.api.transport.DispatchException;
 import org.mule.api.transport.MessageAdapter;
 import org.mule.api.transport.MessageReceiver;
+import org.mule.api.transport.MuleMessageFactory;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.transformer.simple.ByteArrayToSerializable;
 import org.mule.transformer.simple.SerializableToByteArray;
@@ -560,6 +561,7 @@ public class FileConnector extends AbstractConnector
         this.streaming = streaming;
     }
 
+    @Deprecated
     public MessageAdapter getMessageAdapter(Object message) throws MuleException
     {
         if (isStreaming())
@@ -583,6 +585,19 @@ public class FileConnector extends AbstractConnector
         if (filenameParser != null)
         {
             filenameParser.setMuleContext(context);
+        }
+    }
+    
+    @Override
+    protected MuleMessageFactory createMuleMessageFactory() throws InitialisationException
+    {
+        if (isStreaming())
+        {
+            return new FileMuleMessageFactory(muleContext);
+        }
+        else
+        {
+            return super.createMuleMessageFactory();
         }
     }
 

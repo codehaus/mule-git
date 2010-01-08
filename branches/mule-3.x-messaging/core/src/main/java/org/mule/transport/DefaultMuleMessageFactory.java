@@ -10,9 +10,7 @@
 
 package org.mule.transport;
 
-import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleContext;
-import org.mule.api.MuleMessage;
 
 public class DefaultMuleMessageFactory extends AbstractMuleMessageFactory
 {
@@ -20,12 +18,10 @@ public class DefaultMuleMessageFactory extends AbstractMuleMessageFactory
     {
         super(context);
     }
-    
+
     @Override
-    protected MuleMessage doCreate(Object transportMessage) throws Exception
+    protected Object extractPayload(Object transportMessage) throws Exception
     {
-        return new DefaultMuleMessage(transportMessage, muleContext);
+        return transportMessage;
     }
 }
-
-

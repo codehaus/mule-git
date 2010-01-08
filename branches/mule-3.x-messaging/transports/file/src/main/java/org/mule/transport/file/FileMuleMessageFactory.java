@@ -10,38 +10,41 @@
 
 package org.mule.transport.file;
 
-import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleMessage;
-import org.mule.api.transport.MessageTypeNotSupportedException;
 import org.mule.transport.AbstractMuleMessageFactory;
 
 import java.io.File;
 
 /**
- * <code>FileMessageFactory</code> creates a new {@link MuleMessage} with a {@link File} or 
- * {@link ReceiverFileInputStream} payload. Users can obtain the filename and directory in the 
- * properties using <code>FileConnector.PROPERTY_FILENAME</code> and 
+ * <code>FileMuleMessageFactory</code> creates a new {@link MuleMessage} with a
+ * {@link File} or {@link ReceiverFileInputStream} payload. Users can obtain the
+ * filename and directory in the properties using
+ * <code>FileConnector.PROPERTY_FILENAME</code> and
  * <code>FileConnector.PROPERTY_DIRECTORY</code>.
  */
-public class FileMessageFactory extends AbstractMuleMessageFactory
+public class FileMuleMessageFactory extends AbstractMuleMessageFactory
 {
-    public FileMessageFactory(MuleContext context)
+    public FileMuleMessageFactory(MuleContext context)
     {
         super(context);
     }
 
     @Override
-    protected MuleMessage doCreate(Object transportMessage) throws Exception
+    protected Object extractPayload(Object transportMessage) throws Exception
     {
-        MuleMessage message = new DefaultMuleMessage(transportMessage, muleContext);
+        return transportMessage;
+    }
 
+    @Override
+    protected void addProperties(MuleMessage message, Object transportMessage)
+    {
+        super.addProperties(message, transportMessage);
         File file = convertToFile(transportMessage);
         setPropertiesFromFile(message, file);
-        return message;
     }
-    
-    protected File convertToFile(Object transportMessage) throws MessageTypeNotSupportedException
+
+    protected File convertToFile(Object transportMessage)
     {
         File file = null;
 
@@ -55,9 +58,9 @@ public class FileMessageFactory extends AbstractMuleMessageFactory
         }
         else
         {
-            cannotHandlePayload(transportMessage);
+            throw new IllegalArgumentException("Invalid Transport Message " + transportMessage.getClass());
         }
-        
+
         return file;
     }
 
@@ -66,6 +69,5 @@ public class FileMessageFactory extends AbstractMuleMessageFactory
         message.setProperty(FileConnector.PROPERTY_ORIGINAL_FILENAME, file.getName());
         message.setProperty(FileConnector.PROPERTY_DIRECTORY, file.getParent());
     }
+
 }
-
-

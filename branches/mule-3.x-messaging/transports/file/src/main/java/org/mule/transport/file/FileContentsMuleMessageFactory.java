@@ -10,7 +10,6 @@
 
 package org.mule.transport.file;
 
-import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleMessage;
 import org.mule.util.IOUtils;
@@ -20,34 +19,30 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 
 /**
- * <code>FileContentsMessageFactory</code> converts the {@link ReceiverFileInputStream}'s content
- * into a <code>byte[]</code> as payload for the {@link MuleMessage}.
+ * <code>FileContentsMuleMessageFactory</code> converts the
+ * {@link ReceiverFileInputStream}'s content into a <code>byte[]</code> as payload
+ * for the {@link MuleMessage}.
  */
-public class FileContentsMessageFactory extends FileMessageFactory
+public class FileContentsMuleMessageFactory extends FileMuleMessageFactory
 {
-    public FileContentsMessageFactory(MuleContext context)
+    public FileContentsMuleMessageFactory(MuleContext context)
     {
         super(context);
     }
 
     @Override
-    protected MuleMessage doCreate(Object transportMessage) throws Exception
+    protected Object extractPayload(Object transportMessage) throws Exception
     {
         InputStream inputStream = convertToInputStream(transportMessage);
         byte[] payload = IOUtils.toByteArray(inputStream);
         inputStream.close();
-
-        File file = convertToFile(transportMessage);
-        MuleMessage message = new DefaultMuleMessage(payload, muleContext);
-        setPropertiesFromFile(message, file);
-        
-        return message;
+        return payload;
     }
 
     private InputStream convertToInputStream(Object transportMessage) throws Exception
     {
         InputStream stream = null;
-        
+
         if (transportMessage instanceof InputStream)
         {
             stream = (InputStream) transportMessage;
@@ -60,7 +55,7 @@ public class FileContentsMessageFactory extends FileMessageFactory
         {
             cannotHandlePayload(transportMessage);
         }
-        
+
         return stream;
     }
 }

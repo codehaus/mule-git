@@ -192,7 +192,7 @@ public class DefaultTransportServiceDescriptor extends AbstractServiceDescriptor
         }
     }
 
-    public MuleMessageFactory createMessageFactory() throws TransportServiceException
+    public MuleMessageFactory createMuleMessageFactory() throws TransportServiceException
     {
         if (messageFactory == null)
         {

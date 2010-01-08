@@ -339,6 +339,7 @@ public abstract class AbstractConnector
 
         // Initialise the structure of this connector
         this.initFromServiceDescriptor();
+        messageFactory = createMuleMessageFactory();
 
         setMaxDispatchersActive(getDispatcherThreadingProfile().getMaxThreadsActive());
         setMaxRequestersActive(getRequesterThreadingProfile().getMaxThreadsActive());
@@ -355,6 +356,18 @@ public abstract class AbstractConnector
         }
 
         initialised.set(true);
+    }
+
+    protected MuleMessageFactory createMuleMessageFactory() throws InitialisationException
+    {
+        try
+        {
+            return serviceDescriptor.createMuleMessageFactory();
+        }
+        catch (TransportServiceException e)
+        {
+            throw new InitialisationException(CoreMessages.failedToCreate("MuleMessageFactory"), e, this);
+        }
     }
 
     public final synchronized void start() throws MuleException
@@ -2256,8 +2269,6 @@ public abstract class AbstractConnector
                 logger.debug("Transport '" + getProtocol() + "' will not support requests: ");
             }
             
-            messageFactory = serviceDescriptor.createMessageFactory();
-
             sessionHandler = serviceDescriptor.createSessionHandler();
         }
         catch (Exception e)

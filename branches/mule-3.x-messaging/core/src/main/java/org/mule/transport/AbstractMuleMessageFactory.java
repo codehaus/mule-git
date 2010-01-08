@@ -32,16 +32,28 @@ public abstract class AbstractMuleMessageFactory implements MuleMessageFactory
         {
             return new DefaultMuleMessage(NullPayload.getInstance(), muleContext);
         }
-        
-        return doCreate(transportMessage);
+
+        Object payload = extractPayload(transportMessage);
+        MuleMessage message = new DefaultMuleMessage(payload, muleContext);
+        addProperties(message, transportMessage);
+        addAttachments(message, transportMessage);
+        return message;
+    }
+
+    protected abstract Object extractPayload(Object transportMessage) throws Exception;
+
+    protected void addProperties(MuleMessage message, Object transportMessage)
+    {
+        // Template method
+    }
+
+    protected void addAttachments(MuleMessage message, Object transportMessage)
+    {
+        // Template method
     }
     
     protected void cannotHandlePayload(Object transportMessage) throws MessageTypeNotSupportedException
     {
         throw new MessageTypeNotSupportedException(transportMessage, getClass());
     }
-    
-    protected abstract MuleMessage doCreate(Object transportMessage) throws Exception;
 }
-
-

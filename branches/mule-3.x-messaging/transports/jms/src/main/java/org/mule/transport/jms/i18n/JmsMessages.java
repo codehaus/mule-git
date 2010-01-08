@@ -10,6 +10,7 @@
 
 package org.mule.transport.jms.i18n;
 
+import org.mule.api.MuleMessage;
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.MessageFactory;
 import org.mule.transport.jms.JmsMessageAdapter;
@@ -43,9 +44,9 @@ public class JmsMessages extends MessageFactory
         return factory.createMessage(BUNDLE_PATH, 6);
     }
 
-    public static Message messageMarkedForRedelivery(JmsMessageAdapter jmsMessage)
+    public static Message messageMarkedForRedelivery(MuleMessage message)
     {
-        String messageDescription = (jmsMessage == null) ? "[null message]" : jmsMessage.getUniqueId();
+        String messageDescription = (message == null) ? "[null message]" : message.getUniqueId();
         return factory.createMessage(BUNDLE_PATH, 7, messageDescription);
     }
 

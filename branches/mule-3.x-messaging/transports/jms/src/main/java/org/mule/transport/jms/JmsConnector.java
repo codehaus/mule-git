@@ -183,6 +183,9 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
     @Override
     protected void doInitialise() throws InitialisationException
     {
+        
+        ((JMSMuleMessageFactory) messageFactory).setSpecification(getSpecification());
+        
         try
         {
             connectionFactory = this.createConnectionFactory();
@@ -984,7 +987,17 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
 
     public void setSpecification(String specification)
     {
-        this.specification = specification;
+        if (JmsConstants.JMS_SPECIFICATION_11.equals(specification)
+            || (JmsConstants.JMS_SPECIFICATION_102B.equals(specification)))
+        {
+            this.specification = specification;
+        }
+        else
+        {
+            throw new IllegalArgumentException(
+                "JMS specification needs to be one of the defined values in JmsConstants but was: "
+                                + specification);
+        }
     }
 
     public String getUsername()

@@ -48,7 +48,7 @@ public interface TransportServiceDescriptor extends ServiceDescriptor, MuleConte
     public MessageAdapter createMessageAdapter(Object message, MessageAdapter originalMessageAdapter)
             throws TransportServiceException;
 
-    public MuleMessageFactory createMessageFactory() throws TransportServiceException;
+    public MuleMessageFactory createMuleMessageFactory() throws TransportServiceException;
     
     public SessionHandler createSessionHandler() throws TransportServiceException;
 
