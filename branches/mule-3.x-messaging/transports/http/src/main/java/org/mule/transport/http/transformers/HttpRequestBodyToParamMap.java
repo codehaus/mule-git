@@ -13,10 +13,15 @@ package org.mule.transport.http.transformers;
 import org.mule.api.MuleMessage;
 import org.mule.api.transformer.TransformerException;
 import org.mule.transformer.AbstractMessageAwareTransformer;
+import org.mule.transport.http.HttpConstants;
+import org.mule.util.StringUtils;
 
 import java.net.URI;
 import java.net.URLDecoder;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class HttpRequestBodyToParamMap extends AbstractMessageAwareTransformer
 {
@@ -27,43 +32,47 @@ public class HttpRequestBodyToParamMap extends AbstractMessageAwareTransformer
         setReturnClass(Object.class);
     }
 
-    public Object transform(MuleMessage message, String encoding) 
-        throws TransformerException
+    @Override
+    public Object transform(MuleMessage message, String encoding) throws TransformerException
     {
-        HashMap paramMap = new HashMap();
+        Map<String, Object> paramMap = new HashMap<String, Object>();
 
         try
         {
             String httpMethod = (String) message.getProperty("http.method");
             String contentType = (String) message.getProperty("Content-Type");
+            
+            boolean isGet = HttpConstants.METHOD_GET.equalsIgnoreCase(httpMethod);
+            boolean isPost = HttpConstants.METHOD_POST.equalsIgnoreCase(httpMethod);
+            boolean isUrlEncoded = contentType.startsWith("application/x-www-form-urlencoded");
 
-            if (!("GET".equalsIgnoreCase(httpMethod) || ("POST".equalsIgnoreCase(httpMethod) 
-                && "application/x-www-form-urlencoded".equalsIgnoreCase(contentType))))
+            if (!(isGet || (isPost && isUrlEncoded)))
             {
                 throw new Exception("The HTTP method or content type is unsupported!");
             }
 
             String queryString = null;
-            if ("GET".equalsIgnoreCase(httpMethod))
+            if (isGet)
             {
                 URI uri = new URI(message.getPayloadAsString(encoding));
                 queryString = uri.getQuery();
             }
-            else if ("POST".equalsIgnoreCase(httpMethod))
+            else if (isPost)
             {
                 queryString = new String(message.getPayloadAsBytes());
             }
 
-            if (queryString != null && queryString.length() > 0)
+            if (StringUtils.isNotBlank(queryString))
             {
                 String[] pairs = queryString.split("&");
-                for (int x = 0; x < pairs.length; x++)
+                for (String pair : pairs)
                 {
-                    String[] nameValue = pairs[x].split("=");
+                    String[] nameValue = pair.split("=");
                     if (nameValue.length == 2)
                     {
-                        paramMap.put(URLDecoder.decode(nameValue[0], encoding), URLDecoder.decode(
-                            nameValue[1], encoding));
+                        String key = URLDecoder.decode(nameValue[0], encoding);
+                        String value = URLDecoder.decode(nameValue[1], encoding);
+                        addToParameterMap(paramMap, key, value);
                     }
                 }
             }
@@ -74,9 +83,34 @@ public class HttpRequestBodyToParamMap extends AbstractMessageAwareTransformer
         }
 
         return paramMap;
-
     }
 
+    @SuppressWarnings("unchecked")
+    private void addToParameterMap(Map<String, Object> paramMap, String key, String value)
+    {
+        Object existingValue = paramMap.get(key);
+        if (existingValue != null)
+        {
+            List<Object> values = null;
+            if (existingValue instanceof List<?>)
+            {
+                values = (List<Object>) existingValue;
+            }
+            else
+            {
+                values = Arrays.asList(existingValue);
+            }
+
+            values.add(value);
+            paramMap.put(key, values);
+        }
+        else
+        {
+            paramMap.put(key, value);
+        }
+    }
+
+    @Override
     public boolean isAcceptNull()
     {
         return false;
