@@ -18,12 +18,9 @@ import org.mule.api.service.Service;
 import org.mule.api.transport.Connector;
 import org.mule.transport.AbstractPollingMessageReceiver;
 import org.mule.transport.ConnectException;
-import org.mule.transport.file.FileConnector;
 
-import java.io.ByteArrayOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -151,7 +148,7 @@ public class FtpMessageReceiver extends AbstractPollingMessageReceiver
             {
                 return;
             }
-            
+
             try
             {
                 client = connector.createFtpClient(endpoint);
@@ -161,42 +158,13 @@ public class FtpMessageReceiver extends AbstractPollingMessageReceiver
                 throw new ConnectException(e, this);
             }
 
-            MuleMessage message;
-            String encoding = endpoint.getEncoding();
-            if (connector.isStreaming())
-            {
-                InputStream stream = client.retrieveFileStream(file.getName());
-                if (stream == null)
-                {
-                    throw new IOException(MessageFormat.format("Failed to retrieve file {0}. Ftp error: {1}",
-                                                               file.getName(), client.getReplyCode()));
-                }
-                message = connector.getMessage(stream, encoding);
-            }
-            else
-            {
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                if (!client.retrieveFile(file.getName(), baos))
-                {
-                    throw new IOException(MessageFormat.format("Failed to retrieve file {0}. Ftp error: {1}",
-                                                               file.getName(), client.getReplyCode()));
-                }
-                byte[] bytes = baos.toByteArray();
-                if (bytes.length > 0)
-                {
-                    message = connector.getMessage(bytes, encoding);
-                }
-                else
-                {
-                    throw new IOException("File " + file.getName() + " is empty (zero bytes)");
-                }
-            }
+            FtpMuleMessageFactory muleMessageFactory = connector.createMuleMessageFactory();
+            muleMessageFactory.setStreaming(connector.isStreaming());
+            muleMessageFactory.setFtpClient(client);
 
-            message.setProperty(FileConnector.PROPERTY_ORIGINAL_FILENAME, file.getName());
-            message.setProperty(FileConnector.PROPERTY_FILE_SIZE, file.getSize());
-            message.setProperty(FileConnector.PROPERTY_FILE_TIMESTAMP, file.getTimestamp());
+            MuleMessage message = muleMessageFactory.create(file, endpoint.getEncoding());
+
             routeMessage(message);
-
             postProcess(client, file, message);
         }
         finally

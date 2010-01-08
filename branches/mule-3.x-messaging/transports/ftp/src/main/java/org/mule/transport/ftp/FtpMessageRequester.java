@@ -14,13 +14,11 @@ import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.EndpointURI;
 import org.mule.api.endpoint.InboundEndpoint;
 import org.mule.transport.AbstractMessageRequester;
-import org.mule.transport.file.FileConnector;
 
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 
-import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
@@ -85,16 +83,15 @@ public class FtpMessageRequester extends AbstractMessageRequester
             {
                 return null;
             }
-            
-            String originalFileName = fileToProcess.getName();
+
             fileToProcess = prepareFile(client, fileToProcess);
-            
-            byte[] payload = retriveFileContents(client, fileToProcess);
-            
-            MuleMessage reply = connector.getMessage(payload, endpoint.getEncoding());
-            reply.setProperty(FileConnector.PROPERTY_ORIGINAL_FILENAME, originalFileName);
-            reply.setProperty(FileConnector.PROPERTY_FILE_SIZE, new Long(fileToProcess.getSize()));
-            return reply;
+
+            FtpMuleMessageFactory muleMessageFactory = connector.createMuleMessageFactory();
+            // We might want to use isStreaming from connector, but for now maintain existing behaviour.
+            muleMessageFactory.setStreaming(false);
+            muleMessageFactory.setFtpClient(client);
+
+            return muleMessageFactory.create(fileToProcess, endpoint.getEncoding());
         }
         finally
         {
@@ -105,16 +102,6 @@ public class FtpMessageRequester extends AbstractMessageRequester
     protected FTPFile prepareFile(FTPClient client, FTPFile file) throws IOException
     {
         return file;
-    }
-
-    private byte[] retriveFileContents(FTPClient client, FTPFile fileToProcess) throws IOException
-    {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        if (!client.retrieveFile(fileToProcess.getName(), baos))
-        {
-            throw new IOException("Ftp error: " + client.getReplyCode());
-        }
-        return baos.toByteArray();
     }
 
     protected FTPFile findFileToProcess(FTPClient client) throws Exception
