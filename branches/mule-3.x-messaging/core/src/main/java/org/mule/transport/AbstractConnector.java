@@ -2354,22 +2354,22 @@ public abstract class AbstractConnector
         }
     }
 
-    public MuleMessage getMessage(Object payload, String encoding) throws MessagingException
+    public MuleMessage getMessage(Object transportMessage, String encoding) throws MessagingException
     {
         try
         {
-            return messageFactory.create(payload, encoding);
+            return messageFactory.create(transportMessage, encoding);
         }
         catch (Exception e)
         {
-            throw new MessagingException(CoreMessages.failedToBuildMessage(), new DefaultMuleMessage(payload,
+            throw new MessagingException(CoreMessages.failedToBuildMessage(), new DefaultMuleMessage(transportMessage,
                 muleContext));
         }
     }
 
-    public MuleMessage getMessage(Object payload) throws MessagingException
+    public MuleMessage getMessage(Object transportMessage) throws MessagingException
     {
-        return getMessage(payload, muleContext.getConfiguration().getDefaultEncoding());
+        return getMessage(transportMessage, muleContext.getConfiguration().getDefaultEncoding());
     }
     
     /**
