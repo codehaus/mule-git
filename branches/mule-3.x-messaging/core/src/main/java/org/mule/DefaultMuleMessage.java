@@ -16,36 +16,38 @@ import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.MuleRuntimeException;
 import org.mule.api.ThreadSafeAccess;
+import org.mule.api.config.MuleProperties;
 import org.mule.api.transformer.DataType;
 import org.mule.api.transformer.Transformer;
 import org.mule.api.transformer.TransformerException;
 import org.mule.api.transport.MessageAdapter;
-import org.mule.api.transport.MutableMessageAdapter;
 import org.mule.api.transport.OutputHandler;
 import org.mule.api.transport.PropertyScope;
+import org.mule.config.MuleManifest;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.transformer.types.DataTypeFactory;
 import org.mule.transformer.types.SimpleDataType;
-import org.mule.transport.AbstractMessageAdapter;
-import org.mule.transport.DefaultMessageAdapter;
-import org.mule.transport.MessageAdapterSerialization;
+import org.mule.transport.MessagePropertiesContext;
 import org.mule.transport.NullPayload;
 import org.mule.util.ClassUtils;
+import org.mule.util.StringUtils;
+import org.mule.util.UUID;
 import org.mule.util.store.DeserializationPostInitialisable;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import javax.activation.DataHandler;
 
+import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
 import edu.emory.mathcs.backport.java.util.concurrent.CopyOnWriteArrayList;
+import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
+import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -54,100 +56,109 @@ import org.apache.commons.logging.LogFactory;
  * <code>DefaultMuleMessage</code> is a wrapper that contains a payload and properties
  * associated with the payload.
  */
-
 public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, DeserializationPostInitialisable
 {
-    /**
-     * Serial version
-     */
-    private static final long serialVersionUID = 1541720810851984842L;
-    private static Log logger = LogFactory.getLog(DefaultMuleMessage.class);
+    private static final long serialVersionUID = 1541720810851984843L;
+    private static final Log logger = LogFactory.getLog(DefaultMuleMessage.class);
+    private static final List<Class<?>> consumableClasses = new ArrayList<Class<?>>();
 
-    private transient MessageAdapter adapter;
-    private transient MessageAdapter originalAdapter = null;
+    /** 
+     * The default UUID for the message. If the underlying transport has the notion of a 
+     * message id, this uuid will be ignored 
+     */
+    private String id = UUID.getUUID();
+
+    private Object payload;
+    private Object originalPayload;
+
+    /** 
+     * If an excpetion occurs while processing this message an exception payload 
+     * will be attached here 
+     */
+    private ExceptionPayload exceptionPayload;
+
+    /** 
+     * Scoped properties for this message 
+     */
+    private MessagePropertiesContext properties = new MessagePropertiesContext();
+
+    /** 
+     * Collection of attachments associatated with this message 
+     */
+    @SuppressWarnings("unchecked")
+    private Map<String, DataHandler> attachments = new ConcurrentHashMap();
+
     private transient List<Integer> appliedTransformerHashCodes;
     private transient byte[] cache;
     protected transient MuleContext muleContext;
 
-    private static final List<Class<?>> consumableClasses = new ArrayList<Class<?>>();
+    // these are transient because serisalisation generates a new instance
+    // so we allow mutation again (and we can't serialize threads anyway)
+    private transient AtomicReference ownerThread = null;
+    private transient AtomicBoolean mutable = null;
 
     static
     {
-        try
-        {
-            consumableClasses.add(ClassUtils.loadClass("javax.xml.stream.XMLStreamReader",
-                    DefaultMuleMessage.class));
-        }
-        catch (ClassNotFoundException e)
-        {
-            // ignore
-        }
-
-        try
-        {
-            consumableClasses.add(ClassUtils.loadClass("javax.xml.transform.stream.StreamSource",
-                    DefaultMuleMessage.class));
-        }
-        catch (ClassNotFoundException e)
-        {
-            // ignore
-        }
-
+        addToConsuableClasses("javax.xml.stream.XMLStreamReader");
+        addToConsuableClasses("javax.xml.transform.stream.StreamSource");
         consumableClasses.add(OutputHandler.class);
+    }
+    
+    private static void addToConsuableClasses(String className)
+    {
+        try
+        {
+            consumableClasses.add(ClassUtils.loadClass(className, DefaultMuleMessage.class));
+        }
+        catch (ClassNotFoundException e)
+        {
+            // ignore
+        }
     }
 
     public DefaultMuleMessage(Object message, MuleContext muleContext)
     {
-        this(message, (Map) null, muleContext);
+        this(message, (Map<String, Object>) null, muleContext);
     }
 
-    public DefaultMuleMessage(Object message, Map properties, MuleContext muleContext)
+    public DefaultMuleMessage(Object message, Map<String, Object> properties, MuleContext muleContext)
     {
-        if (muleContext == null)
-        {
-            throw new IllegalArgumentException(CoreMessages.objectIsNull("muleContext").getMessage());
-        }
-        this.muleContext = muleContext;
-
+        setMuleContext(muleContext);
         initAppliedTransformerHashCodes();
 
         // Explicitly check for MuleMessage as a safeguard since MuleMessage is instance of MessageAdapter
         if (message instanceof MuleMessage)
         {
-            adapter = ((MuleMessage) message).getAdapter();
-        }
-        else if (message instanceof MessageAdapter)
-        {
-            adapter = (MessageAdapter) message;
+            MuleMessage muleMessage = (MuleMessage) message;
+            payload = muleMessage.getPayload();
+            copyMessageProperties(muleMessage);
         }
         else
         {
-            adapter = new DefaultMessageAdapter(message);
+            payload = message;
+            originalPayload = message;
         }
         addProperties(properties);
         resetAccessControl();
     }
 
+    private void copyMessageProperties(MuleMessage muleMessage)
+    {
+        for (String key : muleMessage.getPropertyNames())
+        {
+            Object value = muleMessage.getProperty(key);
+            setProperty(key, value);
+        }
+    }
 
     public DefaultMuleMessage(Object message, MessageAdapter previous, MuleContext muleContext)
     {
-        if (muleContext == null)
-        {
-            throw new IllegalArgumentException(CoreMessages.objectIsNull("muleContext").getMessage());
-        }
-        this.muleContext = muleContext;
-
+        setMuleContext(muleContext);
         initAppliedTransformerHashCodes();
 
-        if (message instanceof MessageAdapter)
-        {
-            adapter = (MessageAdapter) message;
-            ((ThreadSafeAccess) adapter).resetAccessControl();
-        }
-        else
-        {
-            adapter = new DefaultMessageAdapter(message, previous);
-        }
+        payload = message;
+        originalPayload = previous.getPayload();
+
         if (previous.getExceptionPayload() != null)
         {
             setExceptionPayload(previous.getExceptionPayload());
@@ -155,12 +166,12 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
         setEncoding(previous.getEncoding());
         if (previous.getAttachmentNames().size() > 0)
         {
-            Set<String> attNames = adapter.getAttachmentNames();
+            Set<String> attNames = previous.getAttachmentNames();
             for (String s : attNames)
             {
                 try
                 {
-                    addAttachment(s, adapter.getAttachment(s));
+                    addAttachment(s, previous.getAttachment(s));
                 }
                 catch (Exception e)
                 {
@@ -176,6 +187,15 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
         this(message.getPayload(), message.getAdapter(), message.getMuleContext());
     }
 
+    private void setMuleContext(MuleContext context)
+    {
+        if (context == null)
+        {
+            throw new IllegalArgumentException(CoreMessages.objectIsNull("muleContext").getMessage());
+        }
+        muleContext = context;
+    }
+    
     @SuppressWarnings("unchecked")
     private void initAppliedTransformerHashCodes()
     {
@@ -307,7 +327,7 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
      */
     public MessageAdapter getAdapter()
     {
-        return adapter;
+        return this;
     }
 
     /**
@@ -315,15 +335,7 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
      */
     public Object getOrginalPayload()
     {
-        return (originalAdapter == null ? adapter.getPayload() : originalAdapter.getPayload());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public MessageAdapter getOriginalAdapter()
-    {
-        return (originalAdapter == null ? adapter : originalAdapter);
+        return originalPayload;
     }
 
     /**
@@ -331,7 +343,27 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
      */
     public void setProperty(String key, Object value, PropertyScope scope)
     {
-        adapter.setProperty(key, value, scope);
+        assertAccess(WRITE);
+        if (key != null)
+        {
+            if (value != null)
+            {
+                properties.setProperty(key, value, scope);
+            }
+            else
+            {
+                logger.warn("setProperty(key, value) called with null value; removing key: " + key
+                        + "; please report the following stack trace to " + MuleManifest.getDevListEmail(),
+                        new Throwable());
+                properties.removeProperty(key);
+            }
+        }
+        else
+        {
+            logger.warn("setProperty(key, value) ignored because of null key for object: " + value
+                    + "; please report the following stack trace to " + MuleManifest.getDevListEmail(),
+                    new Throwable());
+        }
     }
 
     /**
@@ -339,7 +371,8 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
      */
     public Object getProperty(String key)
     {
-        return adapter.getProperty(key);
+        assertAccess(READ);
+        return properties.getProperty(key);
     }
 
     /**
@@ -347,7 +380,8 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
      */
     public Object removeProperty(String key)
     {
-        return adapter.removeProperty(key);
+        assertAccess(WRITE);
+        return properties.removeProperty(key);
     }
 
     /**
@@ -355,13 +389,34 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
      */
     public Object removeProperty(String key, PropertyScope scope)
     {
-        return adapter.removeProperty(key, scope);
+        assertAccess(WRITE);
+        return properties.removeProperty(key, scope);
     }
 
     /** {@inheritDoc} */
     public void setProperty(String key, Object value)
     {
-        adapter.setProperty(key, value);
+        assertAccess(WRITE);
+        if (key != null)
+        {
+            if (value != null)
+            {
+                properties.setProperty(key, value);
+            }
+            else
+            {
+                logger.warn("setProperty(key, value) called with null value; removing key: " + key
+                        + "; please report the following stack trace to " + MuleManifest.getDevListEmail(),
+                        new Throwable());
+                properties.removeProperty(key);
+            }
+        }
+        else
+        {
+            logger.warn("setProperty(key, value) ignored because of null key for object: " + value
+                    + "; please report the following stack trace to " + MuleManifest.getDevListEmail(),
+                    new Throwable());
+        }
     }
 
     /**
@@ -383,7 +438,7 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
         {
             return cache;
         }
-        byte[] result = (byte[]) getPayload(byte[].class);
+        byte[] result = getPayload(byte[].class);
         if (muleContext.getConfiguration().isCacheMessageAsBytes())
         {
             cache = result;
@@ -401,7 +456,7 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
         {
             return new String(cache, encoding);
         }
-        String result = (String) getPayload(String.class, encoding);
+        String result = getPayload(String.class, encoding);
         if (muleContext.getConfiguration().isCacheMessageAsBytes())
         {
             cache = result.getBytes(encoding);
@@ -414,7 +469,8 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
      */
     public Set<String> getPropertyNames()
     {
-        return adapter.getPropertyNames();
+        assertAccess(READ);
+        return properties.getPropertyNames();
     }
 
     /**
@@ -422,13 +478,15 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
      */
     public Set<String> getPropertyNames(PropertyScope scope)
     {
-        return adapter.getPropertyNames(scope);
+        assertAccess(READ);
+        return properties.getScopedProperties(scope).keySet();
     }
 
     //** {@inheritDoc} */
     public double getDoubleProperty(String name, double defaultValue)
     {
-        return adapter.getDoubleProperty(name, defaultValue);
+        assertAccess(READ);
+        return properties.getDoubleProperty(name, defaultValue);
     }
 
     /**
@@ -436,7 +494,8 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
      */
     public void setDoubleProperty(String name, double value)
     {
-        adapter.setDoubleProperty(name, value);
+        assertAccess(WRITE);
+        setProperty(name, Double.valueOf(value));
     }
 
     /**
@@ -444,7 +503,8 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
      */
     public String getUniqueId()
     {
-        return adapter.getUniqueId();
+        assertAccess(READ);
+        return id;
     }
 
     /**
@@ -452,7 +512,8 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
      */
     public Object getProperty(String name, Object defaultValue)
     {
-        return adapter.getProperty(name, defaultValue);
+        assertAccess(READ);
+        return properties.getProperty(name, defaultValue);
     }
 
     /**
@@ -460,7 +521,8 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
      */
     public Object getProperty(String name, PropertyScope scope)
     {
-        return adapter.getProperty(name, scope);
+        assertAccess(READ);
+        return properties.getProperty(name, scope);
     }
 
     /**
@@ -468,7 +530,8 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
      */
     public int getIntProperty(String name, int defaultValue)
     {
-        return adapter.getIntProperty(name, defaultValue);
+        assertAccess(READ);
+        return properties.getIntProperty(name, defaultValue);
     }
 
     /**
@@ -476,7 +539,8 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
      */
     public long getLongProperty(String name, long defaultValue)
     {
-        return adapter.getLongProperty(name, defaultValue);
+        assertAccess(READ);
+        return properties.getLongProperty(name, defaultValue);
     }
 
     /**
@@ -484,7 +548,8 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
      */
     public boolean getBooleanProperty(String name, boolean defaultValue)
     {
-        return adapter.getBooleanProperty(name, defaultValue);
+        assertAccess(READ);
+        return properties.getBooleanProperty(name, defaultValue);
     }
 
     /**
@@ -492,7 +557,8 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
      */
     public void setBooleanProperty(String name, boolean value)
     {
-        adapter.setBooleanProperty(name, value);
+        assertAccess(WRITE);
+        setProperty(name, Boolean.valueOf(value));
     }
 
     /**
@@ -500,7 +566,8 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
      */
     public void setIntProperty(String name, int value)
     {
-        adapter.setIntProperty(name, value);
+        assertAccess(WRITE);
+        setProperty(name, Integer.valueOf(value));
     }
 
     /**
@@ -508,7 +575,8 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
      */
     public void setLongProperty(String name, long value)
     {
-        adapter.setLongProperty(name, value);
+        assertAccess(WRITE);
+        setProperty(name, Long.valueOf(value));
     }
 
     /**
@@ -516,7 +584,15 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
      */
     public void setCorrelationId(String id)
     {
-        adapter.setCorrelationId(id);
+        assertAccess(WRITE);
+        if (StringUtils.isNotBlank(id))
+        {
+            setProperty(MuleProperties.MULE_CORRELATION_ID_PROPERTY, id);
+        }
+        else
+        {
+            removeProperty(MuleProperties.MULE_CORRELATION_ID_PROPERTY);
+        }
     }
 
     /**
@@ -524,7 +600,8 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
      */
     public String getCorrelationId()
     {
-        return adapter.getCorrelationId();
+        assertAccess(READ);
+        return (String) getProperty(MuleProperties.MULE_CORRELATION_ID_PROPERTY);
     }
 
     /**
@@ -532,7 +609,15 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
      */
     public void setReplyTo(Object replyTo)
     {
-        adapter.setReplyTo(replyTo);
+        assertAccess(WRITE);
+        if (replyTo != null)
+        {
+            setProperty(MuleProperties.MULE_REPLY_TO_PROPERTY, replyTo);
+        }
+        else
+        {
+            removeProperty(MuleProperties.MULE_REPLY_TO_PROPERTY);
+        }
     }
 
     /**
@@ -540,7 +625,8 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
      */
     public Object getReplyTo()
     {
-        return adapter.getReplyTo();
+        assertAccess(READ);
+        return getProperty(MuleProperties.MULE_REPLY_TO_PROPERTY);
     }
 
     /**
@@ -548,7 +634,8 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
      */
     public int getCorrelationSequence()
     {
-        return adapter.getCorrelationSequence();
+        assertAccess(READ);
+        return getIntProperty(MuleProperties.MULE_CORRELATION_SEQUENCE_PROPERTY, -1);
     }
 
     /**
@@ -556,7 +643,8 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
      */
     public void setCorrelationSequence(int sequence)
     {
-        adapter.setCorrelationSequence(sequence);
+        assertAccess(WRITE);
+        setIntProperty(MuleProperties.MULE_CORRELATION_SEQUENCE_PROPERTY, sequence);
     }
 
     /**
@@ -564,13 +652,15 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
      */
     public int getCorrelationGroupSize()
     {
-        return adapter.getCorrelationGroupSize();
+        assertAccess(READ);
+        return getIntProperty(MuleProperties.MULE_CORRELATION_GROUP_SIZE_PROPERTY, -1);
     }
 
     //** {@inheritDoc} */
     public void setCorrelationGroupSize(int size)
     {
-        adapter.setCorrelationGroupSize(size);
+        assertAccess(WRITE);
+        setIntProperty(MuleProperties.MULE_CORRELATION_GROUP_SIZE_PROPERTY, size);
     }
 
     /**
@@ -578,7 +668,8 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
      */
     public ExceptionPayload getExceptionPayload()
     {
-        return adapter.getExceptionPayload();
+        assertAccess(READ);
+        return exceptionPayload;
     }
 
     /**
@@ -586,13 +677,32 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
      */
     public void setExceptionPayload(ExceptionPayload exceptionPayload)
     {
-        adapter.setExceptionPayload(exceptionPayload);
+        assertAccess(WRITE);
+        this.exceptionPayload = exceptionPayload;
     }
 
     @Override
     public String toString()
     {
-        return adapter.toString();
+        assertAccess(READ);
+        StringBuffer buf = new StringBuffer(120);
+        buf.append(getClass().getName());
+        buf.append("/" + super.toString());
+        buf.append('{');
+        buf.append("id=").append(getUniqueId());
+        buf.append(", payload=").append(getPayload().getClass().getName());
+        buf.append(", properties=").append(properties);
+        buf.append(", correlationId=").append(getCorrelationId());
+        buf.append(", correlationGroup=").append(getCorrelationGroupSize());
+        buf.append(", correlationSeq=").append(getCorrelationSequence());
+        buf.append(", encoding=").append(getEncoding());
+        buf.append(", exceptionPayload=").append(exceptionPayload);
+        if (logger.isDebugEnabled())
+        {
+            buf.append(", properties=").append(properties);
+        }
+        buf.append('}');
+        return buf.toString();
     }
 
     /**
@@ -600,7 +710,8 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
      */
     public void addAttachment(String name, DataHandler dataHandler) throws Exception
     {
-        adapter.addAttachment(name, dataHandler);
+        assertAccess(WRITE);
+        attachments.put(name, dataHandler);
     }
 
     /**
@@ -608,7 +719,8 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
      */
     public void removeAttachment(String name) throws Exception
     {
-        adapter.removeAttachment(name);
+        assertAccess(WRITE);
+        attachments.remove(name);
     }
 
     /**
@@ -616,7 +728,8 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
      */
     public DataHandler getAttachment(String name)
     {
-        return adapter.getAttachment(name);
+        assertAccess(READ);
+        return attachments.get(name);
     }
 
     /**
@@ -624,7 +737,8 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
      */
     public Set<String> getAttachmentNames()
     {
-        return adapter.getAttachmentNames();
+        assertAccess(READ);
+        return Collections.unmodifiableSet(attachments.keySet());
     }
 
     /**
@@ -632,7 +746,17 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
      */
     public String getEncoding()
     {
-        return adapter.getEncoding();
+        assertAccess(READ);
+        
+        String encoding =  getStringProperty(MuleProperties.MULE_ENCODING_PROPERTY, null);
+        if (encoding != null)
+        {
+            return encoding;
+        }
+        else
+        {
+            return System.getProperty(MuleProperties.MULE_ENCODING_SYSTEM_PROPERTY);
+        }
     }
 
     /**
@@ -640,7 +764,8 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
      */
     public void setEncoding(String encoding)
     {
-        adapter.setEncoding(encoding);
+        assertAccess(WRITE);
+        setStringProperty(MuleProperties.MULE_ENCODING_PROPERTY, encoding);
     }
 
     /**
@@ -648,7 +773,8 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
      */
     public String getStringProperty(String name, String defaultValue)
     {
-        return adapter.getStringProperty(name, defaultValue);
+        assertAccess(READ);
+        return properties.getStringProperty(name, defaultValue);
     }
 
     /**
@@ -656,23 +782,34 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
      */
     public void setStringProperty(String name, String value)
     {
-        adapter.setStringProperty(name, value);
+        assertAccess(WRITE);
+        setProperty(name, value);
     }
 
     /**
      * {@inheritDoc}
      */
-    public void addProperties(Map<String, Object> properties)
+    public void addProperties(Map<String, Object> props)
     {
-        adapter.addProperties(properties);
+        addProperties(props, properties.getDefaultScope());
     }
 
     /**
      * {@inheritDoc}
      */
-    public void addProperties(Map<String, Object> properties, PropertyScope scope)
+    public void addProperties(Map<String, Object> props, PropertyScope scope)
     {
-        adapter.addProperties(properties, scope);
+        assertAccess(WRITE);
+        if (props != null)
+        {
+            synchronized (props)
+            {
+                for (Map.Entry<String, Object> entry : props.entrySet())
+                {
+                    setProperty(entry.getKey(), entry.getValue(), scope);
+                }
+            }
+        }
     }
 
     /**
@@ -680,7 +817,8 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
      */
     public void clearProperties()
     {
-        adapter.clearProperties();
+        assertAccess(WRITE);
+        properties.clearProperties();
     }
 
     /**
@@ -688,7 +826,7 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
      */
     public Object getPayload()
     {
-        return adapter.getPayload();
+        return payload;
     }
 
     /**
@@ -696,15 +834,7 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
      */
     public synchronized void setPayload(Object payload)
     {
-        //TODO we may want to enforce stricter rules here, rather than silently wrapping the existing adapter
-        if (!(adapter instanceof MutableMessageAdapter))
-        {
-            adapter = new DefaultMessageAdapter(payload, adapter);
-        }
-        else
-        {
-            ((MutableMessageAdapter) adapter).setPayload(payload);
-        }
+        this.payload = payload;
         cache = null;
     }
 
@@ -713,11 +843,6 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
      */
     public void release()
     {
-        adapter.release();
-        if (originalAdapter != null)
-        {
-            originalAdapter.release();
-        }
         cache = null;
         appliedTransformerHashCodes.clear();
     }
@@ -756,7 +881,6 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
     {
         if (!transformers.isEmpty())
         {
-
             for (Object transformer1 : transformers)
             {
                 Transformer transformer = (Transformer) transformer1;
@@ -783,16 +907,19 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
                 {
                     Object result = transformer.transform(this);
 
-                    if (originalAdapter == null && muleContext.getConfiguration().isCacheMessageOriginalPayload())
+                    if (originalPayload == null && muleContext.getConfiguration().isCacheMessageOriginalPayload())
                     {
-                        originalAdapter = adapter;
+                        originalPayload = payload;
                     }
 
                     if (result instanceof MuleMessage)
                     {
                         synchronized (this)
                         {
-                            adapter = ((MuleMessage) result).getAdapter();
+                            MuleMessage resultMessage = (MuleMessage) result;
+                            setPayload(resultMessage.getPayload());
+                            originalPayload = resultMessage.getOrginalPayload();
+                            // TODO MessageAdapterRemoval: copy attachments, properties here?
                         }
                     }
                     else
@@ -826,16 +953,7 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
      */
     public ThreadSafeAccess newThreadCopy()
     {
-        if (adapter instanceof ThreadSafeAccess)
-        {
-            logger.debug("new copy of message for " + Thread.currentThread());
-            return new DefaultMuleMessage(((ThreadSafeAccess) adapter).newThreadCopy(), this, muleContext);
-        }
-        else
-        {
-            // not much we can do here - streaming will have to handle things itself
-            return this;
-        }
+        return new DefaultMuleMessage(this);
     }
 
     /**
@@ -843,13 +961,15 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
      */
     public void resetAccessControl()
     {
-        if (adapter instanceof AbstractMessageAdapter)
+        // just reset the internal state here as this method is explicitly intended not to
+        // be used from the outside
+        if (ownerThread != null)
         {
-            ((AbstractMessageAdapter) adapter).resetAccessControl();
+            ownerThread.set(null);
         }
-        if (originalAdapter instanceof AbstractMessageAdapter)
+        if (mutable != null)
         {
-            ((AbstractMessageAdapter) originalAdapter).resetAccessControl();
+            mutable.set(true);
         }
     }
 
@@ -858,10 +978,98 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
      */
     public void assertAccess(boolean write)
     {
-        if (adapter instanceof AbstractMessageAdapter)
+        if (AccessControl.isAssertMessageAccess())
         {
-            ((AbstractMessageAdapter) adapter).assertAccess(write);
+            initAccessControl();
+            setOwner();
+            checkMutable(write);
         }
+    }
+
+    private synchronized void initAccessControl()
+    {
+        if (null == ownerThread)
+        {
+            ownerThread = new AtomicReference();
+        }
+        if (null == mutable)
+        {
+            mutable = new AtomicBoolean(true);
+        }
+    }
+
+    private void setOwner()
+    {
+        if (null == ownerThread.get())
+        {
+            ownerThread.compareAndSet(null, Thread.currentThread());
+        }
+    }
+
+    private void checkMutable(boolean write)
+    {
+
+        // IF YOU SEE AN EXCEPTION THAT IS RAISED FROM WITHIN THIS CODE
+        // ============================================================
+        //
+        // First, understand that the exception here is not the "real" problem.  These exceptions
+        // give early warning of a much more serious issue that results in unreliable and unpredictable
+        // code - more than one thread is attempting to change the contents of a message.
+        //
+        // Having said that, you can disable these exceptions by defining
+        // MuleProperties.MULE_THREAD_UNSAFE_MESSAGES_PROPERTY (mule.disable.threadsafemessages)
+        // (i.e., by adding -Dmule.disable.threadsafemessages=true to the java command line).
+        //
+        // To remove the underlying cause, however, you probably need to do one of:
+        //
+        // - make sure that the message adapter you are using correctly implements the
+        // ThreadSafeAccess interface
+        //
+        // - make sure that dispatcher and receiver classes copy ThreadSafeAccess instances when
+        // they are passed between threads
+
+        Thread currentThread = Thread.currentThread();
+        if (currentThread.equals(ownerThread.get()))
+        {
+            if (write && !mutable.get())
+            {
+                if (isDisabled())
+                {
+                    logger.warn("Writing to immutable message (exception disabled)");
+                }
+                else
+                {
+                    throw newException("Cannot write to immutable message");
+                }
+            }
+        }
+        else
+        {
+            if (write)
+            {
+                if (isDisabled())
+                {
+                    logger.warn("Non-owner writing to message (exception disabled)");
+                }
+                else
+                {
+                    throw newException("Only owner thread can write to message: "
+                            + ownerThread.get() + "/" + Thread.currentThread());
+                }
+            }
+        }
+    }
+
+    protected boolean isDisabled()
+    {
+        return !AccessControl.isFailOnMessageScribbling();
+    }
+
+    protected IllegalStateException newException(String message)
+    {
+        IllegalStateException exception = new IllegalStateException(message);
+        logger.warn("Message access violation", exception);
+        return exception;
     }
 
     /**
@@ -872,113 +1080,6 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
     public boolean isConsumable()
     {
         return isConsumedFromAdditional(this.getPayload().getClass());
-    }
-
-    private void writeObject(ObjectOutputStream out) throws Exception
-    {
-        out.defaultWriteObject();
-        marshalMessageAdapter(out);
-    }
-
-    private void marshalMessageAdapter(ObjectOutputStream out) throws Exception
-    {
-        if (adapter instanceof MessageAdapterSerialization)
-        {
-            customMessageAdapterMarshalling(out);
-        }
-        else
-        {
-            defaultMessageAdapterMarshalling(out);
-        }
-    }
-
-    private void customMessageAdapterMarshalling(ObjectOutputStream out) throws Exception
-    {
-        out.writeObject(MessageAdapterSerialization.Type.CustomSerialization);
-
-        byte[] payload = ((MessageAdapterSerialization) adapter).getPayloadForSerialization();
-        out.writeInt(payload.length);
-        out.write(payload);
-
-        marshalMessageAdapterProperties(out);
-        marshalMessageAdapterAttachments(out);
-    }
-
-    private void defaultMessageAdapterMarshalling(ObjectOutputStream out) throws Exception
-    {
-        out.writeObject(MessageAdapterSerialization.Type.DefaultSerialization);
-        out.writeObject(adapter);
-    }
-
-    private void marshalMessageAdapterProperties(ObjectOutputStream out) throws IOException
-    {
-        Set<String> propertyNames = adapter.getPropertyNames();
-        out.writeInt(propertyNames.size());
-        for (Object property : propertyNames)
-        {
-            String key = property.toString();
-            out.writeObject(key);
-            out.writeObject(getProperty(key));
-        }
-    }
-
-    private void marshalMessageAdapterAttachments(ObjectOutputStream out)
-    {
-        // TODO Auto-generated method stub
-    }
-
-    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
-    {
-        in.defaultReadObject();
-        unmarshalMessageAdapter(in);
-    }
-
-    private void unmarshalMessageAdapter(ObjectInputStream in) throws IOException, ClassNotFoundException
-    {
-        MessageAdapterSerialization.Type type = (MessageAdapterSerialization.Type) in.readObject();
-        if (type == MessageAdapterSerialization.Type.DefaultSerialization)
-        {
-            defaultMessageAdapterUnmarshalling(in);
-        }
-        else
-        {
-            adapter = customMessageAdapterUnmarshalling(in);
-            unmarshalMessageAdapterProperties(in, adapter);
-            unmarshalMessageAdapterAttachments(in, adapter);
-        }
-    }
-
-    private MessageAdapter customMessageAdapterUnmarshalling(ObjectInputStream in) throws IOException
-    {
-        int payloadSize = in.readInt();
-
-        byte[] payload = new byte[payloadSize];
-        in.read(payload);
-
-        return new DefaultMessageAdapter(payload);
-    }
-
-    private void defaultMessageAdapterUnmarshalling(ObjectInputStream in) throws IOException, ClassNotFoundException
-    {
-        adapter = (MessageAdapter) in.readObject();
-    }
-
-    private void unmarshalMessageAdapterProperties(ObjectInputStream in, MessageAdapter messageAdapter)
-            throws IOException, ClassNotFoundException
-    {
-        int propertyCount = in.readInt();
-        for (int i = 0; i < propertyCount; i++)
-        {
-            String key = (String) in.readObject();
-            Object value = in.readObject();
-            messageAdapter.setProperty(key, value);
-        }
-    }
-
-    private void unmarshalMessageAdapterAttachments(ObjectInputStream in, MessageAdapter messageAdapter)
-            throws IOException, ClassNotFoundException
-    {
-        // TODO implement me
     }
 
     public static MuleMessage copy(MuleMessage message)

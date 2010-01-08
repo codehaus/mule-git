@@ -25,17 +25,9 @@ public interface MuleMessage extends MessageAdapter
 {
 
     /**
-     * Returns the currently edited Message adapter for this message. If no edits have been made
-     * this methd will return the same as {@link #getOriginalAdapter()}
+     * Returns the currently edited Message adapter for this message.
      */
     MessageAdapter getAdapter();
-
-    /**
-     * Returns the original payload used to create this message. The payload of the message can change if {@link #applyTransformers(java.util.List)} or
-     * {@link #applyTransformers(java.util.List, Class)} is called.
-     * @return the original payload used to create this message
-     */
-    MessageAdapter getOriginalAdapter();
 
     /**
      * Will apply a list of transformers to the payload of the message. This *Will* change the payload of the

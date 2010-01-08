@@ -95,7 +95,8 @@ public class MessagePropertiesContext implements Serializable
         this.defaultScope = defaultScope;
     }
 
-    protected Map<String, Object> getScopedProperties(PropertyScope scope)
+    // TODO MessageAdapterRemoval: this method was protected before. Probably move this class up to the org.mule package
+    public Map<String, Object> getScopedProperties(PropertyScope scope)
     {
         Map<String, Object> map = scopedMap.get(scope);
         if (map == null)
