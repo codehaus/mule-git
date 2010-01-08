@@ -162,6 +162,7 @@ public class FtpMessageReceiver extends AbstractPollingMessageReceiver
             }
 
             MuleMessage message;
+            String encoding = endpoint.getEncoding();
             if (connector.isStreaming())
             {
                 InputStream stream = client.retrieveFileStream(file.getName());
@@ -170,7 +171,7 @@ public class FtpMessageReceiver extends AbstractPollingMessageReceiver
                     throw new IOException(MessageFormat.format("Failed to retrieve file {0}. Ftp error: {1}",
                                                                file.getName(), client.getReplyCode()));
                 }
-                message = connector.getMessage(stream);
+                message = connector.getMessage(stream, encoding);
             }
             else
             {
@@ -183,7 +184,7 @@ public class FtpMessageReceiver extends AbstractPollingMessageReceiver
                 byte[] bytes = baos.toByteArray();
                 if (bytes.length > 0)
                 {
-                    message = connector.getMessage(bytes);
+                    message = connector.getMessage(bytes, encoding);
                 }
                 else
                 {

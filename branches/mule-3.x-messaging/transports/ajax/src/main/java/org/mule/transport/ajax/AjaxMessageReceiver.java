@@ -58,7 +58,7 @@ public class AjaxMessageReceiver extends AbstractMessageReceiver
         public Object route(Client client, Object data) throws Exception
         {
             AbstractConnector connector = (AbstractConnector) getConnector();
-            MuleMessage messageToRoute = connector.getMessage(data);
+            MuleMessage messageToRoute = connector.getMessage(data, endpoint.getEncoding());
 
             Object replyTo = messageToRoute.getReplyTo();
             MuleMessage message = AjaxMessageReceiver.this.routeMessage(messageToRoute);

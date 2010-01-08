@@ -69,7 +69,8 @@ public class AxisServiceProxy
 
         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable
         {
-            MuleMessage messageToRoute = receiver.getConnector().getMessage(args);
+            MuleMessage messageToRoute = receiver.getConnector().getMessage(args,
+                receiver.getEndpoint().getEncoding());
             messageToRoute.setProperty(MuleProperties.MULE_METHOD_PROPERTY, method);
             
             // add all custom headers, filter out all mule headers (such as

@@ -37,12 +37,9 @@ public class JMSMuleMessageFactory extends AbstractMuleMessageFactory
     }
 
     @Override
-    protected Object extractPayload(Object transportMessage) throws Exception
+    protected Object extractPayload(Object transportMessage, String encoding) throws Exception
     {
         Message jmsMessage = (Message) transportMessage;
-
-        // TODO MessageAdapterRemoval: what about encoding set on the endpoint?
-        String encoding = muleContext.getConfiguration().getDefaultEncoding();
         return JmsMessageUtils.toObject(jmsMessage, specification, encoding);
     }
 

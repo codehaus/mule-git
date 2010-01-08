@@ -234,17 +234,18 @@ public class FileMessageReceiver extends AbstractPollingMessageReceiver
         }
 
         MuleMessage message = null;
+        String encoding = endpoint.getEncoding();
         try
         {
             if (fileConnector.isStreaming())
             {
                 ReceiverFileInputStream payload = new ReceiverFileInputStream(sourceFile, 
                     fileConnector.isAutoDelete(), destinationFile);
-                message = connector.getMessage(payload);
+                message = connector.getMessage(payload, encoding);
             }
             else
             {
-                message = connector.getMessage(sourceFile);
+                message = connector.getMessage(sourceFile, encoding);
             }
         }
         catch (FileNotFoundException e)
@@ -295,7 +296,7 @@ public class FileMessageReceiver extends AbstractPollingMessageReceiver
                 }
 
                 // create new Message for destinationFile
-                message = connector.getMessage(destinationFile);
+                message = connector.getMessage(destinationFile, endpoint.getEncoding());
                 message.setProperty(FileConnector.PROPERTY_FILENAME, destinationFile.getName());
                 message.setProperty(FileConnector.PROPERTY_ORIGINAL_FILENAME, sourceFileOriginalName);
             }

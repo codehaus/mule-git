@@ -57,7 +57,7 @@ public class TcpMessageRequester extends AbstractMessageRequester
             {
                 return null;
             }
-            return connector.getMessage(result);
+            return connector.getMessage(result, endpoint.getEncoding());
         }
         catch (SocketTimeoutException e)
         {

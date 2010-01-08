@@ -98,6 +98,7 @@ public class StdioMessageReceiver extends AbstractPollingMessageReceiver
     @Override
     public void poll()
     {
+        String encoding = endpoint.getEncoding();
         try
         {
             if (sendStream)
@@ -108,7 +109,7 @@ public class StdioMessageReceiver extends AbstractPollingMessageReceiver
                 int i = in.read();
                 //Roll back our read
                 in.unread(i);
-                MuleMessage message = connector.getMessage(in);
+                MuleMessage message = connector.getMessage(in, encoding);
                 routeMessage(message, endpoint.isSynchronous());
             }
             else
@@ -136,7 +137,7 @@ public class StdioMessageReceiver extends AbstractPollingMessageReceiver
                 String[] lines = fullBuffer.toString().split(SystemUtils.LINE_SEPARATOR);
                 for (int i = 0; i < lines.length; ++i)
                 {                
-                    MuleMessage message = connector.getMessage(lines[i]);
+                    MuleMessage message = connector.getMessage(lines[i], encoding);
                     routeMessage(message, endpoint.isSynchronous());
                 }
             }

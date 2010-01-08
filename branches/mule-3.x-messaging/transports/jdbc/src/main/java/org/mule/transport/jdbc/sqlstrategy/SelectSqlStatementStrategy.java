@@ -140,7 +140,7 @@ public  class SelectSqlStatementStrategy implements SqlStatementStrategy
             }
             else
             {
-                message = connector.getMessage(result);
+                message = connector.getMessage(result, endpoint.getEncoding());
             }
             
             //Close or return connection if not in a transaction

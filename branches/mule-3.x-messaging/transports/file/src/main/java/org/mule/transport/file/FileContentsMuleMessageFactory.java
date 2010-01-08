@@ -37,7 +37,7 @@ public class FileContentsMuleMessageFactory extends FileMuleMessageFactory
     }
 
     @Override
-    protected Object extractPayload(Object transportMessage) throws Exception
+    protected Object extractPayload(Object transportMessage, String encoding) throws Exception
     {
         InputStream inputStream = convertToInputStream(transportMessage);
         byte[] payload = IOUtils.toByteArray(inputStream);

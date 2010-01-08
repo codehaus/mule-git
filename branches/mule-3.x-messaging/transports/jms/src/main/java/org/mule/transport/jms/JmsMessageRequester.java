@@ -172,7 +172,7 @@ public class JmsMessageRequester extends AbstractMessageRequester
                 }
 
                 message = connector.preProcessMessage(message, session);
-                return connector.getMessage(message);
+                return connector.getMessage(message, endpoint.getEncoding());
             }
             catch (Exception e)
             {

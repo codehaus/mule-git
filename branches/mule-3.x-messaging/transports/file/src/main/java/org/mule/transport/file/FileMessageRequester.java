@@ -151,17 +151,18 @@ public class FileMessageRequester extends AbstractMessageRequester
                 }
 
                 MuleMessage returnMessage = null;
+                String encoding = endpoint.getEncoding();
                 try
                 {
                     if (connector.isStreaming())
                     {
                         ReceiverFileInputStream receiverStream = new ReceiverFileInputStream(result, 
                             connector.isAutoDelete(), destinationFile);
-                        returnMessage = connector.getMessage(receiverStream);
+                        returnMessage = connector.getMessage(receiverStream, encoding);
                     }
                     else
                     {
-                        returnMessage = connector.getMessage(result);
+                        returnMessage = connector.getMessage(result, encoding);
                     }
                 }
                 catch (FileNotFoundException e)

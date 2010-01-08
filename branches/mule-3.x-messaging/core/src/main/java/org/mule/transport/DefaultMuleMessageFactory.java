@@ -26,7 +26,7 @@ public class DefaultMuleMessageFactory extends AbstractMuleMessageFactory
     }
 
     @Override
-    protected Object extractPayload(Object transportMessage) throws Exception
+    protected Object extractPayload(Object transportMessage, String encoding) throws Exception
     {
         return transportMessage;
     }

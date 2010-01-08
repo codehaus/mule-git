@@ -105,7 +105,7 @@ public class XmppMessageRequester extends AbstractMessageRequester
         }
         if (message != null)
         {
-            return connector.getMessage(message);
+            return connector.getMessage(message, endpoint.getEncoding());
         }
         else
         {

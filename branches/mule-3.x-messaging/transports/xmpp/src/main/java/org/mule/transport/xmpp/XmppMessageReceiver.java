@@ -138,7 +138,7 @@ public class XmppMessageReceiver extends AbstractMessageReceiver implements Pack
                     logger.debug("Processing XMPP packet from: " + packet.getFrom());
                 }
 
-                MuleMessage message = connector.getMessage(packet);
+                MuleMessage message = connector.getMessage(packet, endpoint.getEncoding());
                 MuleMessage returnMessage = routeMessage(message, endpoint.isSynchronous());
 
                 if (returnMessage != null && packet instanceof Message)

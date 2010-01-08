@@ -218,6 +218,8 @@ public class TransactedSingleResourceJmsMessageReceiver extends AbstractMessageR
                 TransactionTemplate tt = new TransactionTemplate(endpoint.getTransactionConfig(),
                         connector.getExceptionListener(), connector.getMuleContext());
 
+                final String encoding = endpoint.getEncoding();
+
                 if (receiveMessagesInTransaction)
                 {
                     TransactionCallback cb = new MessageTransactionCallback(message)
@@ -264,7 +266,7 @@ public class TransactedSingleResourceJmsMessageReceiver extends AbstractMessageR
                                 redeliveryHandler.handleRedelivery(message);
                             }
 
-                            MuleMessage messageToRoute = connector.getMessage(message);
+                            MuleMessage messageToRoute = connector.getMessage(message, encoding);
                             routeMessage(messageToRoute);
                             return null;
                         }
@@ -273,23 +275,19 @@ public class TransactedSingleResourceJmsMessageReceiver extends AbstractMessageR
                 }
                 else
                 {
-                    MuleMessage messageToRoute = connector.getMessage(message);
+                    MuleMessage messageToRoute = connector.getMessage(message, encoding);
                     routeMessage(messageToRoute);
                 }
-
             }
             catch (Exception e)
             {
                 getConnector().handleException(e);
             }
-
         }
 
         public void release()
         {
             // Nothing to release.
         }
-
     }
-
 }

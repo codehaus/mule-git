@@ -26,7 +26,7 @@ public abstract class AbstractMuleMessageFactory implements MuleMessageFactory
         muleContext = context;
     }
 
-    public MuleMessage create(Object transportMessage) throws Exception
+    public MuleMessage create(Object transportMessage, String encoding) throws Exception
     {
         if (transportMessage == null)
         {
@@ -38,7 +38,7 @@ public abstract class AbstractMuleMessageFactory implements MuleMessageFactory
             throw new MessageTypeNotSupportedException(transportMessage, getClass());
         }
 
-        Object payload = extractPayload(transportMessage);
+        Object payload = extractPayload(transportMessage, encoding);
         MuleMessage message = new DefaultMuleMessage(payload, muleContext);
         addProperties(message, transportMessage);
         addAttachments(message, transportMessage);
@@ -47,7 +47,7 @@ public abstract class AbstractMuleMessageFactory implements MuleMessageFactory
 
     protected abstract Class<?>[] getSupportedTransportMessageTypes();
 
-    protected abstract Object extractPayload(Object transportMessage) throws Exception;
+    protected abstract Object extractPayload(Object transportMessage, String encoding) throws Exception;
 
     protected void addProperties(MuleMessage message, Object transportMessage)
     {

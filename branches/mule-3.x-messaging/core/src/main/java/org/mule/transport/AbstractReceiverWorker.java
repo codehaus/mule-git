@@ -95,7 +95,7 @@ public abstract class AbstractReceiverWorker implements Work
                     payload = preProcessMessage(payload);
                     if (payload != null)
                     {
-                        MuleMessage muleMessage = endpoint.getConnector().getMessage(payload);
+                        MuleMessage muleMessage = endpoint.getConnector().getMessage(payload, endpoint.getEncoding());
                         preRouteMuleMessage(muleMessage);
                         MuleMessage result = receiver.routeMessage(muleMessage, tx,  tx != null || endpoint.isSynchronous(), out);
                         if (result != null)

@@ -263,7 +263,7 @@ public class UdpMessageReceiver extends AbstractMessageReceiver implements Work
             MuleMessage returnMessage = null;
             try
             {
-                MuleMessage message = connector.getMessage(packet);
+                MuleMessage message = connector.getMessage(packet, endpoint.getEncoding());
                 final SocketAddress clientAddress = socket.getRemoteSocketAddress();
                 if (clientAddress != null)
                 {

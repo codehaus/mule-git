@@ -91,7 +91,7 @@ public class FtpMessageRequester extends AbstractMessageRequester
             
             byte[] payload = retriveFileContents(client, fileToProcess);
             
-            MuleMessage reply = connector.getMessage(payload);
+            MuleMessage reply = connector.getMessage(payload, endpoint.getEncoding());
             reply.setProperty(FileConnector.PROPERTY_ORIGINAL_FILENAME, originalFileName);
             reply.setProperty(FileConnector.PROPERTY_FILE_SIZE, new Long(fileToProcess.getSize()));
             return reply;
