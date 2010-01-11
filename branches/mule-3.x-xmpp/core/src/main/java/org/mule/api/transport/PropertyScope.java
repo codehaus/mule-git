@@ -13,9 +13,9 @@ import java.io.Serializable;
 import java.util.Comparator;
 
 /**
- * A PropertyScope is used to associate a message property with a lifetime.  A scope may be very brief such as
- * {@link #INVOCATION} which only lasts until a service has been invoked or longer running such as {@link #SESSION}.
- *
+ * A PropertyScope is used to associate a message property with a lifetime.  A scope may be very 
+ * brief such as {@link #INVOCATION} which only lasts until a service has been invoked or longer 
+ * running such as {@link #SESSION}.
  */
 public final class PropertyScope implements Serializable
 {
@@ -109,11 +109,13 @@ public final class PropertyScope implements Serializable
         return order;
     }
 
+    @Override
     public String toString()
     {
         return getScopeName();
     }
 
+    @Override
     public boolean equals(Object o)
     {
         if (this == o)
@@ -139,6 +141,7 @@ public final class PropertyScope implements Serializable
         return true;
     }
 
+    @Override
     public int hashCode()
     {
         int result;
@@ -151,11 +154,11 @@ public final class PropertyScope implements Serializable
      * Used for comparing {@link PropertyScope} instances in a map. The {@link PropertyScope#getOrder()}
      * property is used to determine the order in the map
      */
-    public static class ScopeComparator implements Comparator, Serializable
+    public static class ScopeComparator implements Comparator<PropertyScope>, Serializable
     {
         private static final long serialVersionUID = -3346258000312580166L;
 
-        public int compare(Object o, Object o1)
+        public int compare(PropertyScope o, PropertyScope o1)
         {
             if (o == o1)
             {
@@ -165,7 +168,7 @@ public final class PropertyScope implements Serializable
             {
                 return 0;
             }
-            return (((PropertyScope) o).getOrder() < ((PropertyScope) o1).getOrder() ? -1 : 1);
+            return (o.getOrder() < o1.getOrder() ? -1 : 1);
         }
     }
 }
