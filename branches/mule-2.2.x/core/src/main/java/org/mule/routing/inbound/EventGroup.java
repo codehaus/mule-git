@@ -10,10 +10,10 @@
 
 package org.mule.routing.inbound;
 
+import org.mule.DefaultMessageCollection;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessageCollection;
 import org.mule.util.ClassUtils;
-import org.mule.DefaultMessageCollection;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -21,6 +21,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import edu.emory.mathcs.backport.java.util.concurrent.helpers.Utils;
+
 import org.apache.commons.collections.IteratorUtils;
 
 /**
@@ -51,7 +52,7 @@ public class EventGroup implements Comparable, Serializable
     public EventGroup(Object groupId, int expectedSize)
     {
         super();
-        this.created = Utils.nanoTime();
+        this.created = System.nanoTime();
         this.events = new ArrayList(expectedSize > 0 ? expectedSize : 10);
         this.expectedSize = expectedSize;
         this.groupId = groupId;
