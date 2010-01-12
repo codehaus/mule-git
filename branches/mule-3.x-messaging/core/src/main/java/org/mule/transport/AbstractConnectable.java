@@ -25,6 +25,8 @@ import org.mule.api.transport.Connectable;
 import org.mule.api.transport.Connector;
 import org.mule.api.transport.MuleMessageFactory;
 import org.mule.config.i18n.CoreMessages;
+import org.mule.config.i18n.Message;
+import org.mule.config.i18n.MessageFactory;
 import org.mule.context.notification.ConnectionNotification;
 import org.mule.util.ClassUtils;
 import org.mule.util.concurrent.WaitableBoolean;
@@ -78,11 +80,6 @@ public abstract class AbstractConnectable implements Connectable, ExceptionListe
         }
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.mule.util.ExceptionListener#onException(java.lang.Throwable)
-     */
     public void exceptionThrown(Exception e)
     {
         try
@@ -118,6 +115,12 @@ public abstract class AbstractConnectable implements Connectable, ExceptionListe
     
     public void initialise() throws InitialisationException
     {
+        initializeRetryPolicy();
+        initializeMessageFactory();
+    }
+
+    protected void initializeRetryPolicy()
+    {
         if (endpoint.getRetryPolicyTemplate() != null)
         {
             retryTemplate = endpoint.getRetryPolicyTemplate();
@@ -125,6 +128,19 @@ public abstract class AbstractConnectable implements Connectable, ExceptionListe
         else
         {
             retryTemplate = connector.getRetryPolicyTemplate();
+        }
+    }
+
+    protected void initializeMessageFactory() throws InitialisationException
+    {
+        try
+        {
+            muleMessageFactory = createMuleMessageFactory();
+        }
+        catch (CreateException ce)
+        {
+            Message message = MessageFactory.createStaticMessage(ce.getMessage());
+            throw new InitialisationException(message, ce, this);
         }
     }
 
@@ -406,7 +422,7 @@ public abstract class AbstractConnectable implements Connectable, ExceptionListe
      * a new {@link MuleMessageFactory}. Subclasses may need to override this method in order to 
      * perform additional initialization on the message factory before it's actually used.
      */
-    protected MuleMessageFactory createMuleMessageFactory() throws InitialisationException
+    protected MuleMessageFactory createMuleMessageFactory() throws CreateException
     {
         return connector.createMuleMessageFactory();
     }

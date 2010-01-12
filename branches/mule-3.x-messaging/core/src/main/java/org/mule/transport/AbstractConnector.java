@@ -29,6 +29,7 @@ import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.endpoint.InboundEndpoint;
 import org.mule.api.endpoint.InboundEndpointDecorator;
 import org.mule.api.endpoint.OutboundEndpoint;
+import org.mule.api.lifecycle.CreateException;
 import org.mule.api.lifecycle.DisposeException;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.lifecycle.LifecycleException;
@@ -365,15 +366,16 @@ public abstract class AbstractConnector
      * @see MessageReceiver#createMuleMessage(Object)
      * @see MessageReceiver#createMuleMessage(Object, String)
      */
-    public MuleMessageFactory createMuleMessageFactory() throws InitialisationException
+    public MuleMessageFactory createMuleMessageFactory() throws CreateException
     {
         try
         {
             return serviceDescriptor.createMuleMessageFactory();
         }
-        catch (TransportServiceException e)
+        catch (TransportServiceException tse)
         {
-            throw new InitialisationException(CoreMessages.failedToCreate("MuleMessageFactory"), e, this);
+            throw new CreateException(CoreMessages.failedToCreate("MuleMessageFactory"), 
+                tse, this);
         }
     }
 

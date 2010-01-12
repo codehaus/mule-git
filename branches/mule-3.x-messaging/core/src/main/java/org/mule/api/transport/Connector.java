@@ -19,7 +19,7 @@ import org.mule.api.context.MuleContextAware;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.endpoint.InboundEndpoint;
 import org.mule.api.endpoint.OutboundEndpoint;
-import org.mule.api.lifecycle.InitialisationException;
+import org.mule.api.lifecycle.CreateException;
 import org.mule.api.lifecycle.Lifecycle;
 import org.mule.api.retry.RetryPolicyTemplate;
 import org.mule.api.service.Service;
@@ -88,7 +88,7 @@ public interface Connector extends Lifecycle, MuleContextAware, NamedObject
      * Creates a new {@link MuleMessageFactory} using what's defined in the connector's 
      * transport service descriptor. 
      */
-    MuleMessageFactory createMuleMessageFactory() throws InitialisationException;
+    MuleMessageFactory createMuleMessageFactory() throws CreateException;
     
     /**
      * @return the primary protocol name for endpoints of this connector
