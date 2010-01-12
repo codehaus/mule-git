@@ -37,7 +37,7 @@
                     </execution>
                 </executions>
             </plugin>
-            <!-- 
+            <!--
                 This is absolutely necessary as the cxf-codegen-plugin already attaches
                 the generated source dir to the lifecycle. Then again, when generating your IDE
                 project files, this project will have compile errors because of missing sources
@@ -201,6 +201,10 @@
                 <exclusion>
                     <groupId>velocity</groupId>
                     <artifactId>velocity-dep</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.sun.xml.parsers</groupId>
+                    <artifactId>jaxp-ri</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -405,26 +409,26 @@
             <artifactId>mule-transport-tcp</artifactId>
             <version>${version}</version>
         </dependency>
-        
+
         <!--  We should reenable this as it makes CXF faster
-        <dependency>  
-            <groupId>asm</groupId>  
-            <artifactId>asm.osgi</artifactId>  
-            <version>${asmVersion}</version> 
+        <dependency>
+            <groupId>asm</groupId>
+            <artifactId>asm.osgi</artifactId>
+            <version>${asmVersion}</version>
         </dependency>
          -->
-        
+
         <dependency>
             <groupId>net.sf.saxon</groupId>
             <artifactId>saxon</artifactId>
             <version>${saxonVersion}-osgi</version>
         </dependency>
-        
+
         <dependency>
             <groupId>org.apache.geronimo.specs</groupId>
             <artifactId>geronimo-annotation_1.0_spec</artifactId>
         </dependency>
-        
+
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-beans</artifactId>
@@ -440,9 +444,9 @@
             <artifactId>spring-context</artifactId>
             <version>${springVersion}</version>
         </dependency>
-        
+
         <!-- For dynamic client, which compiles stuff on the fly -->
-        
+
 
         <!-- Unit tests -->
         <dependency>
@@ -487,14 +491,14 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- for integration tests -->  
-        <!-- Maven classpath gets messed up and WsdlCallTestCase doesn't pass unless this is here -->      
+        <!-- for integration tests -->
+        <!-- Maven classpath gets messed up and WsdlCallTestCase doesn't pass unless this is here -->
 
         <dependency>
             <groupId>org.mortbay.jetty</groupId>
             <artifactId>jetty</artifactId>
         </dependency>
-        
+
         <dependency>
             <groupId>org.mule.transports</groupId>
             <artifactId>mule-transport-vm</artifactId>
@@ -539,13 +543,13 @@
             <artifactId>jaxws-api</artifactId>
             <version>${javaXmlWsVersion}-osgi</version>
             <exclusions>
-                <exclusion> 
+                <exclusion>
                     <groupId>javax.jws</groupId>
                     <artifactId>jsr181</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
-        
+
         <!--  for dynamic client -->
         <dependency>
             <groupId>ant</groupId>
