@@ -174,7 +174,15 @@ public class FtpMessageReceiver extends AbstractPollingMessageReceiver
         }
     }
 
-    protected FtpMuleMessageFactory createMuleMessageFactory(FTPClient client) throws InitialisationException
+    @Override
+    protected void initializeMessageFactory() throws InitialisationException
+    {
+        // Do not initialize the muleMessageFactory instance variable of our super class as 
+        // we're creating MuleMessageFactory instances per request. 
+        // See createMuleMessageFactory(FTPClient) below.
+    }
+    
+    protected FtpMuleMessageFactory createMuleMessageFactory(FTPClient client) throws CreateException
     {
         FtpMuleMessageFactory factory = (FtpMuleMessageFactory) createMuleMessageFactory();
         factory.setStreaming(connector.isStreaming());

@@ -15,6 +15,7 @@ import org.mule.api.MuleRuntimeException;
 import org.mule.api.context.notification.ConnectionNotificationListener;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.endpoint.InboundEndpoint;
+import org.mule.api.lifecycle.CreateException;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.lifecycle.StartException;
 import org.mule.api.lifecycle.StopException;
@@ -224,7 +225,7 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
     }
 
     @Override
-    public MuleMessageFactory createMuleMessageFactory() throws InitialisationException
+    public MuleMessageFactory createMuleMessageFactory() throws CreateException
     {
         JMSMuleMessageFactory jmsFactory = (JMSMuleMessageFactory) super.createMuleMessageFactory();
         jmsFactory.setSpecification(getSpecification());

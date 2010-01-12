@@ -13,7 +13,7 @@ package org.mule.transport.ftp;
 import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.EndpointURI;
 import org.mule.api.endpoint.InboundEndpoint;
-import org.mule.api.lifecycle.InitialisationException;
+import org.mule.api.lifecycle.CreateException;
 import org.mule.transport.AbstractMessageRequester;
 
 import java.io.File;
@@ -96,7 +96,7 @@ public class FtpMessageRequester extends AbstractMessageRequester
         }
     }
     
-    protected FtpMuleMessageFactory createMuleMessageFactory(FTPClient client) throws InitialisationException
+    protected FtpMuleMessageFactory createMuleMessageFactory(FTPClient client) throws CreateException
     {
         FtpMuleMessageFactory factory = (FtpMuleMessageFactory) createMuleMessageFactory();
         // We might want to use isStreaming from connector, but for now maintain existing behaviour.
