@@ -356,7 +356,14 @@ public abstract class AbstractConnector
     }
 
     /**
-     * @inheritDoc
+     * <p>Create a {@link MuleMessageFactory} from this connector's configuration, typically through the
+     * transport descriptor.</p>
+     * <p><b>Attention!</b> This method is not meant to be used by client code directly. It is only
+     * publicly available to service message receivers which should be used as <em>real</em> 
+     * factories to create {@link MuleMessage} instances.
+     * 
+     * @see MessageReceiver#createMuleMessage(Object)
+     * @see MessageReceiver#createMuleMessage(Object, String)
      */
     public MuleMessageFactory createMuleMessageFactory() throws InitialisationException
     {

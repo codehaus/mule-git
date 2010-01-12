@@ -12,6 +12,7 @@ package org.mule.transport;
 
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
+import org.mule.api.config.MuleConfiguration;
 import org.mule.api.context.WorkManager;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.CreateException;
@@ -400,11 +401,20 @@ public abstract class AbstractConnectable implements Connectable, ExceptionListe
         return started.get();
     }
     
+    /**
+     * This method uses the connector's <code>createMuleMessageFactory</code> method to create
+     * a new {@link MuleMessageFactory}. Subclasses may need to override this method in order to 
+     * perform additional initialization on the message factory before it's actually used.
+     */
     protected MuleMessageFactory createMuleMessageFactory() throws InitialisationException
     {
         return connector.createMuleMessageFactory();
     }
     
+    /**
+     * Uses this object's {@link MuleMessageFactory} to create a new {@link MuleMessage} instance.
+     * This is the designated way to build {@link MuleMessage}s from the transport specific message. 
+     */
     public MuleMessage createMuleMessage(Object transportMessage, String encoding) throws MuleException
     {
         try
@@ -417,6 +427,12 @@ public abstract class AbstractConnectable implements Connectable, ExceptionListe
         }
     }
 
+    /**
+     * Uses this object's {@link MuleMessageFactory} to create a new {@link MuleMessage} instance.
+     * Uses the default encoding.
+     * 
+     * @see MuleConfiguration#getDefaultEncoding()
+     */
     public MuleMessage createMuleMessage(Object transportMessage) throws MuleException
     {
         String encoding = endpoint.getMuleContext().getConfiguration().getDefaultEncoding();

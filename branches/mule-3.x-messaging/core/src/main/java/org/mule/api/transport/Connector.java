@@ -208,7 +208,6 @@ public interface Connector extends Lifecycle, MuleContextAware, NamedObject
      */
     MuleMessage send(OutboundEndpoint endpoint, MuleEvent event) throws DispatchException;
 
-
     /**
      * Will get the output stream for this type of transport. Typically this
      * will be called only when Streaming is being used on an outbound endpoint.
