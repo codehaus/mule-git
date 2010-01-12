@@ -158,11 +158,11 @@ public class FileMessageRequester extends AbstractMessageRequester
                     {
                         ReceiverFileInputStream receiverStream = new ReceiverFileInputStream(result, 
                             connector.isAutoDelete(), destinationFile);
-                        returnMessage = connector.getMessage(receiverStream, encoding);
+                        returnMessage = createMuleMessage(receiverStream, encoding);
                     }
                     else
                     {
-                        returnMessage = connector.getMessage(result, encoding);
+                        returnMessage = createMuleMessage(result, encoding);
                     }
                 }
                 catch (FileNotFoundException e)

@@ -115,7 +115,7 @@ public class JdbcMessageReceiver extends TransactedPollingMessageReceiver
         try
         {
             con = this.connector.getConnection();
-            MuleMessage muleMessage = connector.getMessage(message, endpoint.getEncoding());
+            MuleMessage muleMessage = createMuleMessage(message, endpoint.getEncoding());
             if (this.ackStmt != null)
             {
                 if (aggregateResult)

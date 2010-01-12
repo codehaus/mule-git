@@ -140,7 +140,7 @@ public  class SelectSqlStatementStrategy implements SqlStatementStrategy
             }
             else
             {
-                message = connector.getMessage(result, endpoint.getEncoding());
+                message = new DefaultMuleMessage(result, connector.getMuleContext());
             }
             
             //Close or return connection if not in a transaction

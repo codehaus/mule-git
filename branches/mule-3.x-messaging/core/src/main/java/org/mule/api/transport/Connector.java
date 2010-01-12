@@ -10,7 +10,6 @@
 
 package org.mule.api.transport;
 
-import org.mule.api.MessagingException;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleException;
@@ -20,6 +19,7 @@ import org.mule.api.context.MuleContextAware;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.endpoint.InboundEndpoint;
 import org.mule.api.endpoint.OutboundEndpoint;
+import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.lifecycle.Lifecycle;
 import org.mule.api.retry.RetryPolicyTemplate;
 import org.mule.api.service.Service;
@@ -85,15 +85,11 @@ public interface Connector extends Lifecycle, MuleContextAware, NamedObject
     MessageAdapter getMessageAdapter(Object message) throws MuleException;
 
     /**
-     * Gets a {@link MuleMessage} from the connector for the given payload and encoding.
+     * Creates a new {@link MuleMessageFactory} using what's defined in the connector's 
+     * transport service descriptor. 
      */
-    MuleMessage getMessage(Object transportMessage, String encoding) throws MessagingException, MessageTypeNotSupportedException;
+    MuleMessageFactory createMuleMessageFactory() throws InitialisationException;
     
-    /**
-     * Gets a {@link MuleMessage} from the connector for the given payload using the default encoding.
-     */
-    MuleMessage getMessage(Object transportMessage) throws MessagingException, MessageTypeNotSupportedException;
-
     /**
      * @return the primary protocol name for endpoints of this connector
      */
@@ -186,6 +182,7 @@ public interface Connector extends Lifecycle, MuleContextAware, NamedObject
      * @throws Exception if the call to the underlying protocal cuases an exception
      * @deprecated Use request(ImmutableEndpoint endpoint, long timeout)
      */
+    @Deprecated
     MuleMessage request(String uri, long timeout) throws Exception;
 
     /**

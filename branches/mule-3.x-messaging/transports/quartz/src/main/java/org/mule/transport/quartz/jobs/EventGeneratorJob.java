@@ -109,7 +109,7 @@ public class EventGeneratorJob implements Job
                 }
             }
             
-            MuleMessage msg = receiver.getConnector().getMessage(payload, receiver.getEndpoint().getEncoding());
+            MuleMessage msg = receiver.createMuleMessage(payload, receiver.getEndpoint().getEncoding());
             // If the job is stateful users can store state in this map and have it available for the next job trigger
             msg.setProperty(QuartzConnector.PROPERTY_JOB_DATA, 
                 jobExecutionContext.getJobDetail().getJobDataMap(), PropertyScope.INVOCATION);

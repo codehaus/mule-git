@@ -10,7 +10,6 @@
 
 package org.mule.transport.ftp;
 
-import org.mule.api.MessagingException;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
@@ -23,7 +22,6 @@ import org.mule.api.service.Service;
 import org.mule.api.transport.ConnectorException;
 import org.mule.api.transport.DispatchException;
 import org.mule.api.transport.MessageReceiver;
-import org.mule.api.transport.MuleMessageFactory;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.config.i18n.MessageFactory;
 import org.mule.model.streaming.CallbackOutputStream;
@@ -93,6 +91,7 @@ public class FtpConnector extends AbstractConnector
         return FTP;
     }
 
+    @Override
     public MessageReceiver createReceiver(Service service, InboundEndpoint endpoint) throws Exception
     {
         List args = getReceiverArguments(endpoint.getProperties());
@@ -231,6 +230,7 @@ public class FtpConnector extends AbstractConnector
     }
 
 
+    @Override
     protected void doInitialise() throws InitialisationException
     {
         try
@@ -251,26 +251,31 @@ public class FtpConnector extends AbstractConnector
         pools = new HashMap<String, ObjectPool>();
     }
 
+    @Override
     protected void doDispose()
     {
         // template method
     }
 
+    @Override
     protected void doConnect() throws Exception
     {
         // template method
     }
 
+    @Override
     protected void doDisconnect() throws Exception
     {
         // template method
     }
 
+    @Override
     protected void doStart() throws MuleException
     {
         // template method
     }
 
+    @Override
     protected void doStop() throws MuleException
     {
         if (logger.isDebugEnabled())
@@ -636,20 +641,5 @@ public class FtpConnector extends AbstractConnector
         {
             filenameParser.setMuleContext(context);
         }
-    }
-    
-    @Override
-    public final MuleMessage getMessage(Object transportMessage, String encoding) throws MessagingException
-    {
-       throw new UnsupportedOperationException("getMessage: Use getMessageFactory() instead");
-    }
-    
-    /**
-     * Open up access to this method so the MessageReciever can customize the Factory before using it.
-     */
-    @Override
-    protected FtpMuleMessageFactory createMuleMessageFactory() throws InitialisationException
-    {
-        return (FtpMuleMessageFactory) super.createMuleMessageFactory();
     }
 }

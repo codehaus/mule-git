@@ -43,6 +43,7 @@ public class TcpMessageRequester extends AbstractMessageRequester
      *         returned if no data was available
      * @throws Exception if the call to the underlying protocal cuases an exception
      */
+    @Override
     protected MuleMessage doRequest(long timeout) throws Exception
     {
         if (timeout > Integer.MAX_VALUE || timeout < 0)
@@ -57,7 +58,7 @@ public class TcpMessageRequester extends AbstractMessageRequester
             {
                 return null;
             }
-            return connector.getMessage(result, endpoint.getEncoding());
+            return createMuleMessage(result, endpoint.getEncoding());
         }
         catch (SocketTimeoutException e)
         {
@@ -69,9 +70,9 @@ public class TcpMessageRequester extends AbstractMessageRequester
             }
             return null;
         }
-
     }
 
+    @Override
     protected synchronized void doDispose()
     {
         try
@@ -84,11 +85,13 @@ public class TcpMessageRequester extends AbstractMessageRequester
         }
     }
 
+    @Override
     protected void doConnect() throws Exception
     {
         // nothing, there is an optional validation in validateConnection()
     }
 
+    @Override
     protected void doDisconnect() throws Exception
     {
         //nothing to do

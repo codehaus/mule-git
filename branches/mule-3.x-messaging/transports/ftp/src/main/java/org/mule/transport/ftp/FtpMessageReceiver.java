@@ -13,6 +13,7 @@ package org.mule.transport.ftp;
 import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.InboundEndpoint;
 import org.mule.api.lifecycle.CreateException;
+import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.retry.RetryContext;
 import org.mule.api.service.Service;
 import org.mule.api.transport.Connector;
@@ -158,10 +159,7 @@ public class FtpMessageReceiver extends AbstractPollingMessageReceiver
                 throw new ConnectException(e, this);
             }
 
-            FtpMuleMessageFactory muleMessageFactory = connector.createMuleMessageFactory();
-            muleMessageFactory.setStreaming(connector.isStreaming());
-            muleMessageFactory.setFtpClient(client);
-
+            FtpMuleMessageFactory muleMessageFactory = createMuleMessageFactory(client);
             MuleMessage message = muleMessageFactory.create(file, endpoint.getEncoding());
 
             routeMessage(message);
@@ -174,6 +172,15 @@ public class FtpMessageReceiver extends AbstractPollingMessageReceiver
                 connector.releaseFtp(endpoint.getEndpointURI(), client);
             }
         }
+    }
+
+    protected FtpMuleMessageFactory createMuleMessageFactory(FTPClient client) throws InitialisationException
+    {
+        FtpMuleMessageFactory factory = (FtpMuleMessageFactory) createMuleMessageFactory();
+        factory.setStreaming(connector.isStreaming());
+        factory.setFtpClient(client);    
+        
+        return factory;
     }
 
     protected void postProcess(FTPClient client, FTPFile file, MuleMessage message) throws Exception

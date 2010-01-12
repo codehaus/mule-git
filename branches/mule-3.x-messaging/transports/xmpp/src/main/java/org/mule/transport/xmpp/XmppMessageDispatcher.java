@@ -106,7 +106,7 @@ public class XmppMessageDispatcher extends AbstractMessageDispatcher
                 {
                     logger.debug("Got a response from chat: " + chat);
                 }
-                connector.getMessage(response, endpoint.getEncoding());
+                createMuleMessage(response, endpoint.getEncoding());
             }
         }
         return new DefaultMuleMessage(NullPayload.getInstance(), connector.getMuleContext());

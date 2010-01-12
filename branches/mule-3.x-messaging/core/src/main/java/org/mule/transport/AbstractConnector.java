@@ -271,8 +271,6 @@ public abstract class AbstractConnector
      */
     private boolean validateConnections = true;
 
-    protected MuleMessageFactory messageFactory;
-
     public AbstractConnector()
     {
         setDynamicNotification(false);
@@ -339,7 +337,6 @@ public abstract class AbstractConnector
 
         // Initialise the structure of this connector
         this.initFromServiceDescriptor();
-        messageFactory = createMuleMessageFactory();
 
         setMaxDispatchersActive(getDispatcherThreadingProfile().getMaxThreadsActive());
         setMaxRequestersActive(getRequesterThreadingProfile().getMaxThreadsActive());
@@ -358,7 +355,10 @@ public abstract class AbstractConnector
         initialised.set(true);
     }
 
-    protected MuleMessageFactory createMuleMessageFactory() throws InitialisationException
+    /**
+     * @inheritDoc
+     */
+    public MuleMessageFactory createMuleMessageFactory() throws InitialisationException
     {
         try
         {
@@ -2352,24 +2352,6 @@ public abstract class AbstractConnector
             throw new MessagingException(CoreMessages.failedToCreate("Message Adapter"),
                     new DefaultMuleMessage(message, muleContext), tse);
         }
-    }
-
-    public MuleMessage getMessage(Object transportMessage, String encoding) throws MessagingException
-    {
-        try
-        {
-            return messageFactory.create(transportMessage, encoding);
-        }
-        catch (Exception e)
-        {
-            throw new MessagingException(CoreMessages.failedToBuildMessage(), new DefaultMuleMessage(transportMessage,
-                muleContext));
-        }
-    }
-
-    public MuleMessage getMessage(Object transportMessage) throws MessagingException
-    {
-        return getMessage(transportMessage, muleContext.getConfiguration().getDefaultEncoding());
     }
     
     /**

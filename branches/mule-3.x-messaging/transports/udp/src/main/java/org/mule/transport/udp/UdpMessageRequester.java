@@ -126,7 +126,7 @@ public class UdpMessageRequester extends AbstractMessageRequester
         {
             return null;
         }
-        return connector.getMessage(result, endpoint.getEncoding());
+        return createMuleMessage(result, endpoint.getEncoding());
     }
 
     @Override

@@ -69,7 +69,8 @@ public class AxisServiceProxy
 
         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable
         {
-            MuleMessage messageToRoute = receiver.getConnector().getMessage(args,
+            AxisMessageReceiver axisReceiver = (AxisMessageReceiver) receiver;
+            MuleMessage messageToRoute = axisReceiver.createMuleMessage(args, 
                 receiver.getEndpoint().getEncoding());
             messageToRoute.setProperty(MuleProperties.MULE_METHOD_PROPERTY, method);
             

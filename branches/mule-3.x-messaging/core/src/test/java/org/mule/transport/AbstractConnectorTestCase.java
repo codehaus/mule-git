@@ -33,6 +33,7 @@ import java.beans.ExceptionListener;
 public abstract class AbstractConnectorTestCase extends AbstractMuleTestCase
 {
     protected String connectorName;
+    protected String encoding;
 
     public AbstractConnectorTestCase()
     {
@@ -51,6 +52,7 @@ public abstract class AbstractConnectorTestCase extends AbstractMuleTestCase
         
         connector.setMuleContext(muleContext);
         muleContext.getRegistry().registerConnector(connector);
+        encoding = muleContext.getConfiguration().getDefaultEncoding();
     }
 
     @Override
@@ -242,8 +244,8 @@ public abstract class AbstractConnectorTestCase extends AbstractMuleTestCase
     public void testConnectorMessageCreatorWithNullPayload() throws Exception
     {
         Connector connector = getConnectorAndAssert();
-        
-        MuleMessage message = connector.getMessage(null);
+
+        MuleMessage message = connector.createMuleMessageFactory().create(null, encoding);
         assertNotNull(message);
         assertEquals(NullPayload.getInstance(), message.getPayload());
     }
@@ -253,7 +255,7 @@ public abstract class AbstractConnectorTestCase extends AbstractMuleTestCase
         Connector connector = getConnectorAndAssert();
 
         Object payload = getValidMessage();
-        MuleMessage message = connector.getMessage(payload);
+        MuleMessage message = connector.createMuleMessageFactory().create(payload, encoding);
         assertNotNull(message);
         assertEquals(payload, message.getPayload());
     }

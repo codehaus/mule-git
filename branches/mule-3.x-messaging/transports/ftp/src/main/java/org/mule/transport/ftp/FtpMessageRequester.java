@@ -13,6 +13,8 @@ package org.mule.transport.ftp;
 import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.EndpointURI;
 import org.mule.api.endpoint.InboundEndpoint;
+import org.mule.api.lifecycle.InitialisationException;
+import org.mule.api.transport.MuleMessageFactory;
 import org.mule.transport.AbstractMessageRequester;
 
 import java.io.File;
@@ -86,17 +88,30 @@ public class FtpMessageRequester extends AbstractMessageRequester
 
             fileToProcess = prepareFile(client, fileToProcess);
 
-            FtpMuleMessageFactory muleMessageFactory = connector.createMuleMessageFactory();
-            // We might want to use isStreaming from connector, but for now maintain existing behaviour.
-            muleMessageFactory.setStreaming(false);
-            muleMessageFactory.setFtpClient(client);
-
+            FtpMuleMessageFactory muleMessageFactory = createMuleMessageFactory(client);
             return muleMessageFactory.create(fileToProcess, endpoint.getEncoding());
         }
         finally
         {
             connector.releaseFtp(endpoint.getEndpointURI(), client);
         }
+    }
+    
+    protected FtpMuleMessageFactory createMuleMessageFactory(FTPClient client) throws InitialisationException
+    {
+        FtpMuleMessageFactory factory = (FtpMuleMessageFactory) createMuleMessageFactory();
+        // We might want to use isStreaming from connector, but for now maintain existing behaviour.
+        factory.setStreaming(false);
+        factory.setFtpClient(client);
+        
+        return factory;
+    }
+
+    @Override
+    protected MuleMessageFactory createMuleMessageFactory() throws InitialisationException
+    {
+        // TODO Auto-generated method stub
+        return super.createMuleMessageFactory();
     }
 
     protected FTPFile prepareFile(FTPClient client, FTPFile file) throws IOException

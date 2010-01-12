@@ -394,7 +394,7 @@ public class HttpMessageReceiver extends TcpMessageReceiver
                 }
             }
 
-            return connector.getMessage(new Object[]{ body, headers }, endpoint.getEncoding());
+            return createMuleMessage(new Object[]{ body, headers }, endpoint.getEncoding());
         }
 
         private void sendExpect100(Map headers, RequestLine requestLine)

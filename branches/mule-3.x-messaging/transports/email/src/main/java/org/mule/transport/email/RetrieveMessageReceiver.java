@@ -137,7 +137,7 @@ public class RetrieveMessageReceiver extends AbstractPollingMessageReceiver
                     {
                         MimeMessage mimeMessage = new MimeMessage((MimeMessage) messages[i]);
                         storeMessage(mimeMessage);
-                        message = castConnector().getMessage(mimeMessage, endpoint.getEncoding());
+                        message = createMuleMessage(mimeMessage, endpoint.getEncoding());
 
                         if (castConnector().isDeleteReadMessages())
                         {

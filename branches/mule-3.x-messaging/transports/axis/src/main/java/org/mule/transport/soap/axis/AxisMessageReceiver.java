@@ -11,6 +11,7 @@
 package org.mule.transport.soap.axis;
 
 import org.mule.api.MuleException;
+import org.mule.api.MuleMessage;
 import org.mule.api.component.Component;
 import org.mule.api.component.JavaComponent;
 import org.mule.api.endpoint.EndpointURI;
@@ -335,6 +336,7 @@ public class AxisMessageReceiver extends AbstractMessageReceiver
         soapService.stop();
     }
 
+    @Override
     protected void doConnect() throws Exception
     {
         // Tell the axis configuration about our new service.
@@ -342,6 +344,7 @@ public class AxisMessageReceiver extends AbstractMessageReceiver
         connector.registerReceiverWithMuleService(this, endpoint.getEndpointURI());
     }
 
+    @Override
     protected void doDisconnect() throws Exception
     {
         try
@@ -358,6 +361,7 @@ public class AxisMessageReceiver extends AbstractMessageReceiver
         connector.unregisterReceiverWithMuleService(this, endpoint.getEndpointURI());
     }
 
+    @Override
     protected void doStart() throws MuleException
     {
         if (soapService != null)
@@ -366,6 +370,7 @@ public class AxisMessageReceiver extends AbstractMessageReceiver
         }
     }
 
+    @Override
     protected void doStop() throws MuleException
     {
         if (soapService != null)
@@ -374,6 +379,7 @@ public class AxisMessageReceiver extends AbstractMessageReceiver
         }
     }
 
+    @Override
     protected void doDispose()
     {
         // nothing to do               
@@ -391,5 +397,15 @@ public class AxisMessageReceiver extends AbstractMessageReceiver
     public SOAPService getSoapService()
     {
         return soapService;
+    }
+
+    /**
+     * Open up access for classes in the same package
+     */
+    @Override
+    protected MuleMessage createMuleMessage(Object transportMessage, String encoding) throws MuleException
+    {
+        // TODO Auto-generated method stub
+        return super.createMuleMessage(transportMessage, encoding);
     }
 }

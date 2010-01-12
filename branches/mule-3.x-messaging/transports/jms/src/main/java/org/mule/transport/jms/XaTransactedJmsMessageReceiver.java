@@ -273,7 +273,7 @@ public class XaTransactedJmsMessageReceiver extends TransactedPollingMessageRece
             redeliveryHandler.handleRedelivery(message);
         }
 
-        MuleMessage messageToRoute = connector.getMessage(message, endpoint.getEncoding());
+        MuleMessage messageToRoute = createMuleMessage(message, endpoint.getEncoding());
         routeMessage(messageToRoute);
         return null;
     }

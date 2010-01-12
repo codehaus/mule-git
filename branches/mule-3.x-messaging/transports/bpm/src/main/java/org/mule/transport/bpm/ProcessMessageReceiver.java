@@ -79,7 +79,7 @@ public class ProcessMessageReceiver extends AbstractMessageReceiver
         }
         else
         {
-            message = connector.getMessage(payload, this.endpoint.getEncoding());
+            message = createMuleMessage(payload, this.endpoint.getEncoding());
         }
         message.addProperties(messageProperties);
 

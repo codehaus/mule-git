@@ -189,7 +189,7 @@ public class RmiCallbackMessageReceiver extends AbstractMessageReceiver
 
     public Object routeMessage(Object payload) throws MuleException
     {
-        MuleMessage messageToRoute = connector.getMessage(payload, endpoint.getEncoding());
+        MuleMessage messageToRoute = createMuleMessage(payload, endpoint.getEncoding());
         return routeMessage(messageToRoute);
     }
 }

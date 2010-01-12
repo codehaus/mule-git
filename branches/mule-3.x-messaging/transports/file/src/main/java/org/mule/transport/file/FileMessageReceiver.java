@@ -92,6 +92,7 @@ public class FileMessageReceiver extends AbstractPollingMessageReceiver
         }
     }
 
+    @Override
     protected void doConnect() throws Exception
     {
         if (readDir != null)
@@ -117,16 +118,19 @@ public class FileMessageReceiver extends AbstractPollingMessageReceiver
         }
     }
 
+    @Override
     protected void doDisconnect() throws Exception
     {
         // template method
     }
 
+    @Override
     protected void doDispose()
     {
         // nothing to do
     }
 
+    @Override
     public void poll()
     {
         try
@@ -241,11 +245,11 @@ public class FileMessageReceiver extends AbstractPollingMessageReceiver
             {
                 ReceiverFileInputStream payload = new ReceiverFileInputStream(sourceFile, 
                     fileConnector.isAutoDelete(), destinationFile);
-                message = connector.getMessage(payload, encoding);
+                message = createMuleMessage(payload, encoding);
             }
             else
             {
-                message = connector.getMessage(sourceFile, encoding);
+                message = createMuleMessage(sourceFile, encoding);
             }
         }
         catch (FileNotFoundException e)
@@ -296,7 +300,7 @@ public class FileMessageReceiver extends AbstractPollingMessageReceiver
                 }
 
                 // create new Message for destinationFile
-                message = connector.getMessage(destinationFile, endpoint.getEncoding());
+                message = createMuleMessage(destinationFile, endpoint.getEncoding());
                 message.setProperty(FileConnector.PROPERTY_FILENAME, destinationFile.getName());
                 message.setProperty(FileConnector.PROPERTY_ORIGINAL_FILENAME, sourceFileOriginalName);
             }

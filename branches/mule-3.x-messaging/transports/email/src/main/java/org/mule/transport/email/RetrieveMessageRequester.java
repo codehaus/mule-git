@@ -211,7 +211,7 @@ public class RetrieveMessageRequester extends AbstractMessageRequester
                             folder.copyMessages(new Message[]{message}, moveToFolder);
                             message = newMessage;
                         }
-                        return castConnector().getMessage(message, endpoint.getEncoding());
+                        return createMuleMessage(message, endpoint.getEncoding());
                     }
                 }
                 else if (count == -1)

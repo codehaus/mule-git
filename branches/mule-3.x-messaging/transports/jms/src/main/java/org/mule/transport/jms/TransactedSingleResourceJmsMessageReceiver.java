@@ -266,7 +266,7 @@ public class TransactedSingleResourceJmsMessageReceiver extends AbstractMessageR
                                 redeliveryHandler.handleRedelivery(message);
                             }
 
-                            MuleMessage messageToRoute = connector.getMessage(message, encoding);
+                            MuleMessage messageToRoute = createMuleMessage(message, encoding);
                             routeMessage(messageToRoute);
                             return null;
                         }
@@ -275,7 +275,7 @@ public class TransactedSingleResourceJmsMessageReceiver extends AbstractMessageR
                 }
                 else
                 {
-                    MuleMessage messageToRoute = connector.getMessage(message, encoding);
+                    MuleMessage messageToRoute = createMuleMessage(message, encoding);
                     routeMessage(messageToRoute);
                 }
             }
