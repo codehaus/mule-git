@@ -46,6 +46,7 @@ public class TestConnector extends AbstractConnector
         super();
         setDispatcherFactory(new AbstractMessageDispatcherFactory()
         {
+            @Override
             public MessageDispatcher create(OutboundEndpoint endpoint) throws MuleException
             {
                 return new TestMessageDispatcher(endpoint);
@@ -58,36 +59,43 @@ public class TestConnector extends AbstractConnector
         return TEST;
     }
 
+    @Override
     protected void doInitialise() 
     {
         initialiseCount++;
     }
 
+    @Override
     protected void doConnect() 
     {
         connectCount++;
     }
 
+    @Override
     protected void doStart() 
     {
         startCount++;
     }
 
+    @Override
     protected void doStop() 
     {
         stopCount++;
     }
 
+    @Override
     protected void doDisconnect() 
     {
         disconnectCount++;
     }
 
+    @Override
     protected void doDispose() 
     {
         disposeCount++;
     }
 
+    @Override
     public MessageAdapter getMessageAdapter(Object message) throws MuleException
     {
         return new DummyMessageAdapter(message);
@@ -103,36 +111,43 @@ public class TestConnector extends AbstractConnector
         this.someProperty = someProperty;
     }
 
+    @Override
     public MessageReceiver createReceiver(Service service, InboundEndpoint endpoint) throws Exception
     {
         MessageReceiver receiver = new AbstractMessageReceiver(this, service, endpoint)
         {
 
+            @Override
             protected void doInitialise() throws InitialisationException
             {
                 //nothing to do
             }
 
+            @Override
             protected void doConnect() throws Exception
             {
                 // nothing to do
             }
 
+            @Override
             protected void doDisconnect() throws Exception
             {
                 // nothing to do
             }
 
+            @Override
             protected void doStart() throws MuleException
             {
                 // nothing to do
             }
 
+            @Override
             protected void doStop() throws MuleException
             {
                 // nothing to do
             }
 
+            @Override
             protected void doDispose()
             {
                 // nothing to do               
@@ -144,6 +159,7 @@ public class TestConnector extends AbstractConnector
     /**
      * Open up the access to the service descriptor for testing purposes.
      */
+    @Override
     public TransportServiceDescriptor getServiceDescriptor()
     {
         return super.getServiceDescriptor();
@@ -189,6 +205,7 @@ public class TestConnector extends AbstractConnector
             this.message = payload;
         }
 
+        @Override
         public ThreadSafeAccess newThreadCopy()
         {
             return this;

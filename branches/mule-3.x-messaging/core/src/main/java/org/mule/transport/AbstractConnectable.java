@@ -405,7 +405,7 @@ public abstract class AbstractConnectable implements Connectable, ExceptionListe
         return connector.createMuleMessageFactory();
     }
     
-    protected MuleMessage createMuleMessage(Object transportMessage, String encoding) throws MuleException
+    public MuleMessage createMuleMessage(Object transportMessage, String encoding) throws MuleException
     {
         try
         {
@@ -417,7 +417,7 @@ public abstract class AbstractConnectable implements Connectable, ExceptionListe
         }
     }
 
-    protected MuleMessage createMuleMessage(Object transportMessage) throws MuleException
+    public MuleMessage createMuleMessage(Object transportMessage) throws MuleException
     {
         String encoding = endpoint.getMuleContext().getConfiguration().getDefaultEncoding();
         return createMuleMessage(transportMessage, encoding);

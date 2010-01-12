@@ -11,7 +11,6 @@
 package org.mule.transport.servlet;
 
 import org.mule.api.MuleException;
-import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.InboundEndpoint;
 import org.mule.api.lifecycle.CreateException;
 import org.mule.api.service.Service;
@@ -61,23 +60,5 @@ public class ServletMessageReceiver extends AbstractMessageReceiver
     protected void doStop() throws MuleException
     {
         // nothing to do
-    }
-
-    /**
-     * Open up access for classes in the same package.
-     */
-    @Override
-    protected MuleMessage createMuleMessage(Object transportMessage) throws MuleException
-    {
-        return super.createMuleMessage(transportMessage);
-    }
-
-    /**
-     * Open up access for classes in the same package.
-     */
-    @Override
-    protected MuleMessage createMuleMessage(Object transportMessage, String encoding) throws MuleException
-    {
-        return super.createMuleMessage(transportMessage, encoding);
     }
 }

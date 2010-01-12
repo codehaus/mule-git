@@ -11,7 +11,6 @@
 package org.mule.transport.soap.axis;
 
 import org.mule.api.MuleException;
-import org.mule.api.MuleMessage;
 import org.mule.api.component.Component;
 import org.mule.api.component.JavaComponent;
 import org.mule.api.endpoint.EndpointURI;
@@ -397,15 +396,5 @@ public class AxisMessageReceiver extends AbstractMessageReceiver
     public SOAPService getSoapService()
     {
         return soapService;
-    }
-
-    /**
-     * Open up access for classes in the same package
-     */
-    @Override
-    protected MuleMessage createMuleMessage(Object transportMessage, String encoding) throws MuleException
-    {
-        // TODO Auto-generated method stub
-        return super.createMuleMessage(transportMessage, encoding);
     }
 }

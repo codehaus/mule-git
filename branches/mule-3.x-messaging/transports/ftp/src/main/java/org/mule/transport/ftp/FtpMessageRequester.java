@@ -14,7 +14,6 @@ import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.EndpointURI;
 import org.mule.api.endpoint.InboundEndpoint;
 import org.mule.api.lifecycle.InitialisationException;
-import org.mule.api.transport.MuleMessageFactory;
 import org.mule.transport.AbstractMessageRequester;
 
 import java.io.File;
@@ -105,13 +104,6 @@ public class FtpMessageRequester extends AbstractMessageRequester
         factory.setFtpClient(client);
         
         return factory;
-    }
-
-    @Override
-    protected MuleMessageFactory createMuleMessageFactory() throws InitialisationException
-    {
-        // TODO Auto-generated method stub
-        return super.createMuleMessageFactory();
     }
 
     protected FTPFile prepareFile(FTPClient client, FTPFile file) throws IOException
