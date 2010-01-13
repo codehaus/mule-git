@@ -13,7 +13,6 @@ package org.mule.transport.http;
 import org.mule.DefaultMuleEvent;
 import org.mule.DefaultMuleMessage;
 import org.mule.DefaultMuleSession;
-import org.mule.NullSessionHandler;
 import org.mule.OptimizedRequestContext;
 import org.mule.RequestContext;
 import org.mule.api.MessagingException;
@@ -41,6 +40,7 @@ import org.mule.util.MapUtils;
 import org.mule.util.ObjectUtils;
 import org.mule.util.monitor.Expirable;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
@@ -132,7 +132,13 @@ public class HttpMessageReceiver extends TcpMessageReceiver
 
         public HttpWorker(Socket socket) throws IOException
         {
-            conn = new HttpServerConnection(socket, endpoint);
+            String encoding = endpoint.getEncoding();
+            if (encoding == null)
+            {
+                encoding = connector.getMuleContext().getConfiguration().getDefaultEncoding();
+            }
+
+            conn = new HttpServerConnection(socket, encoding, (HttpConnector) connector);
             
             final SocketAddress clientAddress = socket.getRemoteSocketAddress();
             if (clientAddress != null)
@@ -379,7 +385,7 @@ public class HttpMessageReceiver extends TcpMessageReceiver
                 if (!endpoint.isSynchronous())
                 {
                     logger.debug("Reading HTTP POST InputStream into byte[] for asynchronous messaging.");
-                    body = IOUtils.toByteArray((InputStream) body);
+                    body = new ByteArrayInputStream(IOUtils.toByteArray((InputStream) body));
                 }
             }
 
