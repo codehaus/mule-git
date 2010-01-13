@@ -10,6 +10,7 @@
 
 package org.mule.transport.xmpp;
 
+import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.module.client.MuleClient;
 
@@ -17,6 +18,7 @@ import org.jivesoftware.smack.packet.Message;
 
 public class XmppMessageSyncTestCase extends AbstractXmppTestCase
 {
+    private static final long JABBER_SEND_THREAD_SLEEP_TIME = 1000;
     protected static final String REPLY = "Jabber reply";
     
     @Override
@@ -32,7 +34,7 @@ public class XmppMessageSyncTestCase extends AbstractXmppTestCase
         return "xmpp-message-sync-config.xml";
     }
 
-    public void testSendSync() throws Exception
+    public void XXXtestSendSync() throws Exception
     {   
         MuleClient client = new MuleClient(muleContext);
         MuleMessage reply = client.send("vm://in", TEST_MESSAGE, null);
@@ -49,16 +51,49 @@ public class XmppMessageSyncTestCase extends AbstractXmppTestCase
         assertEquals(REPLY, xmppReply.getBody());
     }
     
-    public void testReceiveSync() throws Exception
+    public void XXXtestReceiveSync() throws Exception
     {
-        jabberClient.sendMessage(recipient, TEST_MESSAGE);
-        
+        sendJabberMessageFromNewThread();
+        requestMessageAndAssert("vm://fromJabber");
+    }
+    
+    public void testRequestSync() throws Exception
+    {
+        sendJabberMessageFromNewThread();
+        requestMessageAndAssert("xmpp://MESSAGE/mule2@localhost?synchronous=true");
+    }
+
+    private void sendJabberMessageFromNewThread()
+    {
+        Thread sendThread = new Thread(new SendIt());
+        sendThread.setName("JabberClient send");
+        sendThread.start();
+    }
+
+    private void requestMessageAndAssert(String url) throws MuleException
+    {
         MuleClient client = new MuleClient();
-        MuleMessage muleMessage = client.request("vm://fromJabber", RECEIVE_TIMEOUT);
+        MuleMessage muleMessage = client.request(url, RECEIVE_TIMEOUT);
         assertNotNull(muleMessage);
-        
+
         Message xmppMessage = (Message) muleMessage.getPayload();
         assertEquals(Message.Type.normal, xmppMessage.getType());
         assertEquals(TEST_MESSAGE, xmppMessage.getBody());
+    }
+
+    private class SendIt implements Runnable
+    {        
+        public void run()
+        {
+            try
+            {
+                Thread.sleep(JABBER_SEND_THREAD_SLEEP_TIME);
+                jabberClient.sendMessage(muleJabberUserId, TEST_MESSAGE);
+            }
+            catch (Exception e)
+            {
+                throw new RuntimeException("Exception while sending", e);
+            }
+        }
     }
 }

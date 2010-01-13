@@ -39,5 +39,10 @@ public interface XmppConversation
      * 
      * @return {@link Message} next available message or <code>null</code> if timeout occurred.
      */
-    Message receive(int timeout);
+    Message receive(long timeout);
+
+    /**
+     * Wait for a response on this conversation until a message arrives.
+     */
+    Message receive();
 }

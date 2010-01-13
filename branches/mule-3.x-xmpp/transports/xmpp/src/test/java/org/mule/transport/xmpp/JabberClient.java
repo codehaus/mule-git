@@ -193,8 +193,17 @@ public class JabberClient implements PacketListener
 
     public void sendMessage(String recipient, String payload)
     {
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("Will send message to \"" + recipient + "\" with payload \"" + payload + "\"");
+        }
+        
         Message message = new Message();
         message.setType(Message.Type.normal);
+        
+        String from = user + "@" + host;
+        message.setFrom(from);
+        
         message.setTo(recipient);
         message.setBody(payload);
         

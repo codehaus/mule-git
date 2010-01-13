@@ -45,6 +45,7 @@ public abstract class AbstractXmppConversation implements XmppConversation
         }
         else
         {
+            // TODO xmpp: implement me
         }
     }
     
@@ -80,10 +81,17 @@ public abstract class AbstractXmppConversation implements XmppConversation
         // template method
     }
     
-    public Message receive(int timeout)
+    public Message receive(long timeout)
     {
         // The filter of our packetCollector should make sure that we receive only
         // Message instances here
         return (Message) packetCollector.nextResult(timeout);
+    }
+    
+    public Message receive()
+    {
+        // The filter of our packetCollector should make sure that we receive only
+        // Message instances here
+        return (Message) packetCollector.nextResult();
     }
 }

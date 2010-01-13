@@ -13,101 +13,64 @@ package org.mule.transport.xmpp;
 import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
-import org.mule.api.endpoint.EndpointURI;
 import org.mule.api.endpoint.InboundEndpoint;
-import org.mule.api.endpoint.MalformedEndpointException;
 import org.mule.transport.AbstractMessageRequester;
 
-import org.jivesoftware.smack.Chat;
-import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.packet.Message;
 
 /**
- * Allows Mule events to be received over Xmpp
+ * Allows Mule messages to be received over XMPP
  */
-
 public class XmppMessageRequester extends AbstractMessageRequester
 {
-
-    private final XmppConnector connector;
-    private volatile XMPPConnection xmppConnection = null;
+    private XmppConnector connector;
+    private XmppConversation conversation;    
 
     public XmppMessageRequester(InboundEndpoint endpoint)
     {
         super(endpoint);
-        this.connector = (XmppConnector)endpoint.getConnector();
+        connector = (XmppConnector) endpoint.getConnector();
+        conversation = connector.getConversationFactory().create(endpoint);
     }
 
+    @Override
     protected void doConnect() throws Exception
     {
-        if (xmppConnection == null)
-        {
-            EndpointURI uri = endpoint.getEndpointURI();
-            xmppConnection = connector.createXmppConnection(uri);
-        }
+        conversation.connect();
     }
 
+    @Override
     protected void doDisconnect() throws Exception
     {
-        try
-        {
-            if (xmppConnection != null)
-            {
-                xmppConnection.disconnect();
-            }
-        }
-        finally
-        {
-            xmppConnection = null;
-        }
+        conversation.disconnect();
     }
 
+    @Override
     protected void doDispose()
     {
-        // template method
+        conversation = null;
     }
 
-    /**
-     * Make a specific request to the underlying transport
-     *
-     * @param timeout the maximum time the operation should block before returning.
-     *            The call should return immediately if there is data available. If
-     *            no data becomes available before the timeout elapses, null will be
-     *            returned
-     * @return the result of the request wrapped in a MuleMessage object. Null will be
-     *         returned if no data was avaialable
-     * @throws Exception if the call to the underlying protocal cuases an exception
-     */
+    @Override
     protected MuleMessage doRequest(long timeout) throws Exception
     {
-        // Should be in the form of xmpp://user:pass@host:[port]/folder
-        String to = (String)endpoint.getProperty("folder");
-        if (to == null)
-        {
-            throw new MalformedEndpointException(endpoint.getEndpointURI().toString());
-        }
-        
-        // TODO xmpp: who's the chat listener here
-//        Chat chat = xmppConnection.createChat(to);
-//        Chat chat = xmppConnection.getChatManager().createChat(userJID, listener);
-        Chat chat = null;
-        
         Message message = null;
         if (timeout == MuleEvent.TIMEOUT_WAIT_FOREVER)
         {
-            // TODO xmpp: get the next message from a chat listener
-//            message = chat.nextMessage();
-        }
-        else if (timeout == MuleEvent.TIMEOUT_DO_NOT_WAIT)
-        {
-            // TODO xmpp: get the next message from a chat listener
-//            message = chat.nextMessage(1);
+            message = conversation.receive();
         }
         else
         {
-            // TODO xmpp: get the next message from a chat listener
-//            message = chat.nextMessage(timeout);
+            message = conversation.receive(timeout);
         }
+        
+//        // Should be in the form of xmpp://user:pass@host:[port]/folder
+//        String to = (String)endpoint.getProperty("folder");
+//        if (to == null)
+//        {
+//            throw new MalformedEndpointException(endpoint.getEndpointURI().toString());
+//        }
+        
         if (message != null)
         {
             return new DefaultMuleMessage(connector.getMessageAdapter(message), connector.getMuleContext());
@@ -117,5 +80,4 @@ public class XmppMessageRequester extends AbstractMessageRequester
             return null;
         }
     }
-
 }

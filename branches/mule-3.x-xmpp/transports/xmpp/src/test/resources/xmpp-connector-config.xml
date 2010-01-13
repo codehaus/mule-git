@@ -21,7 +21,7 @@
 <!--                <spring:entry key="host" value="jabber.ccc.de"/>-->
 <!--                <spring:entry key="user" value="mule1"/>-->
 <!--                <spring:entry key="password" value="mule"/>-->
-<!--                <spring:entry key="recipient" value="dirk.olmes@googlemail.com"/>-->
+<!--                <spring:entry key="conversationPartner" value="dirk.olmes@googlemail.com"/>-->
 <!--            </spring:map>-->
 <!--        </spring:property>-->
 <!--    </spring:bean>-->
@@ -32,8 +32,8 @@
                 <spring:entry key="host" value="localhost"/>
                 <spring:entry key="user" value="mule1"/>
                 <spring:entry key="password" value="mule"/>
-                <spring:entry key="recipient" value="mule2@localhost"/>
-                <spring:entry key="recipientPassword" value="mule"/>
+                <spring:entry key="conversationPartner" value="mule2@localhost"/>
+                <spring:entry key="conversationPartnerPassword" value="mule"/>
             </spring:map>
         </spring:property>
     </spring:bean>

@@ -20,14 +20,14 @@
             </inbound>
             <outbound>
                 <pass-through-router>
-                    <xmpp:outbound-endpoint type="MESSAGE" recipient="${recipient}"
+                    <xmpp:outbound-endpoint type="MESSAGE" recipient="${conversationPartner}"
                         synchronous="true"/>
                 </pass-through-router>
             </outbound>
         </service>
         <service name="receiveMessage">
             <inbound>
-                <xmpp:inbound-endpoint type="MESSAGE" from="${recipient}" synchronous="true"/>
+                <xmpp:inbound-endpoint type="MESSAGE" from="${conversationPartner}" synchronous="true"/>
             </inbound>
             <outbound>
                 <pass-through-router>

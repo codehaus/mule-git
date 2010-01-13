@@ -11,7 +11,6 @@
 package org.mule.transport.xmpp;
 
 import org.mule.api.MuleException;
-import org.mule.api.endpoint.EndpointURI;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.transport.AbstractConnector;
@@ -57,6 +56,7 @@ public class XmppConnector extends AbstractConnector
         return endpoint.getEndpointURI().getPath().substring(1);
     }
     
+    @Override
     protected void doInitialise() throws InitialisationException
     {
         try
@@ -69,16 +69,19 @@ public class XmppConnector extends AbstractConnector
         }
     }
 
+    @Override
     protected void doDispose()
     {
         connection = null;
     }
 
+    @Override
     protected void doConnect() throws Exception
     {
         connectToJabberServer();
     }
 
+    @Override
     protected void doDisconnect() throws Exception
     {
         if (connection.isConnected())
@@ -87,11 +90,13 @@ public class XmppConnector extends AbstractConnector
         }
     }
 
+    @Override
     protected void doStart() throws MuleException
     {
         // template method
     }
 
+    @Override
     protected void doStop() throws MuleException
     {
         // template method
@@ -104,11 +109,15 @@ public class XmppConnector extends AbstractConnector
 
     protected void createXmppConnection() throws XMPPException
     {
-        ConnectionConfiguration connectionConfig = new ConnectionConfiguration(host, port);
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("Connecting to " + host + ":" + port);
+        }
 
+        ConnectionConfiguration connectionConfig = new ConnectionConfiguration(host, port);
         // no need to load the roster (this is not an interactive app)
         connectionConfig.setRosterLoadedAtLogin(false);
-
+        
         connection = new XMPPConnection(connectionConfig);
     }
 
@@ -145,87 +154,7 @@ public class XmppConnector extends AbstractConnector
         }
     }
 
-    @Deprecated
-    // TODO xmpp: remove me
-    public XMPPConnection createXmppConnection(EndpointURI endpointURI) throws XMPPException
-    {
-        logger.info("Trying to find XMPP connection for uri: " + endpointURI);
-
-        String username = endpointURI.getUser();
-        String hostname = endpointURI.getHost();
-        String password = endpointURI.getPassword();
-        String resource = (String)endpointURI.getParams().get("resource");
-
-        XMPPConnection xmppConnection = this.doCreateXmppConnection(endpointURI);
-
-        if (!xmppConnection.isAuthenticated())
-        {
-            // Make sure we have an account. If we don't, make one.
-            try
-            {
-                AccountManager accManager = new AccountManager(xmppConnection);
-                accManager.createAccount(username, password);
-            }
-            catch (XMPPException ex)
-            {
-                // User probably already exists, throw away...
-                logger.info("*** account (" + username + ") already exists ***");
-            }
-
-            if (logger.isDebugEnabled())
-            {
-                logger.debug("Logging in as: " + username);
-                logger.debug("pw is        : " + password);
-                logger.debug("server       : " + hostname);
-                logger.debug("resource     : " + resource);
-            }
-
-            if (resource == null)
-            {
-                xmppConnection.login(username, password);
-            }
-            else
-            {
-                xmppConnection.login(username, password, resource);
-            }
-        }
-        else
-        {
-            if (logger.isDebugEnabled())
-            {
-                logger.debug("Already authenticated on this connection, no need to log in again.");
-            }
-        }
-        return xmppConnection;
-    }
-
-    /**
-     * This method creates and returns the {@link XMPPConnection} object that's uses to talk to
-     * the Jabber server.
-     * <p/>
-     * Subclasses can override this method to create a more specialized {@link XMPPConnection}.
-     * 
-     * @param endpointURI
-     * @throws XMPPException
-     */
-    protected XMPPConnection doCreateXmppConnection(EndpointURI endpointURI) throws XMPPException
-    {
-        XMPPConnection xmppConnection = null;
-        
-        if (endpointURI.getPort() != -1)
-        {
-            ConnectionConfiguration connectionConfig = new ConnectionConfiguration(
-                endpointURI.getHost(), endpointURI.getPort());
-            xmppConnection = new XMPPConnection(connectionConfig);
-        }
-        else
-        {
-            xmppConnection = new XMPPConnection(endpointURI.getHost());
-        }
-        
-        return xmppConnection;
-    }
-
+    @Override
     public boolean isResponseEnabled()
     {
         return true;
