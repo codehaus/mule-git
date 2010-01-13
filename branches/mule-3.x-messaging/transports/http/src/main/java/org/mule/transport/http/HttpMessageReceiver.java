@@ -226,7 +226,7 @@ public class HttpMessageReceiver extends TcpMessageReceiver
 
         protected HttpResponse doRequest(HttpRequest request) throws IOException, MuleException
         {
-            sendExpect100(request.getHeaders(), request.getRequestLine());
+            sendExpect100(request);
 
             MuleMessage message = createMuleMessage(request);
 
@@ -350,25 +350,19 @@ public class HttpMessageReceiver extends TcpMessageReceiver
             return transformResponse(response);
         }
 
-        private void sendExpect100(Header [] headers, RequestLine requestLine)
-            throws TransformerException, IOException
+        private void sendExpect100(HttpRequest request) throws TransformerException, IOException
         {
+            RequestLine requestLine = request.getRequestLine();
+            
             // respond with status code 100, for Expect handshake
             // according to rfc 2616 and http 1.1
             // the processing will continue and the request will be fully
             // read immediately after
-            if (HttpVersion.HTTP_1_1.equals(requestLine.getHttpVersion()))
+            HttpVersion requestVersion = requestLine.getHttpVersion();
+            if (HttpVersion.HTTP_1_1.equals(requestVersion))
             {
-                String expectHeaderValue = null;
-
-                for (Header header : headers)
-                {
-                    if (header.getName().equals(HttpConstants.HEADER_EXPECT))
-                    {
-                        expectHeaderValue = header.getValue().toLowerCase();
-                        break;
-                    }
-                }
+                Header expectHeader = request.getFirstHeader(HttpConstants.HEADER_EXPECT);
+                String expectHeaderValue = expectHeader.getValue();
                 if (HttpConstants.HEADER_EXPECT_CONTINUE_REQUEST_VALUE.equals(expectHeaderValue))
                 {
                     HttpResponse expected = new HttpResponse();
