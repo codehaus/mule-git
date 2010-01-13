@@ -58,16 +58,18 @@ public class XmppMessageDispatcher extends AbstractMessageDispatcher
         conversation = null;
     }
 
+    @Override
     protected void doDispatch(MuleEvent event) throws Exception
     {
         sendMessage(event);
     }
 
+    @Override
     protected MuleMessage doSend(MuleEvent event) throws Exception
     {
         sendMessage(event);
 
-        if (returnResponse(event))
+        if (returnResponse(event, false))
         {
             Message response = conversation.receive(event.getTimeout());
 
