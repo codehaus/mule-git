@@ -29,6 +29,7 @@ import org.mule.api.transformer.TransformerException;
 import org.mule.api.transport.Connector;
 import org.mule.api.transport.MessageAdapter;
 import org.mule.api.transport.MessageReceiver;
+import org.mule.api.transport.MuleMessageFactory;
 import org.mule.transport.ConnectException;
 import org.mule.transport.NullPayload;
 import org.mule.transport.http.i18n.HttpMessages;
@@ -129,13 +130,6 @@ public class HttpMessageReceiver extends TcpMessageReceiver
         public HttpWorker(Socket socket) throws IOException
         {
             conn = new HttpServerConnection(socket, endpoint);
-
-            cookieSpec =
-                    MapUtils.getString(endpoint.getProperties(), HttpConnector.HTTP_COOKIE_SPEC_PROPERTY,
-                            ((HttpConnector) connector).getCookieSpec());
-            enableCookies =
-                    MapUtils.getBooleanValue(endpoint.getProperties(), HttpConnector.HTTP_ENABLE_COOKIES_PROPERTY,
-                            ((HttpConnector) connector).isEnableCookies());
 
             final SocketAddress clientAddress = socket.getRemoteSocketAddress();
             if (clientAddress != null)
@@ -577,6 +571,22 @@ public class HttpMessageReceiver extends TcpMessageReceiver
             }
         }
         return receiver;
+    }
+    
+    @Override
+    protected MuleMessageFactory createMuleMessageFactory() throws CreateException
+    {
+        HttpMuleMessageFactory muleMessageFactory = (HttpMuleMessageFactory) super.createMuleMessageFactory();
+
+        boolean enableCookies = MapUtils.getBooleanValue(endpoint.getProperties(),
+            HttpConnector.HTTP_ENABLE_COOKIES_PROPERTY, ((HttpConnector) connector).isEnableCookies());
+        muleMessageFactory.setEnableCookies(enableCookies);
+
+        String cookieSpec = MapUtils.getString(endpoint.getProperties(),
+            HttpConnector.HTTP_COOKIE_SPEC_PROPERTY, ((HttpConnector) connector).getCookieSpec());
+        muleMessageFactory.setCookieSpec(cookieSpec);
+
+        return muleMessageFactory;
     }
 
 }

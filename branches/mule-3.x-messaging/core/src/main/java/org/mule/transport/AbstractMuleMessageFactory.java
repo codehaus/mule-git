@@ -49,7 +49,7 @@ public abstract class AbstractMuleMessageFactory implements MuleMessageFactory
 
     protected abstract Object extractPayload(Object transportMessage, String encoding) throws Exception;
 
-    protected void addProperties(MuleMessage message, Object transportMessage)
+    protected void addProperties(MuleMessage message, Object transportMessage) throws Exception
     {
         // Template method
     }
