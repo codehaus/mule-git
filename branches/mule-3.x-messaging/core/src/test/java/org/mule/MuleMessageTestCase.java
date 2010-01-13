@@ -101,6 +101,10 @@ public class MuleMessageTestCase extends AbstractMuleTestCase
         DefaultMessageAdapter adapter = new DefaultMessageAdapter(payload);
 
         message = new DefaultMuleMessage(adapter, new HashMap(), muleContext);
-        assertEquals(message.getPayload(), payload);
+        
+        // NOTE: Now MuleMessage no longer nests a MessageAdaptor whatever is used in
+        // the constructor will be the payload and will not be unwrapped even if it
+        // is a MessageAdaptor instance
+        assertEquals(message.getPayload(), adapter);
     }
 }

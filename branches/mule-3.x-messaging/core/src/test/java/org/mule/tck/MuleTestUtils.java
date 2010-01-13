@@ -12,7 +12,6 @@ package org.mule.tck;
 
 import org.mule.DefaultMuleContext;
 import org.mule.DefaultMuleEvent;
-import org.mule.DefaultMuleMessage;
 import org.mule.DefaultMuleSession;
 import org.mule.RequestContext;
 import org.mule.api.MuleContext;
@@ -297,7 +296,8 @@ public final class MuleTestUtils
     public static MuleEvent getTestEvent(Object data, Service service, ImmutableEndpoint endpoint, MuleContext context) throws Exception
     {
         MuleSession session = getTestSession(service, context);
-        return new DefaultMuleEvent(new DefaultMuleMessage(data, new HashMap(), context), endpoint, session, true);
+        return new DefaultMuleEvent(endpoint.getConnector().createMuleMessageFactory().create(data,
+            endpoint.getEncoding()), endpoint, session, true);
     }
 
     public static MuleEventContext getTestEventContext(Object data, MuleContext context) throws Exception
