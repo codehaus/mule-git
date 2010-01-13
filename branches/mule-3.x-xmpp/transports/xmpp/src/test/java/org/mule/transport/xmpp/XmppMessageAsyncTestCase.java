@@ -31,10 +31,10 @@ public class XmppMessageAsyncTestCase extends AbstractXmppTestCase
     }
 
     @Override
-    protected void configureJabberClient(JabberClient jabberClient)
+    protected void configureJabberClient(JabberClient client)
     {
-        jabberClient.setSynchronous(false);
-        jabberClient.setMessageLatch(latch);
+        client.setSynchronous(false);
+        client.setMessageLatch(latch);
     }
 
     public void testDispatch() throws Exception
