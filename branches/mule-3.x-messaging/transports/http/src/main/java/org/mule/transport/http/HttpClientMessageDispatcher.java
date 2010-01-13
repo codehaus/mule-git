@@ -357,36 +357,18 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
         }
     }
 
-    protected MuleMessage getResponseFromMethod(HttpMethod httpMethod, ExceptionPayload ep) throws IOException
+    protected MuleMessage getResponseFromMethod(HttpMethod httpMethod, ExceptionPayload ep)
+        throws IOException, MuleException
     {
-        Object body = null;
+        MuleMessage message = createMuleMessage(httpMethod);
 
-        InputStream is = httpMethod.getResponseBodyAsStream();
-        if (is == null)
-        {
-            body = StringUtils.EMPTY;
-        }
-        else
-        {
-            is = new ReleasingInputStream(is, httpMethod);
-            body = is;
-        }
-
-        Header[] headers = httpMethod.getResponseHeaders();
-        HttpMessageAdapter adapter = new HttpMessageAdapter(new Object[]{body, headers});
-
-        String status = String.valueOf(httpMethod.getStatusCode());
-
-        adapter.setProperty(HttpConnector.HTTP_STATUS_PROPERTY, status);
         if (logger.isDebugEnabled())
         {
-            logger.debug("Http response is: " + status);
+            logger.debug("Http response is: " + message.getProperty(HttpConnector.HTTP_STATUS_PROPERTY));
         }
 
-        MuleMessage m = new DefaultMuleMessage(adapter, connector.getMuleContext());
-
-        m.setExceptionPayload(ep);
-        return m;
+        message.setExceptionPayload(ep);
+        return message;
     }
 
     protected boolean returnException(MuleEvent event, HttpMethod httpMethod)

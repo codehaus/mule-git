@@ -330,7 +330,7 @@ public class HttpMessageReceiver extends TcpMessageReceiver
         
         protected HttpResponse doOtherValid(RequestLine requestLine, String method) throws MuleException
         {
-            MuleMessage message = new DefaultMuleMessage(NullPayload.getInstance(), connector.getMuleContext());
+            MuleMessage message = createMuleMessage((Object) null);
             MuleEvent event = new DefaultMuleEvent(message, endpoint, new DefaultMuleSession(connector.getMuleContext()), true);
             OptimizedRequestContext.unsafeSetEvent(event);
             HttpResponse response = new HttpResponse();
@@ -341,7 +341,7 @@ public class HttpMessageReceiver extends TcpMessageReceiver
 
         protected HttpResponse doBad(RequestLine requestLine) throws MuleException
         {
-            MuleMessage message = new DefaultMuleMessage(NullPayload.getInstance(), connector.getMuleContext());
+            MuleMessage message = createMuleMessage((Object) null);
             MuleEvent event = new DefaultMuleEvent(message, endpoint, new DefaultMuleSession(connector.getMuleContext()), true);
             OptimizedRequestContext.unsafeSetEvent(event);
             HttpResponse response = new HttpResponse();
@@ -518,7 +518,7 @@ public class HttpMessageReceiver extends TcpMessageReceiver
         return muleMessageFactory;
     }
     
-    protected MuleMessage createMuleMessage(final HttpRequest request)
+    protected MuleMessage createMuleMessage(HttpRequest request)
         throws MuleException, TransformerException, IOException
     {
         Object body = request.getBody();

@@ -12,14 +12,20 @@ package org.mule.transport.http;
 
 import org.mule.api.MuleContext;
 import org.mule.api.MuleMessage;
+import org.mule.api.transport.MessageTypeNotSupportedException;
 import org.mule.transport.AbstractMuleMessageFactory;
+import org.mule.util.StringUtils;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.commons.httpclient.Cookie;
 import org.apache.commons.httpclient.Header;
+import org.apache.commons.httpclient.HttpMethod;
+import org.apache.commons.httpclient.HttpVersion;
+import org.apache.commons.httpclient.cookie.MalformedCookieException;
 
 public class HttpMuleMessageFactory extends AbstractMuleMessageFactory
 {
@@ -35,40 +41,113 @@ public class HttpMuleMessageFactory extends AbstractMuleMessageFactory
     @Override
     protected Class<?>[] getSupportedTransportMessageTypes()
     {
-        return new Class[]{HttpRequest.class};
+        return new Class[]{HttpRequest.class, HttpMethod.class};
     }
 
     @Override
     protected Object extractPayload(Object transportMessage, String encoding) throws Exception
     {
-        HttpRequest httpRequest = (HttpRequest) transportMessage;
-        Object body = httpRequest.getBody();
-        if (body == null)
+        if (transportMessage instanceof HttpRequest)
         {
-            return httpRequest.getRequestLine().getUri();
+            return extractPayloadFromHttpRequest((HttpRequest) transportMessage);
+        }
+        else if (transportMessage instanceof HttpMethod)
+        {
+            return extractPayloadFromHttpMethod((HttpMethod) transportMessage);
         }
         else
         {
+            // This should never happen because of the supported type checking
+            throw new MessageTypeNotSupportedException(transportMessage, getClass());
+        }
+    }
+
+    protected Object extractPayloadFromHttpRequest(HttpRequest httpRequest)
+    {
+        Object body = httpRequest.getBody();
+        if (body != null)
+        {
             return body;
+        }
+        else
+        {
+            return httpRequest.getRequestLine().getUri();
+        }
+    }
+
+    protected Object extractPayloadFromHttpMethod(HttpMethod httpMethod) throws IOException
+    {
+        InputStream body = httpMethod.getResponseBodyAsStream();
+        if (body != null)
+        {
+            return new ReleasingInputStream(body, httpMethod);
+        }
+        else
+        {
+            return StringUtils.EMPTY;
         }
     }
 
     @Override
     protected void addProperties(MuleMessage message, Object transportMessage) throws Exception
     {
-        super.addProperties(message, transportMessage);
-        HttpRequest httpRequest = (HttpRequest) transportMessage;
 
-        Map<String, Object> headers = convertHeadersToMap(httpRequest.getHeaders());
+        String method;
+        HttpVersion httpVersion;
+        String uri;
+        String statusCode = null;
+        Map<String, Object> headers;
+        // This is a shortcut for now
+        Header cookieHeader;
+
+        if (transportMessage instanceof HttpRequest)
+        {
+            HttpRequest httpRequest = (HttpRequest) transportMessage;
+            method = httpRequest.getRequestLine().getMethod();
+            httpVersion = httpRequest.getRequestLine().getHttpVersion();
+            uri = httpRequest.getRequestLine().getUri();
+            headers = convertHeadersToMap(((HttpRequest) transportMessage).getHeaders());
+            cookieHeader = httpRequest.getFirstHeader(HttpConnector.HTTP_COOKIES_PROPERTY);
+        }
+        else if (transportMessage instanceof HttpMethod)
+        {
+            HttpMethod httpMethod = (HttpMethod) transportMessage;
+            method = httpMethod.getName();
+            httpVersion = HttpVersion.parse(httpMethod.getStatusLine().getHttpVersion());
+            uri = httpMethod.getURI().toString();
+            statusCode = String.valueOf(httpMethod.getStatusCode());
+            headers = convertHeadersToMap(((HttpRequest) transportMessage).getHeaders());
+            cookieHeader = httpMethod.getResponseHeader(HttpConnector.HTTP_COOKIES_PROPERTY);
+        }
+        else
+        {
+            // This should never happen because of the supported type checking
+            throw new MessageTypeNotSupportedException(transportMessage, getClass());
+        }
+
         rewriteConnectionAndKeepAliveHeaders(headers);
 
-        RequestLine requestLine = httpRequest.getRequestLine();
+        processIncomingHeaders(headers, cookieHeader);
 
-        for (Iterator rhi = httpRequest.getHeaderIterator(); rhi.hasNext();)
+        headers.put(HttpConnector.HTTP_METHOD_PROPERTY, method);
+        headers.put(HttpConnector.HTTP_REQUEST_PROPERTY, uri);
+        headers.put(HttpConnector.HTTP_VERSION_PROPERTY, httpVersion.toString());
+        headers.put(HttpConnector.HTTP_COOKIE_SPEC_PROPERTY, cookieSpec);
+
+        if (statusCode != null)
         {
-            Header header = (Header) rhi.next();
-            String headerName = header.getName();
-            Object headerValue = header.getValue();
+            headers.put(HttpConnector.HTTP_STATUS_PROPERTY, statusCode);
+        }
+
+        message.addProperties(headers);
+    }
+
+    protected void processIncomingHeaders(Map<String, Object> headers, Header cookieHeader)
+        throws MalformedCookieException
+    {
+        for (String headerName : headers.keySet())
+        {
+            Object headerValue = headers.get(headerName);
 
             // fix Mule headers?
             if (headerName.startsWith("X-MULE"))
@@ -80,7 +159,7 @@ public class HttpMuleMessageFactory extends AbstractMuleMessageFactory
             {
                 if (enableCookies)
                 {
-                    Cookie[] cookies = CookieHelper.parseCookies(header, cookieSpec);
+                    Cookie[] cookies = CookieHelper.parseCookies(cookieHeader, cookieSpec);
                     if (cookies.length > 0)
                     {
                         // yum!
@@ -102,13 +181,6 @@ public class HttpMuleMessageFactory extends AbstractMuleMessageFactory
             // accept header & value
             headers.put(headerName, headerValue);
         }
-
-        headers.put(HttpConnector.HTTP_METHOD_PROPERTY, requestLine.getMethod());
-        headers.put(HttpConnector.HTTP_REQUEST_PROPERTY, requestLine.getUri());
-        headers.put(HttpConnector.HTTP_VERSION_PROPERTY, requestLine.getHttpVersion().toString());
-        headers.put(HttpConnector.HTTP_COOKIE_SPEC_PROPERTY, cookieSpec);
-
-        message.addProperties(headers);
     }
 
     private Map<String, Object> convertHeadersToMap(Header[] headers)
