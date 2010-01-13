@@ -223,7 +223,7 @@ public abstract class AbstractConnectable implements Connectable, ExceptionListe
                     {
                         if (logger.isDebugEnabled())
                         {
-                            logger.debug(e);
+                            logger.debug("exception in doWork", e);
                         }
                         throw e;
                     }
