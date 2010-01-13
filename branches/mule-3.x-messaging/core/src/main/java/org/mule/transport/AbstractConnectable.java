@@ -454,4 +454,14 @@ public abstract class AbstractConnectable implements Connectable, ExceptionListe
         String encoding = endpoint.getMuleContext().getConfiguration().getDefaultEncoding();
         return createMuleMessage(transportMessage, encoding);
     }
+    
+    /**
+     * Uses this object's {@link MuleMessageFactory} to create a new {@link MuleMessage} instance.
+     * Rather than passing in a transport message instance, {@link NullPayload} is used instead.
+     * Uses the default encoding.
+     */
+    protected MuleMessage createNullMuleMessage() throws MuleException
+    {
+        return createMuleMessage(null);
+    }
 }
