@@ -21,11 +21,11 @@ import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.Message;
 
-public class JMSMuleMessageFactory extends AbstractMuleMessageFactory
+public class JmsMuleMessageFactory extends AbstractMuleMessageFactory
 {
     private String specification;
 
-    public JMSMuleMessageFactory(MuleContext context)
+    public JmsMuleMessageFactory(MuleContext context)
     {
         super(context);
     }

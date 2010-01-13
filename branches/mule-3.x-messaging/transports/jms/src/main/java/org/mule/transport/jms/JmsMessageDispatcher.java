@@ -261,13 +261,11 @@ public class JmsMessageDispatcher extends AbstractMessageDispatcher
                     if (result == null)
                     {
                         logger.debug("No message was returned via replyTo destination");
-                        return new DefaultMuleMessage(NullPayload.getInstance(), connector.getMuleContext());
+                        return createMuleMessage(null);
                     }
                     else
                     {
-                        MessageAdapter adapter = connector.getMessageAdapter(result);
-                        return new DefaultMuleMessage(JmsMessageUtils.toObject(result, connector.getSpecification(), endpoint.getEncoding()),
-                                adapter, connector.getMuleContext());
+                        return createMuleMessage(result);
                     }
                 }
                 else
@@ -283,14 +281,11 @@ public class JmsMessageDispatcher extends AbstractMessageDispatcher
                     if (result == null)
                     {
                         logger.debug("No message was returned via replyTo destination " + replyTo);
-                        return new DefaultMuleMessage(NullPayload.getInstance(), connector.getMuleContext());
+                        return createMuleMessage(null);
                     }
                     else
                     {
-                        MessageAdapter adapter = connector.getMessageAdapter(result);
-                        return new DefaultMuleMessage(
-                                JmsMessageUtils.toObject(result, connector.getSpecification(),
-                                        endpoint.getEncoding()), adapter, connector.getMuleContext());
+                        return createMuleMessage(result);
                     }
                 }
             }
@@ -299,7 +294,7 @@ public class JmsMessageDispatcher extends AbstractMessageDispatcher
                 // In this case a response was never expected so we return null and not NullPayload.
                 // This generally happens when dispatch is used for an asynchronous endpoint but can also occur when send() is used 
                 // and disableTempDestinations is set.
-                return returnOriginalMessageAsReply ? new DefaultMuleMessage(msg, connector.getMuleContext()) : null;
+                return returnOriginalMessageAsReply ? createMuleMessage(msg) : null;
             }
         }
         finally

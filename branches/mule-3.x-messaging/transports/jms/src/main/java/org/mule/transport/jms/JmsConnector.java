@@ -227,7 +227,7 @@ public class JmsConnector extends AbstractConnector implements ConnectionNotific
     @Override
     public MuleMessageFactory createMuleMessageFactory() throws CreateException
     {
-        JMSMuleMessageFactory jmsFactory = (JMSMuleMessageFactory) super.createMuleMessageFactory();
+        JmsMuleMessageFactory jmsFactory = (JmsMuleMessageFactory) super.createMuleMessageFactory();
         jmsFactory.setSpecification(getSpecification());
         return jmsFactory;
     }
