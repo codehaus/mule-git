@@ -20,10 +20,10 @@ public class XmppMessageSyncTestCase extends AbstractXmppTestCase
     protected static final String REPLY = "Jabber reply";
     
     @Override
-    protected void configureJabberClient(JabberClient jabberClient)
+    protected void configureJabberClient(JabberClient client)
     {
-        jabberClient.setAutoReply(true);
-        jabberClient.setReplyPayload(REPLY);
+        client.setAutoReply(true);
+        client.setReplyPayload(REPLY);
     }
     
     @Override
