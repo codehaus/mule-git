@@ -43,7 +43,7 @@ public class FileMuleMessageFactory extends AbstractMuleMessageFactory
     }
 
     @Override
-    protected void addProperties(MuleMessage message, Object transportMessage)
+    protected void addProperties(MuleMessage message, Object transportMessage) throws Exception
     {
         super.addProperties(message, transportMessage);
         File file = convertToFile(transportMessage);

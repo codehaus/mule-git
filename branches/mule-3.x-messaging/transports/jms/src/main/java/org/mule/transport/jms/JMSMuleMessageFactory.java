@@ -44,7 +44,7 @@ public class JMSMuleMessageFactory extends AbstractMuleMessageFactory
     }
 
     @Override
-    protected void addProperties(MuleMessage muleMessage, Object transportMessage)
+    protected void addProperties(MuleMessage muleMessage, Object transportMessage) throws Exception
     {
         Message jmsMessage = (Message) transportMessage;
 
