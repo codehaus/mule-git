@@ -20,7 +20,8 @@
             </inbound>
             <outbound>
                 <pass-through-router>
-                    <xmpp:outbound-endpoint type="CHAT" recipient="${recipient}" synchronous="true"/>
+                    <xmpp:outbound-endpoint type="CHAT" recipient="${conversationPartner}" 
+                        synchronous="true"/>
                 </pass-through-router>
             </outbound>
         </service>
