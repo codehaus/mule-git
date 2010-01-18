@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <connector xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
  xmlns="http://geronimo.apache.org/xml/ns/j2ee/connector-1.2"
- xmlns:naming="http://geronimo.apache.org/xml/ns/naming-1.2"
- xsi:schemaLocation="
- http://geronimo.apache.org/xml/ns/j2ee/connector-1.2 connector-1.2.xsd
- http://geronimo.apache.org/xml/ns/naming-1.2 geronimo-naming-1.2.xsd">
+ xmlns:naming="http://geronimo.apache.org/xml/ns/naming-1.2">
 
   <resourceadapter>
     <resourceadapter-instance>
