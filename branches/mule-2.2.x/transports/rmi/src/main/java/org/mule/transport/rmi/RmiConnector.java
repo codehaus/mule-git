@@ -307,8 +307,8 @@ public class RmiConnector extends AbstractJndiConnector
     protected Class[] getArgTypes(Object args, MuleEvent fromEvent) 
         throws ClassNotFoundException, TransformerException
     {
-    	Class[] argTypes = null;
-    	
+        Class[] argTypes = null;
+
         if (args instanceof List)
         {
             // MULE-1794 this used to take the first list entry as a string, splitting it
@@ -323,7 +323,7 @@ public class RmiConnector extends AbstractJndiConnector
         {
             argTypes = ClassUtils.getClassTypes(fromEvent.transformMessage());
         }
-    	
+
         return argTypes;
     }
 }

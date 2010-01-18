@@ -12,19 +12,19 @@
     <endpoint name="service2" address="vm://service2" responseTransformer-refs="validateResponse" />
     <endpoint name="service3" address="vm://service3" responseTransformer-refs="validateResponse" />
 
-	<custom-transformer name="validateResponse" class="org.mule.tck.transformer.ValidateResponse" />
-	
+    <custom-transformer name="validateResponse" class="org.mule.tck.transformer.ValidateResponse" />
+
     <model>
         <service name="StaticEndpointsByName">
             <inbound>
                 <vm:inbound-endpoint path="in1" />
             </inbound>
             <outbound>
-            	<exception-based-router>
-            		<outbound-endpoint ref="service1" />
-            		<outbound-endpoint ref="service2" />
-            		<outbound-endpoint ref="service3" />
-            	</exception-based-router>
+                <exception-based-router>
+                    <outbound-endpoint ref="service1" />
+                    <outbound-endpoint ref="service2" />
+                    <outbound-endpoint ref="service3" />
+                </exception-based-router>
             </outbound>
         </service>
 
@@ -33,11 +33,11 @@
                 <vm:inbound-endpoint path="in2" />
             </inbound>
             <outbound>
-            	<exception-based-router>
-            		<outbound-endpoint address="vm://service4" responseTransformer-refs="validateResponse" />
-            		<outbound-endpoint address="vm://service5" responseTransformer-refs="validateResponse" />
-            		<outbound-endpoint address="vm://service6" responseTransformer-refs="validateResponse" />
-            	</exception-based-router>
+                <exception-based-router>
+                    <outbound-endpoint address="vm://service4" responseTransformer-refs="validateResponse" />
+                    <outbound-endpoint address="vm://service5" responseTransformer-refs="validateResponse" />
+                    <outbound-endpoint address="vm://service6" responseTransformer-refs="validateResponse" />
+                </exception-based-router>
             </outbound>
         </service>
 
@@ -46,7 +46,7 @@
                 <vm:inbound-endpoint path="in3" />
             </inbound>
             <outbound>
-            	<recipient-list-exception-based-router evaluator="header" expression="recipients" />
+                <recipient-list-exception-based-router evaluator="header" expression="recipients" />
             </outbound>
         </service>
 
@@ -56,7 +56,7 @@
                 <inbound-endpoint address="vm://service4" />
             </inbound>
             <test:component>
-            	<test:return-data>error</test:return-data>
+                <test:return-data>error</test:return-data>
             </test:component>
         </service>
 
@@ -66,7 +66,7 @@
                 <inbound-endpoint address="vm://service5" />
             </inbound>
             <test:component>
-            	<test:return-data>success</test:return-data>
+                <test:return-data>success</test:return-data>
             </test:component>
         </service>
 
@@ -76,7 +76,7 @@
                 <inbound-endpoint address="vm://service6" />
             </inbound>
             <test:component>
-            	<test:return-data>error</test:return-data>
+                <test:return-data>error</test:return-data>
             </test:component>
         </service>
     </model>

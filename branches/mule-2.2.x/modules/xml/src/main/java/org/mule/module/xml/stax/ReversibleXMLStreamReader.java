@@ -410,14 +410,14 @@ public class ReversibleXMLStreamReader extends DelegateXMLStreamReader
     {
         if (replay)
         {
-        	if (current == null)
-        	{
-        		return null;
-        	} 
-        	else 
-        	{	
-        		return current.getLocation();
-        	}
+            if (current == null)
+            {
+                return null;
+            }
+            else
+            {
+                return current.getLocation();
+            }
         }
         else
         {
@@ -448,8 +448,8 @@ public class ReversibleXMLStreamReader extends DelegateXMLStreamReader
     {
         if (replay)
         {
-        	StartElementEventX event = getStartEvent();
-        	
+            StartElementEventX event = getStartEvent();
+
             return event.getNamespaceContext();
         }
         else
@@ -462,9 +462,9 @@ public class ReversibleXMLStreamReader extends DelegateXMLStreamReader
     {
         if (replay)
         {
-        	StartElementEventX event = getStartEvent();
-        	
-        	return event.getNamespaceList().size();
+            StartElementEventX event = getStartEvent();
+
+            return event.getNamespaceList().size();
         }
         else
         {
@@ -476,8 +476,8 @@ public class ReversibleXMLStreamReader extends DelegateXMLStreamReader
     {
         if (replay)
         {
-        	StartElementEventX event = getStartEvent();
-        	
+            StartElementEventX event = getStartEvent();
+
             Namespace ns = (Namespace) event.getNamespaceList().get(arg0);
             
             return ns.getPrefix();
@@ -488,22 +488,22 @@ public class ReversibleXMLStreamReader extends DelegateXMLStreamReader
         }
     }
 
-	private StartElementEventX getStartEvent() {
-		StartElementEventX event;
-		if (current instanceof EndElementEvent) 
-		{
-		    event = ((EndElementEventX) current).getStartEvent();
-		} 
-		else if (current instanceof StartElementEvent) 
-		{
-		    event = (StartElementEventX) current;
-		}
-		else 
-		{
-			throw new IllegalStateException("Cannot call getNamespaceCount() unless the current event is START_ELEMENT or END_ELEMENT.");
-		}
-		return event;
-	}
+    private StartElementEventX getStartEvent() {
+        StartElementEventX event;
+        if (current instanceof EndElementEvent)
+        {
+            event = ((EndElementEventX) current).getStartEvent();
+        }
+        else if (current instanceof StartElementEvent)
+        {
+            event = (StartElementEventX) current;
+        }
+        else
+        {
+            throw new IllegalStateException("Cannot call getNamespaceCount() unless the current event is START_ELEMENT or END_ELEMENT.");
+        }
+        return event;
+    }
 
     public String getNamespaceURI()
     {
@@ -529,7 +529,7 @@ public class ReversibleXMLStreamReader extends DelegateXMLStreamReader
         if (replay)
         {
 
-        	StartElementEventX event = getStartEvent();
+            StartElementEventX event = getStartEvent();
             Namespace ns = (Namespace) event.getNamespaceList().get(arg0);
             
             return ns.getNamespaceURI();
@@ -544,7 +544,7 @@ public class ReversibleXMLStreamReader extends DelegateXMLStreamReader
     {
         if (replay)
         {
-        	StartElementEventX event = getStartEvent();
+            StartElementEventX event = getStartEvent();
             return event.getNamespaceURI(prefix);
         }
         else

@@ -323,11 +323,11 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
         }
     }
 
-	protected boolean returnException(MuleEvent event, HttpMethod httpMethod) 
-	{
-		return httpMethod.getStatusCode() >= ERROR_STATUS_CODE_RANGE_START 
-				&& !BooleanUtils.toBoolean((String)event.getMessage().getProperty(HttpConnector.HTTP_DISABLE_STATUS_CODE_EXCEPTION_CHECK));
-	}
+    protected boolean returnException(MuleEvent event, HttpMethod httpMethod)
+    {
+        return httpMethod.getStatusCode() >= ERROR_STATUS_CODE_RANGE_START
+                && !BooleanUtils.toBoolean((String)event.getMessage().getProperty(HttpConnector.HTTP_DISABLE_STATUS_CODE_EXCEPTION_CHECK));
+    }
 
     protected HostConfiguration getHostConfig(URI uri) throws Exception
     {

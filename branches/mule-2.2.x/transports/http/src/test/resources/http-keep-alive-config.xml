@@ -25,7 +25,7 @@
         
         <service name="WithEndpointOverride">
             <inbound>
-	           <http:inbound-endpoint address="http://localhost:60214/http-in" keep-alive="true" synchronous="true"/>
+               <http:inbound-endpoint address="http://localhost:60214/http-in" keep-alive="true" synchronous="true"/>
             </inbound>
             <echo-component/>
         </service>

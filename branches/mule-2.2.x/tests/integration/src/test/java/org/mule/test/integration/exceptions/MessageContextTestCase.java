@@ -20,23 +20,23 @@ import java.util.Map;
 public class MessageContextTestCase extends FunctionalTestCase 
 {
 
-	String request = "Hello World";
+    String request = "Hello World";
 
-	protected String getConfigResources() 
-	{
-		return "org/mule/test/integration/exceptions/message-context-test.xml";
-	}
+    protected String getConfigResources()
+    {
+        return "org/mule/test/integration/exceptions/message-context-test.xml";
+    }
 
-	/**
-	 * Test for MULE-4361
-	 */
-	public void testAlternateExceptionStrategy() throws Exception 
-	{
-		MuleClient client1 = new MuleClient();
-		DefaultMuleMessage msg1 = new DefaultMuleMessage(request, (Map) null);
-		MuleMessage response1 = client1.send("testin", msg1, 200000);
-		assertNotNull(response1);
-		Thread.sleep(10000); // Wait for test to finish
-	}
+    /**
+     * Test for MULE-4361
+     */
+    public void testAlternateExceptionStrategy() throws Exception
+    {
+        MuleClient client1 = new MuleClient();
+        DefaultMuleMessage msg1 = new DefaultMuleMessage(request, (Map) null);
+        MuleMessage response1 = client1.send("testin", msg1, 200000);
+        assertNotNull(response1);
+        Thread.sleep(10000); // Wait for test to finish
+    }
 
 }

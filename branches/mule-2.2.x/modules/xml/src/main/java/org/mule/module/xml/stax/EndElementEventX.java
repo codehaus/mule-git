@@ -22,19 +22,19 @@ public class EndElementEventX extends EndElementEvent
 
     private final StartElementEventX startEvent;
 
-	public EndElementEventX(QName name,
+    public EndElementEventX(QName name,
                             StartElementEventX startEvent,
                             List namespaces,
                             Location location,
                             QName schemaType)
     {
         super(name, namespaces.iterator(), location, schemaType);
-		this.startEvent = startEvent;
+        this.startEvent = startEvent;
     }
 
-	public StartElementEventX getStartEvent() {
-		return startEvent;
-	}
+    public StartElementEventX getStartEvent() {
+        return startEvent;
+    }
     
 }
 

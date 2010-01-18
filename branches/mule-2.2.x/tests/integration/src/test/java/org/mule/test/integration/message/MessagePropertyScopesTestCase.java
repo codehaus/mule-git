@@ -16,23 +16,23 @@ import org.mule.tck.FunctionalTestCase;
 
 public class MessagePropertyScopesTestCase extends FunctionalTestCase 
 {
-	@Override
-	protected String getConfigResources() 
-	{
-		return "org/mule/test/integration/messaging/message-property-scopes-config.xml";
-	}
+    @Override
+    protected String getConfigResources()
+    {
+        return "org/mule/test/integration/messaging/message-property-scopes-config.xml";
+    }
 
-	public void testSessionProperty() throws Exception 
-	{
-		MuleClient client = new MuleClient();
-		MuleMessage response = client.send("vm://in1", "Hello World", null);
-		assertNotNull(response);
-		String payload = response.getPayloadAsString();
-		assertNotNull(payload);
-		assertEquals("java.util.Date", payload);
-	}
+    public void testSessionProperty() throws Exception
+    {
+        MuleClient client = new MuleClient();
+        MuleMessage response = client.send("vm://in1", "Hello World", null);
+        assertNotNull(response);
+        String payload = response.getPayloadAsString();
+        assertNotNull(payload);
+        assertEquals("java.util.Date", payload);
+    }
 
-	/* Test fails
+    /* Test fails
     public void testInvocationProperty() throws Exception 
     {
         
