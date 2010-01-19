@@ -75,3 +75,6 @@ org.mule.test.integration.transaction.XABridgeJmsJdbcTestCase
 ##########################################################################
 #org.mule.test.integration.management.ManagementSimpleStartupTestCase
 #org.mule.test.integration.management.ManagementStartupTestCase
+
+#EE-1801 : intermittent
+org.mule.test.integration.service.ServiceInFlightMessagesTestCase
