@@ -471,11 +471,6 @@ public abstract class AbstractConnector
         }
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.mule.api.transport.Connector#isStarted()
-     */
     public final boolean isStarted()
     {
         return started.get();
@@ -617,11 +612,6 @@ public abstract class AbstractConnector
         }
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.mule.api.transport.Connector#shutdown()
-     */
     public final synchronized void dispose()
     {
         if (this.isDisposed())
@@ -772,11 +762,6 @@ public abstract class AbstractConnector
         }
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.mule.api.transport.Connector#isAlive()
-     */
     public boolean isDisposed()
     {
         return disposed.get();
@@ -868,11 +853,6 @@ public abstract class AbstractConnector
         }
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.mule.util.ExceptionListener#onException(java.lang.Throwable)
-     */
     public void exceptionThrown(Exception e)
     {
         handleException(e);
