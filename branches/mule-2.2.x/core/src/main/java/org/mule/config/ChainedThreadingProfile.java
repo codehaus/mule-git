@@ -12,6 +12,7 @@ package org.mule.config;
 
 import org.mule.api.config.ThreadingProfile;
 import org.mule.api.context.WorkManager;
+import org.mule.config.pool.ThreadPoolFactory;
 
 import edu.emory.mathcs.backport.java.util.concurrent.ExecutorService;
 import edu.emory.mathcs.backport.java.util.concurrent.RejectedExecutionHandler;
@@ -44,7 +45,7 @@ public class ChainedThreadingProfile implements ThreadingProfile
     private Integer poolExhaustedAction;
     private Boolean doThreading;
 
-    private PoolFactory poolFactory = new ImmutableThreadingProfile.DefaultPoolFactory();
+    private ThreadPoolFactory poolFactory = ThreadPoolFactory.newInstance();
     private WorkManagerFactory workManagerFactory = new ImmutableThreadingProfile.DefaultWorkManagerFactory();
     private RejectedExecutionHandler rejectedExecutionHandler;
     private ThreadFactory threadFactory;
@@ -184,16 +185,6 @@ public class ChainedThreadingProfile implements ThreadingProfile
         return workManagerFactory.createWorkManager(this, name);
     }
 
-    public PoolFactory getPoolFactory()
-    {
-        return poolFactory;
-    }
-
-    public void setPoolFactory(PoolFactory poolFactory)
-    {
-        this.poolFactory = poolFactory;
-    }
-
     public ExecutorService createPool()
     {
         return createPool(null);
@@ -212,6 +203,11 @@ public class ChainedThreadingProfile implements ThreadingProfile
     public void setDoThreading(boolean doThreading)
     {
         this.doThreading = doThreading;
+    }
+
+    public ThreadPoolFactory getPoolFactory()
+    {
+        return poolFactory;
     }
 
     public String toString()

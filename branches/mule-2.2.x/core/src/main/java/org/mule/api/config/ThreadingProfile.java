@@ -12,13 +12,13 @@ package org.mule.api.config;
 
 import org.mule.api.context.WorkManager;
 import org.mule.config.ImmutableThreadingProfile;
+import org.mule.config.pool.ThreadPoolFactory;
 
 import java.util.Map;
 
 import edu.emory.mathcs.backport.java.util.concurrent.ExecutorService;
 import edu.emory.mathcs.backport.java.util.concurrent.RejectedExecutionHandler;
 import edu.emory.mathcs.backport.java.util.concurrent.ThreadFactory;
-
 import org.apache.commons.collections.map.CaseInsensitiveMap;
 
 /**
@@ -170,14 +170,7 @@ public interface ThreadingProfile
 
     void setDoThreading(boolean doThreading);
 
-    PoolFactory getPoolFactory();
-
-    void setPoolFactory(PoolFactory poolFactory);
-
-    interface PoolFactory
-    {
-        ExecutorService createPool(String name, ThreadingProfile profile);
-    }
+    ThreadPoolFactory getPoolFactory();
 
     interface WorkManagerFactory
     {
