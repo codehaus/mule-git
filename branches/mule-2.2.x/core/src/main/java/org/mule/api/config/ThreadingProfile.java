@@ -89,23 +89,23 @@ public interface ThreadingProfile
 
         // initializer
         {
-            Integer value = new Integer(WHEN_EXHAUSTED_WAIT);
+            Integer value = WHEN_EXHAUSTED_WAIT;
             this.put("WHEN_EXHAUSTED_WAIT", value);
             this.put("WAIT", value);
 
-            value = new Integer(WHEN_EXHAUSTED_DISCARD);
+            value = WHEN_EXHAUSTED_DISCARD;
             this.put("WHEN_EXHAUSTED_DISCARD", value);
             this.put("DISCARD", value);
 
-            value = new Integer(WHEN_EXHAUSTED_DISCARD_OLDEST);
+            value = WHEN_EXHAUSTED_DISCARD_OLDEST;
             this.put("WHEN_EXHAUSTED_DISCARD_OLDEST", value);
             this.put("DISCARD_OLDEST", value);
 
-            value = new Integer(WHEN_EXHAUSTED_ABORT);
+            value = WHEN_EXHAUSTED_ABORT;
             this.put("WHEN_EXHAUSTED_ABORT", value);
             this.put("ABORT", value);
 
-            value = new Integer(WHEN_EXHAUSTED_RUN);
+            value = WHEN_EXHAUSTED_RUN;
             this.put("WHEN_EXHAUSTED_RUN", value);
             this.put("RUN", value);
         }
