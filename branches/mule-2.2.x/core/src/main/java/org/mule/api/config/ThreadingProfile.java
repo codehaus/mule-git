@@ -15,9 +15,9 @@ import org.mule.config.ImmutableThreadingProfile;
 
 import java.util.Map;
 
+import edu.emory.mathcs.backport.java.util.concurrent.ExecutorService;
 import edu.emory.mathcs.backport.java.util.concurrent.RejectedExecutionHandler;
 import edu.emory.mathcs.backport.java.util.concurrent.ThreadFactory;
-import edu.emory.mathcs.backport.java.util.concurrent.ThreadPoolExecutor;
 
 import org.apache.commons.collections.map.CaseInsensitiveMap;
 
@@ -162,13 +162,22 @@ public interface ThreadingProfile
 
     WorkManager createWorkManager(String name);
 
-    ThreadPoolExecutor createPool();
+    ExecutorService createPool();
 
-    ThreadPoolExecutor createPool(String name);
+    ExecutorService createPool(String name);
 
     boolean isDoThreading();
 
     void setDoThreading(boolean doThreading);
+
+    PoolFactory getPoolFactory();
+
+    void setPoolFactory(PoolFactory poolFactory);
+
+    interface PoolFactory
+    {
+        ExecutorService createPool(String name, ThreadingProfile profile);
+    }
 
     interface WorkManagerFactory
     {

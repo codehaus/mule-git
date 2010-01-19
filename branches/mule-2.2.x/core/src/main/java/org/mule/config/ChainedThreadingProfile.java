@@ -13,9 +13,9 @@ package org.mule.config;
 import org.mule.api.config.ThreadingProfile;
 import org.mule.api.context.WorkManager;
 
+import edu.emory.mathcs.backport.java.util.concurrent.ExecutorService;
 import edu.emory.mathcs.backport.java.util.concurrent.RejectedExecutionHandler;
 import edu.emory.mathcs.backport.java.util.concurrent.ThreadFactory;
-import edu.emory.mathcs.backport.java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * This was written (perhaps too far in advance) with an eye to how we will manage default values
@@ -44,6 +44,7 @@ public class ChainedThreadingProfile implements ThreadingProfile
     private Integer poolExhaustedAction;
     private Boolean doThreading;
 
+    private PoolFactory poolFactory = new ImmutableThreadingProfile.DefaultPoolFactory();
     private WorkManagerFactory workManagerFactory = new ImmutableThreadingProfile.DefaultWorkManagerFactory();
     private RejectedExecutionHandler rejectedExecutionHandler;
     private ThreadFactory threadFactory;
@@ -64,7 +65,6 @@ public class ChainedThreadingProfile implements ThreadingProfile
      * Generate a mutable threading profile with dynamic default values taken from the
      * given delegate.
      *
-     * @param delegate
      */
     public ChainedThreadingProfile(ThreadingProfile delegate)
     {
@@ -91,27 +91,27 @@ public class ChainedThreadingProfile implements ThreadingProfile
 
     public int getMaxThreadsActive()
     {
-        return null != maxThreadsActive ? maxThreadsActive.intValue() : delegate.getMaxThreadsActive();
+        return null != maxThreadsActive ? maxThreadsActive : delegate.getMaxThreadsActive();
     }
 
     public int getMaxThreadsIdle()
     {
-        return null != maxThreadsIdle ? maxThreadsIdle.intValue() : delegate.getMaxThreadsIdle();
+        return null != maxThreadsIdle ? maxThreadsIdle : delegate.getMaxThreadsIdle();
     }
 
     public long getThreadTTL()
     {
-        return null != threadTTL ? threadTTL.longValue() : delegate.getThreadTTL();
+        return null != threadTTL ? threadTTL : delegate.getThreadTTL();
     }
 
     public long getThreadWaitTimeout()
     {
-        return null != threadWaitTimeout ? threadWaitTimeout.longValue() : delegate.getThreadWaitTimeout();
+        return null != threadWaitTimeout ? threadWaitTimeout : delegate.getThreadWaitTimeout();
     }
 
     public int getPoolExhaustedAction()
     {
-        return null != poolExhaustedAction ? poolExhaustedAction.intValue() : delegate.getPoolExhaustedAction();
+        return null != poolExhaustedAction ? poolExhaustedAction : delegate.getPoolExhaustedAction();
     }
 
     public RejectedExecutionHandler getRejectedExecutionHandler()
@@ -126,27 +126,27 @@ public class ChainedThreadingProfile implements ThreadingProfile
 
     public void setMaxThreadsActive(int maxThreadsActive)
     {
-        this.maxThreadsActive = new Integer(maxThreadsActive);
+        this.maxThreadsActive = maxThreadsActive;
     }
 
     public void setMaxThreadsIdle(int maxThreadsIdle)
     {
-        this.maxThreadsIdle = new Integer(maxThreadsIdle);
+        this.maxThreadsIdle = maxThreadsIdle;
     }
 
     public void setThreadTTL(long threadTTL)
     {
-        this.threadTTL = new Long(threadTTL);
+        this.threadTTL = threadTTL;
     }
 
     public void setThreadWaitTimeout(long threadWaitTimeout)
     {
-        this.threadWaitTimeout = new Long(threadWaitTimeout);
+        this.threadWaitTimeout = threadWaitTimeout;
     }
 
     public void setPoolExhaustedAction(int poolExhaustPolicy)
     {
-        this.poolExhaustedAction = new Integer(poolExhaustPolicy);
+        this.poolExhaustedAction = poolExhaustPolicy;
     }
 
     public void setRejectedExecutionHandler(RejectedExecutionHandler rejectedExecutionHandler)
@@ -161,12 +161,12 @@ public class ChainedThreadingProfile implements ThreadingProfile
 
     public int getMaxBufferSize()
     {
-        return null != maxBufferSize ? maxBufferSize.intValue() : delegate.getMaxBufferSize();
+        return null != maxBufferSize ? maxBufferSize : delegate.getMaxBufferSize();
     }
 
     public void setMaxBufferSize(int maxBufferSize)
     {
-        this.maxBufferSize = new Integer(maxBufferSize);
+        this.maxBufferSize = maxBufferSize;
     }
 
     public WorkManagerFactory getWorkManagerFactory()
@@ -184,24 +184,34 @@ public class ChainedThreadingProfile implements ThreadingProfile
         return workManagerFactory.createWorkManager(this, name);
     }
 
-    public ThreadPoolExecutor createPool()
+    public PoolFactory getPoolFactory()
+    {
+        return poolFactory;
+    }
+
+    public void setPoolFactory(PoolFactory poolFactory)
+    {
+        this.poolFactory = poolFactory;
+    }
+
+    public ExecutorService createPool()
     {
         return createPool(null);
     }
 
-    public ThreadPoolExecutor createPool(String name)
+    public ExecutorService createPool(String name)
     {
-        return ImmutableThreadingProfile.createPool(name, this);
+        return poolFactory.createPool(name, this);
     }
 
     public boolean isDoThreading()
     {
-        return null != doThreading ? doThreading.booleanValue() : delegate.isDoThreading();
+        return null != doThreading ? doThreading : delegate.isDoThreading();
     }
 
     public void setDoThreading(boolean doThreading)
     {
-        this.doThreading = Boolean.valueOf(doThreading);
+        this.doThreading = doThreading;
     }
 
     public String toString()

@@ -19,6 +19,7 @@ import org.mule.util.concurrent.WaitPolicy;
 import org.mule.work.MuleWorkManager;
 
 import edu.emory.mathcs.backport.java.util.concurrent.BlockingQueue;
+import edu.emory.mathcs.backport.java.util.concurrent.ExecutorService;
 import edu.emory.mathcs.backport.java.util.concurrent.LinkedBlockingDeque;
 import edu.emory.mathcs.backport.java.util.concurrent.RejectedExecutionHandler;
 import edu.emory.mathcs.backport.java.util.concurrent.SynchronousQueue;
@@ -38,6 +39,7 @@ public class ImmutableThreadingProfile implements ThreadingProfile
     private int poolExhaustedAction;
     private boolean doThreading;
 
+    private PoolFactory poolFactory = new DefaultPoolFactory();
     private WorkManagerFactory workManagerFactory = new DefaultWorkManagerFactory();
     private RejectedExecutionHandler rejectedExecutionHandler;
     private ThreadFactory threadFactory;
@@ -166,19 +168,29 @@ public class ImmutableThreadingProfile implements ThreadingProfile
         throw new UnsupportedOperationException(getClass().getName());
     }
 
+    public PoolFactory getPoolFactory()
+    {
+        return poolFactory;
+    }
+
+    public void setPoolFactory(PoolFactory poolFactory)
+    {
+        this.poolFactory = poolFactory;
+    }
+
     public WorkManager createWorkManager(String name)
     {
         return workManagerFactory.createWorkManager(this, name);
     }
 
-    public ThreadPoolExecutor createPool()
+    public ExecutorService createPool()
     {
         return createPool(null);
     }
 
-    public ThreadPoolExecutor createPool(String name)
+    public ExecutorService createPool(String name)
     {
-        return createPool(name, this);
+        return poolFactory.createPool(name, this);
     }
 
     public boolean isDoThreading()
@@ -211,75 +223,78 @@ public class ImmutableThreadingProfile implements ThreadingProfile
 
     }
 
-    // this should be a separate factory, really
-    public static ThreadPoolExecutor createPool(String name, ThreadingProfile tp)
+    public static class DefaultPoolFactory implements PoolFactory
     {
 
-        BlockingQueue buffer;
+        public ExecutorService createPool(String name, ThreadingProfile tp)
+        {
+            BlockingQueue buffer;
 
-        if (tp.getMaxBufferSize() > 0 && tp.getMaxThreadsActive() > 1)
-        {
-            buffer = new LinkedBlockingDeque(tp.getMaxBufferSize());
-        }
-        else
-        {
-            buffer = new SynchronousQueue();
-        }
-
-        ThreadPoolExecutor pool =
-                new ThreadPoolExecutor(Math.min(tp.getMaxThreadsIdle(), tp.getMaxThreadsActive()),
-                        tp.getMaxThreadsActive(), tp.getThreadTTL(),
-                        TimeUnit.MILLISECONDS, buffer);
-
-        // use a custom ThreadFactory if one has been configured
-        if (tp.getThreadFactory() != null)
-        {
-            pool.setThreadFactory(tp.getThreadFactory());
-        }
-        else
-        {
-            // ..else create a "NamedThreadFactory" if a proper name was passed in
-            if (StringUtils.isNotBlank(name))
+            if (tp.getMaxBufferSize() > 0 && tp.getMaxThreadsActive() > 1)
             {
-                // Use MuleContext classloader so that other temporary classloaders
-                // aren't used when things are started lazily or from elsewhere.
-                pool.setThreadFactory(new NamedThreadFactory(name, MuleContext.class.getClassLoader()));
+                buffer = new LinkedBlockingDeque(tp.getMaxBufferSize());
             }
             else
             {
-                // let ThreadPoolExecutor create a default ThreadFactory;
-                // see Executors.defaultThreadFactory()
+                buffer = new SynchronousQueue();
             }
-        }
 
-        if (tp.getRejectedExecutionHandler() != null)
-        {
-            pool.setRejectedExecutionHandler(tp.getRejectedExecutionHandler());
-        }
-        else
-        {
-            switch (tp.getPoolExhaustedAction())
+            ThreadPoolExecutor pool =
+                    new ThreadPoolExecutor(Math.min(tp.getMaxThreadsIdle(), tp.getMaxThreadsActive()),
+                                           tp.getMaxThreadsActive(), tp.getThreadTTL(),
+                                           TimeUnit.MILLISECONDS, buffer);
+
+            // use a custom ThreadFactory if one has been configured
+            if (tp.getThreadFactory() != null)
             {
-                case WHEN_EXHAUSTED_DISCARD_OLDEST :
-                    pool.setRejectedExecutionHandler(new ThreadPoolExecutor.DiscardOldestPolicy());
-                    break;
-                case WHEN_EXHAUSTED_RUN :
-                    pool.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
-                    break;
-                case WHEN_EXHAUSTED_ABORT :
-                    pool.setRejectedExecutionHandler(new ThreadPoolExecutor.AbortPolicy());
-                    break;
-                case WHEN_EXHAUSTED_DISCARD :
-                    pool.setRejectedExecutionHandler(new ThreadPoolExecutor.DiscardPolicy());
-                    break;
-                default :
-                    // WHEN_EXHAUSTED_WAIT
-                    pool.setRejectedExecutionHandler(new WaitPolicy(tp.getThreadWaitTimeout(), TimeUnit.MILLISECONDS));
-                    break;
+                pool.setThreadFactory(tp.getThreadFactory());
             }
-        }
+            else
+            {
+                // ..else create a "NamedThreadFactory" if a proper name was passed in
+                if (StringUtils.isNotBlank(name))
+                {
+                    // Use MuleContext classloader so that other temporary classloaders
+                    // aren't used when things are started lazily or from elsewhere.
+                    pool.setThreadFactory(new NamedThreadFactory(name, MuleContext.class.getClassLoader()));
+                }
+                else
+                {
+                    // let ThreadPoolExecutor create a default ThreadFactory;
+                    // see Executors.defaultThreadFactory()
+                }
+            }
 
-        return pool;
+            if (tp.getRejectedExecutionHandler() != null)
+            {
+                pool.setRejectedExecutionHandler(tp.getRejectedExecutionHandler());
+            }
+            else
+            {
+                switch (tp.getPoolExhaustedAction())
+                {
+                    case WHEN_EXHAUSTED_DISCARD_OLDEST :
+                        pool.setRejectedExecutionHandler(new ThreadPoolExecutor.DiscardOldestPolicy());
+                        break;
+                    case WHEN_EXHAUSTED_RUN :
+                        pool.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
+                        break;
+                    case WHEN_EXHAUSTED_ABORT :
+                        pool.setRejectedExecutionHandler(new ThreadPoolExecutor.AbortPolicy());
+                        break;
+                    case WHEN_EXHAUSTED_DISCARD :
+                        pool.setRejectedExecutionHandler(new ThreadPoolExecutor.DiscardPolicy());
+                        break;
+                    default :
+                        // WHEN_EXHAUSTED_WAIT
+                        pool.setRejectedExecutionHandler(new WaitPolicy(tp.getThreadWaitTimeout(), TimeUnit.MILLISECONDS));
+                        break;
+                }
+            }
+
+            return pool;
+
+        }
     }
 
 }
