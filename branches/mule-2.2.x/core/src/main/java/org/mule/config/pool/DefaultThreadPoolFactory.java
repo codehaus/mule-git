@@ -41,10 +41,7 @@ public class DefaultThreadPoolFactory extends ThreadPoolFactory
             buffer = new SynchronousQueue();
         }
 
-        ThreadPoolExecutor pool =
-                new ThreadPoolExecutor(Math.min(tp.getMaxThreadsIdle(), tp.getMaxThreadsActive()),
-                                       tp.getMaxThreadsActive(), tp.getThreadTTL(),
-                                       TimeUnit.MILLISECONDS, buffer);
+        ThreadPoolExecutor pool = internalCreatePool(name, tp, buffer);
 
         // use a custom ThreadFactory if one has been configured
         if (tp.getThreadFactory() != null)
@@ -95,6 +92,14 @@ public class DefaultThreadPoolFactory extends ThreadPoolFactory
         }
 
         return pool;
+
+    }
+
+    protected ThreadPoolExecutor internalCreatePool(String name, ThreadingProfile tp, BlockingQueue buffer)
+    {
+        return new ThreadPoolExecutor(Math.min(tp.getMaxThreadsIdle(), tp.getMaxThreadsActive()),
+                                      tp.getMaxThreadsActive(), tp.getThreadTTL(),
+                                      TimeUnit.MILLISECONDS, buffer);
 
     }
 }
