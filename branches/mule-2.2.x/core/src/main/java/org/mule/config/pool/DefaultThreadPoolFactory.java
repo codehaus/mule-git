@@ -42,27 +42,8 @@ public class DefaultThreadPoolFactory extends ThreadPoolFactory
         }
 
         ThreadPoolExecutor pool = internalCreatePool(name, tp, buffer);
+        configureThreadFactory(name, tp, pool);
 
-        // use a custom ThreadFactory if one has been configured
-        if (tp.getThreadFactory() != null)
-        {
-            pool.setThreadFactory(tp.getThreadFactory());
-        }
-        else
-        {
-            // ..else create a "NamedThreadFactory" if a proper name was passed in
-            if (StringUtils.isNotBlank(name))
-            {
-                // Use MuleContext classloader so that other temporary classloaders
-                // aren't used when things are started lazily or from elsewhere.
-                pool.setThreadFactory(new NamedThreadFactory(name, MuleContext.class.getClassLoader()));
-            }
-            else
-            {
-                // let ThreadPoolExecutor create a default ThreadFactory;
-                // see Executors.defaultThreadFactory()
-            }
-        }
 
         if (tp.getRejectedExecutionHandler() != null)
         {
@@ -93,6 +74,30 @@ public class DefaultThreadPoolFactory extends ThreadPoolFactory
 
         return pool;
 
+    }
+
+    protected void configureThreadFactory(String name, ThreadingProfile tp, ThreadPoolExecutor pool)
+    {
+        // use a custom ThreadFactory if one has been configured
+        if (tp.getThreadFactory() != null)
+        {
+            pool.setThreadFactory(tp.getThreadFactory());
+        }
+        else
+        {
+            // ..else create a "NamedThreadFactory" if a proper name was passed in
+            if (StringUtils.isNotBlank(name))
+            {
+                // Use MuleContext classloader so that other temporary classloaders
+                // aren't used when things are started lazily or from elsewhere.
+                pool.setThreadFactory(new NamedThreadFactory(name, MuleContext.class.getClassLoader()));
+            }
+            else
+            {
+                // let ThreadPoolExecutor create a default ThreadFactory;
+                // see Executors.defaultThreadFactory()
+            }
+        }
     }
 
     protected ThreadPoolExecutor internalCreatePool(String name, ThreadingProfile tp, BlockingQueue buffer)
