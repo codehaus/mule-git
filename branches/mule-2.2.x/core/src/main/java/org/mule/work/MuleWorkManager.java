@@ -34,6 +34,7 @@ import org.mule.api.config.ThreadingProfile;
 import org.mule.api.context.MuleContextAware;
 import org.mule.api.context.WorkManager;
 import org.mule.api.work.WorkExecutor;
+import org.mule.config.ChainedThreadingProfile;
 
 import java.text.MessageFormat;
 import java.util.List;
@@ -311,5 +312,9 @@ public class MuleWorkManager implements WorkManager, MuleContextAware
     public void setMuleContext(MuleContext muleContext)
     {
         this.muleContext = muleContext;
+        if (this.threadingProfile != null && muleContext != null)
+        {
+            threadingProfile.setMuleContext(muleContext);
+        }
     }
 }

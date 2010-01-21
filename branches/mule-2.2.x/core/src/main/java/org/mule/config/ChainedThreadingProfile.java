@@ -23,13 +23,13 @@ import edu.emory.mathcs.backport.java.util.concurrent.ThreadFactory;
 /**
  * This was written (perhaps too far in advance) with an eye to how we will manage default values
  * in a dynamic environment.  Since very little has been decided in that direction the correct
- * behaviour is unclear - changing the default value of "dyanamic"
+ * behaviour is unclear - changing the default value of "dynamic"
  * {@link org.mule.config.ChainedThreadingProfile#ChainedThreadingProfile(ThreadingProfile)}
  * will switch behaviour between dynamic and static chaining.
  *
  * <p>Note that within Spring, as far as I understand things, object creation is always ordered
  * so that dependencies are correctly resolved.  In that case, in a static scenario (or in a
- * dynamic one that rebuilds the instances) dyanmic and static behaviour should be identical.</p>
+ * dynamic one that rebuilds the instances) dynamic and static behaviour should be identical.</p>
  *
  * <p>Also, the "lazy" chaining is an optimisation - all hierarchies should be grounded in a final
  * default which is {@link ImmutableThreadingProfile} and, as such, return reliable
@@ -53,6 +53,8 @@ public class ChainedThreadingProfile implements ThreadingProfile
     private ThreadFactory threadFactory;
 
     private ThreadingProfile delegate;
+
+    private MuleContext muleContext;
 
     /**
      * Generate a mutable threading profile with fixed default values taken from
@@ -184,19 +186,7 @@ public class ChainedThreadingProfile implements ThreadingProfile
 
     public WorkManager createWorkManager(String name)
     {
-        return createWorkManager(name, null);
-    }
-
-    public WorkManager createWorkManager(String name, MuleContext muleContext)
-    {
-        final WorkManager workManager = workManagerFactory.createWorkManager(this, name);
-        if (workManager instanceof MuleContextAware && muleContext != null)
-        {
-            MuleContextAware contextAware = (MuleContextAware) workManager;
-            contextAware.setMuleContext(muleContext);
-        }
-
-        return workManager;
+        return workManagerFactory.createWorkManager(this, name);
     }
 
     public ExecutorService createPool()
@@ -222,6 +212,24 @@ public class ChainedThreadingProfile implements ThreadingProfile
     public ThreadPoolFactory getPoolFactory()
     {
         return poolFactory;
+    }
+
+    public MuleContext getMuleContext()
+    {
+        return muleContext;
+    }
+
+    public void setMuleContext(MuleContext muleContext)
+    {
+        this.muleContext = muleContext;
+
+        // propagate mule context
+        if (this.workManagerFactory instanceof MuleContextAware)
+        {
+            ((MuleContextAware) workManagerFactory).setMuleContext(muleContext);
+        }
+
+        poolFactory.setMuleContext(muleContext);
     }
 
     public String toString()

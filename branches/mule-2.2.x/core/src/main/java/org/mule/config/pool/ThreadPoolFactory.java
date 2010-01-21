@@ -10,8 +10,10 @@
 
 package org.mule.config.pool;
 
+import org.mule.api.MuleContext;
 import org.mule.api.MuleRuntimeException;
 import org.mule.api.config.ThreadingProfile;
+import org.mule.api.context.MuleContextAware;
 import org.mule.config.i18n.MessageFactory;
 import org.mule.util.ClassUtils;
 
@@ -29,13 +31,15 @@ import org.apache.commons.logging.LogFactory;
  * <a href="http://java.sun.com/j2se/1.3/docs/guide/jar/jar.html#Service%20Provider">SPI discovery</a>
  * mechanism to locate implementations.
  */
-public abstract class ThreadPoolFactory
+public abstract class ThreadPoolFactory implements MuleContextAware
 {
     // keep it private, subclasses will have their own loggers, thus avoiding contention on this static one
     private static final Log logger = LogFactory.getLog(ThreadPoolFactory.class);
 
     private static final String PREFERRED_CONFIG_CLASSNAME = "com.mulesoft.mule.config.Preferred";
     private static boolean extensionsAvailable = ClassUtils.isClassOnPath(PREFERRED_CONFIG_CLASSNAME, ThreadPoolFactory.class);
+
+    protected MuleContext muleContext;
 
     /**
      * @return a discovered
@@ -99,6 +103,11 @@ public abstract class ThreadPoolFactory
         throw new MuleRuntimeException(MessageFactory.createStaticMessage(
                 "Couldn't find config via SPI mechanism. Corrupted Mule core jar?"
         ));
+    }
+
+    public void setMuleContext(MuleContext context)
+    {
+        this.muleContext = context;
     }
 
     public abstract ThreadPoolExecutor createPool(String name, ThreadingProfile tp);

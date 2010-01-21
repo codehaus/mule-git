@@ -11,6 +11,7 @@
 package org.mule.api.config;
 
 import org.mule.api.MuleContext;
+import org.mule.api.context.MuleContextAware;
 import org.mule.api.context.WorkManager;
 import org.mule.config.ImmutableThreadingProfile;
 import org.mule.config.pool.ThreadPoolFactory;
@@ -36,7 +37,7 @@ import org.apache.commons.collections.map.CaseInsensitiveMap;
  * can be either dynamic (read whenever the value is queried) or static (a local copy of the
  * default is made when the profile is first constructed).</p>
  */
-public interface ThreadingProfile
+public interface ThreadingProfile extends MuleContextAware
 {
 
     /**
@@ -172,8 +173,6 @@ public interface ThreadingProfile
     void setDoThreading(boolean doThreading);
 
     ThreadPoolFactory getPoolFactory();
-
-    WorkManager createWorkManager(String name, MuleContext muleContext);
 
     interface WorkManagerFactory
     {

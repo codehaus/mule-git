@@ -37,6 +37,7 @@ public class ImmutableThreadingProfile implements ThreadingProfile
     private WorkManagerFactory workManagerFactory = new DefaultWorkManagerFactory();
     private RejectedExecutionHandler rejectedExecutionHandler;
     private ThreadFactory threadFactory;
+    private MuleContext muleContext;
 
     public ImmutableThreadingProfile(int maxThreadsActive,
                             int maxThreadsIdle,
@@ -95,6 +96,11 @@ public class ImmutableThreadingProfile implements ThreadingProfile
     public int getPoolExhaustedAction()
     {
         return poolExhaustedAction;
+    }
+
+    public String getPoolExhaustedActionAsString()
+    {
+        return null;
     }
 
     public RejectedExecutionHandler getRejectedExecutionHandler()
@@ -164,19 +170,7 @@ public class ImmutableThreadingProfile implements ThreadingProfile
 
     public WorkManager createWorkManager(String name)
     {
-        return createWorkManager(name, null);
-    }
-
-    public WorkManager createWorkManager(String name, MuleContext muleContext)
-    {
-        final WorkManager workManager = workManagerFactory.createWorkManager(this, name);
-        if (workManager instanceof MuleContextAware  && muleContext != null)
-        {
-            MuleContextAware contextAware = (MuleContextAware) workManager;
-            contextAware.setMuleContext(muleContext);
-        }
-
-        return workManager;
+        return workManagerFactory.createWorkManager(this, name);
     }
 
     public ExecutorService createPool()
@@ -204,6 +198,24 @@ public class ImmutableThreadingProfile implements ThreadingProfile
         return poolFactory;
     }
 
+    public void setMuleContext(MuleContext context)
+    {
+        this.muleContext = context;
+
+        // propagate mule context
+        if (this.workManagerFactory instanceof MuleContextAware)
+        {
+            ((MuleContextAware) workManagerFactory).setMuleContext(muleContext);
+        }
+
+        poolFactory.setMuleContext(muleContext);
+    }
+
+    public MuleContext getMuleContext()
+    {
+        return muleContext;
+    }
+
     public String toString()
     {
         return "ThreadingProfile{" + "maxThreadsActive=" + maxThreadsActive + ", maxThreadsIdle="
@@ -214,14 +226,27 @@ public class ImmutableThreadingProfile implements ThreadingProfile
                         + ", threadFactory=" + threadFactory + "}";
     }
 
-    public static class DefaultWorkManagerFactory implements WorkManagerFactory
+    public static class DefaultWorkManagerFactory implements WorkManagerFactory, MuleContextAware
     {
+
+        protected MuleContext muleContext;
 
         public WorkManager createWorkManager(ThreadingProfile profile, String name)
         {
-            return new MuleWorkManager(profile, name);
+            final WorkManager workManager = new MuleWorkManager(profile, name);
+            if (workManager instanceof MuleContextAware && muleContext != null)
+            {
+                MuleContextAware contextAware = (MuleContextAware) workManager;
+                contextAware.setMuleContext(muleContext);
+            }
+
+            return workManager;
         }
 
+        public void setMuleContext(MuleContext context)
+        {
+            this.muleContext = context;
+        }
     }
 
 }
