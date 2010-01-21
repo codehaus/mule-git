@@ -17,9 +17,9 @@ import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicLong;
 
 public class NamedThreadFactory implements ThreadFactory
 {
-    private final String name;
-    private final AtomicLong counter;
-    private final ClassLoader contextClassLoader;
+    protected final String name;
+    protected final AtomicLong counter;
+    protected final ClassLoader contextClassLoader;
 
     public NamedThreadFactory(String name)
     {
