@@ -17,9 +17,9 @@ import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicLong;
 
 public class NamedThreadFactory implements ThreadFactory
 {
-    protected final String name;
-    protected final AtomicLong counter;
-    protected final ClassLoader contextClassLoader;
+    private final String name;
+    private final AtomicLong counter;
+    private final ClassLoader contextClassLoader;
 
     public NamedThreadFactory(String name)
     {
@@ -59,4 +59,18 @@ public class NamedThreadFactory implements ThreadFactory
         t.setName(name + '.' + counter.getAndIncrement());
     }
 
+    public ClassLoader getContextClassLoader()
+    {
+        return contextClassLoader;
+    }
+
+    public AtomicLong getCounter()
+    {
+        return counter;
+    }
+
+    public String getName()
+    {
+        return name;
+    }
 }
