@@ -15,6 +15,7 @@ import org.mule.api.MuleRuntimeException;
 import org.mule.api.config.MuleConfiguration;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.config.ThreadingProfile;
+import org.mule.api.context.MuleContextAware;
 import org.mule.api.context.WorkManager;
 import org.mule.api.context.notification.ServerNotification;
 import org.mule.api.context.notification.ServerNotificationListener;
@@ -139,6 +140,12 @@ public class DefaultMuleContext implements MuleContext
             registryBroker.initialise();
 
             //We need to start the work manager straight away since we need it to fire notifications
+            if (workManager instanceof MuleContextAware)
+            {
+                MuleContextAware contextAware = (MuleContextAware) workManager;
+                contextAware.setMuleContext(this);
+            }
+
             workManager.start();
             getNotificationManager().start(workManager, workListener);
 
