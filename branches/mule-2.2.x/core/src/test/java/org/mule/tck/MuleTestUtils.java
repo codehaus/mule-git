@@ -361,21 +361,22 @@ public final class MuleTestUtils
         model.setMuleContext(context);
         context.getLifecycleManager().applyCompletedPhases(model);
         
-        Service c = new SedaService();
-        c.setName(name);
+        Service service = new SedaService();
+        service.setName(name);
         ObjectFactory of = new SingletonObjectFactory(clazz, props);
         of.initialise();
-        c.setComponent(new DefaultJavaComponent(of));
-        c.setModel(model);
+        service.setComponent(new DefaultJavaComponent(of));
+        service.setModel(model);
+        service.setMuleContext(context);
         if (initialize)
         {
-            context.getRegistry().registerService(c);
+            context.getRegistry().registerService(service);
             //TODO Why is this necessary
             OutboundRouter router = new OutboundPassThroughRouter();
-            c.getOutboundRouter().addRouter(router);
+            service.getOutboundRouter().addRouter(router);
         }
 
-        return c;
+        return service;
     }
 
     public static TestAgent getTestAgent() throws Exception

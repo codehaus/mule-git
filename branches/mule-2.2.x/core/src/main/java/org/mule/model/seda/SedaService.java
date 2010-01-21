@@ -23,6 +23,7 @@ import org.mule.api.MuleMessage;
 import org.mule.api.MuleRuntimeException;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.config.ThreadingProfile;
+import org.mule.api.context.MuleContextAware;
 import org.mule.api.context.WorkManager;
 import org.mule.api.endpoint.InboundEndpoint;
 import org.mule.api.lifecycle.InitialisationException;
@@ -112,6 +113,10 @@ public class SedaService extends AbstractService implements Work, WorkListener
         ChainedThreadingProfile threadingProfile = new ChainedThreadingProfile(this.threadingProfile);
         threadingProfile.setMaxThreadsActive(threadingProfile.getMaxThreadsActive() + 1);
         workManager = threadingProfile.createWorkManager(getName());
+        if (workManager instanceof MuleContextAware)
+        {
+            ((MuleContextAware) workManager).setMuleContext(muleContext);
+        }
 
         if (queueProfile == null)
         {
