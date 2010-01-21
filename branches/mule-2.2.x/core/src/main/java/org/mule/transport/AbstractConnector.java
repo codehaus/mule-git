@@ -626,7 +626,7 @@ public abstract class AbstractConnector
         if (receiverWorkManager.get() == null)
         {
             WorkManager newWorkManager = this.getReceiverThreadingProfile().createWorkManager(
-                getName() + ".receiver");
+                getName() + ".receiver", muleContext);
 
             if (receiverWorkManager.compareAndSet(null, newWorkManager))
             {
@@ -636,7 +636,7 @@ public abstract class AbstractConnector
         if (dispatcherWorkManager.get() == null)
         {
             WorkManager newWorkManager = this.getDispatcherThreadingProfile().createWorkManager(
-                getName() + ".dispatcher");
+                getName() + ".dispatcher", muleContext);
 
             if (dispatcherWorkManager.compareAndSet(null, newWorkManager))
             {
@@ -646,7 +646,7 @@ public abstract class AbstractConnector
         if (requesterWorkManager.get() == null)
         {
             WorkManager newWorkManager = this.getRequesterThreadingProfile().createWorkManager(
-                getName() + ".requester");
+                getName() + ".requester", muleContext);
 
             if (requesterWorkManager.compareAndSet(null, newWorkManager))
             {

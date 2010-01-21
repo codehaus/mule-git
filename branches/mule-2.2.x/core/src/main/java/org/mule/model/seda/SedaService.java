@@ -112,11 +112,7 @@ public class SedaService extends AbstractService implements Work, WorkListener
         // work item that is running continuously and polling the SEDA queue.)
         ChainedThreadingProfile threadingProfile = new ChainedThreadingProfile(this.threadingProfile);
         threadingProfile.setMaxThreadsActive(threadingProfile.getMaxThreadsActive() + 1);
-        workManager = threadingProfile.createWorkManager(getName());
-        if (workManager instanceof MuleContextAware)
-        {
-            ((MuleContextAware) workManager).setMuleContext(muleContext);
-        }
+        workManager = threadingProfile.createWorkManager(getName(), muleContext);
 
         if (queueProfile == null)
         {

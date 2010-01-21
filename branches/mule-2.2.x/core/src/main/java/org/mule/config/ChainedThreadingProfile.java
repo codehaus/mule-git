@@ -10,7 +10,9 @@
 
 package org.mule.config;
 
+import org.mule.api.MuleContext;
 import org.mule.api.config.ThreadingProfile;
+import org.mule.api.context.MuleContextAware;
 import org.mule.api.context.WorkManager;
 import org.mule.config.pool.ThreadPoolFactory;
 
@@ -182,7 +184,19 @@ public class ChainedThreadingProfile implements ThreadingProfile
 
     public WorkManager createWorkManager(String name)
     {
-        return workManagerFactory.createWorkManager(this, name);
+        return createWorkManager(name, null);
+    }
+
+    public WorkManager createWorkManager(String name, MuleContext muleContext)
+    {
+        final WorkManager workManager = workManagerFactory.createWorkManager(this, name);
+        if (workManager instanceof MuleContextAware && muleContext != null)
+        {
+            MuleContextAware contextAware = (MuleContextAware) workManager;
+            contextAware.setMuleContext(muleContext);
+        }
+
+        return workManager;
     }
 
     public ExecutorService createPool()

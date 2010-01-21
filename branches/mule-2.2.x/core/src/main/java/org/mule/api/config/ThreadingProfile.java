@@ -10,6 +10,7 @@
 
 package org.mule.api.config;
 
+import org.mule.api.MuleContext;
 import org.mule.api.context.WorkManager;
 import org.mule.config.ImmutableThreadingProfile;
 import org.mule.config.pool.ThreadPoolFactory;
@@ -171,6 +172,8 @@ public interface ThreadingProfile
     void setDoThreading(boolean doThreading);
 
     ThreadPoolFactory getPoolFactory();
+
+    WorkManager createWorkManager(String name, MuleContext muleContext);
 
     interface WorkManagerFactory
     {
