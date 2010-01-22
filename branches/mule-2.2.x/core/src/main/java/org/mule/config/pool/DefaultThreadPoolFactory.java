@@ -21,12 +21,16 @@ import edu.emory.mathcs.backport.java.util.concurrent.LinkedBlockingDeque;
 import edu.emory.mathcs.backport.java.util.concurrent.SynchronousQueue;
 import edu.emory.mathcs.backport.java.util.concurrent.ThreadPoolExecutor;
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
 *
 */
 public class DefaultThreadPoolFactory extends ThreadPoolFactory
 {
+    // deliberately shadow the superclass' static logger as to avoid log congestion on it
+    protected final Log logger = LogFactory.getLog(getClass());
 
     public ThreadPoolExecutor createPool(String name, ThreadingProfile tp)
     {
