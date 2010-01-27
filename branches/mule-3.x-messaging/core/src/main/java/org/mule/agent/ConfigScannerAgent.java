@@ -13,6 +13,7 @@ package org.mule.agent;
 import org.mule.AbstractAgent;
 import org.mule.MuleServer;
 import org.mule.api.MuleException;
+import org.mule.api.agent.Agent;
 import org.mule.api.config.ConfigurationBuilder;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.util.ClassUtils;
@@ -75,6 +76,7 @@ public class ConfigScannerAgent extends AbstractAgent
     /**
      * Should be a 1 line description of the agent
      */
+    @Override
     public String getDescription()
     {
         return getName() + " scanning for files in " + configDirName;
@@ -106,6 +108,7 @@ public class ConfigScannerAgent extends AbstractAgent
         // do nothing
     }
 
+    @Override
     public void initialise() throws InitialisationException
     {
         if (configDirName == null)
@@ -124,11 +127,13 @@ public class ConfigScannerAgent extends AbstractAgent
         }
     }
 
-    public List getDependentAgents()
+    @Override
+    public List<Class<Agent>> getDependentAgents()
     {
-        return Collections.EMPTY_LIST;
+        return Collections.emptyList();
     }
 
+    @Override
     public String toString()
     {
         return getDescription();
@@ -143,8 +148,9 @@ public class ConfigScannerAgent extends AbstractAgent
     {
         int errorCount = 0;
         int errorThreshold = 3;
-        List processedFiles = new ArrayList();
+        List<String> processedFiles = new ArrayList<String>();
 
+        @Override
         public void run()
         {
             while (true)
@@ -202,7 +208,7 @@ public class ConfigScannerAgent extends AbstractAgent
     {
         try
         {
-            Class cfgBuilderClass = ClassUtils.loadClass(
+            Class<?> cfgBuilderClass = ClassUtils.loadClass(
                 "org.mule.config.spring.SpringXmlConfigurationBuilder", MuleServer.class);
             ConfigurationBuilder cfgBuilder = (ConfigurationBuilder) ClassUtils.instanciateClass(
                 cfgBuilderClass, configFile);
