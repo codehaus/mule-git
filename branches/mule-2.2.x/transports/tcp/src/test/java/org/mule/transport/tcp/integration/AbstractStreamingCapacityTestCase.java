@@ -70,13 +70,9 @@ public abstract class AbstractStreamingCapacityTestCase extends FunctionalTestCa
             }
         };
 
-        MuleClient client = new MuleClient();
-
         Object ftc = getComponent("testComponent");
         assertTrue("FunctionalStreamingTestComponent expected", ftc instanceof FunctionalStreamingTestComponent);
         assertNotNull(ftc);
-        //assertEquals(1, ftc.getNumber());
-
         ((FunctionalStreamingTestComponent) ftc).setEventCallback(callback, size);
 
         Runtime runtime = Runtime.getRuntime();
@@ -87,6 +83,7 @@ public abstract class AbstractStreamingCapacityTestCase extends FunctionalTestCa
 
         BigInputStream stream = new BigInputStream(size, MESSAGES);
         DefaultMessageAdapter adapter = new DefaultMessageAdapter(stream);
+        MuleClient client = new MuleClient();
         client.dispatch(endpoint, new DefaultMuleMessage(adapter));
 
         // if we assume 1MB/sec then we need at least...
@@ -99,18 +96,21 @@ public abstract class AbstractStreamingCapacityTestCase extends FunctionalTestCa
         // neither of these memory tests are really reliable, but if we stay with 1.4 i don't
         // know of anything better.
         // if these fail in practice i guess we just remove them.
-
         long freeEnd = runtime.freeMemory();
         long delta = freeStart - freeEnd;
         long timeEnd = System.currentTimeMillis();
         double speed = size / (double) (timeEnd - timeStart) * 1000 / ONE_MB;
         logger.info("Transfer speed " + speed + " MB/s (" + size + " B in " + (timeEnd - timeStart) + " ms)");
+        
+        double expectPercent = 10;
         double usePercent = 100.0 * delta / size;
         logger.info("Memory delta " + delta + " B = " + usePercent + "%");
-        assertTrue("Memory used too high", usePercent < 10);
+        
+        String assertMessage = String.format("Expected memory usage to be lower than %f%% but was %f%%", 
+            Double.valueOf(expectPercent), Double.valueOf(usePercent));
+        assertTrue(assertMessage, usePercent < expectPercent);
 
         long maxEnd = runtime.maxMemory();
         assertEquals("Max memory shifted", 0,  maxEnd - maxStart);
     }
-
 }
