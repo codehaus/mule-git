@@ -159,6 +159,24 @@ public class ProxyTestCase extends FunctionalTestCase
     public void testProxyWithFault() throws Exception
     {
         String msg = "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
+                     + "<soap:Body><invalid xmlns=\"http://apache.org/hello_world_soap_http/types\"><requestType>Dan</requestType></invalid>"
+                     + "</soap:Body>" + "</soap:Envelope>";
+
+        MuleClient client = new MuleClient();
+        MuleMessage result = client.send("http://localhost:63081/services/greeter-proxy", msg, null);
+        String resString = result.getPayloadAsString();
+
+        String resultProperty = (String) result.getProperty("http.status");
+
+        assertFalse("Status code should not be 'OK' when the proxied endpoint returns a fault",
+            Integer.parseInt(resultProperty) == (HttpConstants.SC_OK));
+
+        assertTrue(resString.indexOf("Fault") != -1);
+    }
+
+    public void testProxyWithIntermediateTransform() throws Exception
+    {
+        String msg = "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
                      + "<soap:Body><greetMe xmlns=\"http://apache.org/hello_world_soap_http/types\"><requestType>Dan</requestType></greetMe>"
                      + "</soap:Body>" + "</soap:Envelope>";
 
