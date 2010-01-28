@@ -13,11 +13,14 @@ package org.mule.transport.jms.integration;
 import org.mule.api.config.MuleProperties;
 import org.mule.message.ExceptionMessage;
 
+import javax.jms.BytesMessage;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.ObjectMessage;
 import javax.jms.Session;
+import javax.jms.TextMessage;
 
+import org.apache.commons.lang.SerializationUtils;
 import org.junit.Test;
 
 /**
@@ -25,6 +28,8 @@ import org.junit.Test;
  */
 public class JmsExceptionStrategyTestCase extends AbstractJmsFunctionalTestCase
 {
+    public static final String DEADLETTER_QUEUE_NAME = "dlq";
+
     public JmsExceptionStrategyTestCase(JmsVendorConfiguration config)
     {
         super(config);
@@ -44,17 +49,55 @@ public class JmsExceptionStrategyTestCase extends AbstractJmsFunctionalTestCase
         receiveAndAssertNone();
 
         // Verify that an ExceptionMessage got sent to dead letter queue instead.
-        Message output = receive(getJmsConfig().getDeadLetterDestinationName(), getTimeout(), null);
-        assertTrue("Message should be ObjectMessage but is " + output.getClass(), output instanceof ObjectMessage);
-        Object payload = ((ObjectMessage) output).getObject();
-        assertTrue(payload instanceof ExceptionMessage);
+        Message message = receive(getJmsConfig().getDeadLetterDestinationName(), getTimeout(), null);
+
+        Object obj = null;
+        // ExceptionMessage got serialized by JMS provider
+        if (message instanceof BytesMessage)
+        {
+            byte[] messageBytes = new byte[(int) ((BytesMessage) message).getBodyLength()];
+            ((BytesMessage) message).readBytes(messageBytes);
+            obj = SerializationUtils.deserialize(messageBytes);
+        }
+        // ExceptionMessage did not get serialized by JMS provider
+        else if (message instanceof ObjectMessage)
+        {
+            obj = ((ObjectMessage) message).getObject();
+        }
+        else
+        {
+            fail("Message is an unexpected type: " + message.getClass().getName());
+        }
+        assertTrue(obj instanceof ExceptionMessage);
+
         // The payload should be the original message, not the reply message
         // since the FTC threw an exception.
-        assertEquals(DEFAULT_INPUT_MESSAGE, ((ExceptionMessage) payload).getPayload());
+        
+        Object payload = ((ExceptionMessage) obj).getPayload();
+        // Original JMS message was serializable
+        if (payload instanceof TextMessage)
+        {
+            assertEquals(DEFAULT_INPUT_MESSAGE, ((TextMessage) payload).getText());
+        }
+        // Original JMS message was not serializable and toString() was called
+        // instead
+        // (see AbstractExceptionListener.routeException() )
+        else if (payload instanceof String)
+        {
+            assertEquals(DEFAULT_INPUT_MESSAGE, payload);
+        }
+        else
+        {
+            fail("Payload is an unexpected type: " + payload.getClass().getName());
+        }
 
-        String dest = output.getStringProperty(MuleProperties.MULE_ENDPOINT_PROPERTY);
-        assertNotNull(dest);
-        assertEquals(getJmsConfig().getDeadLetterEndpoint(), dest);
+        String dest = message.getStringProperty(MuleProperties.MULE_ENDPOINT_PROPERTY);
+        // Some JMS providers do not allow custom properties to be set on JMS
+        // messages
+        if (dest != null)
+        {
+            assertEquals(getJmsConfig().getDeadLetterEndpoint(), dest);
+        }
     }
 
     @Test

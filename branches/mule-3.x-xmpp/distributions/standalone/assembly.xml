@@ -390,6 +390,7 @@
         <include>org.mule.modules:mule-module-spring-extras</include>
         <include>org.mule.modules:mule-module-spring-security</include>
         <include>org.mule.modules:mule-module-sxc</include>
+        <include>org.mule.modules:mule-module-tomcat</include>
         <include>org.mule.modules:mule-module-xml</include>
       </includes>
     </dependencySet>
@@ -452,6 +453,7 @@
         <exclude>org.mule.modules:mule-module-spring-extras</exclude>
         <exclude>org.mule.modules:mule-module-spring-security</exclude>
         <exclude>org.mule.modules:mule-module-sxc</exclude>
+        <exclude>org.mule.modules:mule-module-tomcat</exclude>
         <exclude>org.mule.modules:mule-module-xml</exclude>
         <exclude>org.mule.examples:mule-examples-all</exclude>
         <exclude>org.mule.examples:mule-example-echo</exclude>
@@ -498,27 +500,6 @@
         <include>junit:junit</include>
         <include>xmlunit:xmlunit</include>
         <include>org.mule.tests:mule-tests-functional</include>
-      </includes>
-    </dependencySet>
-
-    <!-- Mule examples -->
-    <dependencySet>
-      <outputDirectory>lib/user</outputDirectory>
-      <!-- Don't put the version number in the examples. -->
-      <outputFileNameMapping>${artifactId}.${extension}</outputFileNameMapping>
-      <includes>
-        <include>org.mule.examples:mule-example-echo</include>
-        <include>org.mule.examples:mule-example-errorhandler</include>
-        <!-- TODO examples structure and location will be changed. They must not be in lib/user anymore -->
-        <!--<include>org.mule.examples:mule-example-hello</include>-->
-        <include>org.mule.examples:mule-example-loanbroker-common</include>
-        <include>org.mule.examples:mule-example-loanbroker-esn</include>
-        <include>org.mule.examples:mule-example-loanbroker-esb</include>
-        <include>org.mule.examples:mule-example-loanbroker-bpm</include>
-        <include>org.mule.examples:mule-example-loanbroker-credit-agency</include>
-        <include>org.mule.examples:mule-example-scripting</include>
-        <include>org.mule.examples:mule-example-stockquote</include>
-        <include>org.mule.examples:mule-example-bookstore</include>
       </includes>
     </dependencySet>
 

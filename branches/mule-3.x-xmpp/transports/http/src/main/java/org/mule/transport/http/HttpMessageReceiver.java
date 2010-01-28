@@ -40,6 +40,7 @@ import org.mule.util.MapUtils;
 import org.mule.util.ObjectUtils;
 import org.mule.util.monitor.Expirable;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
@@ -270,9 +271,9 @@ public class HttpMessageReceiver extends TcpMessageReceiver
             // A) the request was not served or B) a null result was returned
             if (receiver != null)
             {
-            	message.setProperty(HttpConnector.HTTP_CONTEXT_PATH_PROPERTY, 
-    	                HttpConnector.normalizeUrl(receiver.getEndpointURI().getPath()));
-            	
+                message.setProperty(HttpConnector.HTTP_CONTEXT_PATH_PROPERTY,
+                        HttpConnector.normalizeUrl(receiver.getEndpointURI().getPath()));
+
                 preRouteMessage(message);
                 MuleMessage returnMessage = receiver.routeMessage(message, endpoint.isSynchronous(), null);
 
@@ -305,14 +306,10 @@ public class HttpMessageReceiver extends TcpMessageReceiver
                 {
                     String value = connectionHeader.getValue();
                     boolean endpointOverride = getEndpointKeepAliveValue(endpoint);
-					if ("keep-alive".equalsIgnoreCase(value) && endpointOverride) 
+                    if ("keep-alive".equalsIgnoreCase(value) && endpointOverride)
                     {
                         response.setKeepAlive(true);
-                    	
-                        Header header = new Header(HttpConstants.HEADER_KEEP_ALIVE, "timeout=" 
-                            + httpConnector.getKeepAliveTimeout());
-                        response.addHeader(header); 
-                        
+
                         if (response.getHttpVersion().equals(HttpVersion.HTTP_1_0))
                         {
                             connectionHeader = new Header(HttpConstants.HEADER_CONNECTION, "Keep-Alive");
@@ -391,7 +388,7 @@ public class HttpMessageReceiver extends TcpMessageReceiver
                 if (!endpoint.isSynchronous())
                 {
                     logger.debug("Reading HTTP POST InputStream into byte[] for asynchronous messaging.");
-                    body = IOUtils.toByteArray((InputStream) body);
+                    body = new ByteArrayInputStream(IOUtils.toByteArray((InputStream) body));
                 }
             }
 

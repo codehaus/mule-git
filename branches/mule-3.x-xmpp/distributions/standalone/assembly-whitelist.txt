@@ -92,15 +92,6 @@ log4j-1.2.14
 mail-1.4-osgi
 mule-core
 mule-core-tests
-mule-example-echo
-mule-example-errorhandler
-mule-example-loanbroker-bpm
-mule-example-loanbroker-common
-mule-example-loanbroker-credit-agency
-mule-example-loanbroker-esb
-mule-example-loanbroker-esn
-mule-example-scripting
-mule-example-stockquote
 mule-module-acegi
 mule-module-annotations
 mule-module-atom
@@ -120,6 +111,7 @@ mule-module-spring-config
 mule-module-spring-extras
 mule-module-spring-security
 mule-module-sxc
+mule-module-tomcat
 mule-module-xml
 mule-tests-functional
 mule-transport-axis
@@ -152,7 +144,6 @@ mx4j-tools-2.1.1-osgi
 mx4j-remote-2.1.1-osgi
 neethi-2.0.4
 ognl-2.7.3-osgi
-opensaml-1.1b-osgi
 oro-2.0.8-osgi
 quartz-all-1.6.0-osgi
 retrotranslator-runtime-1.2.1

@@ -424,11 +424,6 @@ public class DefaultMuleEvent extends EventObject implements MuleEvent, ThreadSa
         }
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.mule.api.MuleEvent#getId()
-     */
     public String getId()
     {
         return id;
@@ -442,11 +437,6 @@ public class DefaultMuleEvent extends EventObject implements MuleEvent, ThreadSa
         return getProperty(name, /* defaultValue */null);
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.mule.api.MuleEvent#getProperty(java.lang.String, java.lang.Object)
-     */
     public Object getProperty(String name, Object defaultValue)
     {
         Object property = message.getProperty(name);
@@ -459,21 +449,12 @@ public class DefaultMuleEvent extends EventObject implements MuleEvent, ThreadSa
         return (property == null ? defaultValue : property);
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.mule.api.MuleEvent#getEndpoint()
-     */
     public ImmutableEndpoint getEndpoint()
     {
         return endpoint;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see java.lang.Object#toString()
-     */
+    @Override
     public String toString()
     {
         StringBuffer buf = new StringBuffer(64);
@@ -534,6 +515,7 @@ public class DefaultMuleEvent extends EventObject implements MuleEvent, ThreadSa
         this.stopFurtherProcessing = stopFurtherProcessing;
     }
 
+    @Override
     public boolean equals(Object o)
     {
         if (this == o)
@@ -554,6 +536,7 @@ public class DefaultMuleEvent extends EventObject implements MuleEvent, ThreadSa
         return id.equals(event.id);
     }
 
+    @Override
     public int hashCode()
     {
         return 29 * id.hashCode() + (message != null ? message.hashCode() : 0);
@@ -602,7 +585,13 @@ public class DefaultMuleEvent extends EventObject implements MuleEvent, ThreadSa
         out.writeInt(endpoint.hashCode());
         out.writeBoolean(endpoint instanceof InboundEndpoint);
         out.writeObject(endpoint.getEndpointBuilderName());
-        out.writeObject(endpoint.getEndpointURI().getUri().toString());
+        
+        // make sure to write out the connector's name along with the endpoint URI. Omitting the
+        // connector will fail rebuilding the endpoint when this event is read back in and there
+        // is more than one connector for the protocol.
+        String uri = endpoint.getEndpointURI().getUri().toString();
+        String connectorName = endpoint.getConnector().getName();
+        out.writeObject(uri + "?connector=" + connectorName);
 
         // write number of Transformers
         out.writeInt(endpoint.getTransformers().size());
