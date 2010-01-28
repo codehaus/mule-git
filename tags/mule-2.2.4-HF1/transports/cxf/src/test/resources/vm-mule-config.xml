@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<mule xmlns="http://www.mulesource.org/schema/mule/core/2.2"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:spring="http://www.springframework.org/schema/beans"
+       xmlns:cxf="http://www.mulesource.org/schema/mule/cxf/2.2"
+    xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+       http://www.mulesource.org/schema/mule/core/2.2 http://www.mulesource.org/schema/mule/core/2.2/mule.xsd
+       http://www.mulesource.org/schema/mule/cxf/2.2 http://www.mulesource.org/schema/mule/cxf/2.2/mule-cxf.xsd">
+
+    <configuration defaultSynchronousEndpoints="true"/>
+
+    <cxf:connector name="cxf" defaultFrontend="simple"/>
+    
+    <model name="test">
+        <service name="mycomponent">
+            <inbound>
+                <inbound-endpoint address="cxf:vm://mycomponent"/>
+            </inbound>
+            <component>
+                <singleton-object class="org.mule.tck.testmodels.services.TestServiceComponent"/>
+            </component>
+        </service>
+
+        <service name="mycomponent2">
+            <inbound>
+                <inbound-endpoint address="cxf:vm://mycomponent2">
+                    <properties>
+                        <spring:entry key="serviceInterfaces">
+                            <spring:list>
+                                <spring:value>org.mule.api.component.simple.EchoService</spring:value>
+                                <spring:value>org.mule.tck.testmodels.services.DateService</spring:value>
+                            </spring:list>
+                        </spring:entry>
+                    </properties>
+                </inbound-endpoint>
+            </inbound>
+            <component>
+                <singleton-object class="org.mule.tck.testmodels.services.TestServiceComponent"/>
+            </component>
+        </service>
+
+        <service name="mycomponent3">
+            <inbound>
+                <inbound-endpoint address="cxf:vm://mycomponent3"/>
+            </inbound>
+            <component>
+                <singleton-object class="org.mule.tck.testmodels.services.TestServiceComponent"/>
+            </component>
+        </service>
+
+        <service name="mycomponent4">
+            <inbound>
+                <inbound-endpoint address="cxf:vm://mycomponent4" synchronous="false"/>
+            </inbound>
+            <component>
+                <singleton-object class="org.mule.tck.testmodels.services.TestServiceComponent"/>
+            </component>
+        </service>
+        
+        <service name="httpBridge">
+            <inbound>
+                <inbound-endpoint address="http://localhost:63081/test" synchronous="true"/>
+            </inbound>
+            <outbound>
+                <pass-through-router>
+                    <outbound-endpoint address="vm://mycomponent"/>
+                </pass-through-router>
+            </outbound>
+        </service>
+    </model>
+</mule>
