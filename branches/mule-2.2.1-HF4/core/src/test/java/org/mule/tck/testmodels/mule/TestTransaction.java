@@ -23,6 +23,8 @@ public class TestTransaction extends AbstractSingleResourceTransaction
     private AtomicBoolean committed = new AtomicBoolean(false);
     private AtomicBoolean rolledBack = new AtomicBoolean(false);
 
+    private String testProperty;
+
     /**
      * Really begin the transaction. Note that resources are enlisted yet.
      *
@@ -56,13 +58,13 @@ public class TestTransaction extends AbstractSingleResourceTransaction
         rolledBack.set(true);
     }
 
-//    public boolean isCommitted()
-//    {
-//        return committed.get();
-//    }
-//
-//    public boolean isRolledBack()
-//    {
-//        return rolledBack.get();
-//    }
+    public String getTestProperty()
+    {
+        return testProperty;
+    }
+
+    public void setTestProperty(String testProperty)
+    {
+        this.testProperty = testProperty;
+    }
 }
