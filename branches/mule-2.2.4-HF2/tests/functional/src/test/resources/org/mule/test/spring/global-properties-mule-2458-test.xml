@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesource.org/schema/mule/core/2.2"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:spring="http://www.springframework.org/schema/beans"
+      xsi:schemaLocation="
+      http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+      http://www.mulesource.org/schema/mule/core/2.2 http://www.mulesource.org/schema/mule/core/2.2/mule.xsd">
+
+    <endpoint name="foo" address="test://foo">
+        <property key="global" value="global"/>
+        <property key="override-me" value="global"/>
+    </endpoint>
+
+    <model name="model">
+        <service name="service">
+            <inbound>
+                <inbound-endpoint ref="foo">
+                    <property key="local" value="local"/>
+                    <property key="override-me" value="local"/>
+                </inbound-endpoint>
+            </inbound>
+            <null-component/>
+        </service>
+    </model>
+
+</mule>
