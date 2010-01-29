@@ -281,9 +281,18 @@ public class CxfMessageDispatcher extends AbstractMessageDispatcher
         }
         
         String statusCode = (String) transportResponse.getProperty(HttpConnector.HTTP_STATUS_PROPERTY);
-        if (statusCode == null || Integer.parseInt(statusCode) != HttpConstants.SC_OK)
+        if (statusCode != null && Integer.parseInt(statusCode) != HttpConstants.SC_OK)
         {
-            result.setExceptionPayload(new DefaultExceptionPayload(new HttpException((String) transportResponse.getPayload())));
+            String payload;
+            try
+            {
+                payload = transportResponse.getPayloadAsString();
+            }
+            catch (Exception e)
+            {
+                payload = "Invalid status code: " + statusCode;
+            }
+            result.setExceptionPayload(new DefaultExceptionPayload(new HttpException(payload)));
         }
 
         return result;
