@@ -13,6 +13,7 @@ import org.mule.RequestContext;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleSession;
 import org.mule.api.transport.PropertyScope;
+import org.mule.util.CaseInsensitiveHashMap;
 import org.mule.util.MapUtils;
 import org.mule.util.ObjectUtils;
 
@@ -50,45 +51,61 @@ public class MessagePropertiesContext implements Serializable
      * The order that properties should be read in.
      */
     private final static List<PropertyScope> SCOPE_ORDER = new ArrayList<PropertyScope>();
-    
+
     static
     {
+        /**
+         * Outbound is the default scope since properties added to a message are assumed to be included on the
+         * outgoing message
+         */
         SCOPE_ORDER.add(PropertyScope.OUTBOUND);
+        /**
+         * Invocation scope properties only exist for the invocation of a service, after which they are destroyed
+         */
         SCOPE_ORDER.add(PropertyScope.INVOCATION);
+        /**
+         * If a message was created via and inbound event, any properties associated with that event are available
+         * in the inbound scope
+         */
         SCOPE_ORDER.add(PropertyScope.INBOUND);
+        /**
+         * Any properties available on the session associated with the current message (if any) will be made available
+         * the session scope
+         */
         SCOPE_ORDER.add(PropertyScope.SESSION);
     }
-    
+
     /**
      * Map of maps containing the scoped properties, each scope has its own Map.
      */
     protected Map<PropertyScope, Map<String, Object>> scopedMap;
-    
+
     /**
      * The union of all property names from all scopes.
      */
     protected Set<String> keySet;
 
     protected PropertyScope defaultScope = PropertyScope.OUTBOUND;
-    
+
     public MessagePropertiesContext()
     {
         keySet = new TreeSet<String>();
         scopedMap = new TreeMap<PropertyScope, Map<String, Object>>(new PropertyScope.ScopeComparator());
 
-        scopedMap.put(PropertyScope.INVOCATION, new HashMap<String, Object>(6));
-        scopedMap.put(PropertyScope.INBOUND, new HashMap<String, Object>(6));
-        scopedMap.put(PropertyScope.OUTBOUND, new HashMap<String, Object>(6));
+        scopedMap.put(PropertyScope.INVOCATION, new CaseInsensitiveHashMap/*<String, Object>*/(6));
+        scopedMap.put(PropertyScope.INBOUND, new CaseInsensitiveHashMap/*<String, Object>*/(6));
+        scopedMap.put(PropertyScope.OUTBOUND, new CaseInsensitiveHashMap/*<String, Object>*/(6));
     }
 
     /**
      * Ctor used for copying only
-     * @param defaultScope
-     * @param keySet
-     * @param scopedMap
+     *
+     * @param defaultScope The default scope to add properties to if a scope is not defined
+     * @param keySet       the set ofkeys for the Message properties context being copied
+     * @param scopedMap    the map of actual properties to be copied
      */
-    private MessagePropertiesContext(PropertyScope defaultScope, Set<String> keySet, 
-        Map<PropertyScope, Map<String, Object>> scopedMap)
+    private MessagePropertiesContext(PropertyScope defaultScope, Set<String> keySet,
+                                     Map<PropertyScope, Map<String, Object>> scopedMap)
     {
         this.keySet = keySet;
         this.scopedMap = scopedMap;
@@ -107,15 +124,6 @@ public class MessagePropertiesContext implements Serializable
         return map;
     }
 
-    protected void registerInvocationProperties(Map<String, Object> properties)
-    {
-        if (properties != null)
-        {
-            getScopedProperties(PropertyScope.INVOCATION).putAll(properties);
-            keySet.addAll(properties.keySet());
-        }
-    }
-
     public PropertyScope getDefaultScope()
     {
         return defaultScope;
@@ -125,22 +133,13 @@ public class MessagePropertiesContext implements Serializable
     {
         if (properties != null)
         {
-            getScopedProperties(PropertyScope.INBOUND).putAll(properties);
-            keySet.addAll(properties.keySet());
-        }
-    }
-
-    protected void registerSessionProperties(Map<String, Object> properties)
-    {
-        if (properties != null)
-        {
-            if (RequestContext.getEvent() != null)
+            Map props = new HashMap(properties.size());
+            for (String key : properties.keySet())
             {
-                for (Object key : properties.keySet())
-                {
-                    RequestContext.getEvent().getSession().setProperty(key, properties.get(key));
-                }
+                props.put(key, properties.get(key));
             }
+            getScopedProperties(PropertyScope.INBOUND).putAll(props);
+            keySet.addAll(props.keySet());
         }
     }
 
@@ -174,8 +173,8 @@ public class MessagePropertiesContext implements Serializable
         {
             return getProperty(key);
         }
-        
-        Object value = null;        
+
+        Object value = null;
         if (PropertyScope.SESSION.equals(scope))
         {
             if (RequestContext.getEvent() != null)
@@ -211,7 +210,7 @@ public class MessagePropertiesContext implements Serializable
             clearProperties();
             return;
         }
-        
+
         checkScopeForWriteAccess(scope);
         if (PropertyScope.SESSION.equals(scope))
         {
@@ -243,11 +242,14 @@ public class MessagePropertiesContext implements Serializable
     {
         Object value = getScopedProperties(PropertyScope.OUTBOUND).remove(key);
         Object inv = getScopedProperties(PropertyScope.INVOCATION).remove(key);
-    
+
         keySet.remove(key);
-      
-        if (value == null) value = inv;
-        
+
+        if (value == null)
+        {
+            value = inv;
+        }
+
         return value;
     }
 
@@ -263,7 +265,7 @@ public class MessagePropertiesContext implements Serializable
         {
             return removeProperty(key);
         }
-        
+
         Object value = null;
         if (PropertyScope.SESSION.equals(scope))
         {
@@ -278,13 +280,13 @@ public class MessagePropertiesContext implements Serializable
         }
 
         // Only remove the property from the keySet if it does not exist in any other scope besides this one.
-        if (getProperty(key, PropertyScope.OUTBOUND) == null 
-            && getProperty(key, PropertyScope.INVOCATION) == null 
-            && getProperty(key, PropertyScope.INBOUND) == null)
+        if (getProperty(key, PropertyScope.OUTBOUND) == null
+                && getProperty(key, PropertyScope.INVOCATION) == null
+                && getProperty(key, PropertyScope.INBOUND) == null)
         {
             keySet.remove(key);
         }
-        
+
         return value;
     }
 
@@ -315,7 +317,7 @@ public class MessagePropertiesContext implements Serializable
             setProperty(key, value);
             return;
         }
-        
+
         checkScopeForWriteAccess(scope);
         if (PropertyScope.SESSION.equals(scope))
         {
@@ -331,7 +333,9 @@ public class MessagePropertiesContext implements Serializable
         }
     }
 
-    /** @return all property keys on this message */
+    /**
+     * @return all property keys on this message
+     */
     public Set<String> getPropertyNames()
     {
         Set<String> allProps = new HashSet<String>();
@@ -343,14 +347,16 @@ public class MessagePropertiesContext implements Serializable
         return allProps;
     }
 
-    /** @return all property keys on this message for the given scope */
+    /**
+     * @return all property keys on this message for the given scope
+     */
     public Set<String> getPropertyNames(PropertyScope scope)
     {
         if (scope == null)
         {
             return getPropertyNames();
         }
-        
+
         if (PropertyScope.SESSION.equals(scope))
         {
             if (RequestContext.getEvent() != null)
@@ -430,15 +436,15 @@ public class MessagePropertiesContext implements Serializable
     {
         Set<String> keys = new TreeSet<String>(getPropertyNames());
 
-        Map<PropertyScope, Map<String, Object>> map = new TreeMap<PropertyScope, 
-            Map<String, Object>>(new PropertyScope.ScopeComparator());
+        Map<PropertyScope, Map<String, Object>> map = new TreeMap<PropertyScope,
+                Map<String, Object>>(new PropertyScope.ScopeComparator());
 
-        map.put(PropertyScope.INVOCATION, 
-            new HashMap<String, Object>(getScopedProperties(PropertyScope.INVOCATION)));
-        map.put(PropertyScope.INBOUND, 
-            new HashMap<String, Object>(getScopedProperties(PropertyScope.INBOUND)));
-        map.put(PropertyScope.OUTBOUND, 
-            new HashMap<String, Object>(getScopedProperties(PropertyScope.OUTBOUND)));
+        map.put(PropertyScope.INVOCATION,
+                new HashMap<String, Object>(getScopedProperties(PropertyScope.INVOCATION)));
+        map.put(PropertyScope.INBOUND,
+                new HashMap<String, Object>(getScopedProperties(PropertyScope.INBOUND)));
+        map.put(PropertyScope.OUTBOUND,
+                new HashMap<String, Object>(getScopedProperties(PropertyScope.OUTBOUND)));
 
         return new MessagePropertiesContext(getDefaultScope(), keys, map);
     }

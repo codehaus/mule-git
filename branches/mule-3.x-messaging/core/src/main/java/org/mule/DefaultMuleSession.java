@@ -28,6 +28,7 @@ import org.mule.api.transport.ReceiveException;
 import org.mule.api.transport.SessionHandler;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.transport.AbstractConnector;
+import org.mule.util.CaseInsensitiveHashMap;
 import org.mule.util.UUID;
 import org.mule.util.store.DeserializationPostInitialisable;
 
@@ -41,6 +42,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.collections.map.CaseInsensitiveMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -63,7 +65,7 @@ public final class DefaultMuleSession implements MuleSession, DeserializationPos
 
     /**
      * The Mule service associated with the session
-     * 
+     * <p/>
      * Note: This object uses custom serialization via the writeObject()/readObject() methods.
      */
     private transient Service service = null;
@@ -76,7 +78,7 @@ public final class DefaultMuleSession implements MuleSession, DeserializationPos
     private String id;
 
     /**
-     * The security context associated with the session.  
+     * The security context associated with the session.
      * Note that this context will only be serialized if the SecurityContext object is Serializable.
      */
     private SecurityContext securityContext;
@@ -85,7 +87,7 @@ public final class DefaultMuleSession implements MuleSession, DeserializationPos
 
     /**
      * The Mule context
-     * 
+     * <p/>
      * Note: This object uses custom serialization via the readObject() method.
      */
     private transient MuleContext muleContext;
@@ -100,7 +102,7 @@ public final class DefaultMuleSession implements MuleSession, DeserializationPos
     public DefaultMuleSession(Service service, MuleContext muleContext)
     {
         this.muleContext = muleContext;
-        properties = new HashMap<String, Object>();
+        properties = new CaseInsensitiveHashMap/*<String, Object>*/();
         id = UUID.getUUID();
         this.service = service;
     }
@@ -141,7 +143,7 @@ public final class DefaultMuleSession implements MuleSession, DeserializationPos
                     CoreMessages.propertiesNotSet("message").toString());
         }
 
-        properties = new HashMap<String, Object>();
+        properties = new CaseInsensitiveMap/*<String, Object>*/();
         requestSessionHandler.retrieveSessionInfoFromMessage(message, this);
         id = (String) getProperty(requestSessionHandler.getSessionIDKey());
         if (id == null)
@@ -313,6 +315,7 @@ public final class DefaultMuleSession implements MuleSession, DeserializationPos
 
     // TODO This method is practically the same as dispatchEvent(MuleEvent event),
     // so we could use some refactoring here.
+
     public MuleMessage sendEvent(MuleEvent event) throws MuleException
     {
         int timeout = event.getMessage().getIntProperty(MuleProperties.MULE_EVENT_TIMEOUT_PROPERTY, -1);
@@ -551,7 +554,7 @@ public final class DefaultMuleSession implements MuleSession, DeserializationPos
     ////////////////////////////
     // Serialization methods
     ////////////////////////////
-    
+
     private void writeObject(ObjectOutputStream out) throws IOException
     {
         out.defaultWriteObject();
@@ -577,12 +580,13 @@ public final class DefaultMuleSession implements MuleSession, DeserializationPos
             //ignore
         }
     }
+
     /**
-     * Invoked after deserialization. This is called when the marker interface 
-     * {@link org.mule.util.store.DeserializationPostInitialisable} is used. This will get invoked 
-     * after the object has been deserialized passing in the current mulecontext when using either 
-     * {@link org.mule.transformer.wire.SerializationWireFormat}, 
-     * {@link org.mule.transformer.wire.SerializedMuleMessageWireFormat}, or the 
+     * Invoked after deserialization. This is called when the marker interface
+     * {@link org.mule.util.store.DeserializationPostInitialisable} is used. This will get invoked
+     * after the object has been deserialized passing in the current mulecontext when using either
+     * {@link org.mule.transformer.wire.SerializationWireFormat},
+     * {@link org.mule.transformer.wire.SerializedMuleMessageWireFormat}, or the
      * {@link org.mule.transformer.simple.ByteArrayToSerializable} transformer.
      *
      * @param muleContext the current muleContext instance
@@ -598,5 +602,5 @@ public final class DefaultMuleSession implements MuleSession, DeserializationPos
         }
         serializedData = null;
     }
-    
+
 }

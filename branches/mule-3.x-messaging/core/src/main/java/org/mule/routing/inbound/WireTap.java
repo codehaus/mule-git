@@ -11,15 +11,15 @@
 package org.mule.routing.inbound;
 
 import org.mule.DefaultMuleEvent;
+import org.mule.DefaultMuleMessage;
 import org.mule.DefaultMuleSession;
-import org.mule.NullSessionHandler;
 import org.mule.RequestContext;
 import org.mule.api.MessagingException;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleException;
+import org.mule.api.MuleMessage;
 import org.mule.api.MuleSession;
 import org.mule.api.endpoint.OutboundEndpoint;
-import org.mule.api.transport.DispatchException;
 
 /**
  * An inbound router that can forward every message to another destination as defined
@@ -31,6 +31,7 @@ public class WireTap extends SelectiveConsumer
 {
     private volatile OutboundEndpoint tap;
 
+    @Override
     public boolean isMatch(MuleEvent event) throws MessagingException
     {
         if (tap != null)
@@ -44,6 +45,7 @@ public class WireTap extends SelectiveConsumer
         }
     }
 
+    @Override
     public MuleEvent[] process(MuleEvent event) throws MessagingException
     {
         RequestContext.setEvent(null);
@@ -52,16 +54,19 @@ public class WireTap extends SelectiveConsumer
             //We have to create a new session for this dispatch, since the session may get altered
             //using this call, changing the behaviour of the request
             MuleSession session = new DefaultMuleSession(getMuleContext());
-            tap.dispatch(new DefaultMuleEvent(event.getMessage(), tap, session, false));
+            
+            // send a copy of the message as it may get processed by a different thread.
+            MuleMessage originalMessage = event.getMessage();
+            MuleMessage tapMessage = new DefaultMuleMessage(originalMessage.getPayload(),
+                originalMessage.getAdapter(), muleContext);
+            
+            tap.dispatch(new DefaultMuleEvent(tapMessage, tap, session, false));
         }
         catch (MessagingException e)
         {
             throw e;
         }
-        catch (MuleException e)
-        {
-            throw new DispatchException(event.getMessage(), tap, e);
-        }
+
         return super.process(event);
     }
 
