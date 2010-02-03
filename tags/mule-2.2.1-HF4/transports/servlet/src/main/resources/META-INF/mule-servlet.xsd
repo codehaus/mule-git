@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema xmlns="http://www.mulesource.org/schema/mule/servlet/2.2"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:mule="http://www.mulesource.org/schema/mule/core/2.2"
+            xmlns:schemadoc="http://www.mulesource.org/schema/mule/schemadoc/2.2" 
+            xmlns:http="http://www.mulesource.org/schema/mule/http/2.2"
+            targetNamespace="http://www.mulesource.org/schema/mule/servlet/2.2"
+            elementFormDefault="qualified"
+            attributeFormDefault="unqualified">
+
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:import namespace="http://www.mulesource.org/schema/mule/core/2.2" 
+                schemaLocation="http://www.mulesource.org/schema/mule/core/2.2/mule.xsd" />
+    <xsd:import namespace="http://www.mulesource.org/schema/mule/http/2.2"
+                schemaLocation="http://www.mulesource.org/schema/mule/http/2.2/mule-http.xsd"/>
+    <xsd:import namespace = "http://www.mulesource.org/schema/mule/schemadoc/2.2"
+                schemaLocation = "http://www.mulesource.org/schema/mule/schemadoc/2.2/mule-schemadoc.xsd"/>
+    
+   <xsd:annotation>
+        <xsd:documentation>
+            The Servlet transport allows Mule components to listen for events received via a servlet request. 
+        </xsd:documentation>
+        <xsd:appinfo>
+            <schemadoc:short-name>Servlet</schemadoc:short-name>
+            <schemadoc:page-title>Servlet Transport</schemadoc:page-title>
+            <schemadoc:transport-features receiveEvents="true" dispatchEvents="true" responseEvents="true"
+                                          requestEvents="true"
+                                          transactions="false" streaming="true">
+                <schemadoc:inboundMEPs in-only="true" in-out="true" in-optional-out="true"/>
+            </schemadoc:transport-features>
+        </xsd:appinfo>
+    </xsd:annotation>
+    <xsd:element name="connector" type="servletConnectorType" substitutionGroup="mule:abstract-connector">
+        <xsd:annotation>
+            <xsd:documentation>
+                Servlet connector is a channel adapter between Mule and a servlet engine. It allows the MuleReceiverServlet to look up components interested in requests it receives via the servlet container.
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="servletConnectorType">
+        <xsd:complexContent>
+            <xsd:extension base="mule:connectorType">
+                <xsd:attribute name="servletUrl">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                            The real URL on which the servlet container is bound. If this is not set, the WSDL may not be generated correctly.
+                        </xsd:documentation>
+                    </xsd:annotation>
+                </xsd:attribute>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:element name="inbound-endpoint" type="inboundEndpointType" substitutionGroup="mule:abstract-inbound-endpoint"/>
+    <xsd:complexType name="inboundEndpointType">
+        <xsd:complexContent>
+            <xsd:extension base="http:inboundEndpointType"/>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:element name="outbound-endpoint" type="outboundEndpointType" substitutionGroup="mule:abstract-outbound-endpoint"/>
+    <xsd:complexType name="outboundEndpointType">
+        <xsd:complexContent>
+            <xsd:extension base="http:outboundEndpointType"/>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:element name="endpoint" type="globalEndpointType" substitutionGroup="mule:abstract-global-endpoint"/>
+    <xsd:complexType name="globalEndpointType">
+        <xsd:complexContent>
+            <xsd:extension base="http:globalEndpointType"/>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:element name="http-request-to-parameter-map" type="mule:abstractTransformerType"
+                 substitutionGroup="mule:abstract-transformer">
+        <xsd:annotation>
+            <xsd:documentation>
+            Returns a simple Map of the parameters sent with the HTTP Request.
+            If the same parameter is given more than once, only the first value for it will be in the Map.
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+
+    <xsd:element name="http-request-to-input-stream" type="mule:abstractTransformerType"
+                 substitutionGroup="mule:abstract-transformer">
+        <xsd:annotation>
+            <xsd:documentation>
+            Converts an HttpServletRequest into an InputStream.
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+
+    <xsd:element name="http-request-to-byte-array" type="mule:abstractTransformerType"
+                 substitutionGroup="mule:abstract-transformer">
+        <xsd:annotation>
+            <xsd:documentation>
+            Converts an HttpServletRequest into an array of bytes by extracting the payload of the request.
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+</xsd:schema>
