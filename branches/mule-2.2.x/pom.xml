@@ -1204,7 +1204,7 @@
 
     <ciManagement>
         <system>bamboo</system>
-        <url>http://bamboo.mulesource.org/bamboo</url>
+        <url>http://bamboo.mulesoft.org</url>
         <notifiers>
             <notifier>
                 <type>mail</type>
@@ -1216,7 +1216,7 @@
     </ciManagement>
 
     <distributionManagement>
-        <downloadUrl>http://mule.mulesource.org/display/MULE/Download</downloadUrl>
+        <downloadUrl>http://www.mulesoft.org/display/MULE/Download</downloadUrl>
         <repository>
             <id>mule-releases</id>
             <name>Mule Release Repository</name>
@@ -1557,7 +1557,7 @@
                             <More-Info>For more information go to ${productUrl}</More-Info>
                             <Support>Get commercial support: ${pom.organization.url}/support</Support>
                             <Description>Mule ESB and Integration Platform</Description>
-                            <License>CPAL v1.0 http://www.mulesource.com/CPAL/</License>
+                            <License>CPAL v1.0 http://www.mulesoft.com/CPAL/</License>
                             <Vendor-Url>${pom.organization.url}</Vendor-Url>
                             <Product-Url>${productUrl}</Product-Url>
                             <!-- This would work if this issue gets closed: http://jira.codehaus.org/browse/MNG-1832 -->
