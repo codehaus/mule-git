@@ -196,6 +196,15 @@ public abstract class AbstractMessageReceiver extends AbstractConnectable implem
     }
 
     public final MuleMessage routeMessage(MuleMessage message,
+                                          Transaction trans,
+                                          boolean synchronous,
+                                          OutputStream outputStream) throws MuleException
+    {
+        return routeMessage(message, new DefaultMuleSession(connector.getMuleContext()), trans, synchronous, outputStream);
+    }
+    
+    public final MuleMessage routeMessage(MuleMessage message,
+                                          MuleSession session,
                                          Transaction trans,
                                          boolean synchronous,
                                          OutputStream outputStream) throws MuleException
@@ -242,8 +251,7 @@ public abstract class AbstractMessageReceiver extends AbstractConnectable implem
                 //to response messages where the filter denied the message
                 //Maybe the filter should be checked in the MessageListener...
                 message = handleUnacceptedFilter(message);
-                RequestContext.setEvent(new DefaultMuleEvent(message, endpoint,
-                        new DefaultMuleSession(connector.getMuleContext()), synchronous));
+                RequestContext.setEvent(new DefaultMuleEvent(message, endpoint, session, synchronous));
                 return message;
             }
         }
