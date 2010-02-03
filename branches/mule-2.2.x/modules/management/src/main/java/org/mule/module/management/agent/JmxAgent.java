@@ -37,6 +37,7 @@ import org.mule.module.management.mbean.MuleServiceMBean;
 import org.mule.module.management.mbean.ServiceService;
 import org.mule.module.management.mbean.ServiceServiceMBean;
 import org.mule.module.management.mbean.StatisticsService;
+import org.mule.module.management.mbean.StatisticsServiceMBean;
 import org.mule.module.management.support.AutoDiscoveryJmxSupportFactory;
 import org.mule.module.management.support.JmxSupport;
 import org.mule.module.management.support.JmxSupportFactory;
@@ -69,7 +70,6 @@ import javax.management.remote.JMXServiceURL;
 import javax.management.remote.rmi.RMIConnectorServer;
 
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -81,7 +81,7 @@ public class JmxAgent extends AbstractAgent
 
     public static final String DEFAULT_REMOTING_URI = "service:jmx:rmi:///jndi/rmi://localhost:1099/server";
     // populated with values below in a static initializer
-    public static final Map DEFAULT_CONNECTOR_SERVER_PROPERTIES;
+    public static final Map<String, String> DEFAULT_CONNECTOR_SERVER_PROPERTIES;
 
     /**
      * Default JMX Authenticator to use for securing remote access.
@@ -103,7 +103,7 @@ public class JmxAgent extends AbstractAgent
     private String connectorServerUrl;
     private MBeanServer mBeanServer;
     private JMXConnectorServer connectorServer;
-    private Map connectorServerProperties = null;
+    private Map<String, Object> connectorServerProperties = null;
     private boolean enableStatistics = true;
     private final AtomicBoolean serverCreated = new AtomicBoolean(false);
     private final AtomicBoolean initialized = new AtomicBoolean(false);
@@ -115,11 +115,11 @@ public class JmxAgent extends AbstractAgent
     /**
      * Username/password combinations for JMX Remoting authentication.
      */
-    private Map credentials = new HashMap();
+    private Map<String, String> credentials = new HashMap<String, String>();
 
     static
     {
-        Map props = new HashMap(1);
+        Map<String, String> props = new HashMap<String, String>(1);
         props.put(RMIConnectorServer.JNDI_REBIND_ATTRIBUTE, "true");
         DEFAULT_CONNECTOR_SERVER_PROPERTIES = Collections.unmodifiableMap(props);
     }
@@ -127,7 +127,7 @@ public class JmxAgent extends AbstractAgent
     public JmxAgent()
     {
         super("jmx-agent");
-        connectorServerProperties = new HashMap(DEFAULT_CONNECTOR_SERVER_PROPERTIES);
+        connectorServerProperties = new HashMap<String, Object>(DEFAULT_CONNECTOR_SERVER_PROPERTIES);
     }
 
     /**
@@ -153,7 +153,7 @@ public class JmxAgent extends AbstractAgent
     @Override
     public List getDependentAgents()
     {
-        return Arrays.asList(new Class[] { RmiRegistryAgent.class });
+        return Arrays.asList(RmiRegistryAgent.class);
     }
 
     /**
@@ -233,7 +233,7 @@ public class JmxAgent extends AbstractAgent
                 JMXServiceURL url = new JMXServiceURL(connectorServerUrl);
                 if (connectorServerProperties == null)
                 {
-                    connectorServerProperties = new HashMap(DEFAULT_CONNECTOR_SERVER_PROPERTIES);
+                    connectorServerProperties = new HashMap<String, Object>(DEFAULT_CONNECTOR_SERVER_PROPERTIES);
                 }
                 // TODO custom authenticator may have its own security config,
                 // refactor
@@ -322,7 +322,7 @@ public class JmxAgent extends AbstractAgent
     protected void registerStatisticsService() throws NotCompliantMBeanException, MBeanRegistrationException,
                                                       InstanceAlreadyExistsException, MalformedObjectNameException
     {
-        ObjectName on = jmxSupport.getObjectName(jmxSupport.getDomainName(muleContext) + ":type=org.mule.Statistics,name=AllStatistics");
+        ObjectName on = jmxSupport.getObjectName(String.format("%s:%s", jmxSupport.getDomainName(muleContext), StatisticsServiceMBean.DEFAULT_JMX_NAME));
         StatisticsService mBean = new StatisticsService();
         mBean.setMuleContext(muleContext);
         mBean.setEnabled(isEnableStatistics());
@@ -333,13 +333,14 @@ public class JmxAgent extends AbstractAgent
     protected void registerModelServices() throws NotCompliantMBeanException, MBeanRegistrationException,
                                                   InstanceAlreadyExistsException, MalformedObjectNameException
     {
-        for (Iterator iterator = muleContext.getRegistry().lookupObjects(Model.class).iterator(); iterator.hasNext();)
+        for (Iterator<Model> iterator = muleContext.getRegistry().lookupObjects(Model.class).iterator(); iterator.hasNext();)
         {
-            Model model = (Model) iterator.next();
+            Model model = iterator.next();
             ModelServiceMBean serviceMBean = new ModelService(model);
             String rawName = serviceMBean.getName() + "(" + serviceMBean.getType() + ")";
             String name = jmxSupport.escape(rawName);
-            ObjectName on = jmxSupport.getObjectName(jmxSupport.getDomainName(muleContext) + ":type=org.mule.Model,name=" + name);
+            final String jmxName = String.format("%s:%s%s", jmxSupport.getDomainName(muleContext), ModelServiceMBean.DEFAULT_JMX_NAME_PREFIX, name);
+            ObjectName on = jmxSupport.getObjectName(jmxName);
             logger.debug("Registering model with name: " + on);
             mBeanServer.registerMBean(serviceMBean, on);
         }
@@ -348,7 +349,7 @@ public class JmxAgent extends AbstractAgent
     protected void registerMuleService() throws NotCompliantMBeanException, MBeanRegistrationException,
                                                 InstanceAlreadyExistsException, MalformedObjectNameException
     {
-        ObjectName on = jmxSupport.getObjectName(jmxSupport.getDomainName(muleContext) + ":type=org.mule.MuleContext,name=MuleServerInfo");
+        ObjectName on = jmxSupport.getObjectName(String.format("%s:%s", jmxSupport.getDomainName(muleContext), MuleServiceMBean.DEFAULT_JMX_NAME));
         MuleServiceMBean serviceMBean = new MuleService(muleContext);
         logger.debug("Registering mule with name: " + on);
         mBeanServer.registerMBean(serviceMBean, on);
@@ -357,7 +358,7 @@ public class JmxAgent extends AbstractAgent
     protected void registerConfigurationService() throws NotCompliantMBeanException, MBeanRegistrationException,
                                                          InstanceAlreadyExistsException, MalformedObjectNameException
     {
-        ObjectName on = jmxSupport.getObjectName(jmxSupport.getDomainName(muleContext) + ":type=org.mule.Configuration,name=GlobalConfiguration");
+        ObjectName on = jmxSupport.getObjectName(String.format("%s:%s", jmxSupport.getDomainName(muleContext), MuleConfigurationServiceMBean.DEFAULT_JMX_NAME));
         MuleConfigurationServiceMBean serviceMBean = new MuleConfigurationService(muleContext.getConfiguration());
         logger.debug("Registering configuration with name: " + on);
         mBeanServer.registerMBean(serviceMBean, on);
@@ -367,11 +368,12 @@ public class JmxAgent extends AbstractAgent
             InstanceAlreadyExistsException, MalformedObjectNameException
     {
         String rawName;
-        for (Iterator iterator = muleContext.getRegistry().lookupObjects(Service.class).iterator(); iterator.hasNext();)
+        for (Iterator<Service> iterator = muleContext.getRegistry().lookupObjects(Service.class).iterator(); iterator.hasNext();)
         {
-            rawName = ((Service) iterator.next()).getName();
+            rawName = iterator.next().getName();
             final String name = jmxSupport.escape(rawName);
-            ObjectName on = jmxSupport.getObjectName(jmxSupport.getDomainName(muleContext) + ":type=org.mule.Service,name=" + name);
+            final String jmxName = String.format("%s:%s%s", jmxSupport.getDomainName(muleContext), ServiceServiceMBean.DEFAULT_JMX_NAME_PREFIX, name);
+            ObjectName on = jmxSupport.getObjectName(jmxName);
             ServiceServiceMBean serviceMBean = new ServiceService(rawName);
             logger.debug("Registering service with name: " + on);
             mBeanServer.registerMBean(serviceMBean, on);
@@ -388,16 +390,16 @@ public class JmxAgent extends AbstractAgent
             connector = (Connector) iter.next();
             if (connector instanceof AbstractConnector)
             {
-                for (Iterator iterator = ((AbstractConnector) connector).getReceivers().values().iterator(); iterator.hasNext();)
+                for (Iterator<MessageReceiver> iterator = ((AbstractConnector) connector).getReceivers().values().iterator(); iterator.hasNext();)
                 {
-                    EndpointServiceMBean mBean = new EndpointService((MessageReceiver) iterator.next());
-                    
+                    EndpointServiceMBean mBean = new EndpointService(iterator.next());
+
                     String fullName = buildFullyQualifiedEndpointName(mBean, connector);
-                    if (logger.isInfoEnabled()) 
+                    if (logger.isInfoEnabled())
                     {
                         logger.info("Attempting to register service with name: " + fullName);
                     }
-                    
+
                     ObjectName on = jmxSupport.getObjectName(fullName);
                     mBeanServer.registerMBean(mBean, on);
                     if (logger.isInfoEnabled())
@@ -435,19 +437,20 @@ public class JmxAgent extends AbstractAgent
                                                 MBeanRegistrationException,
                                                 InstanceAlreadyExistsException
     {
-        Iterator iter = muleContext.getRegistry().lookupObjects(Connector.class).iterator();
+        @SuppressWarnings("unchecked")
+        Iterator<Connector> iter = muleContext.getRegistry().lookupObjects(Connector.class).iterator();
         while (iter.hasNext())
         {
-            Connector connector = (Connector) iter.next();
+            Connector connector = iter.next();
             ConnectorServiceMBean mBean = new ConnectorService(connector);
             final String rawName = mBean.getName();
             final String name = jmxSupport.escape(rawName);
-            final String stringName = jmxSupport.getDomainName(muleContext) + ":type=org.mule.Connector,name=" + name;
+            final String jmxName = String.format("%s:%s%s", jmxSupport.getDomainName(muleContext), ConnectorServiceMBean.DEFAULT_JMX_NAME_PREFIX, name);
             if (logger.isDebugEnabled())
             {
-                logger.debug("Attempting to register service with name: " + stringName);
+                logger.debug("Attempting to register service with name: " + jmxName);
             }
-            ObjectName oName = jmxSupport.getObjectName(stringName);
+            ObjectName oName = jmxSupport.getObjectName(jmxName);
             mBeanServer.registerMBean(mBean, oName);
             logger.info("Registered Connector Service with name " + oName);
         }
@@ -550,7 +553,7 @@ public class JmxAgent extends AbstractAgent
      *
      * @param connectorServerProperties Value to set for property 'connectorServerProperties'.
      */
-    public void setConnectorServerProperties(Map connectorServerProperties)
+    public void setConnectorServerProperties(Map<String, Object> connectorServerProperties)
     {
         this.connectorServerProperties = connectorServerProperties;
     }
@@ -582,7 +585,7 @@ public class JmxAgent extends AbstractAgent
      *
      * @param newCredentials Value to set for property 'credentials'.
      */
-    public void setCredentials(final Map newCredentials)
+    public void setCredentials(final Map<String, String> newCredentials)
     {
         this.credentials.clear();
         if (newCredentials != null && !newCredentials.isEmpty())

@@ -22,6 +22,8 @@ import javax.management.ObjectName;
  */
 public interface ServiceServiceMBean extends Stoppable, Startable, ServiceStatsMBean
 {
+    String DEFAULT_JMX_NAME_PREFIX = "type=org.mule.Service,name=";
+
     /**
      * The statistics for this service
      * 
