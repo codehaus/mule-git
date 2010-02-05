@@ -10,33 +10,33 @@
 
 package org.mule.object;
 
-import org.mule.api.object.ObjectFactory;
-import org.mule.object.PrototypeObjectFactory;
 
 public class PrototypeObjectFactoryTestCase extends AbstractObjectFactoryTestCase
 {
 
-    // @Override
-    public ObjectFactory getObjectFactory()
+    @Override
+    public AbstractObjectFactory getUninitialisedObjectFactory()
     {
         return new PrototypeObjectFactory();
     }
 
-    // @Override
+    @Override
     public void testGetObjectClass() throws Exception
     {
-        PrototypeObjectFactory factory = (PrototypeObjectFactory) getObjectFactory();
+        PrototypeObjectFactory factory = (PrototypeObjectFactory) getUninitialisedObjectFactory();
         factory.setObjectClass(Object.class);
         factory.initialise();
+        
         assertEquals(Object.class, factory.getObjectClass());
     }
 
-    // @Override
+    @Override
     public void testGet() throws Exception
     {
-        PrototypeObjectFactory factory = (PrototypeObjectFactory) getObjectFactory();
+        PrototypeObjectFactory factory = (PrototypeObjectFactory) getUninitialisedObjectFactory();
         factory.setObjectClass(Object.class);
         factory.initialise();
+        
         assertNotSame(factory.getInstance(), factory.getInstance());
     }
 

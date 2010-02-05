@@ -10,33 +10,33 @@
 
 package org.mule.object;
 
-import org.mule.api.object.ObjectFactory;
-import org.mule.object.SingletonObjectFactory;
 
 public class SingletonObjectFactoryTestCase extends AbstractObjectFactoryTestCase
 {
 
-    // @Override
-    public ObjectFactory getObjectFactory()
+    @Override
+    public AbstractObjectFactory getUninitialisedObjectFactory()
     {
         return new SingletonObjectFactory();
     }
 
-    // @Override
+    @Override
     public void testGetObjectClass() throws Exception
     {
-        SingletonObjectFactory factory = (SingletonObjectFactory) getObjectFactory();
+        SingletonObjectFactory factory = (SingletonObjectFactory) getUninitialisedObjectFactory();
         factory.setObjectClass(Object.class);
         factory.initialise();
+        
         assertEquals(Object.class, factory.getObjectClass());
     }
 
-    // @Override
+    @Override
     public void testGet() throws Exception
     {
-        SingletonObjectFactory factory = (SingletonObjectFactory) getObjectFactory();
+        SingletonObjectFactory factory = (SingletonObjectFactory) getUninitialisedObjectFactory();
         factory.setObjectClass(Object.class);
         factory.initialise();
+        
         assertSame(factory.getInstance(), factory.getInstance());
     }
 

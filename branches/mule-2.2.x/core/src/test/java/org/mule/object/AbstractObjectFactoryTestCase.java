@@ -11,8 +11,6 @@
 package org.mule.object;
 
 import org.mule.api.lifecycle.InitialisationException;
-import org.mule.api.object.ObjectFactory;
-import org.mule.object.AbstractObjectFactory;
 import org.mule.tck.AbstractMuleTestCase;
 
 public abstract class AbstractObjectFactoryTestCase extends AbstractMuleTestCase
@@ -20,7 +18,7 @@ public abstract class AbstractObjectFactoryTestCase extends AbstractMuleTestCase
 
     public void testInitialisationFailure() throws Exception
     {
-        AbstractObjectFactory factory = (AbstractObjectFactory) getObjectFactory();
+        AbstractObjectFactory factory = getUninitialisedObjectFactory();
 
         try
         {
@@ -45,41 +43,25 @@ public abstract class AbstractObjectFactoryTestCase extends AbstractMuleTestCase
 
     public void testInitialiseWithClass() throws Exception
     {
-        AbstractObjectFactory factory = (AbstractObjectFactory) getObjectFactory();
+        AbstractObjectFactory factory = getUninitialisedObjectFactory();
         factory.setObjectClass(Object.class);
 
-        try
-        {
-            factory.initialise();
-        }
-        catch (InitialisationException iex)
-        {
-            fail(iex.getDetailedMessage());
-        }
-
+        factory.initialise();
         assertNotNull(factory.getInstance());
     }
 
     public void testInitialiseWithClassName() throws Exception
     {
-        AbstractObjectFactory factory = (AbstractObjectFactory) getObjectFactory();
+        AbstractObjectFactory factory = getUninitialisedObjectFactory();
         factory.setObjectClassName(Object.class.getName());
 
-        try
-        {
-            factory.initialise();
-        }
-        catch (InitialisationException iex)
-        {
-            fail(iex.getDetailedMessage());
-        }
-
+        factory.initialise();
         assertNotNull(factory.getInstance());
     }
 
     public void testDispose() throws Exception
     {
-        AbstractObjectFactory factory = (AbstractObjectFactory) getObjectFactory();
+        AbstractObjectFactory factory = getUninitialisedObjectFactory();
         factory.setObjectClass(Object.class);
 
         factory.initialise();
@@ -98,7 +80,7 @@ public abstract class AbstractObjectFactoryTestCase extends AbstractMuleTestCase
         }
     }
 
-    public abstract ObjectFactory getObjectFactory();
+    public abstract AbstractObjectFactory getUninitialisedObjectFactory();
 
     public abstract void testGetObjectClass() throws Exception;
 
