@@ -84,7 +84,10 @@ public abstract class AbstractJavaComponent extends AbstractComponent implements
         }
         finally
         {
-            returnComponentLifecycleAdaptor(componentLifecycleAdapter);
+            if (componentLifecycleAdapter != null)
+            {
+                returnComponentLifecycleAdaptor(componentLifecycleAdapter);
+            }
         }
     }
 
