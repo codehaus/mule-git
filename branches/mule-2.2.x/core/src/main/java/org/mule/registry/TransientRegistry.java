@@ -9,7 +9,6 @@
  */
 package org.mule.registry;
 
-import org.mule.MuleServer;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleException;
 import org.mule.api.agent.Agent;
@@ -24,40 +23,43 @@ import org.mule.api.registry.RegistrationException;
 import org.mule.api.service.Service;
 import org.mule.api.transformer.Transformer;
 import org.mule.api.transport.Connector;
+import org.mule.context.notification.RegistryNotification;
 import org.mule.util.CollectionUtils;
 import org.mule.util.StringUtils;
+
+import org.apache.commons.collections.functors.InstanceofPredicate;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.commons.collections.functors.InstanceofPredicate;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 /**
  * @ThreadSafe Use synchronized(registry) when reading/writing/iterating over the contents of the registry hashmap.
  */
 public class TransientRegistry extends AbstractRegistry
 {
-    /** logger used by this class */
-    protected transient final Log logger = LogFactory.getLog(TransientRegistry.class);
     public static final String REGISTRY_ID = "org.mule.Registry.Transient";
 
+    /** logger used by this class */
+    protected transient final Log logger = LogFactory.getLog(TransientRegistry.class);
+
+    protected MuleContext muleContext;
+
     //@ThreadSafe synchronized(registry)
-    private Map registry = new HashMap();
+    private final Map<String, Object> registry = new HashMap<String, Object>();
 
-    private MuleContext context;
 
-    public TransientRegistry(MuleContext context)
+    public TransientRegistry(MuleContext muleContext)
     {
         super(REGISTRY_ID);
-        this.context = context;
+        this.muleContext = muleContext;
         synchronized(registry)
         {
-            registry.put("_muleContextProcessor", new MuleContextProcessor(context));
-            registry.put("_mulePropertyExtractorProcessor", new ExpressionEvaluatorProcessor(context));
+            registry.put("_muleContextProcessor", new MuleContextProcessor(muleContext));
+            registry.put("_mulePropertyExtractorProcessor", new ExpressionEvaluatorProcessor(muleContext));
         }
     }
 
@@ -197,7 +199,8 @@ public class TransientRegistry extends AbstractRegistry
         }
         
         logger.debug("registering object");
-        if (MuleServer.getMuleContext().isInitialised() || MuleServer.getMuleContext().isInitialising())
+
+        if (muleContext.isInitialised() || muleContext.isInitialising())
         {
             logger.debug("applying processors");
             object = applyProcessors(object);
@@ -217,16 +220,18 @@ public class TransientRegistry extends AbstractRegistry
 
         try
         {
-            if(logger.isDebugEnabled())
+            if (logger.isDebugEnabled())
             {
                 logger.debug("applying lifecycle to object: " + object);
             }
-            context.getLifecycleManager().applyCompletedPhases(object);
+            muleContext.getLifecycleManager().applyCompletedPhases(object);
         }
         catch (MuleException e)
         {
             throw new RegistrationException(e);
         }
+
+        muleContext.getNotificationManager().fireNotification(new RegistryNotification(this, RegistryNotification.));
     }
 
     public void unregisterObject(String key, Object metadata) throws RegistrationException
