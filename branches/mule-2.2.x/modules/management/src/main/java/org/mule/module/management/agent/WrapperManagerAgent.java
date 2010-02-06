@@ -72,7 +72,7 @@ public class WrapperManagerAgent extends AbstractAgent
 
     public WrapperManagerAgent()
     {
-        super("wrapper-manager");
+        super("wrapper");
     }
 
     public void initialise() throws InitialisationException
