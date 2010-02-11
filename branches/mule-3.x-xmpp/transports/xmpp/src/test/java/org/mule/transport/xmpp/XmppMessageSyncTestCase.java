@@ -11,8 +11,8 @@
 package org.mule.transport.xmpp;
 
 import org.mule.api.MuleEventContext;
-import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
+import org.mule.api.service.Service;
 import org.mule.module.client.MuleClient;
 import org.mule.tck.functional.EventCallback;
 import org.mule.tck.functional.FunctionalTestComponent;
@@ -26,8 +26,9 @@ import org.jivesoftware.smack.packet.Message;
 
 public class XmppMessageSyncTestCase extends AbstractXmppTestCase
 {
-    private static final long JABBER_SEND_THREAD_SLEEP_TIME = 1000;
+    protected static final long JABBER_SEND_THREAD_SLEEP_TIME = 1000;
     protected static final String REPLY = "Jabber reply";
+    private static final String RECEIVE_SERVICE_NAME = "receiveFromJabber";
     
     @Override
     protected void configureJabberClient(JabberClient client)
@@ -50,11 +51,13 @@ public class XmppMessageSyncTestCase extends AbstractXmppTestCase
         
         assertEquals(Message.class, reply.getPayload().getClass());
         Message xmppReply = (Message) reply.getPayload();
-        assertXmppMessage(xmppReply);
+        assertXmppReply(xmppReply);
     }
     
     public void testReceiveSync() throws Exception
     {
+        startReceiverService();
+        
         Latch receiveLatch = new Latch();
         setupTestServiceComponent(receiveLatch);
         
@@ -63,75 +66,80 @@ public class XmppMessageSyncTestCase extends AbstractXmppTestCase
         assertTrue(receiveLatch.await(RECEIVE_TIMEOUT, TimeUnit.MILLISECONDS));
     }
 
-    public void testRequestSync() throws Exception
+    private void startReceiverService() throws Exception
     {
-        sendJabberMessageFromNewThread();
-        requestMessageAndAssert("xmpp://MESSAGE/mule2@localhost?synchronous=true");
+        Service service = muleContext.getRegistry().lookupService(RECEIVE_SERVICE_NAME);
+        assertNotNull(service);
+        
+        service.start();
     }
 
     private void setupTestServiceComponent(Latch receiveLatch) throws Exception
-    {
-        Object testComponent = getComponent("receiveMessage");
+    {   
+        Object testComponent = getComponent(RECEIVE_SERVICE_NAME);
         assertTrue(testComponent instanceof FunctionalTestComponent);
         FunctionalTestComponent component = (FunctionalTestComponent) testComponent;
         
-        Callback callback = new Callback(receiveLatch);
+        Callback callback = new Callback(receiveLatch, expectedXmppMessageType());
         component.setEventCallback(callback);
     }
 
-    private void sendJabberMessageFromNewThread()
+    public void testRequestSync() throws Exception
+    {
+        doTestRequest("xmpp://MESSAGE/mule2@localhost?synchronous=true");
+    }
+    
+    protected void doTestRequest(String url) throws Exception
+    {
+        sendJabberMessageFromNewThread();
+
+        MuleClient client = new MuleClient();
+        MuleMessage muleMessage = client.request(url, RECEIVE_TIMEOUT);
+        assertNotNull(muleMessage);
+
+        Message xmppMessage = (Message) muleMessage.getPayload();
+        assertEquals(expectedXmppMessageType(), xmppMessage.getType());
+        assertEquals(TEST_MESSAGE, xmppMessage.getBody());
+    }
+
+    protected Message.Type expectedXmppMessageType()
+    {
+        return Message.Type.normal;
+    }
+
+    protected void sendJabberMessageFromNewThread()
     {
         Thread sendThread = new Thread(new SendIt());
         sendThread.setName("JabberClient send");
         sendThread.start();
     }
 
-    private void requestMessageAndAssert(String url) throws MuleException
+    private void assertXmppReply(Message xmppMessage)
     {
-        MuleClient client = new MuleClient();
-        MuleMessage muleMessage = client.request(url, RECEIVE_TIMEOUT);
-        assertNotNull(muleMessage);
-
-        Message xmppMessage = (Message) muleMessage.getPayload();
-        assertEquals(Message.Type.normal, xmppMessage.getType());
-        assertEquals(TEST_MESSAGE, xmppMessage.getBody());
+        assertEquals(expectedXmppMessageType(), xmppMessage.getType());
+        assertEquals(REPLY, xmppMessage.getBody());
     }
-
-    protected void assertXmppMessage(Message xmppMessage)
-    {
-        assertJabberMessage(xmppMessage, REPLY);
-    }
-    
-    private static void assertJabberMessage(Message xmppMessage, String payload)
-    {
-        assertEquals(Message.Type.normal, xmppMessage.getType());
-        assertEquals(payload, xmppMessage.getBody());
-    }
-    
-    private class SendIt implements Runnable
+        
+    private class SendIt extends RunnableWithExceptionHandler
     {        
-        public void run()
+        @Override
+        protected void doRun() throws Exception
         {
-            try
-            {
-                Thread.sleep(JABBER_SEND_THREAD_SLEEP_TIME);
-                jabberClient.sendMessage(muleJabberUserId, TEST_MESSAGE);
-            }
-            catch (Exception e)
-            {
-                throw new RuntimeException("Exception while sending", e);
-            }
+            Thread.sleep(JABBER_SEND_THREAD_SLEEP_TIME);
+            jabberClient.sendMessage(muleJabberUserId, TEST_MESSAGE);
         }
     }
     
     private static class Callback implements EventCallback
     {
         private Latch latch;
+        private Message.Type expectedMessageType;
 
-        public Callback(Latch latch)
+        public Callback(Latch latch, Message.Type type)
         {
             super();
             this.latch = latch;
+            this.expectedMessageType = type;
         }
 
         public void eventReceived(MuleEventContext context, Object component) throws Exception
@@ -141,7 +149,8 @@ public class XmppMessageSyncTestCase extends AbstractXmppTestCase
             Assert.assertTrue(payload instanceof Message);
             
             Message xmppMessage = (Message) payload;
-            assertJabberMessage(xmppMessage, TEST_MESSAGE);
+            assertEquals(expectedMessageType, xmppMessage.getType());
+            assertEquals(TEST_MESSAGE, xmppMessage.getBody());
             
             latch.countDown();
         }

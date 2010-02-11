@@ -11,6 +11,7 @@
 package org.mule.transport.xmpp;
 
 import org.jivesoftware.smack.packet.Message;
+import org.jivesoftware.smack.packet.Message.Type;
 
 public class XmppChatSyncTestCase extends XmppMessageSyncTestCase
 {
@@ -21,9 +22,32 @@ public class XmppChatSyncTestCase extends XmppMessageSyncTestCase
     }
 
     @Override
-    protected void assertXmppMessage(Message xmppReply)
+    public void testRequestSync() throws Exception
     {
-        assertEquals(Message.Type.chat, xmppReply.getType());
-        assertEquals(REPLY, xmppReply.getBody());
+        doTestRequest("xmpp://CHAT/mule2@localhost?synchronous=true");
+    }
+
+    @Override
+    protected Type expectedXmppMessageType()
+    {
+        return Message.Type.chat;
+    }
+    
+    @Override
+    protected void sendJabberMessageFromNewThread()
+    {
+        Thread sendThread = new Thread(new SendViaChat());
+        sendThread.setName("JabberClient send");
+        sendThread.start();
+    }
+    
+    private class SendViaChat extends RunnableWithExceptionHandler
+    {
+        @Override
+        protected void doRun() throws Exception
+        {
+            Thread.sleep(JABBER_SEND_THREAD_SLEEP_TIME);
+            jabberClient.sendChatMessage(muleJabberUserId, TEST_MESSAGE);
+        }
     }
 }

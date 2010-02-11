@@ -64,13 +64,6 @@ public class XmppMessageRequester extends AbstractMessageRequester
             message = conversation.receive(timeout);
         }
         
-//        // Should be in the form of xmpp://user:pass@host:[port]/folder
-//        String to = (String)endpoint.getProperty("folder");
-//        if (to == null)
-//        {
-//            throw new MalformedEndpointException(endpoint.getEndpointURI().toString());
-//        }
-        
         if (message != null)
         {
             return new DefaultMuleMessage(connector.getMessageAdapter(message), connector.getMuleContext());
