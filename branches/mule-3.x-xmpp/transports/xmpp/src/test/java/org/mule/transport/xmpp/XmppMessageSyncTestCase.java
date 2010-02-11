@@ -10,9 +10,17 @@
 
 package org.mule.transport.xmpp;
 
+import org.mule.api.MuleEventContext;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.module.client.MuleClient;
+import org.mule.tck.functional.EventCallback;
+import org.mule.tck.functional.FunctionalTestComponent;
+import org.mule.util.concurrent.Latch;
+
+import junit.framework.Assert;
+
+import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 
 import org.jivesoftware.smack.packet.Message;
 
@@ -34,7 +42,7 @@ public class XmppMessageSyncTestCase extends AbstractXmppTestCase
         return "xmpp-message-sync-config.xml";
     }
 
-    public void XXXtestSendSync() throws Exception
+    public void testSendSync() throws Exception
     {   
         MuleClient client = new MuleClient(muleContext);
         MuleMessage reply = client.send("vm://in", TEST_MESSAGE, null);
@@ -44,23 +52,31 @@ public class XmppMessageSyncTestCase extends AbstractXmppTestCase
         Message xmppReply = (Message) reply.getPayload();
         assertXmppMessage(xmppReply);
     }
-
-    protected void assertXmppMessage(Message xmppReply)
-    {
-        assertEquals(Message.Type.normal, xmppReply.getType());
-        assertEquals(REPLY, xmppReply.getBody());
-    }
     
-    public void XXXtestReceiveSync() throws Exception
+    public void testReceiveSync() throws Exception
     {
+        Latch receiveLatch = new Latch();
+        setupTestServiceComponent(receiveLatch);
+        
         sendJabberMessageFromNewThread();
-        requestMessageAndAssert("vm://fromJabber");
+        
+        assertTrue(receiveLatch.await(RECEIVE_TIMEOUT, TimeUnit.MILLISECONDS));
     }
-    
+
     public void testRequestSync() throws Exception
     {
         sendJabberMessageFromNewThread();
         requestMessageAndAssert("xmpp://MESSAGE/mule2@localhost?synchronous=true");
+    }
+
+    private void setupTestServiceComponent(Latch receiveLatch) throws Exception
+    {
+        Object testComponent = getComponent("receiveMessage");
+        assertTrue(testComponent instanceof FunctionalTestComponent);
+        FunctionalTestComponent component = (FunctionalTestComponent) testComponent;
+        
+        Callback callback = new Callback(receiveLatch);
+        component.setEventCallback(callback);
     }
 
     private void sendJabberMessageFromNewThread()
@@ -81,6 +97,17 @@ public class XmppMessageSyncTestCase extends AbstractXmppTestCase
         assertEquals(TEST_MESSAGE, xmppMessage.getBody());
     }
 
+    protected void assertXmppMessage(Message xmppMessage)
+    {
+        assertJabberMessage(xmppMessage, REPLY);
+    }
+    
+    private static void assertJabberMessage(Message xmppMessage, String payload)
+    {
+        assertEquals(Message.Type.normal, xmppMessage.getType());
+        assertEquals(payload, xmppMessage.getBody());
+    }
+    
     private class SendIt implements Runnable
     {        
         public void run()
@@ -94,6 +121,29 @@ public class XmppMessageSyncTestCase extends AbstractXmppTestCase
             {
                 throw new RuntimeException("Exception while sending", e);
             }
+        }
+    }
+    
+    private static class Callback implements EventCallback
+    {
+        private Latch latch;
+
+        public Callback(Latch latch)
+        {
+            super();
+            this.latch = latch;
+        }
+
+        public void eventReceived(MuleEventContext context, Object component) throws Exception
+        {
+            MuleMessage muleMessage = context.getMessage();
+            Object payload = muleMessage.getPayload();
+            Assert.assertTrue(payload instanceof Message);
+            
+            Message xmppMessage = (Message) payload;
+            assertJabberMessage(xmppMessage, TEST_MESSAGE);
+            
+            latch.countDown();
         }
     }
 }
