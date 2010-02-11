@@ -11,23 +11,28 @@
 package org.mule.transport.xmpp;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import edu.emory.mathcs.backport.java.util.concurrent.CountDownLatch;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.ConnectionConfiguration;
+import org.jivesoftware.smack.MessageListener;
 import org.jivesoftware.smack.PacketCollector;
 import org.jivesoftware.smack.PacketListener;
 import org.jivesoftware.smack.XMPPConnection;
+import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.filter.MessageTypeFilter;
 import org.jivesoftware.smack.filter.OrFilter;
 import org.jivesoftware.smack.filter.PacketFilter;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Packet;
 
-public class JabberClient implements PacketListener
+public class JabberClient implements PacketListener, MessageListener
 {
     private static Log logger = LogFactory.getLog(JabberClient.class);
     
@@ -39,6 +44,7 @@ public class JabberClient implements PacketListener
     private boolean autoreply = false;
 
     private XMPPConnection connection;
+    private Map<String, Chat> chats;
     private List<Message> replies;
     private PacketCollector packetFilter = null;
     private CountDownLatch messageLatch = null;
@@ -61,6 +67,7 @@ public class JabberClient implements PacketListener
         this.password = password;        
 
         replies = new ArrayList<Message>();
+        chats = new HashMap<String, Chat>();
     }
 
     public void connect(CountDownLatch latch) throws Exception
@@ -117,7 +124,7 @@ public class JabberClient implements PacketListener
     }
 
     //
-    // Jabber packet listener
+    // Jabber listeners
     //
     public void processPacket(Packet packet)
     {
@@ -131,6 +138,17 @@ public class JabberClient implements PacketListener
         
         countDownMessageLatch();        
         sendAutoreply(packet);
+    }
+
+    public void processMessage(Chat chat, Message message)
+    {
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("received from chat '" + chat.getThreadID() + ": " + message);
+        }
+        
+        replies.add(message);
+        countDownMessageLatch();
     }
 
     private void countDownMessageLatch()
@@ -161,6 +179,54 @@ public class JabberClient implements PacketListener
         }
     }
 
+    public void sendMessage(String recipient, String payload)
+    {
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("Will send message to \"" + recipient + "\" with payload \"" + payload + "\"");
+        }
+        
+        Message message = buildMessage(Message.Type.normal, recipient, payload);
+        connection.sendPacket(message);
+    }
+
+    public void sendChatMessage(String recipient, String payload) throws XMPPException
+    {
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("Will send chat message to \"" + recipient + "\" with payload \"" + payload + "\"");
+        }
+
+        Chat chat = chatWith(recipient);
+        Message message = buildMessage(Message.Type.chat, recipient, payload);
+        chat.sendMessage(message);
+    }
+    
+    private Chat chatWith(String recipient)
+    {
+        Chat chat = chats.get(recipient);
+        if (chat == null)
+        {
+            chat = connection.getChatManager().createChat(recipient, this);
+            chats.put(recipient, chat);
+        }
+        return chat;
+    }
+    
+    private Message buildMessage(Message.Type type, String recipient, String payload)
+    {
+        Message message = new Message();
+        message.setType(type);
+        
+        String from = user + "@" + host;
+        message.setFrom(from);
+        
+        message.setTo(recipient);
+        message.setBody(payload);
+
+        return message;
+    }
+    
     public List<Message> getReceivedMessages()
     {
         return replies;
@@ -189,24 +255,5 @@ public class JabberClient implements PacketListener
     public void setMessageLatch(CountDownLatch latch)
     {
         messageLatch = latch;
-    }
-
-    public void sendMessage(String recipient, String payload)
-    {
-        if (logger.isDebugEnabled())
-        {
-            logger.debug("Will send message to \"" + recipient + "\" with payload \"" + payload + "\"");
-        }
-        
-        Message message = new Message();
-        message.setType(Message.Type.normal);
-        
-        String from = user + "@" + host;
-        message.setFrom(from);
-        
-        message.setTo(recipient);
-        message.setBody(payload);
-        
-        connection.sendPacket(message);
     }
 }
