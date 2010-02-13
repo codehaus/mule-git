@@ -66,6 +66,7 @@ public abstract class AbstractReceiverServlet extends HttpServlet
 
     private MuleMessageToHttpResponse responseTransformer = new MuleMessageToHttpResponse();
 
+    @Override
     public final void init() throws ServletException
     {
         String timeoutString = getServletConfig().getInitParameter(REQUEST_TIMEOUT_PROPERTY);
@@ -137,6 +138,7 @@ public abstract class AbstractReceiverServlet extends HttpServlet
 
     protected void doInit() throws ServletException
     {
+        // template method
     }
 
     protected void writeResponse(HttpServletResponse servletResponse, MuleMessage message) throws Exception
@@ -166,8 +168,7 @@ public abstract class AbstractReceiverServlet extends HttpServlet
 
             // Map the HttpResponse to the ServletResponse
             Header contentTypeHeader = httpResponse.getFirstHeader(HttpConstants.HEADER_CONTENT_TYPE);
-
-            String contentType;
+            String contentType = defaultContentType;
             if (contentTypeHeader != null && contentTypeHeader.getValue() != null)
             {
                 if (logger.isDebugEnabled())
@@ -175,10 +176,6 @@ public abstract class AbstractReceiverServlet extends HttpServlet
                     logger.debug("Using Content-Type from message header = " + contentTypeHeader.getValue());
                 }
                 contentType = contentTypeHeader.getValue();
-            }
-            else
-            {
-                contentType = defaultContentType;
             }
 
             servletResponse.setContentType(contentType);
@@ -201,8 +198,14 @@ public abstract class AbstractReceiverServlet extends HttpServlet
 
     protected HttpServletResponse setHttpHeadersOnServletResponse(HttpResponse httpResponse, HttpServletResponse servletResponse)
     {
-        Header[] headers = httpResponse.getHeaders();
+        // Remove any Transfer-Encoding headers that were set (e.g. by MuleMessageToHttpResponse)
+        // earlier. Mule's default HTTP transformer is used in both cases: when the reply 
+        // MuleMessage is generated for our standalone HTTP server and for the servlet case. The 
+        // servlet container should be able to figure out the Transfer-Encoding itself and some 
+        // get confused by 
+        httpResponse.removeHeaders(HttpConstants.HEADER_TRANSFER_ENCODING);
 
+        Header[] headers = httpResponse.getHeaders();
         for (Header header : headers)
         {
             servletResponse.setHeader(header.getName(), header.getValue());
