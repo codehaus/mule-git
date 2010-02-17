@@ -35,14 +35,14 @@ public class StdioMessageDispatcher extends AbstractMessageDispatcher
     public StdioMessageDispatcher(OutboundEndpoint endpoint)
     {
         super(endpoint);
-        this.connector = (StdioConnector)endpoint.getConnector();
+        this.connector = (StdioConnector) endpoint.getConnector();
 
         // apply connector-specific properties
         if (connector instanceof PromptStdioConnector)
         {
             PromptStdioConnector ssc = (PromptStdioConnector)connector;
 
-            String outputMessage = (String)endpoint.getProperties().get("outputMessage");
+            String outputMessage = (String) endpoint.getProperties().get("outputMessage");
             if (outputMessage != null)
             {
                 ssc.setOutputMessage(outputMessage);
@@ -109,7 +109,4 @@ public class StdioMessageDispatcher extends AbstractMessageDispatcher
     {
         // template method
     }
-
-
-
 }
