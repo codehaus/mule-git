@@ -10,7 +10,6 @@
 
 package org.mule.transport.http;
 
-import org.mule.DefaultMuleMessage;
 import org.mule.api.ExceptionPayload;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleException;
@@ -30,7 +29,6 @@ import org.mule.transport.http.transformers.ObjectToHttpClientMethodRequest;
 import org.mule.util.StringUtils;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URI;
 import java.util.Iterator;
 import java.util.List;
