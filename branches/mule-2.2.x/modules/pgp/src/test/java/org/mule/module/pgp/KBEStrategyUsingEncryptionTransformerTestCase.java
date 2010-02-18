@@ -12,45 +12,12 @@ package org.mule.module.pgp;
 
 import org.mule.DefaultMuleEvent;
 import org.mule.RequestContext;
-import org.mule.tck.AbstractMuleTestCase;
 import org.mule.tck.testmodels.fruit.Orange;
 import org.mule.transformer.encryption.EncryptionTransformer;
 import org.mule.transformer.simple.ByteArrayToObject;
 
-import java.net.URL;
-
-public class KBEStrategyUsingEncryptionTransformerTestCase extends AbstractMuleTestCase
-{
-    private KeyBasedEncryptionStrategy kbStrategy;
-    
-    @Override
-    protected void doSetUp() throws Exception
-    {
-        PGPKeyRingImpl keyM = new PGPKeyRingImpl();
-        ClassLoader loader = Thread.currentThread().getContextClassLoader();
-
-        URL url = loader.getResource("./serverPublic.gpg");
-        keyM.setPublicKeyRingFileName(url.getFile());
-
-        url = loader.getResource("./serverPrivate.gpg");
-        keyM.setSecretKeyRingFileName(url.getFile());
-
-        keyM.setSecretAliasId("0x6168F39C");
-        keyM.setSecretPassphrase("TestingPassphrase");
-        keyM.initialise();
-
-        kbStrategy = new KeyBasedEncryptionStrategy();
-        kbStrategy.setKeyManager(keyM);
-        kbStrategy.setCredentialsAccessor(new FakeCredentialAccessor());
-        kbStrategy.initialise();
-    }
-
-    @Override
-    protected void doTearDown() throws Exception
-    {
-        kbStrategy = null;
-    }
-    
+public class KBEStrategyUsingEncryptionTransformerTestCase extends AbstractEncryptionStrategyTestCase
+{    
     public void testEncrypt() throws Exception
     {
         String msg = "Test Message";
