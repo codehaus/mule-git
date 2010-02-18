@@ -170,7 +170,7 @@ public class ImmutableThreadingProfile implements ThreadingProfile
 
     public WorkManager createWorkManager(String name)
     {
-        return workManagerFactory.createWorkManager(this, name);
+        return workManagerFactory.createWorkManager(new ImmutableThreadingProfile(this), name);
     }
 
     public ExecutorService createPool()
@@ -180,7 +180,7 @@ public class ImmutableThreadingProfile implements ThreadingProfile
 
     public ExecutorService createPool(String name)
     {
-        return poolFactory.createPool(name, this);
+        return poolFactory.createPool(name, new ImmutableThreadingProfile(this));
     }
 
     public boolean isDoThreading()
