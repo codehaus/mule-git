@@ -77,6 +77,11 @@ public abstract class AbstractRegistry implements Registry
         }
     }
 
+    public Object get(String key)
+    {
+        return lookupObject(key);
+    }
+
     public Object lookupObject(Class type) throws RegistrationException
     {
         // Accumulate objects from all registries.

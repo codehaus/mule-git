@@ -22,6 +22,11 @@ public interface Registry extends Initialisable, Disposable
     // Lookup methods - these should NOT create a new object, only return existing ones
     // /////////////////////////////////////////////////////////////////////////
 
+    /**
+     * Alias method performing the lookup, here to simplify syntax when called from dynamic languages.
+     */
+    Object get(String key);
+
     /** 
      * Look up a single object by name. 
      * @return object or null if not found

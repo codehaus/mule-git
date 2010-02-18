@@ -567,7 +567,13 @@ public class MuleRegistryHelper implements MuleRegistry, Initialisable, Disposab
     ////////////////////////////////////////////////////////////////////////////
     // Delegate to internal registry
     ////////////////////////////////////////////////////////////////////////////
-    
+
+
+    public Object get(String key)
+    {
+        return lookupObject(key);
+    }
+
     public Object lookupObject(Class type) throws RegistrationException
     {
         return registry.lookupObject(type);

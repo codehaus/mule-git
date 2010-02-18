@@ -10,9 +10,9 @@
 
 package org.mule.module.scripting.component;
 
-import org.mule.MuleServer;
 import org.mule.DefaultMuleEventContext;
-import org.mule.transport.NullPayload;
+import org.mule.MuleServer;
+import org.mule.api.MuleContext;
 import org.mule.api.MuleEvent;
 import org.mule.api.lifecycle.Initialisable;
 import org.mule.api.lifecycle.InitialisationException;
@@ -20,6 +20,8 @@ import org.mule.api.transformer.TransformerException;
 import org.mule.api.transport.MessageAdapter;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.config.i18n.MessageFactory;
+import org.mule.transport.DefaultMessageAdapter;
+import org.mule.transport.NullPayload;
 import org.mule.util.CollectionUtils;
 import org.mule.util.IOUtils;
 import org.mule.util.StringUtils;
@@ -161,7 +163,9 @@ public class Scriptable implements Initialisable
         //A place holder for a retuen result if the script doesn't return a result.
         //The script can overwrite this binding
         bindings.put("result", NullPayload.getInstance());
-        bindings.put("muleContext", MuleServer.getMuleContext());
+        final MuleContext muleContext = MuleServer.getMuleContext();
+        bindings.put("muleContext", muleContext);
+        bindings.put("registry", muleContext.getRegistry());
     }
 
     public void populateBindings(Bindings bindings, Object payload)
@@ -176,6 +180,10 @@ public class Scriptable implements Initialisable
     public void populateBindings(Bindings bindings, MessageAdapter message)
     {
         populateDefaultBindings(bindings);
+        if (message == null)
+        {
+            message = new DefaultMessageAdapter(NullPayload.getInstance());
+        }
         bindings.put("message", message);
         //This will get overwritten if populateBindings(Bindings bindings, MuleEvent event) is called
         //and not this method directly.

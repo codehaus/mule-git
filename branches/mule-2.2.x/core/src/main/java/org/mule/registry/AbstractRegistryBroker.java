@@ -60,7 +60,13 @@ public abstract class AbstractRegistryBroker implements RegistryBroker
     ////////////////////////////////////////////////////////////////////////////////
     // Delegating methods
     ////////////////////////////////////////////////////////////////////////////////
-    
+
+
+    public Object get(String key)
+    {
+        return lookupObject(key);
+    }
+
     public Object lookupObject(String key)
     {
         Object obj = null;

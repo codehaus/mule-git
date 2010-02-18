@@ -40,4 +40,31 @@ public class GroovyExpressionEvaluatorTestCase extends AbstractMuleTestCase
         value = e.evaluate("bar", msg);
         assertNull(value);
     }
+
+    public void testRegistrySyntax() throws Exception
+    {
+        Apple apple = new Apple();
+        muleContext.getRegistry().registerObject("name.with.dots", apple);
+        Object result = muleContext.getExpressionManager().evaluate(
+                "#[groovy:registry.lookupObject('name.with.dots')]", null);
+
+        assertNotNull(result);
+        assertSame(apple, result);
+
+        // try various map-style access in groovy for simpler syntax
+        result = muleContext.getExpressionManager().evaluate(
+            "#[groovy:registry.'name.with.dots']", null);
+        assertNotNull(result);
+        assertSame(apple, result);
+
+        result = muleContext.getExpressionManager().evaluate(
+                "#[groovy:registry['name.with.dots']]", null);
+        assertNotNull(result);
+        assertSame(apple, result);
+
+        result = muleContext.getExpressionManager().evaluate(
+                "#[groovy:registry.'name.with.dots'.washed]", null);
+        assertNotNull(result);
+        assertEquals(false, result);
+    }
 }
