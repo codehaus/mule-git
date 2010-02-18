@@ -10,8 +10,6 @@
 
 package org.mule.module.pgp;
 
-import java.net.URL;
-
 import org.mule.DefaultMuleEvent;
 import org.mule.RequestContext;
 import org.mule.tck.AbstractMuleTestCase;
@@ -19,19 +17,22 @@ import org.mule.tck.testmodels.fruit.Orange;
 import org.mule.transformer.encryption.EncryptionTransformer;
 import org.mule.transformer.simple.ByteArrayToObject;
 
+import java.net.URL;
+
 public class KBEStrategyUsingEncryptionTransformerTestCase extends AbstractMuleTestCase
 {
     private KeyBasedEncryptionStrategy kbStrategy;
     
+    @Override
     protected void doSetUp() throws Exception
     {
         PGPKeyRingImpl keyM = new PGPKeyRingImpl();
-        URL url;
+        ClassLoader loader = Thread.currentThread().getContextClassLoader();
 
-        url = Thread.currentThread().getContextClassLoader().getResource("./serverPublic.gpg");
+        URL url = loader.getResource("./serverPublic.gpg");
         keyM.setPublicKeyRingFileName(url.getFile());
 
-        url = Thread.currentThread().getContextClassLoader().getResource("./serverPrivate.gpg");
+        url = loader.getResource("./serverPrivate.gpg");
         keyM.setSecretKeyRingFileName(url.getFile());
 
         keyM.setSecretAliasId("0x6168F39C");
@@ -44,6 +45,7 @@ public class KBEStrategyUsingEncryptionTransformerTestCase extends AbstractMuleT
         kbStrategy.initialise();
     }
 
+    @Override
     protected void doTearDown() throws Exception
     {
         kbStrategy = null;
@@ -53,14 +55,15 @@ public class KBEStrategyUsingEncryptionTransformerTestCase extends AbstractMuleT
     {
         String msg = "Test Message";
         
-        DefaultMuleEvent event = (DefaultMuleEvent)getTestEvent(msg, getTestService("orange", Orange.class));
+        DefaultMuleEvent event = (DefaultMuleEvent) getTestEvent(msg, getTestService("orange", Orange.class));
         RequestContext.setEvent(event);
         
-        EncryptionTransformer etrans = new EncryptionTransformer();
-        etrans.setStrategy(kbStrategy);
-        Object result = etrans.doTransform(msg.getBytes(), "UTF-8");
+        EncryptionTransformer encryptionTransformer = new EncryptionTransformer();
+        encryptionTransformer.setStrategy(kbStrategy);
         
+        Object result = encryptionTransformer.doTransform(msg.getBytes(), "UTF-8");
         assertNotNull(result);
+        
         String encrypted = (String) new ByteArrayToObject().doTransform(result,"UTF-8");
         assertTrue(encrypted.startsWith("-----BEGIN PGP MESSAGE-----"));
     }

@@ -7,5 +7,3 @@
 org.mule.module.pgp.KeyBasedEncryptionStrategyTestCase
 # MULE-3672
 org.mule.module.pgp.PGPSecurityFilterTestCase
-# MULE-3672
-org.mule.module.pgp.KBEStrategyUsingEncryptionTransformerTestCase
