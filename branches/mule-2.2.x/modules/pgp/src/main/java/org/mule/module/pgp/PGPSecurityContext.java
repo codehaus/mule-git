@@ -15,31 +15,20 @@ import org.mule.api.security.SecurityContext;
 
 public class PGPSecurityContext implements SecurityContext
 {
-    private volatile PGPAuthentication authentication;
+    private transient PGPAuthentication authentication;
 
     public PGPSecurityContext(PGPAuthentication authentication)
     {
         this.authentication = authentication;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mule.api.security.SecurityContext#setAuthentication(org.mule.api.security.Authentication)
-     */
     public void setAuthentication(Authentication authentication)
     {
         this.authentication = (PGPAuthentication)authentication;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mule.api.security.SecurityContext#getAuthentication()
-     */
     public Authentication getAuthentication()
     {
         return authentication;
     }
-
 }
