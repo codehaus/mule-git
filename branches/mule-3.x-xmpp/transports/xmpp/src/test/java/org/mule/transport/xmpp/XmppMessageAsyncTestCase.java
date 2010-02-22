@@ -42,7 +42,7 @@ public class XmppMessageAsyncTestCase extends AbstractXmppTestCase
         client.setMessageLatch(latch);
     }
 
-    public void _testDispatch() throws Exception
+    public void testDispatch() throws Exception
     {
         MuleClient client = new MuleClient();
         client.dispatch("vm://in", TEST_MESSAGE, null);
