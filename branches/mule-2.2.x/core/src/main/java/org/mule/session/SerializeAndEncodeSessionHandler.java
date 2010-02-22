@@ -10,6 +10,9 @@
 
 package org.mule.session;
 
+import java.io.IOException;
+
+import org.apache.commons.lang.SerializationUtils;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.MuleSession;
@@ -17,10 +20,6 @@ import org.mule.api.config.MuleProperties;
 import org.mule.api.model.SessionException;
 import org.mule.config.i18n.MessageFactory;
 import org.mule.util.Base64;
-
-import java.io.IOException;
-
-import org.apache.commons.lang.SerializationUtils;
 
 /**
  * A session handler used to store and retrieve session information on an
@@ -31,6 +30,7 @@ import org.apache.commons.lang.SerializationUtils;
  */
 public class SerializeAndEncodeSessionHandler extends SerializeOnlySessionHandler
 {
+    @Override
     public MuleSession retrieveSessionInfoFromMessage(MuleMessage message) throws MuleException
     {
         MuleSession session = null;
@@ -48,17 +48,9 @@ public class SerializeAndEncodeSessionHandler extends SerializeOnlySessionHandle
         return session;
     }
 
-    /**
-     * @deprecated Use retrieveSessionInfoFromMessage(MuleMessage message) instead
-     */
-    public void retrieveSessionInfoFromMessage(MuleMessage message, MuleSession session) throws MuleException
-    {
-        session = retrieveSessionInfoFromMessage(message);
-    }
-
+    @Override
     public void storeSessionInfoToMessage(MuleSession session, MuleMessage message) throws MuleException
-    {
-        
+    {        
         byte[] serializedSession = SerializationUtils.serialize(removeNonSerializableProperties(session));
         String serializedEncodedSession;
         try

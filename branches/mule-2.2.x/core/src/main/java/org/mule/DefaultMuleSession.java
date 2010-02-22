@@ -10,6 +10,17 @@
 
 package org.mule;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleException;
@@ -29,18 +40,6 @@ import org.mule.api.transport.SessionHandler;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.transport.AbstractConnector;
 import org.mule.util.UUID;
-
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * <code>DefaultMuleSession</code> manages the interaction and distribution of events for
@@ -90,7 +89,7 @@ public final class DefaultMuleSession implements MuleSession
     
     public DefaultMuleSession(MuleContext muleContext)
     {
-        this(null, muleContext);
+        this((Service) null, muleContext);
     }
 
     public DefaultMuleSession(Service service, MuleContext muleContext)
@@ -116,6 +115,21 @@ public final class DefaultMuleSession implements MuleSession
     public DefaultMuleSession(MuleMessage message, SessionHandler requestSessionHandler, MuleContext muleContext) throws MuleException
     {
         this(muleContext);
+    }
+
+    public DefaultMuleSession(MuleSession session, MuleContext muleContext)
+    {
+    	this.muleContext = muleContext;
+    	this.id = session.getId();
+    	this.securityContext = session.getSecurityContext();
+    	this.service = session.getService();
+    	this.valid = session.isValid();
+
+    	this.properties = new HashMap();
+    	for (Object key : session.getPropertyNamesAsSet())
+    	{
+    		this.properties.put(key, session.getProperty(key));
+    	}
     }
 
     public void dispatchEvent(MuleMessage message) throws MuleException
@@ -236,14 +250,15 @@ public final class DefaultMuleSession implements MuleSession
 
                 if (connector instanceof AbstractConnector)
                 {
-                    ((AbstractConnector) connector).getSessionHandler().storeSessionInfoToMessage(this,
-                        event.getMessage());
+                    ((AbstractConnector) connector).getSessionHandler().storeSessionInfoToMessage(
+                		new DefaultMuleSession(this, muleContext), event.getMessage());
                 }
                 else
                 {
                     // TODO in Mule 2.0 we'll flatten the Connector hierachy
                     logger.warn("A session handler could not be obtained, using  default");
-                    new MuleSessionHandler().storeSessionInfoToMessage(this, event.getMessage());
+                    new MuleSessionHandler().storeSessionInfoToMessage(
+                    	new DefaultMuleSession(this, muleContext), event.getMessage());
                 }
 
                 ((OutboundEndpoint) event.getEndpoint()).dispatch(event);
@@ -303,14 +318,15 @@ public final class DefaultMuleSession implements MuleSession
 
                 if (connector instanceof AbstractConnector)
                 {
-                    ((AbstractConnector) connector).getSessionHandler().storeSessionInfoToMessage(this,
-                        event.getMessage());
+                    ((AbstractConnector) connector).getSessionHandler().storeSessionInfoToMessage(
+                    	new DefaultMuleSession(this, muleContext), event.getMessage());
                 }
                 else
                 {
                     // TODO in Mule 2.0 we'll flatten the Connector hierachy
                     logger.warn("A session handler could not be obtained, using default.");
-                    new MuleSessionHandler().storeSessionInfoToMessage(this, event.getMessage());
+                    new MuleSessionHandler().storeSessionInfoToMessage(
+                    	new DefaultMuleSession(this, muleContext), event.getMessage());
                 }
 
                 MuleMessage response = ((OutboundEndpoint) event.getEndpoint()).send(event);
