@@ -10,6 +10,9 @@
 
 package org.mule.transport.xmpp;
 
+import org.mule.api.MuleException;
+import org.mule.api.service.Service;
+
 import java.util.Properties;
 
 import edu.emory.mathcs.backport.java.util.concurrent.CountDownLatch;
@@ -70,5 +73,13 @@ public abstract class AbstractXmppTestCase extends XmppEnableDisableTestCase
     {
         jabberClient.disconnect();
         super.doTearDown();
+    }
+    
+    protected void startService(String serviceName) throws MuleException
+    {
+        Service service = muleContext.getRegistry().lookupService(serviceName);
+        assertNotNull(service);
+        
+        service.start();
     }
 }

@@ -12,7 +12,6 @@ package org.mule.transport.xmpp;
 
 import org.mule.api.MuleEventContext;
 import org.mule.api.MuleMessage;
-import org.mule.api.service.Service;
 import org.mule.module.client.MuleClient;
 import org.mule.tck.functional.EventCallback;
 import org.mule.tck.functional.FunctionalTestComponent;
@@ -56,7 +55,7 @@ public class XmppMessageSyncTestCase extends AbstractXmppTestCase
     
     public void testReceiveSync() throws Exception
     {
-        startReceiverService();
+        startService(RECEIVE_SERVICE_NAME);
         
         Latch receiveLatch = new Latch();
         setupTestServiceComponent(receiveLatch);
@@ -64,14 +63,6 @@ public class XmppMessageSyncTestCase extends AbstractXmppTestCase
         sendJabberMessageFromNewThread();
         
         assertTrue(receiveLatch.await(RECEIVE_TIMEOUT, TimeUnit.MILLISECONDS));
-    }
-
-    private void startReceiverService() throws Exception
-    {
-        Service service = muleContext.getRegistry().lookupService(RECEIVE_SERVICE_NAME);
-        assertNotNull(service);
-        
-        service.start();
     }
 
     private void setupTestServiceComponent(Latch receiveLatch) throws Exception

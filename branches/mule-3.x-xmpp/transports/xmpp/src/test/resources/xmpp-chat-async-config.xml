@@ -24,5 +24,15 @@
                 </pass-through-router>
             </outbound>
         </service>
+        <!-- 
+            This flow is started from within the test case to avoid it consuming messages when 
+            testing the message requester.
+        -->
+        <service name="receiveFromJabber" initialState="stopped">
+            <inbound>
+                <xmpp:inbound-endpoint type="CHAT" from="${conversationPartner}"/>
+            </inbound>
+            <test:component/>
+        </service>
     </model>
 </mule>
