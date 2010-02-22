@@ -10,14 +10,10 @@
 
 package org.mule.transport.xmpp;
 
-import org.mule.api.MuleEventContext;
 import org.mule.api.MuleMessage;
 import org.mule.module.client.MuleClient;
-import org.mule.tck.functional.EventCallback;
 import org.mule.tck.functional.FunctionalTestComponent;
 import org.mule.util.concurrent.Latch;
-
-import junit.framework.Assert;
 
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 
@@ -61,7 +57,6 @@ public class XmppMessageSyncTestCase extends AbstractXmppTestCase
         setupTestServiceComponent(receiveLatch);
         
         sendJabberMessageFromNewThread();
-        
         assertTrue(receiveLatch.await(RECEIVE_TIMEOUT, TimeUnit.MILLISECONDS));
     }
 
@@ -71,7 +66,7 @@ public class XmppMessageSyncTestCase extends AbstractXmppTestCase
         assertTrue(testComponent instanceof FunctionalTestComponent);
         FunctionalTestComponent component = (FunctionalTestComponent) testComponent;
         
-        Callback callback = new Callback(receiveLatch, expectedXmppMessageType());
+        XmppCallback callback = new XmppCallback(receiveLatch, expectedXmppMessageType());
         component.setEventCallback(callback);
     }
 
@@ -118,32 +113,6 @@ public class XmppMessageSyncTestCase extends AbstractXmppTestCase
         {
             Thread.sleep(JABBER_SEND_THREAD_SLEEP_TIME);
             jabberClient.sendMessage(muleJabberUserId, TEST_MESSAGE);
-        }
-    }
-    
-    private static class Callback implements EventCallback
-    {
-        private Latch latch;
-        private Message.Type expectedMessageType;
-
-        public Callback(Latch latch, Message.Type type)
-        {
-            super();
-            this.latch = latch;
-            this.expectedMessageType = type;
-        }
-
-        public void eventReceived(MuleEventContext context, Object component) throws Exception
-        {
-            MuleMessage muleMessage = context.getMessage();
-            Object payload = muleMessage.getPayload();
-            Assert.assertTrue(payload instanceof Message);
-            
-            Message xmppMessage = (Message) payload;
-            assertEquals(expectedMessageType, xmppMessage.getType());
-            assertEquals(TEST_MESSAGE, xmppMessage.getBody());
-            
-            latch.countDown();
         }
     }
 }

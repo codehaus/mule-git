@@ -11,6 +11,8 @@
 package org.mule.transport.xmpp;
 
 import org.mule.module.client.MuleClient;
+import org.mule.tck.functional.FunctionalTestComponent;
+import org.mule.util.concurrent.Latch;
 
 import java.util.List;
 
@@ -22,6 +24,9 @@ import org.jivesoftware.smack.packet.Message;
 
 public class XmppMessageAsyncTestCase extends AbstractXmppTestCase
 {
+    protected static final long JABBER_SEND_THREAD_SLEEP_TIME = 1000;
+    private static final String RECEIVE_SERVICE_NAME = "receiveFromJabber";
+
     private CountDownLatch latch = new CountDownLatch(1);
     
     @Override
@@ -37,7 +42,7 @@ public class XmppMessageAsyncTestCase extends AbstractXmppTestCase
         client.setMessageLatch(latch);
     }
 
-    public void testDispatch() throws Exception
+    public void _testDispatch() throws Exception
     {
         MuleClient client = new MuleClient();
         client.dispatch("vm://in", TEST_MESSAGE, null);
@@ -50,10 +55,54 @@ public class XmppMessageAsyncTestCase extends AbstractXmppTestCase
         Message message = receivedMessages.get(0);
         assertXmppMessage(message);
     }
+    
+    public void testReceiveAsync() throws Exception
+    {
+        startService(RECEIVE_SERVICE_NAME);
+        
+        Latch receiveLatch = new Latch();
+        setupTestServiceComponent(receiveLatch);
+
+        sendJabberMessageFromNewThread();
+        assertTrue(receiveLatch.await(RECEIVE_TIMEOUT, TimeUnit.MILLISECONDS));
+    }
+
+    private void setupTestServiceComponent(Latch receiveLatch) throws Exception
+    {   
+        Object testComponent = getComponent(RECEIVE_SERVICE_NAME);
+        assertTrue(testComponent instanceof FunctionalTestComponent);
+        FunctionalTestComponent component = (FunctionalTestComponent) testComponent;
+        
+        XmppCallback callback = new XmppCallback(receiveLatch, expectedXmppMessageType());
+        component.setEventCallback(callback);
+    }
+
+    protected Message.Type expectedXmppMessageType()
+    {
+        return Message.Type.normal;
+    }
 
     protected void assertXmppMessage(Message message)
     {
         assertEquals(Message.Type.normal, message.getType());
         assertEquals(TEST_MESSAGE, message.getBody());
     }
+    
+    protected void sendJabberMessageFromNewThread()
+    {
+        Thread sendThread = new Thread(new SendIt());
+        sendThread.setName("JabberClient send");
+        sendThread.start();
+    }
+
+    private class SendIt extends RunnableWithExceptionHandler
+    {        
+        @Override
+        protected void doRun() throws Exception
+        {
+            Thread.sleep(JABBER_SEND_THREAD_SLEEP_TIME);
+            jabberClient.sendMessage(muleJabberUserId, TEST_MESSAGE);
+        }
+    }
+
 }
