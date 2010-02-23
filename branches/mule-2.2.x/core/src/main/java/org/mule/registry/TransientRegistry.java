@@ -27,14 +27,14 @@ import org.mule.api.transport.Connector;
 import org.mule.util.CollectionUtils;
 import org.mule.util.StringUtils;
 
+import org.apache.commons.collections.functors.InstanceofPredicate;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-
-import org.apache.commons.collections.functors.InstanceofPredicate;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * @ThreadSafe Use synchronized(registry) when reading/writing/iterating over the contents of the registry hashmap.
@@ -46,7 +46,7 @@ public class TransientRegistry extends AbstractRegistry
     public static final String REGISTRY_ID = "org.mule.Registry.Transient";
 
     //@ThreadSafe synchronized(registry)
-    private Map registry = new HashMap();
+    private final Map<String, Object> registry = new HashMap<String, Object>();
 
     private MuleContext context;
 
@@ -147,12 +147,27 @@ public class TransientRegistry extends AbstractRegistry
         }
     }
 
-    public Collection lookupObjects(Class returntype)
+    public Collection lookupObjects(Class type)
     {
         synchronized(registry)
         {
-            return CollectionUtils.select(registry.values(), new InstanceofPredicate(returntype));
+            return CollectionUtils.select(registry.values(), new InstanceofPredicate(type));
         }
+    }
+
+    public Map<String, Object> lookupByType(Class type)
+    {
+        final Map<String, Object> results = new HashMap<String, Object>();
+        for (Map.Entry<String, Object> entry : registry.entrySet())
+        {
+            final Class clazz = entry.getValue().getClass();
+            if (type.isAssignableFrom(clazz))
+            {
+                results.put(entry.getKey(), entry.getValue());
+            }
+        }
+
+        return results;
     }
 
     protected Object applyProcessors(Object object)
@@ -187,7 +202,6 @@ public class TransientRegistry extends AbstractRegistry
      * Allows for arbitary registration of transient objects
      *
      * @param key
-     * @param value
      */
     public void registerObject(String key, Object object, Object metadata) throws RegistrationException
     {

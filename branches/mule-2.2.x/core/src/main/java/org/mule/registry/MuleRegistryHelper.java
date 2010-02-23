@@ -42,6 +42,9 @@ import org.mule.util.SpiUtils;
 import org.mule.util.StringUtils;
 import org.mule.util.UUID;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -50,8 +53,6 @@ import java.util.Map;
 import java.util.Properties;
 
 import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * Adds lookup/register/unregister methods for Mule-specific entities to the standard
@@ -587,6 +588,11 @@ public class MuleRegistryHelper implements MuleRegistry, Initialisable, Disposab
     public Collection lookupObjects(Class type)
     {
         return registry.lookupObjects(type);
+    }
+
+    public Map<String, Object> lookupByType(Class type)
+    {
+        return registry.lookupByType(type);
     }
 
     public void registerObject(String key, Object value, Object metadata) throws RegistrationException

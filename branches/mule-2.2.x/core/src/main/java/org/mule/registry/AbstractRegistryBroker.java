@@ -17,6 +17,7 @@ import org.mule.api.registry.RegistryBroker;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -55,7 +56,7 @@ public abstract class AbstractRegistryBroker implements RegistryBroker
         return false;
     }
 
-    abstract protected Collection/*<Registry>*/ getRegistries();
+    abstract protected Collection<Registry> getRegistries();
     
     ////////////////////////////////////////////////////////////////////////////////
     // Delegating methods
@@ -99,14 +100,25 @@ public abstract class AbstractRegistryBroker implements RegistryBroker
 
     public Collection lookupObjects(Class type)
     {
-        Collection objects = new ArrayList();
-        
-        Iterator it = getRegistries().iterator(); 
-        while (it.hasNext())
+        Collection results = new ArrayList();
+
+        for (Registry registry : getRegistries())
         {
-            objects.addAll(((Registry) it.next()).lookupObjects(type));
+            results.addAll(registry.lookupObjects(type));
         }
-        return objects;
+
+        return results;
+    }
+
+    public Map<String, Object> lookupByType(Class type)
+    {
+        Map<String, Object> results = new HashMap<String, Object>();
+        for (Registry registry : getRegistries())
+        {
+            results.putAll(registry.lookupByType(type));
+        }
+
+        return results;
     }
 
     public void registerObject(String key, Object value) throws RegistrationException

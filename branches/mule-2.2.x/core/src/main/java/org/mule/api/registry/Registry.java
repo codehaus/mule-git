@@ -46,6 +46,11 @@ public interface Registry extends Initialisable, Disposable
      * */
     Object lookupObject(Class type) throws RegistrationException;
 
+    /**
+     * @return key/object pairs
+     */
+    Map<String, Object> lookupByType(Class type);
+
     // /////////////////////////////////////////////////////////////////////////
     // Registration methods
     // /////////////////////////////////////////////////////////////////////////
