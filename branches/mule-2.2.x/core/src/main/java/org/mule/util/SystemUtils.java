@@ -158,6 +158,12 @@ public class SystemUtils extends org.apache.commons.lang.SystemUtils
         return SystemUtils.JAVA_VM_VENDOR.toUpperCase().indexOf("IBM") != -1;
     }
 
+    public static boolean isAppleJDK()
+    {
+        return SystemUtils.JAVA_VM_VENDOR.toUpperCase().indexOf("APPLE") != -1;
+    }
+
+    
     // TODO MULE-1947 Command-line arguments should be handled exclusively by the bootloader
     private static CommandLine parseCommandLine(String args[], String opts[][]) throws DefaultMuleException
     {

@@ -39,7 +39,7 @@ public class ProxyServiceServingWsdlMule4092TestCase extends FunctionalTestCase
      */
     private void setupExpectedWsdlFileName()
     {
-        if (SystemUtils.isSunJDK())
+        if (SystemUtils.isSunJDK() || SystemUtils.isAppleJDK())
         {
             expectedWsdlFileName = "test.wsdl";
         }
