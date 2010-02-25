@@ -34,10 +34,7 @@ public abstract class AbstractXmppConversation implements XmppConversation
     public void connect()
     {
         doConnect();
-
-        // create the packet filter that's used to retrieve sync responses
-        PacketFilter filter = createPacketFilter();
-        packetCollector = connection.createPacketCollector(filter);
+        packetCollector = createPacketCollector();
     }
     
     /**
@@ -49,10 +46,23 @@ public abstract class AbstractXmppConversation implements XmppConversation
     }
 
     /**
+     * @return a {@link PacketCollector} that can be used to retrieve messages for this 
+     * conversation.
+     */
+    protected PacketCollector createPacketCollector()
+    {
+        PacketFilter filter = createPacketFilter();
+        return connection.createPacketCollector(filter);
+    }
+    
+    /**
      * @return a {@link PacketFilter} instance that matches the desired message type and recipient
      * for this conversation.
      */
-    protected abstract PacketFilter createPacketFilter();
+    protected PacketFilter createPacketFilter()
+    {
+        return null;
+    }
     
     public void disconnect()
     {

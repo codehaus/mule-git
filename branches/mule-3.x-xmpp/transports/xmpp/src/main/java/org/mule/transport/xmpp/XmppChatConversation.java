@@ -13,7 +13,6 @@ package org.mule.transport.xmpp;
 import org.mule.api.endpoint.ImmutableEndpoint;
 
 import org.jivesoftware.smack.Chat;
-import org.jivesoftware.smack.MessageListener;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.filter.AndFilter;
 import org.jivesoftware.smack.filter.FromMatchesFilter;
@@ -24,7 +23,7 @@ import org.jivesoftware.smack.packet.Message;
 /**
  * {@link XmppConversation} implementation that sends messages via {@link Chat}
  */
-public class XmppChatConversation extends AbstractXmppConversation implements MessageListener
+public class XmppChatConversation extends AbstractXmppConversation
 {
     private Chat chat;
     
@@ -36,12 +35,19 @@ public class XmppChatConversation extends AbstractXmppConversation implements Me
     @Override
     protected void doConnect()
     {
-        chat = connection.getChatManager().createChat(recipient, this);
+        chat = connection.getChatManager().createChat(recipient, null);
     }
 
     @Override
     protected PacketFilter createPacketFilter()
     {
+        // The smack API provides Chat.createCollector to create a PacketCollector for a given chat.
+        // We cannot reasonably use this, however because smack uses a ThreadFilter internally
+        // to match the chat's thread ID. While testing with some Jabber clients (Psi, Spark) 
+        // it became obvious that the thread ID is not always preserved. Filtering for a given
+        // thread id would then prevent the PacketCollector to see incoming chat messages.
+        // We create our own PacketFilter here which matches only our chat partner's JID and
+        // the message type, just in case.
         PacketFilter recipientFilter = new FromMatchesFilter(recipient);
         PacketFilter messageTypeFilter = new MessageTypeFilter(Message.Type.chat);
         return new AndFilter(recipientFilter, messageTypeFilter);
@@ -57,10 +63,5 @@ public class XmppChatConversation extends AbstractXmppConversation implements Me
     {
         message.setType(Message.Type.chat);
         chat.sendMessage(message);
-    }
-
-    public void processMessage(Chat chat, Message message)
-    {
-        // TODO xmpp: work out how to listen for chat messages
     }
 }
