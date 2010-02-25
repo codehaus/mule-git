@@ -642,7 +642,9 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess
                 Class srcCls = getPayload().getClass();
                 if (transformer.isSourceTypeSupported(srcCls))
                 {
-                    Object result = transformer.transform(RequestContext.internalRewriteEvent(this, false));
+                    Object result = transformer.transform(this);
+                    // Update the RequestContext with the result of the transformation.
+                    RequestContext.internalRewriteEvent(this, false);
 
                     if (originalAdapter == null && MuleServer.getMuleContext().getConfiguration().isCacheMessageOriginalPayload())
                     {
