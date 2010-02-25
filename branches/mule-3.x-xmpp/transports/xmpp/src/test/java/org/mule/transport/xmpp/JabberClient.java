@@ -254,6 +254,11 @@ public class JabberClient implements PacketListener, MessageListener
         groupchat.join(UUID.getUUID().toString());
     }
 
+    public void sendGroupchatMessage(String text) throws XMPPException
+    {
+        groupchat.sendMessage(text);
+    }
+
     //
     // setters for config parameters
     // 

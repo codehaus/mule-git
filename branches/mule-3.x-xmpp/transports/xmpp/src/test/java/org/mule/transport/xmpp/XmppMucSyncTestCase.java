@@ -10,19 +10,30 @@
 
 package org.mule.transport.xmpp;
 
+import org.mule.api.MuleEventContext;
 import org.mule.api.MuleMessage;
 import org.mule.module.client.MuleClient;
+import org.mule.tck.functional.EventCallback;
+import org.mule.tck.functional.FunctionalTestComponent;
 import org.mule.transport.NullPayload;
+import org.mule.transport.xmpp.JabberSender.Callback;
 import org.mule.util.UUID;
+import org.mule.util.concurrent.Latch;
 
 import java.util.Properties;
+
+import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Packet;
 
 public class XmppMucSyncTestCase extends AbstractXmppTestCase
 {
+    protected static final long JABBER_SEND_THREAD_SLEEP_TIME = 1000;
+    private static final String RECEIVE_SERVICE_NAME = "receiveFromJabber";
     private static final long SHORT_RETRIEVE_TIMEOUT = 100;
+    
+    private final String testMessage = UUID.getUUID().toString();
     
     @Override
     protected void doSetUp() throws Exception
@@ -43,11 +54,9 @@ public class XmppMucSyncTestCase extends AbstractXmppTestCase
     }
 
     public void testSendSync() throws Exception
-    {   
-        String input = UUID.getUUID().toString();
-        
+    {           
         MuleClient client = new MuleClient(muleContext);
-        MuleMessage reply = client.send("vm://in", input, null);
+        MuleMessage reply = client.send("vm://in", testMessage, null);
         assertNotNull(reply);
         
         assertEquals(NullPayload.getInstance(), reply.getPayload());
@@ -60,7 +69,7 @@ public class XmppMucSyncTestCase extends AbstractXmppTestCase
         while (packet != null)
         {
             String payload = ((Message) packet).getBody();
-            if (payload.equals(input))
+            if (payload.equals(testMessage))
             {
                 inputSeen = true;
                 break;
@@ -69,5 +78,68 @@ public class XmppMucSyncTestCase extends AbstractXmppTestCase
             packet = jabberClient.receive(SHORT_RETRIEVE_TIMEOUT);
         }
         assertTrue(inputSeen);
+    }
+    
+    public void testReceiveSync() throws Exception
+    {
+        startService(RECEIVE_SERVICE_NAME);
+
+        Latch receiveLatch = new Latch();
+        setupTestServiceComponent(receiveLatch);
+        
+        sendJabberMessageFromNewThread();
+        assertTrue(receiveLatch.await(60, TimeUnit.SECONDS));
+    }
+    
+    private void setupTestServiceComponent(Latch receiveLatch) throws Exception
+    {   
+        Object testComponent = getComponent(RECEIVE_SERVICE_NAME);
+        assertTrue(testComponent instanceof FunctionalTestComponent);
+        FunctionalTestComponent component = (FunctionalTestComponent) testComponent;
+        
+        XmppGroupchatCallback callback = new XmppGroupchatCallback(receiveLatch);
+        component.setEventCallback(callback);
+    }
+    
+    protected Message.Type expectedXmppMessageType()
+    {
+        return Message.Type.groupchat;
+    }
+    
+    protected void sendJabberMessageFromNewThread()
+    {
+        JabberSender sender = new JabberSender(new Callback()
+        {
+            public void doit() throws Exception
+            {
+                Thread.sleep(JABBER_SEND_THREAD_SLEEP_TIME);
+                jabberClient.sendGroupchatMessage(testMessage);
+            }
+        });
+        startSendThread(sender);
+    }
+    
+    private class XmppGroupchatCallback implements EventCallback
+    {
+        private Latch latch;
+        
+        public XmppGroupchatCallback(Latch latch)
+        {
+            super();
+            this.latch = latch;
+        }
+        
+        public void eventReceived(MuleEventContext context, Object component) throws Exception
+        {
+            MuleMessage muleMessage = context.getMessage();
+            Object payload = muleMessage.getPayload();
+            assertTrue(payload instanceof Message);
+            
+            Message jabberMessage = (Message) payload;
+            if (jabberMessage.getBody().equals(testMessage))
+            {
+                latch.countDown();
+            }
+        }
     }
 }
