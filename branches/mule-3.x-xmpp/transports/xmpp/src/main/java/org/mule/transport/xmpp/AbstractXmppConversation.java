@@ -11,7 +11,10 @@
 package org.mule.transport.xmpp;
 
 import org.mule.api.endpoint.ImmutableEndpoint;
+import org.mule.transport.ConnectException;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.jivesoftware.smack.PacketCollector;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.filter.PacketFilter;
@@ -20,6 +23,8 @@ import org.jivesoftware.smack.packet.Message;
 
 public abstract class AbstractXmppConversation implements XmppConversation
 {
+    protected final Log logger = LogFactory.getLog(getClass());
+    
     protected XMPPConnection connection;
     protected String recipient;
     protected PacketCollector packetCollector;
@@ -31,7 +36,7 @@ public abstract class AbstractXmppConversation implements XmppConversation
         recipient = XmppConnector.getRecipient(endpoint);
     }
 
-    public void connect()
+    public void connect() throws ConnectException
     {
         doConnect();
         packetCollector = createPacketCollector();
@@ -40,7 +45,7 @@ public abstract class AbstractXmppConversation implements XmppConversation
     /**
      * Subclasses can override this method to create their conversation specific connection.
      */
-    protected void doConnect()
+    protected void doConnect() throws ConnectException
     {
         // template method
     }

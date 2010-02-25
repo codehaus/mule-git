@@ -10,6 +10,8 @@
 
 package org.mule.transport.xmpp;
 
+import org.mule.transport.ConnectException;
+
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Message;
 
@@ -22,7 +24,7 @@ public interface XmppConversation
     /**
      * Connect to the Jabber conversation, e.g. join a chat.
      */
-    void connect();
+    void connect() throws ConnectException;
     
     /**
      * Disconnect from the Jabber conversation, e.g. leave a chat.

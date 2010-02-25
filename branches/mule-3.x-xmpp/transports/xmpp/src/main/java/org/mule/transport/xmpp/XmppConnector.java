@@ -38,7 +38,7 @@ public class XmppConnector extends AbstractConnector
     
     public static final String CONVERSATION_TYPE_MESSAGE = "MESSAGE";
     public static final String CONVERSATION_TYPE_CHAT = "CHAT";
-    public static final String CONVERSATION_TYPE_MULTI_USER_CHAT = "MULTI_USER_CHAT";
+    public static final String CONVERSATION_TYPE_GROUPCHAT = "GROUPCHAT";
 
     private String host;
     private int port = 5222; // default jabber port

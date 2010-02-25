@@ -20,6 +20,7 @@ import org.mule.util.concurrent.Latch;
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 
 import org.jivesoftware.smack.packet.Message;
+import org.jivesoftware.smack.packet.Packet;
 
 public class XmppMessageSyncTestCase extends AbstractXmppTestCase
 {
@@ -43,8 +44,10 @@ public class XmppMessageSyncTestCase extends AbstractXmppTestCase
         MuleClient client = new MuleClient(muleContext);
         MuleMessage reply = client.send("vm://in", TEST_MESSAGE, null);
         assertNotNull(reply);
-        
         assertEquals(NullPayload.getInstance(), reply.getPayload());
+        
+        Packet packet = jabberClient.receive(RECEIVE_TIMEOUT);
+        assertReceivedPacketEqualsMessageSent(packet);
     }
     
     public void testReceiveSync() throws Exception

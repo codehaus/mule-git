@@ -157,14 +157,14 @@
         <xsd:attribute name="type" default="CHAT">
             <xsd:annotation>
                 <xsd:documentation>
-                    The type of the Jabber message to send: MESSAGE, CHAT or MULTI_USER_CHAT.
+                    The type of the Jabber message to send: MESSAGE, CHAT or GROUPCHAT.
                 </xsd:documentation>
             </xsd:annotation>
             <xsd:simpleType>
                 <xsd:restriction base="xsd:NMTOKEN">
                     <xsd:enumeration value="MESSAGE"/>
                     <xsd:enumeration value="CHAT"/>
-                    <xsd:enumeration value="MULTI_USER_CHAT"/>
+                    <xsd:enumeration value="GROUPCHAT"/>
                 </xsd:restriction>
             </xsd:simpleType>
         </xsd:attribute>

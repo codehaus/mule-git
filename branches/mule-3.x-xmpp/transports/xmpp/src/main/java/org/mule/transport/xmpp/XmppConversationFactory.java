@@ -30,7 +30,7 @@ public class XmppConversationFactory
         {
             return createChatConversation(endpoint);
         }
-        else if (XmppConnector.CONVERSATION_TYPE_MULTI_USER_CHAT.equals(type))
+        else if (XmppConnector.CONVERSATION_TYPE_GROUPCHAT.equals(type))
         {
             return createGroupchatConversation(endpoint);
         }
@@ -52,8 +52,7 @@ public class XmppConversationFactory
 
     protected XmppConversation createGroupchatConversation(ImmutableEndpoint endpoint)
     {
-        // TODO xmpp: implement me
-        return null;
+        return new XmppMultiUserChatConversation(endpoint);
     }
 }
 

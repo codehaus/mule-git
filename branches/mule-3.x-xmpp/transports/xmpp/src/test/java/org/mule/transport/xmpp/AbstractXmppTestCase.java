@@ -18,6 +18,9 @@ import java.util.Properties;
 import edu.emory.mathcs.backport.java.util.concurrent.CountDownLatch;
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 
+import org.jivesoftware.smack.packet.Message;
+import org.jivesoftware.smack.packet.Packet;
+
 public abstract class AbstractXmppTestCase extends XmppEnableDisableTestCase
 {
     private static final long STARTUP_TIMEOUT = 5000;
@@ -88,5 +91,13 @@ public abstract class AbstractXmppTestCase extends XmppEnableDisableTestCase
         Thread sendThread = new Thread(sender);
         sendThread.setName("Jabber send");
         sendThread.start();
+    }
+    
+    protected void assertReceivedPacketEqualsMessageSent(Packet packet)
+    {
+        assertNotNull(packet);
+        assertTrue(packet instanceof Message);
+        Message messageFromJabber = (Message) packet;
+        assertEquals(TEST_MESSAGE, messageFromJabber.getBody());        
     }
 }

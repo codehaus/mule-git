@@ -34,6 +34,7 @@
                 <spring:entry key="password" value="mule"/>
                 <spring:entry key="conversationPartner" value="mule2@localhost"/>
                 <spring:entry key="conversationPartnerPassword" value="mule"/>
+                <spring:entry key="chatroom" value="mulebarn@conference.localhost"/>
             </spring:map>
         </spring:property>
     </spring:bean>

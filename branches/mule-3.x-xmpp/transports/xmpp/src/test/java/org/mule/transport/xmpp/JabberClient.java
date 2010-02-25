@@ -46,7 +46,7 @@ public class JabberClient implements PacketListener, MessageListener
     private XMPPConnection connection;
     private Map<String, Chat> chats;
     private List<Message> replies;
-    private PacketCollector packetFilter = null;
+    private PacketCollector packetCollector = null;
     private CountDownLatch messageLatch = null;
 
     public JabberClient(String host, String user, String password) throws Exception
@@ -99,11 +99,13 @@ public class JabberClient implements PacketListener, MessageListener
     {
         PacketFilter normalTypeFilter = new MessageTypeFilter(Message.Type.normal);
         PacketFilter chatTypeFilter = new MessageTypeFilter(Message.Type.chat);
+        PacketFilter mucTypeFilter = new MessageTypeFilter(Message.Type.groupchat);
         PacketFilter filter = new OrFilter(normalTypeFilter, chatTypeFilter);
+        filter = new OrFilter(filter, mucTypeFilter);
 
         if (synchronous)
         {
-            packetFilter = connection.createPacketCollector(filter);
+            packetCollector = connection.createPacketCollector(filter);
         }
         else
         {
@@ -115,9 +117,9 @@ public class JabberClient implements PacketListener, MessageListener
     {
         connection.removePacketListener(this);
         
-        if (packetFilter != null)
+        if (packetCollector != null)
         {
-            packetFilter.cancel();
+            packetCollector.cancel();
         }
         
         connection.disconnect();
@@ -230,6 +232,11 @@ public class JabberClient implements PacketListener, MessageListener
     public List<Message> getReceivedMessages()
     {
         return replies;
+    }
+    
+    public Packet receive(long timeout)
+    {
+        return packetCollector.nextResult(timeout);
     }
 
     //

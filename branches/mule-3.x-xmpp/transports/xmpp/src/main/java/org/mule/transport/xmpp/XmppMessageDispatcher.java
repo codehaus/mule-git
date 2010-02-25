@@ -44,11 +44,6 @@ public class XmppMessageDispatcher extends AbstractMessageDispatcher
     protected void doDisconnect() throws Exception
     {
         conversation.disconnect();
-        
-//            if (groupChat != null)
-//            {
-//                groupChat.leave();
-//            }
     }
 
     @Override
