@@ -13,13 +13,27 @@ package org.mule.transport.xmpp;
 import org.mule.api.MuleMessage;
 import org.mule.module.client.MuleClient;
 import org.mule.transport.NullPayload;
+import org.mule.util.UUID;
+
+import java.util.Properties;
+
+import org.jivesoftware.smack.packet.Message;
+import org.jivesoftware.smack.packet.Packet;
 
 public class XmppMucSyncTestCase extends AbstractXmppTestCase
 {
+    private static final long SHORT_RETRIEVE_TIMEOUT = 100;
+    
     @Override
-    protected void configureJabberClient(JabberClient client)
+    protected void doSetUp() throws Exception
     {
-        // TODO xmpp: this method should not be abstract
+        super.doSetUp();
+
+        Properties properties = (Properties) muleContext.getRegistry().lookupObject("properties");
+        String chatroom = properties.getProperty("chatroom");
+        assertNotNull(chatroom);
+        
+        jabberClient.joinGroupchat(chatroom);
     }
 
     @Override
@@ -30,19 +44,30 @@ public class XmppMucSyncTestCase extends AbstractXmppTestCase
 
     public void testSendSync() throws Exception
     {   
+        String input = UUID.getUUID().toString();
+        
         MuleClient client = new MuleClient(muleContext);
-        MuleMessage reply = client.send("vm://in", TEST_MESSAGE, null);
+        MuleMessage reply = client.send("vm://in", input, null);
         assertNotNull(reply);
         
         assertEquals(NullPayload.getInstance(), reply.getPayload());
         
-//        Packet packet = jabberClient.receive(RECEIVE_TIMEOUT);
-//        // the first packet may be an error presence from the chat ... retry in this case
-//        if (packet instanceof Presence)
-//        {
-//            packet = jabberClient.receive(RECEIVE_TIMEOUT);
-//        }
-//        assertReceivedPacketEqualsMessageSent(packet);
-    }
+        Packet packet = jabberClient.receive(RECEIVE_TIMEOUT);
+        // The groupchat may have a backlog of messages whis is sent before our input is transmitted.
+        // Poll the entire groupchat history
+        boolean inputSeen = false;
+        packet = jabberClient.receive(SHORT_RETRIEVE_TIMEOUT);
+        while (packet != null)
+        {
+            String payload = ((Message) packet).getBody();
+            if (payload.equals(input))
+            {
+                inputSeen = true;
+                break;
+            }
 
+            packet = jabberClient.receive(SHORT_RETRIEVE_TIMEOUT);
+        }
+        assertTrue(inputSeen);
+    }
 }

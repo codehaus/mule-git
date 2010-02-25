@@ -10,6 +10,8 @@
 
 package org.mule.transport.xmpp;
 
+import org.mule.util.UUID;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,6 +33,7 @@ import org.jivesoftware.smack.filter.OrFilter;
 import org.jivesoftware.smack.filter.PacketFilter;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Packet;
+import org.jivesoftware.smackx.muc.MultiUserChat;
 
 public class JabberClient implements PacketListener, MessageListener
 {
@@ -45,6 +48,7 @@ public class JabberClient implements PacketListener, MessageListener
 
     private XMPPConnection connection;
     private Map<String, Chat> chats;
+    private MultiUserChat groupchat = null;
     private List<Message> replies;
     private PacketCollector packetCollector = null;
     private CountDownLatch messageLatch = null;
@@ -121,7 +125,12 @@ public class JabberClient implements PacketListener, MessageListener
         {
             packetCollector.cancel();
         }
+        if (groupchat != null)
+        {
+            groupchat.leave();
+        }
         
+        chats = null;
         connection.disconnect();
     }
 
@@ -237,6 +246,12 @@ public class JabberClient implements PacketListener, MessageListener
     public Packet receive(long timeout)
     {
         return packetCollector.nextResult(timeout);
+    }
+
+    public void joinGroupchat(String chatroom) throws XMPPException
+    {
+        groupchat = new MultiUserChat(connection, chatroom);
+        groupchat.join(UUID.getUUID().toString());
     }
 
     //

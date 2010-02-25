@@ -69,7 +69,10 @@ public abstract class AbstractXmppTestCase extends XmppEnableDisableTestCase
         assertTrue(jabberLatch.await(STARTUP_TIMEOUT, TimeUnit.MILLISECONDS));
     }
 
-    protected abstract void configureJabberClient(JabberClient client);
+    protected void configureJabberClient(JabberClient client) throws Exception
+    {
+        // template method
+    }
 
     @Override
     protected void doTearDown() throws Exception

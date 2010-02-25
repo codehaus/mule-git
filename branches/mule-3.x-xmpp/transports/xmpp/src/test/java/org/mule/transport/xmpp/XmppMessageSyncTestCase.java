@@ -26,13 +26,7 @@ public class XmppMessageSyncTestCase extends AbstractXmppTestCase
 {
     protected static final long JABBER_SEND_THREAD_SLEEP_TIME = 1000;
     private static final String RECEIVE_SERVICE_NAME = "receiveFromJabber";
-    
-    @Override
-    protected void configureJabberClient(JabberClient client)
-    {
-        // TODO xmpp: this method should not be abstract
-    }
-    
+        
     @Override
     protected String getXmppConfigResources()
     {
