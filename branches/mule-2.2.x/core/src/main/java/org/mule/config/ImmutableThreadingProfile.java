@@ -98,11 +98,6 @@ public class ImmutableThreadingProfile implements ThreadingProfile
         return poolExhaustedAction;
     }
 
-    public String getPoolExhaustedActionAsString()
-    {
-        return null;
-    }
-
     public RejectedExecutionHandler getRejectedExecutionHandler()
     {
         return rejectedExecutionHandler;
@@ -234,7 +229,7 @@ public class ImmutableThreadingProfile implements ThreadingProfile
         public WorkManager createWorkManager(ThreadingProfile profile, String name)
         {
             final WorkManager workManager = new MuleWorkManager(profile, name);
-            if (workManager instanceof MuleContextAware && muleContext != null)
+            if (muleContext != null)
             {
                 MuleContextAware contextAware = (MuleContextAware) workManager;
                 contextAware.setMuleContext(muleContext);
