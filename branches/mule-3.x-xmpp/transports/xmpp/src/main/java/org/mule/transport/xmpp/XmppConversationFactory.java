@@ -24,21 +24,36 @@ public class XmppConversationFactory
         String type = endpoint.getEndpointURI().getHost();
         if (XmppConnector.CONVERSATION_TYPE_MESSAGE.equals(type))
         {
-            return new XmppMessageConversation(endpoint);
+            return createMessageConversation(endpoint);
         }
         else if (XmppConnector.CONVERSATION_TYPE_CHAT.equals(type))
         {
-            return new XmppChatConversation(endpoint);
+            return createChatConversation(endpoint);
         }
         else if (XmppConnector.CONVERSATION_TYPE_MULTI_USER_CHAT.equals(type))
         {
-            // TODO xmpp: create me
-            return null;
+            return createGroupchatConversation(endpoint);
         }
         else
         {
             throw new MuleRuntimeException(XmppMessages.invalidConversationType(type));
         }
+    }
+
+    protected XmppConversation createMessageConversation(ImmutableEndpoint endpoint)
+    {
+        return new XmppMessageConversation(endpoint);
+    }
+
+    protected XmppConversation createChatConversation(ImmutableEndpoint endpoint)
+    {
+        return new XmppChatConversation(endpoint);
+    }
+
+    protected XmppConversation createGroupchatConversation(ImmutableEndpoint endpoint)
+    {
+        // TODO xmpp: implement me
+        return null;
     }
 }
 
