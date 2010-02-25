@@ -82,4 +82,11 @@ public abstract class AbstractXmppTestCase extends XmppEnableDisableTestCase
         
         service.start();
     }
+
+    protected void startSendThread(JabberSender sender)
+    {
+        Thread sendThread = new Thread(sender);
+        sendThread.setName("Jabber send");
+        sendThread.start();
+    }
 }

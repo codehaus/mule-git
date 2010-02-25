@@ -12,6 +12,7 @@ package org.mule.transport.xmpp;
 
 import org.mule.module.client.MuleClient;
 import org.mule.tck.functional.FunctionalTestComponent;
+import org.mule.transport.xmpp.JabberSender.Callback;
 import org.mule.util.concurrent.Latch;
 
 import java.util.List;
@@ -20,7 +21,6 @@ import edu.emory.mathcs.backport.java.util.concurrent.CountDownLatch;
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 
 import org.jivesoftware.smack.packet.Message;
-
 
 public class XmppMessageAsyncTestCase extends AbstractXmppTestCase
 {
@@ -90,19 +90,14 @@ public class XmppMessageAsyncTestCase extends AbstractXmppTestCase
     
     protected void sendJabberMessageFromNewThread()
     {
-        Thread sendThread = new Thread(new SendIt());
-        sendThread.setName("JabberClient send");
-        sendThread.start();
-    }
-
-    private class SendIt extends RunnableWithExceptionHandler
-    {        
-        @Override
-        protected void doRun() throws Exception
+        JabberSender sender = new JabberSender(new Callback()
         {
-            Thread.sleep(JABBER_SEND_THREAD_SLEEP_TIME);
-            jabberClient.sendMessage(muleJabberUserId, TEST_MESSAGE);
-        }
+            public void doit() throws Exception
+            {
+                Thread.sleep(JABBER_SEND_THREAD_SLEEP_TIME);
+                jabberClient.sendMessage(muleJabberUserId, TEST_MESSAGE);
+            }
+        });
+        startSendThread(sender);
     }
-
 }

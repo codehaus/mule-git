@@ -10,6 +10,8 @@
 
 package org.mule.transport.xmpp;
 
+import org.mule.transport.xmpp.JabberSender.Callback;
+
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Message.Type;
 
@@ -36,18 +38,14 @@ public class XmppChatSyncTestCase extends XmppMessageSyncTestCase
     @Override
     protected void sendJabberMessageFromNewThread()
     {
-        Thread sendThread = new Thread(new SendViaChat());
-        sendThread.setName("JabberClient send");
-        sendThread.start();
-    }
-    
-    private class SendViaChat extends RunnableWithExceptionHandler
-    {
-        @Override
-        protected void doRun() throws Exception
+        JabberSender sender = new JabberSender(new Callback()
         {
-            Thread.sleep(JABBER_SEND_THREAD_SLEEP_TIME);
-            jabberClient.sendChatMessage(muleJabberUserId, TEST_MESSAGE);
-        }
+            public void doit() throws Exception
+            {
+                Thread.sleep(JABBER_SEND_THREAD_SLEEP_TIME);
+                jabberClient.sendChatMessage(muleJabberUserId, TEST_MESSAGE);
+            }
+        });
+        startSendThread(sender);
     }
 }

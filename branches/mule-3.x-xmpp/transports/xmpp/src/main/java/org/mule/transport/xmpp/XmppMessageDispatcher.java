@@ -22,7 +22,6 @@ import org.jivesoftware.smack.packet.Message;
 /**
  * Allows Mule events to be sent over Xmpp
  */
-
 public class XmppMessageDispatcher extends AbstractMessageDispatcher
 {
     private final XmppConnector connector;
@@ -69,21 +68,22 @@ public class XmppMessageDispatcher extends AbstractMessageDispatcher
     {
         sendMessage(event);
 
-        if (returnResponse(event, false))
-        {
-            Message response = conversation.receive(event.getTimeout());
-
-//            if (groupChat != null)
+        // TODO xmpp: even sync endpoints do not wait for a reply. Look at how the JMS transport handles replies, use reply handler
+//        if (returnResponse(event, false))
+//        {
+//            Message response = conversation.receive(event.getTimeout());
+//
+////            if (groupChat != null)
+////            {
+////                response = groupChat.nextMessage(event.getTimeout());
+////            }
+//
+//            if (response != null)
 //            {
-//                response = groupChat.nextMessage(event.getTimeout());
+//                return new DefaultMuleMessage(connector.getMessageAdapter(response), 
+//                    connector.getMuleContext());
 //            }
-
-            if (response != null)
-            {
-                return new DefaultMuleMessage(connector.getMessageAdapter(response), 
-                    connector.getMuleContext());
-            }
-        }
+//        }
         return new DefaultMuleMessage(NullPayload.getInstance(), connector.getMuleContext());
     }
 

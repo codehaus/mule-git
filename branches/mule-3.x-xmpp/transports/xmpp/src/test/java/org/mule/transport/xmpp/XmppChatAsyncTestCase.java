@@ -10,6 +10,8 @@
 
 package org.mule.transport.xmpp;
 
+import org.mule.transport.xmpp.JabberSender.Callback;
+
 import org.jivesoftware.smack.packet.Message;
 
 public class XmppChatAsyncTestCase extends XmppMessageAsyncTestCase
@@ -21,9 +23,29 @@ public class XmppChatAsyncTestCase extends XmppMessageAsyncTestCase
     }
     
     @Override
+    protected Message.Type expectedXmppMessageType()
+    {
+        return Message.Type.chat;
+    }
+
+    @Override
     protected void assertXmppMessage(Message message)
     {
         assertEquals(Message.Type.chat, message.getType());
         assertEquals(TEST_MESSAGE, message.getBody());
+    }
+    
+    @Override
+    protected void sendJabberMessageFromNewThread()
+    {
+        JabberSender sender = new JabberSender(new Callback()
+        {
+            public void doit() throws Exception
+            {
+                Thread.sleep(JABBER_SEND_THREAD_SLEEP_TIME);
+                jabberClient.sendChatMessage(muleJabberUserId, TEST_MESSAGE);
+            }
+        });
+        startSendThread(sender);
     }
 }

@@ -13,6 +13,8 @@ package org.mule.transport.xmpp;
 import org.mule.api.MuleMessage;
 import org.mule.module.client.MuleClient;
 import org.mule.tck.functional.FunctionalTestComponent;
+import org.mule.transport.NullPayload;
+import org.mule.transport.xmpp.JabberSender.Callback;
 import org.mule.util.concurrent.Latch;
 
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
@@ -22,14 +24,12 @@ import org.jivesoftware.smack.packet.Message;
 public class XmppMessageSyncTestCase extends AbstractXmppTestCase
 {
     protected static final long JABBER_SEND_THREAD_SLEEP_TIME = 1000;
-    protected static final String REPLY = "Jabber reply";
     private static final String RECEIVE_SERVICE_NAME = "receiveFromJabber";
     
     @Override
     protected void configureJabberClient(JabberClient client)
     {
-        client.setAutoReply(true);
-        client.setReplyPayload(REPLY);
+        // TODO xmpp: this method should not be abstract
     }
     
     @Override
@@ -44,9 +44,7 @@ public class XmppMessageSyncTestCase extends AbstractXmppTestCase
         MuleMessage reply = client.send("vm://in", TEST_MESSAGE, null);
         assertNotNull(reply);
         
-        assertEquals(Message.class, reply.getPayload().getClass());
-        Message xmppReply = (Message) reply.getPayload();
-        assertXmppReply(xmppReply);
+        assertEquals(NullPayload.getInstance(), reply.getPayload());
     }
     
     public void testReceiveSync() throws Exception
@@ -95,24 +93,14 @@ public class XmppMessageSyncTestCase extends AbstractXmppTestCase
 
     protected void sendJabberMessageFromNewThread()
     {
-        Thread sendThread = new Thread(new SendIt());
-        sendThread.setName("JabberClient send");
-        sendThread.start();
-    }
-
-    private void assertXmppReply(Message xmppMessage)
-    {
-        assertEquals(expectedXmppMessageType(), xmppMessage.getType());
-        assertEquals(REPLY, xmppMessage.getBody());
-    }
-        
-    private class SendIt extends RunnableWithExceptionHandler
-    {        
-        @Override
-        protected void doRun() throws Exception
+        JabberSender sender = new JabberSender(new Callback()
         {
-            Thread.sleep(JABBER_SEND_THREAD_SLEEP_TIME);
-            jabberClient.sendMessage(muleJabberUserId, TEST_MESSAGE);
-        }
+            public void doit() throws Exception
+            {
+                Thread.sleep(JABBER_SEND_THREAD_SLEEP_TIME);
+                jabberClient.sendMessage(muleJabberUserId, TEST_MESSAGE);
+            }
+        });
+        startSendThread(sender);
     }
 }
