@@ -22,7 +22,6 @@ public abstract class AbstractXmppConversation implements XmppConversation
 {
     protected XMPPConnection connection;
     protected String recipient;
-//    private boolean isSynchronous;
     protected PacketCollector packetCollector;
 
     public AbstractXmppConversation(ImmutableEndpoint endpoint)
@@ -30,23 +29,15 @@ public abstract class AbstractXmppConversation implements XmppConversation
         super();        
         connection = ((XmppConnector) endpoint.getConnector()).getXmppConnection();
         recipient = XmppConnector.getRecipient(endpoint);
-//        isSynchronous = endpoint.isSynchronous();
     }
 
     public void connect()
     {
         doConnect();
 
-//        if (isSynchronous)
-//        {
-            // create the packet filter that's used to retrieve sync responses
-            PacketFilter filter = createPacketFilter();
-            packetCollector = connection.createPacketCollector(filter);
-//        }
-//        else
-//        {
-//            // TODO xmpp: implement me
-//        }
+        // create the packet filter that's used to retrieve sync responses
+        PacketFilter filter = createPacketFilter();
+        packetCollector = connection.createPacketCollector(filter);
     }
     
     /**
