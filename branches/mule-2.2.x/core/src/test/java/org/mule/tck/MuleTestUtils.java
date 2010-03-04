@@ -289,15 +289,20 @@ public final class MuleTestUtils
     }
 
     /** Supply endpoint but no service */
+    public static MuleEvent getTestEvent(Object data, ImmutableEndpoint endpoint, MuleContext context) throws Exception
+    {
+        return getTestEvent(data, getTestService(context), endpoint, context, true);
+    }
+
     public static MuleEvent getTestEvent(Object data, ImmutableEndpoint endpoint, MuleContext context, boolean synchronous) throws Exception
     {
         return getTestEvent(data, getTestService(context), endpoint, context, synchronous);
     }
-
+    
     public static MuleEvent getTestEvent(Object data, Service service, ImmutableEndpoint endpoint, MuleContext context, boolean synchronous) throws Exception
     {
         MuleSession session = getTestSession(service, context);
-        return new DefaultMuleEvent(new DefaultMuleMessage(data, new HashMap()), endpoint, session, endpoint.isSynchronous());
+        return new DefaultMuleEvent(new DefaultMuleMessage(data, new HashMap()), endpoint, session, synchronous);
     }
 
     public static MuleEventContext getTestEventContext(Object data, MuleContext context) throws Exception
