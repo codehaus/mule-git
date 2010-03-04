@@ -27,7 +27,6 @@ import org.mule.api.transport.MessageDispatcher;
 import org.mule.context.notification.EndpointMessageNotification;
 import org.mule.context.notification.SecurityNotification;
 import org.mule.transaction.TransactionCoordination;
-import org.mule.work.AbstractMuleEventWork;
 
 import java.util.List;
 
@@ -100,16 +99,20 @@ public abstract class AbstractMessageDispatcher extends AbstractConnectable impl
 
         try
         {
-            Transaction tx = TransactionCoordination.getInstance().getTransaction();
-            Worker worker = new Worker(event);
-            if (isDoThreading() && !event.isSynchronous() && tx == null)
+            // Make sure we are connected
+            connect();
+            doDispatch(event);
+
+            if (connector.isEnableMessageEvents())
             {
-                connector.getDispatcherWorkManager().scheduleWork(worker, WorkManager.INDEFINITE, null, connector);
-            }
-            else
-            {
-                // Execute within this thread
-                worker.run();
+                String component = null;
+                if (event.getService() != null)
+                {
+                    component = event.getService().getName();
+                }
+
+                connector.fireNotification(new EndpointMessageNotification(event.getMessage(),
+                    event.getEndpoint(), component, EndpointMessageNotification.MESSAGE_DISPATCHED));
             }
         }
         catch (Exception e)
@@ -260,40 +263,6 @@ public abstract class AbstractMessageDispatcher extends AbstractConnectable impl
             event.getMessage().removeProperty(MuleProperties.MULE_REMOTE_SYNC_PROPERTY);
         }
         return remoteSync;
-    }
-
-    private class Worker extends AbstractMuleEventWork
-    {
-        public Worker(MuleEvent event)
-        {
-            super(event);
-        }
-
-        protected void doRun()
-        {
-            try
-            {
-                // Make sure we are connected
-                connect();
-                doDispatch(event);
-
-                if (connector.isEnableMessageEvents())
-                {
-                    String component = null;
-                    if (event.getService() != null)
-                    {
-                        component = event.getService().getName();
-                    }
-
-                    connector.fireNotification(new EndpointMessageNotification(event.getMessage(), event
-                        .getEndpoint(), component, EndpointMessageNotification.MESSAGE_DISPATCHED));
-                }
-            }
-            catch (Exception e)
-            {
-                handleException(e);
-            }
-        }
     }
 
     /**

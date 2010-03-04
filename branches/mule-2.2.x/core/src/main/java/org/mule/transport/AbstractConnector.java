@@ -37,6 +37,7 @@ import org.mule.api.retry.RetryCallback;
 import org.mule.api.retry.RetryContext;
 import org.mule.api.retry.RetryPolicyTemplate;
 import org.mule.api.service.Service;
+import org.mule.api.transaction.Transaction;
 import org.mule.api.transport.Connectable;
 import org.mule.api.transport.Connector;
 import org.mule.api.transport.ConnectorException;
@@ -58,6 +59,7 @@ import org.mule.lifecycle.AlreadyInitialisedException;
 import org.mule.model.streaming.DelegatingInputStream;
 import org.mule.retry.policies.NoRetryPolicyTemplate;
 import org.mule.routing.filters.WildcardFilter;
+import org.mule.transaction.TransactionCoordination;
 import org.mule.transformer.TransformerUtils;
 import org.mule.transport.service.TransportFactory;
 import org.mule.transport.service.TransportServiceDescriptor;
@@ -68,6 +70,7 @@ import org.mule.util.ObjectNameHelper;
 import org.mule.util.ObjectUtils;
 import org.mule.util.StringUtils;
 import org.mule.util.concurrent.NamedThreadFactory;
+import org.mule.work.AbstractMuleEventWork;
 
 import java.beans.ExceptionListener;
 import java.io.IOException;
@@ -83,6 +86,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import javax.resource.spi.work.Work;
 import javax.resource.spi.work.WorkEvent;
 import javax.resource.spi.work.WorkListener;
 
@@ -333,7 +337,7 @@ public abstract class AbstractConnector
         // Initialise the structure of this connector
         this.initFromServiceDescriptor();
 
-        setMaxDispatchersActive(getDispatcherThreadingProfile().getMaxThreadsActive());
+        configureDispatcherPool();
         setMaxRequestersActive(getRequesterThreadingProfile().getMaxThreadsActive());
         
         this.doInitialise();
@@ -349,6 +353,21 @@ public abstract class AbstractConnector
 
 
         initialised.set(true);
+    }
+
+    protected void configureDispatcherPool()
+    {
+        // Normally having a the same maximum number of dispatcher objects as threads is ok. 
+        int maxDispatchersActive = getDispatcherThreadingProfile().getMaxThreadsActive();
+
+        // BUT if the WHEN_EXHAUSTED_RUN threading profile exhausted action is configured then a single 
+        // additional dispatcher is required that can be used by the caller thread when it executes job's itself.
+        // Also See: MULE-4752
+        if (ThreadingProfile.WHEN_EXHAUSTED_RUN == getDispatcherThreadingProfile().getPoolExhaustedAction())
+        {
+            maxDispatchersActive++;
+        }
+        setMaxDispatchersActive(maxDispatchersActive);
     }
 
     public final synchronized void start() throws MuleException
@@ -941,7 +960,7 @@ public abstract class AbstractConnector
         this.dispatchers.setMaxIdle(maxActive);
         // this tells the pool to expire some objects eventually if we start
         // running out. This happens if one is using a lot of dynamic endpoints.
-        this.dispatchers.setMaxTotal(20*maxActive);
+        this.dispatchers.setMaxTotal(20 * maxActive);
     }
 
     private MessageDispatcher getDispatcher(OutboundEndpoint endpoint) throws MuleException
@@ -1972,26 +1991,30 @@ public abstract class AbstractConnector
 
     public void dispatch(OutboundEndpoint endpoint, MuleEvent event) throws DispatchException
     {
-        MessageDispatcher dispatcher = null;
+        // MULE-4752 Obtain dispatcher inside Work so that we don't attempt to borrow
+        // a dispatcher if the dispatch isn't going to happen due to
+        // the threading profile maxActive and exhaustion policy configured.
+        Work dispatchWork = new DispatchWorker(event, endpoint);
 
         try
         {
-            dispatcher = this.getDispatcher(endpoint);
-            dispatcher.dispatch(event);
+            Transaction tx = TransactionCoordination.getInstance().getTransaction();
+            if (getDispatcherThreadingProfile().isDoThreading() && !event.isSynchronous() && tx == null)
+            {
+                getDispatcherWorkManager().scheduleWork(dispatchWork, WorkManager.INDEFINITE, null,
+                    AbstractConnector.this);
+            }
+            else
+            {
+                dispatchWork.run();
+            }
         }
-        catch (DispatchException dex)
+        catch (Exception e)
         {
-            throw dex;
+            handleException(e);
         }
-        catch (MuleException ex)
-        {
-            throw new DispatchException(event.getMessage(), endpoint, ex);
-        }
-        finally
-        {
-            this.returnDispatcher(endpoint, dispatcher);
-        }
-    }
+    }   
+
 
     /**
      * This method will return the dispatcher to the pool or, if the payload is an inputstream,
@@ -2414,4 +2437,37 @@ public abstract class AbstractConnector
     {
         this.validateConnections = validateConnections;
     }
+    
+    private class DispatchWorker extends AbstractMuleEventWork
+    {
+        private OutboundEndpoint endpoint;
+        private MessageDispatcher dispatcher;
+
+        public DispatchWorker(MuleEvent event, OutboundEndpoint endpoint)
+        {
+            super(event);
+            this.endpoint = endpoint;
+        }
+
+        @Override
+        protected void doRun()
+        {
+            try
+            {
+                // Note: This should never fail because threadpool.maxActive=objectpool.maxActive.
+                // Also objectpool.maxActive is per endpoint whereas threadpool.maxActive
+                // is per connector.
+                dispatcher = getDispatcher(endpoint);
+                dispatcher.dispatch(event);
+            }
+            catch (MuleException ex)
+            {
+                handleException(ex);
+            }
+            finally
+            {
+                returnDispatcher(endpoint, dispatcher);
+            }
+        }
+    };
 }
