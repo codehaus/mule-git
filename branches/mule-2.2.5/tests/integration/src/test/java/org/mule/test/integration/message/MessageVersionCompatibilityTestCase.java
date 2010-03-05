@@ -19,6 +19,7 @@ import org.mule.tck.FunctionalTestCase;
  */
 public class MessageVersionCompatibilityTestCase extends FunctionalTestCase
 {
+    private int TIMEOUT = 5000;
     @Override
     protected String getConfigResources()
     {
@@ -30,7 +31,7 @@ public class MessageVersionCompatibilityTestCase extends FunctionalTestCase
         MuleClient client = new MuleClient();
         client.dispatch("vm://in1", "test", null);
 
-        MuleMessage reply = client.request("vm://out1", 1000);
+        MuleMessage reply = client.request("vm://out1", TIMEOUT);
         assertNotNull(reply);
         assertEquals("test", reply.getPayload());
     }
@@ -40,7 +41,7 @@ public class MessageVersionCompatibilityTestCase extends FunctionalTestCase
         MuleClient client = new MuleClient();
         client.dispatch("vm://in2", "test", null);
 
-        MuleMessage reply = client.request("vm://out2", 1000);
+        MuleMessage reply = client.request("vm://out2", TIMEOUT);
         assertNotNull(reply);
         assertEquals("test", reply.getPayload());
     }
@@ -50,7 +51,7 @@ public class MessageVersionCompatibilityTestCase extends FunctionalTestCase
         MuleClient client = new MuleClient();
         client.dispatch("vm://in3", "test", null);
 
-        MuleMessage reply = client.request("vm://out3", 1000);
+        MuleMessage reply = client.request("vm://out3", TIMEOUT);
         // No output is received because the receiver throws an exception:
         // "java.lang.IllegalArgumentException: Session variable ... is malfomed and cannot be read"
         assertNull(reply);
@@ -61,7 +62,7 @@ public class MessageVersionCompatibilityTestCase extends FunctionalTestCase
         MuleClient client = new MuleClient();
         client.dispatch("vm://in4", "test", null);
 
-        MuleMessage reply = client.request("vm://out4", 1000);
+        MuleMessage reply = client.request("vm://out4", TIMEOUT);
         assertNotNull(reply);
         assertEquals("test", reply.getPayload());
     }
