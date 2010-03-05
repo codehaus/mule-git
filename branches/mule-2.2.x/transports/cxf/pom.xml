@@ -348,7 +348,7 @@
                 </exclusion>
                 <!-- This needs to be provided since it's JDK-specific -->
                 <exclusion>
-                    <groupId>bouncycastle</groupId>
+                    <groupId>org.bouncycastle</groupId>
                     <artifactId>bcprov-jdk15</artifactId>
                 </exclusion>
                 <exclusion>
