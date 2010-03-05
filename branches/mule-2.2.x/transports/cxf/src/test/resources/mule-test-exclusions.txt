@@ -24,5 +24,5 @@ org.mule.transport.cxf.WSProxyTestCase
 # MULE-3694
 org.mule.transport.cxf.CxfConnectorVMFunctionalTestCase
 
-# MULE-4490
-#org.mule.transport.cxf.functional.HttpResponseTimeoutTestCase
+# MULE-3501 Port StaxFeature from 1.x CXF connector to 2.x
+org.mule.transport.cxf.StaxFeatureTestCase

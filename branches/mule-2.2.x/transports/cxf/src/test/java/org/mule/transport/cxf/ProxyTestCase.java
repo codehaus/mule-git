@@ -265,7 +265,7 @@ public class ProxyTestCase extends FunctionalTestCase
     protected String prepareOneWayTestMessage()
     {
         return "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">" + "<soap:Body>"
-               + "<send xmlns=\"http://testmodels.cxf.transport.mule.org\"><text>hello</text></send>"
+               + "<tns:send xmlns:tns=\"http://testmodels.cxf.transport.mule.org/\"><text>hello</text></tns:send>"
                + "</soap:Body>" + "</soap:Envelope>";
     }
 
