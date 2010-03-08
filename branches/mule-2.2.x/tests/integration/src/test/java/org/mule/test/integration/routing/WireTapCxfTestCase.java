@@ -47,7 +47,7 @@ public class WireTapCxfTestCase extends FunctionalTestCase
     {
         String url = "http://localhost:65082/services/EchoUMO";
         String msg = "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
-            + "<soap:Body><echo><text>foo</text></echo></soap:Body></soap:Envelope>";
+            + "<soap:Body><echo:echo xmlns:echo=\"http://testmodels.cxf.transport.mule.org/\"><text>foo</text></echo:echo></soap:Body></soap:Envelope>";
 
         MuleClient client = new MuleClient();
         MuleMessage response = client.send(url, msg, null);
