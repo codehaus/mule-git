@@ -2442,6 +2442,7 @@ public abstract class AbstractConnector
     
     /**
      * Allows an ExhaustedAction to be configured on the dispatcher object pool 
+     * See: {@link GenericKeyedObjectPool#setWhenExhaustedAction(byte)} 
      */
     public void setDispatcherPoolWhenExhaustedAction(byte whenExhaustedAction)
     {
@@ -2449,7 +2450,8 @@ public abstract class AbstractConnector
     }
 
     /**
-     * Allows a maxWait timeout to be configured on the requester object pool 
+     * Allows a maxWait timeout to be configured on the dispatcher object pool 
+     * See: {@link GenericKeyedObjectPool#setMaxWait(long)} 
      */
     public void setDispatcherPoolMaxWait(int maxWait)
     {
@@ -2458,12 +2460,17 @@ public abstract class AbstractConnector
 
     /**
      * Allows an ExhaustedAction to be configured on the requester object pool 
+     * See: {@link GenericKeyedObjectPool#setWhenExhaustedAction(byte)} 
      */
     public void setRequesterPoolWhenExhaustedAction(byte whenExhaustedAction)
     {
         requesters.setWhenExhaustedAction(whenExhaustedAction);
     }
 
+    /**
+     * Allows a maxWait timeout to be configured on the requester object pool 
+     * See: {@link GenericKeyedObjectPool#setMaxWait(long)} 
+     */
     public void setRequesterPoolMaxWait(int maxWait)
     {
         requesters.setMaxWait(maxWait);
