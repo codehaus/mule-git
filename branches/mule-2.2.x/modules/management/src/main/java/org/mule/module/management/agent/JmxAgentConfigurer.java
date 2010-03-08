@@ -13,15 +13,15 @@ import org.mule.api.MuleContext;
 import org.mule.api.context.MuleContextAware;
 import org.mule.api.registry.RegistrationException;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.management.MBeanServer;
 import javax.management.remote.rmi.RMIConnectorServer;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * Mule now binds to a platform mbeanserver by default and jmx agent is always registered via a
@@ -191,7 +191,7 @@ public class JmxAgentConfigurer implements MuleContextAware
         this.muleContext = context;
         try
         {
-            // by the time mule contextis injected, other attributes will have been set already
+            // by the time mule context is injected, other attributes will have been set already
             JmxAgent agent = (JmxAgent) muleContext.getRegistry().lookupObject(JmxAgent.class);
             // in case it is injected, otherwise will follow the init logic
             if (getMBeanServer() != null)
