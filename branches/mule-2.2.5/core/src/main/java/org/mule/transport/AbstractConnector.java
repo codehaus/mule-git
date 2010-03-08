@@ -2414,4 +2414,35 @@ public abstract class AbstractConnector
     {
         this.validateConnections = validateConnections;
     }
+    
+    // MULE-4751 Expose some dispatcher and requester object pool configuration
+    
+    /**
+     * Allows an ExhaustedAction to be configured on the dispatcher object pool 
+     */
+    public void setDispatcherPoolWhenExhaustedAction(byte whenExhaustedAction)
+    {
+        dispatchers.setWhenExhaustedAction(whenExhaustedAction);
+    }
+
+    /**
+     * Allows a maxWait timeout to be configured on the requester object pool 
+     */
+    public void setDispatcherPoolMaxWait(int maxWait)
+    {
+        dispatchers.setMaxWait(maxWait);
+    }
+
+    /**
+     * Allows an ExhaustedAction to be configured on the requester object pool 
+     */
+    public void setRequesterPoolWhenExhaustedAction(byte whenExhaustedAction)
+    {
+        requesters.setWhenExhaustedAction(whenExhaustedAction);
+    }
+
+    public void setRequesterPoolMaxWait(int maxWait)
+    {
+        requesters.setMaxWait(maxWait);
+    }
 }
