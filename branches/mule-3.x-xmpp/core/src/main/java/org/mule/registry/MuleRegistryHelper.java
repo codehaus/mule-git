@@ -54,6 +54,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -383,8 +384,8 @@ public class MuleRegistryHelper implements MuleRegistry, Initialisable, Disposab
     public ServiceDescriptor lookupServiceDescriptor(ServiceType type, String name, Properties overrides) throws ServiceException
     {
         String key = new AbstractServiceDescriptor.Key(name, overrides).getKey();
-        //TODO If we want these descriptors loaded from Spring we need to change the key mechanism
-        //and the scope, and then deal with circular reference issues.
+        // TODO If we want these descriptors loaded form Spring we need to change the key mechanism
+        // and the scope, and then deal with circular reference issues.
         ServiceDescriptor sd = (ServiceDescriptor) registry.lookupObject(key);
 
         synchronized (this)
@@ -563,12 +564,10 @@ public class MuleRegistryHelper implements MuleRegistry, Initialisable, Disposab
         return registry.lookupObject(type);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public Object lookupObject(String key)
+    @SuppressWarnings("unchecked")
+    public <T> T lookupObject(String key)
     {
-        return registry.lookupObject(key);
+        return (T) registry.lookupObject(key);
     }
 
     /**
@@ -577,6 +576,17 @@ public class MuleRegistryHelper implements MuleRegistry, Initialisable, Disposab
     public <T> Collection<T> lookupObjects(Class<T> type)
     {
         return registry.lookupObjects(type);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> T get(String key)
+    {
+        return (T)registry.get(key);
+    }
+
+    public <T> Map<String, T> lookupByType(Class<T> type)
+    {
+        return registry.lookupByType(type);
     }
 
     /**

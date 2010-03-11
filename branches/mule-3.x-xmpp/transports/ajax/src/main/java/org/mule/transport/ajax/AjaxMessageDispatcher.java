@@ -14,12 +14,13 @@ import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.OutboundEndpoint;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.transport.AbstractMessageDispatcher;
+import org.mule.transport.NullPayload;
 import org.mule.util.MapUtils;
 
-import dojox.cometd.Channel;
-import dojox.cometd.Client;
 import org.apache.commons.collections.Buffer;
 import org.apache.commons.collections.buffer.BoundedFifoBuffer;
+import org.cometd.Channel;
+import org.cometd.Client;
 import org.mortbay.cometd.AbstractBayeux;
 
 /**
@@ -36,6 +37,8 @@ public class AjaxMessageDispatcher extends AbstractMessageDispatcher
     protected Buffer messageCache;
 
     protected String channel;
+
+    protected Client client;
 
     public AjaxMessageDispatcher(OutboundEndpoint endpoint)
     {
@@ -65,8 +68,22 @@ public class AjaxMessageDispatcher extends AbstractMessageDispatcher
         }
     }
 
+    protected Client getClient()
+    {
+        if(client == null)
+        {
+            client = bayeux.newClient(channel);
+        }
+        return client;
+    }
+
     protected void doDispatch(MuleEvent event) throws Exception
     {
+        //We have no need for Null messages to be sent to the browser
+        if(NullPayload.getInstance().equals(event.getMessage().getPayload()))
+        {
+            return;
+        }
         if (!connector.isStarted())
         {
             //TODO MULE-4320
@@ -85,10 +102,12 @@ public class AjaxMessageDispatcher extends AbstractMessageDispatcher
                     {
                         deliver(client, channel, messageCache.remove());
                     }
+                    //deliver(getClient(), channel, messageCache.remove());
                 }
             }
 
             Object data = event.transformMessage();
+            //deliver(getClient(), channel, data);
             for (Client client : chan.getSubscribers())
             {
                 deliver(client, channel, data);
@@ -96,12 +115,12 @@ public class AjaxMessageDispatcher extends AbstractMessageDispatcher
         }
         else if (cacheMessages)
         {
-            Object message = event.transformMessage();
+            Object data = event.transformMessage();
             if (logger.isTraceEnabled())
             {
-                logger.trace("There are no clients waiting, adding message to cache: " + message);
+                logger.trace("There are no clients waiting, adding message to cache: " + data);
             }
-            messageCache.add(message);
+            messageCache.add(data);
         }
     }
 

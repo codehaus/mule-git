@@ -96,8 +96,6 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
         if (client == null)
         {
             client = connector.doClientConnect();
-            client.getHttpConnectionManager().getParams().setConnectionTimeout(endpoint.getResponseTimeout());
-            client.getHttpConnectionManager().getParams().setSoTimeout(endpoint.getResponseTimeout());
         }
     }
 
@@ -185,7 +183,18 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
             if (cookies != null && cookies.length > 0)
             {
                 client.getParams().setCookiePolicy(CookieHelper.getCookiePolicy(policy));
-                client.getState().addCookies(cookies);
+
+                for (Cookie cookie : cookies)
+                {
+                    cookie.setDomain(endpoint.getEndpointURI().getHost());
+                    if(StringUtils.isNotBlank(endpoint.getEndpointURI().getPath()))
+                    {
+                        cookie.setPath(endpoint.getEndpointURI().getPath());
+                    }
+                    cookie.setSecure(endpoint.getEndpointURI().getScheme().equalsIgnoreCase("https"));
+                    client.getState().addCookie(cookie);
+                }
+
             }
         }
         else if (cookieObject instanceof Map)
@@ -217,6 +226,13 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
 
     protected HttpMethod getMethod(MuleEvent event) throws TransformerException
     {
+        // Configure timeout. This is done here because MuleEvent.getTimeout() takes
+        // precedence and is not available before send/dispatch.
+        // Given that dispatchers are borrowed from a thread pool mutating client
+        // here is ok even though it is not ideal.
+        client.getHttpConnectionManager().getParams().setConnectionTimeout(event.getTimeout());
+        client.getHttpConnectionManager().getParams().setSoTimeout(event.getTimeout());
+        
         MuleMessage msg = event.getMessage();
         setPropertyFromEndpoint(event, msg, HttpConnector.HTTP_CUSTOM_HEADERS_MAP_PROPERTY);
 
