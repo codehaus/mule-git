@@ -1,0 +1,5 @@
+#
+# Test cases listed in this file are not run.
+#
+# EE-1800 : intermittent
+org.mule.example.loanbroker.esn.AxisLoanBrokerAsynchronousFunctionalTestCase
