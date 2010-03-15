@@ -414,10 +414,13 @@ public class DefaultTransportServiceDescriptor extends AbstractServiceDescriptor
             {
                 synchronized (outboundTransformer)
                 {
-                    Transformer newTransformer = (Transformer) ClassUtils.instanciateClass(
-                        defaultOutboundTransformer, ClassUtils.NO_ARGS, classLoader);
-                    registry.registerObject(newTransformer.getName(), newTransformer);
-                    outboundTransformer.compareAndSet(null, newTransformer);
+                    if (outboundTransformer.get() == null)
+                    {
+                        Transformer newTransformer = (Transformer) ClassUtils.instanciateClass(
+                            defaultOutboundTransformer, ClassUtils.NO_ARGS, classLoader);
+                        registry.registerObject(newTransformer.getName(), newTransformer);
+                        outboundTransformer.compareAndSet(null, newTransformer);
+                    }
                 }
                 return CollectionUtils.singletonList(outboundTransformer.get());
             }
@@ -443,11 +446,12 @@ public class DefaultTransportServiceDescriptor extends AbstractServiceDescriptor
             {
                 synchronized (responseTransformer)
                 {
-
-                    Transformer newTransformer = (Transformer) ClassUtils.instanciateClass(
-                        defaultResponseTransformer, ClassUtils.NO_ARGS, classLoader);
-                    registry.registerObject(newTransformer.getName(), newTransformer);
-                    responseTransformer.compareAndSet(null, newTransformer);
+                    if (responseTransformer.get() == null)
+                    {
+                        Transformer newTransformer = (Transformer) ClassUtils.instanciateClass(
+                            defaultResponseTransformer, ClassUtils.NO_ARGS, classLoader);
+                        registry.registerObject(newTransformer.getName(), newTransformer);
+                    }
                 }
                 return CollectionUtils.singletonList(responseTransformer.get());
             }
