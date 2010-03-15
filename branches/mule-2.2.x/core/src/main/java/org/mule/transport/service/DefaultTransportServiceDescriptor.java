@@ -36,8 +36,6 @@ import org.mule.util.CollectionUtils;
 import java.util.List;
 import java.util.Properties;
 
-import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicReference;
-
 /** @inheritDocs */
 public class DefaultTransportServiceDescriptor extends AbstractServiceDescriptor implements TransportServiceDescriptor
 {
@@ -55,9 +53,10 @@ public class DefaultTransportServiceDescriptor extends AbstractServiceDescriptor
     private String defaultOutboundTransformer;
     private String defaultResponseTransformer;
 
-    private final AtomicReference inboundTransformer = new AtomicReference();
-    private final AtomicReference outboundTransformer = new AtomicReference();
-    private final AtomicReference responseTransformer = new AtomicReference();
+    private Transformer inboundTransformer;
+    private Transformer outboundTransformer;
+    private Transformer responseTransformer;
+    // private EndpointBuilder endpointBuilderImpl;
 
     private Properties exceptionMappings = new Properties();
     private Registry registry;
@@ -108,21 +107,21 @@ public class DefaultTransportServiceDescriptor extends AbstractServiceDescriptor
         if (temp != null)
         {
             defaultInboundTransformer = temp;
-            inboundTransformer.set(null);
+            inboundTransformer = null;
         }
 
         temp = props.getProperty(MuleProperties.CONNECTOR_OUTBOUND_TRANSFORMER);
         if (temp != null)
         {
             defaultOutboundTransformer = temp;
-            outboundTransformer.set(null);
+            outboundTransformer = null;
         }
 
         temp = props.getProperty(MuleProperties.CONNECTOR_RESPONSE_TRANSFORMER);
         if (temp != null)
         {
             defaultResponseTransformer = temp;
-            responseTransformer.set(null);
+            responseTransformer = null;
         }
 
         temp = props.getProperty(MuleProperties.CONNECTOR_ENDPOINT_BUILDER);
@@ -371,31 +370,23 @@ public class DefaultTransportServiceDescriptor extends AbstractServiceDescriptor
 
     public List createInboundTransformers() throws TransportFactoryException
     {
-        if (inboundTransformer.get() != null)
+        if (inboundTransformer != null)
         {
-            return CollectionUtils.singletonList(inboundTransformer.get());
+            return CollectionUtils.singletonList(inboundTransformer);
         }
         if (defaultInboundTransformer != null)
         {
             logger.info("Loading default inbound transformer: " + defaultInboundTransformer);
             try
             {
-                synchronized (inboundTransformer)
-                {
-                    if (inboundTransformer.get() == null)
-                    {
-                        Transformer newTransformer = (Transformer) ClassUtils.instanciateClass(
-                            defaultInboundTransformer, ClassUtils.NO_ARGS, classLoader);
-                        registry.registerObject(newTransformer.getName(), newTransformer);
-                        inboundTransformer.compareAndSet(null, newTransformer);
-                    }
-                }
-                return CollectionUtils.singletonList(inboundTransformer.get());
+                inboundTransformer = (Transformer) ClassUtils.instanciateClass(
+                        defaultInboundTransformer, ClassUtils.NO_ARGS, classLoader);
+                registry.registerObject(inboundTransformer.getName(), inboundTransformer);
+                return CollectionUtils.singletonList(inboundTransformer);
             }
             catch (Exception e)
             {
-                throw new TransportFactoryException(CoreMessages.failedToLoadTransformer("inbound",
-                    defaultInboundTransformer), e);
+                throw new TransportFactoryException(CoreMessages.failedToLoadTransformer("inbound", defaultInboundTransformer), e);
             }
         }
         return null;
@@ -403,31 +394,23 @@ public class DefaultTransportServiceDescriptor extends AbstractServiceDescriptor
 
     public List createOutboundTransformers() throws TransportFactoryException
     {
-        if (outboundTransformer.get() != null)
+        if (outboundTransformer != null)
         {
-            return CollectionUtils.singletonList(outboundTransformer.get());
+            return CollectionUtils.singletonList(outboundTransformer);
         }
         if (defaultOutboundTransformer != null)
         {
             logger.info("Loading default outbound transformer: " + defaultOutboundTransformer);
             try
             {
-                synchronized (outboundTransformer)
-                {
-                    if (outboundTransformer.get() == null)
-                    {
-                        Transformer newTransformer = (Transformer) ClassUtils.instanciateClass(
-                            defaultOutboundTransformer, ClassUtils.NO_ARGS, classLoader);
-                        registry.registerObject(newTransformer.getName(), newTransformer);
-                        outboundTransformer.compareAndSet(null, newTransformer);
-                    }
-                }
-                return CollectionUtils.singletonList(outboundTransformer.get());
+                outboundTransformer = (Transformer) ClassUtils.instanciateClass(
+                        defaultOutboundTransformer, ClassUtils.NO_ARGS, classLoader);
+                registry.registerObject(outboundTransformer.getName(), outboundTransformer);
+                return CollectionUtils.singletonList(outboundTransformer);
             }
             catch (Exception e)
             {
-                throw new TransportFactoryException(CoreMessages.failedToLoadTransformer("outbound",
-                    defaultOutboundTransformer), e);
+                throw new TransportFactoryException(CoreMessages.failedToLoadTransformer("outbound", defaultOutboundTransformer), e);
             }
         }
         return null;
@@ -435,30 +418,23 @@ public class DefaultTransportServiceDescriptor extends AbstractServiceDescriptor
 
     public List createResponseTransformers() throws TransportFactoryException
     {
-        if (responseTransformer.get() != null)
+        if (responseTransformer != null)
         {
-            return CollectionUtils.singletonList(responseTransformer.get());
+            return CollectionUtils.singletonList(responseTransformer);
         }
         if (defaultResponseTransformer != null)
         {
             logger.info("Loading default response transformer: " + defaultResponseTransformer);
             try
             {
-                synchronized (responseTransformer)
-                {
-                    if (responseTransformer.get() == null)
-                    {
-                        Transformer newTransformer = (Transformer) ClassUtils.instanciateClass(
-                            defaultResponseTransformer, ClassUtils.NO_ARGS, classLoader);
-                        registry.registerObject(newTransformer.getName(), newTransformer);
-                    }
-                }
-                return CollectionUtils.singletonList(responseTransformer.get());
+                responseTransformer = (Transformer) ClassUtils.instanciateClass(
+                        defaultResponseTransformer, ClassUtils.NO_ARGS, classLoader);
+                registry.registerObject(responseTransformer.getName(), responseTransformer);                
+                return CollectionUtils.singletonList(responseTransformer);
             }
             catch (Exception e)
             {
-                throw new TransportFactoryException(CoreMessages.failedToLoadTransformer("response",
-                    defaultResponseTransformer), e);
+                throw new TransportFactoryException(CoreMessages.failedToLoadTransformer("response", defaultResponseTransformer), e);
             }
         }
         return null;
