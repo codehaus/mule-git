@@ -25,7 +25,6 @@ import org.mule.util.IOUtils;
 import org.mule.util.StringUtils;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.StringReader;
 import java.util.Iterator;
 import java.util.Map;
@@ -125,10 +124,17 @@ public class XsltTransformer extends AbstractXmlTransformer implements MuleConte
         uriResolver = new LocalURIResolver();
     }
 
+    @Override
     public void initialise() throws InitialisationException
     {
+        logger.debug("Initialising transformer: " + this);
         try
         {
+            // Only load the file once at initialize time
+            if (xslFile != null)
+            {
+                this.xslt = IOUtils.getResourceAsString(xslFile, getClass());
+            }
             transformerPool.addObject();
         }
         catch (Throwable te)
@@ -148,6 +154,7 @@ public class XsltTransformer extends AbstractXmlTransformer implements MuleConte
      * @param src The source XML (String, byte[], DOM, etc.)
      * @return The result in the type specified by the user
      */
+    @Override
     public Object doTransform(Object src, String encoding) throws TransformerException
     {
         try
@@ -309,47 +316,26 @@ public class XsltTransformer extends AbstractXmlTransformer implements MuleConte
     }
 
     /**
-     * Returns the StreamSource corresponding to xslFile
-     *
+     * Returns the StreamSource corresponding to xslt (which should have been loaded
+     * in {@link #initialise()}).
+     * 
      * @return The StreamSource
      */
     protected StreamSource getStreamSource() throws InitialisationException
     {
-        if (xslt != null)
+        if (xslt == null)
         {
-            return new StreamSource(new StringReader(xslt));
-        }
-
-        if (xslFile == null)
-        {
-            throw new InitialisationException(CoreMessages.objectIsNull("xslFile"), this);
-        }
-
-        InputStream is;
-        try
-        {
-            is = IOUtils.getResourceAsStream(xslFile, getClass());
-            //if (logger.isDebugEnabled())
-            //{
-            //    logger.debug("XSLT = " + IOUtils.getResourceAsString(xslFile, getClass()));
-            //}
-        }
-        catch (IOException e)
-        {
-            throw new InitialisationException(e, this);
-        }
-        if (is != null)
-        {
-            return new StreamSource(is);
+            throw new InitialisationException(CoreMessages.propertiesNotSet("xsl-file or xsl-text"), this);
         }
         else
         {
-            throw new InitialisationException(CoreMessages.failedToLoad(xslFile), this);
+            return new StreamSource(new StringReader(xslt));
         }
     }
 
     protected class PooledXsltTransformerFactory extends BasePoolableObjectFactory
     {
+        @Override
         public Object makeObject() throws Exception
         {
             StreamSource source = XsltTransformer.this.getStreamSource();
