@@ -247,6 +247,7 @@ public class XsltTransformerTestCase extends AbstractXmlTransformerTestCase
         try
         {
             xsltTransformer.initialise();
+            assertEquals(someXslText(), xsltTransformer.getXslt());
         }
         catch (InitialisationException e)
         {
@@ -282,6 +283,24 @@ public class XsltTransformerTestCase extends AbstractXmlTransformerTestCase
         catch (InitialisationException e)
         {
             assertTrue(e.getMessage().contains(someNonExistentFileName));
+        }
+    }
+
+    public void testInitialiseMustLoadXsltFile_AllGoodIfXslFileDoesNotExistButXslTextIsSet() throws Exception
+    {
+        XsltTransformer xsltTransformer = new XsltTransformer();
+        String someNonExistentFileName = "some nonexistent file";
+        xsltTransformer.setXslFile(someNonExistentFileName);
+        xsltTransformer.setXslt(someXslText());
+        try
+        {
+            xsltTransformer.initialise();
+            assertEquals(someXslText(), xsltTransformer.getXslt());
+        }
+        catch (InitialisationException e)
+        {
+            fail("Should NOT have thrown an exception because, despite the fact that file '"
+                 + someNonExistentFileName + "' does not exist, the xsl-text property is set.");
         }
     }
 

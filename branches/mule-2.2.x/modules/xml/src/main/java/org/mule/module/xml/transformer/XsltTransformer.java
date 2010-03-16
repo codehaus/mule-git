@@ -131,7 +131,7 @@ public class XsltTransformer extends AbstractXmlTransformer implements MuleConte
         try
         {
             // Only load the file once at initialize time
-            if (xslFile != null)
+            if (xslFile != null && this.xslt == null)
             {
                 this.xslt = IOUtils.getResourceAsString(xslFile, getClass());
             }
