@@ -53,9 +53,11 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
-import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 import junit.framework.TestCase;
 import junit.framework.TestResult;
+
+import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
+
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.logging.Log;
@@ -123,8 +125,8 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
         String muleOpts = SystemUtils.getenv("MULE_TEST_OPTS");
         if (StringUtils.isNotBlank(muleOpts))
         {
-            Map parsedOpts = SystemUtils.parsePropertyDefinitions(muleOpts);
-            String optVerbose = (String) parsedOpts.get("mule.verbose");
+            Map<String, String> parsedOpts = SystemUtils.parsePropertyDefinitions(muleOpts);
+            String optVerbose = parsedOpts.get("mule.verbose");
             verbose = Boolean.valueOf(optVerbose).booleanValue();
         }
         else
@@ -651,10 +653,15 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
         return MuleTestUtils.getTestEvent(data, endpoint, muleContext);
     }
 
+    public static MuleEvent getTestEvent(Object data, ImmutableEndpoint endpoint, boolean synchronous) throws Exception
+    {
+        return MuleTestUtils.getTestEvent(data, endpoint, muleContext, synchronous);
+    }
+
     public static MuleEvent getTestEvent(Object data, Service service, ImmutableEndpoint endpoint)
             throws Exception
     {
-        return MuleTestUtils.getTestEvent(data, service, endpoint, muleContext);
+        return MuleTestUtils.getTestEvent(data, service, endpoint, muleContext, true);
     }
 
     public static MuleSession getTestSession(Service service, MuleContext context)

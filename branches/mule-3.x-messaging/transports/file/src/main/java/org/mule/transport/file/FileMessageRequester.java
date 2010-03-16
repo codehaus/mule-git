@@ -77,7 +77,6 @@ public class FileMessageRequester extends AbstractMessageRequester
      *         receive
      * @throws Exception
      */
-
     @Override
     protected MuleMessage doRequest(long timeout) throws Exception
     {

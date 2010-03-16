@@ -20,8 +20,8 @@ import org.mule.api.transport.Connector;
 import org.mule.transport.AbstractConnector;
 import org.mule.transport.AbstractMessageReceiver;
 
-import dojox.cometd.Bayeux;
-import dojox.cometd.Client;
+import org.cometd.Bayeux;
+import org.cometd.Client;
 
 import org.mortbay.cometd.AbstractBayeux;
 import org.mortbay.cometd.BayeuxService;
@@ -50,8 +50,9 @@ public class AjaxMessageReceiver extends AbstractMessageReceiver
 
         public ReceiverService(String channel, Bayeux bayeux, ImmutableEndpoint endpoint)
         {
-            super(bayeux, channel);
+            super(bayeux, channel /*, connector.getReceiverThreadingProfile().getMaxThreadsActive(), endpoint.isSynchronous()*/);
             this.endpoint = endpoint;
+            //this.setSeeOwnPublishes(true);
             subscribe(channel, "route");
         }
 

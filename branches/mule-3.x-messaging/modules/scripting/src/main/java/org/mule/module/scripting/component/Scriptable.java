@@ -11,6 +11,7 @@
 package org.mule.module.scripting.component;
 
 import org.mule.DefaultMuleEventContext;
+import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
@@ -30,7 +31,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 
@@ -166,8 +166,6 @@ public class Scriptable implements Initialisable, MuleContextAware
                 throw new InitialisationException(e, this);
             }
         }
-
-
     }
 
     public void populateDefaultBindings(Bindings bindings)
@@ -181,6 +179,7 @@ public class Scriptable implements Initialisable, MuleContextAware
         //The script can overwrite this binding
         bindings.put("result", NullPayload.getInstance());
         bindings.put("muleContext", muleContext);
+        bindings.put("registry", muleContext.getRegistry());
     }
 
     public void populateBindings(Bindings bindings, Object payload)
@@ -195,6 +194,10 @@ public class Scriptable implements Initialisable, MuleContextAware
     public void populateBindings(Bindings bindings, MuleMessage message)
     {
         populateDefaultBindings(bindings);
+        if (message == null)
+        {
+            message = new DefaultMuleMessage(NullPayload.getInstance(), muleContext);
+        }
         bindings.put("message", message);
         //This will get overwritten if populateBindings(Bindings bindings, MuleEvent event) is called
         //and not this method directly.
@@ -203,10 +206,8 @@ public class Scriptable implements Initialisable, MuleContextAware
         bindings.put("src", message.getPayload());
 
         // Set any message properties as variables for the script.
-        String propertyName;
-        for (Iterator iterator = message.getPropertyNames().iterator(); iterator.hasNext();)
+        for (String propertyName : message.getPropertyNames())
         {
-            propertyName = (String)iterator.next();
             bindings.put(propertyName, message.getProperty(propertyName));
         }
     }

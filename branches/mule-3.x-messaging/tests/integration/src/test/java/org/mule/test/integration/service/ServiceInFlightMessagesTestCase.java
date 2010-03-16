@@ -14,6 +14,7 @@ import org.mule.api.MuleException;
 import org.mule.api.service.Service;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.util.queue.FilePersistenceStrategy;
+import org.mule.util.queue.Queue;
 import org.mule.util.queue.QueueSession;
 import org.mule.util.queue.TransactionalQueueManager;
 import org.mule.util.xa.ResourceManagerSystemException;
@@ -162,7 +163,7 @@ public class ServiceInFlightMessagesTestCase extends FunctionalTestCase
         String serviceName = service.getName() + ".service";
         int serviceQueueSize = queueSession.getQueue(serviceName).size();
         
-        logger.warn("SEDA Queue: " + outQueueSize + ", Outbound endpoint vm queue: " + serviceQueueSize);
+        logger.info("SEDA Queue: " + outQueueSize + ", Outbound endpoint vm queue: " + serviceQueueSize);
         assertEquals(numMessages, outQueueSize + serviceQueueSize);
     }
 
@@ -176,7 +177,8 @@ public class ServiceInFlightMessagesTestCase extends FunctionalTestCase
         throws ResourceManagerSystemException
     {
         QueueSession queueSession = getTestQueueSession();
-        assertTrue(queueSession.getQueue(service.getName() + ".service").size() > 0);
+        final int size = queueSession.getQueue(service.getName() + ".service").size();
+        assertTrue(String.format("Seda queue for service '%s' is empty", service.getName()), size > 0);
     }
 
     protected synchronized void assertOutboundVMQueueEmpty() throws ResourceManagerSystemException
@@ -188,7 +190,8 @@ public class ServiceInFlightMessagesTestCase extends FunctionalTestCase
     protected synchronized void assertOutboundVMQueueNotEmpty() throws ResourceManagerSystemException
     {
         QueueSession queueSession = getTestQueueSession();
-        assertTrue(queueSession.getQueue("out").size() > 0);
+        final Queue queue = queueSession.getQueue("out");
+        assertTrue(String.format("Qeueu '%s' is empty", queue.getName()), queue.size() > 0);
     }
 
     protected QueueSession getTestQueueSession() throws ResourceManagerSystemException

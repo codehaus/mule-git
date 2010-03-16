@@ -7,31 +7,21 @@
          ******************************************************************* -->
 
     <!-- Request received from customer -->
-    <start name="customerRequest">
-        <transition to="validateCustomerRequest" />
-    </start>
-
-	<!-- The payload which was received from Mule when starting the process is in the variable "incoming".
-		Here we store into the variable "customerRequest". -->
-	<script name="validateCustomerRequest" expr="#{incoming}" var="customerRequest">
+    <mule-receive name="incomingCustomerRequest" endpoint="CustomerRequests" var="customerRequest">
         <transition to="sendToCreditAgency" />
-    </script>
-	
+    </mule-receive>
+
     <!-- Send customer info. to credit agency -->
-	<mule name="sendToCreditAgency" 
-		  payloadSource="customerRequest.customer" endpoint="CreditAgency" synchronous="false">
+	<mule-send name="sendToCreditAgency" 
+		  expr="#{customerRequest.customer}" endpoint="CreditAgency" synchronous="false">
 		<transition to="waitForCreditAgency" />
-	</mule>	
+	</mule-send>	
 	
     <!-- Wait for the customer's credit profile to arrive. -->
-    <state name="waitForCreditAgency">
+    <mule-receive name="waitForCreditAgency" endpoint="CreditProfiles" var="creditProfile">
         <timer duedate="4 hours" />
-        <transition to="validateCreditProfile" />
-    </state>
-
-	<script name="validateCreditProfile" expr="#{incoming}" var="creditProfile">
         <transition to="prepareLoanQuoteRequest" />
-    </script>
+    </mule-receive>
 
     <!-- Prepare a quote request to send to the banks which includes the customer's credit info. -->
     <java name="prepareLoanQuoteRequest" 
@@ -63,29 +53,28 @@
         <transition to="loanDenied" />
     </decision>
 
-	<mule name="sendToBigBank" 
-		  payloadSource="loanRequest" endpoint="BigBank" synchronous="true">
-		<transition to="validateLoanQuote" />
-	</mule>	
+	<mule-send name="sendToBigBank" 
+		  expr="#{loanRequest}" endpoint="BigBank" 
+		  var="loanQuote" type="org.mule.example.loanbroker.messages.LoanQuote">
+		<transition to="sendCustomerResponse" />
+	</mule-send>	
 
-	<mule name="sendToMediumBank" 
-		  payloadSource="loanRequest" endpoint="MediumBank" synchronous="true">
-		<transition to="validateLoanQuote" />
-	</mule>	
+	<mule-send name="sendToMediumBank" 
+		  expr="#{loanRequest}" endpoint="MediumBank" 
+		  var="loanQuote" type="org.mule.example.loanbroker.messages.LoanQuote">
+		<transition to="sendCustomerResponse" />
+	</mule-send>	
 
-	<mule name="sendToSmallBank" 
-		  payloadSource="loanRequest" endpoint="SmallBank" synchronous="true">
-		<transition to="validateLoanQuote" />
-	</mule>	
+	<mule-send name="sendToSmallBank" 
+		  expr="#{loanRequest}" endpoint="SmallBank" 
+		  var="loanQuote" type="org.mule.example.loanbroker.messages.LoanQuote">
+		<transition to="sendCustomerResponse" />
+	</mule-send>	
 
-	<script name="validateLoanQuote" expr="#{incoming}" var="loanQuote">
-        <transition to="sendCustomerResponse" />
-    </script>
-	
-	<mule name="sendCustomerResponse" 
-		  payloadSource="loanQuote" endpoint="CustomerResponses" synchronous="false">
+	<mule-send name="sendCustomerResponse" 
+		  expr="#{loanQuote}" endpoint="CustomerResponses">
 		<transition to="loanApproved" />
-	</mule>	
+	</mule-send>	
 
     <end name="loanApproved" />
 

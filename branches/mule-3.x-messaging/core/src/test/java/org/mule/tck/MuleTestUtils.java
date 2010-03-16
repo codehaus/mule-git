@@ -281,28 +281,33 @@ public final class MuleTestUtils
     /** Supply service but no endpoint */
     public static MuleEvent getTestEvent(Object data, Service service, MuleContext context) throws Exception
     {
-        return getTestEvent(data, service, getTestOutboundEndpoint("test1", context), context);
+        return getTestEvent(data, service, getTestOutboundEndpoint("test1", context), context, true);
     }
 
     public static MuleEvent getTestInboundEvent(Object data, Service service, MuleContext context) throws Exception
     {
-        return getTestEvent(data, service, getTestInboundEndpoint("test1", context), context);
+        return getTestEvent(data, service, getTestInboundEndpoint("test1", context), context, true);
     }
 
     /** Supply endpoint but no service */
     public static MuleEvent getTestEvent(Object data, ImmutableEndpoint endpoint, MuleContext context) throws Exception
     {
-        return getTestEvent(data, getTestService(context), endpoint, context);
+        return getTestEvent(data, getTestService(context), endpoint, context, true);
+    }
+    
+    public static MuleEvent getTestEvent(Object data, ImmutableEndpoint endpoint, MuleContext context,  boolean synchronous) throws Exception
+    {
+        return getTestEvent(data, getTestService(context), endpoint, context, synchronous);
     }
 
-    public static MuleEvent getTestEvent(Object data, Service service, ImmutableEndpoint endpoint, MuleContext context) throws Exception
+    public static MuleEvent getTestEvent(Object data, Service service, ImmutableEndpoint endpoint, MuleContext context, boolean synchronous) throws Exception
     {
         MuleSession session = getTestSession(service, context);
         
         MuleMessageFactory factory = endpoint.getConnector().createMuleMessageFactory();
         MuleMessage message = factory.create(data, endpoint.getEncoding());
         
-        return new DefaultMuleEvent(message, endpoint, session, true);
+        return new DefaultMuleEvent(message, endpoint, session, synchronous);
     }
 
     public static MuleEventContext getTestEventContext(Object data, MuleContext context) throws Exception
@@ -368,12 +373,11 @@ public final class MuleTestUtils
         
         Service service = new SedaService();
         service.setName(name);
-        service.setMuleContext(context);
         ObjectFactory of = new SingletonObjectFactory(clazz, props);
-        final DefaultJavaComponent component = new DefaultJavaComponent(of);
-        component.setMuleContext(context);     
-        service.setComponent(component);
+        of.initialise();
+        service.setComponent(new DefaultJavaComponent(of));
         service.setModel(model);
+        service.setMuleContext(context);
         if (initialize)
         {
             context.getRegistry().registerService(service);
@@ -446,6 +450,4 @@ public final class MuleTestUtils
     {
         return new Mock(TransactionFactory.class, "umoTransactionFactory");
     }
-
-
 }

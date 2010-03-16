@@ -97,7 +97,7 @@ public class DefaultLifecycleAdapter implements LifecycleAdapter
         if (r.lookupObjects(componentObject.getClass()).isEmpty())
         {
             // don't mess up the current component's lifecycle, just put a direct ref without any callbacks executed
-            r.registerObject(key, componentObject, MuleRegistry.LIFECYCLE_BYPASS_FLAG);
+            r.registerObject(key, componentObject, MuleRegistry.LIFECYCLE_BYPASS_FLAG + MuleRegistry.PRE_INIT_BYPASS_FLAG);
         }
     }
 
@@ -182,14 +182,19 @@ public class DefaultLifecycleAdapter implements LifecycleAdapter
                 // unregister a hard ref to the component object
                 muleContext.getRegistry().unregisterObject(createRegistryHardRefName(component));
 
-                ((Disposable) componentObject.get()).dispose();
+                //make sure we haven't lost the reference to the object
+                Object o = componentObject.get();
+                if (o!=null)
+                {
+                    ((Disposable) o).dispose();
+                }
+                
                 componentObject.clear();
                 componentObject.enqueue();
 
             }
             catch (Exception e)
             {
-                // TODO MULE-863: Handle or fail
                 logger.error("failed to dispose: " + component.getService().getName(), e);
             }
         }
@@ -228,8 +233,6 @@ public class DefaultLifecycleAdapter implements LifecycleAdapter
         }
         catch (Exception e)
         {
-            // should all Exceptions caught here be a ServiceException?!?
-            // TODO MULE-863: See above
             throw new ServiceException(RequestContext.getEventContext().getMessage(), component.getService(), e);
         }
 

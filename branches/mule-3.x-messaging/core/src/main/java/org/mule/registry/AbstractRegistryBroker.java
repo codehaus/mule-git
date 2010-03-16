@@ -10,6 +10,9 @@
 
 package org.mule.registry;
 
+import org.mule.api.MuleException;
+import org.mule.api.lifecycle.Disposable;
+import org.mule.api.lifecycle.Initialisable;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.registry.RegistrationException;
 import org.mule.api.registry.Registry;
@@ -17,6 +20,7 @@ import org.mule.api.registry.RegistryBroker;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -24,19 +28,40 @@ public abstract class AbstractRegistryBroker implements RegistryBroker
 {
     public void initialise() throws InitialisationException
     {
-        Iterator it = getRegistries().iterator();
-        while (it.hasNext())
+        try
         {
-            ((Registry) it.next()).initialise();
+            fireLifecycle(Initialisable.PHASE_NAME);
+        }
+        catch (InitialisationException e)
+        {
+            throw e;
+        }
+        catch (MuleException me)
+        {
+            throw new InitialisationException(me, this);
         }
     }
 
     public void dispose()
     {
-        Iterator it = getRegistries().iterator();
-        while (it.hasNext())
+        for (Registry registry : getRegistries())
         {
-            ((Registry) it.next()).dispose();
+            try
+            {
+                registry.fireLifecycle(Disposable.PHASE_NAME);
+            }
+            catch (MuleException e)
+            {
+                //ignore
+            }
+        }
+    }
+
+    public void fireLifecycle(String phase) throws MuleException
+    {
+        for (Registry registry : getRegistries())
+        {
+            registry.fireLifecycle(phase);
         }
     }
 
@@ -55,13 +80,21 @@ public abstract class AbstractRegistryBroker implements RegistryBroker
         return false;
     }
 
-    abstract protected Collection/*<Registry>*/ getRegistries();
+    abstract protected Collection<Registry> getRegistries();
 
     ////////////////////////////////////////////////////////////////////////////////
     // Delegating methods
     ////////////////////////////////////////////////////////////////////////////////
 
-    public Object lookupObject(String key)
+
+    @SuppressWarnings("unchecked")
+    public <T> T get(String key)
+    {
+        return (T) lookupObject(key);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> T lookupObject(String key)
     {
         Object obj = null;
         Iterator it = getRegistries().iterator();
@@ -69,7 +102,7 @@ public abstract class AbstractRegistryBroker implements RegistryBroker
         {
             obj = ((Registry) it.next()).lookupObject(key);
         }
-        return obj;
+        return (T) obj;
     }
 
     public <T> T lookupObject(Class<T> type) throws RegistrationException
@@ -101,6 +134,17 @@ public abstract class AbstractRegistryBroker implements RegistryBroker
             objects.addAll(((Registry) it.next()).lookupObjects(type));
         }
         return objects;
+    }
+
+    public <T> Map<String, T> lookupByType(Class<T> type)
+    {
+        Map<String, T> results = new HashMap<String, T>();
+        for (Registry registry : getRegistries())
+        {
+            results.putAll(registry.lookupByType(type));
+        }
+
+        return results;
     }
 
     public void registerObject(String key, Object value) throws RegistrationException

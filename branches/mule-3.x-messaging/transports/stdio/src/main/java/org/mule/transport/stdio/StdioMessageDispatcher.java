@@ -62,7 +62,6 @@ public class StdioMessageDispatcher extends AbstractMessageDispatcher
                 event.getMessage(), event.getEndpoint());
         }
 
-        // TODO - remove this ugliness
         if (connector instanceof PromptStdioConnector)
         {
             PromptStdioConnector ssc = (PromptStdioConnector)connector;

@@ -20,21 +20,28 @@ import java.lang.reflect.Proxy;
 import java.util.Collection;
 
 /**
- * Factory class used to create {@link org.mule.api.transformer.DataType} objects based on the parameter types passed into the
- * factory methods.
+ * Factory class used to create {@link org.mule.api.transformer.DataType} objects based on the 
+ * parameter types passed into the factory methods.
  */
 public class DataTypeFactory
 {
-    public DataType create(Class type)
+    public static final DataType<String> TEXT_STRING = new SimpleDataType<String>(String.class, MimeTypes.TEXT);
+    public static final DataType<String> XML_STRING = new SimpleDataType<String>(String.class, MimeTypes.XML);
+    public static final DataType<String> JSON_STRING = new SimpleDataType<String>(String.class, MimeTypes.JSON);
+    public static final DataType<String> HTML_STRING = new SimpleDataType<String>(String.class, MimeTypes.HTML);
+    public static final DataType<String> ATOM_STRING = new SimpleDataType<String>(String.class, MimeTypes.ATOM);
+    public static final DataType<String> RSS_STRING = new SimpleDataType<String>(String.class, MimeTypes.RSS);
+
+    public <T> DataType<T> create(Class<T> type)
     {
-        return create(type, (String) null);
+        return create(type, MimeTypes.ANY);
     }
 
-    public DataType create(Class type, String mimeType)
+    public <T> DataType<T> create(Class<?> type, String mimeType)
     {
         if (Collection.class.isAssignableFrom(type))
         {
-            Class<? extends Collection> cType = (Class<? extends Collection>) type;
+            Class<? extends Collection> cType = (Class<? extends Collection>)type;
             Class itemType = GenericsUtils.getCollectionType(cType);
             if (itemType == null)
             {
@@ -82,13 +89,18 @@ public class DataTypeFactory
             MuleMessage mm = (MuleMessage) o;
             type = mm.getPayload().getClass();
             //TODO better mime handling, see MULE-4639
-//            mime = mm.getStringProperty("Content-Type", null);
-//            if(mime!=null)
-//            {
-//                int i = mime.indexOf(";");
-//                mime = (i >-1 ? mime.substring(0, i) : mime);
-//            }
+            mime = mm.getStringProperty("Content-Type", null);
+            if(mime!=null)
+            {
+                int i = mime.indexOf(";");
+                mime = (i >-1 ? mime.substring(0, i) : mime);
+            }
         }
+        if(mime==null)
+        {
+            mime = MimeTypes.ANY;
+        }
+
         return create(type, mime);
     }
 

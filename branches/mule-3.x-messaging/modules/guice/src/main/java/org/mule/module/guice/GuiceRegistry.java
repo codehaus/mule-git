@@ -9,6 +9,7 @@
  */
 package org.mule.module.guice;
 
+import org.mule.api.MuleContext;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.registry.RegistrationException;
 import org.mule.registry.AbstractRegistry;
@@ -43,15 +44,15 @@ public class GuiceRegistry extends AbstractRegistry
 {
     private Injector injector = null;
 
-    public GuiceRegistry()
+    public GuiceRegistry(MuleContext muleContext)
     {
-        super("guice");
+        super("guice", muleContext);
     }
 
 
-    GuiceRegistry(Injector injector)
+    GuiceRegistry(Injector injector, MuleContext muleContext)
     {
-        this();
+        this(muleContext);
         this.injector = injector;
     }
 
@@ -65,12 +66,22 @@ public class GuiceRegistry extends AbstractRegistry
         //nothing to do
     }
 
-    public Object lookupObject(String key)
+    public <T> T lookupObject(String key)
     {
         return null;
     }
 
-    public <T> Collection lookupObjects(Class<T> type)
+    public <T> T get(String key)
+    {
+        return null;
+    }
+
+    public <T> Map<String, T> lookupByType(Class<T> type)
+    {
+        return null;
+    }
+
+    public <T> Collection<T> lookupObjects(Class<T> type)
     {
         try
         {
@@ -84,11 +95,11 @@ public class GuiceRegistry extends AbstractRegistry
                 }
                 return list;
             }
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
         catch (ConfigurationException e)
         {
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
     }
 

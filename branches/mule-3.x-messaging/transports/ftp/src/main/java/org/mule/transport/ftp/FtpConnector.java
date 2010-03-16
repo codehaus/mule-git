@@ -516,9 +516,15 @@ public class FtpConnector extends AbstractConnector
             {
                 throw new ConnectException(e, this);
             }
+            
             try
             {
                 OutputStream out = client.storeFileStream(filename);
+                if (out == null)
+                {
+                    throw new IOException("FTP operation failed: " + client.getReplyString());
+                }
+                
                 return new CallbackOutputStream(out,
                         new CallbackOutputStream.Callback()
                         {

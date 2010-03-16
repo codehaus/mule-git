@@ -10,10 +10,13 @@
 package org.mule.module.scripting.expression;
 
 import org.mule.DefaultMuleMessage;
+import org.mule.api.MuleMessage;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.tck.testmodels.fruit.Apple;
 import org.mule.tck.testmodels.fruit.Banana;
 import org.mule.tck.testmodels.fruit.FruitBowl;
+
+import java.util.Arrays;
 
 public class GroovyExpressionEvaluatorTestCase extends AbstractMuleTestCase
 {
@@ -27,6 +30,7 @@ public class GroovyExpressionEvaluatorTestCase extends AbstractMuleTestCase
         FruitBowl payload = new FruitBowl(apple, banana);
         DefaultMuleMessage msg = new DefaultMuleMessage(payload, muleContext);
         GroovyExpressionEvaluator e = new GroovyExpressionEvaluator();
+        e.setMuleContext(muleContext);
         Object value = e.evaluate("payload.apple.washed", msg);
         assertNotNull(value);
         assertTrue(value instanceof Boolean);
@@ -39,5 +43,47 @@ public class GroovyExpressionEvaluatorTestCase extends AbstractMuleTestCase
 
         value = e.evaluate("bar", msg);
         assertNull(value);
+    }
+
+    public void testRegistrySyntax() throws Exception
+    {
+        Apple apple = new Apple();
+        muleContext.getRegistry().registerObject("name.with.dots", apple);
+        Object result = muleContext.getExpressionManager().evaluate(
+                "#[groovy:registry.lookupObject('name.with.dots')]", null);
+
+        assertNotNull(result);
+        assertSame(apple, result);
+
+        // try various map-style access in groovy for simpler syntax
+        result = muleContext.getExpressionManager().evaluate(
+            "#[groovy:registry.'name.with.dots']", null);
+        assertNotNull(result);
+        assertSame(apple, result);
+
+        result = muleContext.getExpressionManager().evaluate(
+                "#[groovy:registry['name.with.dots']]", null);
+        assertNotNull(result);
+        assertSame(apple, result);
+
+        result = muleContext.getExpressionManager().evaluate(
+                "#[groovy:registry.'name.with.dots'.washed]", null);
+        assertNotNull(result);
+        assertEquals(false, result);
+    }
+
+    public void testComplexExpressionLowLevelParsing() throws Exception
+    {
+        final GroovyExpressionEvaluator evaluator = new GroovyExpressionEvaluator();
+        evaluator.setMuleContext(muleContext);
+        muleContext.getExpressionManager().registerEvaluator(evaluator);
+
+        MuleMessage msg = new DefaultMuleMessage(Arrays.asList(0, "test"), muleContext);
+        String result = muleContext.getExpressionManager().parse("#[groovy:payload[0]] - #[groovy:payload[1].toUpperCase()]",
+                                                                 msg);
+
+        assertNotNull(result);
+        assertEquals("Expressions didn't evaluate correctly",
+                     "0 - TEST", result);
     }
 }

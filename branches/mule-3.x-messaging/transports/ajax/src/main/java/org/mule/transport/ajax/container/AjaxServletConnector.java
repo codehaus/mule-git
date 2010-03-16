@@ -10,13 +10,16 @@
 package org.mule.transport.ajax.container;
 
 import org.mule.api.MuleException;
+import org.mule.api.endpoint.InboundEndpoint;
+import org.mule.api.service.Service;
+import org.mule.api.transport.MessageReceiver;
 import org.mule.api.transport.ReplyToHandler;
 import org.mule.transport.AbstractConnector;
 import org.mule.transport.ajax.AjaxMessageReceiver;
 import org.mule.transport.ajax.AjaxReplyToHandler;
 import org.mule.transport.servlet.ServletConnector;
 
-import dojox.cometd.DataFilter;
+import org.cometd.DataFilter;
 import org.mortbay.cometd.AbstractBayeux;
 
 /**
@@ -94,9 +97,8 @@ public class AjaxServletConnector extends ServletConnector
     {
         super();
         registerSupportedProtocolWithoutPrefix("ajax");
-        //Dont start until the servletContianer is up
+        //Dont start until the servletContainer is up
         setInitialStateStopped(true);
-
     }
 
     public AbstractBayeux getBayeux()
@@ -108,7 +110,6 @@ public class AjaxServletConnector extends ServletConnector
     {
         this.bayeux = bayeux;
         this.getBayeux().setJSONCommented(isJsonCommented());
-        this.getBayeux().setDirectDeliver(isDirectDeliver());
         if(getLogLevel() != AbstractConnector.INT_VALUE_NOT_SET) this.getBayeux().setLogLevel(getLogLevel());
         if(getMaxInterval() != AbstractConnector.INT_VALUE_NOT_SET) this.getBayeux().setMaxInterval(getMaxInterval());
         if(getInterval() != AbstractConnector.INT_VALUE_NOT_SET) this.getBayeux().setInterval(getMaxInterval());
@@ -217,16 +218,6 @@ public class AjaxServletConnector extends ServletConnector
         this.requestAvailable = requestAvailable;
     }
 
-    public boolean isDirectDeliver()
-    {
-        return directDeliver;
-    }
-
-    public void setDirectDeliver(boolean directDeliver)
-    {
-        this.directDeliver = directDeliver;
-    }
-
     public int getRefsThreshold()
     {
         return refsThreshold;
@@ -241,5 +232,13 @@ public class AjaxServletConnector extends ServletConnector
     public ReplyToHandler getReplyToHandler()
     {
         return new AjaxReplyToHandler(getDefaultResponseTransformers(), this);
+    }
+
+    @Override
+    public MessageReceiver registerListener(Service service, InboundEndpoint endpoint) throws Exception
+    {
+        AjaxMessageReceiver receiver = (AjaxMessageReceiver)super.registerListener(service, endpoint);
+        receiver.setBayeux(getBayeux());
+        return receiver;
     }
 }
