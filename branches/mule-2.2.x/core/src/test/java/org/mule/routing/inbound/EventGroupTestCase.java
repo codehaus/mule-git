@@ -102,7 +102,7 @@ public class EventGroupTestCase extends AbstractMuleTestCase
         assertEquals(2, s.size());
     }
 
-    public void testCompareTo()
+    public void testCompareTo() throws InterruptedException
     {
         String uuid = UUID.getUUID();
         EventGroup g1 = new EventGroup(uuid);
@@ -139,6 +139,10 @@ public class EventGroupTestCase extends AbstractMuleTestCase
 
         // when the groupId is not Comparable, the creation time is used as fallback
         g1 = new EventGroup(new Object());
+        // sleep a mini bit to ensure that both event groups do not accidentially
+        // have the same
+        // creation timestamp
+        Thread.sleep(10);
         g2 = new EventGroup(new Object());
         // g1 is older (smaller) than g2
         assertTrue(g1.compareTo(g2) < 0);
