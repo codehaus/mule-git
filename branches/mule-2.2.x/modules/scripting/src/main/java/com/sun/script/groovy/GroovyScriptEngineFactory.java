@@ -37,11 +37,6 @@ public class GroovyScriptEngineFactory implements ScriptEngineFactory {
 	
 	private static String VERSION = "1.5.6";
     
-	public GroovyScriptEngineFactory(){
-	    
-	    System.err.println("HERE");
-	}
-	
     public String getEngineName() {
         return "groovy";
     }
