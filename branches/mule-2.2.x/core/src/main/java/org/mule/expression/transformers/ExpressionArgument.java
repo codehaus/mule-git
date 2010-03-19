@@ -25,6 +25,7 @@ public class ExpressionArgument implements MuleContextAware
     private String name;
     private boolean optional;
     private Class returnClass;
+    protected ClassLoader expressionEvaluationClassLoader = ExpressionArgument.class.getClassLoader();
 
     private MuleContext muleContext;
 
@@ -99,12 +100,33 @@ public class ExpressionArgument implements MuleContextAware
      */
     public Object evaluate(MuleMessage message) throws ExpressionRuntimeException
     {
-        Object result = muleContext.getExpressionManager().evaluate(getExpression(), getEvaluator(), message, isOptional());
-        if(getReturnClass()!=null && result != null)
+        Object result = null;
+
+        // MULE-4797 Because there is no way to specify the class-loader that script
+        // engines use and because scripts when used for expressions are compiled in
+        // runtime rather than at initialization the only way to ensure the correct
+        // class-loader to used is to switch it out here. We may want to consider
+        // passing the class-loader to the ExpressionManager and only doing this for
+        // certain ExpressionEvaluators further in.
+        ClassLoader originalContextClassLoader = Thread.currentThread().getContextClassLoader();
+        try
+        {
+            Thread.currentThread().setContextClassLoader(expressionEvaluationClassLoader);
+            result = muleContext.getExpressionManager().evaluate(getExpression(), getEvaluator(), message,
+                isOptional());
+        }
+        finally
+        {
+            // Restore original context class-loader
+            Thread.currentThread().setContextClassLoader(originalContextClassLoader);
+        }
+
+        if (getReturnClass() != null && result != null)
         {
             if (!getReturnClass().isInstance(result))
             {
-                throw new ExpressionRuntimeException(CoreMessages.transformUnexpectedType(result.getClass(), getReturnClass()));
+                throw new ExpressionRuntimeException(CoreMessages.transformUnexpectedType(result.getClass(),
+                    getReturnClass()));
             }
         }
         return result;
@@ -149,4 +171,10 @@ public class ExpressionArgument implements MuleContextAware
     {
         this.returnClass = returnClass;
     }
+    
+    public void setExpressionEvaluationClassLoader(ClassLoader expressionEvaluationClassLoader)
+    {
+        this.expressionEvaluationClassLoader = expressionEvaluationClassLoader;
+    }
+
 }
