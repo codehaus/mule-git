@@ -47,15 +47,12 @@ public class XmppNamespaceHandler extends AbstractMuleNamespaceHandler
         new String[] { XmppConnector.XMPP_TYPE, XmppConnector.XMPP_RECIPIENT }
     };
 
-    // TODO xmpp: can this be removed?
     private static final String[][] REQUIRED_MESSAGE_PROPERTY_GROUPS = new String[][] {
         new String[] { }
     };
 
     public void init()
-    {
-//        registerStandardTransportEndpoints(XmppConnector.XMPP, REQUIRED_ADDRESS_ATTRIBUTES).addAlias(RECIPIENT, URIBuilder.PATH).registerPreProcessor(new RequireNickname());
-        
+    {        
         registerGlobalEndpointParser();
         registerInboundEndpointParser();
         registerOutboundEndpintParser();
@@ -101,24 +98,4 @@ public class XmppNamespaceHandler extends AbstractMuleNamespaceHandler
         endpointDefinitionParser.addAlias(XmppConnector.XMPP_RECIPIENT, URIBuilder.PATH);
         registerBeanDefinitionParser("outbound-endpoint", endpointDefinitionParser);
     }
-
-//    public static class RequireNickname implements PreProcessor
-//    {
-//
-//        public void preProcess(PropertyConfiguration config, Element element)
-//        {
-//            String groupChat = element.getAttribute(XmppConnector.XMPP_GROUP_CHAT);
-//            if (Boolean.valueOf(groupChat).booleanValue())
-//            {
-//                if (StringUtils.isBlank(element.getAttribute(XmppConnector.XMPP_NICKNAME)))
-//                {
-//                    throw new RequireAttribute.RequireAttributeException("Attribute " +
-//                                    XmppConnector.XMPP_NICKNAME + " must be given if " +
-//                                    XmppConnector.XMPP_GROUP_CHAT + " is true.");
-//                }
-//            }
-//        }
-//
-//    }
-
 }
