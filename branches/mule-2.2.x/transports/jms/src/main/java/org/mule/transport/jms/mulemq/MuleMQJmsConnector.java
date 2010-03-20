@@ -368,11 +368,13 @@ public class MuleMQJmsConnector extends JmsConnector
         return retryCommit;
     }
 
-	public boolean isEnableMultiplexedConnections() {
+	public boolean isEnableMultiplexedConnections() 
+	{
 		return enableMultiplexedConnections;
 	}
 
-	public void setEnableMultiplexedConnections(boolean enableMultiplexedConnections) {
+	public void setEnableMultiplexedConnections(boolean enableMultiplexedConnections) 
+	{
 		this.enableMultiplexedConnections = enableMultiplexedConnections;
 	}
 }
