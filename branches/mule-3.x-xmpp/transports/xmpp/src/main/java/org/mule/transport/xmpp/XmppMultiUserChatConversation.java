@@ -17,6 +17,7 @@ import org.mule.util.UUID;
 import org.jivesoftware.smack.PacketCollector;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Message;
+import org.jivesoftware.smack.packet.XMPPError;
 import org.jivesoftware.smackx.muc.MultiUserChat;
 
 public class XmppMultiUserChatConversation extends AbstractXmppConversation
@@ -50,10 +51,49 @@ public class XmppMultiUserChatConversation extends AbstractXmppConversation
     {
         try
         {
-            chat.join(nickname);
+            tryToJoinChat();
+        }
+        catch (XMPPException e)
+        {
+            if (roomDoesNotExist(e))
+            {
+                createRoom();
+            }
+            else
+            {
+                throw new ConnectException(e, this);
+            }
+        }
+    }
+    
+    protected void tryToJoinChat() throws XMPPException
+    {
+        chat.join(nickname);
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("joined groupchat '" + recipient + "'");
+        }
+    }
+    
+    protected boolean roomDoesNotExist(XMPPException exception)
+    {
+        XMPPError error = exception.getXMPPError();
+        if ((error.getCode() == 404) &&
+            error.getCondition().equals(XMPPError.Condition.recipient_unavailable.toString()))
+        {
+            return true;
+        }
+        return false;
+    }
+    
+    protected void createRoom() throws ConnectException
+    {
+        try
+        {
+            chat.create(nickname);
             if (logger.isDebugEnabled())
             {
-                logger.debug("joined groupchat '" + recipient + "'");
+                logger.debug("created and joined groupchat '" + recipient + "'");
             }
         }
         catch (XMPPException e)
@@ -98,5 +138,3 @@ public class XmppMultiUserChatConversation extends AbstractXmppConversation
         return chat.nextMessage(timeout);
     }
 }
-
-
