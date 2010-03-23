@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:spring="http://www.springframework.org/schema/beans"
+       xmlns:rmi="http://www.mulesoft.org/schema/mule/rmi"
+       xmlns:vm="http://www.mulesoft.org/schema/mule/vm"
+       xsi:schemaLocation="
+               http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+               http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/3.0/mule.xsd
+               http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/3.0/mule-vm.xsd
+               http://www.mulesoft.org/schema/mule/rmi http://www.mulesoft.org/schema/mule/rmi/3.0/mule-rmi.xsd">
+
+    <spring:bean name="jndiFactory" class="org.mule.transport.rmi.MuleRMIFactory"/>
+
+    <spring:bean name="jndiContext" factory-bean="jndiFactory" factory-method="create"/>
+
+    <rmi:connector name="rmi" jndiContext-ref="jndiContext" securityPolicy="rmi.policy"/>
+
+    <vm:connector name="vmQueue"/>
+
+    <rmi:endpoint name="Sender" host="localhost" port="1099" object="SimpleMathsUMO" method="addTen"/>
+    <endpoint name="Sender2" address="rmi://localhost:1099/MatchingUMO?method=reverseString"/>
+
+    <!-- note that this sets proeprties both from the endpoint (method) and directly
+         DO NOT update this to use a more succinct config - this is what is being tested! -->
+    <rmi:endpoint name="GoodType" host="localhost" port="1099" object="MatchingUMO" method="reverseString">
+        <properties>
+            <spring:entry key="methodArgumentTypes" value="java.lang.String"/>
+        </properties>
+    </rmi:endpoint>
+
+    <!-- note that this sets proeprties both from the endpoint (method) and directly
+         DO NOT update this to use a more succinct config - this is what is being tested! -->
+    <rmi:endpoint name="BadType" host="localhost" port="1099" object="MatchingUMO" method="reverseString">
+        <properties>
+            <spring:entry key="methodArgumentTypes" value="java.lang.StringBuffer"/>
+        </properties>
+    </rmi:endpoint>
+
+    <model name="sample">
+
+        <service name="TestUMO">
+            <inbound>
+                <inbound-endpoint address="vm://testin" synchronous="true"/>
+            </inbound>
+            <outbound>
+                <filtering-router>
+                    <outbound-endpoint ref="Sender" synchronous="true"/>
+                    <payload-type-filter expectedType="java.lang.Integer"/>
+                </filtering-router>
+                <filtering-router>
+                    <rmi:outbound-endpoint ref="Sender2" synchronous="true"/>
+                    <payload-type-filter expectedType="java.lang.String"/>
+                </filtering-router>
+            </outbound>
+        </service>
+
+    </model>
+
+</mule>
