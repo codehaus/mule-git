@@ -1,0 +1,15 @@
+#
+# Test cases listed in this file are not run.
+#
+
+# This test is actually empty - do we still need it?
+org.mule.test.spring.NestExampleTestCase
+
+# Needs UDP configured
+org.mule.test.firewall.FirewallTestCase
+
+##########################################################################
+# The following tests will fail if run off-line
+##########################################################################
+org.mule.config.spring.RejectOldConfigTestCase
+org.mule.test.spring.SchemaValidationMule2225TestCase

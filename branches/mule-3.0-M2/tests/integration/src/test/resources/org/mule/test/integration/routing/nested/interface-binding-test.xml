@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:spring="http://www.springframework.org/schema/beans" xmlns:jms="http://www.mulesoft.org/schema/mule/jms"
+    xmlns:vm="http://www.mulesoft.org/schema/mule/vm"
+    xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+       http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/3.0/mule.xsd
+       http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/3.0/mule-jms.xsd
+              http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/3.0/mule-vm.xsd">
+
+    <!-- Testing with ActiveMq -->
+    <jms:activemq-connector name="jmsConnector"/>
+
+    <vm:connector name="vmConnector"/>
+
+    <model>
+
+        <service name="HelloComponent">
+            <inbound>
+                <inbound-endpoint address="vm://hello.in" />
+                <inbound-endpoint address="jms://hello.in" />
+                <inbound-endpoint address="jms://topic:thello.in" />
+            </inbound>
+            <component class="org.mule.test.integration.routing.nested.HelloService" />
+        </service>
+
+        <service name="InvokerComponent">
+            <inbound>
+                <inbound-endpoint address="vm://invoker.in" />
+            </inbound>
+            <component>
+                <singleton-object class="org.mule.test.integration.routing.nested.Invoker" />
+                <binding interface="org.mule.test.integration.routing.nested.HelloInterface">
+                    <outbound-endpoint address="vm://hello.in" synchronous="true" />
+                </binding>
+            </component>
+            <outbound>
+                <pass-through-router>
+                    <outbound-endpoint address="vm://invoker.out" />
+                </pass-through-router>
+            </outbound>
+        </service>
+
+        <service name="JmsQueueInvokerComponent">
+            <inbound>
+                <inbound-endpoint address="jms://invoker.in" />
+            </inbound>
+            <component>
+                <singleton-object class="org.mule.test.integration.routing.nested.Invoker" />
+                <binding interface="org.mule.test.integration.routing.nested.HelloInterface">
+                    <outbound-endpoint address="jms://hello.in" synchronous="true" />
+                </binding>
+            </component>
+            <outbound>
+                <pass-through-router>
+                    <outbound-endpoint address="jms://invoker.out" />
+                </pass-through-router>
+            </outbound>
+        </service>
+
+        <service name="JmsTopicInvokerComponent">
+            <inbound>
+                <inbound-endpoint address="jms://topic:tinvoker.in" />
+            </inbound>
+            <component>
+                <singleton-object class="org.mule.test.integration.routing.nested.Invoker" />
+                <binding interface="org.mule.test.integration.routing.nested.HelloInterface">
+                    <outbound-endpoint address="jms://topic:thello.in" synchronous="true" />
+                </binding>
+            </component>
+            <outbound>
+                <pass-through-router>
+                    <outbound-endpoint address="jms://topic:tinvoker.out" />
+                </pass-through-router>
+            </outbound>
+        </service>
+
+    </model>
+</mule>
