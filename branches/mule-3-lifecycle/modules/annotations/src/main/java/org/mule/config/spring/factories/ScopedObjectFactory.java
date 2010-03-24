@@ -153,9 +153,4 @@ public class ScopedObjectFactory extends AbstractObjectFactory
         }
         return super.getInstance();
     }
-
-    public boolean isAutoWireObject()
-    {
-        return true;
-    }
 }

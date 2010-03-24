@@ -10,6 +10,8 @@
 
 package org.mule.component;
 
+import org.mule.api.lifecycle.InitialisationException;
+import org.mule.api.object.ObjectFactory;
 import org.mule.object.PrototypeObjectFactory;
 import org.mule.tck.testmodels.fruit.Orange;
 import org.mule.tck.testmodels.fruit.WaterMelon;
@@ -17,12 +19,17 @@ import org.mule.tck.testmodels.fruit.WaterMelon;
 public class DefaultJavaComponentTestCase extends AbstractComponentTestCase
 {
 
-    public void testComponentCreation() throws Exception
+    protected ObjectFactory createObjectFactory() throws InitialisationException
     {
         PrototypeObjectFactory objectFactory = new PrototypeObjectFactory(Orange.class);
-        objectFactory.setObjectClass(Orange.class);
+        objectFactory.setMuleContext(muleContext);
         objectFactory.initialise();
+        return objectFactory;
+    }
 
+    public void testComponentCreation() throws Exception
+    {
+        ObjectFactory objectFactory = createObjectFactory();
         DefaultJavaComponent component = new DefaultJavaComponent(objectFactory);
 
         assertNotNull(component.getObjectFactory());
@@ -33,8 +40,7 @@ public class DefaultJavaComponentTestCase extends AbstractComponentTestCase
 
     public void testLifecycle() throws Exception
     {
-        DefaultJavaComponent component = 
-            new DefaultJavaComponent(new PrototypeObjectFactory(Orange.class));
+        DefaultJavaComponent component = new DefaultJavaComponent(createObjectFactory());
         component.setService(getTestService());
         component.setMuleContext(muleContext);
         component.initialise();
@@ -58,7 +64,7 @@ public class DefaultJavaComponentTestCase extends AbstractComponentTestCase
     public void testComponentDisposal() throws Exception
     {
         DefaultJavaComponent component = new DefaultJavaComponent(
-            new PrototypeObjectFactory(WaterMelon.class));
+            createObjectFactory());
         
         component.setService(getTestService());
         component.setMuleContext(muleContext);

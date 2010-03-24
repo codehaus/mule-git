@@ -23,7 +23,9 @@ public class SingletonObjectFactory extends AbstractObjectFactory
 {
     private SoftReference instance;
 
-    /** For Spring only */
+    /**
+     * For Spring only
+     */
     public SingletonObjectFactory()
     {
         super();
@@ -59,9 +61,22 @@ public class SingletonObjectFactory extends AbstractObjectFactory
     }
 
     @Override
-    public void initialise() throws InitialisationException
+    public void dispose()
     {
-        super.initialise();
+        if (instance != null)
+        {
+            instance.clear();
+            instance.enqueue();
+        }
+        super.dispose();
+    }
+
+    /**
+     * Always returns the same instance of the object.
+     */
+    @Override
+    public Object getInstance() throws Exception
+    {
         if (instance == null || instance.get() == null)
         {
             try
@@ -73,31 +88,7 @@ public class SingletonObjectFactory extends AbstractObjectFactory
                 throw new InitialisationException(e, this);
             }
         }
-    }
-
-    @Override
-    public void dispose()
-    {
-        instance.clear();
-        instance.enqueue();
-        super.dispose();
-    }
-
-    /**
-     * Always returns the same instance of the object.
-     */
-    @Override
-    public Object getInstance() throws Exception
-    {
-        if (instance != null && instance.get() != null)
-        {
-            return instance.get();
-        }
-        else
-        {
-            throw new InitialisationException(
-                MessageFactory.createStaticMessage("Object factory has not been initialized."), this);
-        }
+        return instance.get();
     }
 
     @Override
@@ -115,11 +106,6 @@ public class SingletonObjectFactory extends AbstractObjectFactory
 
     @Override
     public boolean isSingleton()
-    {
-        return true;
-    }
-
-    public boolean isAutoWireObject()
     {
         return true;
     }

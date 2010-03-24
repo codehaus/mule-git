@@ -377,7 +377,7 @@ public class CxfConnector extends AbstractConnector implements ServiceNotificati
         }
         // We need to stop the outer services first if they are not already stopped
         // to avoid request failures.
-        else if (event.getAction() == ServiceNotification.SERVICE_STOPPING
+         else if (event.getAction() == ServiceNotification.SERVICE_STOPPED
                 && serviceToProtocolServices.get(event.getSource()) != null)
         {
             try

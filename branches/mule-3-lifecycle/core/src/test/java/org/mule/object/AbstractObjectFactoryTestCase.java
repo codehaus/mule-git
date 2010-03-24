@@ -108,7 +108,6 @@ public abstract class AbstractObjectFactoryTestCase extends AbstractMuleTestCase
         muleContext.getRegistry().applyProcessorsAndLifecycle(factory);
         
         factory.dispose();
-        assertNull(factory.getObjectClass());
 
         try
         {
@@ -152,10 +151,6 @@ public abstract class AbstractObjectFactoryTestCase extends AbstractMuleTestCase
         {
             super(klass);
         }
-        
-        public boolean isAutoWireObject()
-        {
-            return false;
-        }
+
     }
 }

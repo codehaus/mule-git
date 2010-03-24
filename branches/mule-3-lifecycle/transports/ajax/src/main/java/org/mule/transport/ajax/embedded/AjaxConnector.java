@@ -22,6 +22,7 @@ import org.mule.api.transport.MessageDispatcherFactory;
 import org.mule.api.transport.MessageReceiver;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.context.notification.MuleContextNotification;
+import org.mule.context.notification.NotificationException;
 import org.mule.transport.ajax.AjaxMessageReceiver;
 import org.mule.transport.ajax.container.AjaxServletConnector;
 import org.mule.transport.ajax.container.MuleAjaxServlet;
@@ -70,6 +71,15 @@ public class AjaxConnector extends AjaxServletConnector implements MuleContextNo
     @Override
     protected void doInitialise() throws InitialisationException
     {
+        try
+        {
+            muleContext.registerListener(this);
+        }
+        catch (NotificationException e)
+        {
+            throw new InitialisationException(e, this);
+        }
+
         httpServer = new Server();
 //
 //        if (configFile != null)
@@ -96,7 +106,7 @@ public class AjaxConnector extends AjaxServletConnector implements MuleContextNo
             setInitialStateStopped(false);
             try
             {
-                start();
+                doStart();
             }
             catch (MuleException e)
             {

@@ -160,7 +160,9 @@ muleContext.registry.registerModel(model)
 Service service = new SedaService();
 service.model = model
 service.name = "orangeComponent"
-def component = new DefaultJavaComponent(new SingletonObjectFactory(Orange.class.name))
+factory = new SingletonObjectFactory(Orange.class.name);
+factory.muleContext = muleContext
+def component = new DefaultJavaComponent(factory)
 component.muleContext = muleContext
 service.component = component
 List interceptorList = new ArrayList()

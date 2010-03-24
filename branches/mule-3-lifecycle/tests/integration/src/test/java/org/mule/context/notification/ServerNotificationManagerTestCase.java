@@ -42,7 +42,7 @@ public class ServerNotificationManagerTestCase extends AbstractNotificationTestC
                 .parallel(new Node(ServiceNotification.class, ServiceNotification.SERVICE_STARTED, SERVICE))
                 .parallel(new Node(ServiceNotification.class, ServiceNotification.SERVICE_PAUSED, SERVICE))
                 .parallel(new Node(ServiceNotification.class, ServiceNotification.SERVICE_RESUMED, SERVICE))
-                .parallel(new Node(ServiceNotification.class, ServiceNotification.SERVICE_STOPPING, SERVICE))
+                .parallel(new Node(ServiceNotification.class, ServiceNotification.SERVICE_STOPPED, SERVICE))
                 .parallel(new Node(ServiceNotification.class, ServiceNotification.SERVICE_STOPPED, SERVICE))
                 .parallel(new Node(ServiceNotification.class, ServiceNotification.SERVICE_DISPOSED, SERVICE))
                 // synchronous events start here
@@ -85,7 +85,7 @@ public class ServerNotificationManagerTestCase extends AbstractNotificationTestC
         verifyAllNotifications(spec, ModelNotification.class,
                 ModelNotification.MODEL_STARTING, ModelNotification.MODEL_DISPOSED);
         verifyAllNotifications(spec, ServiceNotification.class,
-                ServiceNotification.SERVICE_INITIALISED, ServiceNotification.SERVICE_STOPPING);
+                ServiceNotification.SERVICE_INITIALISED, ServiceNotification.SERVICE_STOPPED);
         // no manager initialising or initialised
         verifyAllNotifications(spec, MuleContextNotification.class,
                 MuleContextNotification.CONTEXT_STARTING, MuleContextNotification.CONTEXT_STOPPED);

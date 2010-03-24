@@ -20,12 +20,12 @@ import org.mule.api.MuleEvent;
 import org.mule.api.MuleEventContext;
 import org.mule.api.MuleException;
 import org.mule.api.MuleSession;
+import org.mule.api.component.JavaComponent;
 import org.mule.api.endpoint.EndpointBuilder;
 import org.mule.api.endpoint.EndpointURI;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.endpoint.InboundEndpoint;
 import org.mule.api.endpoint.OutboundEndpoint;
-import org.mule.api.object.ObjectFactory;
 import org.mule.api.routing.OutboundRouter;
 import org.mule.api.routing.filter.Filter;
 import org.mule.api.service.Service;
@@ -144,6 +144,24 @@ public final class MuleTestUtils
         {
             public ImmutableEndpoint getEndpoint(EndpointBuilder builder) throws MuleException
             {
+                return context.getRegistry().lookupEndpointFactory().getOutboundEndpoint(builder);
+            }
+        });
+    }
+
+    public static OutboundEndpoint getTestOutboundEndpoint(String name,
+                                                            final MuleContext context,
+                                                            String uri,
+                                                            List<Transformer> transformers,
+                                                            Filter filter,
+                                                            Map properties,
+                                                            final Connector connector) throws Exception
+    {
+        return (OutboundEndpoint) getTestEndpoint(name, uri, transformers, filter, properties, context, new EndpointSource()
+        {
+            public ImmutableEndpoint getEndpoint(EndpointBuilder builder) throws MuleException
+            {
+                builder.setConnector(connector);
                 return context.getRegistry().lookupEndpointFactory().getOutboundEndpoint(builder);
             }
         });
@@ -368,11 +386,13 @@ public final class MuleTestUtils
         
         Service service = new SedaService();
         service.setName(name);
-        ObjectFactory of = new SingletonObjectFactory(clazz, props);
+        SingletonObjectFactory of = new SingletonObjectFactory(clazz, props);
+        of.setMuleContext(context);
         of.initialise();
-        service.setComponent(new DefaultJavaComponent(of));
-        service.setModel(model);
         service.setMuleContext(context);
+        JavaComponent component = new DefaultJavaComponent(of);
+        service.setComponent(component);
+        service.setModel(model);
         if (initialize)
         {
             context.getRegistry().registerService(service);

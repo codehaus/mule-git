@@ -100,15 +100,14 @@ public class SimpleCallableJavaComponentTestCase extends AbstractComponentTestCa
 
         component.stop();
         component.dispose();
-
-        try
-        {
-            component.checkDisposed();
-        }
-        catch (Exception e)
-        {
-            assertSame(DisposeException.class, e.getClass());
-        }
+//        try
+//        {
+//            component.checkDisposed();
+//        }
+//        catch (Exception e)
+//        {
+//            assertSame(DisposeException.class, e.getClass());
+//        }
 
     }
 

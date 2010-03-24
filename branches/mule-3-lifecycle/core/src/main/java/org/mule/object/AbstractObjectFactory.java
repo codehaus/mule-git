@@ -11,10 +11,13 @@
 package org.mule.object;
 
 import org.mule.api.MuleContext;
+import org.mule.api.MuleException;
 import org.mule.api.context.MuleContextAware;
 import org.mule.api.lifecycle.InitialisationCallback;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.object.ObjectFactory;
+import org.mule.api.service.Service;
+import org.mule.api.service.ServiceAware;
 import org.mule.config.i18n.MessageFactory;
 import org.mule.util.BeanUtils;
 import org.mule.util.ClassUtils;
@@ -28,9 +31,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * Creates object instances based on the class and sets any properties.
+ * Creates object instances based on the class and sets any properties.  This factory is also responsible for applying
+ * any object processors on the object before the lifecycle callbacks are called.
  */
-public abstract class AbstractObjectFactory implements ObjectFactory, MuleContextAware
+public abstract class AbstractObjectFactory implements ObjectFactory, MuleContextAware, ServiceAware
 {
     public static final String ATTRIBUTE_OBJECT_CLASS_NAME = "objectClassName";
     public static final String ATTRIBUTE_OBJECT_CLASS = "objectClass";
@@ -40,6 +44,8 @@ public abstract class AbstractObjectFactory implements ObjectFactory, MuleContex
     protected Map properties = null;
     protected List<InitialisationCallback> initialisationCallbacks = new ArrayList<InitialisationCallback>();
     protected MuleContext muleContext;
+    protected Service service;
+    protected boolean disposed = false;
 
     protected transient Log logger = LogFactory.getLog(getClass());
 
@@ -94,6 +100,11 @@ public abstract class AbstractObjectFactory implements ObjectFactory, MuleContex
         this.muleContext = context;
     }
 
+    public void setService(Service service)
+    {
+        this.service = service;
+    }
+
     public void initialise() throws InitialisationException
     {
         if ((objectClassName == null) || (objectClass == null))
@@ -101,23 +112,22 @@ public abstract class AbstractObjectFactory implements ObjectFactory, MuleContex
             throw new InitialisationException(
                 MessageFactory.createStaticMessage("Object factory has not been initialized."), this);
         }
+        disposed=false;
     }
     
     public void dispose()
     {
-        this.objectClass.clear();
-        this.objectClass.enqueue();
-        this.objectClass = null;
-        
-        this.objectClassName = null;
+        disposed=true;
+        //Don't reset the component config state i.e. objectClass since service objects can be recycled
     }
 
     /**
      * Creates an initialized object instance based on the class and sets any properties.
+     * THis method handles all injection of properties for the resulting object
      */
     public Object getInstance() throws Exception
     {
-        if (objectClass == null)
+        if (objectClass == null || disposed)
         {
             throw new InitialisationException(
                 MessageFactory.createStaticMessage("Object factory has not been initialized."), this);
@@ -136,9 +146,24 @@ public abstract class AbstractObjectFactory implements ObjectFactory, MuleContex
             BeanUtils.populateWithoutFail(object, properties, true);
         }
 
+        applyProcessors(object);
+
+        if(object instanceof ServiceAware)
+        {
+            ((ServiceAware)object).setService(service);
+        }
+
         fireInitialisationCallbacks(object);
         
         return object;
+    }
+
+    protected void applyProcessors(Object object) throws MuleException
+    {
+        if(isAutoWireObject())
+        {
+            muleContext.getRegistry().applyProcessors(object);
+        }
     }
 
     protected void fireInitialisationCallbacks(Object component) throws InitialisationException
@@ -207,4 +232,8 @@ public abstract class AbstractObjectFactory implements ObjectFactory, MuleContex
         return false;
     }
 
+    public boolean isAutoWireObject()
+    {
+        return true;
+    }
 }

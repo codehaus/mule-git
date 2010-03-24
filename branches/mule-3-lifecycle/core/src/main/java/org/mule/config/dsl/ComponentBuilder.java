@@ -12,6 +12,7 @@ package org.mule.config.dsl;
 import org.mule.api.component.Component;
 import org.mule.api.object.ObjectFactory;
 import org.mule.api.MuleContext;
+import org.mule.object.AbstractObjectFactory;
 import org.mule.object.PrototypeObjectFactory;
 import org.mule.object.SingletonObjectFactory;
 import org.mule.component.PooledJavaComponent;
@@ -35,7 +36,7 @@ public class ComponentBuilder
     public ComponentBuilder(Scope scope, Class clazz, MuleContext muleContext)
     {
         this.muleContext = muleContext;
-        ObjectFactory factory;
+        AbstractObjectFactory factory;
         if (scope == Scope.Singleton)
         {
             factory = new SingletonObjectFactory(clazz);
@@ -44,6 +45,7 @@ public class ComponentBuilder
         {
             factory = new PrototypeObjectFactory(clazz);
         }
+        factory.setMuleContext(muleContext);
 
         if (scope == Scope.Pooled)
         {
@@ -62,13 +64,13 @@ public class ComponentBuilder
         component = new DefaultJavaComponent(factory);
     }
 
+    Component create()
+    {
+        return component;
+    }
+
     public RouteBuilder to(String uri)
     {
         return null;
-    }
-
-    Component getComponent()
-    {
-        return component;
     }
 }

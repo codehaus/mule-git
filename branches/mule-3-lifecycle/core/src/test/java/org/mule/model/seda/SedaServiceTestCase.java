@@ -22,8 +22,10 @@ import org.mule.component.DefaultJavaComponent;
 import org.mule.component.SimpleCallableJavaComponent;
 import org.mule.config.ChainedThreadingProfile;
 import org.mule.config.QueueProfile;
+import org.mule.model.AbstractServiceTestCase;
 import org.mule.object.PrototypeObjectFactory;
 import org.mule.tck.AbstractMuleTestCase;
+import org.mule.tck.MuleTestUtils;
 import org.mule.util.concurrent.Latch;
 import org.mule.util.queue.QueueConfiguration;
 import org.mule.util.queue.QueueManager;
@@ -39,26 +41,29 @@ import javax.resource.spi.work.WorkException;
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 import junit.framework.AssertionFailedError;
 
-public class SedaServiceTestCase extends AbstractMuleTestCase // AbstractServiceTestCase
+public class SedaServiceTestCase extends AbstractServiceTestCase
 {
-    // Cannot extend AbstractServiceTestCase because of inconsistent behaviour. See
-    // MULE-2843
+    private SedaService service;
 
-    // protected void doSetUp() throws Exception
-    // {
-    // service = new SedaService();
-    // service.setName("seda");
-    // service.setServiceFactory(new PrototypeObjectFactory(Object.class));
-    // service.setMuleContext(muleContext);
-    // service.setModel(new SedaModel());
-    // service.getModel().setMuleContext(muleContext);
-    // service.getModel().initialise();
-    // }
-    //
-    // protected void doTearDown() throws Exception
-    // {
-    // service = null;
-    // }
+     protected void doSetUp() throws Exception
+     {
+         service = new SedaService();
+         service.setName("test");
+         service.setMuleContext(muleContext);         
+         PrototypeObjectFactory factory = new PrototypeObjectFactory(Object.class);
+             factory.setMuleContext(muleContext);
+         service.setComponent(new DefaultJavaComponent(factory));
+         service.setMuleContext(muleContext);
+         service.setModel(new SedaModel());
+         service.getModel().setMuleContext(muleContext);
+         service.getModel().initialise();
+     }
+
+    @Override
+    protected Service getService()
+    {
+        return service;
+    }
 
     /**
      * ENSURE THAT: 1) The queueProfile set on the SedaService is used to configure
@@ -94,13 +99,7 @@ public class SedaServiceTestCase extends AbstractMuleTestCase // AbstractService
         muleContext.getRegistry().registerObject(MuleProperties.OBJECT_QUEUE_MANAGER, 
             mockTransactionalQueueManager.proxy());
 
-        SedaService service = new SedaService();
-        service.setMuleContext(muleContext);
-        service.setName("test");
-        Model model = new SedaModel();
-        model.setMuleContext(muleContext);
-        model.initialise();
-        service.setModel(model);
+        
         service.setQueueProfile(new QueueProfile(capacity, persistent));
 
         try
@@ -125,14 +124,6 @@ public class SedaServiceTestCase extends AbstractMuleTestCase // AbstractService
 
     public void testSedaModelEventTimeoutDefault() throws Exception
     {
-        SedaService service = new SedaService();
-        service.setName("test");
-        service.setComponent(new DefaultJavaComponent(new PrototypeObjectFactory(Object.class)));
-        service.setModel(new SedaModel());
-        service.setMuleContext(muleContext);
-        service.getModel().setMuleContext(muleContext);
-
-        service.getModel().initialise();
         service.initialise();
 
         assertNotNull(service.getQueueTimeout());
@@ -143,13 +134,6 @@ public class SedaServiceTestCase extends AbstractMuleTestCase // AbstractService
     {
         try
         {
-            // getTestComponent() currently already returns a SedaService, but
-            // here we are safe-guarding for any future changes
-            SedaService service = new SedaService();
-            service.setName("test");
-            service.setComponent(new DefaultJavaComponent(new PrototypeObjectFactory(Object.class)));
-            service.setModel(new SedaModel());
-
             service.handleWorkException(getTestWorkEvent(), "workRejected");
         }
         catch (MuleRuntimeException mrex)
@@ -167,11 +151,10 @@ public class SedaServiceTestCase extends AbstractMuleTestCase // AbstractService
      */
     public void testDispatchToPausedService() throws Exception
     {
-        Service service = getTestService();
-        service.setMuleContext(muleContext);
+        service.initialise();
         service.start();
         service.pause();
-        service.dispatchEvent(getTestInboundEvent("test"));
+        service.dispatchEvent(MuleTestUtils.getTestInboundEvent("test", service, muleContext));
 
         // This test will timeout and fail if dispatch() blocks
 
@@ -185,10 +168,7 @@ public class SedaServiceTestCase extends AbstractMuleTestCase // AbstractService
     public void testMaxActiveThreadsEqualsOneWhenExhaustedActionWait() throws Exception
     {
         final Latch latch = new Latch();
-
-        SedaService service = new SedaService();
         service.setName("testMaxActiveThreadsEqualsOne");
-        service.setModel(muleContext.getRegistry().lookupSystemModel());
         ChainedThreadingProfile threadingProfile = (ChainedThreadingProfile) muleContext.getDefaultServiceThreadingProfile();
         threadingProfile.setMaxThreadsActive(1);
         threadingProfile.setThreadWaitTimeout(200);
@@ -206,7 +186,7 @@ public class SedaServiceTestCase extends AbstractMuleTestCase // AbstractService
         muleContext.getRegistry().registerService(service);
         service.start();
 
-        service.dispatchEvent(getTestInboundEvent("test"));
+        service.dispatchEvent(MuleTestUtils.getTestInboundEvent("test", service, muleContext));
 
         assertTrue(latch.await(200, TimeUnit.MILLISECONDS));
 
@@ -225,9 +205,7 @@ public class SedaServiceTestCase extends AbstractMuleTestCase // AbstractService
         final String serviceName = "testDoThreadingFalse";
         final String serviceThreadName = serviceName + ".1";
 
-        SedaService service = new SedaService();
         service.setName(serviceName);
-        service.setModel(muleContext.getRegistry().lookupSystemModel());
         ChainedThreadingProfile threadingProfile = (ChainedThreadingProfile) muleContext.getDefaultServiceThreadingProfile();
         threadingProfile.setDoThreading(false);
         service.setThreadingProfile(threadingProfile);
@@ -244,7 +222,7 @@ public class SedaServiceTestCase extends AbstractMuleTestCase // AbstractService
         muleContext.getRegistry().registerService(service);
         service.start();
 
-        service.dispatchEvent(getTestInboundEvent("test"));
+        service.dispatchEvent(MuleTestUtils.getTestInboundEvent("test", service, muleContext));
 
         assertTrue(latch.await(200, TimeUnit.MILLISECONDS));
 
@@ -261,9 +239,7 @@ public class SedaServiceTestCase extends AbstractMuleTestCase // AbstractService
         final String serviceName = "testDoThreadingFalse";
         final String serviceThreadName = serviceName + ".1";
 
-        SedaService service = new SedaService();
         service.setName(serviceName);
-        service.setModel(muleContext.getRegistry().lookupSystemModel());
         ChainedThreadingProfile threadingProfile = (ChainedThreadingProfile) muleContext.getDefaultServiceThreadingProfile();
         threadingProfile.setDoThreading(true);
         service.setThreadingProfile(threadingProfile);
@@ -280,7 +256,7 @@ public class SedaServiceTestCase extends AbstractMuleTestCase // AbstractService
         muleContext.getRegistry().registerService(service);
         service.start();
 
-        service.dispatchEvent(getTestInboundEvent("test"));
+        service.dispatchEvent(MuleTestUtils.getTestInboundEvent("test", service, muleContext));
 
         assertTrue(latch.await(200, TimeUnit.MILLISECONDS));
 

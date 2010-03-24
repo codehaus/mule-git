@@ -20,6 +20,7 @@ import org.mule.api.model.EntryPointResolver;
 import org.mule.api.model.EntryPointResolverSet;
 import org.mule.api.object.ObjectFactory;
 import org.mule.api.routing.BindingCollection;
+import org.mule.api.service.Service;
 import org.mule.api.service.ServiceAware;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.model.resolvers.DefaultEntryPointResolverSet;
@@ -116,26 +117,6 @@ public abstract class AbstractJavaComponent extends AbstractComponent implements
         LifecycleAdapter lifecycleAdapter;
         //Todo this could be moved to the LCAFactory potentially
         Object object = objectFactory.getInstance();
-        //We wire the object here since it is not stored in the registry
-        if(wireObject.get())
-        {
-            //Only wire it once if it is a singleton
-            if(objectFactory.isSingleton())
-            {
-                wireObject.set(false);
-            }
-            //The registry cannot inject the Service for this object since there is no way to tie the two together
-            if(object instanceof ServiceAware)
-            {
-                ((ServiceAware)object).setService(getService());
-            }
-            
-            if(objectFactory.isAutoWireObject())
-            {
-                //Apply processors, these will inject dependencies
-                muleContext.getRegistry().applyProcessors(object);
-            }
-        }
 
         if (lifecycleAdapterFactory != null)
         {
@@ -190,10 +171,10 @@ public abstract class AbstractJavaComponent extends AbstractComponent implements
     @Override
     protected void doDispose()
     {
-        // TODO This can't be implemented currently because AbstractService allows
-        // disposed services to be re-initialised, and re-use of a disposed object
-        // factory is not possible
-        // objectFactory.dispose();
+        if(objectFactory!=null)
+        {
+            objectFactory.dispose();
+        }
     }
 
     public EntryPointResolverSet getEntryPointResolverSet()
@@ -242,6 +223,7 @@ public abstract class AbstractJavaComponent extends AbstractComponent implements
     public void setObjectFactory(ObjectFactory objectFactory)
     {
         this.objectFactory = objectFactory;
+        injectService();
     }
 
     public LifecycleAdapterFactory getLifecycleAdapterFactory()
@@ -254,4 +236,21 @@ public abstract class AbstractJavaComponent extends AbstractComponent implements
         this.lifecycleAdapterFactory = lifecycleAdapterFactory;
     }
 
+    @Override
+    public void setService(Service service)
+    {
+        super.setService(service);
+        injectService();
+    }
+
+    protected void injectService()
+    {
+        if(objectFactory != null && objectFactory instanceof ServiceAware && service!=null)
+        {
+            //The registry cannot inject the Service for this object since there is no way to tie the two together, so
+            //we set the service on the object factory, that way the factory is responsible for injecting all properties
+            //on the result object
+            ((ServiceAware)objectFactory).setService(service);
+        }
+    }
 }

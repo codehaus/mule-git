@@ -67,7 +67,7 @@ public class LifecycleTrackerComponentFunctionalTestCase extends FunctionalTestC
     public void testSingletonServiceLifecycle() throws Exception
     {
         testComponentLifecycle("MuleSingletonService",
-            "[setProperty, setService, setMuleContext, initialise, start, stop, dispose]");
+            "[setProperty, setMuleContext, setService, initialise, start, stop, dispose]");
     }
 
     /**
@@ -79,7 +79,7 @@ public class LifecycleTrackerComponentFunctionalTestCase extends FunctionalTestC
     public void testMulePrototypeServiceLifecycle() throws Exception
     {
         testComponentLifecycle("MulePrototypeService",
-            "[setProperty, setService, setMuleContext, initialise, start, stop, dispose]");
+            "[setProperty, setMuleContext, setService, initialise, start, stop, dispose]");
     }
 
     /**
@@ -90,7 +90,7 @@ public class LifecycleTrackerComponentFunctionalTestCase extends FunctionalTestC
      */
     public void testMulePooledPrototypeServiceLifecycle() throws Exception
     {
-        testComponentLifecycle("MulePooledPrototypeService", "[setProperty, setService, setMuleContext, initialise, start, stop, dispose]");
+        testComponentLifecycle("MulePooledPrototypeService", "[setProperty, setMuleContext, setService, initialise, start, stop, dispose]");
     }
     
     /**
@@ -101,7 +101,7 @@ public class LifecycleTrackerComponentFunctionalTestCase extends FunctionalTestC
      */
     public void testMulePooledSingletonServiceLifecycle() throws Exception
     {
-        testComponentLifecycle("MulePooledSingletonService", "[setProperty, setService, setMuleContext, initialise, initialise, initialise, start, start, start, stop, stop, stop, dispose, dispose, dispose]");
+        testComponentLifecycle("MulePooledSingletonService", "[setProperty, setMuleContext, setService, initialise, initialise, initialise, start, start, start, stop, stop, stop, dispose, dispose, dispose]");
     }
 
     private void testComponentLifecycle(final String serviceName, final String expectedLifeCycle)

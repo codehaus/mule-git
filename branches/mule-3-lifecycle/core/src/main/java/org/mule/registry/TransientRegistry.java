@@ -16,6 +16,7 @@ import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.Disposable;
 import org.mule.api.lifecycle.Initialisable;
 import org.mule.api.lifecycle.InitialisationException;
+import org.mule.api.lifecycle.LifecycleException;
 import org.mule.api.model.Model;
 import org.mule.api.registry.InjectProcessor;
 import org.mule.api.registry.MuleRegistry;
@@ -62,8 +63,10 @@ public class TransientRegistry extends AbstractRegistry
         synchronized(registry)
         {
             registry.put("_muleContextProcessor", new MuleContextProcessor(muleContext));
-            registry.put("_muleNotificationProcessor", new NotificationListenerProcessor(muleContext));
+            //registry.put("_muleNotificationProcessor", new NotificationListenersProcessor(muleContext));
             registry.put("_muleExpressionEvaluatorProcessor", new ExpressionEvaluatorProcessor(muleContext));
+            registry.put("_muleLifecycleStateInjectorProcessor", new LifecycleStateInjectorProcessor(getLifecycleManager().getState()));
+            registry.put("_muleLifecycleManager", getLifecycleManager());
         }
     }
 
@@ -80,7 +83,7 @@ public class TransientRegistry extends AbstractRegistry
 
         try
         {
-            getLifecycleManager().fireLifecycle(this, Initialisable.PHASE_NAME);
+            getLifecycleManager().fireLifecycle(Initialisable.PHASE_NAME);
         }
         catch (MuleException e)
         {
@@ -114,7 +117,7 @@ public class TransientRegistry extends AbstractRegistry
     {
         try
         {
-            getLifecycleManager().fireLifecycle(this, Disposable.PHASE_NAME);
+            getLifecycleManager().fireLifecycle(Disposable.PHASE_NAME);
         }
         catch (MuleException e)
         {

@@ -188,10 +188,6 @@ public class DefaultLifecycleAdapter implements LifecycleAdapter
                 {
                     ((Disposable) o).dispose();
                 }
-                
-                componentObject.clear();
-                componentObject.enqueue();
-
             }
             catch (Exception e)
             {
@@ -199,6 +195,8 @@ public class DefaultLifecycleAdapter implements LifecycleAdapter
             }
         }
 
+        componentObject.clear();
+        componentObject.enqueue();
         disposed = true;
     }
 

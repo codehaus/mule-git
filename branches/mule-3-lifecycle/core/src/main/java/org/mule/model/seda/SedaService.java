@@ -23,7 +23,6 @@ import org.mule.api.MuleMessage;
 import org.mule.api.MuleRuntimeException;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.config.ThreadingProfile;
-import org.mule.api.context.MuleContextAware;
 import org.mule.api.context.WorkManager;
 import org.mule.api.endpoint.InboundEndpoint;
 import org.mule.api.lifecycle.InitialisationException;
@@ -38,6 +37,7 @@ import org.mule.management.stats.ServiceStatistics;
 import org.mule.message.DefaultExceptionPayload;
 import org.mule.service.AbstractService;
 import org.mule.transport.NullPayload;
+import org.mule.util.concurrent.WaitableBoolean;
 import org.mule.util.queue.Queue;
 import org.mule.util.queue.QueueSession;
 import org.mule.work.AbstractMuleEventWork;
@@ -84,6 +84,8 @@ public class SedaService extends AbstractService implements Work, WorkListener
     protected QueueProfile queueProfile;
     
     protected Queue queue;
+
+    private WaitableBoolean queueDraining = new WaitableBoolean(false);
 
     /** For Spring only */
     public SedaService()
@@ -162,19 +164,18 @@ public class SedaService extends AbstractService implements Work, WorkListener
         // Resume if paused. (This is required to unblock the "ticker" thread)
         if (isPaused())
         {
-            paused.set(false);
+            resume();
         }
 
         if (queue != null && queue.size() > 0)
         {
             try
             {
-                stopping.whenFalse(null);
+                queueDraining.whenFalse(null);
             }
             catch (InterruptedException e)
             {
                 // we can ignore this
-                // TODO MULE-863: Why?
             }
         }
         workManager.dispose();
@@ -320,35 +321,36 @@ public class SedaService extends AbstractService implements Work, WorkListener
         DefaultMuleEvent event = null;
         QueueSession queueSession = muleContext.getQueueManager().getQueueSession();
 
-        while (!stopped.get())
+        while (!isStopped())
         {
             try
             {
                 // Wait if the service is paused
-                if (paused.get())
+                if (isPaused())
                 {
-                    paused.whenFalse(null);
+                    waitIfPaused(event);
                     
                     // If service is resumed as part of stopping 
-                    if (stopping.get())
+                    if (lifecycleManager.getState().isStopping())
                     {
+                        queueDraining.set(true);
                         if (!isPersistent() && (queueSession != null && getQueueSize() > 0))
                         {
                             // Any messages in a non-persistent queue went paused service is stopped are lost
                             logger.warn(CoreMessages.stopPausedSedaServiceNonPeristentQueueMessageLoss(getQueueSize(), this));
                         }
-                        stopping.set(false);
+                        queueDraining.set(false);
                         break;
                     }
                 }
 
                 // If we're doing a draining stop, read all events from the queue
                 // before stopping
-                if (stopping.get())
+                if (lifecycleManager.getState().isStopping())
                 {
                     if (isPersistent() || queueSession == null || getQueueSize() <= 0)
                     {
-                        stopping.set(false);
+                        queueDraining.set(false);
                         break;
                     }
                 }
@@ -381,7 +383,7 @@ public class SedaService extends AbstractService implements Work, WorkListener
             {
                 if (e instanceof InterruptedException)
                 {
-                    stopping.set(false);
+                    queueDraining.set(false);
                     break;
                 }
                 if (e instanceof MuleException)
@@ -407,7 +409,7 @@ public class SedaService extends AbstractService implements Work, WorkListener
 
     public void release()
     {
-        stopping.set(false);
+        queueDraining.set(false);
     }
 
     protected void enqueue(MuleEvent event) throws Exception
