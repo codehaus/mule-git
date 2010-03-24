@@ -95,6 +95,8 @@
             <!-- Exclude the webapp tests because Ant is not smart enough to deal
                 with multiple Jetty versions. -->
             <exclude>webapp/src/test/**</exclude>
+            <!-- exclude the geomail example for now, it doesn't work -->
+            <exclude>geomail/**</exclude>
         </excludes>
     </fileSet>
 
@@ -141,10 +143,14 @@
         Mule Examples: Geomail
     ============================
     -->
+<!--
+    The geomail example fails ... include it temporarily for the release
+
     <fileSet>
         <directory>../../examples/geomail/dist</directory>
         <outputDirectory>examples/geomail</outputDirectory>
     </fileSet>
+-->
 
     <!--
     ============================
