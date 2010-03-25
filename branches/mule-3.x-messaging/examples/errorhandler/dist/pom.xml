@@ -10,7 +10,7 @@
     <description>Demonstrates using Spring as the external container to provide the objects managed by Mule and how to publish events to multiple outbound endpoints. The example consists of two components; ExecptionManager and BusinessErrorManager.</description>
 
     <properties>
-        <muleVersion>3.0.0-M2-SNAPSHOT</muleVersion>
+        <muleVersion>3.0.0-M3-SNAPSHOT</muleVersion>
         <activemqVersion>4.1.2</activemqVersion>
         <javaMailVersion>1.4</javaMailVersion>
     </properties>
@@ -244,15 +244,6 @@
             <releases>
                 <enabled>false</enabled>
             </releases>
-        </repository>
-        <!-- for apache-activemq-4.1.0-incubator -->
-        <repository>
-            <id>apache-incubating</id>
-            <name>Apache incubating repository</name>
-            <url>http://people.apache.org/repo/m2-incubating-repository</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
         </repository>
         <repository>
             <id>mule-deps</id>

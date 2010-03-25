@@ -9,7 +9,7 @@
     <version>1.0</version>
     
     <properties>
-        <muleVersion>3.0.0-M2-SNAPSHOT</muleVersion>
+        <muleVersion>3.0.0-M3-SNAPSHOT</muleVersion>
     </properties>
     
     <description>A web based example that plots incoming emails on a world map.  This example demonstrates how to use Ajax events with Mule.</description>
@@ -40,7 +40,6 @@
     </build>
 
     <dependencies>
-
         <dependency>
             <groupId>org.mule.transports</groupId>
             <artifactId>mule-transport-vm</artifactId>
@@ -51,31 +50,27 @@
             <artifactId>mule-transport-email</artifactId>
             <version>${muleVersion}</version>
         </dependency>
-
-         <dependency>
+        <dependency>
             <groupId>org.mule.transports</groupId>
             <artifactId>mule-transport-ajax</artifactId>
             <version>${muleVersion}</version>
         </dependency>
-
         <dependency>
             <groupId>org.mule.transports</groupId>
             <artifactId>mule-transport-quartz</artifactId>
             <version>${muleVersion}</version>
         </dependency>
-
         <dependency>
             <groupId>org.mule.modules</groupId>
             <artifactId>mule-module-scripting</artifactId>
             <version>${muleVersion}</version>
         </dependency>
-
         <dependency>
             <groupId>org.mule.modules</groupId>
             <artifactId>mule-module-json</artifactId>
             <version>${muleVersion}</version>
         </dependency>
-       <!-- Adds support for Spring JPA over Hibernate: -->
+        <!-- Adds support for Spring JPA over Hibernate: -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-orm</artifactId>
@@ -125,6 +120,13 @@
             <groupId>commons-collections</groupId>
             <artifactId>commons-collections</artifactId>
             <version>3.2.1</version>
-        </dependency>        
+        </dependency>
     </dependencies>
+    
+    <repositories>        
+        <repository>
+            <id>mule-deps</id>
+            <url>http://dist.codehaus.org/mule/dependencies/maven2</url>
+        </repository>
+    </repositories>
 </project>

@@ -1003,6 +1003,17 @@ public abstract class AbstractConnector
     {
         return this.dispatchers.getMaxActive();
     }
+ 
+    /**
+     * Returns the maximum number of dispatchers that can be concurrently active for
+     * all endpoints.
+     *
+     * @return max. total number of active dispatchers
+     */
+    public int getMaxTotalDispatchers()
+    {
+        return this.dispatchers.getMaxTotal();
+    }
 
     /**
      * Configures the maximum number of dispatchers that can be concurrently active
@@ -2487,6 +2498,44 @@ public abstract class AbstractConnector
     public void setValidateConnections(final boolean validateConnections)
     {
         this.validateConnections = validateConnections;
+    }
+    
+    // MULE-4751 Expose some dispatcher and requester object pool configuration
+    
+    /**
+     * Allows an ExhaustedAction to be configured on the dispatcher object pool 
+     * See: {@link GenericKeyedObjectPool#setWhenExhaustedAction(byte)} 
+     */
+    public void setDispatcherPoolWhenExhaustedAction(byte whenExhaustedAction)
+    {
+        dispatchers.setWhenExhaustedAction(whenExhaustedAction);
+    }
+
+    /**
+     * Allows a maxWait timeout to be configured on the dispatcher object pool 
+     * See: {@link GenericKeyedObjectPool#setMaxWait(long)} 
+     */
+    public void setDispatcherPoolMaxWait(int maxWait)
+    {
+        dispatchers.setMaxWait(maxWait);
+    }
+
+    /**
+     * Allows an ExhaustedAction to be configured on the requester object pool 
+     * See: {@link GenericKeyedObjectPool#setWhenExhaustedAction(byte)} 
+     */
+    public void setRequesterPoolWhenExhaustedAction(byte whenExhaustedAction)
+    {
+        requesters.setWhenExhaustedAction(whenExhaustedAction);
+    }
+
+    /**
+     * Allows a maxWait timeout to be configured on the requester object pool 
+     * See: {@link GenericKeyedObjectPool#setMaxWait(long)} 
+     */
+    public void setRequesterPoolMaxWait(int maxWait)
+    {
+        requesters.setMaxWait(maxWait);
     }
     
     private class DispatchWorker extends AbstractMuleEventWork

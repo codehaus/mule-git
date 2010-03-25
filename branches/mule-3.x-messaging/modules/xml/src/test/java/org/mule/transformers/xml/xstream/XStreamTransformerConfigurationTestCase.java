@@ -85,4 +85,31 @@ public class XStreamTransformerConfigurationTestCase extends AbstractMuleTestCas
         }
     }
 
+    public void testClassLoader()
+    {
+
+        ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
+
+        try
+        {
+            TestClassLoader classLoader =  new TestClassLoader();   
+            Thread.currentThread().setContextClassLoader(classLoader);
+            XmlToObject transformer = new XmlToObject();
+            transformer.initialise();
+            assertEquals(classLoader, transformer.getXStream().getClassLoader());
+        }
+        catch (Exception e)
+        {
+            fail(e.getMessage());
+        }
+        finally
+        {
+            Thread.currentThread().setContextClassLoader(originalClassLoader);
+        }
+    }
+
+    private static class TestClassLoader extends ClassLoader
+    {
+    }
+
 }

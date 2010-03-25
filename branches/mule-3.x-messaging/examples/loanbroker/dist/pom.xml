@@ -10,7 +10,7 @@
     <description>The Loan Broker example application is based on the example presented in the Enterprise Integration Patterns book. This chapter of the book is available online so you can see a detailed description of the application here (http://www.eaipatterns.com/ComposedMessagingWS.html).</description>
 
     <properties>
-        <muleVersion>3.0.0-M2-SNAPSHOT</muleVersion>
+        <muleVersion>3.0.0-M3-SNAPSHOT</muleVersion>
         <activemqVersion>4.1.2</activemqVersion>
     </properties>
 
@@ -67,15 +67,6 @@
             <releases>
                 <enabled>false</enabled>
             </releases>
-        </repository>
-        <!-- for apache-activemq-4.1.0-incubator -->
-        <repository>
-            <id>apache-incubating</id>
-            <name>Apache incubating repository</name>
-            <url>http://people.apache.org/repo/m2-incubating-repository</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
         </repository>
         <!--
             This is actually from cxf's pom an shouldn't be necessary here.

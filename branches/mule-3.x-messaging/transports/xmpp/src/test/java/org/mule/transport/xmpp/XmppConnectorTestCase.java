@@ -18,6 +18,12 @@ import org.jivesoftware.smack.packet.Message;
 public class XmppConnectorTestCase extends AbstractConnectorTestCase
 {
     @Override
+    protected boolean isDisabledInThisEnvironment()
+    {
+        return XmppEnableDisableTestCase.isTestDisabled();
+    }
+
+    @Override
     public Connector createConnector() throws Exception
     {
         XmppConnector cnn = new XmppConnector();
