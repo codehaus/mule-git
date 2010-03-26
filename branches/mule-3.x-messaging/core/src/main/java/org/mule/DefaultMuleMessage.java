@@ -331,11 +331,20 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
     }
 
     /**
-     * {@inheritDoc}
+     * @deprecated use {@link #getOriginalPayload()}
      */
+    @Deprecated
     public Object getOrginalPayload()
     {
-        return originalPayload;
+        return getOrginalPayload();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Object getOriginalPayload()
+    {
+        return (originalAdapter == null ? adapter.getPayload() : originalAdapter.getPayload());
     }
 
     /**
