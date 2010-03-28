@@ -2388,7 +2388,7 @@ public abstract class AbstractConnector implements Connector, ExceptionListener,
         final StringBuffer sb = new StringBuffer(120);
         sb.append(ClassUtils.getSimpleName(this.getClass()));
         sb.append("{name=").append(name);
-        sb.append(", lifecycle=").append(lifecycleManager.getCurrentPhase());
+        sb.append(", lifecycle=").append(lifecycleManager==null? "not in lifecycle" : lifecycleManager.getCurrentPhase());
         sb.append(", this=").append(Integer.toHexString(System.identityHashCode(this)));        
         sb.append(", numberOfConcurrentTransactedReceivers=").append(numberOfConcurrentTransactedReceivers);
         sb.append(", createMultipleTransactedReceivers=").append(createMultipleTransactedReceivers);

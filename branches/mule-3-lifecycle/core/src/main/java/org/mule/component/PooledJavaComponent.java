@@ -70,6 +70,12 @@ public class PooledJavaComponent extends AbstractJavaComponent
     }
 
     @Override
+    protected void doInitialise() throws InitialisationException
+    {
+        super.doInitialise();    //To change body of overridden methods use File | Settings | File Templates.
+    }
+
+    @Override
     protected void doStart() throws MuleException
     {
         super.doStart();

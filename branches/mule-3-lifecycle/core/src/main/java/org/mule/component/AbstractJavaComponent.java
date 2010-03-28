@@ -118,6 +118,13 @@ public abstract class AbstractJavaComponent extends AbstractComponent implements
         //Todo this could be moved to the LCAFactory potentially
         Object object = objectFactory.getInstance();
 
+        //Ideally wiring would happen in the ObjectFactory. However, the way we create the ObjectFactory in Spring makes it difficult to
+        //reliably inject the MUle context in the ObjectFactory since the Spring context doesn't contain the MuleContext
+        if(objectFactory.isAutoWireObject())
+        {
+            muleContext.getRegistry().applyProcessors(object);
+        }
+
         if (lifecycleAdapterFactory != null)
         {
             // Custom lifecycleAdapterFactory set on component
@@ -151,6 +158,11 @@ public abstract class AbstractJavaComponent extends AbstractComponent implements
         {
             throw new InitialisationException(CoreMessages.objectIsNull("object factory"), this);
         }
+
+//        if(isAutoWireObject())
+//        {
+//            muleContext.getRegistry().applyProcessors(object);
+//        }
 
         objectFactory.initialise();
     }

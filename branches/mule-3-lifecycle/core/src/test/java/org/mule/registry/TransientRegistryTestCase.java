@@ -9,10 +9,8 @@
  */
 package org.mule.registry;
 
-import org.mule.api.MuleException;
 import org.mule.api.lifecycle.Disposable;
 import org.mule.api.lifecycle.Initialisable;
-import org.mule.api.lifecycle.LifecycleException;
 import org.mule.api.lifecycle.Startable;
 import org.mule.api.lifecycle.Stoppable;
 import org.mule.api.registry.MuleRegistry;
@@ -71,7 +69,7 @@ public class TransientRegistryTestCase extends AbstractMuleTestCase
     {
         muleContext.start();
         InterfaceBasedTracker tracker = new InterfaceBasedTracker();
-        muleContext.getRegistry().registerObject("test", tracker, MuleRegistry.INJECT_BYPASS_FLAG);
+        muleContext.getRegistry().registerObject("test", tracker, MuleRegistry.INJECT_PROCESSORS_BYPASS_FLAG);
         muleContext.dispose();
         assertEquals("[initialise, start, stop, dispose]", tracker.getTracker().toString());
     }
@@ -83,7 +81,7 @@ public class TransientRegistryTestCase extends AbstractMuleTestCase
         reg.fireLifecycle(Startable.PHASE_NAME);
 
         InterfaceBasedTracker tracker = new InterfaceBasedTracker();
-        reg.registerObject("test", tracker, MuleRegistry.INJECT_BYPASS_FLAG);
+        reg.registerObject("test", tracker, MuleRegistry.INJECT_PROCESSORS_BYPASS_FLAG);
         reg.dispose();
         assertEquals("[initialise, start, stop, dispose]", tracker.getTracker().toString());
     }
@@ -93,7 +91,7 @@ public class TransientRegistryTestCase extends AbstractMuleTestCase
         muleContext.start();
 
         InterfaceBasedTracker tracker = new InterfaceBasedTracker();
-        muleContext.getRegistry().registerObject("test", tracker, MuleRegistry.LIFECYCLE_BYPASS_FLAG + MuleRegistry.INJECT_BYPASS_FLAG);
+        muleContext.getRegistry().registerObject("test", tracker, MuleRegistry.LIFECYCLE_BYPASS_FLAG + MuleRegistry.INJECT_PROCESSORS_BYPASS_FLAG);
         muleContext.dispose();
         assertEquals("[stop, dispose]", tracker.getTracker().toString());
     }
@@ -105,7 +103,7 @@ public class TransientRegistryTestCase extends AbstractMuleTestCase
         reg.fireLifecycle(Startable.PHASE_NAME);
 
         InterfaceBasedTracker tracker = new InterfaceBasedTracker();
-        reg.registerObject("test", tracker, MuleRegistry.LIFECYCLE_BYPASS_FLAG + MuleRegistry.INJECT_BYPASS_FLAG);
+        reg.registerObject("test", tracker, MuleRegistry.LIFECYCLE_BYPASS_FLAG + MuleRegistry.INJECT_PROCESSORS_BYPASS_FLAG);
         reg.dispose();
         assertEquals("[stop, dispose]", tracker.getTracker().toString());
 

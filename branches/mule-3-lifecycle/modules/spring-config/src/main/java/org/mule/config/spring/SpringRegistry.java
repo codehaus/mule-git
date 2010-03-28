@@ -132,6 +132,7 @@ public class SpringRegistry extends AbstractRegistry
 
         for (LifecyclePair pair : lifecyclePairs)
         {
+            //Marker: MULE-4813
             if(pair.getBegin().getName().equals(Initialisable.PHASE_NAME))
             {
                 lifecycleManager.registerLifecycle(new DefaultLifecyclePair(
@@ -142,7 +143,7 @@ public class SpringRegistry extends AbstractRegistry
                 lifecycleManager.registerLifecycle(pair);
             }
         }
-//
+
         return lifecycleManager;
     }
 

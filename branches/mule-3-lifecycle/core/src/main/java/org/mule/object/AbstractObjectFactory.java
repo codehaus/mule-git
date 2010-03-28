@@ -10,9 +10,6 @@
 
 package org.mule.object;
 
-import org.mule.api.MuleContext;
-import org.mule.api.MuleException;
-import org.mule.api.context.MuleContextAware;
 import org.mule.api.lifecycle.InitialisationCallback;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.object.ObjectFactory;
@@ -34,7 +31,7 @@ import org.apache.commons.logging.LogFactory;
  * Creates object instances based on the class and sets any properties.  This factory is also responsible for applying
  * any object processors on the object before the lifecycle callbacks are called.
  */
-public abstract class AbstractObjectFactory implements ObjectFactory, MuleContextAware, ServiceAware
+public abstract class AbstractObjectFactory implements ObjectFactory, ServiceAware
 {
     public static final String ATTRIBUTE_OBJECT_CLASS_NAME = "objectClassName";
     public static final String ATTRIBUTE_OBJECT_CLASS = "objectClass";
@@ -43,7 +40,6 @@ public abstract class AbstractObjectFactory implements ObjectFactory, MuleContex
     protected SoftReference<Class<?>> objectClass = null;
     protected Map properties = null;
     protected List<InitialisationCallback> initialisationCallbacks = new ArrayList<InitialisationCallback>();
-    protected MuleContext muleContext;
     protected Service service;
     protected boolean disposed = false;
 
@@ -95,11 +91,6 @@ public abstract class AbstractObjectFactory implements ObjectFactory, MuleContex
         }
     }
 
-    public void setMuleContext(MuleContext context)
-    {
-        this.muleContext = context;
-    }
-
     public void setService(Service service)
     {
         this.service = service;
@@ -146,8 +137,6 @@ public abstract class AbstractObjectFactory implements ObjectFactory, MuleContex
             BeanUtils.populateWithoutFail(object, properties, true);
         }
 
-        applyProcessors(object);
-
         if(object instanceof ServiceAware)
         {
             ((ServiceAware)object).setService(service);
@@ -156,14 +145,6 @@ public abstract class AbstractObjectFactory implements ObjectFactory, MuleContex
         fireInitialisationCallbacks(object);
         
         return object;
-    }
-
-    protected void applyProcessors(Object object) throws MuleException
-    {
-        if(isAutoWireObject())
-        {
-            muleContext.getRegistry().applyProcessors(object);
-        }
     }
 
     protected void fireInitialisationCallbacks(Object component) throws InitialisationException

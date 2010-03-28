@@ -9,14 +9,14 @@
  */
 package org.mule.config.dsl;
 
+import org.mule.api.MuleContext;
 import org.mule.api.component.Component;
 import org.mule.api.object.ObjectFactory;
-import org.mule.api.MuleContext;
+import org.mule.component.DefaultJavaComponent;
+import org.mule.component.PooledJavaComponent;
 import org.mule.object.AbstractObjectFactory;
 import org.mule.object.PrototypeObjectFactory;
 import org.mule.object.SingletonObjectFactory;
-import org.mule.component.PooledJavaComponent;
-import org.mule.component.DefaultJavaComponent;
 
 /**
  * TODO
@@ -45,7 +45,6 @@ public class ComponentBuilder
         {
             factory = new PrototypeObjectFactory(clazz);
         }
-        factory.setMuleContext(muleContext);
 
         if (scope == Scope.Pooled)
         {

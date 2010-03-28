@@ -26,8 +26,6 @@ import org.mule.api.interceptor.Interceptor;
 import org.mule.api.interceptor.Invocation;
 import org.mule.api.lifecycle.DisposeException;
 import org.mule.api.lifecycle.InitialisationException;
-import org.mule.api.lifecycle.Lifecycle;
-import org.mule.api.lifecycle.LifecycleState;
 import org.mule.api.service.Service;
 import org.mule.api.service.ServiceException;
 import org.mule.api.transformer.Transformer;
@@ -44,7 +42,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -234,6 +231,13 @@ public abstract class AbstractComponent implements Component, Interceptor, MuleC
 
     public final void initialise() throws InitialisationException
     {
+        //TODO with spring controlling lifecycle the component gets initialised before the service, even though there is an
+        //explicit dependency
+        if(service!=null && service.getLifecycleManager()!=null && service.getLifecycleManager().getState().isInitialised())
+        {
+            return;
+        }
+
         if (logger.isInfoEnabled())
         {
             logger.info("Initialising: " + this);
@@ -254,7 +258,10 @@ public abstract class AbstractComponent implements Component, Interceptor, MuleC
 
     public void dispose()
     {
-
+        if(service.getLifecycleManager().getState().isDisposed())
+        {
+            return;
+        }
             try
             {
                 //TODO is this needed, doesn't the service manage this?
@@ -285,11 +292,15 @@ public abstract class AbstractComponent implements Component, Interceptor, MuleC
 
     public void stop() throws MuleException
     {
-            if (logger.isInfoEnabled())
-            {
-                logger.info("Stopping: " + this);
-            }
-            doStop();
+        if(service.getLifecycleManager().getState().isStopped())
+        {
+            return;
+        }
+        if (logger.isInfoEnabled())
+        {
+            logger.info("Stopping: " + this);
+        }
+        doStop();
     }
 
     protected void doStart() throws MuleException
@@ -299,6 +310,11 @@ public abstract class AbstractComponent implements Component, Interceptor, MuleC
 
     public void start() throws MuleException
     {
+        if(service.getLifecycleManager().getState().isStarted())
+        {
+            return;
+        }
+
         if (logger.isInfoEnabled())
         {
             logger.info("Starting: " + this);

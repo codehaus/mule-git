@@ -16,7 +16,6 @@ import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.Disposable;
 import org.mule.api.lifecycle.Initialisable;
 import org.mule.api.lifecycle.InitialisationException;
-import org.mule.api.lifecycle.LifecycleException;
 import org.mule.api.model.Model;
 import org.mule.api.registry.InjectProcessor;
 import org.mule.api.registry.MuleRegistry;
@@ -89,27 +88,6 @@ public class TransientRegistry extends AbstractRegistry
         {
             throw new InitialisationException(e, this);
         }
-//        synchronized(registry)
-//        {
-//            Collection allObjects = lookupObjects(Object.class);
-//            Object obj;
-//            for (Iterator iterator = allObjects.iterator(); iterator.hasNext();)
-//            {
-//                obj = iterator.next();
-//                try
-//                {
-//                    applyLifecycle(obj);
-//                }
-//                catch (InitialisationException e)
-//                {
-//                    throw e;
-//                }
-//                catch (MuleException e)
-//                {
-//                    throw new InitialisationException(e, this);
-//                }
-//            }
-//        }
     }
 
     @Override
@@ -123,23 +101,6 @@ public class TransientRegistry extends AbstractRegistry
         {
             logger.warn("Failed to dipose the registry cleanly", e);
         }
-//        synchronized(registry)
-//        {
-//            Collection allObjects = lookupObjects(Object.class);
-//            Object obj;
-//            for (Iterator iterator = allObjects.iterator(); iterator.hasNext();)
-//            {
-//                obj = iterator.next();
-//                try
-//                {
-//                    applyLifecycle(obj);
-//                }
-//                catch (MuleException e)
-//                {
-//                    logger.warn("Object '" + obj + "'disposed with error: " + e.getDetailedMessage());
-//                }
-//            }
-//        }
     }
 
     protected Map applyProcessors(Map<String, Object> objects)
@@ -239,7 +200,7 @@ public class TransientRegistry extends AbstractRegistry
     {
         Object theObject = object;
 
-        if(!hasFlag(metadata, MuleRegistry.INJECT_BYPASS_FLAG))
+        if(!hasFlag(metadata, MuleRegistry.INJECT_PROCESSORS_BYPASS_FLAG))
         {
             //Process injectors first
             Collection<InjectProcessor> injectProcessors = lookupObjects(InjectProcessor.class);
@@ -249,7 +210,7 @@ public class TransientRegistry extends AbstractRegistry
             }
         }
 
-        if(!hasFlag(metadata, MuleRegistry.PRE_INIT_BYPASS_FLAG))
+        if(!hasFlag(metadata, MuleRegistry.PRE_INIT_PROCESSORS_BYPASS_FLAG))
         {
             //Then any other processors
             Collection<PreInitProcessor> processors = lookupObjects(PreInitProcessor.class);

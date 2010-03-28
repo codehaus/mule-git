@@ -11,7 +11,6 @@
 package org.mule.object;
 
 import org.mule.api.lifecycle.InitialisationException;
-import org.mule.config.i18n.MessageFactory;
 
 import java.lang.ref.SoftReference;
 import java.util.Map;

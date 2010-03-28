@@ -31,7 +31,6 @@ public class ServiceServiceTestCase extends AbstractMuleJmxTestCase
         final SedaService service = new SedaService();
         service.setName("TEST_SERVICE");
         SingletonObjectFactory factory = new SingletonObjectFactory(Object.class);
-        factory.setMuleContext(muleContext);
         final DefaultJavaComponent component = new DefaultJavaComponent(factory);
         component.setMuleContext(muleContext);
         service.setComponent(component);

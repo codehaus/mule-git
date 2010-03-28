@@ -56,7 +56,6 @@ public class DefaultLifecycleEnabledObjectPoolTestCase extends AbstractPoolingTe
     {
         // WaterMelon implements some lifecycle methods
         PrototypeObjectFactory factory = new PrototypeObjectFactory(WaterMelon.class);
-        factory.setMuleContext(muleContext);
         return factory;
     }
     

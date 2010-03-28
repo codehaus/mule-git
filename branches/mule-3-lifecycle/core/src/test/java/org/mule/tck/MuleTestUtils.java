@@ -387,7 +387,6 @@ public final class MuleTestUtils
         Service service = new SedaService();
         service.setName(name);
         SingletonObjectFactory of = new SingletonObjectFactory(clazz, props);
-        of.setMuleContext(context);
         of.initialise();
         service.setMuleContext(context);
         JavaComponent component = new DefaultJavaComponent(of);

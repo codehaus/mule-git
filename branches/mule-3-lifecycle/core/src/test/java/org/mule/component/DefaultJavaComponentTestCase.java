@@ -14,7 +14,6 @@ import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.object.ObjectFactory;
 import org.mule.object.PrototypeObjectFactory;
 import org.mule.tck.testmodels.fruit.Orange;
-import org.mule.tck.testmodels.fruit.WaterMelon;
 
 public class DefaultJavaComponentTestCase extends AbstractComponentTestCase
 {
@@ -22,7 +21,6 @@ public class DefaultJavaComponentTestCase extends AbstractComponentTestCase
     protected ObjectFactory createObjectFactory() throws InitialisationException
     {
         PrototypeObjectFactory objectFactory = new PrototypeObjectFactory(Orange.class);
-        objectFactory.setMuleContext(muleContext);
         objectFactory.initialise();
         return objectFactory;
     }
