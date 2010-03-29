@@ -10,6 +10,7 @@
 
 package org.mule.component;
 
+import org.mule.api.MuleContext;
 import org.mule.api.MuleException;
 import org.mule.api.component.Component;
 import org.mule.api.component.LifecycleAdapter;
@@ -81,7 +82,7 @@ public class PooledJavaComponent extends AbstractJavaComponent
         super.doStart();
         // Wrap pool's objectFactory with a LifeCycleAdaptor factory so we pool
         // LifeCycleAdaptor's and not just pojo instances.
-        lifecycleAdapterPool = new DefaultLifecycleEnabledObjectPool(new LifeCycleAdaptorFactory(), poolingProfile);
+        lifecycleAdapterPool = new DefaultLifecycleEnabledObjectPool(new LifeCycleAdaptorFactory(), poolingProfile, muleContext);
         lifecycleAdapterPool.initialise();
         lifecycleAdapterPool.start();
     }
@@ -124,7 +125,7 @@ public class PooledJavaComponent extends AbstractJavaComponent
     protected class LifeCycleAdaptorFactory implements ObjectFactory
     {
 
-        public Object getInstance() throws Exception
+        public Object getInstance(MuleContext muleContext) throws Exception
         {
             return createLifeCycleAdaptor();
         }

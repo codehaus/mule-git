@@ -10,6 +10,7 @@
 
 package org.mule.object;
 
+import org.mule.api.MuleContext;
 import org.mule.api.lifecycle.InitialisationException;
 
 import java.lang.ref.SoftReference;
@@ -72,15 +73,16 @@ public class SingletonObjectFactory extends AbstractObjectFactory
 
     /**
      * Always returns the same instance of the object.
+     * @param muleContext
      */
     @Override
-    public Object getInstance() throws Exception
+    public Object getInstance(MuleContext muleContext) throws Exception
     {
         if (instance == null || instance.get() == null)
         {
             try
             {
-                instance = new SoftReference<Object>(super.getInstance());
+                instance = new SoftReference<Object>(super.getInstance(muleContext));
             }
             catch (Exception e)
             {

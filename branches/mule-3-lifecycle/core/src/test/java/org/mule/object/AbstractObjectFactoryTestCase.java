@@ -37,7 +37,7 @@ public abstract class AbstractObjectFactoryTestCase extends AbstractMuleTestCase
 
         try
         {
-            factory.getInstance();
+            factory.getInstance(muleContext);
             fail("expected InitialisationException");
         }
         catch (InitialisationException iex)
@@ -87,7 +87,7 @@ public abstract class AbstractObjectFactoryTestCase extends AbstractMuleTestCase
         // Will init the object        
         muleContext.getRegistry().applyProcessorsAndLifecycle(factory);
 
-        assertNotNull(factory.getInstance());
+        assertNotNull(factory.getInstance(muleContext));
     }
 
     public void testInitialiseWithClassName() throws Exception
@@ -97,7 +97,7 @@ public abstract class AbstractObjectFactoryTestCase extends AbstractMuleTestCase
         // Will init the object
         muleContext.getRegistry().applyProcessorsAndLifecycle(factory);
         
-        assertNotNull(factory.getInstance());
+        assertNotNull(factory.getInstance(muleContext));
     }
 
     public void testDispose() throws Exception
@@ -111,7 +111,7 @@ public abstract class AbstractObjectFactoryTestCase extends AbstractMuleTestCase
 
         try
         {
-            factory.getInstance();
+            factory.getInstance(muleContext);
             fail("expected InitialisationException");
         }
         catch (InitialisationException iex)
@@ -130,7 +130,7 @@ public abstract class AbstractObjectFactoryTestCase extends AbstractMuleTestCase
         // simulate garbage collection
         factory.objectClass.clear();
         
-        Object borrowed = factory.getInstance();
+        Object borrowed = factory.getInstance(muleContext);
         assertNotNull(borrowed);
     }
 

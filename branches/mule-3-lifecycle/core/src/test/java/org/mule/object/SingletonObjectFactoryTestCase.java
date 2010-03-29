@@ -36,7 +36,7 @@ public class SingletonObjectFactoryTestCase extends AbstractObjectFactoryTestCas
         factory.setObjectClass(Object.class);
         factory.initialise();
         
-        assertSame(factory.getInstance(), factory.getInstance());
+        assertSame(factory.getInstance(muleContext), factory.getInstance(muleContext));
     }
 
 }

@@ -45,7 +45,7 @@ public class DefaultLifecycleEnabledObjectPoolTestCase extends AbstractPoolingTe
         PoolingProfile poolingProfile = createDefaultPoolingProfile();
         ObjectFactory objectFactory = createDefaultObjectFactory();
         DefaultLifecycleEnabledObjectPool pool =
-            new DefaultLifecycleEnabledObjectPool(objectFactory, poolingProfile);
+            new DefaultLifecycleEnabledObjectPool(objectFactory, poolingProfile, muleContext);
         
         pool.initialise();
         

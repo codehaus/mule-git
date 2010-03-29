@@ -47,7 +47,7 @@ public class DefaultJavaComponentTestCase extends AbstractComponentTestCase
         assertNotSame(component.borrowComponentLifecycleAdaptor(),
             component.borrowComponentLifecycleAdaptor());
 
-        Object obj = component.getObjectFactory().getInstance();
+        Object obj = component.getObjectFactory().getInstance(muleContext);
         assertNotNull(obj);
 
         component.stop();

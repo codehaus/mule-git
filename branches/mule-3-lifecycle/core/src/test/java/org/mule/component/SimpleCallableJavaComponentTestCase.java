@@ -11,7 +11,6 @@
 package org.mule.component;
 
 import org.mule.api.DefaultMuleException;
-import org.mule.api.lifecycle.DisposeException;
 import org.mule.object.PrototypeObjectFactory;
 import org.mule.tck.testmodels.fruit.Apple;
 import org.mule.tck.testmodels.fruit.Orange;
@@ -95,7 +94,7 @@ public class SimpleCallableJavaComponentTestCase extends AbstractComponentTestCa
 
         assertNull(component.borrowComponentLifecycleAdaptor());
 
-        Object obj = component.getObjectFactory().getInstance();
+        Object obj = component.getObjectFactory().getInstance(muleContext);
         assertNotNull(obj);
 
         component.stop();

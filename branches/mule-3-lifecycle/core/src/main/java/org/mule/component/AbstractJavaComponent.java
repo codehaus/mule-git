@@ -28,7 +28,6 @@ import org.mule.routing.binding.DefaultBindingCollection;
 
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Abstract implementation of JavaComponent adds JavaComponent specific's:
@@ -48,10 +47,6 @@ public abstract class AbstractJavaComponent extends AbstractComponent implements
 
     protected LifecycleAdapterFactory lifecycleAdapterFactory;
 
-    //Determines whether an object should be wired once created.  For
-    //prototypes this value is always true, for singletons it is only true
-    //the first time the object is created from the objectFactory
-    private AtomicBoolean wireObject = new AtomicBoolean(true);
 
     public AbstractJavaComponent()
     {
@@ -116,14 +111,7 @@ public abstract class AbstractJavaComponent extends AbstractComponent implements
     {
         LifecycleAdapter lifecycleAdapter;
         //Todo this could be moved to the LCAFactory potentially
-        Object object = objectFactory.getInstance();
-
-        //Ideally wiring would happen in the ObjectFactory. However, the way we create the ObjectFactory in Spring makes it difficult to
-        //reliably inject the MUle context in the ObjectFactory since the Spring context doesn't contain the MuleContext
-        if(objectFactory.isAutoWireObject())
-        {
-            muleContext.getRegistry().applyProcessors(object);
-        }
+        Object object = objectFactory.getInstance(muleContext);
 
         if (lifecycleAdapterFactory != null)
         {

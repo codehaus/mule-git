@@ -10,6 +10,7 @@
 
 package org.mule.object;
 
+import org.mule.api.MuleContext;
 import org.mule.api.lifecycle.InitialisationCallback;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.object.ObjectFactory;
@@ -114,9 +115,12 @@ public abstract class AbstractObjectFactory implements ObjectFactory, ServiceAwa
 
     /**
      * Creates an initialized object instance based on the class and sets any properties.
-     * THis method handles all injection of properties for the resulting object
+     * This method handles all injection of properties for the resulting object
+     * @param muleContext the current {@link org.mule.api.MuleContext} instance. This can be used for performing registry lookups
+     * applying processors to newly created objects or even firing custom notifications
+     * @throws Exception Can throw any type of exception while creating a new object
      */
-    public Object getInstance() throws Exception
+    public Object getInstance(MuleContext muleContext) throws Exception
     {
         if (objectClass == null || disposed)
         {
@@ -142,6 +146,10 @@ public abstract class AbstractObjectFactory implements ObjectFactory, ServiceAwa
             ((ServiceAware)object).setService(service);
         }
 
+        if(isAutoWireObject())
+        {
+            muleContext.getRegistry().applyProcessors(object);
+        }
         fireInitialisationCallbacks(object);
         
         return object;
