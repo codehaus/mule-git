@@ -17,10 +17,8 @@ import org.mule.api.endpoint.OutboundEndpoint;
 import org.mule.api.lifecycle.LifecycleException;
 import org.mule.api.service.Service;
 import org.mule.api.transport.DispatchException;
-import org.mule.lifecycle.AlreadyInitialisedException;
 import org.mule.routing.inbound.DefaultInboundRouterCollection;
 import org.mule.tck.AbstractMuleTestCase;
-import org.mule.tck.MuleTestUtils;
 import org.mule.tck.testmodels.mule.TestConnector;
 
 import javax.resource.spi.work.Work;
@@ -70,7 +68,7 @@ public class ConnectorLifecycleTestCase extends AbstractMuleTestCase
         try 
         {
             connector.initialise();
-            Assert.fail("Expected AlreadyInitialisedException not thrown.");
+            Assert.fail("Expected IllegalStateException not thrown.");
         } 
         catch (IllegalStateException ex)
         {
