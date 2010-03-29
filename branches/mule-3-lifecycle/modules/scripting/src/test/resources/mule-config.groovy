@@ -11,8 +11,6 @@ import org.mule.config.ChainedThreadingProfile
 import org.mule.endpoint.DefaultEndpointFactory
 import org.mule.endpoint.EndpointURIEndpointBuilder
 import org.mule.interceptor.InterceptorStack
-import org.mule.interceptor.LoggingInterceptor
-import org.mule.interceptor.TimerInterceptor
 import org.mule.model.seda.SedaModel
 import org.mule.model.seda.SedaService
 import org.mule.object.SingletonObjectFactory
@@ -160,9 +158,7 @@ muleContext.registry.registerModel(model)
 Service service = new SedaService();
 service.model = model
 service.name = "orangeComponent"
-factory = new SingletonObjectFactory(Orange.class.name);
-factory.muleContext = muleContext
-def component = new DefaultJavaComponent(factory)
+def component = new DefaultJavaComponent(new SingletonObjectFactory(Orange.class.name))
 component.muleContext = muleContext
 service.component = component
 List interceptorList = new ArrayList()
