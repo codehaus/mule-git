@@ -344,7 +344,7 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
      */
     public Object getOriginalPayload()
     {
-        return (originalAdapter == null ? adapter.getPayload() : originalAdapter.getPayload());
+        return originalPayload;
     }
 
     /**
