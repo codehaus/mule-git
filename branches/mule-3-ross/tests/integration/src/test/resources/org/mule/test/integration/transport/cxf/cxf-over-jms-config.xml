@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:spring="http://www.springframework.org/schema/beans"
+       xmlns:jms="http://www.mulesoft.org/schema/mule/jms"
+       xmlns:cxf="http://www.mulesoft.org/schema/mule/cxf"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+       http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/3.0/mule.xsd
+       http://www.mulesoft.org/schema/mule/cxf http://www.mulesoft.org/schema/mule/cxf/3.0/mule-cxf.xsd
+       http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/3.0/mule-jms.xsd">
+
+    <jms:activemq-connector name="jmsConnector"/>
+
+    <cxf:endpoint name="clientEndpoint" address="jms://TestComponent2?method=echo"/>
+    
+    <model name="Test-Case">
+        <service name="JmsService">
+            <inbound>
+                <jms:inbound-endpoint address="jms://TestComponent"/>
+            </inbound>
+            <outbound>
+                <chaining-router>
+                    <outbound-endpoint address="vm://test" synchronous="true"/>
+                    <jms:outbound-endpoint address="jms://testout"/>
+                </chaining-router>
+            </outbound>
+        </service>
+        
+        <service name="TestComponent">
+            <inbound>
+                <cxf:inbound-endpoint address="vm://test" frontend="simple" synchronous="true"/>
+            </inbound>
+            <echo-component/>
+        </service>
+        
+        <service name="TestComponent2">
+            <inbound>
+                <cxf:inbound-endpoint address="jms://TestComponent2" frontend="simple"/>
+            </inbound>
+            <echo-component/>
+            <outbound>
+                <chaining-router>
+                    <jms:outbound-endpoint address="jms://testout"/>
+                </chaining-router>
+            </outbound>
+        </service>
+        
+        <service name="TestCxfJmsProxy">
+            <inbound>
+                <cxf:inbound-endpoint address="http://localhost:63081/services/testBridge" proxy="true" synchronous="true"/>
+            </inbound>
+            <outbound>
+                <pass-through-router>
+                    <cxf:outbound-endpoint address="jms://testEcho" proxy="true" synchronous="true"/>
+                </pass-through-router>
+            </outbound>
+        </service>
+
+        <service name="TestEcho">
+            <inbound>
+                <cxf:inbound-endpoint address="jms://testEcho" frontend="simple" synchronous="true" proxy="true"/>
+            </inbound>
+            <echo-component/>
+        </service>
+        
+    </model>
+    
+</mule>
