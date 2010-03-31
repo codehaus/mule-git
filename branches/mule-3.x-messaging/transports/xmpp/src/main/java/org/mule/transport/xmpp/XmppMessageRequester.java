@@ -51,7 +51,6 @@ public class XmppMessageRequester extends AbstractMessageRequester
     }
 
     @Override
-    @Override
     protected MuleMessage doRequest(long timeout) throws Exception
     {
         Message message = null;
