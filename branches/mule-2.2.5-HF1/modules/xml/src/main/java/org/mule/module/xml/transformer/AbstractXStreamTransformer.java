@@ -10,7 +10,9 @@
 
 package org.mule.module.xml.transformer;
 
+import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.transformer.TransformerException;
+import org.mule.config.i18n.CoreMessages;
 import org.mule.config.i18n.MessageFactory;
 import org.mule.transformer.AbstractMessageAwareTransformer;
 
@@ -35,6 +37,23 @@ public abstract class AbstractXStreamTransformer extends AbstractMessageAwareTra
     private volatile Map aliases = null;
     private volatile List converters = null;
 
+    @Override
+    public void initialise() throws InitialisationException
+    {
+        super.initialise();
+        try
+        {
+            // Create XStream instance as part of initialization so that we can set
+            // the context classloader that will be required to load classes.
+            XStream xStreamInstance = getXStream();
+            xStreamInstance.setClassLoader(Thread.currentThread().getContextClassLoader());
+        }
+        catch (TransformerException e)
+        {
+            throw new InitialisationException(CoreMessages.initialisationFailure(e.getMessage()), this);
+        }
+    }  
+    
     public final XStream getXStream() throws TransformerException
     {
         XStream instance = (XStream) xstream.get();

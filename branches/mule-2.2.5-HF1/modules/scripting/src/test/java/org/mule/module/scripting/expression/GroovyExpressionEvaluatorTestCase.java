@@ -15,6 +15,9 @@ import org.mule.tck.testmodels.fruit.Apple;
 import org.mule.tck.testmodels.fruit.Banana;
 import org.mule.tck.testmodels.fruit.FruitBowl;
 
+import groovyjarjarasm.asm.ClassWriter;
+import groovyjarjarasm.asm.Opcodes;
+
 public class GroovyExpressionEvaluatorTestCase extends AbstractMuleTestCase
 {
 
@@ -66,5 +69,46 @@ public class GroovyExpressionEvaluatorTestCase extends AbstractMuleTestCase
                 "#[groovy:registry.'name.with.dots'.washed]", null);
         assertNotNull(result);
         assertEquals(false, result);
+    }
+
+    /**
+     * See: MULE-4797 GroovyExpressionEvaluator script is unable to load user classes when used with hot deployment
+     * See: https://scripting.dev.java.net/issues/show_bug.cgi?id=32
+     */
+    public void testUseContextClassLoaderToResolveClasses() throws ClassNotFoundException
+    {
+        ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
+        try
+        {
+            Thread.currentThread().setContextClassLoader(new MyClassClassLoader());
+            assertFalse((Boolean) muleContext.getExpressionManager().evaluate(
+                "groovy:payload instanceof MyClass", new DefaultMuleMessage("test")));
+        }
+        catch (Exception e)
+        {
+            fail(e.getMessage());
+        }
+        finally
+        {
+            Thread.currentThread().setContextClassLoader(originalClassLoader);
+        }
+    }
+
+    class MyClassClassLoader extends ClassLoader
+    {
+        @Override
+        protected Class<?> findClass(String name) throws ClassNotFoundException
+        {
+            if (name.equals("MyClass"))
+            {
+                ClassWriter cw = new ClassWriter(true);
+                cw.visit(Opcodes.V1_5, Opcodes.ACC_PUBLIC, "MyClass", null, "java/lang/Object", null);
+                return defineClass(name, cw.toByteArray(), 0, cw.toByteArray().length);
+            }
+            else
+            {
+                return super.findClass(name);
+            }
+        }
     }
 }

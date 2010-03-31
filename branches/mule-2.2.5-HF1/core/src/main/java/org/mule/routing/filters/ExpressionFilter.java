@@ -9,13 +9,14 @@
  */
 package org.mule.routing.filters;
 
+import static org.mule.util.ClassUtils.equal;
+import static org.mule.util.ClassUtils.hash;
+
 import org.mule.api.MuleContext;
 import org.mule.api.MuleMessage;
 import org.mule.api.context.MuleContextAware;
 import org.mule.api.routing.filter.Filter;
 import org.mule.config.i18n.CoreMessages;
-import static org.mule.util.ClassUtils.equal;
-import static org.mule.util.ClassUtils.hash;
 
 import java.text.MessageFormat;
 
@@ -39,6 +40,12 @@ public class ExpressionFilter implements Filter, MuleContextAware
     private boolean nullReturnsTrue = false;
     private MuleContext muleContext;
 
+    /**
+     * The class-loader that should be used to load any classes used in scripts.
+     * Default to the classloader used to load this filter
+     **/
+    private ClassLoader expressionEvaluationClassLoader = Thread.currentThread().getContextClassLoader();
+    
     private static final String TRUE = "true";
 
     /** For evaluators that are not expression languages we can delegate the execution to another filter */
@@ -97,7 +104,28 @@ public class ExpressionFilter implements Filter, MuleContextAware
             return result;
         }
 
-        Object result = muleContext.getExpressionManager().evaluate(expr, message);
+        Object result;
+
+        // MULE-4797 Because there is no way to specify the class-loader that script
+        // engines use and because scripts when used for expressions are compiled in
+        // runtime rather than at initialization the only way to ensure the correct
+        // class-loader to used is to switch it out here. We may want to consider
+        // passing the class-loader to the ExpressionManager and only doing this for
+        // certain ExpressionEvaluators further in.
+        ClassLoader originalContextClassLoader = Thread.currentThread().getContextClassLoader();
+        try
+        {
+            Thread.currentThread().setContextClassLoader(expressionEvaluationClassLoader);
+            result = muleContext.getExpressionManager().evaluate(expr, message);
+
+        }
+        finally
+        {
+            // Restore original context class-loader
+            Thread.currentThread().setContextClassLoader(originalContextClassLoader);
+
+        }
+
         if (result == null)
         {
             return nullReturnsTrue;

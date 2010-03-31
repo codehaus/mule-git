@@ -52,13 +52,11 @@
             <classifier>jdk14</classifier>
         </dependency>
 
-        <!-- This is the actual language implementation -->
-         <dependency>
-            <groupId>javax.script</groupId>
-            <artifactId>groovy-engine</artifactId>
-            <!-- we use our own retrotranslated version -->
-            <classifier>jdk14</classifier>
-        </dependency>
+        <!-- 
+             javax.script:groovy-engine source is now included in this module to overcome the 
+             issue described here: https://scripting.dev.java.net/issues/show_bug.cgi?id=32 		    
+        -->
+
         <dependency>
             <groupId>org.codehaus.groovy</groupId>
             <artifactId>groovy-all</artifactId>
