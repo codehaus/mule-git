@@ -142,15 +142,10 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
         resetAccessControl();
     }
 
-    private void copyMessageProperties(MuleMessage muleMessage)
-    {
-        for (String key : muleMessage.getPropertyNames())
-        {
-            Object value = muleMessage.getProperty(key);
-            setProperty(key, value);
-        }
-    }
-
+    /**
+     * @deprecated This method will go away as part of the message adapter removal
+     */
+    @Deprecated
     public DefaultMuleMessage(Object message, MessageAdapter previous, MuleContext muleContext)
     {
         setMuleContext(muleContext);
@@ -181,10 +176,67 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
         }
         resetAccessControl();
     }
-
-    protected DefaultMuleMessage(DefaultMuleMessage message)
+    
+    public DefaultMuleMessage(Object message, MuleMessage previous, MuleContext muleContext)
     {
-        this(message.getPayload(), message.getAdapter(), message.muleContext);
+        setMuleContext(muleContext);
+        initAppliedTransformerHashCodes();
+        setEncoding(previous.getEncoding());
+        
+        payload = message;
+        originalPayload = previous.getPayload();
+        
+        if (previous.getExceptionPayload() != null)
+        {
+            setExceptionPayload(previous.getExceptionPayload());
+        }
+        
+        copyMessageProperties(previous);
+        copyAttachments(previous);
+        
+        resetAccessControl();
+    }
+
+    private void copyMessageProperties(MuleMessage muleMessage)
+    {
+        for (PropertyScope scope : PropertyScope.ALL_SCOPES)
+        {
+            try
+            {
+                for (String name : muleMessage.getPropertyNames(scope))
+                {
+                    Object value = muleMessage.getProperty(name);
+                    setProperty(name, value, scope);
+                }
+            }
+            catch (IllegalArgumentException iae)
+            {
+                // ignore non-registered property scope
+            }
+        }
+    }
+
+    private void copyAttachments(MuleMessage previous)
+    {
+        if (previous.getAttachmentNames().size() > 0)
+        {
+            for (String name : previous.getAttachmentNames())
+            {
+                try
+                {
+                    addAttachment(name, previous.getAttachment(name));
+                }
+                catch (Exception e)
+                {
+                    throw new MuleRuntimeException(CoreMessages.failedToReadAttachment(name), e);
+                }
+            }
+        }
+    }
+
+    private DefaultMuleMessage(DefaultMuleMessage message)
+    {
+        this(message.getPayload(), message, message.muleContext);
     }
 
     private void setMuleContext(MuleContext context)

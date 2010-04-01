@@ -21,6 +21,8 @@ import org.mule.transport.DefaultMessageAdapter;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.activation.DataHandler;
+
 public class MuleMessageTestCase extends AbstractMuleTestCase
 {
 
@@ -86,5 +88,26 @@ public class MuleMessageTestCase extends AbstractMuleTestCase
         // the constructor will be the payload and will not be unwrapped even if it
         // is a MessageAdaptor instance
         assertEquals(message.getPayload(), adapter);
+    }
+    
+    public void testConstructorUpdatingPayloadAndCopyingFromPreviousMessage() throws Exception
+    {
+        MuleMessage original = new DefaultMuleMessage("original", muleContext);
+        original.setProperty("custom-property", "value");
+        
+        DataHandler dataHandler = new DataHandler("this is the test attachment", "text/plain");
+        original.addAttachment("test-attachment", dataHandler);
+        
+        MuleMessage copy = new DefaultMuleMessage("copy", original, muleContext);
+        assertEquals("copy", copy.getPayload());
+        assertEquals("value", copy.getProperty("custom-property"));
+        assertEquals(dataHandler, copy.getAttachment("test-attachment"));
+        
+        // make sure the copies are disconnected
+        copy.setProperty("copy-property", "copy-value");
+        assertNull(original.getProperty("copy-property"));
+        
+        copy.addAttachment("copy-attachment", new DataHandler("copy-attachment", "text/plain"));
+        assertNull(original.getAttachment("copy-attachment"));
     }
 }
