@@ -184,7 +184,7 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
 
     protected DefaultMuleMessage(DefaultMuleMessage message)
     {
-        this(message.getPayload(), message.getAdapter(), message.getMuleContext());
+        this(message.getPayload(), message.getAdapter(), message.muleContext);
     }
 
     private void setMuleContext(MuleContext context)
@@ -208,11 +208,6 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
     public <T> T getPayload(Class<T> outputType) throws TransformerException
     {
         return getPayload(outputType, getEncoding());
-    }
-
-    MuleContext getMuleContext()
-    {
-        return muleContext;
     }
 
     /**
