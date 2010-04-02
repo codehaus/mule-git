@@ -9,7 +9,7 @@
        http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/3.0/mule.xsd">
 
     <model>
-        <service name="StollerService">
+        <service name="StrollerService">
             <description>
                 A service that generates GPS coordinates in downtown San Francisco. These get mapped on a Google map
                 at the browser. there is no fancy street walking algorithm so the results may vary.
