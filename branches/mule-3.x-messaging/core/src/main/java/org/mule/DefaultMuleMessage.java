@@ -141,41 +141,6 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
         addProperties(properties);
         resetAccessControl();
     }
-
-    /**
-     * @deprecated This method will go away as part of the message adapter removal
-     */
-    @Deprecated
-    public DefaultMuleMessage(Object message, MessageAdapter previous, MuleContext muleContext)
-    {
-        setMuleContext(muleContext);
-        initAppliedTransformerHashCodes();
-
-        payload = message;
-        originalPayload = previous.getPayload();
-
-        if (previous.getExceptionPayload() != null)
-        {
-            setExceptionPayload(previous.getExceptionPayload());
-        }
-        setEncoding(previous.getEncoding());
-        if (previous.getAttachmentNames().size() > 0)
-        {
-            Set<String> attNames = previous.getAttachmentNames();
-            for (String s : attNames)
-            {
-                try
-                {
-                    addAttachment(s, previous.getAttachment(s));
-                }
-                catch (Exception e)
-                {
-                    throw new MuleRuntimeException(CoreMessages.failedToReadAttachment(s), e);
-                }
-            }
-        }
-        resetAccessControl();
-    }
     
     public DefaultMuleMessage(Object message, MuleMessage previous, MuleContext muleContext)
     {
