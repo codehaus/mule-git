@@ -166,7 +166,15 @@ public class ServerNotificationManager implements Work, Disposable, ServerNotifi
 
     public boolean isListenerRegistered(ServerNotificationListener listener)
     {
-        return configuration.getListeners().contains(listener);
+
+        for (ListenerSubscriptionPair pair : configuration.getListeners())
+        {
+            if(pair.getListener().equals(listener))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void fireNotification(ServerNotification notification)
