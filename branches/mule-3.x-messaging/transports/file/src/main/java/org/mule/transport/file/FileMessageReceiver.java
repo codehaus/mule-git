@@ -21,7 +21,6 @@ import org.mule.api.service.Service;
 import org.mule.api.transport.Connector;
 import org.mule.transport.AbstractPollingMessageReceiver;
 import org.mule.transport.ConnectException;
-import org.mule.transport.DefaultMessageAdapter;
 import org.mule.transport.file.i18n.FileMessages;
 import org.mule.util.FileUtils;
 
@@ -202,10 +201,9 @@ public class FileMessageReceiver extends AbstractPollingMessageReceiver
             throw new DefaultMuleException(FileMessages.fileDoesNotExist(sourceFileOriginalName));
         }
 
-        // This isn't nice but is needed as MessageAdaptor is required to resolve
-        // destination file name, and StreamingReceiverFileInputStream is
-        // required to create MessageAdaptor
-        DefaultMessageAdapter fileParserMsgAdaptor = new DefaultMessageAdapter(null);
+        // This isn't nice but is needed as MuleMessage is required to resolve
+        // destination file name
+        DefaultMuleMessage fileParserMsgAdaptor = new DefaultMuleMessage(null, connector.getMuleContext());
         fileParserMsgAdaptor.setProperty(FileConnector.PROPERTY_ORIGINAL_FILENAME, sourceFileOriginalName);
         
         File workFile = null;

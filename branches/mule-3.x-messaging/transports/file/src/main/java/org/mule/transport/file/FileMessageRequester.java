@@ -10,6 +10,7 @@
 
 package org.mule.transport.file;
 
+import org.mule.DefaultMuleMessage;
 import org.mule.api.DefaultMuleException;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
@@ -17,7 +18,6 @@ import org.mule.api.endpoint.InboundEndpoint;
 import org.mule.api.lifecycle.CreateException;
 import org.mule.api.routing.filter.Filter;
 import org.mule.transport.AbstractMessageRequester;
-import org.mule.transport.DefaultMessageAdapter;
 import org.mule.transport.file.i18n.FileMessages;
 import org.mule.util.FileUtils;
 
@@ -126,13 +126,6 @@ public class FileMessageRequester extends AbstractMessageRequester
                 // Don't we need to try to obtain a file lock as we do with receiver
                 String sourceFileOriginalName = result.getName();
 
-                // This isn't nice but is needed as MessageAdaptor is required to
-                // resolve
-                // destination file name, and StreamingReceiverFileInputStream is
-                // required to create MessageAdaptor
-                DefaultMessageAdapter fileParserMsgAdaptor = new DefaultMessageAdapter(null);
-                fileParserMsgAdaptor.setProperty(FileConnector.PROPERTY_ORIGINAL_FILENAME, sourceFileOriginalName);
-
                 // set up destination file
                 File destinationFile = null;
                 String movDir = getMoveDirectory();
@@ -142,8 +135,14 @@ public class FileMessageRequester extends AbstractMessageRequester
                     String moveToPattern = getMoveToPattern();
                     if (moveToPattern != null)
                     {
-                        destinationFileName = connector.getFilenameParser().getFilename(
-                            fileParserMsgAdaptor, moveToPattern);
+                        // This isn't nice but is needed as MuleMessage is required to
+                        // resolve the destination file name
+                        DefaultMuleMessage parserMesssage = new DefaultMuleMessage(null, 
+                            connector.getMuleContext());
+                        parserMesssage.setProperty(FileConnector.PROPERTY_ORIGINAL_FILENAME, sourceFileOriginalName);
+
+                        destinationFileName = 
+                            connector.getFilenameParser().getFilename(parserMesssage, moveToPattern);
                     }
                     // don't use new File() directly, see MULE-1112
                     destinationFile = FileUtils.newFile(movDir, destinationFileName);
