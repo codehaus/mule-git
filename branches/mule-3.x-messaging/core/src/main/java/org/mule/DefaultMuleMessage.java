@@ -708,9 +708,7 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
         assertAccess(READ);
         StringBuffer buf = new StringBuffer(120);
         buf.append(getClass().getName());
-        buf.append("/" + super.toString());
-        buf.append('{');
-        buf.append("id=").append(getUniqueId());
+        buf.append("{id=").append(getUniqueId());
         buf.append(", payload=").append(getPayload().getClass().getName());
         buf.append(", properties=").append(properties);
         buf.append(", correlationId=").append(getCorrelationId());
