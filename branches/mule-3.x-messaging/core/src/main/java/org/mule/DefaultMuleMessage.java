@@ -130,12 +130,12 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
         if (message instanceof MuleMessage)
         {
             MuleMessage muleMessage = (MuleMessage) message;
-            payload = muleMessage.getPayload();
+            setPayload(muleMessage.getPayload());
             copyMessageProperties(muleMessage);
         }
         else
         {
-            payload = message;
+            setPayload(message);
             originalPayload = message;
         }
         addProperties(properties);
@@ -148,7 +148,7 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
         initAppliedTransformerHashCodes();
         setEncoding(previous.getEncoding());
         
-        payload = message;
+        setPayload(message);
         originalPayload = previous.getPayload();
         
         if (previous.getExceptionPayload() != null)
@@ -855,7 +855,14 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
      */
     public synchronized void setPayload(Object payload)
     {
-        this.payload = payload;
+        if (payload == null)
+        {
+            this.payload = NullPayload.getInstance();
+        }
+        else
+        {
+            this.payload = payload;
+        }
         cache = null;
     }
 
