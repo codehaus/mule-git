@@ -160,8 +160,7 @@ public class FileReceiverMoveDeleteTestCase extends AbstractFileMoveDeleteTestCa
 
     protected Latch configureService(File inFile, boolean streaming, boolean filePayload) throws Exception
     {
-        Service service = new SedaService();
-        service.setMuleContext(muleContext);
+        Service service = new SedaService(muleContext);
         service.setName("moveDeleteBridgeService");
         String url = fileToUrl(inFile.getParentFile()) + "?connector=moveDeleteConnector";
         org.mule.api.transformer.Transformer transformer = null;
@@ -212,7 +211,6 @@ public class FileReceiverMoveDeleteTestCase extends AbstractFileMoveDeleteTestCa
         final DefaultJavaComponent component = new DefaultJavaComponent(new SingletonObjectFactory(testComponent));
         component.setMuleContext(muleContext);
         service.setComponent(component);
-        service.setMuleContext(muleContext);
         service.setModel(muleContext.getRegistry().lookupSystemModel());
         muleContext.getRegistry().registerService(service);
         service.start();

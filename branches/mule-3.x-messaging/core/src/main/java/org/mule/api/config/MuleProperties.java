@@ -108,6 +108,7 @@ public class MuleProperties
     public static final String MULE_HOME_DIRECTORY_PROPERTY = "mule.home";
 
     // Object Name Keys
+    public static final String OBJECT_MULE_CONTEXT = "_muleContext";
     public static final String OBJECT_SYSTEM_MODEL = "_muleSystemModel";
     public static final String OBJECT_MULE_CONTEXT_PROCESSOR = "_muleContextProcessor";
     public static final String OBJECT_PROPERTY_PLACEHOLDER_PROCESSOR = "_mulePropertyPlaceholderProcessor";
