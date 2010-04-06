@@ -151,13 +151,13 @@ public class FileConnectorTestCase extends AbstractConnectorTestCase
     }
     
     /**
-     * The default message factory for the file connector converts to byte[] so the original
+     * If the connector is configured not to do streaming it converts to byte[] so the original
      * input payload is not the same as the payload in the MuleMessage
      */
-    @Override
-    public void testConnectorMessageCreatorWithValidPayload() throws Exception
+    public void testConnectorMessageFactoryNonStreaming() throws Exception
     {
         Connector connector = getConnectorAndAssert();
+        ((FileConnector) connector).setStreaming(false);
 
         Object payload = getValidMessage();
         MuleMessage message = connector.createMuleMessageFactory().create(payload, encoding);
