@@ -81,7 +81,7 @@ public abstract class AbstractMuleMessageFactoryTestCase extends AbstractMuleTes
 
     protected Object getUnsupportedTransportMessage()
     {
-        throw new IllegalStateException("Subclasses must properly implement this method");
+        throw new AssertionError("Subclasses must properly implement this method");
     }
 
     protected abstract MuleMessageFactory doCreateMuleMessageFactory();
