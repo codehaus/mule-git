@@ -91,7 +91,6 @@ public class HttpMuleMessageFactory extends AbstractMuleMessageFactory
     @Override
     protected void addProperties(MuleMessage message, Object transportMessage) throws Exception
     {
-
         String method;
         HttpVersion httpVersion;
         String uri;
@@ -106,7 +105,7 @@ public class HttpMuleMessageFactory extends AbstractMuleMessageFactory
             method = httpRequest.getRequestLine().getMethod();
             httpVersion = httpRequest.getRequestLine().getHttpVersion();
             uri = httpRequest.getRequestLine().getUri();
-            headers = convertHeadersToMap(((HttpRequest) transportMessage).getHeaders());
+            headers = convertHeadersToMap(httpRequest.getHeaders());
             cookieHeader = httpRequest.getFirstHeader(HttpConnector.HTTP_COOKIES_PROPERTY);
         }
         else if (transportMessage instanceof HttpMethod)
@@ -116,7 +115,7 @@ public class HttpMuleMessageFactory extends AbstractMuleMessageFactory
             httpVersion = HttpVersion.parse(httpMethod.getStatusLine().getHttpVersion());
             uri = httpMethod.getURI().toString();
             statusCode = String.valueOf(httpMethod.getStatusCode());
-            headers = convertHeadersToMap(((HttpRequest) transportMessage).getHeaders());
+            headers = convertHeadersToMap(httpMethod.getResponseHeaders());
             cookieHeader = httpMethod.getResponseHeader(HttpConnector.HTTP_COOKIES_PROPERTY);
         }
         else
@@ -127,7 +126,7 @@ public class HttpMuleMessageFactory extends AbstractMuleMessageFactory
 
         rewriteConnectionAndKeepAliveHeaders(headers);
 
-        processIncomingHeaders(headers, cookieHeader);
+        headers = processIncomingHeaders(headers, cookieHeader);
 
         headers.put(HttpConnector.HTTP_METHOD_PROPERTY, method);
         headers.put(HttpConnector.HTTP_REQUEST_PROPERTY, uri);
@@ -142,9 +141,11 @@ public class HttpMuleMessageFactory extends AbstractMuleMessageFactory
         message.addProperties(headers);
     }
 
-    protected void processIncomingHeaders(Map<String, Object> headers, Header cookieHeader)
+    protected Map<String, Object> processIncomingHeaders(Map<String, Object> headers, Header cookieHeader)
         throws MalformedCookieException
     {
+        Map<String, Object> outHeaders = new HashMap<String, Object>();
+        
         for (String headerName : headers.keySet())
         {
             Object headerValue = headers.get(headerName);
@@ -179,8 +180,10 @@ public class HttpMuleMessageFactory extends AbstractMuleMessageFactory
             }
 
             // accept header & value
-            headers.put(headerName, headerValue);
+            outHeaders.put(headerName, headerValue);
         }
+        
+        return outHeaders;
     }
 
     private Map<String, Object> convertHeadersToMap(Header[] headers)
