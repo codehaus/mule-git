@@ -358,16 +358,19 @@ public class HttpMessageReceiver extends TcpMessageReceiver
             if (HttpVersion.HTTP_1_1.equals(requestVersion))
             {
                 Header expectHeader = request.getFirstHeader(HttpConstants.HEADER_EXPECT);
-                String expectHeaderValue = expectHeader.getValue();
-                if (HttpConstants.HEADER_EXPECT_CONTINUE_REQUEST_VALUE.equals(expectHeaderValue))
+                if (expectHeader != null)
                 {
-                    HttpResponse expected = new HttpResponse();
-                    expected.setStatusLine(requestLine.getHttpVersion(), HttpConstants.SC_CONTINUE);
-                    final DefaultMuleEvent event = new DefaultMuleEvent(new DefaultMuleMessage(expected,
-                        connector.getMuleContext()), endpoint, new DefaultMuleSession(service,
-                        connector.getMuleContext()), true);
-                    RequestContext.setEvent(event);
-                    conn.writeResponse(transformResponse(expected));
+                    String expectHeaderValue = expectHeader.getValue();
+                    if (HttpConstants.HEADER_EXPECT_CONTINUE_REQUEST_VALUE.equals(expectHeaderValue))
+                    {
+                        HttpResponse expected = new HttpResponse();
+                        expected.setStatusLine(requestLine.getHttpVersion(), HttpConstants.SC_CONTINUE);
+                        final DefaultMuleEvent event = new DefaultMuleEvent(new DefaultMuleMessage(expected,
+                            connector.getMuleContext()), endpoint, new DefaultMuleSession(service,
+                            connector.getMuleContext()), true);
+                        RequestContext.setEvent(event);
+                        conn.writeResponse(transformResponse(expected));
+                    }
                 }
             }
         }
