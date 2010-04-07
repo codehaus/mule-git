@@ -86,5 +86,5 @@ public abstract class AbstractMuleMessageFactoryTestCase extends AbstractMuleTes
 
     protected abstract MuleMessageFactory doCreateMuleMessageFactory();
     
-    protected abstract Object getValidTransportMessage();
+    protected abstract Object getValidTransportMessage() throws Exception;
 }
