@@ -11,12 +11,12 @@
 package org.mule.transport;
 
 import org.mule.api.DefaultMuleException;
-import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.InboundEndpoint;
 import org.mule.api.service.Service;
 import org.mule.api.transport.Connector;
 import org.mule.api.transport.MessageDispatcherFactory;
 import org.mule.api.transport.MessageRequesterFactory;
+import org.mule.api.transport.MuleMessageFactory;
 import org.mule.config.i18n.MessageFactory;
 import org.mule.tck.AbstractMuleTestCase;
 import org.mule.tck.testmodels.fruit.Apple;
@@ -241,23 +241,17 @@ public abstract class AbstractConnectorTestCase extends AbstractMuleTestCase
         assertNotNull("Protocol must be set as a constant", connector.getProtocol());
     }
     
-    public void testConnectorMessageCreatorWithNullPayload() throws Exception
+    /**
+     * This test only asserts that the transport descriptor mechanism works for creating the
+     * MuleMessageFactory. For exhaustive tests of MuleMessageFactory implementations see
+     * {@link AbstractMuleMessageFactoryTestCase} and subclasses.
+     */
+    public void testConnectorMuleMessageFactory() throws Exception
     {
         Connector connector = getConnectorAndAssert();
-
-        MuleMessage message = connector.createMuleMessageFactory().create(null, encoding);
-        assertNotNull(message);
-        assertEquals(NullPayload.getInstance(), message.getPayload());
-    }
-    
-    public void testConnectorMessageCreatorWithValidPayload() throws Exception
-    {
-        Connector connector = getConnectorAndAssert();
-
-        Object payload = getValidMessage();
-        MuleMessage message = connector.createMuleMessageFactory().create(payload, encoding);
-        assertNotNull(message);
-        assertEquals(payload, message.getPayload());
+        
+        MuleMessageFactory factory = connector.createMuleMessageFactory();
+        assertNotNull(factory);
     }
 
     public void testConnectorMessageDispatcherFactory() throws Exception

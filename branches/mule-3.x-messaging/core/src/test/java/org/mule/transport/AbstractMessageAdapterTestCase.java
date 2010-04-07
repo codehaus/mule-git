@@ -19,13 +19,16 @@ import org.mule.tck.AbstractMuleTestCase;
 
 import java.util.Arrays;
 
+// TODO MessageAdapterRemoval: delete this class and all its subclasses
 public abstract class AbstractMessageAdapterTestCase extends AbstractMuleTestCase
 {
+    @Override
     protected void doSetUp() throws Exception
     {
         RequestContext.setEvent(getTestEvent("hello"));
     }
 
+    @Override
     protected void doTearDown() throws Exception
     {
         RequestContext.clear();
@@ -92,6 +95,7 @@ public abstract class AbstractMessageAdapterTestCase extends AbstractMuleTestCas
 
     final static class InvalidMessage
     {
+        @Override
         public String toString()
         {
             return "invalid message";
