@@ -44,7 +44,7 @@ public class ${ModuleName}TransformersTestCase extends AbstractTransformerTestCa
 #if( $inboundTransformer != "n")
         Transformer t = new ${inboundTransformer}();
         // Set the correct return class for this roundtrip test
-        t.setReturnClass(this.getResultData().getClass());
+        t.setReturnDataType(DataTypeFactory.create(this.getResultData().getClass());
         return t;
 #else
         // No Inbound transformer was created for this Transport
@@ -57,7 +57,7 @@ public class ${ModuleName}TransformersTestCase extends AbstractTransformerTestCa
 #if( $outboundTransformer != "n")
         Transformer t = new ${outboundTransformer}();
         // Set the correct return class for this roundtrip test
-        t.setReturnClass(this.getTestData().getClass());
+        t.setReturnDataType(DataTypeFactory.create(this.getTestData().getClass());
         return t;
 #else
         // No Outbound transformer was created for this Transport

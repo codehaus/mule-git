@@ -13,6 +13,7 @@ package org.mule.transport.servlet.transformers;
 import org.mule.api.MuleMessage;
 import org.mule.api.transformer.TransformerException;
 import org.mule.transformer.AbstractMessageAwareTransformer;
+import org.mule.transformer.types.DataTypeFactory;
 import org.mule.transport.servlet.AbstractReceiverServlet;
 import org.mule.transport.servlet.HttpRequestMessageAdapter;
 import org.mule.util.SystemUtils;
@@ -29,7 +30,7 @@ public class HttpRequestToParameter extends AbstractMessageAwareTransformer
     public HttpRequestToParameter()
     {
         registerSourceType(Object.class);
-        setReturnClass(String.class);
+        setReturnDataType(DataTypeFactory.create(String.class));
     }
 
     public Object transform(MuleMessage message, String outputEncoding) throws TransformerException

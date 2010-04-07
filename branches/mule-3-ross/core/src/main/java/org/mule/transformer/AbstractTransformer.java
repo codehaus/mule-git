@@ -203,6 +203,11 @@ public abstract class AbstractTransformer implements Transformer, MuleContextNot
         return returnType.getType();
     }
 
+    public void setReturnClass(Class<?> theClass)
+    {
+        this.returnType = DataTypeFactory.create(theClass);
+    }
+
     public void setReturnDataType(DataType type)
     {
         this.returnType = type;
@@ -213,14 +218,14 @@ public abstract class AbstractTransformer implements Transformer, MuleContextNot
         return returnType;
     }
 
-    public void setReturnClass(Class newClass)
+    public void setReturnDataType(Class newClass)
     {
-        returnType = new SimpleDataType(newClass);
+        returnType = DataTypeFactory.create(newClass);
     }
 
     public boolean isSourceTypeSupported(Class aClass)
     {
-        return isSourceDataTypeSupported(new SimpleDataType(aClass), false);
+        return isSourceDataTypeSupported(DataTypeFactory.create(aClass), false);
     }
 
     public boolean isSourceDataTypeSupported(DataType dataType)

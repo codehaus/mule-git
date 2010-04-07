@@ -16,6 +16,7 @@ import org.mule.api.context.MuleContextAware;
 import org.mule.api.transformer.TransformerException;
 import org.mule.api.transport.PropertyScope;
 import org.mule.transformer.AbstractMessageAwareTransformer;
+import org.mule.transformer.types.DataTypeFactory;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -48,7 +49,7 @@ public class MessagePropertiesTransformer extends AbstractMessageAwareTransforme
     public MessagePropertiesTransformer()
     {
         registerSourceType(Object.class);
-        setReturnClass(Object.class);
+        setReturnDataType(DataTypeFactory.create(Object.class));
     }
 
     @Override

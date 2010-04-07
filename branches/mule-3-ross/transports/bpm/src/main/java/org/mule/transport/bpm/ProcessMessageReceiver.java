@@ -10,11 +10,15 @@
 
 package org.mule.transport.bpm;
 
+import org.mule.DefaultMuleEvent;
 import org.mule.DefaultMuleMessage;
+import org.mule.DefaultMuleSession;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.context.WorkManager;
+import org.mule.api.endpoint.EndpointBuilder;
 import org.mule.api.endpoint.InboundEndpoint;
+import org.mule.api.endpoint.OutboundEndpoint;
 import org.mule.api.lifecycle.CreateException;
 import org.mule.api.service.Service;
 import org.mule.api.transport.Connector;
@@ -80,22 +84,41 @@ public class ProcessMessageReceiver extends AbstractMessageReceiver
         }
         else
         {
-            message = new DefaultMuleMessage(connector.getMessageAdapter(payload), connector.getMuleContext());
+            message = new DefaultMuleMessage(connector.getMessageAdapter(payload), messageProperties, connector.getMuleContext());
         }
-        message.addProperties(messageProperties);
 
+        //message.addProperties(messageProperties);
+        
         if (connector.isAllowGlobalDispatcher())
         {
+            //TODO should probably cache this
+            EndpointBuilder endpointBuilder = connector.getMuleContext().getRegistry()
+                .lookupEndpointFactory().getEndpointBuilder(endpoint);
+            endpointBuilder.setSynchronous(synchronous);
+            OutboundEndpoint ep = endpointBuilder.buildOutboundEndpoint();
+
+            DefaultMuleEvent event = new DefaultMuleEvent(message, ep, new DefaultMuleSession(service, connector.getMuleContext()), synchronous);
             // TODO MULE-1221 This should use the "dynamic://" endpoint and not depend on the MuleClient.
             if (synchronous)
             {
-                return connector.getMuleClient().send(endpoint, message);
+                return ep.send(event);
             }
             else
             {
-                connector.getMuleClient().dispatch(endpoint, message);
+                ep.dispatch(event);
                 return null;
             }
+
+//            // TODO MULE-1221 This should use the "dynamic://" endpoint and not depend on the MuleClient.
+//            if (synchronous)
+//            {
+//                return connector.getMuleClient().send(endpoint, message);
+//            }
+//            else
+//            {
+//                connector.getMuleClient().dispatch(endpoint, message);
+//                return null;
+//            }
         }
         else
         {

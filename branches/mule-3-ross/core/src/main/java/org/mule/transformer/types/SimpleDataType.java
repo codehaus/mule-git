@@ -20,7 +20,7 @@ public class SimpleDataType<T> implements DataType<T>
     protected Class<T> type;
     protected String mimeType = ANY_MIME_TYPE;
 
-    public SimpleDataType(Class type, String mimeType)
+    public SimpleDataType(Class<T> type, String mimeType)
     {
         this.type = type;
         this.mimeType = (mimeType == null ? ANY_MIME_TYPE : mimeType);

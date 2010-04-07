@@ -46,7 +46,6 @@ import java.util.Set;
 import javax.activation.DataHandler;
 
 import edu.emory.mathcs.backport.java.util.concurrent.CopyOnWriteArrayList;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -229,8 +228,7 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
             throw new IllegalArgumentException(CoreMessages.objectIsNull("resultType").getMessage());
         }
 
-        //TODO handling of mime type
-        DataType<?> source = new DataTypeFactory().create(getPayload().getClass());
+        DataType<?> source = DataTypeFactory.createFromObject(this);
 
         // If no conversion is necessary, just return the payload as-is
         if (resultType.isCompatibleWith(source))
@@ -789,7 +787,7 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
                 }
 
                 Class srcCls = getPayload().getClass();
-                if (transformer.isSourceTypeSupported(srcCls))
+                if (transformer.isSourceDataTypeSupported(DataTypeFactory.create(srcCls)))
                 {
                     Object result = transformer.transform(this);
 
