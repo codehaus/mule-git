@@ -34,7 +34,10 @@ import org.mule.util.StringUtils;
 import org.mule.util.UUID;
 import org.mule.util.store.DeserializationPostInitialisable;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -68,8 +71,8 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
      */
     private String id = UUID.getUUID();
 
-    private Object payload;
-    private Object originalPayload;
+    private transient Object payload;
+    private transient Object originalPayload;
 
     /** 
      * If an excpetion occurs while processing this message an exception payload 
@@ -1121,6 +1124,27 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
         }
     }
 
+    private void writeObject(ObjectOutputStream out) throws Exception
+    {
+        out.defaultWriteObject();
+        
+        byte[] serializablePayload = getPayloadAsBytes();
+        out.writeInt(serializablePayload.length);
+        out.write(serializablePayload);
+        
+        // TODO: we don't serialize the originalPayload for now
+    }
+    
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
+    {
+        in.defaultReadObject();
+        
+        int payloadSize = in.readInt();
+        byte[] serializedPayload = new byte[payloadSize];
+        in.read(serializedPayload);
+        payload = serializedPayload;
+    }
+    
     /**
      * Invoked after deserialization. This is called when the marker interface
      * {@link org.mule.util.store.DeserializationPostInitialisable} is used. This will get invoked
