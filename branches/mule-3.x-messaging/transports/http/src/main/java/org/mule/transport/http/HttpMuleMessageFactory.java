@@ -18,6 +18,7 @@ import org.mule.util.StringUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,7 +26,7 @@ import org.apache.commons.httpclient.Cookie;
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.HttpVersion;
-import org.apache.commons.httpclient.cookie.MalformedCookieException;
+import org.apache.commons.httpclient.cookie.CookieSpec;
 
 public class HttpMuleMessageFactory extends AbstractMuleMessageFactory
 {
@@ -126,12 +127,15 @@ public class HttpMuleMessageFactory extends AbstractMuleMessageFactory
 
         rewriteConnectionAndKeepAliveHeaders(headers);
 
-        headers = processIncomingHeaders(headers, cookieHeader);
+        headers = processIncomingHeaders(headers, uri, cookieHeader);
 
         headers.put(HttpConnector.HTTP_METHOD_PROPERTY, method);
         headers.put(HttpConnector.HTTP_REQUEST_PROPERTY, uri);
         headers.put(HttpConnector.HTTP_VERSION_PROPERTY, httpVersion.toString());
-        headers.put(HttpConnector.HTTP_COOKIE_SPEC_PROPERTY, cookieSpec);
+        if (enableCookies)
+        {
+            headers.put(HttpConnector.HTTP_COOKIE_SPEC_PROPERTY, cookieSpec);
+        }
 
         if (statusCode != null)
         {
@@ -141,8 +145,8 @@ public class HttpMuleMessageFactory extends AbstractMuleMessageFactory
         message.addProperties(headers);
     }
 
-    protected Map<String, Object> processIncomingHeaders(Map<String, Object> headers, Header cookieHeader)
-        throws MalformedCookieException
+    protected Map<String, Object> processIncomingHeaders(Map<String, Object> headers, String uri, 
+        Header cookieHeader) throws Exception
     {
         Map<String, Object> outHeaders = new HashMap<String, Object>();
         
@@ -160,7 +164,11 @@ public class HttpMuleMessageFactory extends AbstractMuleMessageFactory
             {
                 if (enableCookies)
                 {
-                    Cookie[] cookies = CookieHelper.parseCookies(cookieHeader, cookieSpec);
+                    CookieSpec cs = CookieHelper.getCookieSpec(cookieSpec);
+                    URI u = new URI(uri);
+
+                    Cookie[] cookies = cs.parse(u.getHost(), u.getPort(), u.getPath(),
+                        u.getScheme().equalsIgnoreCase("https"), cookieHeader);
                     if (cookies.length > 0)
                     {
                         // yum!
