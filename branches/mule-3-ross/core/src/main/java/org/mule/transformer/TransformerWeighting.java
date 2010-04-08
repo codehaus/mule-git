@@ -39,9 +39,9 @@ public class TransformerWeighting implements Comparable
     private void init()
     {
         inputWeighting = Integer.MAX_VALUE;
-        List<DataType<?>> sourceTypes = transformer.getSourceDataTypes();
+        List<DataType> sourceTypes = transformer.getSourceDataTypes();
 
-        for (DataType<?> type : sourceTypes)
+        for (DataType type : sourceTypes)
         {
             int weighting = getWeighting(-1, inputClass, type.getType());
             if (weighting < inputWeighting && weighting != -1)

@@ -25,7 +25,7 @@ public interface DataType<T>
      *
      * @return the class object of the source object. This must not be null
      */
-    Class<T> getType();
+    Class<?> getType();
 
     /**
      * The mime type of the the source object to transform.
@@ -50,5 +50,5 @@ public interface DataType<T>
      * @param dataType the dataType object to compare with
      * @return true if the mime types are the same and this type can be assigned to the dataType.type.
      */
-    boolean isCompatibleWith(DataType dataType);
+    boolean isCompatibleWith(DataType<T> dataType);
 }

@@ -48,8 +48,8 @@ import org.apache.commons.logging.LogFactory;
 
 public abstract class AbstractTransformer implements Transformer, MuleContextNotificationListener<MuleContextNotification>
 {
-    public static final DataType<MuleMessage> MULE_MESSAGE_DATA_TYPE = new SimpleDataType<MuleMessage>(MuleMessage.class);
-    public static final DataType<MessageAdapter> MULE_MESSAGE_ADAPTER_DATA_TYPE = new SimpleDataType<MessageAdapter>(MessageAdapter.class);
+    public static final DataType MULE_MESSAGE_DATA_TYPE = new SimpleDataType(MuleMessage.class);
+    public static final DataType MULE_MESSAGE_ADAPTER_DATA_TYPE = new SimpleDataType(MessageAdapter.class);
 
     protected static final int DEFAULT_TRUNCATE_LENGTH = 200;
 
@@ -61,7 +61,7 @@ public abstract class AbstractTransformer implements Transformer, MuleContextNot
      * The return type that will be returned by the {@link #transform} method is
      * called
      */
-    protected DataType returnType = new SimpleDataType<Object>(Object.class);
+    protected DataType returnType = new SimpleDataType(Object.class);
 
     /**
      * The name that identifies this transformer. If none is set the class name of
@@ -79,7 +79,7 @@ public abstract class AbstractTransformer implements Transformer, MuleContextNot
      * transformer
      */
     @SuppressWarnings("unchecked")
-    protected final List<DataType<?>> sourceTypes = new CopyOnWriteArrayList/*<DataType>*/();
+    protected final List<DataType> sourceTypes = new CopyOnWriteArrayList/*<DataType>*/();
 
     /**
      * Determines whether the transformer will throw an exception if the message
@@ -245,7 +245,7 @@ public abstract class AbstractTransformer implements Transformer, MuleContextNot
     @Deprecated
     public boolean isSourceTypeSupported(Class<MuleMessage> aClass, boolean exactMatch)
     {
-        return isSourceDataTypeSupported(new SimpleDataType<MuleMessage>(aClass), exactMatch);
+        return isSourceDataTypeSupported(new SimpleDataType(aClass), exactMatch);
     }
 
     /**
@@ -433,14 +433,14 @@ public abstract class AbstractTransformer implements Transformer, MuleContextNot
     {
         //A work around to support the legacy API
         List<Class<?>> sourceClasses = new ArrayList<Class<?>>();
-        for (DataType<?> sourceType : sourceTypes)
+        for (DataType sourceType : sourceTypes)
         {
             sourceClasses.add(sourceType.getType());
         }
         return Collections.unmodifiableList(sourceClasses);
     }
 
-    public List<DataType<?>> getSourceDataTypes()
+    public List<DataType> getSourceDataTypes()
     {
         return Collections.unmodifiableList(sourceTypes);
     }

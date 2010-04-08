@@ -24,32 +24,32 @@ import java.util.Collection;
  */
 public class CollectionDataType<T> extends SimpleDataType<T>
 {
-    private Class<? extends Collection> collectionType;
+    private Class<? extends Collection<T>> collectionType;
 
     /**
      * Creates an untyped collection data type
      *
      * @param collectionType the collection class type
      */
-    public CollectionDataType(Class<? extends Collection> collectionType)
+    public CollectionDataType(Class<? extends Collection<T>> collectionType)
     {
-        super(Object.class, null);
+        super(Object.class);
         this.collectionType = collectionType;
     }
 
-    public CollectionDataType(Class<? extends Collection> collectionType, String mimeType)
+    public CollectionDataType(Class<? extends Collection<T>> collectionType, String mimeType)
     {
         super(Object.class, mimeType);
         this.collectionType = collectionType;
     }
 
-    public CollectionDataType(Class<? extends Collection> collectionType, Class type, String mimeType)
+    public CollectionDataType(Class<? extends Collection<T>> collectionType, Class type, String mimeType)
     {
         super(type, mimeType);
         this.collectionType = collectionType;
     }
 
-    public CollectionDataType(Class<? extends Collection> collectionType, Class type)
+    public CollectionDataType(Class<? extends Collection<T>> collectionType, Class type)
     {
         super(type);
         this.collectionType = collectionType;
@@ -61,7 +61,7 @@ public class CollectionDataType<T> extends SimpleDataType<T>
     }
 
     @Override
-    public Class getType()
+    public Class<?> getType()
     {
         return collectionType;
     }
@@ -73,7 +73,7 @@ public class CollectionDataType<T> extends SimpleDataType<T>
 
     public static CollectionDataType createFromMethodReturn(Method m, String mimeType)
     {
-        Class collType = GenericsUtils.getCollectionReturnType(m);
+        Class<?> collType = GenericsUtils.getCollectionReturnType(m);
 
         if (collType != null)
         {
@@ -115,7 +115,7 @@ public class CollectionDataType<T> extends SimpleDataType<T>
     }
 
     @Override
-    public boolean isCompatibleWith(DataType dataType)
+    public boolean isCompatibleWith(DataType<T> dataType)
     {
         if (!(dataType instanceof CollectionDataType))
         {
@@ -129,16 +129,8 @@ public class CollectionDataType<T> extends SimpleDataType<T>
         CollectionDataType that = (CollectionDataType) dataType;
 
         //Untyped compatible collection
-        if (that.getItemType() == Object.class)
-        {
-            return true;
-        }
+        return that.getItemType() == Object.class || this.getItemType().isAssignableFrom(that.getItemType());
 
-        if (!this.getItemType().isAssignableFrom(that.getItemType()))
-        {
-            return false;
-        }
-        return true;
     }
 
     @Override
@@ -165,12 +157,8 @@ public class CollectionDataType<T> extends SimpleDataType<T>
             return false;
         }
 
-        if (!getType().equals(that.getType()))
-        {
-            return false;
-        }
+        return getType().equals(that.getType());
 
-        return true;
     }
 
     @Override

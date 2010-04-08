@@ -12,7 +12,6 @@ package org.mule.transport;
 
 import org.mule.DefaultExceptionStrategy;
 import org.mule.DefaultMuleMessage;
-import org.mule.MuleSessionHandler;
 import org.mule.api.MessagingException;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleEvent;
@@ -63,6 +62,7 @@ import org.mule.context.notification.OptimisedNotificationHandler;
 import org.mule.model.streaming.DelegatingInputStream;
 import org.mule.retry.policies.NoRetryPolicyTemplate;
 import org.mule.routing.filters.WildcardFilter;
+import org.mule.session.SerializeAndEncodeSessionHandler;
 import org.mule.transaction.TransactionCoordination;
 import org.mule.transformer.TransformerUtils;
 import org.mule.transport.service.TransportFactory;
@@ -248,10 +248,10 @@ public abstract class AbstractConnector implements Connector, ExceptionListener,
     protected volatile Properties serviceOverrides;
 
     /**
-     * The strategy used for reading and writing session information to and fromt he
+     * The strategy used for reading and writing session information to and front he
      * transport
      */
-    protected volatile SessionHandler sessionHandler = new MuleSessionHandler();
+    protected volatile SessionHandler sessionHandler = new SerializeAndEncodeSessionHandler();
 
     protected MuleContext muleContext;
 

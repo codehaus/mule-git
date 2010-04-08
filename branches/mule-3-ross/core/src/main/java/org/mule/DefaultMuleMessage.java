@@ -228,7 +228,7 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
             throw new IllegalArgumentException(CoreMessages.objectIsNull("resultType").getMessage());
         }
 
-        DataType<?> source = DataTypeFactory.createFromObject(this);
+        DataType source = DataTypeFactory.createFromObject(this);
 
         // If no conversion is necessary, just return the payload as-is
         if (resultType.isCompatibleWith(source))

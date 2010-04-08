@@ -26,27 +26,27 @@ import java.util.Collection;
  */
 public class DataTypeFactory
 {
-    public static final DataType<String> TEXT_STRING = new SimpleDataType<String>(String.class, MimeTypes.TEXT);
-    public static final DataType<String> XML_STRING = new SimpleDataType<String>(String.class, MimeTypes.XML);
-    public static final DataType<String> JSON_STRING = new SimpleDataType<String>(String.class, MimeTypes.JSON);
-    public static final DataType<String> HTML_STRING = new SimpleDataType<String>(String.class, MimeTypes.HTML);
-    public static final DataType<String> ATOM_STRING = new SimpleDataType<String>(String.class, MimeTypes.ATOM);
-    public static final DataType<String> RSS_STRING = new SimpleDataType<String>(String.class, MimeTypes.RSS);
+    public static final DataType TEXT_STRING = new SimpleDataType(String.class, MimeTypes.TEXT);
+    public static final DataType XML_STRING = new SimpleDataType(String.class, MimeTypes.XML);
+    public static final DataType JSON_STRING = new SimpleDataType(String.class, MimeTypes.JSON);
+    public static final DataType HTML_STRING = new SimpleDataType(String.class, MimeTypes.HTML);
+    public static final DataType ATOM_STRING = new SimpleDataType(String.class, MimeTypes.ATOM);
+    public static final DataType RSS_STRING = new SimpleDataType(String.class, MimeTypes.RSS);
 
     //Common Java types
-    public static final DataType<String> STRING = new SimpleDataType<String>(String.class);
-    public static final DataType<Object> OBJECT = new SimpleDataType<Object>(Object.class);
-    public static final DataType<byte[]> BYTE_ARRAY = new SimpleDataType<byte[]>(byte[].class);
-    public static final DataType<InputStream> INPUT_STREAM = new SimpleDataType<InputStream>(InputStream.class);
+    public static final DataType STRING = new SimpleDataType(String.class);
+    public static final DataType OBJECT = new SimpleDataType(Object.class);
+    public static final DataType BYTE_ARRAY = new SimpleDataType(byte[].class);
+    public static final DataType INPUT_STREAM = new SimpleDataType(InputStream.class);
 
 
 
-    public static <T> DataType<T> create(Class<T> type)
+    public static <T> DataType create(Class<T> type)
     {
         return create(type, MimeTypes.ANY);
     }
 
-    public static <T> DataType<T> create(Class<?> type, String mimeType)
+    public static <T> DataType create(Class<T> type, String mimeType)
     {
         if (Collection.class.isAssignableFrom(type))
         {
