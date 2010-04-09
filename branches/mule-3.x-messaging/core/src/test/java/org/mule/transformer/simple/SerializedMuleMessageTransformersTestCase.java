@@ -35,9 +35,9 @@ public class SerializedMuleMessageTransformersTestCase extends AbstractTransform
     @Override
     protected void doSetUp() throws Exception
     {
-        Map props = new HashMap();
+        Map<String, Object> props = new HashMap<String, Object>();
         props.put("object", new Apple());
-        props.put("number", new Integer(1));
+        props.put("number", Integer.valueOf(1));
         props.put("string", "hello");
         testObject = new DefaultMuleMessage("test", props, muleContext);
         
@@ -57,24 +57,27 @@ public class SerializedMuleMessageTransformersTestCase extends AbstractTransform
     {
         // this depends on the ordering of properties in the map.
         // because we now make a copy of maps in RequestContext this order can change
-        //super.testTransform();
     }
 
+    @Override
     public Transformer getTransformer() throws Exception
     {
         return new MuleMessageToByteArray();
     }
 
+    @Override
     public Transformer getRoundTripTransformer() throws Exception
     {
         return new ByteArrayToMuleMessage();
     }
 
+    @Override
     public Object getTestData()
     {
         return testObject;
     }
 
+    @Override
     public Object getResultData()
     {
         try
@@ -143,9 +146,16 @@ public class SerializedMuleMessageTransformersTestCase extends AbstractTransform
     
     private boolean comparePayloads(MuleMessage src, MuleMessage result)
     {
-        Object sourcePayload = src.getPayload();
-        Object resultPayload = result.getPayload();
-        return sourcePayload.equals(resultPayload);
+        try
+        {
+            byte[] sourcePayload = src.getPayloadAsBytes();
+            byte[] resultPayload = (byte[]) result.getPayload();
+            return Arrays.equals(sourcePayload, resultPayload);
+        }
+        catch (Exception e)
+        {
+            throw new IllegalStateException(e);
+        }
     }
     
     private boolean compareObjectProperties(MuleMessage src, MuleMessage result)

@@ -14,29 +14,28 @@ import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleMessage;
 import org.mule.tck.testmodels.fruit.Orange;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
 public abstract class AbstractMuleMessageWireFormatTestCase extends AbstractWireFormatTestCase
 {
-
     @Override
     public void testWriteReadMessage() throws Exception
     {
         // Create message to send over wire
-        Map<String, Object> messageProerties = new HashMap<String, Object>();
-        messageProerties.put("key1", "val1");
-        MuleMessage inMessage = new DefaultMuleMessage("testMessage", messageProerties, muleContext);
+        Map<String, Object> messageProperties = new HashMap<String, Object>();
+        messageProperties.put("key1", "val1");
+        MuleMessage inMessage = new DefaultMuleMessage(TEST_MESSAGE, messageProperties, muleContext);
 
         Object outMessage = readWrite(inMessage);
 
-        // Test deserialized message
-        // NOTE: As we are using SerializedMuleMessageWireFormat we get
-        // MuleMessage rather than just the payload
-
         assertTrue(outMessage instanceof MuleMessage);
-        assertEquals("testMessage", ((MuleMessage) outMessage).getPayload());
+        
+        byte[] payload = (byte[]) ((MuleMessage) outMessage).getPayload();
+        assertTrue(Arrays.equals(TEST_MESSAGE.getBytes(), payload));
+
         assertEquals("val1", ((MuleMessage) outMessage).getProperty("key1"));
     }
 
