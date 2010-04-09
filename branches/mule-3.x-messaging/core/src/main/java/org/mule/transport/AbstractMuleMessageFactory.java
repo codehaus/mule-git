@@ -54,7 +54,7 @@ public abstract class AbstractMuleMessageFactory implements MuleMessageFactory
         // Template method
     }
 
-    protected void addAttachments(MuleMessage message, Object transportMessage)
+    protected void addAttachments(MuleMessage message, Object transportMessage) throws Exception
     {
         // Template method
     }
