@@ -38,6 +38,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -61,7 +62,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, DeserializationPostInitialisable
 {
-    private static final long serialVersionUID = 1541720810851984843L;
+    private static final long serialVersionUID = 1541720810851984844L;
     private static final Log logger = LogFactory.getLog(DefaultMuleMessage.class);
     private static final List<Class<?>> consumableClasses = new ArrayList<Class<?>>();
 
@@ -1128,9 +1129,18 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
     {
         out.defaultWriteObject();
         
-        byte[] serializablePayload = getPayloadAsBytes();
-        out.writeInt(serializablePayload.length);
-        out.write(serializablePayload);
+        if (payload instanceof Serializable)
+        {
+            out.writeBoolean(true);
+            out.writeObject(payload);
+        }
+        else
+        {
+            out.writeBoolean(false);
+            byte[] serializablePayload = getPayloadAsBytes();
+            out.writeInt(serializablePayload.length);
+            out.write(serializablePayload);
+        }
         
         // TODO: we don't serialize the originalPayload for now
     }
@@ -1139,10 +1149,18 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
     {
         in.defaultReadObject();
         
-        int payloadSize = in.readInt();
-        byte[] serializedPayload = new byte[payloadSize];
-        in.read(serializedPayload);
-        payload = serializedPayload;
+        boolean payloadWasSerialized = in.readBoolean();
+        if (payloadWasSerialized)
+        {
+            payload = in.readObject();
+        }
+        else
+        {
+            int payloadSize = in.readInt();
+            byte[] serializedPayload = new byte[payloadSize];
+            in.read(serializedPayload);
+            payload = serializedPayload;
+        }
     }
     
     /**

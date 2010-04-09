@@ -146,16 +146,9 @@ public class SerializedMuleMessageTransformersTestCase extends AbstractTransform
     
     private boolean comparePayloads(MuleMessage src, MuleMessage result)
     {
-        try
-        {
-            byte[] sourcePayload = src.getPayloadAsBytes();
-            byte[] resultPayload = (byte[]) result.getPayload();
-            return Arrays.equals(sourcePayload, resultPayload);
-        }
-        catch (Exception e)
-        {
-            throw new IllegalStateException(e);
-        }
+        Object sourcePayload = src.getPayload();
+        Object resultPayload = result.getPayload();
+        return sourcePayload.equals(resultPayload);
     }
     
     private boolean compareObjectProperties(MuleMessage src, MuleMessage result)
