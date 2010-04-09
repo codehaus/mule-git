@@ -50,5 +50,5 @@ public interface DataType<T>
      * @param dataType the dataType object to compare with
      * @return true if the mime types are the same and this type can be assigned to the dataType.type.
      */
-    boolean isCompatibleWith(DataType<T> dataType);
+    boolean isCompatibleWith(DataType dataType);
 }

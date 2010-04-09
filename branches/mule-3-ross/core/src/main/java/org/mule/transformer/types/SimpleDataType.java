@@ -46,7 +46,7 @@ public class SimpleDataType<T> implements DataType<T>
         this.mimeType = (mimeType==null?ANY_MIME_TYPE:mimeType);
     }
 
-    public boolean isCompatibleWith(DataType<T> dataType)
+    public boolean isCompatibleWith(DataType dataType)
     {
         if (this == dataType)
         {

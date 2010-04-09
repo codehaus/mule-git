@@ -39,7 +39,7 @@ public class TransformerWeighting implements Comparable
     private void init()
     {
         inputWeighting = Integer.MAX_VALUE;
-        List<DataType> sourceTypes = transformer.getSourceDataTypes();
+        List<DataType<?>> sourceTypes = transformer.getSourceDataTypes();
 
         for (DataType type : sourceTypes)
         {
