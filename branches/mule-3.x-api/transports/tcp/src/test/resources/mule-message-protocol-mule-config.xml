@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:spring="http://www.springframework.org/schema/beans"
+       xmlns:tcp="http://www.mulesoft.org/schema/mule/tcp"
+       xmlns:vm="http://www.mulesoft.org/schema/mule/vm"
+       xsi:schemaLocation="
+               http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+               http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/3.0/mule.xsd
+               http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/3.0/mule-vm.xsd
+               http://www.mulesoft.org/schema/mule/tcp http://www.mulesoft.org/schema/mule/tcp/3.0/mule-tcp.xsd">
+
+    <vm:connector name="quedvm"/>
+
+    <tcp:connector name="tcpConnector" keepSendSocketOpen="false">
+        <tcp:eof-protocol payloadOnly="false"/>
+    </tcp:connector>
+
+    <model name="main">
+        <service name="BridgeIn">
+            <inbound>
+                <vm:inbound-endpoint path="in"/>
+            </inbound>
+            <outbound>
+                <message-chunking-router messageSize="90">
+                    <tcp:outbound-endpoint host="localhost" port="63994"/>
+                </message-chunking-router>
+            </outbound>
+        </service>
+
+        <service name="BridgeOut">
+            <inbound>
+                <tcp:inbound-endpoint host="localhost" port="63994"/>
+                <message-chunking-aggregator-router/>
+            </inbound>
+            <outbound>
+                <pass-through-router>
+                    <vm:outbound-endpoint path="out"/>
+                </pass-through-router>
+            </outbound>
+        </service>
+    </model>
+</mule>

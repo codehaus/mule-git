@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:spring="http://www.springframework.org/schema/beans"
+       xmlns:smtp="http://www.mulesoft.org/schema/mule/smtp"
+       xmlns:vm="http://www.mulesoft.org/schema/mule/vm"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+       http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/3.0/mule.xsd
+       http://www.mulesoft.org/schema/mule/smtp http://www.mulesoft.org/schema/mule/smtp/3.0/mule-smtp.xsd
+       http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/3.0/mule-vm.xsd">
+
+    <smtp:connector name="smtpConnector">
+        <service-overrides messageAdapter="org.mule.transport.email.SimpleMailMessageAdapter"
+                           outboundTransformer="org.mule.transformer.NoActionTransformer"/>
+    </smtp:connector>
+
+    <model name="test">
+
+        <service name="relay">
+            <inbound>
+                <vm:inbound-endpoint path="send"/>
+            </inbound>
+            <outbound>
+                <pass-through-router>
+                    <outbound-endpoint address="smtp://localhost:65438"/>
+                </pass-through-router>
+            </outbound>
+        </service>
+
+    </model>
+
+</mule>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:spring="http://www.springframework.org/schema/beans"
+       xmlns:http="http://www.mulesoft.org/schema/mule/http"
+       xmlns:jetty="http://www.mulesoft.org/schema/mule/jetty"
+       xmlns:test="http://www.mulesoft.org/schema/mule/test"
+    xsi:schemaLocation="
+       http://www.mulesoft.org/schema/mule/test http://www.mulesoft.org/schema/mule/test/3.0/mule-test.xsd
+       http://www.mulesoft.org/schema/mule/jetty http://www.mulesoft.org/schema/mule/jetty/3.0/mule-jetty.xsd
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+       http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/3.0/mule.xsd
+       http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/3.0/mule-http.xsd">
+
+    <model name="main">
+        <service name="httpIn">
+            <inbound>
+                <jetty:inbound-endpoint address="http://localhost:60200/foo" synchronous="true"/>
+            </inbound>
+            <test:component appendString=" World"/>
+        </service>
+
+        <service name="httpBestMatch">
+            <inbound>
+                <jetty:inbound-endpoint address="http://localhost:60200/foo/bestmatch" synchronous="true"/>
+            </inbound>
+            <test:component appendString=" World Best Match"/>
+        </service>
+        
+        <service name="httpDifferentPort">
+            <inbound>
+                <jetty:inbound-endpoint address="http://localhost:60202/foo/bestmatch" synchronous="true"/>
+            </inbound>
+            <test:component appendString=" World Best Match 2"/>
+        </service>
+        
+    </model>
+</mule>
