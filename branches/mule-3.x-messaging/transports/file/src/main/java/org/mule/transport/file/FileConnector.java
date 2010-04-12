@@ -602,17 +602,6 @@ public class FileConnector extends AbstractConnector
             return super.getMessageAdapter(message);
         }
     }
-
-    @Override
-    public void setMuleContext(MuleContext context)
-    {
-        super.setMuleContext(context);
-        
-        if (filenameParser != null)
-        {
-            filenameParser.setMuleContext(context);
-        }
-    }
     
     @Override
     public MuleMessageFactory createMuleMessageFactory() throws CreateException
