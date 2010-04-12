@@ -34,15 +34,12 @@ import org.mule.transport.NullPayload;
 import org.mule.transport.http.i18n.HttpMessages;
 import org.mule.transport.tcp.TcpConnector;
 import org.mule.transport.tcp.TcpMessageReceiver;
-import org.mule.util.IOUtils;
 import org.mule.util.MapUtils;
 import org.mule.util.monitor.Expirable;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.Socket;
 import java.net.SocketAddress;
-import java.util.Iterator;
 import java.util.Map;
 
 import javax.resource.spi.work.Work;
@@ -483,15 +480,14 @@ public class HttpMessageReceiver extends TcpMessageReceiver
         return (HttpResponse) message.getPayload();
     }
 
-    public static MessageReceiver findReceiverByStem(Map receivers, String uriStr)
+    public static MessageReceiver findReceiverByStem(Map<Object, MessageReceiver> receivers, String uriStr)
     {
         int match = 0;
         MessageReceiver receiver = null;
-        for (Iterator itr = receivers.entrySet().iterator(); itr.hasNext();)
+        for (Map.Entry<Object, MessageReceiver> e : receivers.entrySet())
         {
-            Map.Entry e = (Map.Entry) itr.next();
             String key = (String) e.getKey();
-            MessageReceiver candidate = (MessageReceiver) e.getValue();
+            MessageReceiver candidate = e.getValue();
             if (uriStr.startsWith(key) && match < key.length())
             {
                 match = key.length();
@@ -513,33 +509,9 @@ public class HttpMessageReceiver extends TcpMessageReceiver
         String cookieSpec = MapUtils.getString(endpoint.getProperties(),
             HttpConnector.HTTP_COOKIE_SPEC_PROPERTY, ((HttpConnector) connector).getCookieSpec());
         muleMessageFactory.setCookieSpec(cookieSpec);
+        
+        muleMessageFactory.setSynchronous(endpoint.isSynchronous());
 
         return muleMessageFactory;
     }
-    
-    protected MuleMessage createMuleMessage(HttpRequest request)
-        throws MuleException, TransformerException, IOException
-    {
-        Object body = request.getBody();
-
-        // If http method is GET we use the request uri as the payload.
-        if (body == null)
-        {
-            body = request.getRequestLine().getUri();
-        }
-        else
-        {
-            // If we are running async we need to read stream into a byte[].
-            // Passing along the InputStream doesn't work because the
-            // HttpConnection gets closed and closes the InputStream, often
-            // before it can be read.
-            if (!endpoint.isSynchronous())
-            {
-                logger.debug("Reading HTTP POST InputStream into byte[] for asynchronous messaging.");
-                body = IOUtils.toByteArray((InputStream) body);
-            }
-        }
-        return createMuleMessage(request, endpoint.getEncoding());
-    }
-
 }

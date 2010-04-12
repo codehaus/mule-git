@@ -14,6 +14,7 @@ import org.mule.api.MuleContext;
 import org.mule.api.MuleMessage;
 import org.mule.api.transport.MessageTypeNotSupportedException;
 import org.mule.transport.AbstractMuleMessageFactory;
+import org.mule.util.IOUtils;
 import org.mule.util.StringUtils;
 
 import java.io.IOException;
@@ -27,12 +28,16 @@ import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.HttpVersion;
 import org.apache.commons.httpclient.cookie.CookieSpec;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public class HttpMuleMessageFactory extends AbstractMuleMessageFactory
 {
-
+    private static Log log = LogFactory.getLog(HttpMuleMessageFactory.class);
+    
     private boolean enableCookies;
     private String cookieSpec;
+    private boolean synchronous;
 
     public HttpMuleMessageFactory(MuleContext context)
     {
@@ -63,17 +68,29 @@ public class HttpMuleMessageFactory extends AbstractMuleMessageFactory
         }
     }
 
-    protected Object extractPayloadFromHttpRequest(HttpRequest httpRequest)
+    protected Object extractPayloadFromHttpRequest(HttpRequest httpRequest) throws IOException
     {
         Object body = httpRequest.getBody();
-        if (body != null)
+
+        // If http method is GET we use the request uri as the payload.
+        if (body == null)
         {
-            return body;
+            body = httpRequest.getRequestLine().getUri();
         }
         else
         {
-            return httpRequest.getRequestLine().getUri();
+            // If we are running async we need to read stream into a byte[].
+            // Passing along the InputStream doesn't work because the
+            // HttpConnection gets closed and closes the InputStream, often
+            // before it can be read.
+            if (!synchronous)
+            {
+                log.debug("Reading HTTP POST InputStream into byte[] for asynchronous messaging.");
+                body = IOUtils.toByteArray((InputStream) body);
+            }
         }
+
+        return body;
     }
 
     protected Object extractPayloadFromHttpMethod(HttpMethod httpMethod) throws IOException
@@ -252,4 +269,8 @@ public class HttpMuleMessageFactory extends AbstractMuleMessageFactory
         this.cookieSpec = cookieSpec;
     }
 
+    public void setSynchronous(boolean flag)
+    {
+        synchronous = flag;
+    }
 }
