@@ -17,7 +17,7 @@ public class TcpConnectorTestCase extends AbstractConnectorTestCase
 {
     public Connector createConnector() throws Exception
     {
-        TcpConnector c = new TcpConnector();
+        TcpConnector c = new TcpConnector(muleContext);
         c.setName("TcpConnector");
         return c;
     }

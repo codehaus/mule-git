@@ -384,7 +384,7 @@ public class DefaultTransportServiceDescriptor extends AbstractServiceDescriptor
                 {
                     connectorClass = ClassUtils.loadClass(connector, getClass());
                 }
-                newConnector = connectorClass.newInstance();
+                newConnector = connectorClass.getConstructor(MuleContext.class).newInstance(muleContext);
             }
             else
             {

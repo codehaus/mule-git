@@ -10,6 +10,7 @@
 
 package org.mule.transport.udp;
 
+import org.mule.api.MuleContext;
 import org.mule.api.MuleException;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.endpoint.InboundEndpoint;
@@ -42,7 +43,11 @@ public class UdpConnector extends AbstractConnector
     protected GenericKeyedObjectPool dispatcherSocketsPool = new GenericKeyedObjectPool();
     protected UdpSocketFactory socketFactory;
 
-
+    public UdpConnector(MuleContext context)
+    {
+        super(context);
+    }
+    
     @Override
     protected void doInitialise() throws InitialisationException
     {
