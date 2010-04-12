@@ -10,12 +10,12 @@
 
 package org.mule.config.spring;
 
-import org.mule.api.MuleContext;
-import org.mule.config.ConfigResource;
-import org.mule.util.IOUtils;
-
 import java.io.IOException;
 
+import org.mule.api.MuleContext;
+import org.mule.api.config.MuleProperties;
+import org.mule.config.ConfigResource;
+import org.mule.util.IOUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.AbstractBeanFactory;
@@ -62,7 +62,7 @@ public class MuleApplicationContext extends AbstractXmlApplicationContext
         super.prepareBeanFactory(beanFactory);
         beanFactory.addBeanPostProcessor(new MuleContextPostProcessor(muleContext));
         beanFactory.addBeanPostProcessor(new ExpressionEvaluatorPostProcessor(muleContext));
-        //beanFactory.addBeanPostProcessor(new NotificationListenersPostProcessor(muleContext));
+        beanFactory.registerSingleton(MuleProperties.OBJECT_MULE_CONTEXT, muleContext);
     }
 
     private static Resource[] convert(ConfigResource[] resources)

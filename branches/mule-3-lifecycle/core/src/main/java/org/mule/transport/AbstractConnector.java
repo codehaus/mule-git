@@ -10,6 +10,28 @@
 
 package org.mule.transport;
 
+import java.beans.ExceptionListener;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+
+import javax.resource.spi.work.Work;
+import javax.resource.spi.work.WorkEvent;
+import javax.resource.spi.work.WorkListener;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.commons.pool.KeyedPoolableObjectFactory;
+import org.apache.commons.pool.impl.GenericKeyedObjectPool;
 import org.mule.DefaultExceptionStrategy;
 import org.mule.DefaultMuleMessage;
 import org.mule.MuleSessionHandler;
@@ -76,24 +98,6 @@ import org.mule.util.StringUtils;
 import org.mule.util.concurrent.NamedThreadFactory;
 import org.mule.work.AbstractMuleEventWork;
 
-import java.beans.ExceptionListener;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.lang.reflect.InvocationTargetException;
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-
-import javax.resource.spi.work.Work;
-import javax.resource.spi.work.WorkEvent;
-import javax.resource.spi.work.WorkListener;
-
 import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
 import edu.emory.mathcs.backport.java.util.concurrent.ScheduledExecutorService;
 import edu.emory.mathcs.backport.java.util.concurrent.ScheduledThreadPoolExecutor;
@@ -101,10 +105,6 @@ import edu.emory.mathcs.backport.java.util.concurrent.ThreadFactory;
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicReference;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.commons.pool.KeyedPoolableObjectFactory;
-import org.apache.commons.pool.impl.GenericKeyedObjectPool;
 
 /**
  * <code>AbstractConnector</code> provides base functionality for all connectors
@@ -279,9 +279,20 @@ public abstract class AbstractConnector implements Connector, ExceptionListener,
      */
     private boolean validateConnections = true;
 
-    public AbstractConnector()
+    public AbstractConnector(MuleContext context)
     {
+        muleContext = context;
+        try
+        {
+            lifecycleManager = new ConnectorLifecycleManager(this, muleContext.getLifecycleManager());
+        }
+        catch (MuleException e)
+        {
+            throw new MuleRuntimeException(CoreMessages.failedToCreate("Connector Lifecycle Manager"), e);
+        }
+        updateCachedNotificationHandler();
         setDynamicNotification(false);
+        updateCachedNotificationHandler();
 
         // always add at least the default protocol
         supportedProtocols = new ArrayList<String>();
@@ -2366,20 +2377,6 @@ public abstract class AbstractConnector implements Connector, ExceptionListener,
     public MuleContext getMuleContext()
     {
         return muleContext;
-    }
-
-    public void setMuleContext(MuleContext context)
-    {
-        this.muleContext = context;
-        try
-        {
-            lifecycleManager = new ConnectorLifecycleManager(this, muleContext.getLifecycleManager());
-        }
-        catch (MuleException e)
-        {
-            throw new MuleRuntimeException(CoreMessages.failedToCreate("Connector Lifecycle Manager"), e);
-        }
-        updateCachedNotificationHandler();
     }
 
     @Override

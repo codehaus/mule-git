@@ -173,7 +173,7 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
 
     protected DefaultMuleMessage(DefaultMuleMessage message)
     {
-        this(message.getPayload(), message.getAdapter(), message.getMuleContext());
+        this(message.getPayload(), message.getAdapter(), message.muleContext);
     }
 
     @SuppressWarnings("unchecked")
@@ -325,6 +325,14 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
      */
     public Object getOrginalPayload()
     {
+        return getOriginalPayload();
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public Object getOriginalPayload()
+    {
         return (originalAdapter == null ? adapter.getPayload() : originalAdapter.getPayload());
     }
 
@@ -393,7 +401,7 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
         {
             return cache;
         }
-        byte[] result = (byte[]) getPayload(byte[].class);
+        byte[] result = getPayload(byte[].class);
         if (muleContext.getConfiguration().isCacheMessageAsBytes())
         {
             cache = result;
@@ -411,7 +419,7 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
         {
             return new String(cache, encoding);
         }
-        String result = (String) getPayload(String.class, encoding);
+        String result = getPayload(String.class, encoding);
         if (muleContext.getConfiguration().isCacheMessageAsBytes())
         {
             cache = result.getBytes(encoding);

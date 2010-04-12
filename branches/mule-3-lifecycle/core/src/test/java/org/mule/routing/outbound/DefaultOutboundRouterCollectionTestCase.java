@@ -67,9 +67,8 @@ public class DefaultOutboundRouterCollectionTestCase extends AbstractMuleTestCas
     {
         SedaModel model = new SedaModel();
         muleContext.getRegistry().registerModel(model);
-        Service service = new SedaService();
+        Service service = new SedaService(muleContext);
         service.setName("test");
-        service.setMuleContext(muleContext);
         service.setComponent(new PassThroughComponent());
         service.setModel(model);
         return service;

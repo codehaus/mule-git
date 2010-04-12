@@ -8,26 +8,12 @@
  * LICENSE.txt file.
  */
 
-package org.mule.transport.ssl;
-
-import org.mule.api.MuleContext;
+package org.mule.transport.xmpp;
 
 /**
- * <code>TlsConnector</code> Provides TLS connections
+ * This enum represents the XMPP message types that can be used in Mule.
  */
-public class TlsConnector extends SslConnector
+public enum XmppMessageType
 {
-
-    public static final String TLS = "tls";
-
-    public TlsConnector(MuleContext context)
-    {
-        super(context);
-    }
-    
-    public String getProtocol()
-    {
-        return TLS;
-    }
-
+    MESSAGE, CHAT, GROUPCHAT
 }

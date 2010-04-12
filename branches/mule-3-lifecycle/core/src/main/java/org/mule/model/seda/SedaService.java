@@ -10,6 +10,13 @@
 
 package org.mule.model.seda;
 
+import java.text.MessageFormat;
+
+import javax.resource.spi.work.Work;
+import javax.resource.spi.work.WorkEvent;
+import javax.resource.spi.work.WorkListener;
+
+import org.apache.commons.lang.BooleanUtils;
 import org.mule.AbstractExceptionListener;
 import org.mule.DefaultMuleEvent;
 import org.mule.DefaultMuleMessage;
@@ -17,6 +24,7 @@ import org.mule.FailedToQueueEventException;
 import org.mule.RequestContext;
 import org.mule.api.ExceptionPayload;
 import org.mule.api.MessagingException;
+import org.mule.api.MuleContext;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
@@ -41,14 +49,6 @@ import org.mule.util.concurrent.WaitableBoolean;
 import org.mule.util.queue.Queue;
 import org.mule.util.queue.QueueSession;
 import org.mule.work.AbstractMuleEventWork;
-
-import java.text.MessageFormat;
-
-import javax.resource.spi.work.Work;
-import javax.resource.spi.work.WorkEvent;
-import javax.resource.spi.work.WorkListener;
-
-import org.apache.commons.lang.BooleanUtils;
 
 /**
  * A Seda service runs inside a Seda Model and is responsible for managing a Seda
@@ -87,10 +87,9 @@ public class SedaService extends AbstractService implements Work, WorkListener
 
     private WaitableBoolean queueDraining = new WaitableBoolean(false);
 
-    /** For Spring only */
-    public SedaService()
+    public SedaService(MuleContext muleContext)
     {
-        super();
+        super(muleContext);
     }
     
     /**

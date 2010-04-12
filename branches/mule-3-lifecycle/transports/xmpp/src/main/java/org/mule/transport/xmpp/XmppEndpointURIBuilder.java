@@ -18,26 +18,46 @@ import java.net.URI;
 import java.util.Properties;
 
 /**
- * Does the same as the UserInfoEndpointBuilder but also ensures that a path is set
- * on the uri. The path is used as either the groupChat name or the recipient name of
- * a one on one chat.
+ * This endpoint builder ensures that a path is set on the URI as the path is the message type.
+ * 
  */
-// TODO xmpp: is this class still necessary?
 public class XmppEndpointURIBuilder extends UserInfoEndpointURIBuilder
 {
+    @Override
     protected void setEndpoint(URI uri, Properties props) throws MalformedEndpointException
     {
+        checkXmppMessageType(uri);
+        checkRecipient(uri);
+        super.setEndpoint(uri, props);
+    }
+
+    private void checkXmppMessageType(URI uri) throws MalformedEndpointException
+    {
+        // the XMPP message type is stored in the host of the URL
+        String host = uri.getHost();
+        
+        if (host.length() == 0)
+        {
+            throw new MalformedEndpointException(XmppMessages.noMessageTypeInUri(), uri.toString());
+        }
+        
+        try
+        {
+            XmppMessageType.valueOf(host);
+        }
+        catch (IllegalArgumentException e)
+        {
+            throw new MalformedEndpointException(XmppMessages.invalidMessageTypeInUri(), 
+                uri.toString());
+        }
+    }
+
+    private void checkRecipient(URI uri) throws MalformedEndpointException
+    {
+        // the recipient is stored in the path of the URL
         if (uri.getPath().length() == 0)
         {
             throw new MalformedEndpointException(XmppMessages.noRecipientInUri(), uri.toString());
-        }
-        if (props.getProperty(XmppConnector.XMPP_GROUP_CHAT, "false").equalsIgnoreCase("true"))
-        {
-            if (props.getProperty(XmppConnector.XMPP_NICKNAME, null) == null)
-            {
-                throw new MalformedEndpointException(XmppMessages.nicknameMustBeSet(), uri.toString());
-            }
-        }
-        super.setEndpoint(uri, props);
+        }        
     }
 }

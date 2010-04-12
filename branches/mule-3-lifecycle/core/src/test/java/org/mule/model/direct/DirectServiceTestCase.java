@@ -21,9 +21,8 @@ public class DirectServiceTestCase extends AbstractServiceTestCase
 
     protected void doSetUp() throws Exception
     {
-        service = new DirectService();
+        service = new DirectService(muleContext);
         service.setName("direct");
-        service.setMuleContext(muleContext);        
         SingletonObjectFactory factory = new SingletonObjectFactory(Object.class);
         final DefaultJavaComponent component = new DefaultJavaComponent(factory);
         component.setMuleContext(muleContext);

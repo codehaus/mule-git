@@ -10,6 +10,7 @@
 
 package org.mule.transport.xmpp;
 
+import org.mule.api.MuleContext;
 import org.mule.api.MuleException;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.InitialisationException;
@@ -36,10 +37,6 @@ public class XmppConnector extends AbstractConnector
     public static final String XMPP_RECIPIENT = "recipient";
     public static final String XMPP_TYPE = "type";
     
-    public static final String CONVERSATION_TYPE_MESSAGE = "MESSAGE";
-    public static final String CONVERSATION_TYPE_CHAT = "CHAT";
-    public static final String CONVERSATION_TYPE_GROUPCHAT = "GROUPCHAT";
-
     private String host;
     private int port = 5222; // default jabber port
     private String user;
@@ -49,6 +46,11 @@ public class XmppConnector extends AbstractConnector
     
     private XMPPConnection connection;
     private XmppConversationFactory conversationFactory = new XmppConversationFactory();
+    
+    public XmppConnector(MuleContext context)
+    {
+        super(context);
+    }
     
     protected static String getRecipient(ImmutableEndpoint endpoint)
     {

@@ -10,6 +10,7 @@
 
 package org.mule.transport.jms;
 
+import org.mule.api.MuleContext;
 import org.mule.api.MuleException;
 import org.mule.api.MuleRuntimeException;
 import org.mule.api.context.notification.ConnectionNotificationListener;
@@ -182,6 +183,11 @@ public class JmsConnector extends AbstractConnector implements ExceptionListener
         ExceptionHelper.registerExceptionReader(new JmsExceptionReader());
     }
 
+    public JmsConnector(MuleContext context)
+    {
+        super(context);
+    }
+    
     public String getProtocol()
     {
         return JMS;

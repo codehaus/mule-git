@@ -10,6 +10,16 @@
 
 package org.mule.component;
 
+import java.lang.ref.SoftReference;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.mule.DefaultMuleEventContext;
 import org.mule.RequestContext;
 import org.mule.api.DefaultMuleException;
@@ -17,7 +27,6 @@ import org.mule.api.MuleContext;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleEventContext;
 import org.mule.api.MuleException;
-import org.mule.api.component.Component;
 import org.mule.api.component.JavaComponent;
 import org.mule.api.component.LifecycleAdapter;
 import org.mule.api.lifecycle.Disposable;
@@ -36,17 +45,6 @@ import org.mule.model.resolvers.TooManySatisfiableMethodsException;
 import org.mule.routing.binding.BindingInvocationHandler;
 import org.mule.util.ClassUtils;
 
-import java.lang.ref.SoftReference;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 /**
  * <code>DefaultLifecycleAdapter</code> provides lifecycle methods for all Mule
  * managed components. It's possible to plugin custom lifecycle adapters, this can
@@ -58,6 +56,12 @@ public class DefaultLifecycleAdapter implements LifecycleAdapter
     protected static final Log logger = LogFactory.getLog(DefaultLifecycleAdapter.class);
 
     protected SoftReference<?> componentObject;
+
+    /**
+     * name under which the componentObject is registered in the registry
+     */
+    private String componentObjectRegistryKey;
+
     protected JavaComponent component;
     protected EntryPointResolverSet entryPointResolver;
     
@@ -180,7 +184,7 @@ public class DefaultLifecycleAdapter implements LifecycleAdapter
             try
             {
                 // unregister a hard ref to the component object
-                muleContext.getRegistry().unregisterObject(createRegistryHardRefName(component));
+                muleContext.getRegistry().unregisterObject(componentObjectRegistryKey);
 
                 //make sure we haven't lost the reference to the object
                 Object o = componentObject.get();
@@ -313,13 +317,11 @@ public class DefaultLifecycleAdapter implements LifecycleAdapter
     }
 
     /**
-     * Generate a registry key name for this component. Used to bind component's hard reference to the Mule's
-     * lifecycle and prevent the garbage collector from kicking in too early.
-     * @param component component to generate the name for
-     * @return registry key name
+     * Generate a registry key name for this component. Used to bind component's hard reference to 
+     * the Mule's lifecycle and prevent the garbage collector from kicking in too early.
      */
-    protected String createRegistryHardRefName(Component component)
+    protected String createRegistryHardRefName(Object object)
     {
-        return "_component.hardref." + component.getService().getName();
+        return "_component.hardref." + component.getService().getName() + "." + System.identityHashCode(object);
     }
 }

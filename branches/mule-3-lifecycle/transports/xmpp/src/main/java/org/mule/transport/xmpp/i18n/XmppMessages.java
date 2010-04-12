@@ -13,6 +13,7 @@ package org.mule.transport.xmpp.i18n;
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.MessageFactory;
 import org.mule.transport.xmpp.XmppConnector;
+import org.mule.transport.xmpp.XmppMessageType;
 
 public class XmppMessages extends MessageFactory
 {
@@ -25,14 +26,19 @@ public class XmppMessages extends MessageFactory
         return factory.createMessage(BUNDLE_PATH, 1);
     }
 
-    public static Message nicknameMustBeSet()
+    public static Message invalidConversationType(XmppMessageType type)
     {
-        return factory.createMessage(BUNDLE_PATH, 2);
+        return factory.createMessage(BUNDLE_PATH, 3, type.name());
     }
 
-    public static Message invalidConversationType(String conversationType)
+    public static Message noMessageTypeInUri()
     {
-        return factory.createMessage(BUNDLE_PATH, 3, conversationType);
+        return factory.createMessage(BUNDLE_PATH, 4);
+    }
+
+    public static Message invalidMessageTypeInUri()
+    {
+        return factory.createMessage(BUNDLE_PATH, 5);
     }
 }
 

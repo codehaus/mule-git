@@ -10,6 +10,7 @@
 
 package org.mule.transport.soap.axis;
 
+import org.mule.api.MuleContext;
 import org.mule.api.MuleException;
 import org.mule.api.context.notification.MuleContextNotificationListener;
 import org.mule.api.endpoint.EndpointBuilder;
@@ -127,9 +128,9 @@ public class AxisConnector extends AbstractConnector implements MuleContextNotif
 
     private boolean treatMapAsNamedParams = true;
 
-    public AxisConnector()
+    public AxisConnector(MuleContext context)
     {
-        super();
+        super(context);
         this.registerProtocols();
     }
 
@@ -442,7 +443,7 @@ public class AxisConnector extends AbstractConnector implements MuleContextNotif
         if (service == null)
         {
             // TODO MULE-2228 Simplify this API
-            service = new SedaService();
+            service = new SedaService(muleContext);
             service.setName(AXIS_SERVICE_PROPERTY + getName());
             service.setModel(muleContext.getRegistry().lookupSystemModel());
 

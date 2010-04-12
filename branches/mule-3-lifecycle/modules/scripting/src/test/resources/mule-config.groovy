@@ -87,7 +87,7 @@ OutboundEndpoint createOutboundEndpoint(String url, String name)
 muleContext.transactionManager = new TestTransactionManagerFactory().create()
 
 //register connector
-TestConnector c = new TestConnector();
+TestConnector c = new TestConnector(muleContext);
 c.name = "dummyConnector"
 c.exceptionListener = new TestExceptionStrategy()
 muleContext.registry.registerConnector(c);
@@ -155,7 +155,7 @@ model.entryPointResolverSet = new TestEntryPointResolverSet()
 muleContext.registry.registerModel(model)
 
 // building service
-Service service = new SedaService();
+Service service = new SedaService(muleContext);
 service.model = model
 service.name = "orangeComponent"
 def component = new DefaultJavaComponent(new SingletonObjectFactory(Orange.class.name))

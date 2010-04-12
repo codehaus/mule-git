@@ -37,7 +37,7 @@ public class JmsMuleSideDurableTopicXATxTestCase extends AbstractJmsFunctionalTe
     {
         // There is a need to guarantee that XaMessageTopicReceiver connected to
         // topic
-        Thread.sleep(3000);
+        Thread.sleep(5000);
 
         MuleMessage result;
         MuleClient client = new MuleClient();
@@ -46,7 +46,7 @@ public class JmsMuleSideDurableTopicXATxTestCase extends AbstractJmsFunctionalTe
         assertNotNull(result);
         result = client.request("vm://out", getTimeout());
         assertNotNull(result);
-        result = client.request("vm://out", getSmallTimeout());
+        result = client.request("vm://out", getTimeout());
         assertNull(result);
 
         muleContext.getRegistry().lookupConnector(CONNECTOR1_NAME).stop();

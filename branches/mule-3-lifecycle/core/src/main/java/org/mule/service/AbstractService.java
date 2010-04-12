@@ -10,6 +10,12 @@
 
 package org.mule.service;
 
+import java.beans.ExceptionListener;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.mule.DefaultMuleMessage;
 import org.mule.OptimizedRequestContext;
 import org.mule.api.MessagingException;
@@ -53,13 +59,7 @@ import org.mule.transport.AbstractConnector;
 import org.mule.transport.NullPayload;
 import org.mule.util.ClassUtils;
 
-import java.beans.ExceptionListener;
-import java.util.ArrayList;
-import java.util.List;
-
 import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * A base implementation for all Services in Mule
@@ -125,12 +125,17 @@ public abstract class AbstractService implements Service
     // events that are bridged but currently everything is an invocation.
     protected Component component = new PassThroughComponent();
     
-    /**
-     * For Spring only
-     */
-    public AbstractService()
+    public AbstractService(MuleContext muleContext)
     {
-        // nop
+        this.muleContext = muleContext;
+        try
+        {
+            lifecycleManager = new ServiceLifecycleManager(this, muleContext.getLifecycleManager());
+        }
+        catch (MuleException e)
+        {
+            throw new MuleRuntimeException(CoreMessages.failedToCreate("Service Lifecycle Manager"), e);
+        }
     }
 
     /**
@@ -654,19 +659,6 @@ public abstract class AbstractService implements Service
             endpoints.addAll(responseRouter.getEndpoints());
         }
         return endpoints;
-    }
-
-    public void setMuleContext(MuleContext context)
-    {
-        this.muleContext = context;
-        try
-        {
-            lifecycleManager = new ServiceLifecycleManager(this, muleContext.getLifecycleManager());
-        }
-        catch (MuleException e)
-        {
-            throw new MuleRuntimeException(CoreMessages.failedToCreate("Service Lifecycle Manager"), e);
-        }
     }
 
     // /////////////////////////////////////////////////////////////////////////////////////////

@@ -14,17 +14,11 @@ import org.mule.api.MuleEvent;
 import org.mule.api.MuleException;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.service.Service;
-import org.mule.component.DefaultJavaComponent;
 import org.mule.model.AbstractServiceTestCase;
 import org.mule.model.resolvers.DefaultEntryPointResolverSet;
-import org.mule.model.seda.SedaModel;
-import org.mule.model.seda.SedaService;
-import org.mule.object.PrototypeObjectFactory;
-import org.mule.tck.AbstractMuleTestCase;
 
 import java.lang.reflect.Method;
 
-import javax.resource.ResourceException;
 import javax.resource.spi.UnavailableException;
 import javax.resource.spi.endpoint.MessageEndpoint;
 import javax.resource.spi.endpoint.MessageEndpointFactory;
@@ -43,10 +37,9 @@ public class JcaServiceTestCase extends AbstractServiceTestCase
         jcaModel.initialise();
 
         String name = "JcaService#";
-        service = new JcaService();
+        service = new JcaService(muleContext);
         service.setName(name);
         service.setModel(jcaModel);
-        service.setMuleContext(muleContext);
         service.setComponent(new JcaComponent(new TestMessageEndpointFactory(), new DefaultEntryPointResolverSet(),
                 service, workManager));
     }

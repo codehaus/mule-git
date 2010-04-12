@@ -36,8 +36,9 @@ import javax.resource.spi.work.Work;
 import javax.resource.spi.work.WorkEvent;
 import javax.resource.spi.work.WorkException;
 
-import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 import junit.framework.AssertionFailedError;
+
+import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 
 public class SedaServiceTestCase extends AbstractServiceTestCase
 {
@@ -45,12 +46,10 @@ public class SedaServiceTestCase extends AbstractServiceTestCase
 
      protected void doSetUp() throws Exception
      {
-         service = new SedaService();
+         service = new SedaService(muleContext);
          service.setName("test");
-         service.setMuleContext(muleContext);         
          PrototypeObjectFactory factory = new PrototypeObjectFactory(Object.class);
          service.setComponent(new DefaultJavaComponent(factory));
-         service.setMuleContext(muleContext);
          service.setModel(new SedaModel());
          service.getModel().setMuleContext(muleContext);
          service.getModel().initialise();
