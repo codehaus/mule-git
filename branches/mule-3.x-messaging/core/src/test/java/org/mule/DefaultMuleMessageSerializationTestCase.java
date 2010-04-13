@@ -17,6 +17,11 @@ import org.mule.transformer.simple.ObjectToByteArray;
 import org.mule.transformer.types.SimpleDataType;
 import org.mule.util.store.DeserializationPostInitialisable;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+
+import edu.emory.mathcs.backport.java.util.Arrays;
+
 import org.apache.commons.lang.SerializationUtils;
 
 public class DefaultMuleMessageSerializationTestCase extends AbstractMuleTestCase
@@ -47,6 +52,19 @@ public class DefaultMuleMessageSerializationTestCase extends AbstractMuleTestCas
 
         assertTrue(deserializedMessage.getPayload() instanceof byte[]);
         assertEquals(INNER_TEST_MESSAGE, deserializedMessage.getPayloadAsString());
+    }
+    
+    public void testStreamPayloadSerialization() throws Exception
+    {
+        InputStream stream = new ByteArrayInputStream(TEST_MESSAGE.getBytes());
+        MuleMessage message = new DefaultMuleMessage(stream, muleContext);
+        message.setProperty("foo", "bar");
+        
+        MuleMessage deserializedMessage = serializationRoundtrip(message);
+        
+        assertEquals(byte[].class, deserializedMessage.getPayload().getClass());
+        byte[] payload = (byte[]) deserializedMessage.getPayload();
+        assertTrue(Arrays.equals(TEST_MESSAGE.getBytes(), payload));
     }
 
     private MuleMessage serializationRoundtrip(MuleMessage message) throws Exception
