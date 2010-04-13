@@ -369,7 +369,7 @@ public abstract class AbstractMuleTestCase extends TestCase implements TestCaseW
         }
     }
 
-    private void giveTheTestSomeTimeToCleanUpAndThenKillIt(String messageIfNeedToKill)
+    protected void giveTheTestSomeTimeToCleanUpAndThenKillIt(String messageIfNeedToKill)
     {
         try
         {
