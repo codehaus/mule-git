@@ -242,6 +242,16 @@ public class JmsMuleMessageFactory extends AbstractMuleMessageFactory
 
     public void setSpecification(String specification)
     {
-        this.specification = specification;
+        if (JmsConstants.JMS_SPECIFICATION_11.equals(specification) 
+            || (JmsConstants.JMS_SPECIFICATION_102B.equals(specification)))
+        {
+            this.specification = specification;
+        }
+        else
+        {
+            throw new IllegalArgumentException(
+                "JMS specification needs to be one of the defined values in JmsConstants but was: "
+                + specification);
+        }
     }
 }

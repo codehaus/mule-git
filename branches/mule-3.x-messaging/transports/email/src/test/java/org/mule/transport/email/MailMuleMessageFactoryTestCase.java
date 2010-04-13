@@ -37,6 +37,11 @@ public class MailMuleMessageFactoryTestCase extends AbstractMuleMessageFactoryTe
     {
         return "this is not a valid transport message for MailMuleMessageFactory";
     }
+    
+    public void _testAttachments()
+    {
+        // TODO MessageAdapterRemoval: implement me
+    }
 }
 
 
