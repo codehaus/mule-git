@@ -835,6 +835,12 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
         }
     }
 
+    // TODO MessageAdapterRemoval: can this method be hidden? It's not for public use
+    public void addInboundProperties(Map<String, Object> props)
+    {
+        properties.addInboundProperties(props);
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -1178,5 +1184,4 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
     {
         this.muleContext = muleContext;
     }
-
 }
