@@ -35,9 +35,9 @@ public class HttpMuleMessageFactory extends AbstractMuleMessageFactory
 {
     private static Log log = LogFactory.getLog(HttpMuleMessageFactory.class);
     
-    private boolean enableCookies;
-    private String cookieSpec;
-    private boolean synchronous;
+    private boolean enableCookies = false;
+    private String cookieSpec = null;
+    private boolean synchronous = true;
 
     public HttpMuleMessageFactory(MuleContext context)
     {
