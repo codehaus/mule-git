@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.mule</groupId>
+        <artifactId>mule</artifactId>
+        <version>2.2.4</version>
+    </parent>
+    <groupId>org.mule.transports</groupId>
+    <artifactId>mule-transports</artifactId>
+    <packaging>pom</packaging>
+    <name>Mule Transports</name>
+
+    <modules>
+        <module>all-transports</module>
+        <module>axis</module>
+        <module>bpm</module>
+        <module>cxf</module>
+        <module>ejb</module>
+        <module>email</module>
+        <module>file</module>
+        <module>ftp</module>
+        <module>http</module>
+        <module>jbpm</module>
+        <module>jdbc</module>
+        <module>jetty</module>
+        <module>jms</module>
+        <module>multicast</module>
+        <module>quartz</module>
+        <module>rmi</module>
+        <module>servlet</module>
+        <module>soap</module>
+        <module>ssl</module>
+        <module>stdio</module>
+        <module>tcp</module>
+        <module>udp</module>
+        <module>vm</module>
+        <module>xmpp</module>
+    </modules>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.mule</groupId>
+            <artifactId>mule-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mule.modules</groupId>
+            <artifactId>mule-module-spring-config</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+        </dependency>
+
+        <!-- Unit tests -->
+        <dependency>
+            <groupId>org.mule.tests</groupId>
+            <artifactId>mule-tests-functional</artifactId>
+            <version>${version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mule.modules</groupId>
+            <artifactId>mule-module-client</artifactId>
+            <version>${version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+</project>
