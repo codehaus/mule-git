@@ -137,6 +137,12 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
             setPayload(muleMessage.getPayload());
             copyMessageProperties(muleMessage);
         }
+        else if (message instanceof MessageAdapter)
+        {
+            MessageAdapter messageAdapter = (MessageAdapter) message;
+            setPayload(messageAdapter.getPayload());
+            copyMessageProperties(messageAdapter);
+        }
         else
         {
             setPayload(message);
@@ -152,7 +158,14 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
         initAppliedTransformerHashCodes();
         setEncoding(previous.getEncoding());
         
-        setPayload(message);
+        if (message instanceof MessageAdapter)
+        {
+            setPayload(((MessageAdapter) message).getPayload());
+        }
+        else
+        {
+            setPayload(message);
+        }
         originalPayload = previous.getPayload();
         
         if (previous.getExceptionPayload() != null)
@@ -175,6 +188,25 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
                 for (String name : muleMessage.getPropertyNames(scope))
                 {
                     Object value = muleMessage.getProperty(name);
+                    setProperty(name, value, scope);
+                }
+            }
+            catch (IllegalArgumentException iae)
+            {
+                // ignore non-registered property scope
+            }
+        }
+    }
+
+    private void copyMessageProperties(MessageAdapter messageAdapter)
+    {
+        for (PropertyScope scope : PropertyScope.ALL_SCOPES)
+        {
+            try
+            {
+                for (String name : messageAdapter.getPropertyNames(scope))
+                {
+                    Object value = messageAdapter.getProperty(name);
                     setProperty(name, value, scope);
                 }
             }
@@ -835,12 +867,6 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
         }
     }
 
-    // TODO MessageAdapterRemoval: can this method be hidden? It's not for public use
-    public void addInboundProperties(Map<String, Object> props)
-    {
-        properties.addInboundProperties(props);
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -1184,4 +1210,5 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
     {
         this.muleContext = muleContext;
     }
+
 }

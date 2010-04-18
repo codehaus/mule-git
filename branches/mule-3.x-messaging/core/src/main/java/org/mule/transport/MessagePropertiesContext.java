@@ -129,8 +129,7 @@ public class MessagePropertiesContext implements Serializable
         return defaultScope;
     }
 
-    // TODO MessageAdapterRemoval: can this method be hidden? It's not for public use
-    public void addInboundProperties(Map<String, Object> properties)
+    protected void addInboundProperties(Map<String, Object> properties)
     {
         if (properties != null)
         {

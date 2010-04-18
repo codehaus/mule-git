@@ -10,7 +10,6 @@
 
 package org.mule.transport.http;
 
-import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleMessage;
 import org.mule.api.transport.MessageTypeNotSupportedException;
@@ -160,7 +159,7 @@ public class HttpMuleMessageFactory extends AbstractMuleMessageFactory
             headers.put(HttpConnector.HTTP_STATUS_PROPERTY, statusCode);
         }
 
-        ((DefaultMuleMessage) message).addInboundProperties(headers);
+        message.addProperties(headers);
     }
 
     protected Map<String, Object> processIncomingHeaders(Map<String, Object> headers, String uri, 
