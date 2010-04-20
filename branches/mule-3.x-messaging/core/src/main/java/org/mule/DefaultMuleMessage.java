@@ -160,11 +160,14 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
         
         if (message instanceof MessageAdapter)
         {
-            setPayload(((MessageAdapter) message).getPayload());
+            MessageAdapter adapter = (MessageAdapter) message;
+            setPayload(adapter.getPayload());
+            copyMessageProperties(adapter);
         }
         else
         {
             setPayload(message);
+            copyMessageProperties(previous);
         }
         originalPayload = previous.getPayload();
         
@@ -173,7 +176,6 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
             setExceptionPayload(previous.getExceptionPayload());
         }
         
-        copyMessageProperties(previous);
         copyAttachments(previous);
         
         resetAccessControl();
