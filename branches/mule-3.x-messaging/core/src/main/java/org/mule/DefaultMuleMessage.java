@@ -884,6 +884,11 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
             }
         }
     }
+    
+    public void addInboundProperties(Map<String, Object> props)
+    {
+        properties.addInboundProperties(props);
+    }
 
     /**
      * {@inheritDoc}

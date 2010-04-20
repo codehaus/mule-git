@@ -10,6 +10,7 @@
 
 package org.mule.transport.http;
 
+import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleMessage;
 import org.mule.api.transport.MessageTypeNotSupportedException;
@@ -138,7 +139,7 @@ public class HttpMuleMessageFactory extends AbstractMuleMessageFactory
         }
         else
         {
-            // This should never happen because of the supported type checking
+            // This should never happen because of the supported type checking in our superclass
             throw new MessageTypeNotSupportedException(transportMessage, getClass());
         }
 
@@ -159,7 +160,16 @@ public class HttpMuleMessageFactory extends AbstractMuleMessageFactory
             headers.put(HttpConnector.HTTP_STATUS_PROPERTY, statusCode);
         }
 
-        message.addProperties(headers);
+        // this preserves the behaviour of the old code. Ideally, all properties should be on
+        // the INBOUND scope, no matter where they come from.
+        if (transportMessage instanceof HttpRequest)
+        {
+            ((DefaultMuleMessage) message).addInboundProperties(headers);
+        }
+        else
+        {
+            message.addProperties(headers);
+        }
     }
 
     protected Map<String, Object> processIncomingHeaders(Map<String, Object> headers, String uri, 

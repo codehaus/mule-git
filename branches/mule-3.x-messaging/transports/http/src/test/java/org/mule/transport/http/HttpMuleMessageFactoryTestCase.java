@@ -13,6 +13,7 @@ package org.mule.transport.http;
 import org.mule.api.MuleMessage;
 import org.mule.api.transport.MessageTypeNotSupportedException;
 import org.mule.api.transport.MuleMessageFactory;
+import org.mule.api.transport.PropertyScope;
 import org.mule.transport.AbstractMuleMessageFactoryTestCase;
 
 import java.io.ByteArrayInputStream;
@@ -25,6 +26,7 @@ import org.apache.commons.httpclient.Header;
 public class HttpMuleMessageFactoryTestCase extends AbstractMuleMessageFactoryTestCase
 {
     private static final String REQUEST_LINE = "GET /services/Echo HTTP/1.1";
+    private static final Header[] HEADERS = new Header[] { new Header("foo-header", "foo-value") };
 
     @Override
     protected MuleMessageFactory doCreateMuleMessageFactory()
@@ -36,7 +38,7 @@ public class HttpMuleMessageFactoryTestCase extends AbstractMuleMessageFactoryTe
     protected Object getValidTransportMessage() throws Exception
     {
         RequestLine requestLine = RequestLine.parseLine(REQUEST_LINE);
-        HttpRequest request = new HttpRequest(requestLine, new Header[0], null, encoding);
+        HttpRequest request = new HttpRequest(requestLine, HEADERS, null, encoding);
         return request;
     }
     
@@ -55,6 +57,7 @@ public class HttpMuleMessageFactoryTestCase extends AbstractMuleMessageFactoryTe
         MuleMessage message = factory.create(payload, encoding);
         assertNotNull(message);
         assertEquals("/services/Echo", message.getPayload());
+        assertEquals("foo-value", message.getProperty("foo-header", PropertyScope.INBOUND));
     }
     
     public void testInvalidPayloadOnHttpMuleMessageFactory() throws Exception
@@ -89,7 +92,7 @@ public class HttpMuleMessageFactoryTestCase extends AbstractMuleMessageFactoryTe
         String line = REQUEST_LINE.replace(HttpConstants.METHOD_GET, HttpConstants.METHOD_POST);
         RequestLine requestLine = RequestLine.parseLine(line);
         InputStream stream = new ByteArrayInputStream(TEST_MESSAGE.getBytes());
-        return new HttpRequest(requestLine, new Header[0], stream, encoding);
+        return new HttpRequest(requestLine, HEADERS, stream, encoding);
     }
     
     public void _testHttpMethodGet() throws Exception

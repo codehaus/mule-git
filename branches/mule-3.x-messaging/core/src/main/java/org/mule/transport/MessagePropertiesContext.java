@@ -129,7 +129,8 @@ public class MessagePropertiesContext implements Serializable
         return defaultScope;
     }
 
-    protected void addInboundProperties(Map<String, Object> properties)
+    // TODO MessageAdapterRemoval: this was protected before (as was MessageAdapter). Move this class to the org.mule package where DefaultMuleMessage resides?
+    public void addInboundProperties(Map<String, Object> properties)
     {
         if (properties != null)
         {
