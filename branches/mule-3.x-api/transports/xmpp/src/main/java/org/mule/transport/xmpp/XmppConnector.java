@@ -10,6 +10,7 @@
 
 package org.mule.transport.xmpp;
 
+import org.mule.api.MuleContext;
 import org.mule.api.MuleException;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.InitialisationException;
@@ -38,6 +39,7 @@ public class XmppConnector extends AbstractConnector
     
     private String host;
     private int port = 5222; // default jabber port
+    private String serviceName = null;
     private String user;
     private String password;
     private String resource;
@@ -45,6 +47,11 @@ public class XmppConnector extends AbstractConnector
     
     private XMPPConnection connection;
     private XmppConversationFactory conversationFactory = new XmppConversationFactory();
+    
+    public XmppConnector(MuleContext context)
+    {
+        super(context);
+    }
     
     protected static String getRecipient(ImmutableEndpoint endpoint)
     {
@@ -110,7 +117,15 @@ public class XmppConnector extends AbstractConnector
             logger.debug("Connecting to " + host + ":" + port);
         }
 
-        ConnectionConfiguration connectionConfig = new ConnectionConfiguration(host, port);
+        ConnectionConfiguration connectionConfig = null;
+        if (serviceName != null)
+        {
+            connectionConfig = new ConnectionConfiguration(host, port, serviceName);
+        }
+        else
+        {
+            connectionConfig = new ConnectionConfiguration(host, port);
+        }
         // no need to load the roster (this is not an interactive app)
         connectionConfig.setRosterLoadedAtLogin(false);
         
@@ -174,6 +189,16 @@ public class XmppConnector extends AbstractConnector
     public void setPort(int port)
     {
         this.port = port;
+    }
+    
+    public String getServiceName()
+    {
+        return serviceName;
+    }
+
+    public void setServiceName(String serviceName)
+    {
+        this.serviceName = serviceName;
     }
 
     public String getUser()

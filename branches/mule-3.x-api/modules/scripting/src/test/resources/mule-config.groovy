@@ -11,8 +11,6 @@ import org.mule.config.ChainedThreadingProfile
 import org.mule.endpoint.DefaultEndpointFactory
 import org.mule.endpoint.EndpointURIEndpointBuilder
 import org.mule.interceptor.InterceptorStack
-import org.mule.interceptor.LoggingInterceptor
-import org.mule.interceptor.TimerInterceptor
 import org.mule.model.seda.SedaModel
 import org.mule.model.seda.SedaService
 import org.mule.object.SingletonObjectFactory
@@ -31,7 +29,7 @@ import org.mule.tck.testmodels.fruit.FruitCleaner
 import org.mule.tck.testmodels.fruit.Orange
 import org.mule.tck.testmodels.mule.TestCompressionTransformer
 import org.mule.tck.testmodels.mule.TestConnector
-import org.mule.tck.testmodels.mule.TestDefaultLifecycleAdapterFactory
+import org.mule.tck.testmodels.mule.TestComponentLifecycleAdapterFactory
 import org.mule.tck.testmodels.mule.TestEntryPointResolverSet
 import org.mule.tck.testmodels.mule.TestExceptionStrategy
 import org.mule.tck.testmodels.mule.TestResponseAggregator
@@ -89,7 +87,7 @@ OutboundEndpoint createOutboundEndpoint(String url, String name)
 muleContext.transactionManager = new TestTransactionManagerFactory().create()
 
 //register connector
-TestConnector c = new TestConnector();
+TestConnector c = new TestConnector(muleContext);
 c.name = "dummyConnector"
 c.exceptionListener = new TestExceptionStrategy()
 muleContext.registry.registerConnector(c);
@@ -152,7 +150,7 @@ Model model = new SedaModel();
 exceptionStrategy = new TestExceptionStrategy();
 exceptionStrategy.addEndpoint(createOutboundEndpoint("test://component.exceptions", null));
 model.exceptionListener = exceptionStrategy
-model.lifecycleAdapterFactory = new TestDefaultLifecycleAdapterFactory()
+model.lifecycleAdapterFactory = new TestComponentLifecycleAdapterFactory()
 model.entryPointResolverSet = new TestEntryPointResolverSet()
 muleContext.registry.registerModel(model)
 

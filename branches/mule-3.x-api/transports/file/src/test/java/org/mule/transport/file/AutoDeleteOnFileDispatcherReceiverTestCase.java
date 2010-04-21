@@ -82,6 +82,7 @@ public class AutoDeleteOnFileDispatcherReceiverTestCase extends AbstractMuleTest
         validMessage = File.createTempFile("hello", ".txt", tempDir);
         assertNotNull(validMessage);
         connector = getConnector();
+        connector.start();
     }
 
     protected void doTearDown() throws Exception
@@ -93,9 +94,8 @@ public class AutoDeleteOnFileDispatcherReceiverTestCase extends AbstractMuleTest
     }
 
     public Connector getConnector() throws Exception {
-        Connector connector = new FileConnector();
+        Connector connector = new FileConnector(muleContext);
         connector.setName("FileConnector");
-        connector.setMuleContext(muleContext);
         muleContext.getRegistry().registerConnector(connector);
         return connector;
     }

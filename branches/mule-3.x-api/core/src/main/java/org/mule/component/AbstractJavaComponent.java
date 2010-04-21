@@ -20,14 +20,13 @@ import org.mule.api.model.EntryPointResolver;
 import org.mule.api.model.EntryPointResolverSet;
 import org.mule.api.object.ObjectFactory;
 import org.mule.api.routing.BindingCollection;
+import org.mule.api.service.Service;
 import org.mule.api.service.ServiceAware;
 import org.mule.config.i18n.CoreMessages;
 import org.mule.model.resolvers.DefaultEntryPointResolverSet;
 import org.mule.routing.binding.DefaultBindingCollection;
 
 import java.util.Collection;
-import java.util.Iterator;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Abstract implementation of JavaComponent adds JavaComponent specific's:
@@ -47,14 +46,11 @@ public abstract class AbstractJavaComponent extends AbstractComponent implements
 
     protected LifecycleAdapterFactory lifecycleAdapterFactory;
 
-    //Determines whether an object should be wired once created.  For
-    //prototypes this value is always true, for singletons it is only true
-    //the first time the object is created from the objectFactory
-    private AtomicBoolean wireObject = new AtomicBoolean(true);
-
+    /**
+     * For Spring only
+     */
     public AbstractJavaComponent()
     {
-        // For Spring only
         super();
     }
 
@@ -99,7 +95,7 @@ public abstract class AbstractJavaComponent extends AbstractComponent implements
         }
     }
 
-    public Class getObjectType()
+    public Class<?> getObjectType()
     {
         return objectFactory.getObjectClass();
     }
@@ -111,43 +107,25 @@ public abstract class AbstractJavaComponent extends AbstractComponent implements
      * @throws MuleException
      * @throws Exception
      */
-    protected LifecycleAdapter createLifeCycleAdaptor() throws Exception
+    protected LifecycleAdapter createLifecycleAdaptor() throws Exception
     {
-        LifecycleAdapter lifecycleAdapter;
         //Todo this could be moved to the LCAFactory potentially
-        Object object = objectFactory.getInstance();
-        //We wire the object here since it is not stored in the registry
-        if(wireObject.get())
-        {
-            //Only wire it once if it is a singleton
-            if(objectFactory.isSingleton())
-            {
-                wireObject.set(false);
-            }
-            //The registry cannot inject the Service for this object since there is no way to tie the two together
-            if(object instanceof ServiceAware)
-            {
-                ((ServiceAware)object).setService(getService());
-            }
-            
-            if(objectFactory.isAutoWireObject())
-            {
-                //Apply processors, these will inject dependencies
-                muleContext.getRegistry().applyProcessors(object);
-            }
-        }
+        Object object = objectFactory.getInstance(muleContext);
 
+        LifecycleAdapter lifecycleAdapter;
         if (lifecycleAdapterFactory != null)
         {
             // Custom lifecycleAdapterFactory set on component
-            lifecycleAdapter = lifecycleAdapterFactory.create(object, this, entryPointResolverSet, muleContext);
+            lifecycleAdapter = 
+                lifecycleAdapterFactory.create(object, this, entryPointResolverSet, muleContext);
         }
         else if (objectFactory.isExternallyManagedLifecycle())
         {
-            // If no lifecycleAdapterFactory is configured explicitly and object factory returns externally managed instance then 
-            // use NullLifecycleAdapter so that lifecycle is not propagated
-            lifecycleAdapter = new NullLifecycleAdapter(object, this,
-                entryPointResolverSet, muleContext);
+            // If no lifecycleAdapterFactory is configured explicitly and object factory returns 
+            // externally managed instance then use NullLifecycleAdapter so that lifecycle 
+            // is not propagated
+            lifecycleAdapter = 
+                new NullLifecycleAdapter(object, this, entryPointResolverSet, muleContext);
         }
         else
         {
@@ -170,7 +148,6 @@ public abstract class AbstractJavaComponent extends AbstractComponent implements
         {
             throw new InitialisationException(CoreMessages.objectIsNull("object factory"), this);
         }
-
         objectFactory.initialise();
     }
 
@@ -190,10 +167,10 @@ public abstract class AbstractJavaComponent extends AbstractComponent implements
     @Override
     protected void doDispose()
     {
-        // TODO This can't be implemented currently because AbstractService allows
-        // disposed services to be re-initialised, and re-use of a disposed object
-        // factory is not possible
-        // objectFactory.dispose();
+        if (objectFactory!=null)
+        {
+            objectFactory.dispose();
+        }
     }
 
     public EntryPointResolverSet getEntryPointResolverSet()
@@ -222,15 +199,16 @@ public abstract class AbstractJavaComponent extends AbstractComponent implements
      * 
      * @param entryPointResolvers Resolvers to add
      */
-    public void setEntryPointResolvers(Collection entryPointResolvers)
+    public void setEntryPointResolvers(Collection<EntryPointResolver> entryPointResolvers)
     {
         if (null == entryPointResolverSet)
         {
             entryPointResolverSet = new DefaultEntryPointResolverSet();
         }
-        for (Iterator resolvers = entryPointResolvers.iterator(); resolvers.hasNext();)
+        
+        for (EntryPointResolver resolver : entryPointResolvers)
         {
-            entryPointResolverSet.addEntryPointResolver((EntryPointResolver) resolvers.next());
+            entryPointResolverSet.addEntryPointResolver(resolver);
         }
     }
 
@@ -242,6 +220,7 @@ public abstract class AbstractJavaComponent extends AbstractComponent implements
     public void setObjectFactory(ObjectFactory objectFactory)
     {
         this.objectFactory = objectFactory;
+        injectService();
     }
 
     public LifecycleAdapterFactory getLifecycleAdapterFactory()
@@ -254,4 +233,21 @@ public abstract class AbstractJavaComponent extends AbstractComponent implements
         this.lifecycleAdapterFactory = lifecycleAdapterFactory;
     }
 
+    @Override
+    public void setService(Service service)
+    {
+        super.setService(service);
+        injectService();
+    }
+
+    protected void injectService()
+    {
+        if(objectFactory != null && objectFactory instanceof ServiceAware && service!=null)
+        {
+            //The registry cannot inject the Service for this object since there is no way to tie the two together, so
+            //we set the service on the object factory, that way the factory is responsible for injecting all properties
+            //on the result object
+            ((ServiceAware)objectFactory).setService(service);
+        }
+    }
 }

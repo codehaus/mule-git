@@ -25,13 +25,12 @@ public class JdbcMessageDispatcherTestCase extends AbstractMuleTestCase
 {
     public void testCustomResultSetHandlerIsNotIgnored() throws Exception
     {
-        JdbcConnector connector = new JdbcConnector();
+        muleContext.start();
+        JdbcConnector connector = new JdbcConnector(muleContext);
         
         connector.setQueryRunner(new TestQueryRunner());
         connector.setResultSetHandler(new TestResultSetHandler());
         connector.setDataSource(new TestDataSource());
-        
-        connector.setMuleContext(muleContext);
         muleContext.getRegistry().registerConnector(connector);
         
         InboundEndpoint ep = muleContext.getRegistry().lookupEndpointFactory().getInboundEndpoint(

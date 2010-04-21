@@ -47,14 +47,16 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * <code>DefaultLifecycleAdapter</code> provides lifecycle methods for all Mule
- * managed components. It's possible to plugin custom lifecycle adapters, this can
- * provide additional lifecycle methods triggered by an external source.
+ * <code>DefaultComponentLifecycleAdapter</code> is a default implementation of
+ * {@link LifecycleAdapter} for use with {@link JavaComponent} that expects component
+ * instances to implement Mule lifecycle interfaces in order to receive lifecycle.
+ * Custom implementations should be used in order to adapt Mule lifecycle to other
+ * custom lifecycle methods that are used by a component instance.
  */
-public class DefaultLifecycleAdapter implements LifecycleAdapter
+public class DefaultComponentLifecycleAdapter implements LifecycleAdapter
 {
     /** logger used by this class */
-    protected static final Log logger = LogFactory.getLog(DefaultLifecycleAdapter.class);
+    protected static final Log logger = LogFactory.getLog(DefaultComponentLifecycleAdapter.class);
 
     protected SoftReference<?> componentObject;
 
@@ -75,12 +77,17 @@ public class DefaultLifecycleAdapter implements LifecycleAdapter
 
     protected MuleContext muleContext;
 
-    public DefaultLifecycleAdapter(Object componentObject, JavaComponent component, MuleContext muleContext) throws MuleException
+    public DefaultComponentLifecycleAdapter(Object componentObject, JavaComponent component, MuleContext muleContext) throws MuleException
     {
+        if (muleContext == null)
+        {
+            throw new IllegalStateException("No muleContext provided");
+        }
         if (componentObject == null)
         {
             throw new IllegalArgumentException("POJO Service cannot be null");
         }
+
         if (entryPointResolver == null)
         {
             entryPointResolver = new LegacyEntryPointResolverSet();
@@ -88,23 +95,19 @@ public class DefaultLifecycleAdapter implements LifecycleAdapter
         this.componentObject = new SoftReference<Object>(componentObject);
         this.component = component;
 
-        if (muleContext == null)
-        {
-            throw new IllegalStateException("No muleContext provided");
-        }
 
         // save a ref for later disposal call
         this.muleContext = muleContext;
         // store a hard ref to the component object in the registry, so it's not GC'ed too early
         MuleRegistry r = muleContext.getRegistry();
         componentObjectRegistryKey = createRegistryHardRefName(componentObject);
-        // don't mess up the current component's lifecycle, just put a direct ref
-        // without any callbacks executed
-        r.registerObject(componentObjectRegistryKey, componentObject, MuleRegistry.LIFECYCLE_BYPASS_FLAG
-                                                                      + MuleRegistry.PRE_INIT_BYPASS_FLAG);
+        if (r.lookupObject(componentObjectRegistryKey) == null)
+        {
+            r.registerObject(componentObjectRegistryKey, new ComponentObjectHolder(componentObject));
+        }
     }
 
-    public DefaultLifecycleAdapter(Object componentObject,
+    public DefaultComponentLifecycleAdapter(Object componentObject,
                                    JavaComponent component,
                                    EntryPointResolverSet entryPointResolver, MuleContext muleContext) throws MuleException
     {
@@ -178,30 +181,28 @@ public class DefaultLifecycleAdapter implements LifecycleAdapter
      */
     public void dispose()
     {
-        if (isDisposable)
+        try
         {
-            try
+            if (isDisposable)
             {
-                // unregister a hard ref to the component object
-                muleContext.getRegistry().unregisterObject(componentObjectRegistryKey);
-
-                //make sure we haven't lost the reference to the object
+                // make sure we haven't lost the reference to the object
                 Object o = componentObject.get();
-                if (o!=null)
+                if (o != null)
                 {
                     ((Disposable) o).dispose();
                 }
-                
-                componentObject.clear();
-                componentObject.enqueue();
+            }
 
-            }
-            catch (Exception e)
-            {
-                logger.error("failed to dispose: " + component.getService().getName(), e);
-            }
+            // unregister a hard ref to the component object
+            muleContext.getRegistry().unregisterObject(componentObjectRegistryKey);
+            componentObject.clear();
+            componentObject.enqueue();
+
         }
-
+        catch (Exception e)
+        {
+            logger.error("failed to dispose: " + component.getService().getName(), e);
+        }
         disposed = true;
     }
 
@@ -324,5 +325,19 @@ public class DefaultLifecycleAdapter implements LifecycleAdapter
     protected String createRegistryHardRefName(Object object)
     {
         return "_component.hardref." + component.getService().getName() + "." + System.identityHashCode(object);
+    }
+    
+    /**
+     * Holder class used only to crate reference to component instance from registry
+     * without if receiving muleContext injection or lifecycle for a second time.
+     */
+    private class ComponentObjectHolder
+    {
+        Object componentObject;
+
+        ComponentObjectHolder(Object componentObject)
+        {
+            this.componentObject = componentObject;
+        }
     }
 }

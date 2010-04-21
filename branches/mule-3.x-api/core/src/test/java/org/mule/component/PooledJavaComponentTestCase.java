@@ -67,8 +67,8 @@ public class PooledJavaComponentTestCase extends AbstractPoolingTestCase
         component.stop();
         component.start();
 
-        Object la1 = ((DefaultLifecycleAdapter) component.borrowComponentLifecycleAdaptor()).componentObject;
-        Object la2 = ((DefaultLifecycleAdapter) component.borrowComponentLifecycleAdaptor()).componentObject;
+        Object la1 = ((DefaultComponentLifecycleAdapter) component.borrowComponentLifecycleAdaptor()).componentObject;
+        Object la2 = ((DefaultComponentLifecycleAdapter) component.borrowComponentLifecycleAdaptor()).componentObject;
         assertNotSame(la1, la2);
     }
 
@@ -209,8 +209,7 @@ public class PooledJavaComponentTestCase extends AbstractPoolingTestCase
 
     public void testObjectUniqueness() throws Exception
     {
-        ObjectFactory objectFactory = new PrototypeObjectFactory(UniqueComponent.class);
-        
+        PrototypeObjectFactory objectFactory = new PrototypeObjectFactory(UniqueComponent.class);
         PooledJavaComponent component = createPooledComponent(objectFactory);
         assertEquals(0, component.lifecycleAdapterPool.getNumActive());
 
@@ -225,11 +224,12 @@ public class PooledJavaComponentTestCase extends AbstractPoolingTestCase
     
     public void testDisposingFactoryDisposesObject() throws Exception
     {
-        ObjectFactory objectFactory = new PrototypeObjectFactory(WaterMelon.class);
+        PrototypeObjectFactory objectFactory = new PrototypeObjectFactory(WaterMelon.class);
         PooledJavaComponent component = createPooledComponent(objectFactory);
 
-        DefaultLifecycleAdapter lifecycleAdapter = (DefaultLifecycleAdapter) component.borrowComponentLifecycleAdaptor();
+        DefaultComponentLifecycleAdapter lifecycleAdapter = (DefaultComponentLifecycleAdapter) component.borrowComponentLifecycleAdaptor();
         component.returnComponentLifecycleAdaptor(lifecycleAdapter);
+        component.stop();
         component.dispose();
 
         assertNull(lifecycleAdapter.componentObject.get());
@@ -280,8 +280,8 @@ public class PooledJavaComponentTestCase extends AbstractPoolingTestCase
 
     private String getIdFromObjectCreatedByPool(PooledJavaComponent component) throws Exception
     {
-        DefaultLifecycleAdapter lifecycleAdapter = 
-            (DefaultLifecycleAdapter) component.borrowComponentLifecycleAdaptor();
+        DefaultComponentLifecycleAdapter lifecycleAdapter = 
+            (DefaultComponentLifecycleAdapter) component.borrowComponentLifecycleAdaptor();
         Object obj = lifecycleAdapter.componentObject.get();
         
         // there is a slight chance that GC kicks in before we can get a hard reference to the 

@@ -126,9 +126,8 @@ public class FileReceiverMoveDeleteTestCase extends AbstractFileMoveDeleteTestCa
 
         File moveToDir = configureConnector(inFile, false, true, false, FileMessageAdapter.class);
 
-        // TODO MULE-3198
-        // assertRecevied(configureService(inFile, false, true));
-        // assertFiles(inFile, moveToDir, true, true);
+        assertRecevied(configureService(inFile, false, true));
+        assertFiles(inFile, moveToDir, true, true);
     }
 
     public void testMoveOnlyFilePayload() throws Exception
@@ -137,9 +136,8 @@ public class FileReceiverMoveDeleteTestCase extends AbstractFileMoveDeleteTestCa
 
         File moveToDir = configureConnector(inFile, false, true, false, FileMessageAdapter.class);
 
-        // TODO MULE-3198
-        // assertRecevied(configureService(inFile, false, true));
-        // assertFiles(inFile, moveToDir, true, false);
+        assertRecevied(configureService(inFile, false, true));
+        assertFiles(inFile, moveToDir, true, false);
     }
 
     public void testDeleteOnlyFilePayload() throws Exception
@@ -148,9 +146,9 @@ public class FileReceiverMoveDeleteTestCase extends AbstractFileMoveDeleteTestCa
 
         File moveToDir = configureConnector(inFile, false, false, true, FileMessageAdapter.class);
 
-        // TODO MULE-3198
-        // assertRecevied(configureService(inFile, false, true));
-        // assertFiles(inFile, moveToDir, false, true);
+        assertRecevied(configureService(inFile, false, true));
+        //TODO MULE-3198
+        //assertFiles(inFile, moveToDir, false, true);
     }
 
     public void testNoMoveNoDeleteFilePayload() throws Exception
@@ -158,16 +156,14 @@ public class FileReceiverMoveDeleteTestCase extends AbstractFileMoveDeleteTestCa
         File inFile = initForRequest();
 
         File moveToDir = configureConnector(inFile, false, false, false, FileMessageAdapter.class);
-
-        // TODO MULE-3198
-        // assertRecevied(configureService(inFile, false, true));
+        //TODO MULE-3198
+        //assertRecevied(configureService(inFile, false, true));
 
         assertFiles(inFile, moveToDir, false, false);
     }
 
     protected Latch configureService(File inFile, boolean streaming, boolean filePayload) throws Exception
     {
-
         Service service = new SedaService(muleContext);
         service.setName("moveDeleteBridgeService");
         String url = fileToUrl(inFile.getParentFile()) + "?connector=moveDeleteConnector";
@@ -181,7 +177,7 @@ public class FileReceiverMoveDeleteTestCase extends AbstractFileMoveDeleteTestCa
             else
             {
                 transformer = new FileMessageAdaptorAssertingTransformer(FileMessageAdapter.class,
-                    ReceiverFileInputStream.class);
+                        ReceiverFileInputStream.class);
             }
         }
         else
@@ -203,9 +199,10 @@ public class FileReceiverMoveDeleteTestCase extends AbstractFileMoveDeleteTestCa
         }
         endpointBuilder.setSynchronous(true);
         service.getInboundRouter().addEndpoint(
-            muleContext.getRegistry().lookupEndpointFactory().getInboundEndpoint(endpointBuilder));
+                muleContext.getRegistry().lookupEndpointFactory().getInboundEndpoint(endpointBuilder));
         final Latch latch = new Latch();
         FunctionalTestComponent testComponent = new FunctionalTestComponent();
+        testComponent.setMuleContext(muleContext);
         testComponent.setEventCallback(new EventCallback()
         {
             public void eventReceived(final MuleEventContext context, final Object message) throws Exception
@@ -222,7 +219,6 @@ public class FileReceiverMoveDeleteTestCase extends AbstractFileMoveDeleteTestCa
         service.setComponent(component);
         service.setModel(muleContext.getRegistry().lookupSystemModel());
         muleContext.getRegistry().registerService(service);
-        service.start();
         return latch;
     }
 
@@ -242,6 +238,7 @@ public class FileReceiverMoveDeleteTestCase extends AbstractFileMoveDeleteTestCa
             this.expectedPayload = expectedPayload;
         }
 
+        @Override
         public Object transform(MuleMessage message, String outputEncoding) throws TransformerException
         {
             assertEquals(expectedMessageAdaptor, message.getAdapter().getClass());

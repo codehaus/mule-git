@@ -17,9 +17,9 @@ import org.mule.api.component.LifecycleAdapter;
 import org.mule.api.component.LifecycleAdapterFactory;
 import org.mule.api.model.EntryPointResolverSet;
 
-public class TestDefaultLifecycleAdapterFactory implements LifecycleAdapterFactory
+public class TestComponentLifecycleAdapterFactory implements LifecycleAdapterFactory
 {
-    public TestDefaultLifecycleAdapterFactory()
+    public TestComponentLifecycleAdapterFactory()
     {
         super();
     }
@@ -27,7 +27,7 @@ public class TestDefaultLifecycleAdapterFactory implements LifecycleAdapterFacto
     public LifecycleAdapter create(Object pojoService, JavaComponent service, EntryPointResolverSet resolver, MuleContext muleContext)
         throws MuleException
     {
-        return new TestDefaultLifecycleAdapter(pojoService, service, resolver, muleContext);
+        return new TestComponentLifecycleAdapter(pojoService, service, resolver, muleContext);
     }
 
 }

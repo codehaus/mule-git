@@ -20,12 +20,12 @@ import org.mule.api.MuleEvent;
 import org.mule.api.MuleEventContext;
 import org.mule.api.MuleException;
 import org.mule.api.MuleSession;
+import org.mule.api.component.JavaComponent;
 import org.mule.api.endpoint.EndpointBuilder;
 import org.mule.api.endpoint.EndpointURI;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.endpoint.InboundEndpoint;
 import org.mule.api.endpoint.OutboundEndpoint;
-import org.mule.api.object.ObjectFactory;
 import org.mule.api.routing.OutboundRouter;
 import org.mule.api.routing.filter.Filter;
 import org.mule.api.service.Service;
@@ -148,6 +148,24 @@ public final class MuleTestUtils
             }
         });
     }
+
+    public static OutboundEndpoint getTestOutboundEndpoint(String name,
+                                                            final MuleContext context,
+                                                            String uri,
+                                                            List<Transformer> transformers,
+                                                            Filter filter,
+                                                            Map properties,
+                                                            final Connector connector) throws Exception
+    {
+        return (OutboundEndpoint) getTestEndpoint(name, uri, transformers, filter, properties, context, new EndpointSource()
+        {
+            public ImmutableEndpoint getEndpoint(EndpointBuilder builder) throws MuleException
+            {
+                builder.setConnector(connector);
+                return context.getRegistry().lookupEndpointFactory().getOutboundEndpoint(builder);
+            }
+        });
+    }
     
 
     private static ImmutableEndpoint getTestEndpoint(String name,
@@ -164,10 +182,10 @@ public final class MuleTestUtils
         props.put("connector", "testConnector");
         // need to build endpoint this way to avoid depenency to any endpoint jars
         AbstractConnector connector = (AbstractConnector) ClassUtils.loadClass(
-            "org.mule.tck.testmodels.mule.TestConnector", AbstractMuleTestCase.class).newInstance();
+            "org.mule.tck.testmodels.mule.TestConnector", AbstractMuleTestCase.class).getConstructor(
+            MuleContext.class).newInstance(context);
 
         connector.setName("testConnector");
-        connector.setMuleContext(context);
         context.getLifecycleManager().applyCompletedPhases(connector);
         
         String endpoingUri = uri == null ? "test://test" : uri;
@@ -256,7 +274,6 @@ public final class MuleTestUtils
                         AbstractMuleTestCase.class).newInstance();
 
         connector.setName("testConnector");
-        connector.setMuleContext(context);
         context.getLifecycleManager().applyCompletedPhases(connector);
         connector.registerSupportedProtocol(protocol);
 
@@ -338,9 +355,8 @@ public final class MuleTestUtils
 
     public static TestConnector getTestConnector(MuleContext context) throws Exception
     {
-        TestConnector testConnector = new TestConnector();
+        TestConnector testConnector = new TestConnector(context);
         testConnector.setName("testConnector");
-        testConnector.setMuleContext(context);
         context.getLifecycleManager().applyCompletedPhases(testConnector);
         return testConnector;
     }
@@ -368,9 +384,10 @@ public final class MuleTestUtils
         
         Service service = new SedaService(context);
         service.setName(name);
-        ObjectFactory of = new SingletonObjectFactory(clazz, props);
+        SingletonObjectFactory of = new SingletonObjectFactory(clazz, props);
         of.initialise();
-        service.setComponent(new DefaultJavaComponent(of));
+        JavaComponent component = new DefaultJavaComponent(of);
+        service.setComponent(component);
         service.setModel(model);
         if (initialize)
         {
