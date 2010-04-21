@@ -440,8 +440,7 @@ public class FileMessageReceiver extends AbstractPollingMessageReceiver
             {
                 todoFiles = readDirectory.listFiles(filenameFilter);
             }
-            // logger.trace("Reading directory " + readDirectory.getAbsolutePath() +
-            // " -> " + TODOFiles.length + " file(s)");
+
             return (todoFiles == null ? NO_FILES : todoFiles);
         }
         catch (Exception e)

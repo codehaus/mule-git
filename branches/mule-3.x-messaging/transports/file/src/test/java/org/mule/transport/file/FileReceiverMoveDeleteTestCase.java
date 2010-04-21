@@ -117,7 +117,7 @@ public class FileReceiverMoveDeleteTestCase extends AbstractFileMoveDeleteTestCa
     {
         File inFile = initForRequest();
 
-        File moveToDir = configureConnector(inFile, false, true, false, FileMessageAdapter.class);
+        File moveToDir = configureConnector(inFile, false, true, false, FileMuleMessageFactory.class);
 
         assertRecevied(configureService(inFile, false, true));
         assertFiles(inFile, moveToDir, true, true);
@@ -127,7 +127,7 @@ public class FileReceiverMoveDeleteTestCase extends AbstractFileMoveDeleteTestCa
     {
         File inFile = initForRequest();
 
-        File moveToDir = configureConnector(inFile, false, true, false, FileMessageAdapter.class);
+        File moveToDir = configureConnector(inFile, false, true, false, FileMuleMessageFactory.class);
 
         assertRecevied(configureService(inFile, false, true));
         assertFiles(inFile, moveToDir, true, false);
@@ -137,7 +137,7 @@ public class FileReceiverMoveDeleteTestCase extends AbstractFileMoveDeleteTestCa
     {
         File inFile = initForRequest();
 
-        File moveToDir = configureConnector(inFile, false, false, true, FileMessageAdapter.class);
+        File moveToDir = configureConnector(inFile, false, false, true, FileMuleMessageFactory.class);
 
         assertRecevied(configureService(inFile, false, true));
         //TODO MULE-3198
@@ -148,7 +148,7 @@ public class FileReceiverMoveDeleteTestCase extends AbstractFileMoveDeleteTestCa
     {
         File inFile = initForRequest();
 
-        File moveToDir = configureConnector(inFile, false, false, false, FileMessageAdapter.class);
+        File moveToDir = configureConnector(inFile, false, false, false, FileMuleMessageFactory.class);
         //TODO MULE-3198
         //assertRecevied(configureService(inFile, false, true));
 
@@ -216,7 +216,8 @@ public class FileReceiverMoveDeleteTestCase extends AbstractFileMoveDeleteTestCa
 
     protected void assertRecevied(Latch latch) throws Exception
     {
-        assertTrue(latch != null && latch.await(2000, TimeUnit.MILLISECONDS));
+        assertNotNull(latch);
+        assertTrue(latch.await(2000, TimeUnit.MILLISECONDS));
     }
 
     private class FileMessageAdaptorAssertingTransformer extends AbstractMessageAwareTransformer

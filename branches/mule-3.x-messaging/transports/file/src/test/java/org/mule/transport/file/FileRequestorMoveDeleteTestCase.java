@@ -102,7 +102,7 @@ public class FileRequestorMoveDeleteTestCase extends AbstractFileMoveDeleteTestC
     {
         File inFile = initForRequest();
 
-        File moveToDir = configureConnector(inFile, false, true, false, FileMessageAdapter.class);
+        File moveToDir = configureConnector(inFile, false, true, false, FileMuleMessageFactory.class);
 
         // TODO MULE-3198
         // assertRequested(request(inFile), inFile, false);
@@ -113,7 +113,7 @@ public class FileRequestorMoveDeleteTestCase extends AbstractFileMoveDeleteTestC
     {
         File inFile = initForRequest();
 
-        File moveToDir = configureConnector(inFile, false, true, false, FileMessageAdapter.class);
+        File moveToDir = configureConnector(inFile, false, true, false, FileMuleMessageFactory.class);
 
         // TODO MULE-3198
         // assertRequested(request(inFile), inFile, false);
@@ -124,7 +124,7 @@ public class FileRequestorMoveDeleteTestCase extends AbstractFileMoveDeleteTestC
     {
         File inFile = initForRequest();
 
-        File moveToDir = configureConnector(inFile, false, false, true, FileMessageAdapter.class);
+        File moveToDir = configureConnector(inFile, false, false, true, FileMuleMessageFactory.class);
 
         // TODO MULE-3198
         // assertRequested(request(inFile), inFile, false);
@@ -135,7 +135,7 @@ public class FileRequestorMoveDeleteTestCase extends AbstractFileMoveDeleteTestC
     {
         File inFile = initForRequest();
 
-        File moveToDir = configureConnector(inFile, false, false, false, FileMessageAdapter.class);
+        File moveToDir = configureConnector(inFile, false, false, false, FileMuleMessageFactory.class);
 
         // TODO MULE-3198
         // assertRequested(request(inFile), inFile, false);

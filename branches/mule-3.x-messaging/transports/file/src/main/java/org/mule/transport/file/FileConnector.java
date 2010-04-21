@@ -20,7 +20,6 @@ import org.mule.api.lifecycle.CreateException;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.service.Service;
 import org.mule.api.transport.DispatchException;
-import org.mule.api.transport.MessageAdapter;
 import org.mule.api.transport.MessageReceiver;
 import org.mule.api.transport.MuleMessageFactory;
 import org.mule.config.i18n.CoreMessages;
@@ -584,23 +583,6 @@ public class FileConnector extends AbstractConnector
     public void setStreaming(boolean streaming)
     {
         this.streaming = streaming;
-    }
-
-    @Override
-    @Deprecated
-    public MessageAdapter getMessageAdapter(Object message) throws MuleException
-    {
-        if (isStreaming())
-        {
-            // TODO Shouldn't we have a way to specify MessageAdaptor for streaming
-            // in service descriptor
-            // See MULE-3209, MULE-3199
-            return new FileMessageAdapter(message);
-        }
-        else
-        {
-            return super.getMessageAdapter(message);
-        }
     }
     
     @Override
