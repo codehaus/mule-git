@@ -194,6 +194,7 @@ public class FileReceiverMoveDeleteTestCase extends AbstractFileMoveDeleteTestCa
                 muleContext.getRegistry().lookupEndpointFactory().getInboundEndpoint(endpointBuilder));
         final Latch latch = new Latch();
         FunctionalTestComponent testComponent = new FunctionalTestComponent();
+        testComponent.setMuleContext(muleContext);
         testComponent.setEventCallback(new EventCallback()
         {
             public void eventReceived(final MuleEventContext context, final Object message) throws Exception
