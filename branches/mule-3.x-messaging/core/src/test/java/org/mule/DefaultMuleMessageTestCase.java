@@ -145,6 +145,26 @@ public class DefaultMuleMessageTestCase extends AbstractMuleTestCase
         assertOutboundMessageProperty("payload", message);
         assertNull(message.getProperty("MessageAdapter"));
     }
+    
+    //
+    // copy ctor
+    //
+    public void testCopyConstructor() throws Exception
+    {
+        DefaultMuleMessage original = (DefaultMuleMessage) createMuleMessage();
+        Map<String, Object> properties = createMessageProperties();
+        original.addInboundProperties(properties);
+        assertInboundAndOutboundMessageProperties(original);
+        
+        MuleMessage copy = DefaultMuleMessage.copy(original);        
+        assertInboundAndOutboundMessageProperties(copy);
+    }
+
+    private void assertInboundAndOutboundMessageProperties(MuleMessage original)
+    {
+        assertOutboundMessageProperty("MuleMessage", original);
+        assertEquals("MessageProperties", original.getProperty("MessageProperties", PropertyScope.INBOUND));
+    }
 
     //
     // attachments
