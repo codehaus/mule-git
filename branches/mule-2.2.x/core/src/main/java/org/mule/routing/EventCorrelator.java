@@ -176,7 +176,7 @@ public class EventCorrelator
                                                                               new DefaultMuleSession(service, context), false);
 
                                     // TODO which use cases would need a sync reply event returned? 
-                                    service.getComponent().invoke(newEvent);
+                                    service.dispatchEvent(newEvent);
                                 }
                                 catch (Exception e)
                                 {
