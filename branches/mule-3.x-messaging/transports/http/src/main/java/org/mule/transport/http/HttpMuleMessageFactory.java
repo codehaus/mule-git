@@ -26,8 +26,10 @@ import java.util.Map;
 
 import org.apache.commons.httpclient.Cookie;
 import org.apache.commons.httpclient.Header;
+import org.apache.commons.httpclient.HeaderElement;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.HttpVersion;
+import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.cookie.CookieSpec;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -170,6 +172,10 @@ public class HttpMuleMessageFactory extends AbstractMuleMessageFactory
         {
             message.addProperties(headers);
         }
+        
+        // The encoding is stored as message property. To avoid overriding it from the message
+        // properties, it must be initialized last
+        initEncoding(message, headers);
     }
 
     protected Map<String, Object> processIncomingHeaders(Map<String, Object> headers, String uri, 
@@ -229,6 +235,27 @@ public class HttpMuleMessageFactory extends AbstractMuleMessageFactory
             headersMap.put(headers[i].getName(), headers[i].getValue());
         }
         return headersMap;
+    }
+
+    private void initEncoding(MuleMessage message, Map<String, Object> headers)
+    {
+        Object contentType = headers.get(HttpConstants.HEADER_CONTENT_TYPE);
+        if (contentType != null)
+        {
+            // use HttpClient classes to parse the charset part from the Content-Type
+            // header (e.g. "text/html; charset=UTF-16BE")
+            Header contentTypeHeader = new Header(HttpConstants.HEADER_CONTENT_TYPE, 
+                contentType.toString());
+            HeaderElement values[] = contentTypeHeader.getElements();
+            if (values.length == 1)
+            {
+                NameValuePair param = values[0].getParameterByName("charset");
+                if (param != null)
+                {
+                    message.setEncoding(param.getValue());
+                }
+            }
+        }
     }
 
     private void rewriteConnectionAndKeepAliveHeaders(Map<String, Object> headers)
