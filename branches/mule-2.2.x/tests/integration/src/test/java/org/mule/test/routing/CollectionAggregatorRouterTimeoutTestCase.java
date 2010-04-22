@@ -12,6 +12,7 @@ package org.mule.test.routing;
 
 import org.mule.api.context.notification.RoutingNotificationListener;
 import org.mule.api.context.notification.ServerNotification;
+import org.mule.api.endpoint.OutboundEndpoint;
 import org.mule.context.notification.RoutingNotification;
 import org.mule.module.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
@@ -48,7 +49,7 @@ public class CollectionAggregatorRouterTimeoutTestCase extends FunctionalTestCas
 
         FunctionalTestComponent vortex = (FunctionalTestComponent) getComponent("vortex");
         FunctionalTestComponent aggregator = (FunctionalTestComponent) getComponent("aggregator");
-
+        
         MuleClient client = new MuleClient();
         List list = Arrays.asList("first", "second");
         client.dispatch("vm://splitter", list, null);
@@ -72,5 +73,6 @@ public class CollectionAggregatorRouterTimeoutTestCase extends FunctionalTestCas
         // now get the messages which were lagging behind
         assertEquals("Other messages never received by aggregator.", 2, aggregator.getReceivedMessagesCount());
         assertEquals("Wrong message received", Arrays.asList("second"), aggregator.getLastReceivedMessage());
+        assertNotNull(client.request("vm://out?connector=queue", 10000));
     }
 }
