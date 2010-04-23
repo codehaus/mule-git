@@ -25,6 +25,12 @@ public abstract class AbstractMuleMessageFactoryTestCase extends AbstractMuleTes
      */
     protected boolean runUnsuppoprtedTransportMessageTest = true;
 
+    public AbstractMuleMessageFactoryTestCase()
+    {
+        super();
+        setStartContext(false);
+    }
+    
     @Override
     protected void doSetUp() throws Exception
     {

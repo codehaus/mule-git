@@ -587,6 +587,12 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
         assertAccess(READ);
         return id;
     }
+    
+    public void setUniqueId(String uid)
+    {
+        assertAccess(WRITE);
+        id = uid;
+    }
 
     /**
      * {@inheritDoc}
