@@ -3,3 +3,6 @@
 #
 # EE-1800 : intermittent
 org.mule.example.loanbroker.esn.AxisLoanBrokerAsynchronousFunctionalTestCase
+
+# EE-1911 : intermittent
+org.mule.example.loanbroker.esn.CxfLoanBrokerAsynchronousFunctionalTestCase
