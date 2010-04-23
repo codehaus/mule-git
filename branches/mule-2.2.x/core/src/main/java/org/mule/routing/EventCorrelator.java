@@ -123,6 +123,31 @@ public class EventCorrelator
 
         this.context.getWorkManager().scheduleWork(new Work()
         {
+            private static final long ONE_DAY = MILLI_TO_NANO_MULTIPLIER * 1000 * 60 * 60 * 24;
+            
+            protected long groupTimeToLive = ONE_DAY;
+            
+            /**
+             * A map with keys = group id and values = group creation time
+             */
+            private Map expiredAndDispatchedGroups = new ConcurrentHashMap();
+            
+            /**
+             * Removes the elements in expiredAndDispatchedGroups when groupLife is reached
+             */
+            private void cleanupExpiredGroups()
+            {
+                for (Object o : expiredAndDispatchedGroups.keySet())
+                {
+                    Long time = (Long) expiredAndDispatchedGroups.get(o);
+                    if (time + groupTimeToLive < System.nanoTime())
+                    {
+                        expiredAndDispatchedGroups.remove(o);
+                        logger.warn(MessageFormat.format("Discarding group ${0}", o));
+                    }
+                }
+            }
+            
             public void release()
             {
                 //no op
@@ -171,12 +196,23 @@ public class EventCorrelator
 
                                 try
                                 {
-                                    MuleMessage msg = callback.aggregateEvents(group);
-                                    MuleEvent newEvent = new DefaultMuleEvent(msg, group.toArray()[0].getEndpoint(),
-                                                                              new DefaultMuleSession(service, context), false);
+                                    if (!(group.getCreated() + groupTimeToLive < System.nanoTime()))
+                                    {
+                                        MuleMessage msg = callback.aggregateEvents(group);
+                                        MuleEvent newEvent = new DefaultMuleEvent(msg, group.toArray()[0].getEndpoint(),
+                                                                                  new DefaultMuleSession(service, context), false);
 
-                                    // TODO which use cases would need a sync reply event returned? 
-                                    service.dispatchEvent(newEvent);
+                                        if (!expiredAndDispatchedGroups.containsKey(group.getGroupId())) 
+                                        {
+                                            // TODO which use cases would need a sync reply event returned?
+                                            service.dispatchEvent(newEvent);
+                                            expiredAndDispatchedGroups.put(group.getGroupId(), group.getCreated());
+                                        }
+                                        else
+                                        {
+                                            logger.warn(MessageFormat.format("Discarding group ${0}", group.getGroupId()));
+                                        }
+                                    }
                                 }
                                 catch (Exception e)
                                 {
@@ -187,6 +223,7 @@ public class EventCorrelator
                     }
                     try
                     {
+                        cleanupExpiredGroups();
                         Thread.sleep(100);
                     }
                     catch (InterruptedException e)
