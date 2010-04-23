@@ -40,11 +40,11 @@ public class ServletConnector extends AbstractConnector
     public static final String SERVLET = "servlet";
 
     /**
-     * This prefix is used to store parameters from the incoming {@link HttpServletRequest} to
-     * the {@link MuleMessage}.
+     * This property name is used to store the character encoding of the {@link HttpServletRequest} to
+     * the {@link MuleMessage}
      */
-    public static final String PARAMETER_PROPERTY_PREFIX = "REQUEST_PARAMETER_";
-    
+    public static final String CHARACTER_ENCODING_PROPERTY_KEY = MuleProperties.PROPERTY_PREFIX + "CHARACTER_ENCODING";
+
     /**
      * This property name is used to store the content type of the {@link HttpServletRequest} to
      * the {@link MuleMessage}
@@ -52,10 +52,28 @@ public class ServletConnector extends AbstractConnector
     public static final String CONTENT_TYPE_PROPERTY_KEY = MuleProperties.PROPERTY_PREFIX + "CONTENT_TYPE";
 
     /**
-     * This property name is used to store the character encoding of the {@link HttpServletRequest} to
-     * the {@link MuleMessage}
+     * This prefix is used to store parameters from the incoming {@link HttpServletRequest} to
+     * the {@link MuleMessage}.
      */
-    public static final String CHARACTER_ENCODING_PROPERTY_KEY = MuleProperties.PROPERTY_PREFIX + "CHARACTER_ENCODING";
+    public static final String PARAMETER_PROPERTY_PREFIX = "REQUEST_PARAMETER_";
+    
+    /**
+     * This property name is used to store a {@link Map} containing all request parameters to the
+     * {@link MuleMessage}.
+     */
+    public static final String PARAMETER_MAP_PROPERTY_KEY = "request.parameters";
+
+    /**
+     * This property name is used to store a {@link Map} containing all request attributes to the
+     * {@link MuleMessage}.
+     */
+    public static final String ATTRIBUTE_MAP_PROPERTY_KEY = "request.attributes";
+
+    /**
+     * This property name is used to store a {@link Map} containing all request headers to the
+     * {@link MuleMessage}.
+     */
+    public static final String HEADER_MAP_PROPERTY_KEY = "request.headers";
 
     // The real URL that the servlet container is bound on.
     // If this is not set the wsdl may not be generated correctly

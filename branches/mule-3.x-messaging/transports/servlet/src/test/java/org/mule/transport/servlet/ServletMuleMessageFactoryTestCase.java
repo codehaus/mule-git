@@ -23,12 +23,19 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpSession;
 
 public class ServletMuleMessageFactoryTestCase extends AbstractMuleMessageFactoryTestCase
 {    
+    private static final String ATTRIBUTE_MAP_PROPERTY_KEY = ServletConnector.ATTRIBUTE_MAP_PROPERTY_KEY;
+    private static final String CHARACTER_ENCODING_PROPERTY_KEY = ServletConnector.CHARACTER_ENCODING_PROPERTY_KEY;
+    private static final String CONTENT_TYPE_PROPERTY_KEY = ServletConnector.CONTENT_TYPE_PROPERTY_KEY;
+    private static final String HEADER_MAP_PROPERTY_KEY = ServletConnector.HEADER_MAP_PROPERTY_KEY;
+    private static final String PARAMETER_MAP_PROPERTY_KEY = ServletConnector.PARAMETER_MAP_PROPERTY_KEY;
+
     private static final String REQUEST_URI = MockHttpServletRequestBuilder.REQUEST_URI;
     
     private MuleMessageFactory factory;
@@ -104,7 +111,7 @@ public class ServletMuleMessageFactoryTestCase extends AbstractMuleMessageFactor
         Object payload = buildGetRequestWithContentType(contentType);
         MuleMessage message = factory.create(payload, encoding);
         assertEquals("UTF-21", message.getEncoding());
-        assertEquals(contentType, message.getProperty(ServletConnector.CONTENT_TYPE_PROPERTY_KEY));
+        assertInboundScopedProperty(contentType, message, CONTENT_TYPE_PROPERTY_KEY);
     }
     
     public void testContentEncodingWithCharsetFirst() throws Exception
@@ -113,7 +120,7 @@ public class ServletMuleMessageFactoryTestCase extends AbstractMuleMessageFactor
         Object payload = buildGetRequestWithContentType(contentType);
         MuleMessage message = factory.create(payload, encoding);
         assertEquals("UTF-21", message.getEncoding());
-        assertEquals(contentType, message.getProperty(ServletConnector.CONTENT_TYPE_PROPERTY_KEY));
+        assertInboundScopedProperty(contentType, message, CONTENT_TYPE_PROPERTY_KEY);
     }
     
     public void testMessageIdFromHttpSession() throws Exception
@@ -131,31 +138,37 @@ public class ServletMuleMessageFactoryTestCase extends AbstractMuleMessageFactor
         Object payload = builder.buildRequest();
         
         MuleMessage message = factory.create(payload, encoding);
-        assertEquals(builder.characterEncoding, 
-            message.getProperty(ServletConnector.CHARACTER_ENCODING_PROPERTY_KEY));
+        assertInboundScopedProperty(builder.characterEncoding, message, CHARACTER_ENCODING_PROPERTY_KEY);
     }
         
     public void testRequestPropertiesAreConvertedToMessageProperties() throws Exception
     {
         Object payload = buildGetRequestWithParameterValue("foo-param", "foo-value");
         MuleMessage message = factory.create(payload, encoding);
-        assertEquals("foo-value", message.getProperty("foo-param", PropertyScope.INBOUND)); 
+
+        Map<String, Object> parameters = retrieveMapProperty(message, PARAMETER_MAP_PROPERTY_KEY);
+        assertNotNull(parameters);
+        assertEquals("foo-value", parameters.get("foo-param")); 
     }
     
     public void testRequestAttributesAreConvertedToMessageProperties() throws Exception
     {
         Object payload = buildGetRequestWithAttributeValue("foo-attribute", "foo-value");
         MuleMessage message = factory.create(payload, encoding);
-        assertEquals("foo-value", message.getProperty("foo-attribute", PropertyScope.INBOUND)); 
+        Map<String, Object> attributes = retrieveMapProperty(message, ATTRIBUTE_MAP_PROPERTY_KEY);
+        assertNotNull(attributes);
+        assertEquals("foo-value", attributes.get("foo-attribute"));
     }
 
     public void testRequestHeadersAreConvertedToMessageProperties() throws Exception
     {
         Object payload = buildGetRequestWithHeaders();
         MuleMessage message = factory.create(payload, encoding);
-        assertInboundScopedProperty("foo-value", message, "foo-header");
-        assertInboundScopedProperty("MULE_HEADER_VALUE", message, "MULE_HEADER");
-        assertInboundScopedProperty("localhost:8080", message, HttpConstants.HEADER_HOST);
+        Map<String, Object> headers = retrieveMapProperty(message, HEADER_MAP_PROPERTY_KEY);
+        assertNotNull(headers);
+        assertEquals("foo-value", headers.get("foo-header"));
+        assertEquals("MULE_HEADER_VALUE", headers.get("MULE_HEADER"));
+        assertEquals("localhost:8080", headers.get(HttpConstants.HEADER_HOST));
     }
     
     private void assertInboundScopedProperty(Object expected, MuleMessage message, String key)
@@ -170,7 +183,13 @@ public class ServletMuleMessageFactoryTestCase extends AbstractMuleMessageFactor
         Object value = message.getProperty(propertyKey);
         assertEquals(expected, value);
     }
-    
+
+    @SuppressWarnings("unchecked")
+    private Map<String, Object> retrieveMapProperty(MuleMessage message, String key)
+    {
+        return (Map<String, Object>) message.getProperty(key, PropertyScope.INBOUND);
+    }
+
     private Object buildGetRequestWithContentType(String contentType)
     {
         MockHttpServletRequestBuilder builder = new MockHttpServletRequestBuilder();

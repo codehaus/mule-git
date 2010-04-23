@@ -154,17 +154,24 @@ public class ServletMuleMessageFactory extends AbstractMuleMessageFactory
 
     private void setupMessageProperties(HttpServletRequest request, MuleMessage message)
     {
-        Map<String, Object> headers = new HashMap<String, Object>();
+        Map<String, Object> messageProperties = new HashMap<String, Object>();
         
-        copyParamterMap(request, headers);
-        copyAttributes(request, headers);
-        copyHeaders(request, headers);
+        Map<String, Object> parameters = buildParameterMap(request);
+        messageProperties.put(ServletConnector.PARAMETER_MAP_PROPERTY_KEY, parameters);
         
-        ((DefaultMuleMessage) message).addInboundProperties(headers);
+        Map<String, Object> attributes = buildAttributeMap(request);
+        messageProperties.put(ServletConnector.ATTRIBUTE_MAP_PROPERTY_KEY, attributes);
+        
+        Map<String, Object> headers = copyHeaders(request);
+        messageProperties.put(ServletConnector.HEADER_MAP_PROPERTY_KEY, headers);
+        
+        ((DefaultMuleMessage) message).addInboundProperties(messageProperties);
     }
 
-    private void copyParamterMap(HttpServletRequest request, Map<String, Object> headers)
+    protected Map<String, Object> buildParameterMap(HttpServletRequest request)
     {
+        Map<String, Object> parameters = new HashMap<String, Object>();
+        
         Map<?, ?> parameterMap = request.getParameterMap();
         if (parameterMap != null && parameterMap.size() > 0)
         {
@@ -176,28 +183,34 @@ public class ServletMuleMessageFactory extends AbstractMuleMessageFactory
                 {
                     if (value.getClass().isArray() && ((Object[]) value).length == 1)
                     {
-                        headers.put(key, ((Object[]) value)[0]);
-                    }
-                    else
-                    {
-                        headers.put(key, value);
+                        value = ((Object[]) value)[0];
                     }
                 }
+                
+                parameters.put(key, value);
             }
         }
+        
+        return parameters;
     }
 
-    private void copyAttributes(HttpServletRequest request, Map<String, Object> headers)
+    protected Map<String, Object> buildAttributeMap(HttpServletRequest request)
     {
+        Map<String, Object> attributes = new HashMap<String, Object>();
+        
         for (Enumeration<?> e = request.getAttributeNames(); e.hasMoreElements();)
         {
             String key = (String) e.nextElement();
-            headers.put(key, request.getAttribute(key));
+            attributes.put(key, request.getAttribute(key));
         }
+        
+        return attributes;
     }
     
-    private void copyHeaders(HttpServletRequest request, Map<String, Object> headers)
-    {
+    private Map<String, Object> copyHeaders(HttpServletRequest request)
+    {        
+        Map<String, Object> headers = new HashMap<String, Object>();        
+        
         for (Enumeration<?> e = request.getHeaderNames(); e.hasMoreElements();)
         {
             String key = (String)e.nextElement();
@@ -222,6 +235,8 @@ public class ServletMuleMessageFactory extends AbstractMuleMessageFactory
             }
             
             headers.put(realKey, value);
-        }        
+        }
+        
+        return headers;
     }
 }
