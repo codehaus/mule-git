@@ -70,8 +70,7 @@ public class CollectionAggregatorRouterTimeoutTestCase extends FunctionalTestCas
         Thread.sleep(9000);
 
         // now get the messages which were lagging behind
-        assertEquals("Other messages never received by aggregator.", 2, aggregator.getReceivedMessagesCount());
-        assertEquals("Wrong message received", Arrays.asList("second"), aggregator.getLastReceivedMessage());
+        assertEquals("Other messages never received by aggregator.", 1, aggregator.getReceivedMessagesCount());
         assertNotNull(client.request("vm://out?connector=queue", 10000));
     }
 }
