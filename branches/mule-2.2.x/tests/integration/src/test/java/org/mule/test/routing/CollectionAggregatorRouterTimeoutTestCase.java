@@ -70,6 +70,7 @@ public class CollectionAggregatorRouterTimeoutTestCase extends FunctionalTestCas
         Thread.sleep(9000);
 
         // now get the messages which were lagging behind
+        // it will receive only one (first) as second will be discarded by the worker because it has already dispatched one with the same group id
         assertEquals("Other messages never received by aggregator.", 1, aggregator.getReceivedMessagesCount());
         assertNotNull(client.request("vm://out?connector=queue", 10000));
     }
