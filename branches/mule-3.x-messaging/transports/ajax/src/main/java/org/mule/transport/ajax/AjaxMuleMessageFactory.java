@@ -83,13 +83,12 @@ public class AjaxMuleMessageFactory extends AbstractMuleMessageFactory
 
     private Object extractPayloadFromMap(Map<?, ?> map)
     {
-        Map<?, ?> data = (Map<?, ?>) map.remove(Bayeux.DATA_FIELD);
+        Object data = map.remove(Bayeux.DATA_FIELD);
         if (data == null)
         {
             throw new IllegalArgumentException(Bayeux.DATA_FIELD + " parameter not set in payload map"); 
         }
         return data;
-
     }
 
     private Object extractJsonPayload(Object transportMessage) throws DefaultMuleException

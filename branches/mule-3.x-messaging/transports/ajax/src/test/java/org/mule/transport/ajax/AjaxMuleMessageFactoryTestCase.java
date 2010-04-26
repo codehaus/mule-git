@@ -13,6 +13,9 @@ package org.mule.transport.ajax;
 import org.mule.api.MuleMessage;
 import org.mule.api.transport.MuleMessageFactory;
 import org.mule.api.transport.PropertyScope;
+import org.mule.tck.testmodels.fruit.Apple;
+import org.mule.tck.testmodels.fruit.Banana;
+import org.mule.tck.testmodels.fruit.FruitBowl;
 import org.mule.transport.AbstractMuleMessageFactoryTestCase;
 import org.mule.transport.ajax.embedded.AjaxConnector;
 
@@ -23,6 +26,8 @@ import org.cometd.Bayeux;
 
 public class AjaxMuleMessageFactoryTestCase extends AbstractMuleMessageFactoryTestCase
 {
+    private static final String JSON_STRING = "{\"value1\":\"foo\",\"value2\":\"bar\"}";
+
     public AjaxMuleMessageFactoryTestCase()
     {
         super();
@@ -38,12 +43,8 @@ public class AjaxMuleMessageFactoryTestCase extends AbstractMuleMessageFactoryTe
     @Override
     protected Object getValidTransportMessage() throws Exception
     {
-        Map<String, String> dataMap = new HashMap<String, String>();
-        dataMap.put("value1", "foo");
-        dataMap.put("value2", "bar");
-        
         Map<String, Object> map = new HashMap<String, Object>();
-        map.put(Bayeux.DATA_FIELD, dataMap);
+        map.put(Bayeux.DATA_FIELD, JSON_STRING);
         map.put(AjaxConnector.REPLYTO_PARAM, "/reply");
         map.put("message-property", "mp-value");
         
@@ -58,7 +59,7 @@ public class AjaxMuleMessageFactoryTestCase extends AbstractMuleMessageFactoryTe
         Object payload = getValidTransportMessage();
         MuleMessage message = factory.create(payload, encoding);
         assertNotNull(message);
-        assertTrue(message.getPayload() instanceof Map<?, ?>);
+        assertEquals(JSON_STRING, message.getPayload());
         assertEquals("/reply", message.getReplyTo());
         assertEquals("mp-value", message.getProperty("message-property", PropertyScope.INVOCATION));
     }
@@ -92,7 +93,7 @@ public class AjaxMuleMessageFactoryTestCase extends AbstractMuleMessageFactoryTe
     
     public void testJsonStringWithData() throws Exception
     {
-        String data = "{\"value1\":\"foo\",\"value2\":\"bar\"}";
+        String data = JSON_STRING;
         String payload = String.format("{ \"data\" : %1s, \"%2s\" : \"/replyEndpoint\"}",
             data, AjaxConnector.REPLYTO_PARAM);
         
@@ -105,7 +106,7 @@ public class AjaxMuleMessageFactoryTestCase extends AbstractMuleMessageFactoryTe
     
     public void testNonMapNonJsonPayload() throws Exception
     {
-        String payload = "<?xml version=\"1.0\" encoding=\"UTF-8\"><test/>";
+        FruitBowl payload = new FruitBowl(new Apple(), new Banana());
         MuleMessageFactory factory = createMuleMessageFactory();
         MuleMessage message = factory.create(payload, encoding);
         assertNotNull(message);
