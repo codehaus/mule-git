@@ -30,10 +30,8 @@ import javax.servlet.http.HttpSession;
 
 public class ServletMuleMessageFactoryTestCase extends AbstractMuleMessageFactoryTestCase
 {    
-    private static final String ATTRIBUTE_MAP_PROPERTY_KEY = ServletConnector.ATTRIBUTE_MAP_PROPERTY_KEY;
     private static final String CHARACTER_ENCODING_PROPERTY_KEY = ServletConnector.CHARACTER_ENCODING_PROPERTY_KEY;
     private static final String CONTENT_TYPE_PROPERTY_KEY = ServletConnector.CONTENT_TYPE_PROPERTY_KEY;
-    private static final String HEADER_MAP_PROPERTY_KEY = ServletConnector.HEADER_MAP_PROPERTY_KEY;
     private static final String PARAMETER_MAP_PROPERTY_KEY = ServletConnector.PARAMETER_MAP_PROPERTY_KEY;
 
     private static final String REQUEST_URI = MockHttpServletRequestBuilder.REQUEST_URI;
@@ -103,6 +101,11 @@ public class ServletMuleMessageFactoryTestCase extends AbstractMuleMessageFactor
         MuleMessage message = factory.create(payload, encoding);
         assertRequestParameterProperty("foo-value", message, "foo");
         assertRequestParameterProperty("bar-value", message, "bar");
+        
+        Map<String, Object> parameters = retrieveMapProperty(message, PARAMETER_MAP_PROPERTY_KEY);
+        assertNotNull(parameters);
+        assertEquals("foo-value", parameters.get("foo"));
+        assertEquals("bar-value", parameters.get("bar"));
     }
     
     public void testContentEncodingWithCharsetLast() throws Exception
@@ -145,32 +148,25 @@ public class ServletMuleMessageFactoryTestCase extends AbstractMuleMessageFactor
     {
         Object payload = buildGetRequestWithParameterValue("foo-param", "foo-value");
         MuleMessage message = factory.create(payload, encoding);
-
-        Map<String, Object> parameters = retrieveMapProperty(message, PARAMETER_MAP_PROPERTY_KEY);
-        assertNotNull(parameters);
-        assertEquals("foo-value", parameters.get("foo-param")); 
+        assertInboundScopedProperty("foo-value", message, "foo-param");
     }
     
     public void testRequestAttributesAreConvertedToMessageProperties() throws Exception
     {
         Object payload = buildGetRequestWithAttributeValue("foo-attribute", "foo-value");
         MuleMessage message = factory.create(payload, encoding);
-        Map<String, Object> attributes = retrieveMapProperty(message, ATTRIBUTE_MAP_PROPERTY_KEY);
-        assertNotNull(attributes);
-        assertEquals("foo-value", attributes.get("foo-attribute"));
+        assertInboundScopedProperty("foo-value", message, "foo-attribute");
     }
 
     public void testRequestHeadersAreConvertedToMessageProperties() throws Exception
     {
         Object payload = buildGetRequestWithHeaders();
         MuleMessage message = factory.create(payload, encoding);
-        Map<String, Object> headers = retrieveMapProperty(message, HEADER_MAP_PROPERTY_KEY);
-        assertNotNull(headers);
-        assertEquals("foo-value", headers.get("foo-header"));
-        assertEquals("MULE_HEADER_VALUE", headers.get("MULE_HEADER"));
-        assertEquals("localhost:8080", headers.get(HttpConstants.HEADER_HOST));
+        assertInboundScopedProperty("foo-value", message, "foo-header");
+        assertInboundScopedProperty("MULE_HEADER_VALUE", message, "MULE_HEADER");
+        assertInboundScopedProperty("localhost:8080", message, HttpConstants.HEADER_HOST);
     }
-    
+        
     private void assertInboundScopedProperty(Object expected, MuleMessage message, String key)
     {
         Object value = message.getProperty(key, PropertyScope.INBOUND);

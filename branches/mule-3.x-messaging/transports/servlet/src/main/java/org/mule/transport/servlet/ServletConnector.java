@@ -63,18 +63,6 @@ public class ServletConnector extends AbstractConnector
      */
     public static final String PARAMETER_MAP_PROPERTY_KEY = "request.parameters";
 
-    /**
-     * This property name is used to store a {@link Map} containing all request attributes to the
-     * {@link MuleMessage}.
-     */
-    public static final String ATTRIBUTE_MAP_PROPERTY_KEY = "request.attributes";
-
-    /**
-     * This property name is used to store a {@link Map} containing all request headers to the
-     * {@link MuleMessage}.
-     */
-    public static final String HEADER_MAP_PROPERTY_KEY = "request.headers";
-
     // The real URL that the servlet container is bound on.
     // If this is not set the wsdl may not be generated correctly
     protected String servletUrl;
