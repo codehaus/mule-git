@@ -196,7 +196,7 @@ public class MuleRESTReceiverServlet extends MuleReceiverServlet
         {
             // if we dont find an endpoint for the given name, lets check the
             // servlet receivers
-            MessageReceiver receiver = (MessageReceiver)getReceivers().get(endpointName);
+            MessageReceiver receiver = getReceivers().get(endpointName);
             
             if (receiver != null)
             {

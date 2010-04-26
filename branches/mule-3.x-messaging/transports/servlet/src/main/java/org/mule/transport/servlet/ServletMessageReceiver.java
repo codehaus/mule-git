@@ -22,14 +22,12 @@ import org.mule.transport.AbstractMessageReceiver;
  * when an event is received. There is a one-to-one mapping between a
  * ServletMessageReceiver and a servlet in the serving webapp.
  */
-
 public class ServletMessageReceiver extends AbstractMessageReceiver
 {
     public ServletMessageReceiver(Connector connector, Service service, InboundEndpoint endpoint)
             throws CreateException
     {
         super(connector, service, endpoint);
-
     }
 
     @Override
