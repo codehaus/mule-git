@@ -14,7 +14,6 @@ import org.mule.DefaultMuleMessage;
 import org.mule.api.DefaultMuleException;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleMessage;
-import org.mule.api.transport.MessageTypeNotSupportedException;
 import org.mule.api.transport.MuleMessageFactory;
 import org.mule.api.transport.PropertyScope;
 import org.mule.module.json.JsonData;
@@ -65,7 +64,7 @@ public class AjaxMuleMessageFactory extends AbstractMuleMessageFactory
         }
         else
         {
-            throw new MessageTypeNotSupportedException(transportMessage, getClass());
+            return transportMessage;
         }
     }
     

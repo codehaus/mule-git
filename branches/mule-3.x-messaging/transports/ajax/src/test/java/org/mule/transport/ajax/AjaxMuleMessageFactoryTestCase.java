@@ -11,7 +11,6 @@
 package org.mule.transport.ajax;
 
 import org.mule.api.MuleMessage;
-import org.mule.api.transport.MessageTypeNotSupportedException;
 import org.mule.api.transport.MuleMessageFactory;
 import org.mule.api.transport.PropertyScope;
 import org.mule.transport.AbstractMuleMessageFactoryTestCase;
@@ -104,18 +103,12 @@ public class AjaxMuleMessageFactoryTestCase extends AbstractMuleMessageFactoryTe
         assertEquals("/replyEndpoint", message.getReplyTo());
     }
     
-    public void testInvalidPayload() throws Exception
+    public void testNonMapNonJsonPayload() throws Exception
     {
         String payload = "<?xml version=\"1.0\" encoding=\"UTF-8\"><test/>";
         MuleMessageFactory factory = createMuleMessageFactory();
-        try
-        {
-            factory.create(payload, encoding);
-            fail("creating a MuleMessage from invalid payload must fail");
-        }
-        catch (MessageTypeNotSupportedException mtnse)
-        {
-            // this one was expected
-        }
+        MuleMessage message = factory.create(payload, encoding);
+        assertNotNull(message);
+        assertEquals(payload, message.getPayload());
     }
 }
