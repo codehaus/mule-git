@@ -10,12 +10,16 @@
 
 package org.mule.transport.jms;
 
+import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleMessage;
 import org.mule.api.config.MuleProperties;
+import org.mule.api.transport.PropertyScope;
 import org.mule.transport.AbstractMuleMessageFactory;
 
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.jms.Destination;
 import javax.jms.JMSException;
@@ -33,7 +37,7 @@ public class JmsMuleMessageFactory extends AbstractMuleMessageFactory
     @Override
     protected Class<?>[] getSupportedTransportMessageTypes()
     {
-        return new Class[]{Message.class};
+        return new Class[]{ Message.class };
     }
 
     @Override
@@ -45,24 +49,27 @@ public class JmsMuleMessageFactory extends AbstractMuleMessageFactory
 
     @Override
     protected void addProperties(MuleMessage muleMessage, Object transportMessage) throws Exception
-    {
+    {        
         Message jmsMessage = (Message) transportMessage;
+        
+        Map<String, Object> messageProperties = new HashMap<String, Object>();
+        addCorrelationProperties(jmsMessage, muleMessage, messageProperties);
+        addDeliveryModeProperty(jmsMessage, messageProperties);
+        addDestinationProperty(jmsMessage, messageProperties);
+        addExpirationProperty(jmsMessage, messageProperties);
+        addMessageIdProperty(jmsMessage, messageProperties);
+        addPriorityProperty(jmsMessage, messageProperties);
+        addRedeliveredProperty(jmsMessage, messageProperties);
+        addJMSReplyTo(muleMessage, jmsMessage);
+        addTimestampProperty(jmsMessage, messageProperties);
+        addTypeProperty(jmsMessage, messageProperties);
 
-        addCorrelationProperties(muleMessage, jmsMessage);
-        addDeliveryModeProperty(muleMessage, jmsMessage);
-        addDestinationProperty(muleMessage, jmsMessage);
-        addExpirationProperty(muleMessage, jmsMessage);
-        addMessageIdProperty(muleMessage, jmsMessage);
-        addPriorityProperty(muleMessage, jmsMessage);
-        addRedeliveredProperty(muleMessage, jmsMessage);
-        addJMSReplyToPropertes(muleMessage, jmsMessage);
-        addTimestampProperty(muleMessage, jmsMessage);
-        addTypeProperty(muleMessage, jmsMessage);
-
-        propagateJMSProperties(jmsMessage, muleMessage);
+        propagateJMSProperties(jmsMessage, messageProperties);
+        
+        ((DefaultMuleMessage) muleMessage).addInboundProperties(messageProperties);
     }
 
-    protected void propagateJMSProperties(Message jmsMessage, MuleMessage muleMessage)
+    protected void propagateJMSProperties(Message jmsMessage, Map<String, Object> messageProperties)
     {
         try
         {
@@ -75,7 +82,7 @@ public class JmsMuleMessageFactory extends AbstractMuleMessageFactory
                     Object value = jmsMessage.getObjectProperty(key);
                     if (value != null)
                     {
-                        muleMessage.setProperty(key, value);
+                        messageProperties.put(key, value);
                     }
                 }
                 catch (JMSException e1)
@@ -90,14 +97,14 @@ public class JmsMuleMessageFactory extends AbstractMuleMessageFactory
         }
     }
 
-    protected void addTypeProperty(MuleMessage muleMessage, Message jmsMessage)
+    protected void addTypeProperty(Message jmsMessage, Map<String, Object> messageProperties)
     {
         try
         {
             String value = jmsMessage.getJMSType();
             if (value != null)
             {
-                muleMessage.setProperty(JmsConstants.JMS_TYPE, value);
+                messageProperties.put(JmsConstants.JMS_TYPE, value);
             }
         }
         catch (JMSException e)
@@ -106,12 +113,12 @@ public class JmsMuleMessageFactory extends AbstractMuleMessageFactory
         }
     }
 
-    protected void addTimestampProperty(MuleMessage muleMessage, Message jmsMessage)
+    protected void addTimestampProperty(Message jmsMessage, Map<String, Object> messageProperties)
     {
         try
         {
             long value = jmsMessage.getJMSTimestamp();
-            muleMessage.setProperty(JmsConstants.JMS_TIMESTAMP, Long.valueOf(value));
+            messageProperties.put(JmsConstants.JMS_TIMESTAMP, Long.valueOf(value));
         }
         catch (JMSException e)
         {
@@ -119,17 +126,19 @@ public class JmsMuleMessageFactory extends AbstractMuleMessageFactory
         }
     }
 
-    protected void addJMSReplyToPropertes(MuleMessage muleMessage, Message jmsMessage)
+    protected void addJMSReplyTo(MuleMessage muleMessage, Message jmsMessage)
     {
         try
         {
-            Destination value = jmsMessage.getJMSReplyTo();
-            if (value != null)
+            Destination replyTo = jmsMessage.getJMSReplyTo();
+            if (replyTo != null)
             {
                 // Special handling of replyTo since it needs to go into the
                 // invocation scope
-                muleMessage.setReplyTo(value);
+                muleMessage.setProperty(JmsConstants.JMS_REPLY_TO, replyTo, PropertyScope.INVOCATION);
             }
+
+            muleMessage.setReplyTo(replyTo);
         }
         catch (JMSException e)
         {
@@ -137,12 +146,12 @@ public class JmsMuleMessageFactory extends AbstractMuleMessageFactory
         }
     }
 
-    protected void addRedeliveredProperty(MuleMessage muleMessage, Message jmsMessage)
+    protected void addRedeliveredProperty(Message jmsMessage, Map<String, Object> messageProperties)
     {
         try
         {
             boolean value = jmsMessage.getJMSRedelivered();
-            muleMessage.setProperty(JmsConstants.JMS_REDELIVERED, Boolean.valueOf(value));
+            messageProperties.put(JmsConstants.JMS_REDELIVERED, Boolean.valueOf(value));
         }
         catch (JMSException e)
         {
@@ -150,12 +159,12 @@ public class JmsMuleMessageFactory extends AbstractMuleMessageFactory
         }
     }
 
-    protected void addPriorityProperty(MuleMessage muleMessage, Message jmsMessage)
+    protected void addPriorityProperty(Message jmsMessage, Map<String, Object> messageProperties)
     {
         try
         {
             int value = jmsMessage.getJMSPriority();
-            muleMessage.setProperty(JmsConstants.JMS_PRIORITY, Integer.valueOf(value));
+            messageProperties.put(JmsConstants.JMS_PRIORITY, Integer.valueOf(value));
         }
         catch (JMSException e)
         {
@@ -163,15 +172,15 @@ public class JmsMuleMessageFactory extends AbstractMuleMessageFactory
         }
     }
 
-    protected void addMessageIdProperty(MuleMessage muleMessage, Message jmsMessage)
+    protected void addMessageIdProperty(Message jmsMessage, Map<String, Object> messageProperties)
     {
         try
         {
             String value = jmsMessage.getJMSMessageID();
             if (value != null)
             {
-                muleMessage.setProperty(JmsConstants.JMS_MESSAGE_ID, value);
-                muleMessage.setProperty(MuleProperties.MULE_MESSAGE_ID_PROPERTY, value);
+                messageProperties.put(JmsConstants.JMS_MESSAGE_ID, value);
+                messageProperties.put(MuleProperties.MULE_MESSAGE_ID_PROPERTY, value);
             }
         }
         catch (JMSException e)
@@ -180,12 +189,12 @@ public class JmsMuleMessageFactory extends AbstractMuleMessageFactory
         }
     }
 
-    protected void addExpirationProperty(MuleMessage muleMessage, Message jmsMessage)
+    protected void addExpirationProperty(Message jmsMessage, Map<String, Object> messageProperties)
     {
         try
         {
             long value = jmsMessage.getJMSExpiration();
-            muleMessage.setProperty(JmsConstants.JMS_EXPIRATION, Long.valueOf(value));
+            messageProperties.put(JmsConstants.JMS_EXPIRATION, Long.valueOf(value));
         }
         catch (JMSException e)
         {
@@ -193,14 +202,14 @@ public class JmsMuleMessageFactory extends AbstractMuleMessageFactory
         }
     }
 
-    protected void addDestinationProperty(MuleMessage muleMessage, Message jmsMessage)
+    protected void addDestinationProperty(Message jmsMessage, Map<String, Object> messageProperties)
     {
         try
         {
             Destination value = jmsMessage.getJMSDestination();
             if (value != null)
             {
-                muleMessage.setProperty(JmsConstants.JMS_DESTINATION, value);
+                messageProperties.put(JmsConstants.JMS_DESTINATION, value);
             }
         }
         catch (JMSException e)
@@ -209,12 +218,12 @@ public class JmsMuleMessageFactory extends AbstractMuleMessageFactory
         }
     }
 
-    protected void addDeliveryModeProperty(MuleMessage muleMessage, Message jmsMessage)
+    protected void addDeliveryModeProperty(Message jmsMessage, Map<String, Object> messageProperties)
     {
         try
         {
             int value = jmsMessage.getJMSDeliveryMode();
-            muleMessage.setProperty(JmsConstants.JMS_DELIVERY_MODE, Integer.valueOf(value));
+            messageProperties.put(JmsConstants.JMS_DELIVERY_MODE, Integer.valueOf(value));
         }
         catch (JMSException e)
         {
@@ -222,14 +231,15 @@ public class JmsMuleMessageFactory extends AbstractMuleMessageFactory
         }
     }
 
-    protected void addCorrelationProperties(MuleMessage muleMessage, Message jmsMessage)
+    protected void addCorrelationProperties(Message jmsMessage, MuleMessage muleMessage, 
+        Map<String, Object> messageProperties)
     {
         try
         {
             String value = jmsMessage.getJMSCorrelationID();
             if (value != null)
             {
-                muleMessage.setProperty(JmsConstants.JMS_CORRELATION_ID, value);
+                messageProperties.put(JmsConstants.JMS_CORRELATION_ID, value);
                 // Map to the internal Mule property
                 muleMessage.setCorrelationId(value);
             }
