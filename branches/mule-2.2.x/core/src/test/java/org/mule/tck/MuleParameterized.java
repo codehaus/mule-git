@@ -10,22 +10,21 @@
 
 package org.mule.tck;
 
-import org.mule.util.FileUtils;
-import org.mule.util.StringUtils;
-
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.net.URLClassLoader;
-import java.security.CodeSource;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.junit.runner.Description;
 import org.junit.runner.manipulation.Filter;
 import org.junit.runner.manipulation.NoTestsRemainException;
 import org.junit.runners.Parameterized;
+import org.mule.util.FileUtils;
+import org.mule.util.StringUtils;
 
 /**
  * <code>MuleParameterized</code> adds test exclusions to the
@@ -41,6 +40,8 @@ public class MuleParameterized extends Parameterized
      */
     private static ArrayList<String> excludedTests = new ArrayList<String>();
 
+    protected static transient Log logger = LogFactory.getLog(org.mule.tck.MuleParameterized.class);    
+    
     public MuleParameterized(Class<?> klass) throws Throwable
     {
         super(klass);
@@ -59,29 +60,13 @@ public class MuleParameterized extends Parameterized
     }
 
     /**
-     * FIXME: Copied from <code>AbstractMuletestCase</code>
-     * 
-     * @param clazz
-     * @return
-     */
-    public static URL getClassPathRoot(Class<? extends MuleParameterized> clazz)
-    {
-        CodeSource cs = clazz.getProtectionDomain().getCodeSource();
-        return (cs != null ? cs.getLocation() : null);
-    }
-
-    /**
      * Read the test exclusions file and find the tests to be excluded from running.
      */
     public void getExcluded()
-    {
+    {      
         try
         {
-            // We find the physical classpath root URL of the test class and
-            // use that to find the correct resource. Works fine everywhere,
-            // regardless of classloaders. See MULE-2414
-            URL[] urls = new URL[]{MuleParameterized.getClassPathRoot(this.getClass())};
-            URL fileUrl = new URLClassLoader(urls).getResource("mule-test-exclusions.txt");
+            URL fileUrl = this.getClass().getClassLoader().getResource("mule-test-exclusions.txt");
 
             if (fileUrl != null)
             {
@@ -99,9 +84,14 @@ public class MuleParameterized extends Parameterized
                     if (!(line.startsWith("#")) && line != "" && line.length() > 0)
                     {
                         s.add(line);
+                        logger.info("adding test to the list of exclusions : " + line);
                     }
                 }
                 excludedTests = s;
+            }
+            else
+            {
+                logger.info("did not find test exclusions file");
             }
         }
         catch (IOException ioex)
@@ -117,12 +107,14 @@ public class MuleParameterized extends Parameterized
     private static Filter excludeFilter = new Filter()
     {
         /**
-         * Checks the test description against the list of excluded tests
+         * Checks the test description against the list of excluded tests. TODO: take
+         * this one step further and allow you to exclude specific tests in a test
+         * class. Currently, parameterized tests have a name like this:
+         * testMethod[index](TestClass)
          */
         @Override
         public boolean shouldRun(Description description)
         {
-
             for (int i = 0; i < excludedTests.size(); i++)
             {
                 // use contains instead of equals since parameterized tests list
@@ -130,8 +122,9 @@ public class MuleParameterized extends Parameterized
                 // class name and methodName[index]ClassName when checking against
                 // individual test methods. The test exclusions file contains the
                 // full class name to exclude.
-                if (description.toString().contains(excludedTests.get(i)))
+                if (description.getChildren().get(0).toString().contains(excludedTests.get(i)))
                 {
+                    logger.info("skipping test : " + description.getChildren().get(0).toString());
                     return false;
                 }
             }
