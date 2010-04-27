@@ -31,7 +31,6 @@ import org.mule.api.transport.MessageAdapter;
 import org.mule.api.transport.OutputHandler;
 import org.mule.api.transport.PropertyScope;
 import org.mule.endpoint.EndpointURIEndpointBuilder;
-import org.mule.transport.DefaultMessageAdapter;
 import org.mule.transport.NullPayload;
 import org.mule.transport.cxf.CxfConnector;
 import org.mule.transport.cxf.CxfConstants;
@@ -211,14 +210,14 @@ public class MuleUniversalConduit extends AbstractConduit
 
         MuleEvent event = (MuleEvent) message.getExchange().get(MULE_EVENT_PROPERTY);
         
-        DefaultMessageAdapter req;
+        MuleMessage req;
         if (event == null) 
         {
-            req = new DefaultMessageAdapter(handler);
+            req = new DefaultMuleMessage(handler, connector.getMuleContext());
         }
         else 
         {
-            req = new DefaultMessageAdapter(handler, event.getMessage());
+            req = new DefaultMuleMessage(handler, event.getMessage(), connector.getMuleContext());
         }
         
         message.getExchange().put(CxfConstants.MULE_MESSAGE, req);
