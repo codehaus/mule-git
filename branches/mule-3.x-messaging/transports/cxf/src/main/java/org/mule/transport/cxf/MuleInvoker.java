@@ -61,7 +61,7 @@ public class MuleInvoker implements Invoker
             
             // create the request message from the properly converted payload in cxfMessage and
             // all the message properties in the original request
-            MuleMessage muleReq = new DefaultMuleMessage(cxfMessage, reqMsg, 
+            MuleMessage muleReq = new DefaultMuleMessage(cxfMessage.getPayload(), reqMsg, 
                 receiver.getConnector().getMuleContext());
             
             BindingOperationInfo bop = exchange.get(BindingOperationInfo.class);
