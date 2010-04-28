@@ -9,38 +9,38 @@
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd              
        http://www.mulesource.org/schema/mule/test/2.2 http://www.mulesource.org/schema/mule/test/2.2/mule-test.xsd">
 
-	<endpoint name="out1" address="${outbound.destination1}"
+	<jms:endpoint name="out1" address="${outbound.destination1}"
 		connector-ref="jmsConnector1">
 		<jms:transaction action="NONE" />
-	</endpoint>
-	<endpoint name="out2" address="${outbound.destination2}"
+	</jms:endpoint>
+	<jms:endpoint name="out2" address="${outbound.destination2}"
 		connector-ref="jmsConnector1">
 		<jms:transaction action="ALWAYS_BEGIN" />
-	</endpoint>
-	<endpoint name="out3" address="${outbound.destination3}"
+	</jms:endpoint>
+	<jms:endpoint name="out3" address="${outbound.destination3}"
 		connector-ref="jmsConnector1">
 		<jms:transaction action="BEGIN_OR_JOIN" />
-	</endpoint>
-	<endpoint name="out4" address="${outbound.destination4}"
+	</jms:endpoint>
+	<jms:endpoint name="out4" address="${outbound.destination4}"
 		connector-ref="jmsConnector1">
 		<jms:transaction action="ALWAYS_JOIN" />
-	</endpoint>
-	<endpoint name="out5" address="${outbound.destination5}"
+	</jms:endpoint>
+	<jms:endpoint name="out5" address="${outbound.destination5}"
 		connector-ref="jmsConnector1">
 		<jms:transaction action="JOIN_IF_POSSIBLE" />
-	</endpoint>
+	</jms:endpoint>
 
 	<model name="TEST">
 		<service name="testNone">
 			<inbound>
-				<inbound-endpoint ref="in1" />
+				<jms:inbound-endpoint ref="in1" />
 			</inbound>
 			<test:component>
 				<test:return-data>OUTPUT MESSAGE</test:return-data>
 			</test:component>
 			<outbound>
 				<pass-through-router>
-					<outbound-endpoint ref="out1" />
+					<jms:outbound-endpoint ref="out1" />
 				</pass-through-router>
 			</outbound>
 			<custom-exception-strategy
@@ -51,14 +51,14 @@
 
 		<service name="testAlwaysBegin">
 			<inbound>
-				<inbound-endpoint ref="in2" />
+				<jms:inbound-endpoint ref="in2" />
 			</inbound>
 			<test:component>
 				<test:return-data>OUTPUT MESSAGE</test:return-data>
 			</test:component>
 			<outbound>
 				<pass-through-router>
-					<outbound-endpoint ref="out2" />
+					<jms:outbound-endpoint ref="out2" />
 				</pass-through-router>
 			</outbound>
 			<custom-exception-strategy
@@ -69,14 +69,14 @@
 
 		<service name="testBeginOrJoin">
 			<inbound>
-				<inbound-endpoint ref="in3" />
+				<jms:inbound-endpoint ref="in3" />
 			</inbound>
 			<test:component>
 				<test:return-data>OUTPUT MESSAGE</test:return-data>
 			</test:component>
 			<outbound>
 				<pass-through-router>
-					<outbound-endpoint ref="out3" />
+					<jms:outbound-endpoint ref="out3" />
 				</pass-through-router>
 			</outbound>
 			<custom-exception-strategy
@@ -87,14 +87,14 @@
 
 		<service name="testAlwaysJoin">
 			<inbound>
-				<inbound-endpoint ref="in4" />
+				<jms:inbound-endpoint ref="in4" />
 			</inbound>
 			<test:component>
 				<test:return-data>OUTPUT MESSAGE</test:return-data>
 			</test:component>
 			<outbound>
 				<pass-through-router>
-					<outbound-endpoint ref="out4" />
+					<jms:outbound-endpoint ref="out4" />
 				</pass-through-router>
 			</outbound>
 			<custom-exception-strategy
@@ -105,14 +105,14 @@
 
 		<service name="testJoinIfPossible">
 			<inbound>
-				<inbound-endpoint ref="in5" />
+				<jms:inbound-endpoint ref="in5" />
 			</inbound>
 			<test:component>
 				<test:return-data>OUTPUT MESSAGE</test:return-data>
 			</test:component>
 			<outbound>
 				<pass-through-router>
-					<outbound-endpoint ref="out5" />
+					<jms:outbound-endpoint ref="out5" />
 				</pass-through-router>
 			</outbound>
 			<custom-exception-strategy
