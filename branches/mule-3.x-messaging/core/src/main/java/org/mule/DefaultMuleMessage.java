@@ -154,6 +154,7 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
     
     public DefaultMuleMessage(Object message, MuleMessage previous, MuleContext muleContext)
     {
+        id = previous.getUniqueId();
         setMuleContext(muleContext);
         initAppliedTransformerHashCodes();
         setEncoding(previous.getEncoding());

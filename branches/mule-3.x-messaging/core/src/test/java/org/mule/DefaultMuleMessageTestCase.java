@@ -130,7 +130,7 @@ public class DefaultMuleMessageTestCase extends AbstractMuleTestCase
         assertEquals("MESSAGE_ADAPTER", message.getPayload());
         assertOutboundMessageProperty("MessageAdapter", message);
         assertNull(message.getProperty("MuleMessage"));
-        assertFalse(previous.getUniqueId().equals(message.getUniqueId()));
+        assertEquals(previous.getUniqueId(), message.getUniqueId());
     }
 
     public void testPreviousMessageConstructorWithMuleMessageAsPayloadAndMuleMessageAsPrevious()
@@ -146,7 +146,7 @@ public class DefaultMuleMessageTestCase extends AbstractMuleTestCase
         assertOutboundMessageProperty("MuleMessage", message);
         assertOutboundMessageProperty("payload", message);
         assertNull(message.getProperty("MessageAdapter"));
-        assertFalse(previous.getUniqueId().equals(message.getUniqueId()));
+        assertEquals(previous.getUniqueId(), message.getUniqueId());
     }
     
     //
