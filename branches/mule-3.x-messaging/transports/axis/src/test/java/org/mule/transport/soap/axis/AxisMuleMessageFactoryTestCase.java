@@ -22,26 +22,24 @@ import org.apache.axis.MessageContext;
 
 public class AxisMuleMessageFactoryTestCase extends AbstractMuleMessageFactoryTestCase
 {
-    private String xml = 
-          "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
-        + "<soap:Header>"
-        + "</soap:Header>"
-        + "<soap:Body>"
-        + "<urn:doGoogleSearch xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:urn=\"urn:GoogleSearch\">"
-        + "<key>1</key>"
-        + "<q>a</q>"
-        + "<start>0</start>"
-        + "<maxResults>1</maxResults>"
-        + "<filter>false</filter>"
-        + "<restrict>a</restrict>"
-        + "<safeSearch>true</safeSearch>"
-        + "<lr>a</lr>"
-        + "<ie>b</ie>"
-        + "<oe>c</oe>"
-        + "</urn:doGoogleSearch>"
-        + "</soap:Body>"
-        + "</soap:Envelope>";
-
+    private static final String XML_WITH_HEADERS =
+          "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">"
+        + "    <soapenv:Header>"
+        + "        <mule:header soapenv:actor=\"http://www.muleumo.org/providers/soap/1.0\" soapenv:mustUnderstand=\"0\" xmlns:mule=\"http://www.muleumo.org/providers/soap/1.0\">"        
+        + "            <mule:MULE_REPLYTO>replyTo</mule:MULE_REPLYTO>"
+        + "            <mule:MULE_CORRELATION_ID>004a1cf9-3e7e-44b3-9b7f-778fae4fa0d2</mule:MULE_CORRELATION_ID>"
+        + "            <mule:MULE_CORRELATION_GROUP_SIZE>42</mule:MULE_CORRELATION_GROUP_SIZE>"
+        + "            <mule:MULE_CORRELATION_SEQUENCE>-42</mule:MULE_CORRELATION_SEQUENCE>"
+        + "        </mule:header>"
+        + "    </soapenv:Header>"
+        + "    <soapenv:Body>"
+        + "        <echo soapenv:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">"
+        + "            <value0 xsi:type=\"soapenc:string\" xmlns:soapenc=\"http://schemas.xmlsoap.org/soap/encoding/\">"
+        + "                Hello"
+        + "            </value0>"
+        + "        </echo>"
+        + "    </soapenv:Body>"
+        + "</soapenv:Envelope>";
     
     public AxisMuleMessageFactoryTestCase()
     {
@@ -49,6 +47,13 @@ public class AxisMuleMessageFactoryTestCase extends AbstractMuleMessageFactoryTe
         runUnsuppoprtedTransportMessageTest = false;
     }
     
+    @Override
+    protected void doSetUp() throws Exception
+    {
+        super.doSetUp();
+        setupAxisMessageContext();
+    }
+
     @Override
     protected MuleMessageFactory doCreateMuleMessageFactory()
     {
@@ -58,24 +63,21 @@ public class AxisMuleMessageFactoryTestCase extends AbstractMuleMessageFactoryTe
     @Override
     protected Object getValidTransportMessage() throws Exception
     {
-        return new Message(xml);
+        return new Message(XML_WITH_HEADERS);
     }
     
-    @Override
-    public void testValidPayload() throws Exception
+    public void testSoapHeaders() throws Exception
     {
-        setupAxisMessageContext();
-        super.testValidPayload();
-    }
-
-    public void _testMessageContextIsNotNull() throws Exception, NoSuchFieldException
-    {
-        setupAxisMessageContext();
         MuleMessageFactory factory = createMuleMessageFactory();
-        MuleMessage muleMessage = factory.create(getValidTransportMessage(), encoding);
-        assertEquals(TEST_MESSAGE, muleMessage.getPayload());
+        Object payload = getValidTransportMessage();
+        MuleMessage message = factory.create(payload, encoding);
+        assertEquals(payload, message.getPayload());
+        assertEquals("replyTo", message.getReplyTo());
+        assertEquals(42, message.getCorrelationGroupSize());
+        assertEquals(-42, message.getCorrelationSequence());
+        assertEquals("004a1cf9-3e7e-44b3-9b7f-778fae4fa0d2", message.getCorrelationId());
     }
-
+    
     private void setupAxisMessageContext()
     {
         EngineConfiguration configuration = new MockEngineConfiguration();
@@ -83,7 +85,7 @@ public class AxisMuleMessageFactoryTestCase extends AbstractMuleMessageFactoryTe
         MessageContext messageContext = new MessageContext(engine);
         MockAxisEngine.setCurrentMessageContext(messageContext);
         
-        Message soapMessage = new Message(xml);
+        Message soapMessage = new Message(XML_WITH_HEADERS);
         messageContext.setMessage(soapMessage);        
     }
 }
