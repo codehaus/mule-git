@@ -27,8 +27,6 @@ import javax.jms.Message;
 
 public class JmsMuleMessageFactory extends AbstractMuleMessageFactory
 {
-    private String specification;
-
     public JmsMuleMessageFactory(MuleContext context)
     {
         super(context);
@@ -43,8 +41,7 @@ public class JmsMuleMessageFactory extends AbstractMuleMessageFactory
     @Override
     protected Object extractPayload(Object transportMessage, String encoding) throws Exception
     {
-        Message jmsMessage = (Message) transportMessage;
-        return JmsMessageUtils.toObject(jmsMessage, specification, encoding);
+        return transportMessage;
     }
 
     @Override
@@ -248,21 +245,6 @@ public class JmsMuleMessageFactory extends AbstractMuleMessageFactory
         catch (JMSException e)
         {
             // ignored
-        }
-    }
-
-    public void setSpecification(String specification)
-    {
-        if (JmsConstants.JMS_SPECIFICATION_11.equals(specification) 
-            || (JmsConstants.JMS_SPECIFICATION_102B.equals(specification)))
-        {
-            this.specification = specification;
-        }
-        else
-        {
-            throw new IllegalArgumentException(
-                "JMS specification needs to be one of the defined values in JmsConstants but was: "
-                + specification);
         }
     }
 }

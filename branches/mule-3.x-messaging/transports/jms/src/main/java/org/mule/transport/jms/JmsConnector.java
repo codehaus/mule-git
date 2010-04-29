@@ -16,7 +16,6 @@ import org.mule.api.MuleRuntimeException;
 import org.mule.api.context.notification.ConnectionNotificationListener;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.endpoint.InboundEndpoint;
-import org.mule.api.lifecycle.CreateException;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.lifecycle.StartException;
 import org.mule.api.lifecycle.StopException;
@@ -24,7 +23,6 @@ import org.mule.api.service.Service;
 import org.mule.api.transaction.Transaction;
 import org.mule.api.transaction.TransactionException;
 import org.mule.api.transport.MessageAdapter;
-import org.mule.api.transport.MuleMessageFactory;
 import org.mule.api.transport.ReplyToHandler;
 import org.mule.config.ExceptionHelper;
 import org.mule.config.i18n.CoreMessages;
@@ -254,14 +252,6 @@ public class JmsConnector extends AbstractConnector implements ExceptionListener
         {
             jmsSupport = createJmsSupport();
         }
-    }
-
-    @Override
-    public MuleMessageFactory createMuleMessageFactory() throws CreateException
-    {
-        JmsMuleMessageFactory jmsFactory = (JmsMuleMessageFactory) super.createMuleMessageFactory();
-        jmsFactory.setSpecification(getSpecification());
-        return jmsFactory;
     }
 
     /**

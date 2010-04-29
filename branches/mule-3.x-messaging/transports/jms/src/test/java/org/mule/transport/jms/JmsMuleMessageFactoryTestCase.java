@@ -68,26 +68,7 @@ public class JmsMuleMessageFactoryTestCase extends AbstractMuleMessageFactoryTes
         Object payload = getValidTransportMessage();
         MuleMessage message = factory.create(payload, encoding);
         assertNotNull(message);
-        assertEquals(payload, MESSAGE_TEXT);
+        assertEquals(payload, message.getPayload());
         assertEquals("bar", message.getProperty("foo"));
-    }
-    
-    public void testInvalidSpecification() throws Exception
-    {
-        JmsMuleMessageFactory factory = (JmsMuleMessageFactory) createMuleMessageFactory();
-        
-        // checking that valid spec versions can be set
-        factory.setSpecification(JmsConstants.JMS_SPECIFICATION_102B);
-        factory.setSpecification(JmsConstants.JMS_SPECIFICATION_11);
-
-        try
-        {
-            factory.setSpecification("0.9");
-            fail("JmsMuleMessageFactory should fail on setting an invalid specification");
-        }
-        catch (IllegalArgumentException iax)
-        {
-            // this one was expected
-        }
     }
 }

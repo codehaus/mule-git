@@ -42,7 +42,7 @@ public class JmsSynchronousResponseTestCase extends AbstractJmsFunctionalTestCas
         
         MuleMessage response = client.send("out1", "TEST_MESSAGE", null);
         assertNotNull(response);
-        assertEquals("TEST_MESSAGE", response.getPayload());
+        assertTrue("Response is not a JMS Message", response.getPayload() instanceof javax.jms.Message);
         assertJmsMessageIdPresent(response);
     }
 
@@ -53,7 +53,7 @@ public class JmsSynchronousResponseTestCase extends AbstractJmsFunctionalTestCas
         
         MuleMessage response = client.send("out2", "TEST_MESSAGE", null);
         assertNotNull(response);
-        assertEquals("TEST_MESSAGE", response.getPayload());        
+        assertTrue("Response is not a JMS Message", response.getPayload() instanceof javax.jms.Message);
         assertJmsMessageIdPresent(response);
     }
 
@@ -66,7 +66,7 @@ public class JmsSynchronousResponseTestCase extends AbstractJmsFunctionalTestCas
         assertNotNull(response);
         assertTrue("Response should be NullPayload", response.getPayload() instanceof NullPayload);
     }
-    
+
     private void assertJmsMessageIdPresent(MuleMessage message)
     {
         String messageId = message.getStringProperty(JmsConstants.JMS_MESSAGE_ID, null);
