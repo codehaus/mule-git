@@ -10,7 +10,6 @@
 
 package org.mule.transport.jms;
 
-import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.config.MuleProperties;
@@ -20,10 +19,8 @@ import org.mule.api.endpoint.OutboundEndpoint;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.transaction.Transaction;
 import org.mule.api.transport.DispatchException;
-import org.mule.api.transport.MessageAdapter;
 import org.mule.transaction.TransactionCoordination;
 import org.mule.transport.AbstractMessageDispatcher;
-import org.mule.transport.NullPayload;
 import org.mule.transport.jms.i18n.JmsMessages;
 import org.mule.util.ClassUtils;
 import org.mule.util.NumberUtils;
@@ -74,6 +71,7 @@ public class JmsMessageDispatcher extends AbstractMessageDispatcher
         }
     }
 
+    @Override
     protected void doDispatch(MuleEvent event) throws Exception
     {
         if (connector.getConnection() == null)
@@ -83,11 +81,13 @@ public class JmsMessageDispatcher extends AbstractMessageDispatcher
         dispatchMessage(event, false);
     }
 
+    @Override
     protected void doConnect() throws Exception
     {
         // template method
     }
 
+    @Override
     protected void doDisconnect() throws Exception
     {
         // template method
@@ -283,7 +283,11 @@ public class JmsMessageDispatcher extends AbstractMessageDispatcher
                     }
                     else
                     {
-                        return createMuleMessage(result);
+                        MuleMessage returnMessage = createMuleMessage(result);
+                        Object payload = JmsMessageUtils.toObject(result, connector.getSpecification(),
+                            endpoint.getEncoding());
+                        returnMessage.setPayload(payload);
+                        return returnMessage;
                     }
                 }
             }
@@ -346,11 +350,13 @@ public class JmsMessageDispatcher extends AbstractMessageDispatcher
         logger.debug("Multi-transaction support is not available in Mule Community Edition.");
     }
 
+    @Override
     protected MuleMessage doSend(MuleEvent event) throws Exception
     {
         return dispatchMessage(event, true);
     }
 
+    @Override
     protected void doDispose()
     {
         // template method
