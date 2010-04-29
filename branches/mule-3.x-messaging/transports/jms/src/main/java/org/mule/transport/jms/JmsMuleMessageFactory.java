@@ -240,8 +240,9 @@ public class JmsMuleMessageFactory extends AbstractMuleMessageFactory
             if (value != null)
             {
                 messageProperties.put(JmsConstants.JMS_CORRELATION_ID, value);
-                // Map to the internal Mule property
-                muleMessage.setCorrelationId(value);
+                // this property is used my getCorrelationId in MuleMessage, but we want
+                // it on the INBOUND scoped properties so don't use setCorrelationId
+                messageProperties.put(MuleProperties.MULE_CORRELATION_ID_PROPERTY, value);
             }
         }
         catch (JMSException e)
