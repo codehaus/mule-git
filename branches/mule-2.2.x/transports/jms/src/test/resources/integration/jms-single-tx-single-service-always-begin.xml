@@ -7,26 +7,26 @@
        http://www.mulesource.org/schema/mule/jms/2.2 http://www.mulesource.org/schema/mule/jms/2.2/mule-jms.xsd
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 
-	<jms:endpoint name="in1" address="${inbound.destination1}"
+	<endpoint name="in1" address="${inbound.destination1}"
 		connector-ref="jmsConnector1">
 		<jms:transaction action="ALWAYS_BEGIN" />
-	</jms:endpoint>
-	<jms:endpoint name="in2" address="${inbound.destination2}"
+	</endpoint>
+	<endpoint name="in2" address="${inbound.destination2}"
 		connector-ref="jmsConnector1">
 		<jms:transaction action="ALWAYS_BEGIN" />
-	</jms:endpoint>
-	<jms:endpoint name="in3" address="${inbound.destination3}"
+	</endpoint>
+	<endpoint name="in3" address="${inbound.destination3}"
 		connector-ref="jmsConnector1">
 		<jms:transaction action="ALWAYS_BEGIN" />
-	</jms:endpoint>
-	<jms:endpoint name="in4" address="${inbound.destination4}"
+	</endpoint>
+	<endpoint name="in4" address="${inbound.destination4}"
 		connector-ref="jmsConnector1">
 		<jms:transaction action="ALWAYS_BEGIN" />
-	</jms:endpoint>
-	<jms:endpoint name="in5" address="${inbound.destination5}"
+	</endpoint>
+	<endpoint name="in5" address="${inbound.destination5}"
 		connector-ref="jmsConnector1">
 		<jms:transaction action="ALWAYS_BEGIN" />
-	</jms:endpoint>
+	</endpoint>
 
 	<spring:beans>
 		<spring:import resource="jms-single-tx-single-common.xml" />
