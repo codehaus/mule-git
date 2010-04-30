@@ -263,7 +263,7 @@ public class JmsMessageDispatcher extends AbstractMessageDispatcher
                     }
                     else
                     {
-                        return createMuleMessage(result);
+                        return createMessageWithJmsMessagePayload(result);
                     }
                 }
                 else
@@ -283,11 +283,7 @@ public class JmsMessageDispatcher extends AbstractMessageDispatcher
                     }
                     else
                     {
-                        MuleMessage returnMessage = createMuleMessage(result);
-                        Object payload = JmsMessageUtils.toObject(result, connector.getSpecification(),
-                            endpoint.getEncoding());
-                        returnMessage.setPayload(payload);
-                        return returnMessage;
+                        return createMessageWithJmsMessagePayload(result);
                     }
                 }
             }
@@ -333,6 +329,15 @@ public class JmsMessageDispatcher extends AbstractMessageDispatcher
         }
     }
 
+    protected MuleMessage createMessageWithJmsMessagePayload(Message jmsMessage) throws Exception
+    {
+        MuleMessage muleMessage = createMuleMessage(jmsMessage);
+        Object payload = JmsMessageUtils.toObject(jmsMessage, connector.getSpecification(),
+            endpoint.getEncoding());
+        muleMessage.setPayload(payload);
+        return muleMessage;
+    }
+    
     /**
      * This method is called before the current message is transformed.  It can be used to do any message body or
      * header processing before the transformer is called.
