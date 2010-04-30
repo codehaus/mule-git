@@ -13,7 +13,6 @@ package org.mule.transport.jms.i18n;
 import org.mule.api.MuleMessage;
 import org.mule.config.i18n.Message;
 import org.mule.config.i18n.MessageFactory;
-import org.mule.transport.jms.JmsMessageAdapter;
 import org.mule.util.ClassUtils;
 import org.mule.util.ObjectUtils;
 import org.mule.util.StringMessageUtils;
@@ -60,9 +59,9 @@ public class JmsMessages extends MessageFactory
         return factory.createMessage(BUNDLE_PATH, 11, messageId, times, maxRedelivery, connectorName);
     }
 
-    public static Message invalidResourceType(Class expectedClass, Object object)
+    public static Message invalidResourceType(Class<?> expectedClass, Object object)
     {
-        Class actualClass = null;
+        Class<?> actualClass = null;
         if (object != null)
         {
             actualClass = object.getClass();
@@ -72,7 +71,7 @@ public class JmsMessages extends MessageFactory
             StringMessageUtils.toString(actualClass));
     }
 
-    public static Message checkTransformer(String string, Class class1, String name)
+    public static Message checkTransformer(String string, Class<?> class1, String name)
     {
         return factory.createMessage(BUNDLE_PATH, 13, string, ClassUtils.getSimpleName(class1.getClass()),
             name);

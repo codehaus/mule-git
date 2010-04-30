@@ -22,7 +22,6 @@ import org.mule.api.lifecycle.StopException;
 import org.mule.api.service.Service;
 import org.mule.api.transaction.Transaction;
 import org.mule.api.transaction.TransactionException;
-import org.mule.api.transport.MessageAdapter;
 import org.mule.api.transport.ReplyToHandler;
 import org.mule.config.ExceptionHelper;
 import org.mule.config.i18n.CoreMessages;
@@ -557,14 +556,6 @@ public class JmsConnector extends AbstractConnector implements ExceptionListener
             // connectionFactory = null;
             connection = null;
         }
-    }
-
-    @Override
-    public MessageAdapter getMessageAdapter(Object message) throws MuleException
-    {
-        JmsMessageAdapter adapter = (JmsMessageAdapter) super.getMessageAdapter(message);
-        adapter.setSpecification(this.getSpecification());
-        return adapter;
     }
 
     @Override
