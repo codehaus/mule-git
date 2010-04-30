@@ -14,7 +14,6 @@ import org.mule.api.MuleMessage;
 import org.mule.module.client.MuleClient;
 import org.mule.tck.FunctionalTestCase;
 import org.mule.transport.http.HttpConstants;
-import org.mule.transport.http.HttpMessageAdapter;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -103,12 +102,6 @@ public class ResponseTransformerScenariosTestCase extends FunctionalTestCase
         MuleClient client = new MuleClient();
         MuleMessage message = client.send("http://localhost:4447", "request", null);
         assertNotNull(message);
-        // Ensure MuleMessageToHttpResponse was used before sending response
-        // NOTE: With http setting custom response transformer does not replace transport default, becasue
-        // custom transformers are called in DefaultInternalMessageListener and http transformer perform
-        // explict response transformer afterwards in HttpMessageReciever.doRequest(HttpRequest request,
-        // RequestLine requestLine) before returning result to client
-        assertTrue(message.getAdapter() instanceof HttpMessageAdapter);
 
         String server = message.getStringProperty(HttpConstants.HEADER_SERVER, null);
         assertTrue(server.startsWith("Mule"));
