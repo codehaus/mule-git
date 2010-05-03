@@ -22,7 +22,6 @@ import org.mule.api.service.Service;
 import org.mule.api.transaction.TransactionFactory;
 import org.mule.api.transformer.Transformer;
 import org.mule.api.transport.Connector;
-import org.mule.api.transport.MessageAdapter;
 import org.mule.api.transport.MessageDispatcherFactory;
 import org.mule.api.transport.MessageReceiver;
 import org.mule.api.transport.MessageRequesterFactory;
@@ -32,7 +31,6 @@ import org.mule.config.i18n.CoreMessages;
 import org.mule.endpoint.EndpointURIEndpointBuilder;
 import org.mule.endpoint.UrlEndpointURIBuilder;
 import org.mule.transaction.XaTransactionFactory;
-import org.mule.transport.NullPayload;
 import org.mule.util.ClassUtils;
 import org.mule.util.CollectionUtils;
 
@@ -147,52 +145,6 @@ public class DefaultTransportServiceDescriptor extends AbstractServiceDescriptor
     public void setMuleContext(MuleContext context)
     {
         this.muleContext = context;
-    }
-
-    @Deprecated
-    public MessageAdapter createMessageAdapter(Object message) throws TransportServiceException
-    {
-        return createMessageAdapter(message, null, messageAdapter);
-    }
-
-    @Deprecated
-    public MessageAdapter createMessageAdapter(Object message, MessageAdapter originalMessageAdapter)
-            throws TransportServiceException
-    {
-        return createMessageAdapter(message, originalMessageAdapter, messageAdapter);
-    }
-
-    protected MessageAdapter createMessageAdapter(Object message, MessageAdapter originalMessageAdapter,
-                                                  String clazz) throws TransportServiceException
-    {
-        if (message == null)
-        {
-            message = NullPayload.getInstance();
-        }
-        if (messageAdapter != null)
-        {
-            try
-            {
-                if (originalMessageAdapter != null)
-                {
-                    return (MessageAdapter) ClassUtils.instanciateClass(clazz,
-                            new Object[]{message, originalMessageAdapter}, classLoader);
-                }
-                else
-                {
-                    return (MessageAdapter)
-                            ClassUtils.instanciateClass(clazz, new Object[]{message}, classLoader);
-                }
-            }
-            catch (Exception e)
-            {
-                throw new TransportServiceException(CoreMessages.failedToCreateObjectWith("Message Adapter", clazz), e);
-            }
-        }
-        else
-        {
-            throw new TransportServiceException(CoreMessages.objectNotSetInService("Message Adapter", getService()));
-        }
     }
 
     public MuleMessageFactory createMuleMessageFactory() throws TransportServiceException

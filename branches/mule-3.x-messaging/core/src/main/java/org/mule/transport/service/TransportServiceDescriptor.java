@@ -20,7 +20,6 @@ import org.mule.api.service.Service;
 import org.mule.api.transaction.TransactionFactory;
 import org.mule.api.transformer.Transformer;
 import org.mule.api.transport.Connector;
-import org.mule.api.transport.MessageAdapter;
 import org.mule.api.transport.MessageDispatcherFactory;
 import org.mule.api.transport.MessageReceiver;
 import org.mule.api.transport.MessageRequesterFactory;
@@ -41,13 +40,6 @@ import java.util.Properties;
 public interface TransportServiceDescriptor extends ServiceDescriptor, MuleContextAware
 {
     public static final String OSGI_HEADER_TRANSPORT = "Mule-Transport";
-
-    @Deprecated
-    public MessageAdapter createMessageAdapter(Object message) throws TransportServiceException;
-
-    @Deprecated
-    public MessageAdapter createMessageAdapter(Object message, MessageAdapter originalMessageAdapter)
-            throws TransportServiceException;
 
     public MuleMessageFactory createMuleMessageFactory() throws TransportServiceException;
     

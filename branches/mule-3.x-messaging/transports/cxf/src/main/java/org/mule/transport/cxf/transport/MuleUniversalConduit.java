@@ -27,7 +27,6 @@ import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.endpoint.OutboundEndpoint;
 import org.mule.api.registry.MuleRegistry;
 import org.mule.api.transformer.TransformerException;
-import org.mule.api.transport.MessageAdapter;
 import org.mule.api.transport.OutputHandler;
 import org.mule.api.transport.PropertyScope;
 import org.mule.endpoint.EndpointURIEndpointBuilder;
@@ -387,9 +386,10 @@ public class MuleUniversalConduit extends AbstractConduit
 
     public void onClose(final Message m) throws IOException
     {
+        // template method
     }
     
-    protected MuleMessage sendStream(MessageAdapter sa, 
+    protected MuleMessage sendStream(MuleMessage sendMessage, 
                                      OutboundEndpoint protocolEndpoint,
                                      Exchange exchange) throws MuleException
     {
@@ -400,7 +400,7 @@ public class MuleUniversalConduit extends AbstractConduit
             session = eventContext.getSession();
         }
 
-        MuleMessage message = new DefaultMuleMessage(sa, connector.getMuleContext());
+        MuleMessage message = new DefaultMuleMessage(sendMessage, connector.getMuleContext());
         if (session == null)
         {
             session = new DefaultMuleSession(message, connector.getSessionHandler(), connector.getMuleContext());
