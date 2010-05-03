@@ -60,8 +60,8 @@ public class ${ModuleName}TransactedMessageReceiver extends TransactedPollingMes
 
         // Here is how to pass the message to Mule.  Most MessageReceivers
         // will need to do nothing more than this
-        MessageAdapter adapter = connector.getMessageAdapter(message);
-        routeMessage(new DefaultMuleMessage(adapter, connector.getMuleContext()), endpoint.isSynchronous());
+        MuleMessage muleMessage = createMuleMessage(message);
+        routeMessage(muleMessage, endpoint.isSynchronous());
     }
 
     public void doConnect() throws ConnectException
