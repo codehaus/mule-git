@@ -11,9 +11,7 @@
 package org.mule.transport;
 
 import org.mule.DefaultExceptionStrategy;
-import org.mule.DefaultMuleMessage;
 import org.mule.MuleSessionHandler;
-import org.mule.api.MessagingException;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleException;
@@ -30,7 +28,6 @@ import org.mule.api.endpoint.InboundEndpoint;
 import org.mule.api.endpoint.InboundEndpointDecorator;
 import org.mule.api.endpoint.OutboundEndpoint;
 import org.mule.api.lifecycle.CreateException;
-import org.mule.api.lifecycle.DisposeException;
 import org.mule.api.lifecycle.Disposable;
 import org.mule.api.lifecycle.Initialisable;
 import org.mule.api.lifecycle.InitialisationException;
@@ -49,7 +46,6 @@ import org.mule.api.transport.Connectable;
 import org.mule.api.transport.Connector;
 import org.mule.api.transport.ConnectorException;
 import org.mule.api.transport.DispatchException;
-import org.mule.api.transport.MessageAdapter;
 import org.mule.api.transport.MessageDispatcher;
 import org.mule.api.transport.MessageDispatcherFactory;
 import org.mule.api.transport.MessageReceiver;
@@ -2318,47 +2314,6 @@ public abstract class AbstractConnector implements Connector, ExceptionListener,
             throws Exception
     {
         return getServiceDescriptor().createMessageReceiver(this, service, endpoint);
-    }
-
-    /**
-     * Gets a <code>MessageAdapter</code> for the endpoint for the given message
-     * (data)
-     *
-     * @param message the data with which to initialise the
-     *                <code>MessageAdapter</code>
-     * @return the <code>MessageAdapter</code> for the endpoint
-     * @throws org.mule.api.MessagingException
-     *          if the message parameter is not
-     *          supported
-     * @see org.mule.api.transport.MessageAdapter
-     */
-    @Deprecated
-    public MessageAdapter getMessageAdapter(Object message) throws MuleException
-    {
-        try
-        {
-            return serviceDescriptor.createMessageAdapter(message);
-        }
-        catch (TransportServiceException e)
-        {
-            throw new MessagingException(CoreMessages.failedToCreate("Message Adapter"),
-                    new DefaultMuleMessage(message, muleContext), e);
-        }
-    }
-
-    @Deprecated
-    public MessageAdapter getMessageAdapter(Object message, MessageAdapter originalMessageAdapter)
-            throws MessagingException
-    {
-        try
-        {
-            return serviceDescriptor.createMessageAdapter(message, originalMessageAdapter);
-        }
-        catch (TransportServiceException tse)
-        {
-            throw new MessagingException(CoreMessages.failedToCreate("Message Adapter"),
-                    new DefaultMuleMessage(message, muleContext), tse);
-        }
     }
     
     /**

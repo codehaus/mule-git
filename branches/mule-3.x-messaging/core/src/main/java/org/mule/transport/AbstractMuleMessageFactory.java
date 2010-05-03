@@ -28,6 +28,12 @@ public abstract class AbstractMuleMessageFactory implements MuleMessageFactory
 
     public MuleMessage create(Object transportMessage, String encoding) throws Exception
     {
+        return create(transportMessage, null, encoding);
+    }
+    
+    public MuleMessage create(Object transportMessage, MuleMessage previousMessage, String encoding) 
+        throws Exception
+    {
         if (transportMessage == null)
         {
             return new DefaultMuleMessage(NullPayload.getInstance(), muleContext);
@@ -39,7 +45,15 @@ public abstract class AbstractMuleMessageFactory implements MuleMessageFactory
         }
 
         Object payload = extractPayload(transportMessage, encoding);
-        MuleMessage message = new DefaultMuleMessage(payload, muleContext);
+        MuleMessage message;
+        if (previousMessage != null)
+        {
+            message = new DefaultMuleMessage(payload, previousMessage, muleContext);
+        }
+        else
+        {
+            message = new DefaultMuleMessage(payload, muleContext);
+        }
         addProperties(message, transportMessage);
         addAttachments(message, transportMessage);
         return message;

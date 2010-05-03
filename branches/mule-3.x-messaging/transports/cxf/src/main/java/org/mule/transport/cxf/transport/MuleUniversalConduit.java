@@ -231,7 +231,7 @@ public class MuleUniversalConduit extends AbstractConduit
         {
             OutboundEndpoint protocolEndpoint = getProtocolEndpoint(uri);
 
-            MessageAdapter req = (MessageAdapter) m.getExchange().get(CxfConstants.MULE_MESSAGE);
+            MuleMessage req = (MuleMessage) m.getExchange().get(CxfConstants.MULE_MESSAGE);
             req.setProperty(MuleProperties.MULE_ENDPOINT_PROPERTY, uri, PropertyScope.INVOCATION);
             req.setProperty(HttpConnector.HTTP_DISABLE_STATUS_CODE_EXCEPTION_CHECK, Boolean.TRUE.toString());
             

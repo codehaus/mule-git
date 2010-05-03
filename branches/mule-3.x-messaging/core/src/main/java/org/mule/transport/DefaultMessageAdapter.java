@@ -14,7 +14,6 @@ import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleRuntimeException;
 import org.mule.api.ThreadSafeAccess;
 import org.mule.api.transport.MessageAdapter;
-import org.mule.api.transport.MutableMessageAdapter;
 import org.mule.config.i18n.CoreMessages;
 
 import java.util.Iterator;
@@ -28,7 +27,7 @@ import javax.activation.DataHandler;
  * associated with an object.
  */
 
-public final class DefaultMessageAdapter extends AbstractMessageAdapter implements MutableMessageAdapter
+public final class DefaultMessageAdapter extends AbstractMessageAdapter
 {
     /**
      * Serial version
@@ -181,6 +180,7 @@ public final class DefaultMessageAdapter extends AbstractMessageAdapter implemen
     }
 
     /** {@inheritDoc} */
+    @Override
     public String getUniqueId()
     {
         return id;
@@ -189,6 +189,7 @@ public final class DefaultMessageAdapter extends AbstractMessageAdapter implemen
     ////////////////////////// ThreadSafeAccess impl ////////////////////
 
     /** {@inheritDoc} */
+    @Override
     public ThreadSafeAccess newThreadCopy()
     {
         return new DefaultMessageAdapter(getPayload(), this);

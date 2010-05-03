@@ -429,6 +429,24 @@ public abstract class AbstractConnectable implements Connectable, ExceptionListe
     
     /**
      * Uses this object's {@link MuleMessageFactory} to create a new {@link MuleMessage} instance.
+     * The payload of the new message will be taken from <code>transportMessage</code>, all
+     * message properties will be copied from <code>previousMessage</code>.
+     */
+    public MuleMessage createMuleMessage(Object transportMessage, MuleMessage previousMessage,
+        String encoding) throws MuleException
+    {
+        try
+        {
+            return muleMessageFactory.create(transportMessage, previousMessage, encoding);
+        }
+        catch (Exception e)
+        {
+            throw new CreateException(CoreMessages.failedToCreate("MuleMessage"), e);
+        }
+    }
+ 
+    /**
+     * Uses this object's {@link MuleMessageFactory} to create a new {@link MuleMessage} instance.
      * This is the designated way to build {@link MuleMessage}s from the transport specific message. 
      */
     public MuleMessage createMuleMessage(Object transportMessage, String encoding) throws MuleException

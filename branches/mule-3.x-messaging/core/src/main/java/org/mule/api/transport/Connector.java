@@ -69,21 +69,6 @@ public interface Connector extends Lifecycle, NamedObject
     boolean isDisposed();
 
     /**
-     * Gets a {@link MessageAdapter} from the connector for the given message
-     * (data)
-     * 
-     * @param message the data with which to initialise the {@link org.mule.api.transport.MessageAdapter}
-     * @return the {@link MessageAdapter} for the endpoint
-     * @throws MessageTypeNotSupportedException if the message parameter is not supported
-     * @throws MuleException if there is a problem creating the Adapter
-     * @see MessageAdapter
-     * 
-     * @deprecated use getMessage(Object) instead
-     */
-    @Deprecated
-    MessageAdapter getMessageAdapter(Object message) throws MuleException;
-
-    /**
      * Creates a new {@link MuleMessageFactory} using what's defined in the connector's 
      * transport service descriptor. 
      */
