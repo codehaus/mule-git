@@ -34,7 +34,6 @@ import org.apache.commons.logging.LogFactory;
 
 public class MailMuleMessageFactory extends AbstractMuleMessageFactory
 {
-    public static final String ATTACHMENT_HEADERS_PROPERTY_POSTFIX = "Headers";
     public static final String HEADER_LIST_PREFIX = "List:";
 
     private static Log log = LogFactory.getLog(MailMuleMessageFactory.class);
@@ -163,7 +162,8 @@ public class MailMuleMessageFactory extends AbstractMuleMessageFactory
         
         if (headers.size() > 0)
         {
-            muleMessage.setProperty(name + ATTACHMENT_HEADERS_PROPERTY_POSTFIX, headers);
+            muleMessage.setProperty(
+                name + AbstractMailConnector.ATTACHMENT_HEADERS_PROPERTY_POSTFIX, headers);
         }
     }
 }
