@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesource.org/schema/mule/core/2.2"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xmlns:spring="http://www.springframework.org/schema/beans"
+    xmlns:tcp="http://www.mulesource.org/schema/mule/tcp/2.2"
+    xmlns:test="http://www.mulesource.org/schema/mule/test/2.2"
+    xmlns:vm="http://www.mulesource.org/schema/mule/vm/2.2"
+    xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+       http://www.mulesource.org/schema/mule/core/2.2 http://www.mulesource.org/schema/mule/core/2.2/mule.xsd
+       http://www.mulesource.org/schema/mule/vm/2.2 http://www.mulesource.org/schema/mule/vm/2.2/mule-vm.xsd
+       http://www.mulesource.org/schema/mule/tcp/2.2 http://www.mulesource.org/schema/mule/tcp/2.2/mule-tcp.xsd
+       http://www.mulesource.org/schema/mule/test/2.2 http://www.mulesource.org/schema/mule/test/2.2/mule-test.xsd">
+
+    <vm:connector name="queue" queueEvents="true" />
+
+    <tcp:polling-connector name="pollingConnector" clientSoTimeout="3000" pollingFrequency="1000">
+        <tcp:direct-protocol payloadOnly="true" />
+    </tcp:polling-connector>
+
+    <model name="echoModel">
+        <service name="echo">
+            <inbound>
+                <tcp:inbound-endpoint host="localhost" port="4444" />
+            </inbound>
+            <outbound>
+                <pass-through-router>
+                    <vm:outbound-endpoint path="out" connector-ref="queue" />
+                </pass-through-router>
+            </outbound>
+        </service>
+    </model>
+</mule>

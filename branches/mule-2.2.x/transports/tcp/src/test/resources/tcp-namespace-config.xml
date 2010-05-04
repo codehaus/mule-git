@@ -20,5 +20,9 @@
     <tcp:connector name="separateTimeouts"
                    clientSoTimeout="3000"
                    serverSoTimeout="4000"/>
+                   
+    <tcp:polling-connector name="pollingConnector"
+                   clientSoTimeout="3000"
+                   pollingFrequency="4000"/>
 
 </mule>
