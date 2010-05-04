@@ -20,7 +20,6 @@ import org.mule.api.config.MuleProperties;
 import org.mule.api.transformer.DataType;
 import org.mule.api.transformer.Transformer;
 import org.mule.api.transformer.TransformerException;
-import org.mule.api.transport.MessageAdapter;
 import org.mule.api.transport.OutputHandler;
 import org.mule.api.transport.PropertyScope;
 import org.mule.config.MuleManifest;
@@ -137,12 +136,6 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
             setPayload(muleMessage.getPayload());
             copyMessageProperties(muleMessage);
         }
-        else if (message instanceof MessageAdapter)
-        {
-            MessageAdapter messageAdapter = (MessageAdapter) message;
-            setPayload(messageAdapter.getPayload());
-            copyMessageProperties(messageAdapter);
-        }
         else
         {
             setPayload(message);
@@ -159,11 +152,11 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
         initAppliedTransformerHashCodes();
         setEncoding(previous.getEncoding());
         
-        if (message instanceof MessageAdapter)
+        if (message instanceof MuleMessage)
         {
-            MessageAdapter adapter = (MessageAdapter) message;
-            setPayload(adapter.getPayload());
-            copyMessageProperties(adapter);
+            MuleMessage payloadMessage = (MuleMessage) message;
+            setPayload(payloadMessage.getPayload());
+            copyMessageProperties(payloadMessage);
         }
         else
         {
@@ -197,25 +190,6 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
                 for (String name : muleMessage.getPropertyNames(scope))
                 {
                     Object value = muleMessage.getProperty(name);
-                    setProperty(name, value, scope);
-                }
-            }
-            catch (IllegalArgumentException iae)
-            {
-                // ignore non-registered property scope
-            }
-        }
-    }
-
-    private void copyMessageProperties(MessageAdapter messageAdapter)
-    {
-        for (PropertyScope scope : PropertyScope.ALL_SCOPES)
-        {
-            try
-            {
-                for (String name : messageAdapter.getPropertyNames(scope))
-                {
-                    Object value = messageAdapter.getProperty(name);
                     setProperty(name, value, scope);
                 }
             }
@@ -373,7 +347,7 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
      * @param inputCls the input type of the message payload
      * @return true if the payload message type was stream-based, false otherwise
      */
-    protected boolean isPayloadConsumed(Class inputCls)
+    protected boolean isPayloadConsumed(Class<?> inputCls)
     {
         return InputStream.class.isAssignableFrom(inputCls) || isConsumedFromAdditional(inputCls);
     }
@@ -393,14 +367,6 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
             }
         }
         return false;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public MessageAdapter getAdapter()
-    {
-        return this;
     }
 
     /**
@@ -961,7 +927,7 @@ public class DefaultMuleMessage implements MuleMessage, ThreadSafeAccess, Deseri
         applyTransformers(Arrays.asList(transformers), null);
     }
 
-    public void applyTransformers(List<? extends Transformer> transformers, Class outputType) throws TransformerException
+    public void applyTransformers(List<? extends Transformer> transformers, Class<?> outputType) throws TransformerException
     {
         if (!transformers.isEmpty() && !appliedTransformerHashCodes.contains(transformers.hashCode()))
         {
