@@ -24,12 +24,6 @@ import java.util.List;
 
 public interface MuleMessage extends MessageAdapter
 {
-
-    /**
-     * Returns the currently edited Message adapter for this message.
-     */
-    MessageAdapter getAdapter();
-
     /**
      * Will apply a list of transformers to the payload of the message. This *Will* change the payload of the
      * message. This method provides the only way to alter the paylaod of this message without recreating a
@@ -86,7 +80,7 @@ public interface MuleMessage extends MessageAdapter
      */
     <T> T getPayload(Class<T> outputType) throws TransformerException;
 
-/**
+    /**
      * Will attempt to obtain the payload of this message with the desired Class type. This will
      * try and resolve a transformer that can do this transformation. If a transformer cannot be found
      * an exception is thrown.  Any transformers added to the registry will be checked for compatability
@@ -141,5 +135,4 @@ public interface MuleMessage extends MessageAdapter
      */
     @Deprecated
     Object getOrginalPayload();
-
 }
