@@ -64,9 +64,6 @@ public class PollingTcpMessageReceiver extends AbstractPollingMessageReceiver
         }
     }
 
-    /* (non-Javadoc)
-     * @see org.mule.transport.AbstractPollingMessageReceiver#poll()
-     */
     @Override
     public void poll() throws Exception
     {

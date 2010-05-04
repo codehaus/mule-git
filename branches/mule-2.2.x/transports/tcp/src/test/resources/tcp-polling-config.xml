@@ -21,7 +21,7 @@
     <model name="echoModel">
         <service name="echo">
             <inbound>
-                <tcp:inbound-endpoint host="localhost" port="4444" />
+                <tcp:inbound-endpoint host="localhost" port="65466" />
             </inbound>
             <outbound>
                 <pass-through-router>

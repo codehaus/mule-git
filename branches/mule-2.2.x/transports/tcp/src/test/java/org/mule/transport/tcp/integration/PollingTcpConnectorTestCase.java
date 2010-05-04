@@ -41,14 +41,14 @@ public class PollingTcpConnectorTestCase extends FunctionalTestCase
         ServerSocket serverSocket = null;
         try
         {
-            serverSocket = new ServerSocket(4444);
+            serverSocket = new ServerSocket(65466);
 
             sendAndTest(client, serverSocket, "hi");
             sendAndTest(client, serverSocket, "hi 3");
         }
         catch (IOException e)
         {
-            System.out.println("Could not listen on port: 4444");
+            System.out.println("Could not listen on port: 65466");
             System.exit(-1);
         }
         finally
