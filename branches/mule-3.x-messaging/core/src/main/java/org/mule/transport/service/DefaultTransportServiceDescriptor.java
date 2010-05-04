@@ -47,8 +47,6 @@ public class DefaultTransportServiceDescriptor extends AbstractServiceDescriptor
     private String dispatcherFactory;
     private String requesterFactory;
     private String transactionFactory;
-    // TODO MessageAdapterRemoval: delete me
-    private String messageAdapter;
     private String messageFactory;
     private String messageReceiver;
     private String transactedMessageReceiver;
@@ -85,7 +83,6 @@ public class DefaultTransportServiceDescriptor extends AbstractServiceDescriptor
         messageReceiver = removeProperty(MuleProperties.CONNECTOR_MESSAGE_RECEIVER_CLASS, props);
         transactedMessageReceiver = removeProperty(MuleProperties.CONNECTOR_TRANSACTED_MESSAGE_RECEIVER_CLASS, props);
         xaTransactedMessageReceiver = removeProperty(MuleProperties.CONNECTOR_XA_TRANSACTED_MESSAGE_RECEIVER_CLASS, props);
-        messageAdapter = removeProperty(MuleProperties.CONNECTOR_MESSAGE_ADAPTER, props);
         messageFactory = removeProperty(MuleProperties.CONNECTOR_MESSAGE_FACTORY, props);
         defaultInboundTransformer = removeProperty(MuleProperties.CONNECTOR_INBOUND_TRANSFORMER, props);
         defaultOutboundTransformer = removeProperty(MuleProperties.CONNECTOR_OUTBOUND_TRANSFORMER, props);
@@ -110,9 +107,8 @@ public class DefaultTransportServiceDescriptor extends AbstractServiceDescriptor
                 MuleProperties.CONNECTOR_TRANSACTED_MESSAGE_RECEIVER_CLASS, transactedMessageReceiver);
         xaTransactedMessageReceiver = props.getProperty(
                 MuleProperties.CONNECTOR_XA_TRANSACTED_MESSAGE_RECEIVER_CLASS, xaTransactedMessageReceiver);
-        messageAdapter = props.getProperty(MuleProperties.CONNECTOR_MESSAGE_ADAPTER, messageAdapter);
+        messageFactory = props.getProperty(MuleProperties.CONNECTOR_MESSAGE_FACTORY, messageFactory);
         endpointBuilder = props.getProperty(MuleProperties.CONNECTOR_META_ENDPOINT_BUILDER, endpointBuilder);
-
 
         String temp = props.getProperty(MuleProperties.CONNECTOR_INBOUND_TRANSFORMER);
         if (temp != null)

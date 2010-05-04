@@ -51,6 +51,7 @@ public class MuleProperties
     /**
      * @deprecated This property is no longer needed and will be removed in the next major release
      */
+    @Deprecated
     public static final String MULE_SESSION_ID_PROPERTY = PROPERTY_PREFIX + "SESSION_ID";
     public static final String MULE_SESSION_PROPERTY = PROPERTY_PREFIX + "SESSION";
     public static final String MULE_MESSAGE_ID_PROPERTY = PROPERTY_PREFIX + "MESSAGE_ID";
@@ -91,8 +92,6 @@ public class MuleProperties
     public static final String CONNECTOR_DISPATCHER_FACTORY = "dispatcher.factory";
     public static final String CONNECTOR_REQUESTER_FACTORY = "requester.factory";
     public static final String CONNECTOR_TRANSACTION_FACTORY = "transaction.factory";
-    // TODO MessageAdapterRemoval: delete me
-    public static final String CONNECTOR_MESSAGE_ADAPTER = "message.adapter";
     public static final String CONNECTOR_MESSAGE_FACTORY = "message.factory";
     public static final String CONNECTOR_INBOUND_TRANSFORMER = "inbound.transformer";
     public static final String CONNECTOR_OUTBOUND_TRANSFORMER = "outbound.transformer";
