@@ -11,6 +11,7 @@
 package org.mule.transport;
 
 import org.mule.api.MuleException;
+import org.mule.api.MuleRuntimeException;
 import org.mule.api.context.WorkManager;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.InitialisationException;
@@ -374,14 +375,22 @@ public abstract class AbstractConnectable implements Connectable, ExceptionListe
                     }
                     catch (MuleException e)
                     {
-                        throw new MuleExceptionAsRuntimeException(e);
+                        throw new MuleRuntimeException(
+                            CoreMessages.createStaticMessage("wrapper exception for a MuleException"), e);
                     }
                 }
             });
         }
-        catch (MuleExceptionAsRuntimeException e)
+        catch (MuleRuntimeException e)
         {
-            throw e.getOriginalMuleException();
+            if (e.getCause() instanceof MuleException)
+            {
+                throw (MuleException) e.getCause();
+            }
+            else
+            {
+                throw e;
+            }
         }
     }
 
