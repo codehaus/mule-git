@@ -1,2 +1,0 @@
-http\://www.mulesource.org/schema/mule/http/2.1=org.mule.transport.http.config.HttpNamespaceHandler
-http\://www.mulesource.org/schema/mule/https/2.1=org.mule.transport.http.config.HttpsNamespaceHandler
