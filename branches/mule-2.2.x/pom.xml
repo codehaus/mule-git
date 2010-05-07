@@ -139,6 +139,8 @@
         <jugVersion>2.0.0</jugVersion>
         <jxlVersion>2.6.3</jxlVersion>
         <log4jVersion>1.2.14</log4jVersion>
+        <mockitoVersion>1.8.0</mockitoVersion>
+        <multithreadedtcVersion>1.01</multithreadedtcVersion>
         <!-- TODO EE-1395 -->
         <mqSeriesVersion>6.0</mqSeriesVersion>
         <mx4jVersion>2.1.1</mx4jVersion>
@@ -655,6 +657,17 @@
                 <artifactId>mockobjects-core</artifactId>
                 <version>0.09</version>
             </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>${mockitoVersion}</version>
+        </dependency>
+        <dependency>
+            <!-- More info: http://www.cs.umd.edu/projects/PL/multithreadedtc/overview.html  -->
+            <groupId>com.googlecode.multithreadedtc</groupId>
+            <artifactId>multithreadedtc</artifactId>
+            <version>${multithreadedtcVersion}</version>
+        </dependency>
         <dependency>
             <groupId>org.apache.geronimo.specs</groupId>
             <artifactId>geronimo-ejb_2.1_spec</artifactId>
@@ -1450,6 +1463,8 @@
                         <exclude implementation="java.lang.String">**/Abstract*.*</exclude>
                         <!-- The org.mule.tck classes are in the test directory but are not runnable tests. -->
                         <exclude implementation="java.lang.String">org/mule/tck/**</exclude>
+                        <!-- exclude inner classes -->
+                        <exclude>**/*$*</exclude>
                     </excludes>
                 </configuration>
             </plugin>

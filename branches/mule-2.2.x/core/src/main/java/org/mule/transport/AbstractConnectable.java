@@ -15,11 +15,13 @@ import org.mule.api.context.WorkManager;
 import org.mule.api.endpoint.ImmutableEndpoint;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.lifecycle.LifecycleException;
+import org.mule.api.lifecycle.StartException;
 import org.mule.api.retry.RetryCallback;
 import org.mule.api.retry.RetryContext;
 import org.mule.api.retry.RetryPolicyTemplate;
 import org.mule.api.transport.Connectable;
 import org.mule.api.transport.Connector;
+import org.mule.config.i18n.CoreMessages;
 import org.mule.context.notification.ConnectionNotification;
 import org.mule.util.ClassUtils;
 import org.mule.util.concurrent.WaitableBoolean;
@@ -52,7 +54,7 @@ public abstract class AbstractConnectable implements Connectable, ExceptionListe
      * This is necessary to support asynchronous retry policies, otherwise the start() 
      * method would block until connection is successful.
      */
-    protected boolean startOnConnect = false;
+    protected volatile boolean startOnConnect = false;
 
     public AbstractConnectable(ImmutableEndpoint endpoint)
     {
@@ -166,7 +168,10 @@ public abstract class AbstractConnectable implements Connectable, ExceptionListe
             throw new IllegalStateException("Requester/dispatcher has been disposed; cannot connect to resource");
         }
         
-        connecting.set(true);
+        if (!connecting.compareAndSet(false, true))
+        {
+            return;
+        }
         
         if (logger.isDebugEnabled())
         {
@@ -269,33 +274,114 @@ public abstract class AbstractConnectable implements Connectable, ExceptionListe
         return "endpoint.outbound." + endpoint.getEndpointURI().toString();
     }
 
+    /**
+     * This method will start the connectable, calling {@link #connect()} if it is
+     * needed.
+     * <p>
+     * This method is synchronous or not depending on how the {@link #retryTemplate}
+     * behaves.
+     * <p>
+     * This method ensures that {@link #doStart()} will be called at most one time
+     * and will return without error if the component is already {@link #started}.
+     */
     public final void start() throws MuleException
     {
-        if(!connected.get() && !connecting.get())
+        if (!connected.get() && !connecting.get())
         {
-            startOnConnect = true;
-
-            // Make sure we are connected
-            try
-            {
-                connect();
-            }
-            catch (Exception e)
-            {
-                throw new LifecycleException(e, this);
-            }
-            return;
+            connectAndThenStart();
         }
-        
-        if (started.compareAndSet(false, true))
+        else
         {
-            if (logger.isDebugEnabled())
+            if (started.compareAndSet(false, true))
             {
-                logger.debug("Starting: " + this);
+                try
+                {
+                    retryTemplate.execute(new RetryCallback()
+                    {
+                        public void doWork(RetryContext context) throws InterruptedException, MuleException
+                        {
+                            callDoStartWhenItIsConnected();
+                        }
+
+                        public String getWorkDescription()
+                        {
+                            return "starting " + getConnectionDescription();
+                        }
+                    }, getWorkManager());
+                }
+                catch (MuleException e)
+                {
+                    throw e;
+                }
+                catch (Exception e)
+                {
+                    throw new StartException(CoreMessages.failedToStart("Connectable: " + this), e, this);
+                }
             }
-            doStart();
-            // TODO It seems like a good idea to reset this variable here
-            //startOnConnect = false;
+            else
+            {
+                logger.warn("Ignoring an attempt to start a connectable that is already started: " + this);
+            }
+        }
+    }
+
+    /**
+     * This method will call {@link #connect()} after setting {@link #startOnConnect}
+     * in true. This will make the {@link #connect()} method call {@link #start()}
+     * after finishing establishing connection.
+     * 
+     * @throws LifecycleException
+     */
+    protected void connectAndThenStart() throws LifecycleException
+    {
+        startOnConnect = true;
+
+        // Make sure we are connected
+        try
+        {
+            connect();
+        }
+        catch (Exception e)
+        {
+            throw new LifecycleException(e, this);
+        }
+    }
+
+    /**
+     * This method will block until {@link #connected} is true and then will call
+     * {@link #doStart()}.
+     * 
+     * @throws InterruptedException if the thread is interrupted while waiting for
+     *             {@link #connected} to be true.
+     * @throws MuleException this is just a propagation of any {@link MuleException}
+     *             that {@link #doStart()} may throw.
+     */
+    protected void callDoStartWhenItIsConnected() throws InterruptedException, MuleException
+    {
+        try
+        {
+            connected.whenTrue(new Runnable()
+            {
+                public void run()
+                {
+                    if (logger.isDebugEnabled())
+                    {
+                        logger.debug("Starting: " + this);
+                    }
+                    try
+                    {
+                        doStart();
+                    }
+                    catch (MuleException e)
+                    {
+                        throw new MuleExceptionAsRuntimeException(e);
+                    }
+                }
+            });
+        }
+        catch (MuleExceptionAsRuntimeException e)
+        {
+            throw e.getOriginalMuleException();
         }
     }
 
