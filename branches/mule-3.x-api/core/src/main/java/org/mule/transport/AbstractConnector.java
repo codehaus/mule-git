@@ -1773,7 +1773,7 @@ public abstract class AbstractConnector implements Connector, ExceptionListener,
         }
     }
 
-    protected boolean isEnableMessageEvents()
+    public boolean isEnableMessageEvents()
     {
         return cachedNotificationHandler.isNotificationEnabled(EndpointMessageNotification.class);
     }

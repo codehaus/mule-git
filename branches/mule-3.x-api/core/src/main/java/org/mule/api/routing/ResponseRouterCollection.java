@@ -14,6 +14,7 @@ import org.mule.api.MuleEvent;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.InboundEndpoint;
+import org.mule.api.processor.MessageProcessor;
 
 import java.util.List;
 
@@ -23,7 +24,7 @@ import java.util.List;
  * is to aggregate a set of asynchonous events into a single response.
  */
 
-public interface ResponseRouterCollection extends RouterCollection
+public interface ResponseRouterCollection extends RouterCollection, MessageProcessor
 {
     void route(MuleEvent event) throws RoutingException;
 

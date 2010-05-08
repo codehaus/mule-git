@@ -63,11 +63,6 @@ public interface MessageReceiver extends Connectable
     MuleMessage routeMessage(MuleMessage message, boolean synchronous) throws MuleException;
 
     MuleMessage routeMessage(MuleMessage message, Transaction trans, boolean synchronous)
-            throws MuleException;
-
-    MuleMessage routeMessage(MuleMessage message, OutputStream outputStream) throws MuleException;
-
-    MuleMessage routeMessage(MuleMessage message, boolean synchronous, OutputStream outputStream)
         throws MuleException;
 
     MuleMessage routeMessage(MuleMessage message,

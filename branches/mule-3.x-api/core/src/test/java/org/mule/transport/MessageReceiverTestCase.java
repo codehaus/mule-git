@@ -23,13 +23,7 @@ import org.mule.api.endpoint.InboundEndpoint;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.routing.RoutingException;
 import org.mule.api.routing.filter.Filter;
-import org.mule.api.security.CryptoFailureException;
-import org.mule.api.security.EncryptionStrategyNotFoundException;
 import org.mule.api.security.EndpointSecurityFilter;
-import org.mule.api.security.SecurityException;
-import org.mule.api.security.SecurityProviderNotFoundException;
-import org.mule.api.security.UnauthorisedException;
-import org.mule.api.security.UnknownAuthenticationTypeException;
 import org.mule.api.service.Service;
 import org.mule.api.transaction.TransactionConfig;
 import org.mule.api.transport.MessageReceiver;
@@ -39,8 +33,8 @@ import org.mule.endpoint.EndpointURIEndpointBuilder;
 import org.mule.message.DefaultExceptionPayload;
 import org.mule.routing.inbound.DefaultInboundRouterCollection;
 import org.mule.routing.response.DefaultResponseRouterCollection;
-import org.mule.security.AbstractEndpointSecurityFilter;
 import org.mule.tck.AbstractMuleTestCase;
+import org.mule.tck.security.TestSecurityFilter;
 import org.mule.tck.testmodels.mule.TestMessageReceiver;
 import org.mule.transaction.MuleTransactionConfig;
 import org.mule.util.concurrent.Latch;
@@ -51,7 +45,6 @@ import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 
 public class MessageReceiverTestCase extends AbstractMuleTestCase
 {
-    private static final String SECURITY_EXCEPTION_MESSAGE = "unauthorized!!";
     private static final String TEST_MESSAGE = "test";
     private MessageReceiver receiver;
     private FakeDefaultInboundRouterCollection inboundRouterCollection;
@@ -140,9 +133,9 @@ public class MessageReceiverTestCase extends AbstractMuleTestCase
 
         assertMessageNotSent();
         assertNotNull(result);
-        assertEquals(SECURITY_EXCEPTION_MESSAGE, result.getPayloadAsString());
+        assertEquals(TestSecurityFilter.SECURITY_EXCEPTION_MESSAGE, result.getPayloadAsString());
         assertNotNull(result.getExceptionPayload());
-        assertTrue(result.getExceptionPayload().getException() instanceof TestSecurityFilter.FakeUnauthorisedException);
+        assertTrue(result.getExceptionPayload().getException() instanceof TestSecurityFilter.StaticMessageUnauthorisedException);
 
     }
 
@@ -157,7 +150,7 @@ public class MessageReceiverTestCase extends AbstractMuleTestCase
 
         MuleMessage result = receiver.routeMessage(inMessage);
 
-        assertFalse(securityFilter.called);
+        assertFalse(securityFilter.wasCalled());
 
         assertMessageNotSent();
         assertEquals(inMessage, result);
@@ -347,59 +340,6 @@ public class MessageReceiverTestCase extends AbstractMuleTestCase
         public boolean accept(MuleMessage message)
         {
             return accept;
-        }
-    }
-
-    private static class TestSecurityFilter extends AbstractEndpointSecurityFilter
-    {
-        boolean accept;
-        boolean called;
-
-        public TestSecurityFilter(boolean accept)
-        {
-            this.accept = accept;
-        }
-
-        @Override
-        protected void authenticateInbound(MuleEvent event)
-            throws SecurityException, CryptoFailureException, SecurityProviderNotFoundException,
-            EncryptionStrategyNotFoundException, UnknownAuthenticationTypeException
-        {
-            called = true;
-            if (!accept)
-            {
-                throw new FakeUnauthorisedException();
-            }
-        }
-
-        @Override
-        protected void authenticateOutbound(MuleEvent event)
-            throws SecurityException, SecurityProviderNotFoundException, CryptoFailureException
-        {
-            if (!accept)
-            {
-                throw new FakeUnauthorisedException();
-            }
-        }
-
-        @Override
-        protected void doInitialise() throws InitialisationException
-        {
-
-        }
-
-        class FakeUnauthorisedException extends UnauthorisedException
-        {
-            public FakeUnauthorisedException()
-            {
-                super(null);
-            }
-
-            @Override
-            public String getLocalizedMessage()
-            {
-                return SECURITY_EXCEPTION_MESSAGE;
-            }
         }
     }
 

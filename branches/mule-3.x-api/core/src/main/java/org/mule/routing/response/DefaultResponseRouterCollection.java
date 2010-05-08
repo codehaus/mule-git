@@ -12,6 +12,7 @@ package org.mule.routing.response;
 
 import org.mule.OptimizedRequestContext;
 import org.mule.api.MuleEvent;
+import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.InboundEndpoint;
 import org.mule.api.lifecycle.InitialisationException;
@@ -28,15 +29,16 @@ import java.util.List;
 import edu.emory.mathcs.backport.java.util.concurrent.CopyOnWriteArrayList;
 
 /**
- * <code>DefaultResponseRouterCollection</code> is a router that can be used to control how
- * the response in a request/response message flow is created. Main usecase is to
- * aggregate a set of asynchonous events into a single response
+ * <code>DefaultResponseRouterCollection</code> is a router that can be used to
+ * control how the response in a request/response message flow is created. Main
+ * usecase is to aggregate a set of asynchonous events into a single response
  */
-public class DefaultResponseRouterCollection extends AbstractRouterCollection implements ResponseRouterCollection
+public class DefaultResponseRouterCollection extends AbstractRouterCollection
+    implements ResponseRouterCollection
 {
     @SuppressWarnings("unchecked")
     private volatile List<InboundEndpoint> endpoints = new CopyOnWriteArrayList();
-    
+
     private volatile int timeout = -1; // undefined
     private volatile boolean failOnTimeout = true;
 
@@ -44,7 +46,6 @@ public class DefaultResponseRouterCollection extends AbstractRouterCollection im
     {
         super(RouterStatistics.TYPE_RESPONSE);
     }
-
 
     @Override
     public void initialise() throws InitialisationException
@@ -76,7 +77,7 @@ public class DefaultResponseRouterCollection extends AbstractRouterCollection im
         MuleMessage result = null;
         if (routers.size() == 0)
         {
-            if(logger.isDebugEnabled())
+            if (logger.isDebugEnabled())
             {
                 logger.debug("There are no routers configured on the response router. Returning the current message");
             }
@@ -180,7 +181,7 @@ public class DefaultResponseRouterCollection extends AbstractRouterCollection im
                 return endpoint;
             }
         }
-        
+
         return null;
     }
 
@@ -207,5 +208,11 @@ public class DefaultResponseRouterCollection extends AbstractRouterCollection im
     public boolean hasEndpoints()
     {
         return !getEndpoints().isEmpty();
+    }
+
+    public MuleEvent process(MuleEvent event) throws MuleException
+    {
+        route(event);
+        return null;
     }
 }

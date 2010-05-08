@@ -29,9 +29,11 @@ import org.mule.api.transformer.TransformerException;
 import org.mule.api.transport.Connector;
 import org.mule.api.transport.MessageAdapter;
 import org.mule.api.transport.MessageReceiver;
+import org.mule.processor.ChainMessageProcessorBuilder;
 import org.mule.transport.ConnectException;
 import org.mule.transport.NullPayload;
 import org.mule.transport.http.i18n.HttpMessages;
+import org.mule.transport.inbound.processor.InboundFilterMessageProcessor;
 import org.mule.transport.tcp.TcpConnector;
 import org.mule.transport.tcp.TcpMessageReceiver;
 import org.mule.util.IOUtils;
@@ -112,15 +114,26 @@ public class HttpMessageReceiver extends TcpMessageReceiver
     }
 
     @Override
-    protected MuleMessage handleUnacceptedFilter(MuleMessage message)
+    protected void customizeMessageProcessorBuilder(ChainMessageProcessorBuilder builder)
     {
-        if (logger.isDebugEnabled())
-        {
-            logger.debug("Message request '" + message.getProperty(HttpConnector.HTTP_REQUEST_PROPERTY)
-                    + "' is being rejected since it does not match the filter on this endpoint: " + endpoint);
-        }
-        message.setProperty(HttpConnector.HTTP_STATUS_PROPERTY, String.valueOf(HttpConstants.SC_NOT_ACCEPTABLE));
-        return message;
+        builder.replaceMessageProcessor(InboundFilterMessageProcessor.class,
+            new InboundFilterMessageProcessor()
+            {
+                @Override
+                protected MuleMessage handleUnacceptedFilter(MuleMessage message, InboundEndpoint endpoint)
+                {
+                    if (logger.isDebugEnabled())
+                    {
+                        logger.debug("Message request '"
+                                     + message.getProperty(HttpConnector.HTTP_REQUEST_PROPERTY)
+                                     + "' is being rejected since it does not match the filter on this endpoint: "
+                                     + endpoint);
+                    }
+                    message.setProperty(HttpConnector.HTTP_STATUS_PROPERTY,
+                        String.valueOf(HttpConstants.SC_NOT_ACCEPTABLE));
+                    return message;
+                }
+            });
     }
 
     protected class HttpWorker implements Work, Expirable
@@ -275,7 +288,7 @@ public class HttpMessageReceiver extends TcpMessageReceiver
                         HttpConnector.normalizeUrl(receiver.getEndpointURI().getPath()));
 
                 preRouteMessage(message);
-                MuleMessage returnMessage = receiver.routeMessage(message, endpoint.isSynchronous(), null);
+                MuleMessage returnMessage = receiver.routeMessage(message, endpoint.isSynchronous());
 
                 Object tempResponse;
                 if (returnMessage != null)

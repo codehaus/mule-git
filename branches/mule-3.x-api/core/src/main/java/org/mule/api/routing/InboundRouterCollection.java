@@ -14,6 +14,7 @@ import org.mule.api.MessagingException;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.endpoint.InboundEndpoint;
+import org.mule.api.processor.MessageProcessor;
 
 import java.util.List;
 
@@ -21,7 +22,7 @@ import java.util.List;
  * <code>DefaultInboundRouterCollection</code> manages a collection of inbound routers.
  */
 
-public interface InboundRouterCollection extends RouterCollection
+public interface InboundRouterCollection extends RouterCollection, MessageProcessor
 {
     MuleMessage route(MuleEvent event) throws MessagingException;
 

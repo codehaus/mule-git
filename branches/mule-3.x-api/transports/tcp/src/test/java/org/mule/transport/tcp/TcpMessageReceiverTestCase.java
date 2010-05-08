@@ -24,7 +24,7 @@ public class TcpMessageReceiverTestCase extends AbstractMessageReceiverTestCase
     public MessageReceiver getMessageReceiver() throws Exception
     {
         Mock mockComponent = new Mock(Service.class);
-        mockComponent.expectAndReturn("getResponseTransformer", null);
+        mockComponent.expectAndReturn("getInboundRouter", null);
         mockComponent.expectAndReturn("getResponseRouter", null);
         return new TcpMessageReceiver((AbstractConnector)endpoint.getConnector(),
             (Service)mockComponent.proxy(), endpoint);

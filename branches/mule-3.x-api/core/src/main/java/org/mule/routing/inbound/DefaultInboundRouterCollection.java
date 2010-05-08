@@ -10,6 +10,7 @@
 
 package org.mule.routing.inbound;
 
+import org.mule.DefaultMuleEvent;
 import org.mule.api.MessagingException;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleException;
@@ -285,5 +286,11 @@ public class DefaultInboundRouterCollection extends AbstractRouterCollection imp
         }
         
         return null;
+    }
+
+    public MuleEvent process(MuleEvent event) throws MuleException
+    {
+        MuleMessage message = route(event);
+        return message != null ? new DefaultMuleEvent(route(event), event) : null;
     }
 }
