@@ -163,7 +163,7 @@
         <wsCommonsSchemaVersion>1.4.2</wsCommonsSchemaVersion>
         <xmlPullVersion>1.1.3.4.O</xmlPullVersion>
         <xmlResolverVersion>1.2</xmlResolverVersion>
-        <xmlSecurityVersion>1.4.0</xmlSecurityVersion>
+        <xmlSecurityVersion>2.1.7</xmlSecurityVersion>
         <wss4jVersion>1.5.4</wss4jVersion>
         <xstreamVersion>1.2.2</xstreamVersion>
         <yourKitVersion>8.0.1</yourKitVersion>
@@ -1150,7 +1150,7 @@
          <dependency>
             <groupId>org.apache.santuario</groupId>
             <artifactId>xmlsec</artifactId>
-            <version>${xmlSecurityVersion}-osgi</version>
+            <version>${xmlSecurityVersion}</version>
         </dependency>
          <dependency>
             <groupId>opensaml</groupId>
