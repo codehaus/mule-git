@@ -57,7 +57,7 @@
             instead a module artifact id is erroneously substituted.
          -->
         <productUrl>http://mule.mulesource.org</productUrl>
-        <springVersion>2.0.6</springVersion>
+        <springVersion>5.2.22.RELEASE</springVersion>
         <xfireVersion>1.2.6</xfireVersion>
         <coberturaVersion>2.1</coberturaVersion>
     </properties>
