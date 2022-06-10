@@ -133,7 +133,7 @@
         <jbpmVersion>3.2.2</jbpmVersion>
         <jcrVersion>1.0</jcrVersion>
         <jdomVersion>1.0</jdomVersion>
-        <jettyVersion>6.1.11</jettyVersion>
+        <jettyVersion>6.1.23</jettyVersion>
         <jxlVersion>2.6.3</jxlVersion>
         <log4jVersion>1.2.14</log4jVersion>
         <!-- TODO EE-1395 -->
