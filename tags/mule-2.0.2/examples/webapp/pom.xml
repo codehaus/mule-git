@@ -15,7 +15,7 @@
 
     <properties>
         <webappName>mule-examples</webappName>
-        <jettyVersion>6.1.9</jettyVersion>
+        <jettyVersion>6.1.23</jettyVersion>
     </properties>
 
     <build>
