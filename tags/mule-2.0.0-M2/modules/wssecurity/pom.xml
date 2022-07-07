@@ -127,7 +127,7 @@
         <dependency>
             <groupId>xalan</groupId>
             <artifactId>xalan</artifactId>
-            <version>2.7.0</version>
+            <version>2.7.2</version>
             <exclusions>
                 <!-- XML was taken care of in the profiles -->
                 <exclusion>
