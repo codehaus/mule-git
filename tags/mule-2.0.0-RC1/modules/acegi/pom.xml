@@ -43,7 +43,7 @@
         <dependency>
             <groupId>org.acegisecurity</groupId>
             <artifactId>acegi-security</artifactId>
-            <version>1.0.1</version>
+            <version>1.0.7</version>
             <exclusions>
                 <!-- We need commons-lang 2.1, not 2.0 -->
                 <exclusion>
