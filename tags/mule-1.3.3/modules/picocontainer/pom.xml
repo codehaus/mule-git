@@ -110,7 +110,7 @@
             <!-- re-add XStream -->
             <groupId>com.thoughtworks.xstream</groupId>
             <artifactId>xstream</artifactId>
-            <version>1.2.1</version>
+            <version>1.4.18</version>
         </dependency>
         
         <!-- TODO JUnit should get included from the parent pom.xml but it is not visible for some
